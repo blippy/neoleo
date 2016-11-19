@@ -27,6 +27,7 @@
 # undef static
 #endif
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
@@ -56,6 +57,7 @@
 #if defined (STDC_HEADERS) || defined (USG)
 # include <string.h>
 #endif
+#include <string.h> // mcarter
 
 /* Some old versions of bison generate parsers that use bcopy.
    That loses on systems that don't provide the function, so we have

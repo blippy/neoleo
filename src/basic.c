@@ -26,6 +26,8 @@
 #include <dmalloc.h>
 #endif
 
+// mcarter
+#define X_DISPLAY_MISSING
 
 #include <stdlib.h>
 #include <unistd.h>

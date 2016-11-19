@@ -11,6 +11,9 @@ config.log
 config.status
 .deps/
 *.o
+neoleo
 ylwrap
 parse.c
 parse.h
+posixtm.c
+posixtm.h

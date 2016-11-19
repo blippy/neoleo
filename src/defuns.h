@@ -136,4 +136,4 @@ static char * DFfnord[] =
 };
 */
 
-get_cmd_funcs();
+struct cmd_func** get_cmd_funcs();

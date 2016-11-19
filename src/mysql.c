@@ -23,6 +23,8 @@
 
 static char rcsid[] = "$Id: mysql.c,v 1.10 2000/07/22 06:13:16 danny Exp $";
 
+#include <stdlib.h>
+
 #ifdef	HAVE_CONFIG_H
 #include "config.h"
 #endif

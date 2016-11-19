@@ -99,6 +99,7 @@ extern char *gettext(char *);
 
 // mcarter
 #define _(x) (x)
+#define X_DISPLAY_MISSING
 
 /*
  * The ultimate global variable

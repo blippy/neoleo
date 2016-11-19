@@ -157,3 +157,9 @@ struct cmd_func cmd_funcs[] =
   { 0, 0, 0, 0, 0 }
 };
 
+
+struct cmd_func** get_cmd_funcs()
+{
+	return (struct cmd_func**) &cmd_funcs[0];
+}
+
