@@ -26,6 +26,10 @@
 #include <dmalloc.h>
 #endif
 
+
+#include <stdlib.h>
+#include <unistd.h>
+
 #include <ctype.h>
 #include "sysdef.h"
 #include "global.h"

@@ -32,8 +32,8 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #else
-extern int access (char *, int);
-extern int getuid (void);
+//extern int access (char *, int);
+//extern int getuid (void);
 #endif /* HAVE_UNISTD_H */
 
 #ifndef _DEBUG_MALLOC_INC
@@ -93,7 +93,7 @@ extern struct tm * gmtime (const time_t *);
 #ifdef __STDC__
 #ifndef _DEBUG_MALLOC_INC
 #ifndef HAVE_STRDUP
-extern char *strdup (const char *);
+//extern char *strdup (const char *);
 #endif
 #ifndef HAVE_STRICMP
 extern int stricmp (const char *, const char *);

@@ -47,6 +47,7 @@
 #include "afm.h"
 #include "cmd.h"
 
+#define BUILD_PREFIX    "/TODO/BUILD_PREFIX"
 #define	AFM_PATH	"/share/afm"
 #define	USRLOCAL_PATH	"/usr/local"
 #define	USR_PATH	"/usr"
