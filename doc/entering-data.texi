@@ -1,0 +1,215 @@
+@node How to enter data, Making changes, Basics, Top
+@chapter Entering Data
+
+
+
+
+
+
+@menu
+* Oleo values::                 
+* Entering::                    Entering values in a cell
+* Input Editing::               Editing in the input line
+* Cell Motion::                 Moving to the next input cell while editing
+@end menu
+
+@node Oleo values, Entering, How to enter data, How to enter data
+@section The different values in Oleo
+
+A value can be a literal (an immediate value, like @code{"foo"},
+@code{16}, or @code{#TRUE}), a function call, or another expression.
+There are 5 types of values:
+
+@itemize @bullet
+@item Integers.
+@item Floats, expressed in the usual format:
+[@code{-}]@var{nnn}[@code{.}@var{nnn}][@code{e}[@code{-}]@var{nnn}],
+e.g., -103.14e-7 or .00000012 or 103.14.
+@cindex String values
+@item Strings, which are surrounded by double quotes.  To include
+unusual characters, you can either quote them with a backslash (e.g.,
+@w{@code{"This is \"quoted\"."}}) or use an octal escape code: 
+@samp{\@var{nnn}}
+where @var{nnn} is the octal code for the ASCII value of the character.
+@c an expression isn't really another type; it's a group of values:
+@c
+@item Expressions, such as @code{@@sum(A1.B3)}, or @code{A1 + B2}.
+@item Errors, which have alphabetic names and start with a @samp{#}
+sign.
+@item Booleans, which are "error" values of either @code{#TRUE} or
+@code{#FALSE}.
+@cindex Boolean values
+@end itemize
+
+
+
+@node Entering, Input Editing, Oleo values, How to enter data
+@section Entering values in a cell
+To enter values into an empty cell, simply start typing.  
+To replace the contents of a cell or of all cells in a region, use
+
+@table @kbd
+@item =
+        Replace the contents of the current cell. (@code{set-cell})
+@cmindex set-cell
+@item M-=
+        Replace the contents of a region. (@code{set-cell-region})
+@cmindex set-cell-region
+@end table
+@kindex =
+@kindex M-=
+
+For example, to put the numbers 2,3,...,11 in the  cells from @code{B1} to
+@code{B10}, type
+@example
+        @key{M-=}  B1.B10   @key{RET}   @@row()+1   @key{RET}
+@end example
+
+
+@node Input Editing, Cell Motion, Entering, How to enter data
+@section Editing in the input line
+
+When the spreadsheet is reading text input, you can use a few
+text-editing commands.  Note that there in no history mechanism and no
+yank command.  If you accidentally type @kbd{C-u}, the text is @emph{erased}.
+@footnote{This will be improved in the future.}
+
+While the input area is active, the commands that move the cell cursor
+are disabled.  If you want to move the cell cursor, use the
+other-window command (@kbd{C-x o}) to leave and later reenter the input area.
+
+@table @kbd
+@item M-a
+Insert/over-write an absolute reference to the
+current cell/region. (@code{insert-abs-ref})
+@cmindex insert-abs-ref
+@item M-r
+Insert/over-write a relative reference to the
+current cell/region. (@code{insert-rel-ref})
+@cmindex insert-rel-ref
+@item C-e
+Insert/over-write the expression in the
+current cell into the input area. (@code{insert-cell-expression})
+@cmindex insert-cell-expression
+@item M-e
+Insert/over-write the value (not the formula) of the current
+cell into the input area. (@code{insert-cell-value})
+@cmindex insert-cell-value
+@item C-a
+Move the cursor to the beginning of the text. (@code{cursor-begin-line})
+@cmindex cursor-begin-line
+@item C-e
+Move to the end of the text. (@code{cursor-end-line})
+@cmindex cursor-end-line
+@item C-b
+Move the cursor back a character. (@code{cursor-back-char})
+@cmindex cursor-back-char
+@item M-b
+Move back a word. (@code{cursor-back-word})
+@cmindex cursor-back-word
+@item C-f
+Move forward a character. (@code{cursor-fwd-char})
+@cmindex cursor-fwd-char
+@item M-f
+Move forward a word. (@code{cursor-fwd-word})
+@cmindex cursor-fwd-word
+@item C-d
+Delete the character under the cursor. (@code{delete-next-char})
+@cmindex delete-next-char
+@item M-d
+Delete the word under the cursor.  (@code{delete-next-word})
+@cmindex delete-next-word
+@item C-?
+Delete the character to the left of the cursor. (@code{delete-prev-char})
+@cmindex delete-prev-char
+@item M-C-?
+Delete the word to the left of the cursor. (@code{delete-prev-word})
+@cmindex delete-prev-word
+@item C-k
+Delete from the cursor to the end of the text. (@code{delete-to-end})
+@cmindex delete-to-end
+@item C-o
+Move the cursor into the cell area.
+@end table
+@kindex M-e
+@kindex C-e
+@kindex M-a
+@kindex M-r
+@kindex C-a
+@kindex C-e
+@kindex C-b
+@kindex M-b
+@kindex C-f
+@kindex M-f
+@kindex C-d
+@kindex M-d
+@kindex C-?
+@kindex M-C-?
+@kindex C-k
+@kindex C-o
+
+The following commands are not bound to any keys
+@table @code
+@item toggle-overwrite
+@cmindex toggle-overwrite
+Toggle between overwrite and insert mode.
+@item delete-to-start
+@cmindex delete-to-start
+ Deletes from the cursor to the beginning of the line
+@end table
+
+@cindex Input Defaults
+
+Almost all editing commands remember what you typed the last time you used
+that command, and start you up editing a copy of that text.  If you want to
+type in something completely new, just type @kbd{C-x} (or @kbd{C-u}) and
+type in your new text.
+
+@node Cell Motion,  , Input Editing, How to enter data
+@comment  node-name,  next,  previous,  up
+@section Moving to the next input cell while editing
+
+When you are finished entering data in a cell, you type @key{RET}. If
+you wish to enter data in the cell below, type either @kbd{C-i} or the
+down-arrow key, and you are
+placed in the  cell below, waiting for input.  If you type the up-arrow
+key, you are placed in the cell above, waiting for input.
+If you type @kbd{C-j}, you
+move to the right.  The direction of @kbd{C-i} can be changed - the
+commands are  given below.  For example, if you wish to move upwards when you
+type @kbd{C-i}, type @code{C-x m ^}.
+
+@table @kbd
+@item C-i
+Enter the data, and move to next cell.  The tab key also does this.
+(@code{next-edit})
+@cmindex next-edit
+@item C-j
+Enter the data, and move to next cell in alternative direction
+(@code{next-edit-set})
+@cmindex next-edit-set
+@item C-x m ^
+@code{auto-move-up}
+@item C-x m v
+@code{auto-move-down}
+@item C-x m <
+@code{auto-move-left}
+@item C-x m >
+@code{auto-move-right}
+@item C-x m `
+@code{auto-move-up-left}
+@item C-x m '
+@code{auto-move-up-right}
+@item C-x m /
+@code{auto-move-down-left}
+@item C-x m \
+@code{auto-move-down-right}
+@item C-x m  
+@code{auto-move-no-motion}
+@end table
+
+
+
+
+
+

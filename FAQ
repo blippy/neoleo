@@ -1,0 +1,228 @@
+Questions Frequently Asked about Oleo
+
+
+Questions
+---------
+
+1. What is Oleo?
+2. How do I build and install it?
+3. Who are the perpetrators of this application?
+4. But I have heard that Oleo is defunct?
+5. How should I go about building Oleo?
+6. What changes are in store for Oleo?
+7. What about the Year 2000 thing?
+8. Does it support languages other than English?
+9. Does Oleo work on character terminals?
+10. Does Oleo work under X?
+11. Does Oleo support <language X>?
+12. What are the licensing terms for Oleo?
+13. I can't compile Oleo 1.6 on a <computer> running <operating system>
+14. I can compile with the Motif interface, but the binary dumps
+    core when I try to run it under X.  What's the deal?
+15. Menu item <some item> in the Motif interface doesn't do anything!
+16. I can't select cells in the Motif interface!
+17. How can I get help on what functions are used for what?
+18. It's obvious that this application needs my help.  How can I
+    participate?
+19. What other spreadsheets are out there?
+20. I can compile with the Motif interface, but when I run Oleo
+    with the -x or --nw option to use the character terminal
+    interface, a lot of keys don't work.  What's the deal?
+21. What are these spreadsheet formats ?
+22. Oleo seems to be able to read DBF files, yet it complains. Why ?
+23. How can I build Oleo with Xbase support ?
+24. I have plotutils installed yet Oleo doesn't use it. Why ?
+
+Answers
+-------
+
+1. What is Oleo?
+
+	It's a spreadsheet program.
+
+2. How do I build and install it?
+
+	See the file README and the file INSTALL.
+
+3. Who are the perpetrators of this application?
+
+	See the file AUTHORS and the file THANKS.
+
+4. But I have heard that Oleo is defunct?
+
+	It's not defunct, but there was a period of several years during
+	which the code sat in limbo on the Internet with no maintainer or
+	team to look after it.  Oleo is now back in the game.  For the full
+	story, see the file AUTHORS.
+
+5. What changes are in store for Oleo?
+
+	See the file TODO.
+
+6. What about the Year 2000 thing?
+
+	As GNU Oleo is free software, there is no guarantee that this
+	package is year-2000 safe.  There are several places where 2-digit
+	dates may indeed be used internally.  However, being based on the
+	GNU Libc, it is likely that it will be year 2000 safe once a quick
+	pass is made to ensure that it uses standard date functions.  Most
+	unix systems use a 32-bit date field, which give us until the year
+	2030 or so to find a better solution.  The likelihood is that all
+	systems will be _at least_ 64 bit by then, alleviating all the
+	pressure.
+
+	This still poses a problem, in that you should NOT expect this
+	version of Oleo to be able to calculate, say, 50 or 100 year
+	investment bonds.  This is a serious limitation that will need to be
+	dealt with.
+
+7. Does it support languages other than English?
+
+	Yes.  See the file ABOUT-NLS.
+
+8. Does Oleo work on character terminals?
+
+	Yes.
+
+9. Does Oleo work under X?
+
+	Yes.  Over the long term, the preferred X interface is going to be
+	the LessTif/Motif interface initiated by Danny Backx.  It is still
+	incomplete, so for real work either run Oleo with the character
+	terminal interface in an Xterm, or see item 17, below.
+
+11. What are the licensing terms for Oleo?
+
+	See the file COPYING.
+
+12. I can't compile Oleo 1.6 on a <computer> running <operating system>.
+
+	See item 17, below.  Even if you conclude early that Oleo will not
+	suit your needs, the developers would still like to have any
+	information you can provideb about failures or problems you
+	encounter.  It's the only quickest way to put things right.  Please
+	inform the list.
+
+13. I can compile with the Motif interface, but the binary dumps
+    core when I try to run it under X.  What's the deal?
+
+	If the XIM (X Input Method) protocol is present in the environment
+	within which Oleo is run, it will dump core.  The kinput2 agent for
+	Japanese input relies on XIM, and if this agent is running in the
+	background, Oleo will be affected.  At present the only way to bring
+	up Oleo in such an environment is to kill kinput2 or any other XIM
+	agent.  This limitation will go away in time, as i18n international
+	support in the Motif libraries improves, but for the present we just
+	have to live with it.
+
+14. Menu item <some item> in the Motif interface doesn't do anything!
+
+	The Motif interface is still incomplete.  For real work you will
+	probably want to use the character interface.  There is no need to
+	recompile.  If running from within X, just run the same binary with
+	the option --nw or -x.  At a character terminal, Oleo should present
+	a character interface even if invoked without these options.
+
+15. I can't select cells in the Motif interface!
+
+	See item 14, above.
+
+16. How can I get help on what functions are used for what?
+
+	We are working on a robust system of online help for both the Motif
+	and character terminal interfaces, but at present the only really
+	useful source of information about the function and expression
+	interfaces is contained in the file doc/scripts/OleoManual.dvi. 
+	This document is 62 pages in length.  Since Oleo's internals are not
+	yet stable, the content of this manual will change a little with
+	each release of the code.  You may therefore prefer to read this
+	document online with a viewer such as Xdvi.
+
+17. It's obvious that this application needs my help.  How can I
+    participate?
+
+	Send mail to bug-oleo-request@gnu.org, including the word "subscribe"
+	in the subject header, and your email address in the body
+	of the message.  Bug reports and requests for help should be sent
+	to the same address.
+
+18. What other free spreadsheets are out there?
+
+	There are several.  A good site to check for information on
+	spreadsheet issues generally is <Web address>.
+
+20. I can compile with the Motif interface, but when I run Oleo
+    with the -x or --nw option to use the character terminal
+    interface, a lot of keys don't work.  What's the deal?
+
+	At present, an Oleo compiled with Motif support lacks the
+	key bindings needed for the character interface to work
+	correctly.  For now, the only way to handle this is to
+	keep two separately compiled copies of Oleo on your system,
+	one with Motif and one without.
+
+21. What are these spreadsheet formats ?
+
+	Oleo currently understands the following formats :
+	- .oleo
+	- .sylk
+	- .sc
+	- .csv	(comma separated values)
+	- .list	(tab separated values)
+	- .panic
+	- .dbf   (Dbase format)
+
+	It currently doesn't understand Excel or Lotus 1-2-3 file
+	formats.
+
+	Many spreadsheet formats, including many of the above, are
+	documented at www.wotsit.org .
+
+22. Oleo seems to be able to read DBF files, yet it complains. Why ?
+
+	Oleo has (currently simplistic) support for reading DBF files
+	through the Xbase library.
+
+	The Xbase library can be obtained from
+		http://www.startech.keller.tx.us/xbase.html
+
+	The problem is that this is C++ software, and we have chosen
+	not to force the use of C++ upon people who want to build
+	Oleo. The automake/autoconf build systems don't allow us to
+	build configuration files that will work whether a C++
+	compiler is present or not (if we include C++ source files).
+
+	So the only option we have left is not to support Xbase by
+	default.
+
+	See the next question.
+
+23. How can I build Oleo with Xbase support ?
+
+	You'll need a C++ compiler. The Oleo sources contain one C++
+	source file (all the rest is plain C). We need this because
+	the Xbase library is C++.
+
+	We did some configuration fine-tuning, and eventually got to
+	a point where we have an Oleo source which builds with or
+	without a C++ compiler.
+
+	So if you have a C++ compiler and you've installed Xbase on
+	your system, then the configure program should find the C++
+	compiler. When that happens it'll look for Xbase as well.
+	If that goes well, it'll compile the relevant source.
+
+	Then you should have a version of Oleo that can deal with .DBF files.
+
+	If anything fails then Oleo will complain when you try to load
+	an Xbase (*.dbf) file.
+
+24. I have plotutils installed yet Oleo doesn't use it. Why ?
+
+	GNU Plotutils can be used with Motif(LessTif), or with the Athena
+	widgets. If your system has a version of Plotutils that has been
+	built with the Athena widgets, it is very likely that the Oleo
+	configuration scripts will fail to pick it up.
+
+	The only remedy is to build a version of Plotutils for use with
+	Motif. This will work correctly with Oleo.

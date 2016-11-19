@@ -1,0 +1,233 @@
+@node Options, Printing and Plotting, Multiple Windows, Top
+@chapter Options
+@cindex Options
+
+@ifhtml
+<A NAME="HelpOptions">
+@end ifhtml
+
+Oleo has various options.  They can be set as a default in the
+@file{.oleorc} file, or using the command @code{M-x set-option}.
+To see all the current options, type @code{C-h o}.
+
+
+
+@menu
+* Appearance::                  Changing Oleo's appearance
+* Window Options::              Options for the active window
+* Other Options::               Other Options
+@end menu
+
+@node Appearance, Window Options, Options, Options
+@section Changing Oleo's appearance
+
+@table @code
+@item a0
+@vindex  a0
+In a0 mode, Oleo uses @{letters@}@{digits@} style cell-references,
+like some popular spreadsheets.
+
+@item noa0
+@vindex  noa0
+In noa0 mode, Oleo uses R@{digits@}C@{digits@} style references,
+like some other popular spreadsheets.  (@code{Default})
+
+@item status
+@vindex  status (number)
+This option controls which line on the screen is used for
+displaying the status of the current cell.  The number may be
+positive, (counting down from the top), negative (counting up
+from the bottom, or zero (disabling the status line).
+(@code{Default=2})
+
+@item input
+@vindex  input (number)	
+This option controls which line on the screen is used for
+reading lines of text.  The number may be positive (counting
+down from the top), or negative (counting up from the
+bottom), but not zero.
+(@code{Default=1})
+
+@item edges	
+@vindex  edges	
+In edges mode Oleo displays row and column numbers at the top
+and left edges of the window. (@code{Default})
+
+@item noedges 
+@vindex  noedges 
+Row and column numbers are not displayed.
+
+@item standout	
+@vindex  standout	
+In standout mode, the edges  are drawn in
+standout mode (reverse video, usually). (@code{Default})
+
+@item nostandout
+@vindex  nostandout
+        Edges are not drawn in standout mode.
+
+@item list (ch)
+@vindex  list 
+       		Use the character CH to separate the cell values.
+@footnote{example? it it @samp{M-x set-option list ","}?}
+
+@end table
+
+@node Window Options, Other Options, Appearance, Options
+@section Options for the active window
+
+The following options affect the currently active window:
+
+@table @code 
+
+@item page
+@vindex  page
+In page mode, whenever a particular cell is
+displayed in the window, it will always be in the same
+location on the screen.  In page mode, the recenter command
+acts just like the redraw-screen command.
+@item nopage 
+@vindex  nopage 
+Turns off page mode.
+
+@item pageh
+@vindex  pageh
+Turns on  page mode only in the horizontal direction.
+
+@item nopageh	 
+@vindex  nopageh	 
+Turns off  page mode only in the horizontal direction.
+
+@item pagev
+@vindex  pagev
+Turns on  page mode only in the vertical direction.
+
+@item nopageh	
+@vindex  nopageh	
+ Turns off  page mode only in the vertical direction.
+
+@item link 
+@vindex  link (wnum)
+This option 'links' the current window with the one
+specified.  A window may only be linked to one other window
+at a time.  When a window is linked to another one, whenever
+the cell cursor in the first window is moved, the cursor in
+the other window moves as well.  (unless the cursor in other
+window is locked from moving in that direction.)
+
+@item nolink
+@vindex  nolink
+@itemx unlink
+@vindex unlink
+This removes the link (if any) on the current window.
+
+@item lockh  
+@vindex  lockh  
+Prevent the cell cursor in the current window
+from moving in the horizontal direction, but only
+when the cell cursor is moved in a window that this one is
+linked.
+
+@item nolockh
+@vindex  nolockh
+        Disable horizontal locking
+
+@item lockv  
+@vindex  lockv  
+Prevent the cell cursor in the current window
+from moving in the vertical direction, but only
+when the cell cursor is moved in a window that this one is
+linked.
+
+@item nolockv
+@vindex  nolockv
+        Disable vertical locking
+
+@end table
+
+@node Other Options,  , Window Options, Options
+@section Other Options
+
+@table @code
+
+@item auto
+@vindex  auto
+In auto mode, cells whose values may have changed are
+automatically recalculated.  (@code{Default})
+
+
+@item noauto
+@vindex  noauto
+In noauto mode, cells are only
+recalculated when the recalculate command is used.
+
+@item bkgrnd	
+@vindex  bkgrnd	
+@itemx background
+@vindex background
+In background mode, automatic recalculation is done while
+the spreadsheet waits for you to type a key (and stops while
+the key is being handled).  (@code{Default})
+
+
+@item nobkgrnd
+@vindex  nobkgrnd
+@itemx nobackground
+@vindex nobackground
+In nobackground mode, Oleo
+performs all its recalculation before listening for
+keystrokes. 
+
+@item backup
+@vindex  backup
+In backup mode, whenever the spreadsheet writes out a file,
+if the file already exists, a backup copy is made (like
+emacs). (@code{Default})
+
+@item nobackup 
+@vindex  nobackup 
+        A backup copy is not made.
+
+@item bkup_copy
+@vindex  bkup_copy
+In bkup_copy mode, backup files are made by copying the original file,
+instead of renaming it.
+
+@item nobkup_copy
+@vindex  nobkup_copy
+In nobackup mode bkup_copy is ignored. (@code{Default})
+
+@item ticks
+@vindex  ticks (number)
+This value controls how often should rnd(), cell(), my(),
+curcell(), etc cells get updated.  This value is in
+seconds. @footnote{is it?} The initial value is 10, meaning once every
+10 seconds.
+
+
+@item print
+@vindex  print (number)
+This is the width of the page for the print command.  The
+initial value is the width of the screen.
+
+@item file
+@vindex  file (format-name) 
+@footnote{I don't understand this}
+If -DUSE_DLD was defined, format-name may be any .o file
+that contains definitions for the appropriate functions, or
+'panic', which is the only file format that Oleo will have
+compiled into it.  If -DUSE_DLD was not defined, format-name
+must be one of sylk, sc, panic, or list, and Oleo will have
+to be re-compiled before any other formats may be used.
+
+@item load (file-name) 
+@vindex  load (file-name) 
+@footnote{nor do I understand this one}This option is only avaliable if
+Oleo was compiled with
+-DUSE_DLD.  This option loads in a .o file of spreadsheet
+functions, keyboard commands, and/or keymaps.  Spreadsheet
+functions and keyboard commands must be loaded in before they
+can be used in expressions or bound to keys.
+
+@end table
+

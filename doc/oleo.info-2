@@ -1,0 +1,1536 @@
+This is oleo.info, produced by makeinfo version 4.0 from oleo.texi.
+
+   This file documents Oleo, the GNU spreadsheet.
+
+   This file is part of GNU Oleo.
+
+   Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+
+
+File: oleo.info,  Node: Protection,  Next: Fonts (in X11),  Prev: Hidden Rows and Columns,  Up: Style
+
+Protection
+==========
+
+   A cell can be protected.  For example, if cell `E5' is protected,
+and you attempt to enter data into it, you are  not allowed to.
+Instead, you get the message
+             Cell C5 is locked.
+   Moreover, all the cells in a region can be protected.  It is also
+possible to make the default protection "locked", so that all cells are
+automatically locked.
+
+   The default is that all cells are unlocked.
+`M-a p'
+     Change the protection of a cell.  The options are `def' (the
+     default), `p' (protect, or lock), and `u' (unprotect, or unlock).
+     (`set-cell-protection').
+
+`M-r p'
+     Change the protection of a region.  The options are the same as
+     above.  (`set-region-protection').
+
+`M-d p'
+     Change the default protection.  The options are `p' (protect, or
+     lock), and `u' (unprotect, or unlock).  (`set-default-protection').
+
+
+File: oleo.info,  Node: Fonts (in X11),  Prev: Protection,  Up: Style
+
+Fonts (in X11)
+==============
+
+   The default cell font is 12 point times-roman.  The easiest way to
+specify a font is to use one of the built-in short-hand names.  These
+names are `fixed', `times', and `courier'.  Optionally, these names can
+be followed by a scale.  The scale is the ratio of the default point
+size to the desired point size. For example, if the default font is a
+10 point font, then `times 1.2' refers to a 12 point Times-Roman type
+font.
+
+`M-a o'
+     Use this command to set the font in a cell.  For instance, to set
+     the current cell to `times-roman' at 24pt, type
+                  M-a o times <RET> 2.0  <RET>
+     Since the default size is 12pt, the 2.0 magnification factor makes
+     the size 24 points. (`set-cell-font')
+
+`M-r o'
+     Use this command to set the font in a region.  For instance, to
+     set the range `A1.E3' to `courier' at 12pt, type
+                  M-r o courier <RET> 1.0   <RET>
+     (`set-region-font')
+
+`M-d o'
+     Use this command to set the default font.  For instance, to set
+     the range `A1.E3' to `fixed' at 12pt, type
+                  M-r o fixed <RET> 1.0  <RET>
+     All cells whose font has not been specified have the default font,
+     so changing this will change the font in the entire spreadsheet.
+     (`set-default-font')
+
+`M-x set-default-point-size'
+     Set the default point size.  To set the default point size to 10,
+     type
+                  M-x set-default-point-size <RET> 10  <RET>
+     (`set-default-point-size')
+
+`M-x define-font-name'
+
+File: oleo.info,  Node: Multiple Windows,  Next: Options,  Prev: Style,  Up: Top
+
+Multiple Windows
+****************
+
+   Oleo can split a spreadsheet into two or more windows.   The windows
+showing the spreadsheet can show different parts of it.  Only one
+spreadsheet can be displayed at a time.
+
+* Menu:
+
+* Windows::                Introduction to Oleo windows.
+* Split Window::                New windows are made by splitting existing windows.
+* Other Window::                Moving to another window or doing something to it.
+* Change Window::               Deleting windows and changing their sizes.
+
+
+File: oleo.info,  Node: Windows,  Next: Split Window,  Prev: Multiple Windows,  Up: Multiple Windows
+
+Concepts of Oleo Windows
+========================
+
+   At any time, one of the windows is the "selected window".    The
+cell cursor is located in this window.  Each other window has a
+location of point as well, but since the terminal has only one cell
+cursor there is no way to show where those locations are.
+
+   Commands to move the cell cursor affect the cell cursor for the
+selected Oleo window only.  They do not change the value of the cell
+cursor in any other Oleo window.
+
+   When there are multiple windows,  they can have different regions,
+because they can have different values of the cell cursor.
+
+
+File: oleo.info,  Node: Split Window,  Next: Other Window,  Prev: Windows,  Up: Multiple Windows
+
+Splitting Windows
+=================
+
+`C-x 2'
+     Split the selected window into two windows, one above the other
+     (`split-window-vertically').
+
+`C-x 5'
+     Split the selected window into two windows positioned side by side
+     (`split-window-horizontally').
+
+   The command `C-x 2' (`split-window-vertically') breaks the selected
+window into two windows, one above the other.  Both windows start out
+displaying the cell cursor in the same position.  By default the two
+windows each get half the height of the window that was split.
+
+   `C-x 5' (`split-window-horizontally') breaks the selected window
+into two side-by-side windows.
+
+
+File: oleo.info,  Node: Other Window,  Next: Change Window,  Prev: Split Window,  Up: Multiple Windows
+
+Using Other Windows
+===================
+
+`C-x o'
+     Select another window (`other-window').  That is `o', not zero.
+
+`M-C-v'
+     Scroll the next window (`scroll-other-window').
+
+   To select a different window, use `C-x o' (`other-window').  That is
+an `o', for `other', not a zero.  When there are more than two windows,
+this command moves through all the windows in a cyclic order, generally
+top to bottom and left to right.  After the rightmost and bottommost
+window, it goes back to the one at the upper left corner.  When the
+minibuffer is active, the minibuffer is the last window in the cycle;
+you can switch from the minibuffer window to one of the other windows,
+and later switch back and finish supplying the minibuffer argument that
+is requested.
+
+   The usual scrolling commands  apply to the selected window only, but
+there is one command to scroll the next window.  `C-M-v'
+(`scroll-other-window') scrolls the window that `C-x o' would select.
+
+
+File: oleo.info,  Node: Change Window,  Prev: Other Window,  Up: Multiple Windows
+
+Deleting and Rearranging Windows
+================================
+
+`C-x 0'
+     Get rid of the selected window (`delete-window').  That is a zero.
+
+`C-x 1'
+     Get rid of all windows except the selected one
+     (`delete-other-windows').
+
+   To delete a window, type `C-x 0' (`delete-window').  (That is a
+zero.)  The space occupied by the deleted window is given to an
+adjacent window.  Once a window is deleted, its attributes are
+forgotten.
+
+   `C-x 1' (`delete-other-windows') is more powerful than `C-x 0'; it
+deletes all the windows except the selected one (and the minibuffer);
+the selected window expands to use the whole frame.
+
+
+File: oleo.info,  Node: Options,  Next: Printing and Plotting,  Prev: Multiple Windows,  Up: Top
+
+Options
+*******
+
+   Oleo has various options.  They can be set as a default in the
+`.oleorc' file, or using the command `M-x set-option'.  To see all the
+current options, type `C-h o'.
+
+* Menu:
+
+* Appearance::                  Changing Oleo's appearance
+* Window Options::              Options for the active window
+* Other Options::               Other Options
+
+
+File: oleo.info,  Node: Appearance,  Next: Window Options,  Prev: Options,  Up: Options
+
+Changing Oleo's appearance
+==========================
+
+`a0'
+     In a0 mode, Oleo uses {letters}{digits} style cell-references,
+     like some popular spreadsheets.
+
+`noa0'
+     In noa0 mode, Oleo uses R{digits}C{digits} style references, like
+     some other popular spreadsheets.  (`Default')
+
+`status'
+     This option controls which line on the screen is used for
+     displaying the status of the current cell.  The number may be
+     positive, (counting down from the top), negative (counting up from
+     the bottom, or zero (disabling the status line).  (`Default=2')
+
+`input'
+     This option controls which line on the screen is used for reading
+     lines of text.  The number may be positive (counting down from the
+     top), or negative (counting up from the bottom), but not zero.
+     (`Default=1')
+
+`edges'
+     In edges mode Oleo displays row and column numbers at the top and
+     left edges of the window. (`Default')
+
+`noedges'
+     Row and column numbers are not displayed.
+
+`standout'
+     In standout mode, the edges  are drawn in standout mode (reverse
+     video, usually). (`Default')
+
+`nostandout'
+     Edges are not drawn in standout mode.
+
+`list (ch)'
+     		Use the character CH to separate the cell values.  (1)
+
+   ---------- Footnotes ----------
+
+   (1) example? it it `M-x set-option list ","'?
+
+
+File: oleo.info,  Node: Window Options,  Next: Other Options,  Prev: Appearance,  Up: Options
+
+Options for the active window
+=============================
+
+   The following options affect the currently active window:
+
+`page'
+     In page mode, whenever a particular cell is displayed in the
+     window, it will always be in the same location on the screen.  In
+     page mode, the recenter command acts just like the redraw-screen
+     command.
+
+`nopage'
+     Turns off page mode.
+
+`pageh'
+     Turns on  page mode only in the horizontal direction.
+
+`nopageh'
+     Turns off  page mode only in the horizontal direction.
+
+`pagev'
+     Turns on  page mode only in the vertical direction.
+
+`nopageh'
+     Turns off  page mode only in the vertical direction.
+
+`link'
+     This option 'links' the current window with the one specified.  A
+     window may only be linked to one other window at a time.  When a
+     window is linked to another one, whenever the cell cursor in the
+     first window is moved, the cursor in the other window moves as
+     well.  (unless the cursor in other window is locked from moving in
+     that direction.)
+
+`nolink'
+`unlink'
+     This removes the link (if any) on the current window.
+
+`lockh'
+     Prevent the cell cursor in the current window from moving in the
+     horizontal direction, but only when the cell cursor is moved in a
+     window that this one is linked.
+
+`nolockh'
+     Disable horizontal locking
+
+`lockv'
+     Prevent the cell cursor in the current window from moving in the
+     vertical direction, but only when the cell cursor is moved in a
+     window that this one is linked.
+
+`nolockv'
+     Disable vertical locking
+
+
+File: oleo.info,  Node: Other Options,  Prev: Window Options,  Up: Options
+
+Other Options
+=============
+
+`auto'
+     In auto mode, cells whose values may have changed are
+     automatically recalculated.  (`Default')
+
+`noauto'
+     In noauto mode, cells are only recalculated when the recalculate
+     command is used.
+
+`bkgrnd'
+`background'
+     In background mode, automatic recalculation is done while the
+     spreadsheet waits for you to type a key (and stops while the key
+     is being handled).  (`Default')
+
+`nobkgrnd'
+`nobackground'
+     In nobackground mode, Oleo performs all its recalculation before
+     listening for keystrokes.
+
+`backup'
+     In backup mode, whenever the spreadsheet writes out a file, if the
+     file already exists, a backup copy is made (like emacs).
+     (`Default')
+
+`nobackup'
+     A backup copy is not made.
+
+`bkup_copy'
+     In bkup_copy mode, backup files are made by copying the original
+     file, instead of renaming it.
+
+`nobkup_copy'
+     In nobackup mode bkup_copy is ignored. (`Default')
+
+`ticks'
+     This value controls how often should rnd(), cell(), my(),
+     curcell(), etc cells get updated.  This value is in seconds. (1)
+     The initial value is 10, meaning once every 10 seconds.
+
+`print'
+     This is the width of the page for the print command.  The initial
+     value is the width of the screen.
+
+`file'
+     (2) If -DUSE_DLD was defined, format-name may be any .o file that
+     contains definitions for the appropriate functions, or 'panic',
+     which is the only file format that Oleo will have compiled into
+     it.  If -DUSE_DLD was not defined, format-name must be one of
+     sylk, sc, panic, or list, and Oleo will have to be re-compiled
+     before any other formats may be used.
+
+`load (file-name)'
+     (3)This option is only avaliable if Oleo was compiled with
+     -DUSE_DLD.  This option loads in a .o file of spreadsheet
+     functions, keyboard commands, and/or keymaps.  Spreadsheet
+     functions and keyboard commands must be loaded in before they can
+     be used in expressions or bound to keys.
+
+   ---------- Footnotes ----------
+
+   (1) is it?
+
+   (2) I don't understand this
+
+   (3) nor do I understand this one
+
+
+File: oleo.info,  Node: Printing and Plotting,  Next: Macros,  Prev: Options,  Up: Top
+
+Printing and Plotting
+*********************
+
+* Menu:
+
+* Writing Files::               Writing  ASCII and Postscript Files
+* Graphing::                    Graphing Using GNU Plotutils
+
+
+File: oleo.info,  Node: Writing Files,  Next: Graphing,  Prev: Printing and Plotting,  Up: Printing and Plotting
+
+Writing  ASCII and Postscript Files
+===================================
+
+   Spreadsheets, and regions of spreadsheets,  can be printed in ASCII,
+LaTeX, or postscript format.  For postscript files, the font and page
+size can be specified.
+
+`M-C-p a'
+     Write a region to a file in ASCII format.  If the mark is set, you
+     are prompted for a file name.  The region between mark and cell
+     cursor will be printed in a tabular ASCII format. If the mark is
+     not set, then you are first prompted for the region, and then for
+     the file name.  (`print-region') For example, if the mark is not
+     set, and you want to print the region A1.C20 to the file
+     `/tmp/myfile', then you type
+                       M-C-p a A1.C20 <RET> /tmp/myfile <RET>
+
+     If the mark had been set so that the region between mark and the
+     current cell is A1.C20, then you only need type
+                       M-C-p a  /tmp/myfile <RET>
+
+`M-C-p l'
+     Write a region to a file in LaTeX format.  By default the LaTeX
+     code prints the entries in ruled boxes in portrait mode.  There are
+     directions in the output file for the simple changes to print in
+     landscape mode, or to have all the entries unboxed.  If your region
+     contains a percent sign, then you must escape it by hand in the
+     LaTeX file to make LaTeX run correctly.
+
+     If the mark is set, you are prompted for a file name.  The region
+     between mark and cell cursor will be printed in LaTeX format.  If
+     the mark is not set, then you are first prompted for the region,
+     and then for the file name.  (`latex-region') For example, if the
+     mark is not set, and you want to print the region A1.C20 to the
+     file `/tmp/myfile.tex', then you type
+                       M-C-p l A1.C20 <RET> /tmp/myfile.tex <RET>
+
+     If the mark had been set so that the region between mark and the
+     current cell is A1.C20, then you only need type
+                       M-C-p l  /tmp/myfile.tex <RET>
+
+`M-C-p p p'
+     Write a region to a file in PostScript format.  If the mark is
+     set, you are prompted for a file name.  If the mark is not set,
+     then you are first prompted for the region, and then for the file
+     name.  (`psprint-region') For example, if the mark is not set, and
+     you want to write the region A1.C20 in PostScript to the file
+     `/tmp/myfile', then you type
+                       M-C-p p p A1.C20 <RET> /tmp/myfile <RET>
+
+     If the mark had been set so that the region between mark and the
+     current cell is A1.C20, then you only need type
+                       M-C-p p p  /tmp/myfile <RET>
+
+`M-C-p p f'
+     This command sets the default font used in printing a region in
+     PostScript.  (`set-default-ps-font') *note Fonts (in X11):: for
+     information about the possible fonts.  To set the font to 24 point
+     courier, type
+                     M-C-p p f courier 2.0 <RET>(1)
+
+`M-C-p p s'
+     Set the page size for the PostScript output (`set-page-size'). You
+     are prompted for a pagesize.  There are several possible ways of
+     describing a page size:
+
+                  8.5x11          -- a page size in inches.
+                  22x28c          -- a page size in centimeters.
+                  612x792p        -- a page size in points.
+                  letter          -- 8.5 x 11 in. (the default)
+
+     To set the correct page size for A4 paper, type
+
+                   M-C-p p s A4 <RET>
+
+     The following table gives the possible paper sizes.  The widths
+     and heights are given in "points", of which there are 72 in an
+     inch.
+
+
+             Name            Width   Height    Comments
+             ------------------------------------------------
+             letter          612     792       8.5 x 11   in.
+             landscape       792     612       11  x 8.5  in.
+             tabloid         792     1224      11  x 17   in.
+             ledger          1224    792       17  x 11   in.
+             legal           612     1008      8.5 x 14   in.
+             statement       396     612       5.5 x 8.5  in.
+             executive       540     720       7.5 x 10   in.
+             a3              842     1190
+             a4              595     842
+             latex-a4        523     770       A4 with 1in. margins
+             a5              420     595
+             b4              729     1032
+             b5              516     729
+             folio           612     936       8.5 x 13  in.
+             quarto          610     780
+
+   ---------- Footnotes ----------
+
+   (1) actually, this does not print correctly - ghostscript gives an
+error
+
+
+File: oleo.info,  Node: Graphing,  Prev: Writing Files,  Up: Printing and Plotting
+
+Graphing Using GNU Plotutils
+============================
+
+   Note: this chapter is only partially updated, however functionality
+has changed drastically !!
+
+   Plotting in Oleo is done using GNU Plotutils. (Versions prior to
+Oleo 1.99.12 used gnuplot.) Currently these types of graphs are
+supported :
+   * XY
+
+   * bar
+
+   * pie
+
+   There are two modes in which Oleo can produce plots on the fly :
+   * in a Motif window
+
+   * in Xterm using its Tektronix emulation
+
+   The former is the default behaviour of you use the Motif interface
+of Oleo, the latter can be initialised by this sequence :
+             M-g  o  t  f - <RET>
+
+   This sequence sets output device to Tektronix, and output file to -
+which means to standard output. Sending Tektronix formatted output to
+an xterm will pop up xterm's Tektronix emulation window which shows the
+plot.
+
+   The file examples/xy.oleo can be used to show a simple XY plot in
+this way.
+
+   Oleo can print up to 10 different data sets at once.  The data sets
+are numbered 0,1,...,9.
+
+   When the plot command (`p') is chosen, all the currently defined
+data sets will be plotted.
+
+* Menu:
+
+* Clearing Plots::              Clearing the plots
+* Data sets::                   Choosing a data set
+* The axes::                    Changing the axes style
+* Viewing Choices::             Viewing your choices
+* Output Type::                 Choosing the output type
+* Style Options::               Picking a  plot style
+* Name Options::                Naming a data set
+
+
+File: oleo.info,  Node: Clearing Plots,  Next: Data sets,  Prev: Graphing,  Up: Graphing
+
+Clearing the Plots
+------------------
+
+   The plot ranges and styles are remembered; if you decide to plot
+using `M-g', you probably want to clear the ranges and styles using the
+`C' and `R' keys in the main graph menu:
+
+`C'
+     Clear all the datasets (0-9) of their ranges.
+
+`R'
+     Remove all the style information from all datasets
+
+
+File: oleo.info,  Node: Data sets,  Next: The axes,  Prev: Clearing Plots,  Up: Graphing
+
+Choosing a data set
+-------------------
+
+   The key `d' is used to choose a range for a data set.  If the mark
+is active, then the region between the mark and the current cell is
+chosen as the data set.  Otherwise, you are prompted for the range.
+
+   When you define a data set (using the `d' key in the graph menu),
+you select a number to refer to the data set.  If we are already in the
+graph menu (having typed `M-g'), then the following assigns the region
+G5.L6 to data set 4:
+                           d  4  <RET> G5.L6  <RET>
+
+   If the mark is set, then it is not necessary (nor possible) to enter
+the range.  Thus, if the mark is set to G5 and the cursor is in L6,
+then these commands set the fourth data set to G5.L6:
+                           d  4  <RET>
+
+                       | Col B | Col C | Col D | Col E | Col F |
+                 ------|-------|-------|-------|-------|-------|
+                 Row 2 |   11  |   33  |  55   |   77  |   99  |
+                 ------|-------|-------|-------|-------|-------|
+                 Row 3 |   22  |   44  |  66   |   88  |    0  |
+                 ------|-------|-------| ------|-------|-------|
+
+   and that we are in the graph menu.
+   * If we type `d 4 RET B2.F3 RET', then when we print there will be
+     three line segments:
+
+               (11,33) -- (22,44) -- (55,77) -- (66,88)
+
+   * If we type `d 4 RET B2.F3 RET', then when we print there will be
+     four line segments:
+
+               (11,22) -- (33,44) -- (55,66) -- (77,88) -- (99,0)
+
+   * If we type `d 4 RET B2.F3 RET', then when we print there will be
+     nine line segments.  Notice that all the items in the first row are
+     plotted, then all the ones in the second row, and so on.
+
+          (0,11)--(1,33)--(2,55)--(3,77)--(4,99)--(5,22)--(6,44)--(7,66)--(8,88)--(9,0)
+
+
+   Finally, you are asked about labels.  (1)
+
+   ---------- Footnotes ----------
+
+   (1) I don't understand them
+
+
+File: oleo.info,  Node: The axes,  Next: Viewing Choices,  Prev: Data sets,  Up: Graphing
+
+Changing the axes style
+-----------------------
+
+   The commands `x' and `y' allow you to control the axes style.
+
+`['
+     You are prompted for the lower limit of the range.
+
+`]'
+     You are prompted for the upper limit of the range.  For instance,
+     to set the range of the x-axis to [-3,5], type the following in
+     the graph menu:
+                        x [ -3 <RET>
+                        x ]  5 <RET>
+
+`s'
+     Use a symbolic expression for the range (1)
+
+`l'
+     Use values in the spreadsheet for the ticks on the axis.  (2)
+
+`L'
+     Restore the default tick marks for the axis.  This undoes the
+     effect of the `l' command.
+
+   ---------- Footnotes ----------
+
+   (1) what?
+
+   (2) example?
+
+
+File: oleo.info,  Node: Viewing Choices,  Next: Output Type,  Prev: The axes,  Up: Graphing
+
+Viewing your choices
+--------------------
+
+   Typing `v' in the main graph menu gives a help screen with all of
+your choices.  A typical  help screen is
+
+         Graph type is XY plot.
+     
+         Parameter               Value
+     
+         output type             Tektronix
+         output file             -
+         x-axis title            "Tijd"
+         y-axis title            "Appelen"
+         logarithmic axes        -neither-
+         x-axis range            [def..def]
+         y-axis range            [def..def]
+     
+         Data Set 0
+           data for this set: A1:A6
+           style for this set: lines
+     
+     
+         Data Set 1
+           data for this set: C4:C9
+           style for this set: lines
+
+
+File: oleo.info,  Node: Output Type,  Next: Style Options,  Prev: Viewing Choices,  Up: Graphing
+
+The Output Type
+---------------
+
+   The `o' key in the main graph menu selects the type of output.  A
+graph can be drawn in several ways - see the table below.
+
+   Note however that, depending on compilation parameters, not all of
+the options documented below may be available (e.g. no X or x commands).
+
+`p'
+     Write a file of PostScript commands that draw that graph.
+
+`X'
+     Draw the graph in an X window, in color.
+
+`t'
+     Write Tektronix graphics terminal commands.
+
+`r'
+     Write ReGIS commands (VT340 type terminals, most VT emulators
+     don't support this)
+
+`P'
+     Write PCL printer commands.
+
+`h'
+     Write HP-GL plotter command language.
+
+`i'
+     Write Adobe Illustrator format.
+
+`m'
+     Write GNU Metaplot format.
+
+`f'
+     Write FIG output
+
+`n'
+     Write PNG (Portable Network Graphics, an unencumbered replacement
+     for GIF)
+
+`g'
+     Write GIF format
+
+`x'
+     Draw the graph in an X window, in black and white.
+
+
+File: oleo.info,  Node: Style Options,  Next: Name Options,  Prev: Output Type,  Up: Graphing
+
+Picking a plot style
+--------------------
+
+   The `s' option on the main graph menu selects the graph style.  There
+are 5 possibilities:(1)
+
+`lines'
+     The _lines_ style connects adjacent points with lines. (Default)
+
+`points'
+     The _points_ style displays a small symbol at each point.
+
+`impulses'
+     The _impulses_ style displays a vertical line from the x axis to
+     each point.
+
+`dots'
+     The _dots_ style  plots a tiny dot at each point; this is useful
+     for  scatter plots with many points.
+
+`linespoints'
+     The _linespoints_ style does both _lines_ and _points_.
+
+   ---------- Footnotes ----------
+
+   (1) gnuplot has 9 styles; should these be added?
+
+
+File: oleo.info,  Node: Name Options,  Prev: Style Options,  Up: Graphing
+
+Naming a data set
+-----------------
+
+   The `d' option on the main graph menu allows a name to be attached
+to a data set.  The default name of the i-th data set is "Data set i".
+When the graphs are plotted, each graph is printed with a different line
+type, and the names of the data set and their line type are printed in
+the upper right corner. The name must be in quotes. (1) To add the name
+"my Fermat plot" to  data set 3, type
+
+           n  3  <RET>   "my Fermat plot"  <RET>
+
+   ---------- Footnotes ----------
+
+   (1) this is not a good choice
+
+
+File: oleo.info,  Node: Macros,  Next: Programs,  Prev: Printing and Plotting,  Up: Top
+
+Macros
+******
+
+* Menu:
+
+* Keyboard Macros::
+* Basic Kbd Macro::
+* Save Kbd Macro::
+
+
+File: oleo.info,  Node: Keyboard Macros,  Next: Basic Kbd Macro,  Prev: Macros,  Up: Macros
+
+Keyboard Macros
+===============
+
+   A "keyboard macro" is a command defined by the user to abbreviate a
+sequence of keys.  For example, if you discover that you are about to
+type `C-b' forty times, you can speed your work by defining a keyboard
+macro to do `C-b' and calling it with a repeat count of forty.  (1)
+
+`C-x ('
+     Start defining a keyboard macro (`start-kbd-macro').
+
+`C-x )'
+     End the definition of a keyboard macro (`end-kbd-macro').
+
+`C-x e'
+     Execute the most recent keyboard macro (`call-last-kbd-macro').
+
+`C-x ='
+     Store the most recent keyboard macro (`store-last-kbd-macro').
+
+   Keyboard macros differ from ordinary Oleo commands in that they are
+simply records of keystrokes.  This makes it easier for the novice to
+write them, and makes them more convenient as temporary hacks.
+However, the Oleo command language is not powerful enough as a
+programming language to be useful for writing anything intelligent or
+general.  For such things, functions and programs must be used.
+
+   You define a keyboard macro while executing the commands which are
+the definition.  Put differently, as you define a keyboard macro, the
+definition is being executed for the first time.  This way, you can see
+what the effects of your commands are, so that you don't have to figure
+them out in your head.  When you are finished, the keyboard macro is
+defined and also has been, in effect, executed once.  You can then do
+the whole thing over again by invoking the macro.
+
+* Menu:
+
+* Basic Kbd Macro::     Defining and running keyboard macros.
+* Save Kbd Macro::      Saving  keyboard macros
+
+   ---------- Footnotes ----------
+
+   (1) does repeat count work?
+
+
+File: oleo.info,  Node: Basic Kbd Macro,  Next: Save Kbd Macro,  Prev: Keyboard Macros,  Up: Macros
+
+Basic Use
+=========
+
+   To start defining a keyboard macro, type the `C-x (' command
+(`start-kbd-macro').  From then on, your keys continue to be executed,
+but also become part of the definition of the macro.  `Def' appears in
+the status line to remind you of what is going on.  (1)   When you are
+finished, the `C-x )' command (`end-kbd-macro') terminates the
+definition (without becoming part of it!).  For example
+
+     C-x ( M-f foo C-x )
+
+defines a macro to move forward a word (while editing the input line)
+and then insert `foo'.
+
+   The macro thus defined can be invoked again with the `C-x e' command
+(`call-last-kbd-macro'), which may be given a repeat count as a numeric
+argument to execute the macro many times.
+
+   If you wish to repeat an operation at regularly spaced places in the
+spreadsheet, define a macro and include as part of the macro the
+commands to move to the next place you want to use it.
+
+   You can use function keys in a keyboard macro, just like keyboard
+keys.  You can even use mouse events, but be careful about that: when
+the macro replays the mouse event, it uses the original mouse position
+of that event, the position that the mouse had while you were defining
+the macro.  The effect of this may be hard to predict.  (Using the
+current mouse position would be even less predictable.)  (2)
+
+   ---------- Footnotes ----------
+
+   (1) does it - it should
+
+   (2) is this correct?
+
+
+File: oleo.info,  Node: Save Kbd Macro,  Prev: Basic Kbd Macro,  Up: Macros
+
+Naming and Saving Keyboard Macros
+=================================
+
+   If you wish to save a keyboard macro for longer than until you
+define the next one, you must give it a cell to store it in  name using
+`M-x save-last-kbd-macro'.  This reads a cell as an argument using the
+minibuffer and stores the macro in the cell.  (1)
+
+     M-x store-last-kbd-macro <RET> CELLNAME <RET>
+
+   ---------- Footnotes ----------
+
+   (1) isn't this C-x =?
+
+
+File: oleo.info,  Node: Programs,  Next: Keymaps,  Prev: Macros,  Up: Top
+
+Programs
+********
+
+* Menu:
+
+* One Line Programs::           Writing One Line Programs
+* Long One Liners::             Multiple Commands in One Line
+* Writing programs::            Writing Programs
+* Commands in Programs::        Commands available in programs
+
+
+File: oleo.info,  Node: One Line Programs,  Next: Long One Liners,  Prev: Programs,  Up: Programs
+
+Writing One Line Programs
+=========================
+
+   Any `M-x' command can be written into a cell.  Typing `M-x
+cell-number' will execute the commands in the cell.  For example,
+assume the cell cursor is located on cell `A1'.  Enter the keystrokes
+(including the quotes and braces).
+
+     "{right-cell 4}"
+
+   If you now type `M-x A1' the cell cursor will be positioned in `E1'.
+Typing `M-x A1' again, the cell cursor is positioned at `I1'.  Some
+examples:
+
+`"{set-option status -1}"'
+     Set the status line to the bottom row of the screen
+
+`"{print-region A1.F35 /tmp/out}"'
+     Write the values of the cells in the region `A1.F35' to the file
+     `/tmp/out'.  The contents of the cells are truncated to fit in
+     their column's width.  The result is a rectangular array.  Notice
+     that there are no quotes around the file name.
+
+
+File: oleo.info,  Node: Long One Liners,  Next: Writing programs,  Prev: One Line Programs,  Up: Programs
+
+Multiple Commands in One Line
+=============================
+
+   To execute several commands at once, concatenate them in a cell.  If
+`A1' contains
+     "{right-cell 1}{up-cell 1}"
+
+   then typing `M-x A1' moves the cell cursor one right and one up.
+
+
+File: oleo.info,  Node: Writing programs,  Next: Commands in Programs,  Prev: Long One Liners,  Up: Programs
+
+Writing Programs
+================
+
+   If commands are entered into a region named by a variable VAR, then
+we can use `M-x var' to execute the code.
+
+   Suppose that the contents of `A1.A3' are given below , and that
+region `A1.A3' is named `test1'.  Typing `M-x test1' has the same
+effect as `{up-cell 1}'.
+
+             "{right-cell 1}"
+             "{up-cell    1}"
+             "{left-cell  1}"
+
+   (1)
+
+   If `filename' contains a list of `Oleo' commands (like the `.oleorc'
+file), the commands in this file can be executed:
+
+`M-x	read-commands'
+     This command opens the file you specify, reads in each line, and
+     executes them as if you'd typed them in to execute-command.  If
+     any command needs more arguments than are included on the line, it
+     will prompt you (interactively) for the missing information.
+
+     The syntax for a command is a command name followed by a whitespace
+     separated list arguments.  For example:
+
+          	bind-key main next-row ^n,
+
+     Blank lines and lines that begin with `#' are ignored.  Lines may
+     be continued by preceeding the final newline with an odd number of
+     `\\' characters.  One backslash and the newline will, be discarded.
+
+     The commands in the next file perform some arithmetic operations
+     on an already loaded spreadsheet.  Note that the division is
+     protected against division by zero.
+          goto-cell r3c84
+          edit-cell  ((rc82-rc3)/if(rc4=0,0.5,rc4) )^2 + \
+                     ((rc82-rc5)/if(rc6=0,0.5,rc6) )^2
+          goto-cell r3c85
+          edit-cell rc[-1]/36.0
+
+   ---------- Footnotes ----------
+
+   (1) yes it's trivial - how about something complex!
+
+
+File: oleo.info,  Node: Commands in Programs,  Prev: Writing programs,  Up: Programs
+
+Commands available in programs
+==============================
+
+   The commands available in programs are listed in the command index
+(*note Command Index::).  For more information, look at the online help
+for the individual entries.
+
+
+File: oleo.info,  Node: Keymaps,  Next: Functions,  Prev: Programs,  Up: Top
+
+Keymaps and defining keys
+*************************
+
+   What a key does when it is pressed depends on the context.  The
+listing of actions associated with a key in a given context is called a
+'keymap'.  Keymaps may have a 'default map'.  If a key is pressed which
+does not have an assigned meaning in that map, the map's default map is
+checked, and that map's default map, until a command is found or there
+are no more default maps to scan.
+
+   The different keymaps, and their usage are as follows:
+
+       universal         The root of all keymaps.
+       main              The default keymap.
+       meta              Default <ESC> commands.
+       ansi              ANSI arrow keys.
+       trolx             Default <C-x> commands.
+       generic-*         More generic versions of the above, work everywhere.
+       mouse             Bindings for mouse buttons.
+       prefix            Number keys, and -, for argument prefix.
+       help              Various levels of help commands.
+
+   The diagram below shows the relationship between the various keymaps.
+The keymap to the left of a given keymap is its default.
+
+                       | generic-main ----| main
+                       |                  | read-string ---| read-<item>*
+     		  |
+                       | generic-meta ----| meta
+                       |                  | meta-read-string --- meta-read-formula
+     		  |
+                       | generic-ansi ----| ansi
+                       |                  | edit-ansi
+     		  |
+                       | generic-trolx ---| trolx
+                       |                  | trolx-read-string
+       universal ------| mouse
+                       | generic-menu
+                       | prefix
+                       | meta-edit-ansi
+                       | read-keyseq
+                       | set-auto-motion
+                       | read-most-chars ---| read-char
+                       |                    | read-menu
+                       | press-any
+                       | view-info
+                       | set-*-attr  (cell, region, default)
+                       | generic-help ---| unprompted-help
+                                         | help
+                                         | verbose-help
+
+`M-x bind-key'
+     This asks for the name of a keymap followed by a command name and
+     a key to bind it to.  If the 'command' you give is a cell or
+     region in the spreadsheet, it is taken as a macro, and bound to
+     the key you specify.  For example, to make <C-1> move up one cell
+     in the main keymap, type
+
+                  <M-x> bind-key <RET> main <RET> up-cell <C-1> <RET>
+
+`M-x unbind-key'
+     This asks for the name of a keymap and the key in that map to
+     unbind.  For example, to remove the default mapping bound to
+     `M-k', type
+          	<M-k> unbind-key <RET> meta <RET> <k>
+
+`M-x describe-key'
+     Have the user press a key, and then describe what function that
+     key is bound to. (bound to `C-h c')
+
+`M-x write-keys'
+     Write a list o`f commands' to a file that, when executed with
+     read-commands, will return the keymaps to their current state.  To
+     write a list of commands to the file `/tmp/name', type
+
+                  M-x write-keys <RET> /tmp/name <RET>
+
+`M-x read-commands'
+     This command opens the file you specify, reads in each line, and
+     executes them as if you'd typed them in to execute-command.  If
+     any command needs more arguments than are included on the line, it
+     will prompt you (interactively) for the missing information.
+
+
+File: oleo.info,  Node: Functions,  Next: Extending Oleo,  Prev: Keymaps,  Up: Top
+
+Functions
+*********
+
+   Cell functions take a comma-separated list of arguments in
+parentheses, and return a value based on those values.  In addition to
+the standard value types, some arguments may be cell ranges.
+
+* Menu:
+
+* Boolean functions::           and, or, not, etc.
+* Math functions::              Elementary mathematical functions
+* String functions::            String manipulation functions.
+* Structural functions::        Info about the structure of the spreadsheet.
+* Search functions::            Search for cells by value, string, etc.
+* Business functions::          Business stuff.
+* Date functions::              Time and date manipulation.
+* Gsl functions::               GSL (GNU Scientific Library) functions.
+
+
+File: oleo.info,  Node: Boolean functions,  Next: Math functions,  Prev: Functions,  Up: Functions
+
+Boolean Functions
+=================
+
+   Boolean functions return either a `#TRUE' or `#FALSE' value.  Most
+arguments (those labelled BOOL) are also boolean.  If these arguments
+have any other value instead, the function returns `#NON_BOOL' as an
+error.
+
+`if(BOOL, VAL1, VAL2)'
+     If BOOL is `#TRUE', then VAL1 is returned.  If BOOL is `#FALSE',
+     VAL2 is returned.
+
+`and(BOOL1, BOOL2)'
+     Returns `#TRUE' if and only if both arguments are `#TRUE',
+     otherwise returns `#FALSE'.
+
+`or(BOOL1, BOOL2)'
+     Returns `#TRUE' if either or both arguments are `#TRUE', otherwise
+     returns `#FALSE'.
+
+`not(BOOL)'
+     Returns `#TRUE' if BOOL is `#FALSE'; `#FALSE' if `#TRUE'.
+
+`iserr(VAL)'
+     returns `#TRUE' if VAL is an error, `#FALSE' otherwise.
+
+`isnum(VAL)'
+     `#TRUE' if VAL is a number, or can be automatically converted to a
+     number.  Thus, `isnum("12")' is `#TRUE', while `isnum("foobar")'
+     is `#FALSE'.
+
+
+File: oleo.info,  Node: Math functions,  Next: String functions,  Prev: Boolean functions,  Up: Functions
+
+Elementary mathematical functions
+=================================
+
+* Menu:
+
+* General math functions::              log, sqrt, etc.
+* Trigonometric functions::             Trigonometric functions
+* Statistical functions::               Statistical functions
+
+
+File: oleo.info,  Node: General math functions,  Next: Trigonometric functions,  Prev: Math functions,  Up: Math functions
+
+General Math Functions
+----------------------
+
+   For these these functions, the argument X can be a number (integer
+or floating point), a reference to a cell containing an integer, or a
+reference to a cell containing a quoted integer.  Thus, if cell (1)
+`A2' contains `"-12.34"', then all of the following expressions compute
+the absolute value of -12.34:
+                    @abs(-12.34)
+                    @abs(A2)
+                    @abs(@cell(2,1,"value"))
+
+`abs(X)'
+     Returns the absolute value of X.
+
+`negate(X)'
+     Returns  -X.
+
+`int(X)'
+     `int()' converts X to an integer by truncating the fractional
+     part.  For instance,
+                     int(2.3)     =>   2
+                     int(-2.3)    =>  -2
+
+`ceil(X)'
+     `ceil()' replaces X by the least integer greater than or equal to
+     X.
+                     ceil(2.3)     =>   3
+                     ceil(-2.3)    =>  -2
+
+`floor(X)'
+     `floor()' replaces X by the largest integer less than or equal to
+     X.
+                     floor(2.3)     =>   2
+                     floor(-2.3)    =>  -3
+
+`log(X)'
+     The natural log  of X.  If X is negative, the result is
+     `#MINUS_INFINITY', and the cell displays is `#OUT_OF_RANGE'.
+
+`exp(X)'
+     The  exponential of X
+
+`log10(X)'
+     The log base 10 of X.  If X is negative, the result is
+     `#MINUS_INFINITY', and the cell displays is `#OUT_OF_RANGE'.
+
+`sqrt(X)'
+     The square root of X.  If X is negative, the error message is
+     `#OUT_OF_RANGE'.
+
+`rnd(X)'
+     Generates a random integer from 0 to X-1.  This is updated
+     regularly. This can get annoying. To change the time that it is
+     updated from 1 second to 10 seconds, type
+                  M-x set-option  <RET> ticks 10  <RET>
+
+`fixed(X, PLACES)'
+     Rounds X to PLACES decimal places.
+
+   ---------- Footnotes ----------
+
+   (1) how do I make a reference to a cell?
+
+
+File: oleo.info,  Node: Trigonometric functions,  Next: Statistical functions,  Prev: General math functions,  Up: Math functions
+
+Trigonometric Functions
+-----------------------
+
+`pi()'
+     Constant; 15 decimals of pi, 3.141592653589793.
+
+`sin(ANG)'
+     The sine of angle ANG (in radians).
+
+`cos(ANG)'
+     The  cosine of angle ANG (in radians).
+
+`tan(ANG)'
+     The  tangent of angle ANG (in radians).
+
+`asin(VAL)'
+     The arc sine (in radians) of VAL.
+
+`acos(VAL)'
+     The arc  cosine (in radians) of VAL.
+
+`atan(VAL)'
+     The arc  tangent (in radians) of VAL.
+
+`dtr(DEG)'
+     `dtr' converts degrees to radians.
+
+`rtd(RAD)'
+     `rtd' converts radians  to degrees.
+
+`atan2(Y, X)'
+     Expanded arc tangent; returns the arc tangent (in radians) of
+     Y / X.  The range of `atan2' is (-pi..pi).  The quadrant of the
+     angle returned is determined by the quadrant of the point (X, Y).
+
+`hypot(X, Y)'
+     Returns the length of the hypotenuse of a triangle with sides X
+     and Y; i.e., `sqrt(X*X + Y*Y)'.  (*note General math functions::)
+
+
+File: oleo.info,  Node: Statistical functions,  Prev: Trigonometric functions,  Up: Math functions
+
+Statistical Functions
+---------------------
+
+   These functions take a variable number of arguments, labeled VR1,
+VR2, etc.  Each of these values can be a numeric type or a range.  If
+the value is a range, the values of all numeric cells in that range are
+used (strings, empty cells, etc. are ignored).  Values can also be
+strings that are easily convertible to numbers; i.e., `"123"'.
+
+   If none of the arguments include valid numbers, then the value of the
+function is `#NO_VALUES'.  To ensure that the expression doesn't return
+an error in such cases, you can provide a default value as an extra
+argument (e.g., `@sum(0,r1:10c1:10)').
+
+   The spreadsheet below is used for examples of the statistical
+functions.
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |   2   |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |   8   |   4   |   6   |
+            ------|-------|-------|-------|
+            Row 4 |   9   |   1   |   3   |
+            ------|-------|-------|-------|
+            Row 5 |   4   |   7   |   0   |
+            ------|-------|-------|-------|
+
+`sum(VR1, ...)'
+     The sum  of the given values.  Each value can be a numeric value
+     or a range.
+    `18'
+          @sum(B2.B5)
+
+    `20'
+          @sum(B2.B5,2)
+
+    `25'
+          @sum(B2.B5,C4.C5)
+
+`prod(VR1, ...)'
+     The product  of the given values.  Each value can be a numeric
+     value or a range.
+    `512'
+          @prod(B2.B5)
+
+    `1024'
+          @prod(B2.B5,2)
+
+    `0'
+          @prod(B2.B5,C4.C5)
+
+`count(VR1, ...)'
+     The number of numeric values found among the arguments. In the
+     example, assume that the first row and column are not numbers.
+    `4'
+          @count(B2.B5)
+
+    `4'
+          @count(B2.B5,A1.D1)
+
+    `6'
+          @count(B2.B5,C4.C5)
+
+`max(VR1, ...)'
+     The maximum  value of all the arguments.  Non-numeric values are
+     ignored.
+    `8'
+          @max(B2.B5)
+
+    `8'
+          @max(B2.B5,A1.D1)
+
+    `8'
+          @max(B2.B5,C4.C5)
+
+`min(VR1, ...)'
+     The  minimum value of all the arguments.
+    `2'
+          @min(B2.B5)
+
+    `2'
+          @min(B2.B5,A1.D1)
+
+    `1'
+          @min(B2.B5,C4.C5)
+
+`avg(VR1, ...)'
+     The average of the given values.  The sum of the numerical values
+     in the arguments is divided by the number of numeric values, not
+     by the number of cells.
+    `4.5'
+          @avg(B2.B5)
+
+    `4.5'
+          @avg(B2.B5,A1.D1)
+
+    `4.333'
+          @avg(B2.B5,C4.C5)
+
+`std(VR1, ...)'
+     The _sample_ standard deviation.  To get the population standard
+     deviation, use `@sqrt(@var(...))'.
+    `2.51'
+          @std(B2.B5)
+
+    `2.51'
+          @std(B2.B5,A1.D1)
+
+    `2.73'
+          @std(B2.B5,C4.C5)
+
+`var(VR1, ...)'
+     The population variance of the arguments.  To get the sample
+     variance, use `@std(...)^2'.
+    `4.75'
+          @var(B2.B5)
+
+    `4.75'
+          @var(B2.B5,A1.D1)
+
+    `6.22'
+          @var(B2.B5,C4.C5)
+
+
+File: oleo.info,  Node: String functions,  Next: Structural functions,  Prev: Math functions,  Up: Functions
+
+String Functions
+================
+
+   Strings indexes start with 1 for the first character.  Indices less
+than 1 or greater than the length of the corresponding string will
+generate an `#OUT_OF_RANGE' error return, unless otherwise noted.
+
+   These functions are in the `string' package.  If Oleo is compiled
+with `-DUSE_DLD', the string package must be loaded before these
+functions can be used.  If a spreadsheet that uses these functions is
+loaded before the string package is loaded, things will fail
+(silently!).  This is a bug.
+
+`len(STR)'
+     Returns the number of characters in STR.
+
+`strupr(STR)'
+     Converts STR to all upper  case.
+
+`strlwr(STR)'
+     Converts STR to all  lower case.
+
+`strcap(STR)'
+     Capitalizes each word in STR.
+
+`trim(TRIM)'
+     String beautifier.  Trims extra spaces and non-ASCII characters
+     from STR.
+
+`find(STR1, STR2, POS)'
+     Returns the index at or beyond POS where STR2 appears in STR1 (1).
+     If STR2 does not appear at or beyond POS, 0 is returned.
+
+`substr(POS1, POS2, STR)'
+     Extracts the substring from index POS1 through POS2 of STR.
+     Positive indices, starting with 1, count from the start of the
+     string, and negative indices (from -1) count from the end of the
+     string.  POS1 must occur at or before POS2.
+
+`mid(STR, POS, LEN)'
+     Extracts the substring of LEN characters starting at POS in STR.
+     The substring is truncated if it begins or extends beyond the end
+     of STR(2).
+
+`edit(STR, POS1, POS2)'
+     Deletes the substring from POS1 through POS2 of STR.  Negative
+     indices can be used as with `substr'.
+
+`repeat(STR, NUM)'
+     Returns a string of NUM concatenations of STR with itself; e.g.,
+     `repeat("foo", 2)' returns `"foofoo"'.
+
+`concat(VR1, ...)'
+     Returns the concatenation of all its arguments.  An argument may
+     be a range, in which case the cell values in the range are
+     concatenated.
+
+   ---------- Footnotes ----------
+
+   (1) Actually, due to a bug in version 1.5 STR1 is searched for in
+STR2.
+
+   (2) In version 1.5 this function counts indices from 0 instead of 1
+as with other string functions; this is probably a bug.
+
+
+File: oleo.info,  Node: Structural functions,  Next: Search functions,  Prev: String functions,  Up: Functions
+
+Structural Functions
+====================
+
+   These functions return information about a cell or range of cells.
+Some of them are in the `cells' package; if Oleo is compiled with
+`-DUSE_DLD', the cells package must be loaded first.
+
+`row()'
+`col()'
+     The row or column of the cell the expression is in.
+
+`rows(RNG)'
+`cols(RNG)'
+     The number of rows or columns in RNG.
+
+`my(KEY)'
+     Returns information about the cell containing the expression
+     according to the key string KEY.  Valid values for KEY are:
+
+    `"row"'
+          The cell's row address (an integer).
+
+    `"column"'
+          The cell's column address.
+
+    `"width"'
+          Width of the cell.
+
+    `"lock"'
+    `"protection"'
+          `"locked"' or `"unlocked"'.
+
+    `"justify"'
+    `"alignment"'
+          `"left"', `"right"', `"center"' or `"default"'.
+
+    `"format"'
+    `"fmt"'
+          `"default"', `"user-1"', etc.
+
+    `"type"'
+          The type of the value of the cell: `"error"', `"boolean"',
+          `"float"', `"integer"', `"null"', `"unknown"', etc.
+
+    `"formula"'
+          A string of the cell's current formula.
+
+    `"value"'
+          The cell's current value.
+
+     Any other value generates `#BAD_INPUT'.
+
+`curcell(KEY)'
+     Same as `my()', but returns information about the cell where the
+     cell-cursor is.
+
+`cell(ROW, COL, KEY)'
+     Same as `my()', but for the cell at (ROW, COL).  Be careful about
+     the indices in `a0' mode.  The cell in row 2, column 1 is `A2',
+     not `B1'.
+

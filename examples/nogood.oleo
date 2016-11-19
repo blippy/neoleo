@@ -1,0 +1,10 @@
+# This file was (not) created by GNU Oleo
+# format 2.0 (requires Oleo 1.6.14 or higher)
+#
+# It is an example file that should generate an error while reading.
+# The last line of this file is incomplete, on purpose.
+#
+F;DGFL8
+O;auto;background;a0;ticks 1
+C;c1;r1;E1 / 2;K0.5
+C;r2;E3 / 3;

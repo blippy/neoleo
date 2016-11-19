@@ -1,0 +1,418 @@
+@node Style, Multiple Windows, Making changes, Top
+@chapter Style
+
+@ifhtml
+<A NAME="HelpFormats">
+@end ifhtml
+
+It is often important to change how the value of a cell is displayed.
+It is possible to change the height and width of a cell, the font used
+in a cell, the alignment and protection of a cell, and the formats
+used to represent numbers.  Entire rows and columns can be hidden.
+
+@menu
+* Alignment::                   Aligning cell entries
+* Formats for numbers::         Formats for numbers
+* Cell Height ::                Changing the height of cells
+* Width of Cells::              Changing the width of cells
+* Hidden Rows and Columns::     Creating hidden rows and columns
+* Protection::                  Protecting cells
+* Fonts (in X11)::              Working with X11 Fonts
+@end menu
+
+@node Alignment
+@section Alignment
+An entry in a cell can be aligned on the left, on the right, or
+centered.   All cells in a region can have their alignment set.
+The default is left alignment.
+
+@table @kbd
+@item M-a a
+Change the alignment of the cell under the cursor.  The options are 
+@kbd{def} (the default), @kbd{l} (left), @kbd{r} (right), and @kbd{c}
+(center).
+(@code{set-cell-alignment}).
+@cmindex set-cell-alignment
+@item M-r a
+Change the alignment of a region.  The options are 
+the same as above.
+(@code{set-region-alignment}).
+@cmindex set-region-alignment
+@item M-d a
+Change the default alignment.  The options are 
+@kbd{l} (left), @kbd{r} (right), and @kbd{c}
+(center).
+(@code{set-default-alignment}).
+@cmindex set-default-alignment
+@end table
+@kindex  M-d a
+@kindex  M-r a
+@kindex  M-a a
+
+@node Formats for numbers
+@section Formats for numbers
+Oleo can display numbers in a variety of formats.  In addition to
+sixteen user-defined formats, you can choose from a variety of simple
+formats.  You can set the format for a cell, for a region, and change
+the default format.
+
+@table @kbd
+@item M-a f
+Change the format of the cell under the cursor.  The options include 
+@var{integer}, @var{float}, @var{hidden}, @var{graph}, @var{general.X},
+@var{dollar.X}, @var{comma.X}, @var{comma.X}, @var{percent.X},
+@var{fixed.X}, @var{exponent.X},  where @var{X} is an integer from 0 to
+14, or the word @var{float}.
+(@code{set-cell-format}).
+@cmindex set-cell-format
+@item M-r f
+Change the format of a region.  The options are 
+the same as above.
+(@code{set-region-format}).
+@cmindex set-region-format
+@item M-d f
+Change the default format.  The options are as above.
+(@code{set-default-format}).
+@cmindex set-default-format
+@end table
+@kindex  M-d f
+@kindex  M-r f
+@kindex  M-a f
+
+There are some examples following a description of the simple and
+general formats.
+
+@subsection Simple Formats
+
+@table @code
+@item integer
+The number is rounded to an integer before being displayed.
+
+@item float
+The number is displayed in normal, everyday notation, using
+whatever precision is needed (or fits).
+
+@item hidden
+The number is not displayed.  It is recalculated, etc as
+normal, but the cell is displayed as if it were empty.
+
+@item graph
+The number is displayed as a small graph.  If the number is
+close to zero, it will be displayed as '0', If it is positive,
+a row of '+'-es is displayed.  If it is negative, a row of
+'-'-es is displayed.  For instance, the number 4.234 is displayed as 
+@var{++++}, and the number -5.2 is displayed as @var{-----}.  
+If the number has absolute value greater than 70 @footnote{is this
+fixed?}, then a string of 35 #'s is displayed.
+@end table
+
+
+@subsection General Formats
+
+The following formats require a precision.  The precision may be a number
+from zero to 14, in which case that number of digits will always be displayed
+after the decimal point (zero-padding or rounding the number as needed), or
+the precision may be 'float', in which case Oleo will use as many digits as
+necessary.  
+
+@table @code
+
+@item general		
+This uses either normal or scientific notation, depending on
+the magnitude of the number and the width of the column.
+
+@item dollar
+Positive values are preceeded by '$', (so 3 is displayed as
+'$3').  Negative values are parenthesized (so -3 is displayed
+as '($3)'), and all large values have a ',' every three
+digits (so 1000 is displayed as '$1,000').
+
+@item comma
+This is like the dollar option, but without the '$'.  Positive numbers
+are presented normally, and negative ones are in parenthesis.  
+
+@item percent
+The value is multiplied by 100, and is displayed with a
+trailing '%'.  Thus .01 displays as '1%', while 1 displays as
+'100%'.
+
+@item fixed
+The number is displayed in normal, everyday notation, using
+the precision specified.  'fixed.float' is the same as
+'float'.  'fixed.0' is the same as 'integer'.
+
+@item exponent
+The number is displayed in scientific notation.
+@end table
+
+
+
+@subsection StyleExamples
+
+Suppose that a cell contains @samp{1234.567}.  If we set the format of
+the cell to the left hand column, the cell is displayed as in the right
+hand column:
+
+@example
+           integer          1234
+           hidden
+           general.float    1234.567
+           general.1        1234.6
+           dollar.0       $1,234
+           dollar.2       $1,234.57
+           comma.1         1,234.6
+           percent.0      123457%
+           fixed.1          1234.6
+           exponent.2        123e+03
+@end example
+
+
+
+
+
+@subsection User Defined Formats
+
+
+You can define up  to sixteen user-defined numeric formats.
+The current parts of a format are in the table below.
+We use the definition of the 'dollar' format for an example.
+@footnote{this does not appear to be implemented}
+
+@table @code
+
+@item	Example:	
+                What it is:
+@item	$		
+                What to print before positive numbers.
+@item	(		
+                What to print before negative numbers.
+@item			
+                What to print after positive numbers.
+@item	)		
+                What to print after negative numbers.
+@item	$0		
+                What to print if the number is zero.
+@item	,		
+                What to print between the thousands and the 	hundreds, etc.
+@item			.		
+                What to print for a decimal point.
+
+@item	0-14 
+@itemx float	
+The number of digits to print after the decimal point.
+'float' means use however many digits are needed, or
+however many will fit, whichever is less. . .
+
+@item number
+What to multiply the value by before printing.
+Most often this will be one, but it might be 100 if
+you're printing percentages, or .000001 if you're
+printing in megabucks.  (Beware of overflow!)
+
+@end table
+
+Some advice: do not use digits for the headers, trailers, the comma, or
+the decimal point 
+symbol.  Using digits will confuse the internal routines and produce
+incomprehensible results. . .  @footnote{Should the set-user-format command check its
+input for validity?}
+
+
+@node Cell Height 
+@section Changing the height of cells
+The height of all the cells in a row is the same.  The default height of a
+row is 1.  A row of height 0 is not displayed, but is still updated just
+as if it were visible.
+@footnote{what is the unit of height}
+
+@table @kbd
+@item M-a h
+Change the height of the row containing the cell cursor.  The options are 
+a non-negative integer, or @kbd{def}.
+(@code{set-cell-height}).
+@cmindex set-cell-height
+@item M-r h
+Change the height of all cells in a region.  The options are 
+the same as above.
+(@code{set-region-height}).
+@cmindex set-region-height
+@item M-d h
+Change the default height to a positive integer.
+(@code{set-default-height}).
+@cmindex set-default-height
+@end table
+@kindex  M-d h
+@kindex  M-r h
+@kindex  M-a h
+
+@node Width of Cells
+@section Changing the width of cells
+The width of all the cells in a column is the same.  The default width of a
+column is 11.  @footnote{is it?}  A column of width 0 is not displayed.
+
+@table @kbd
+@item M-a w
+Change the width of the column containing the  cell cursor.  The options are 
+a non-negative integer, or @kbd{def}.
+(@code{set-cell-width}).
+@cmindex set-cell-width
+@item M-r w
+Change the width of all cells in a region.  The options are 
+the same as above.
+(@code{set-region-width}).
+@cmindex set-region-width
+@item M-d w
+Change the default width to a positive integer.
+(@code{set-default-width}).
+@cmindex set-default-width
+@end table
+@kindex  M-d w
+@kindex  M-r w
+@kindex  M-a w
+
+@node Hidden Rows and Columns
+@section Creating Hidden Rows and Columns
+Rows and columns of the spreadsheet can be hidden, so that they do not
+appear on the screen.  They continue to exist, and are updated when
+necessary.  The following  hides the third column in @code{a0} mode
+
+@example
+           M-x set-region-width @key{RET} @var{C1} @key{RET} 0 @key{RET}
+@end example
+
+or more simply,
+
+@example
+           M-r w @var{C1} @key{RET} 0 @key{RET}
+@end example
+
+
+
+ This  hides the third row in @code{noa0} mode
+
+@example
+           M-r h @key{RET} @var{R3C1} @key{RET} 0 @key{RET}
+@end example
+
+If the cell cursor is located at any cell in the third column, then we
+can  hide the third column column:
+@example
+           M-a w  0 @key{RET}
+@end example
+
+Similarly, if the cell cursor is in the fourth row, we can hide the
+fourth row:
+@example
+           M-a h  0 @key{RET}
+@end example
+
+To make a row visible again, just set its height to some positive value.
+
+@node Protection
+@section Protection
+A cell can be protected.  For example, if cell @code{E5} is protected,
+and you attempt to enter data into it, you are  not allowed to.  Instead, you
+get the message
+@example
+        Cell C5 is locked.
+@end example
+Moreover, all the cells in a region can be protected.  It is also
+possible to make 
+the default protection "locked", so that all cells are 
+automatically locked.
+
+The default is that all cells are unlocked.
+@table @kbd
+@item M-a p
+Change the protection of a cell.  The options are 
+@kbd{def} (the default), @kbd{p} (protect, or lock), and @kbd{u}
+(unprotect, or unlock).
+(@code{set-cell-protection}).
+@cmindex set-cell-protection
+@item M-r p
+Change the protection of a region.  The options are 
+the same as above.
+(@code{set-region-protection}).
+@cmindex set-region-protection
+@item M-d p
+Change the default protection.  The options are 
+@kbd{p} (protect, or lock), and @kbd{u}
+(unprotect, or unlock).
+(@code{set-default-protection}).
+@cmindex set-default-protection
+@end table
+@kindex  M-d p
+@kindex  M-r p
+@kindex  M-a p
+
+@node Fonts (in X11)
+@section Fonts (in X11)
+
+The default cell font is 12 point times-roman.
+The easiest way to specify a font is to use one of the built-in
+short-hand names.  These names are `fixed', `times', and `courier'.
+Optionally, these names can be followed by a scale.  The scale is the
+ratio of the default point size to the desired point size. For
+example, if the default font is a 10 point font, then `times 1.2'
+refers to a 12 point Times-Roman type font.
+
+@table @kbd
+@item M-a o
+        Use this command to set the font in a cell.  For instance, to
+set the current cell to @samp{times-roman} at 24pt, type
+@example
+        M-a o times @key{RET} 2.0  @key{RET}
+@end example
+Since the default size is 12pt, the 2.0 magnification factor makes the
+size 24 points. (@code{set-cell-font})
+@cmindex set-cell-font
+
+@item M-r o
+        Use this command to set the font in a region.  For instance, to
+set the range @samp{A1.E3} to @samp{courier} at 12pt, type
+@example
+        M-r o courier @key{RET} 1.0   @key{RET}
+@end example
+(@code{set-region-font})
+@cmindex set-region-font
+
+@item M-d o
+        Use this command to set the default font.  For instance, to
+set the range @samp{A1.E3} to @samp{fixed} at 12pt, type
+@example
+        M-r o fixed @key{RET} 1.0  @key{RET}
+@end example
+All cells whose font has not been specified have the default font, so
+changing this will change the font in the entire spreadsheet.
+(@code{set-default-font})
+@cmindex set-default-font
+
+@item M-x set-default-point-size
+        Set the default point size.  To set the default point size to
+10, type
+@example
+        M-x set-default-point-size @key{RET} 10  @key{RET}
+@end example
+(@code{set-default-point-size})
+@cmindex set-default-point-size
+
+
+@c
+@item M-x define-font-name
+@c         Define New short hand names for fonts.
+@c   Later, if a user uses a shorthand name in a font
+@c specification, the name is replace by the text of the definition.  For
+@c example,
+@c @example
+@c 	M-x define-font-name time *times-medium-r-* Times-Roman
+@c @end example
+
+@c Notice that the scale has been omitted.  That is so that
+@c specifications like `times 1.2' will be properly expanded.
+
+@end table
+@kindex  M-d o
+@kindex  M-r o
+@kindex  M-a o
+
+

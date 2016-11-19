@@ -1,0 +1,75 @@
+This is oleo.info, produced by makeinfo version 4.0 from oleo.texi.
+
+   This file documents Oleo, the GNU spreadsheet.
+
+   This file is part of GNU Oleo.
+
+   Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+
+
+File: oleo.info,  Node: Concept Index,  Prev: Options Index,  Up: Top
+
+Concept Index
+*************
+
+* Menu:
+
+* .oleorc:                               .oleorc file.
+* a0 mode:                               a0 mode.
+* Absolute references:                   Cell referencing.
+* Addressing cells:                      Cell referencing.
+* Boolean functions:                     Boolean functions.
+* Boolean values:                        Oleo values.
+* Business functions:                    Business functions.
+* Cells, information about:              Structural functions.
+* Command Line Options:                  Command Line Options.
+* Date and time functions:               Date functions.
+* Defining keyboard macros:              Keyboard Macros.
+* Error values:                          Error values.
+* Expressions:                           Expressions.
+* Extending:                             Gsl functions.
+* Functions:                             Functions.
+* Functions, business:                   Business functions.
+* Functions, date and time:              Date functions.
+* Functions, math:                       Math functions.
+* Functions, statistical:                Statistical functions.
+* Functions, string manipulation:        String functions.
+* Functions, structural:                 Structural functions.
+* GNU Scientific Library:                Gsl functions.
+* GSL functions:                         Gsl functions.
+* Infix expressions:                     Infix expressions.
+* Information about a cell:              Structural functions.
+* Input Defaults:                        Input Editing.
+* Keyboard macro:                        Keyboard Macros.
+* Math functions:                        Math functions.
+* Multiple windows in Oleo:              Multiple Windows.
+* noa0 mode:                             noa0 mode.
+* Options:                               Options.
+* Ranges:                                Cell referencing.
+* Referencing cells:                     Cell referencing.
+* Relative references:                   Cell referencing.
+* Saving keyboard macros:                Save Kbd Macro.
+* Scientific functions (GSL):            Gsl functions.
+* Searching a range of cells:            Search functions.
+* Selected window:                       Windows.
+* Statistical functions:                 Statistical functions.
+* String functions:                      String functions.
+* String values:                         Oleo values.
+* Time and date functions:               Date functions.
+* Windows in Oleo:                       Multiple Windows.
+
+

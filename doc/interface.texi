@@ -1,0 +1,169 @@
+@c \input texinfo    @c -*- texinfo -*-
+@c @defcodeindex cm
+@cindex Extending 
+
+@node Extending Oleo, Reporting Bugs, Functions, Top
+@chapter Extending the Oleo system
+
+
+
+@menu
+* New at functions::            Adding new at Functions
+@end menu
+
+@node New at functions,  , Extending Oleo, Extending Oleo
+@section Adding new at Functions
+
+It is easy to add new @@ functions.  Suppose that I want to add 
+a greatest common divisor function.  Here is a definition:
+@example
+int gcd(i,k)
+    int i,k;
+@{     
+  int c;
+  if ( i < 0 )  i = -i;
+  if ( k < 0 )  k = -k;
+  while ( k != 0 ) @{
+    c = k;
+    k = i % k;
+    i = c;
+  @}
+  return  i;
+@}
+@end example
+
+
+
+In Oleo, I would like to enter @code{@@gcd(6,20)}, and have the result
+@code{2} displayed.  The following files need to be changed or created:
+
+@table @file
+@item my-new-functions.c
+
+We will create a new class of functions called @var{int_funs}.  For
+simplicity, there is only one function, @code{gcd}, in this class, but
+there could be many more. In addition to the code given above for @var{gcd}, 
+we need an interface between Oleo and @var{gcd}.  
+@example
+static void
+do_gcd (p)
+     struct value *p;
+@{
+  int arg0 = p[0].Int;
+  int arg1 = p[1].Int;
+
+  p->Int = gcd (arg0,arg1);
+  p->type = TYP_INT;
+@}
+@end example
+
+Next, we need to give information about the members of this new class of
+functions.  The "II" refers to the two integer arguments.  For more
+examples, see @file{busi.c}.
+@example
+struct function int_funs[] =
+@{
+  @{C_FN2, X_A2, "II", do_gcd, "gcd"@},
+  @{0, 0, "", 0, 0@},
+@};
+@end example
+
+Oleo also (as of release 1.99.6) requires a function in each file to figure
+out how many new user accessible functions it contains.
+Look in busi.c for a simple example (init_busi_function_count) which will
+probably work for your new functions as well.
+As you can see the function simply takes information from the above array
+and offers it to another Oleo module.
+
+Finally, we need some standard headers and defines.  These are probably
+not all necessary.
+
+@example
+#include "funcdef.h"
+#include "sysdef.h"
+#include "global.h"
+#include "cell.h"
+#include "eval.h"
+#include "errors.h"
+
+struct value
+  @{
+    int type;
+    union vals x;
+  @};
+
+#define Float	x.c_d
+#define String	x.c_s
+#define Int	x.c_l
+#define Value	x.c_i
+#define Rng	x.c_r
+@end example
+
+
+@item forminfo.c
+
+It's polite to add information about new functions.  This information
+can be added in an appropriate place in @file{forminfo.c}:
+@example
+"gcd",
+"find gcd                       gcd(a,b)",
+""
+"The greatest common divisor of A and B.",
+0,
+@end example
+
+@item byte-compile.c
+
+The byte compiler needs to be told about the new class of functions.  
+We declare the new class of functions:
+@example
+extern struct function int_funs[];
+@end example
+and instruct the compiler to read them by adding the class to
+the appropriate structure.
+@example
+static struct function *__usr_funs[] =
+@{
+  date_funs,
+  busi_funs,
+  string_funs,
+  cells_funs,
+  int_funs,
+@};
+
+extern int init_int_function_count(void);
+
+static init_function_count init_function_counts[] = @{
+        &init_date_function_count,
+        &init_busi_function_count,
+        &init_string_function_count,
+        &init_cells_function_count,
+        &init_int_function_count
+        /* Add something here */
+@};
+
+@end example
+
+@item Makefile.am
+
+The file @file{my-new-functions.c} needs to be added to the list of
+source files. Editing the file src/Makefile.am and adding to the
+list of files named oleo_SOURCES will do :
+
+@example
+oleo_SOURCES = parse.y byte-compile.c eval.c ref.c \
+ decompile.c sort.c regions.c utils.c lists.c\
+ io-term.c io-utils.c io-x11.c window.c io-edit.c\
+ line.c key.c format.c funcs.c \
+ hash.c ir.c io-curses.c font.c display.c init.c \
+ sylk.c oleofile.c sc.c list.c busi.c string.c cells.c \
+ cmd.c basic.c args.c \
+ stub.c input.c info.c help.c \
+ graph.c plot.c \
+ forminfo.c posixtm.y date.c xrdb.c \
+ $(GUI) $(XBSRC) $(MYSQL) \
+ print.c postscript.c pcl.c epson.c prtext.c \
+ my-new-functions.c
+@end example
+@end table
+

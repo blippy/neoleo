@@ -1,0 +1,989 @@
+@c Oleo cell functions, included into oleo.texi    -*- texinfo -*-
+ 
+@node   Functions, Extending Oleo, Keymaps, Top
+@chapter Functions
+@cindex Functions
+
+  Cell functions take a comma-separated list of arguments in
+parentheses, and return a value based on those values.  In addition to
+the standard value types, some arguments may be cell ranges.
+
+@menu
+* Boolean functions::           and, or, not, etc.
+* Math functions::              Elementary mathematical functions
+* String functions::            String manipulation functions.
+* Structural functions::        Info about the structure of the spreadsheet.
+* Search functions::            Search for cells by value, string, etc.
+* Business functions::          Business stuff.
+* Date functions::              Time and date manipulation.
+* Gsl functions::               GSL (GNU Scientific Library) functions.
+@end menu
+
+
+@node   Boolean functions, Math functions, Functions, Functions
+@section Boolean Functions
+@cindex Boolean functions
+
+@ifhtml
+<A NAME="HelpBooleanFunctions">
+@end ifhtml
+
+  Boolean functions return either a @code{#TRUE} or @code{#FALSE} value.
+Most arguments (those labelled @var{bool}) are also boolean.  If these
+arguments have any other value instead, the function returns
+@code{#NON_BOOL} as an error.
+
+@table @code
+@item if(@var{bool}, @var{val1}, @var{val2})
+@findex if
+  If @var{bool} is @code{#TRUE}, then @var{val1} is returned.  If
+@var{bool} is @code{#FALSE}, @var{val2} is returned.
+@item and(@var{bool1}, @var{bool2})
+@findex and
+  Returns @code{#TRUE} if and only if both arguments are @code{#TRUE},
+otherwise returns @code{#FALSE}.
+@item or(@var{bool1}, @var{bool2})
+@findex or
+  Returns @code{#TRUE} if either or both arguments are @code{#TRUE},
+otherwise returns @code{#FALSE}.
+@item not(@var{bool})
+  Returns @code{#TRUE} if @var{bool} is @code{#FALSE}; @code{#FALSE} if
+@code{#TRUE}.
+
+
+@findex iserr
+@findex isnum
+@item iserr(@var{val})
+   returns @code{#TRUE} if @var{val} is an error, @code{#FALSE}
+otherwise.  
+@item isnum(@var{val})
+ @code{#TRUE} if @var{val} is a number, or can be automatically
+converted to a number.  Thus, @code{isnum("12")} is @code{#TRUE}, while
+@code{isnum("foobar")} is @code{#FALSE}.
+  
+@end table
+
+@page
+@node   Math functions, String functions, Boolean functions, Functions
+@section Elementary mathematical functions 
+@cindex Math functions
+@cindex Functions, math
+
+@ifhtml
+<A NAME="HelpMathFunctions">
+@end ifhtml
+
+@menu
+* General math functions::              log, sqrt, etc.
+* Trigonometric functions::             Trigonometric functions
+* Statistical functions::               Statistical functions
+@end menu
+
+@node   General math functions, Trigonometric functions, Math functions, Math functions
+@subsection General Math Functions
+
+For these these functions, the argument @var{x} can be a number (integer
+or floating point), a reference to a cell containing an integer, or a
+reference to a cell containing a quoted integer.  Thus, if cell
+@footnote{how do I make a reference to a cell?}
+@code{A2} contains @code{"-12.34"},
+then all of the following expressions compute the absolute
+value of -12.34:  
+@example
+               @@abs(-12.34)
+               @@abs(A2)
+               @@abs(@@cell(2,1,"value"))
+@end example
+
+
+@table @code
+@item abs(@var{x})
+@findex abs
+  Returns the absolute value of @var{x}.
+
+@item negate(@var{x})
+@findex negate
+  Returns  -@var{x}.
+
+@item int(@var{x}) 
+@code{int()} converts @var{x} to an integer by truncating
+the fractional part.  For instance,
+@example
+           int(2.3)     @result{}   2
+           int(-2.3)    @result{}  -2
+@end example
+
+@item ceil(@var{x})
+  @code{ceil()} replaces @var{x} by the least integer greater than or
+equal to @var{x}.
+@example
+           ceil(2.3)     @result{}   3
+           ceil(-2.3)    @result{}  -2
+@end example
+
+@item floor(@var{x})
+ @code{floor()} replaces @var{x} by the largest integer less than or
+equal to @var{x}.
+@example
+           floor(2.3)     @result{}   2
+           floor(-2.3)    @result{}  -3
+@end example
+
+@findex int
+@findex ceil
+@findex floor
+
+@item log(@var{x})
+The natural log  of @var{x}.  If @var{x} is negative, the result is 
+@samp{#MINUS_INFINITY}, and the cell displays is @samp{#OUT_OF_RANGE}.
+@findex log
+
+@item exp(@var{x})
+The  exponential of @var{x}
+@findex exp
+
+@item log10(@var{x})
+ The log base 10 of @var{x}.  If @var{x} is negative, the result is 
+@samp{#MINUS_INFINITY}, and the cell displays is @samp{#OUT_OF_RANGE}.
+@findex log10
+
+@item sqrt(@var{x})
+  The square root of @var{x}.  If @var{x} is negative, the error message
+is @samp{#OUT_OF_RANGE}.
+@findex sqrt
+
+@item rnd(@var{x})
+@findex rnd
+  Generates a random integer from 0 to @var{x}-1.  This is updated
+regularly. This can get annoying. To change the time that it is updated
+from 1 second to 10 seconds, type
+@example
+        @kbd{M-x} set-option  @key{RET} ticks 10  @key{RET}
+@end example
+
+
+@item fixed(@var{x}, @var{places})
+  Rounds @var{x} to @var{places} decimal places.
+@findex fixed
+@end table
+
+
+@node   Trigonometric functions, Statistical functions, General math functions, Math functions
+@subsection Trigonometric Functions
+
+@ifhtml
+<A NAME="HelpTrigonometricFunctions">
+@end ifhtml
+
+@table @code
+@item pi()
+  Constant; 15 decimals of 
+@ifinfo
+pi,
+@end ifinfo
+@tex
+$\pi$,
+@end tex
+3.141592653589793.
+@item sin(@var{ang}) 
+  The sine of angle @var{ang} (in radians).
+@findex sin
+
+@item cos(@var{ang})
+  The  cosine of angle @var{ang} (in radians).
+@findex cos
+
+@item tan(@var{ang})
+  The  tangent of angle @var{ang} (in radians).
+@findex tan
+
+@item asin(@var{val})
+@findex asin
+  The arc sine (in radians) of @var{val}.
+
+@itemx acos(@var{val})
+@findex acos
+  The arc  cosine (in radians) of @var{val}.
+
+@item atan(@var{val})
+@findex atan
+  The arc  tangent (in radians) of @var{val}.
+
+@item dtr(@var{deg})
+@findex dtr
+  @code{dtr} converts degrees to radians.
+
+@item rtd(@var{rad})
+@findex rtd
+  @code{rtd} converts radians  to degrees.
+
+@item atan2(@var{y}, @var{x})
+  Expanded arc tangent; returns the arc tangent (in radians) of
+@w{@var{y} / @var{x}}.  The range of @code{atan2} is
+@ifinfo
+(-pi..pi).
+@end ifinfo
+@tex
+$\langle -\pi,\pi \rangle$.
+@end tex
+The quadrant of the angle returned is determined by the quadrant of the
+point (@var{x}, @var{y}).
+ 
+@item hypot(@var{x}, @var{y})
+  Returns the length of the hypotenuse of a triangle with sides @var{x}
+and @var{y}; i.e., @w{@code{sqrt(@var{x}*@var{x} + @var{y}*@var{y})}}.
+(@pxref{General math functions})
+@end table
+
+
+@node   Statistical functions,  , Trigonometric functions, Math functions
+@subsection Statistical Functions
+@cindex Statistical functions
+@cindex Functions, statistical
+
+@ifhtml
+<A NAME="HelpStatisticalFunctions">
+@end ifhtml
+
+  These functions take a variable number of arguments, labeled
+@var{vr1}, @var{vr2}, etc.  Each of these values can be a
+numeric type or a range.  If the value is a range, the values of all
+numeric cells in that range are used (strings, empty cells, etc. are
+ignored).  Values can also be strings that are easily convertible to
+numbers; i.e., @code{"123"}.
+
+  If none of the arguments include valid numbers, then the value of the
+function is @code{#NO_VALUES}.  To ensure that the expression doesn't
+return an error in such cases, you can provide a default value as an
+extra argument (e.g., @code{@@sum(0,r1:10c1:10)}).
+
+ The spreadsheet below is used for examples of the statistical
+functions.
+
+@example
+
+             | Col B | Col C | Col D |
+       ------|-------|-------|-------|
+       Row 2 |   2   |   3   |   5   |
+       ------|-------|-------|-------|
+       Row 3 |   8   |   4   |   6   |
+       ------|-------|-------|-------|
+       Row 4 |   9   |   1   |   3   |
+       ------|-------|-------|-------|
+       Row 5 |   4   |   7   |   0   |
+       ------|-------|-------|-------|
+       
+@end example
+
+
+@table @code
+@item sum(@var{vr1}, ...)
+@findex sum
+  The sum  of the given values.  Each value can be a numeric
+value or a range.
+@table @kbd
+@item 18
+        @@sum(B2.B5)
+@item 20
+        @@sum(B2.B5,2)
+@item 25
+        @@sum(B2.B5,C4.C5)
+@end table
+
+
+@item prod(@var{vr1}, ...)
+@findex prod
+  The product  of the given values.  Each value can be a numeric
+value or a range.
+@table @kbd
+@item 512
+        @@prod(B2.B5)
+@item 1024
+        @@prod(B2.B5,2)
+@item 0
+        @@prod(B2.B5,C4.C5)
+@end table
+
+
+@item count(@var{vr1}, ...)
+@findex count
+   The number of numeric values found among the arguments. In the
+example, assume that the first row and column are not numbers.
+@table @kbd
+@item 4
+        @@count(B2.B5)
+@item 4
+        @@count(B2.B5,A1.D1)
+@item 6
+        @@count(B2.B5,C4.C5)
+@end table
+
+
+
+
+@item max(@var{vr1}, ...)
+@findex max
+   The maximum  value of all the arguments.  Non-numeric values are ignored.
+@table @kbd
+@item 8
+        @@max(B2.B5)
+@item 8
+        @@max(B2.B5,A1.D1)
+@item 8
+        @@max(B2.B5,C4.C5)
+@end table
+
+
+@item min(@var{vr1}, ...)
+@findex min
+   The  minimum value of all the arguments.
+@table @kbd
+@item 2
+        @@min(B2.B5)
+@item 2
+        @@min(B2.B5,A1.D1)
+@item 1
+        @@min(B2.B5,C4.C5)
+@end table
+
+@item avg(@var{vr1}, ...)
+@findex avg
+  The average of the given values.  The sum of the numerical values in
+the arguments is divided by the number of numeric values, not by the
+number of cells.
+@table @kbd
+@item 4.5
+        @@avg(B2.B5)
+@item 4.5
+        @@avg(B2.B5,A1.D1)
+@item 4.333
+        @@avg(B2.B5,C4.C5)
+@end table
+
+@item std(@var{vr1}, ...)
+@findex std
+  The @emph{sample} standard deviation.  To get the population standard
+deviation, use @code{@@sqrt(@@var(...))}.
+@table @kbd
+@item 2.51
+        @@std(B2.B5)
+@item 2.51
+        @@std(B2.B5,A1.D1)
+@item 2.73
+        @@std(B2.B5,C4.C5)
+@end table
+
+
+@item var(@var{vr1}, ...)
+  The population variance of the arguments.  To get the sample variance,
+use @code{@@std(...)^2}.
+@findex var
+@table @kbd
+@item 4.75
+        @@var(B2.B5)
+@item 4.75
+        @@var(B2.B5,A1.D1)
+@item 6.22
+        @@var(B2.B5,C4.C5)
+@end table
+
+@end table
+
+
+@page
+@node   String functions, Structural functions, Math functions, Functions
+@section String Functions
+@cindex String functions
+@cindex Functions, string manipulation
+
+@ifhtml
+<A NAME="HelpStringFunctions">
+@end ifhtml
+
+  Strings indexes start with 1 for the first character.  Indices less
+than 1 or greater than the length of the corresponding string will
+generate an @code{#OUT_OF_RANGE} error return, unless otherwise noted.
+
+  These functions are in the `string' package.  If Oleo is compiled with
+@samp{-DUSE_DLD}, the string package must be loaded before these
+functions can be used.  If a spreadsheet that uses these functions is
+loaded before the string package is loaded, things will fail
+(silently!).  This is a bug.
+
+@table @code
+@item len(@var{str})
+@findex len
+  Returns the number of characters in @var{str}.
+@item strupr(@var{str})
+@findex strupr
+  Converts @var{str} to all upper  case.
+@item strlwr(@var{str})
+@findex strlwr
+  Converts @var{str} to all  lower case.
+@item strcap(@var{str})
+@findex strcap
+  Capitalizes each word in @var{str}.
+@item trim(@var{trim})
+@findex trim
+  String beautifier.  Trims extra spaces and non-ASCII characters from
+@var{str}.
+@item find(@var{str1}, @var{str2}, @var{pos})
+@findex find
+  Returns the index at or beyond @var{pos} where @var{str2} appears in
+@var{str1} @footnote{Actually, due to a bug in version 1.5 @var{str1} is
+searched for in @var{str2}.}.  If @var{str2} does not appear at or
+beyond @var{pos}, 0 is returned.
+@item substr(@var{pos1}, @var{pos2}, @var{str})
+@findex substr
+  Extracts the substring from index @var{pos1} through @var{pos2} of
+@var{str}.  Positive indices, starting with 1, count from the start of
+the string, and negative indices (from -1) count from the end of the
+string.  @var{pos1} must occur at or before @var{pos2}.
+@item mid(@var{str}, @var{pos}, @var{len})
+@findex mid
+  Extracts the substring of @var{len} characters starting at @var{pos} in
+@var{str}.  The substring is truncated if it begins or extends beyond
+the end of @var{str}@footnote{In version 1.5 this function counts
+indices from 0 instead of 1 as with other string functions; this is
+probably a bug.}.
+@item edit(@var{str}, @var{pos1}, @var{pos2})
+@findex edit
+  Deletes the substring from @var{pos1} through @var{pos2} of @var{str}.
+Negative indices can be used as with @code{substr}.
+@item repeat(@var{str}, @var{num})
+@findex repeat
+  Returns a string of @var{num} concatenations of @var{str} with itself;
+e.g., @code{repeat("foo", 2)} returns @code{"foofoo"}.
+@item concat(@var{vr1}, ...)
+@findex concat
+  Returns the concatenation of all its arguments.  An argument may be a
+range, in which case the cell values in the range are concatenated.
+@end table
+
+
+@page
+@node   Structural functions, Search functions, String functions, Functions
+@section Structural Functions
+@cindex Information about a cell
+@cindex Cells, information about
+@cindex Functions, structural
+
+@ifhtml
+<A NAME="HelpStructuralFunctions">
+@end ifhtml
+
+  These functions return information about a cell or range of cells.
+Some of them are in the `cells' package; if Oleo is compiled with
+@samp{-DUSE_DLD}, the cells package must be loaded first.
+
+@table @code
+@item row()
+@itemx col()
+@findex row
+@findex col
+  The row or column of the cell the expression is in.
+@item rows(@var{rng})
+@itemx cols(@var{rng})
+@findex rows
+@findex cols
+  The number of rows or columns in @var{rng}.
+@item my(@var{key})
+@findex my
+  Returns information about the cell containing the expression according
+to the key string @var{key}.  Valid values for @var{key} are:
+
+@c should this be @code or @samp?
+@table @code
+@item "row"
+    The cell's row address (an integer).
+@item "column"
+    The cell's column address.
+@item "width"
+    Width of the cell.
+@item "lock"
+@itemx "protection"
+    @code{"locked"} or @code{"unlocked"}. 
+@item "justify"
+@itemx "alignment"
+    @code{"left"}, @code{"right"}, @code{"center"} or @code{"default"}.
+@item "format"
+@itemx "fmt"
+    @code{"default"}, @code{"user-1"}, etc.
+@item "type"
+    The type of the value of the cell: @code{"error"}, @code{"boolean"},
+@code{"float"}, @code{"integer"}, @code{"null"}, @code{"unknown"}, etc.
+@item "formula"
+    A string of the cell's current formula.
+@item "value"
+    The cell's current value.
+@end table
+
+Any other value generates @code{#BAD_INPUT}.
+@item curcell(@var{key})
+@findex curcell
+  Same as @code{my()}, but returns information about the cell where the
+cell-cursor is.
+@item cell(@var{row}, @var{col}, @var{key})
+@findex cell
+  Same as @code{my()}, but for the cell at (@var{row}, @var{col}).  Be
+careful about the indices in @code{a0} mode.  The cell in row 2, column
+1 is @code{A2}, not @code{B1}.
+@end table
+
+
+@node   Search functions, Business functions, Structural functions, Functions
+@section Search Functions
+@cindex Searching a range of cells
+
+@ifhtml
+<A NAME="HelpSearchFunctions">
+@end ifhtml
+
+  These functions search for a value or string in a range of cells, and
+return the index of the first cell that matches.  Cells are numbered
+from 1 in column-major order; e.g., in the range @code{r1:2c1:3} cell
+@code{r1c1} is index 1, cell @code{r2c1} is 2, cell @code{r1c2} is 3,
+etc.
+
+@table @code
+@item member(@var{rng}, @var{val})
+@findex member
+  Returns the index of the first cell in @var{rng} that contains value
+@var{val}, or 0 if no cells contain it.  @var{val} may be an error
+value. 
+@item smember(@var{rng}, @var{str})
+@findex smember
+  Search for a substring.  Returns the index of the first cell in
+@var{rng} that is a substring of @var{str}, or 0 if no cells are
+contained in @var{str}.  If @var{str} is empty, it matches empty cells
+as well @footnote{An empty cell is a cell with no value; a cell with an
+empty @emph{string} value (@code{""}) would match anyway, since an empty
+string is a substring of an empty string.}.
+@item members(@var{rng}, @var{str})
+@findex members
+  Like @code{members()}, but vice-versa: matches the first cell with a
+substring of @var{str} (i.e., @var{str} is contained in the cell).  If
+@var{str} is empty, empty cells are still ignored (unlike
+@code{members()}).
+@item pmember(@var{rng}, @var{str})
+@itemx memberp(@var{rng}, @var{str})
+@findex pmember
+@findex memberp
+  Same as @code{smember()} and @code{members()}, respectively, but these
+search for an @emph{initial} string @var{str} of the cells in @var{rng}.
+@item index(@var{rng}, @var{index})
+@itemx index(@var{rng}, @var{rowoffset}, @var{coloffset})
+@findex index
+  The first form returns the contents of the cell at index @var{index}
+in @var{rng}.  The second form returns the cell in @var{rng} that is
+@var{rowoffset} rows and @var{coloffset} columns from the upper left.
+@item oneof(@var{choice}, @var{val1}, ...)
+@findex oneof
+  Case expression.  Returns @var{val1} if @var{choice} is 1, the next
+value if 2, etc.  If @var{choice} is not a valid integer in the
+appropriate range, @code{#OUT_OF_RANGE} is returned.  If no value
+arguments are supplied, @code{#NO_VALUES} is returned.  Note that
+arguments must be values; ranges are not allowed.
+@end table
+
+  These functions are used to index into a table of entries:
+
+@table @code
+@item hlookup(@var{rng}, @var{num}, @var{rowoffset})
+@findex hlookup
+  Scans the top row of @var{rng} looking for a number which is greater
+than @var{num}, then returns the value in the cell that is
+@var{rowoffset} rows down from the top of the range.
+@item vlookup(@var{rng}, @var{num}, @var{coloffset})
+@findex vlookup
+  Like @code{vlookup()}, but vertically: scans the first column of
+@var{rng} for a value greater than @var{num}, and returns the cell value
+@var{coloffset} columns to the right.
+@item vlookup_str(@var{rng}, @var{str}, @var{coloffset})
+@findex vlookup_str
+  Like @code{vlookup()}, but looks for string @var{str}.
+@end table
+
+
+@page
+@node   Business functions, Date functions, Search functions, Functions
+@section Business Functions
+@cindex Business functions
+@cindex Functions, business
+
+@ifhtml
+<A NAME="HelpBusinessFunctions">
+@end ifhtml
+
+Functions for various business-related calculations.  Rates are expressed as
+exactly, i.e. don't expect @samp{10} to mean @var{10%}, but rather use
+@samp{0.10}.  The units for @var{term} are payment periods.  Thus, if you want
+to calculate any of the following using, for example, monthly componunding, you
+will want @samp{pmt(p, r/12, t*12)}, where @var{t} is in years.
+
+@table @code
+@item pmt(@var{p}, @var{r}, @var{term})
+@findex pmt
+  Payment per period for a loan of principal @var{p} at rate @var{r} for
+  @var{term} payments, assuming a fully amortizing loan which compounds
+  at the payment rate.
+@item pv(@var{pmt}, @var{r}, @var{term})
+@findex pv
+  Present value of an investment that pays @var{pmt} at the end of each
+  of @var{term} periods with a discount (interest) rate of @var{r}.
+@item npv(@var{rng}, @var{r})
+@findex npv
+  Net present value of an investment which will pay uneven payments.  The term
+  is calculated from the number of cells in range @var{rng}, with the first
+  cell corresponding to @var{t=0} (i.e., assuming a beginning of year paymest
+  stream).  Entries in the range can be positive or negative, corresponding to
+  receipts or payments, respectively.
+@item irr(@var{rng}, @var{guess})
+@findex irr
+  Internal rate of return.  Given a range of cells corresponding to
+  uneven periodic payments, calculate the rate @var{r} such that
+  @code{npv(rng,r)==0}.  This function can be multivalued when entries
+  in the range change sign more than once, and hence returns @code{#BAD_INPUT}
+  if it fails to converge.  Argument @var{guess} helps the function return
+  more quickly, but is not critical.
+@item fmrr(@var{rng}, @var{safe}, @var{reinvest}, @var{reinvmin})
+@findex fmrr
+  Financial management rate of return.  This function attempts to be a more
+  encompassing and consistent version of the internal rate of return, which
+  ignores the disposition of intermediate cash in- and outflows.  The
+  @code{fmrr} function pulls back negative values to the nearest positive ones
+  at the @var{safe} rate (e.g. certificate of deposit rate), and pushes
+  forward all outflows to the end of the period as specified by @var{rng}.
+  These outflows generate income at the @var{reinvest}ment rate if they
+  accumulate to be over @var{reinvinmin}, otherwise at the @var{safe} rate.
+@item fv(@var{pmt}, @var{r}, @var{term})
+@findex fv
+  Future value of an annuity that pays @var{pmt} at the end of each
+  of @var{term} periods assuming a discount rate of @var{r}.
+@item rate(@var{fut}, @var{pres}, @var{term})
+@findex rate
+  Interest rate required to turn current principal @var{pres} into
+  future principal @var{fut} in @var{term} periods.
+@item term(@var{pmt}, @var{r}, @var{fut})
+@findex term
+  Number of periods required to collect @var{fut} in payments of
+  @var{pmt}, with an interest rate of @var{r}.
+@item cterm(@var{r}, @var{fut}, @var{pres})
+@findex cterm
+  Number of periods required to collect @var{fut} from a single deposit
+  of @var{pres}, at an interest rate of @var{r}.
+@item sln(@var{cost}, @var{scrap}, @var{life})
+@findex sln
+  Straight line depreciation of an asset that cost @var{cost} when new,
+  can be sold for @var{scrap}, and will last for @var{life} periods.
+@item syd(@var{cost}, @var{scrap}, @var{life}, @var{per})
+@findex syd
+  Sum-of-the-digits depreciation in period @var{per} of an asset that cost
+  @var{cost}, can be sold for @var{scrap}, and lasts @var{life} periods.
+@item ddb(@var{cost}, @var{scrap}, @var{life}, @var{per})
+@findex ddb
+  Double-declining-balance depreciation; similar to @code{syd()}.
+@item anrate(@var{pmt}, @var{p}, @var{term})
+@findex anrate
+  Solve @code{pmt(pmt, r, term) == p} for @var{r}.
+@item anterm(@var{pmt}, @var{prin}, @var{r})
+@findex anterm
+  Solve @code{pmt(pmt, r, term) == p} for @var{term}.
+@item balance(@var{p}, @var{r}, @var{term}, @var{n})
+@findex balance
+  After @var{n} payments (of @code{pmt(p, r, term)}) towards a debt of 
+  @var{p} at interest rate @var{r} over @var{term} periods, this function
+  gives the amount left due.
+@item paidint(@var{p}, @var{r}, @var{term}, @var{n})
+@findex paidint
+  After @var{n} payments (of @code{pmt(p, r, term)}) towards a debt of 
+  @var{p} at interest rate @var{r} over @var{term} periods, this function
+  gives the sum of the amounts of the payments which have gone to service
+  the interest on the debt.
+@item kint(@var{p}, @var{r}, @var{term}, @var{n})
+@findex kint
+  At period @var{n}, this amount goes towards paying the interest on the
+  amortizing loan at rate @var{r}, term @var{term}, and principal @var{p}.
+@item kprin(@var{p}, @var{r}, @var{term}, @var{n})
+@findex kprin
+  At period @var{n}, this amount goes towards reducing the principal on the
+  amortizing loan at rate @var{r}, term @var{term}, and principal @var{p}.
+  Note that @code{kint(p,r,term,n)+kprin(p,r,term,n)==pmt(p,r,term)}.
+@item compbal(@var{p}, @var{r}, @var{term})
+@findex compbal
+  Compound balance.  Returns the value of principal @var{p} after earning
+  interest @var{r} over @var{term} terms.
+@end table
+
+
+@page
+@node   Date functions, Gsl functions, Business functions, Functions
+@section Date Functions
+@cindex Date and time functions
+@cindex Time and date functions
+@cindex Functions, date and time
+
+@ifhtml
+<A NAME="HelpDateFunctions">
+@end ifhtml
+
+  Functions for manipulating date and time.  Arguments named @var{time}
+are times in seconds, either an arbitrary count or from a specific epoch
+(i.e., local time), unless otherwise noted.  Here are some examples.
+Assume that the date is December 16, 1994, and the time is 7:56 am.
+The left hand column is the command, and the right hand column is the
+result. 
+
+@example
+
+          local_month(now())             11
+          ctime(now())                   Fri Dec 16 7:58:34 1994
+          strftime("%d-%b-%C",now())     11-12-94
+@end example
+
+
+@table @code
+@item now()
+@findex now
+  Time of day.  Returns the current time in seconds since Jan 1 1970.
+@item ctime(@var{time})
+@findex ctime
+  Converts @var{time} into a date/time string.  @var{time} is seconds
+since the the epoch, as returned by @code{now()}.
+@item hms_to_time(@var{hours}, @var{minutes}, @var{seconds})
+@item dhms_to_time(@var{days}, @var{hours}, @var{minutes}, @var{seconds})
+@findex hms_to_time
+@findex dhms_to_time
+  Converts @var{days}, @var{hours}, @var{mins}, @var{seconds} to a count
+of seconds.
+@item time_to_d(@var{time})
+@item time_to_h(@var{time})
+@item time_to_m(@var{time})
+@item time_to_s(@var{time})
+@findex time_to_d
+@findex time_to_h
+@findex time_to_m
+@findex time_to_s
+  Returns the number of days, hours (0..23), minutes (0..59), or seconds
+(0..59) in @var{time} seconds.
+@item ymd(@var{year}, @var{month}, @var{day})
+@item ymd_dst(@var{year}, @var{month}, @var{day}, @var{dst})
+@findex ymd
+@findex ymd_dst
+  Convert @var{year}, @var{month}, and @var{day} to the number of
+seconds since January 1, 1970 (typically).  The conversion assumes the
+local time zone.  For @code{ymd_dst()}, if @var{dst} is positive,
+daylight savings time is assumed; if 0, standard time; and if negative,
+neither (i.e., the same as @code{ymd()}).
+@item local_year(@var{time})
+@item local_month(@var{time})
+@findex local_year
+@findex local_month
+  For a time in seconds (e.g., as returned by @code{now()}) return its
+year or month in the local timezone.
+@item local_date(@var{time})
+@findex local_date
+  Returns the date in the local timezone of @var{time}.
+@item local_hour(@var{time})
+@item local_min(@var{time})
+@item local_sec(@var{time})
+@findex local_hour
+@findex local_min
+@findex local_sec
+  Returns the hour, minutes or seconds in the local timezone of
+@var{time}.
+@item local_isdst(@var{time})
+@findex local_isdst
+  Returns @var{dst} in the local timezone for @var{time}.  The return is
+positive if daylight savings time is in effect, 0 otherwise.
+@item local_yday(@var{time})
+@item local_wday(@var{time})
+@findex local_yday
+@findex local_wday
+  Returns the give day-of-year (0..364 or 0..365 for leap years) or
+day-of-week (0..6) in the local timezone for @var{time}.
+@item gmt_year(@var{time})
+@item gmt_month(@var{time})
+@item gmt_date(@var{time})
+@findex gmt_year
+@findex gmt_month
+@findex gmt_date
+  Returns the year, month, or day in Greenwich of @var{time}.
+@item gmt_hour(@var{time})
+@item gmt_min(@var{time})
+@item gmt_sec(@var{time})
+@findex gmt_hour
+@findex gmt_min
+@findex gmt_sec
+  Returns the hour, minutes or seconds in Greenwich of @var{time}.
+@item gmt_isdst(@var{time})
+@findex gmt_isdst
+  Returns a positive value if daylight savings time is in effect in
+Greenwich @var{time}, 0 otherwise.
+@item gmt_yday(@var{time})
+@item gmt_wday(@var{time})
+@findex gmt_yday
+@findex gmt_wday
+  Returns the day-of-year (0..365) or day-of-week (0..6) in Greenwich.
+@item get_date(@var{date})
+@item posix_date(@var{date})
+@findex get_date
+@findex posix_date
+  Parse a string date and return its time (seconds since epoch).  The
+syntax of @var{date} is the same as is understood by GNU tar or GNU date
+for @code{get_date()}, and as per the Posix standard for
+@code{posix_date()}.
+@item strftime(@var{format}, @var{time})
+@findex strftime
+  Returns a string according to @var{format} describing @var{time} (as
+returned by @code{now()}).  This function is implemented by the C
+library function @code{strftime()}.  The following documentation
+describes the GNU implementation of @code{strftime()}.  Your version of
+Oleo may have been built with a different version, in which case, you
+can find documentation in the @code{strftime()} man page.  (In the
+future this anomaly will be removed).
+
+Performs @samp{%} substitutions similar to those in @code{printf()}.
+Except where noted, substituted fields have a fixed size; numeric fields
+are padded if necessary.  Padding is with zeros by default; for fields
+that display a single number, padding can be changed or inhibited by
+following the @samp{%} with one of the modifiers described below.
+Unknown field specifiers are copied as normal characters.  All other
+characters are copied to the output without change.
+
+Supports a superset of the ANSI C field specifiers.
+
+Literal character fields:
+@table @samp
+@item %
+  @samp{%}
+@item n
+  newline
+@item t
+  tab
+@end table
+
+Numeric modifiers (a nonstandard extension):
+@table @samp
+@item -
+  do not pad the field
+@item _
+  pad the field with spaces
+@end table
+
+Time fields:
+@table @samp
+@item %H
+  hour (@samp{00}..@samp{23})
+@item %I
+  hour (@samp{01}..@samp{12})
+@item %k
+  hour (@samp{ 0}..@samp{23})
+@item %l
+  hour (@samp{ 1}..@samp{12})
+@item %M
+  minute (@samp{00}..@samp{59})
+@item %p
+  locale's AM or PM
+@item %r
+  time, 12-hour (@samp{@var{hh}:@var{mm}:@var{ss} A/PM})
+@item %R
+  time, 24-hour (@samp{@var{hh}:@var{mm}})
+@item %S
+  second (@samp{00}..@samp{61})
+@item %T
+  time, 24-hour (@samp{@var{hh}:@var{mm}:@var{ss}})
+@item %X
+  locale's time representation (@samp{%H:%M:%S})
+@item %Z
+  time zone (EDT), or nothing if no time zone is determinable
+@end table
+
+Date fields:
+@table @samp
+@item %a
+  locale's abbreviated weekday name (@samp{Sun}..@samp{Sat})
+@item %A
+  locale's full weekday name, variable length
+(@samp{Sunday}..@samp{Saturday})
+@item %b
+  locale's abbreviated month name (@samp{Jan}..@samp{Dec})
+@item %B
+  locale's full month name, variable length
+(@samp{January}..@samp{December})
+@item %c
+  locale's date and time (@samp{Sat Nov 04 12:02:33 EST 1989})
+@item %C
+  century (@samp{00}..@samp{99})
+@item %d
+  day of month (@samp{01}..@samp{31})
+@item %e
+  day of month (@samp{ 1}..@samp{31})
+@item %D
+  date (@samp{@var{mm}/@var{dd}/@var{yy}})
+@item %h
+  same as @samp{%b}
+@item %j
+  day of year (@samp{001}..@samp{366})
+@item %m
+  month (@samp{01}..@samp{12})
+@item %U
+  week number of year with Sunday as first day of week
+(@samp{00}..@samp{53})
+@item %w
+  day of week (@samp{0}..@samp{6})
+@item %W
+  week number of year with Monday as first day of week
+(@samp{00}..@samp{53})
+@item %x
+  locale's date representation (@samp{@var{mm}/@var{dd}/@var{yy}})
+@item %y
+  last two digits of year (@samp{00}..@samp{99})
+@item %Y
+  year (@samp{1970}...)
+@end table
+@end table
+
+@page
+@node   Gsl functions,  , Date functions, Functions
+@section GSL Functions
+@cindex GSL functions
+@cindex Scientific functions (GSL)
+@cindex GNU Scientific Library
+
+The GNU Scientific Library (GSL) is a collection of routines for
+numerical computing.  The routines are written from scratch by the GSL
+team in C, and are meant to present a
+modern Applications Programming Interface (API) for C programmers, while
+allowing wrappers to be written for very high level languages.
+
+More information about GSL is available from @url{http://sources.redhat.com/gsl/}
+
+Currently only a small subset of the GSL functions (as they are in GSL 0.6) are
+made available in Oleo. They're most of the statistical functions :
+@table @samp
+@item gsl_stats_mean
+@item gsl_stats_variance
+@item gsl_stats_sd
+@item gsl_stats_absdev
+@item gsl_stats_skew
+@item gsl_stats_kurtosis
+@item gsl_stats_lag1_autocorrelation
+@item gsl_stats_median_from_sorted_data
+@item gsl_stats_quantile_from_sorted_data
+@item gsl_stats_variance_m
+@item gsl_stats_sd_m
+@item gsl_stats_variance_with_fixed_mean
+@item gsl_stats_sd_with_fixed_mean
+@item gsl_stats_absdev_m
+@item gsl_stats_skew_m_sd
+@item gsl_stats_kurtosis_m_sd
+@end table
+
+The API made available in Oleo for these functions differs slightly from
+the native C API of GSL. The C API provides for a @code{stride} and a @code{number}
+parameter when passing a data array. In Oleo, both of these are not explicitly passed.
+
+For example, the @code{gsl_stats_mean} function has just one parameter in Oleo,
+which is a range of cells from which it calculates the mean. @code{oleo_gsl_stats_kurtosis_m_sd}
+has three parameters : a range of cells, and two numbers.

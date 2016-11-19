@@ -1,0 +1,122 @@
+@node Multiple Windows, Options, Style, Top
+@chapter Multiple Windows
+@cindex Windows in Oleo
+@cindex Multiple windows in Oleo
+
+  Oleo can split a spreadsheet into two or more windows.  
+ The windows showing the spreadsheet can
+show different parts of it.
+Only one spreadsheet can be displayed at a time.
+
+@menu
+* Windows::                Introduction to Oleo windows.
+* Split Window::                New windows are made by splitting existing windows.
+* Other Window::                Moving to another window or doing something to it.
+* Change Window::               Deleting windows and changing their sizes.
+@end menu
+
+@node  Windows, Split Window, Multiple Windows, Multiple Windows
+@section Concepts of Oleo Windows
+
+
+@cindex Selected window
+  At any time, one of the windows is the @dfn{selected window}.
+  The cell cursor is located in this window.  Each other window has a
+location of point as well, but since the terminal has only one cell
+cursor there is no way to show where those locations are.
+
+  Commands to move the cell cursor affect the cell cursor for the
+selected Oleo window only.  They do not change the value of the cell
+cursor in any other Oleo window.
+
+  When there are multiple windows,  they can have different
+regions, because they can have different values of the cell cursor.
+
+@node Split Window, Other Window, Windows, Multiple Windows
+@section Splitting Windows
+
+@table @kbd
+@item C-x 2
+Split the selected window into two windows, one above the other
+(@code{split-window-vertically}).
+@cmindex split-window-vertically
+@item C-x 5
+Split the selected window into two windows positioned side by side
+(@code{split-window-horizontally}).
+@cmindex split-window-horizontally
+@end table
+
+@kindex C-x 2
+@cmindex split-window-vertically
+  The command @kbd{C-x 2} (@code{split-window-vertically}) breaks the
+@cmindex split-window-vertically
+selected window into two windows, one above the other.  Both windows start
+out displaying the cell cursor in the same position.  By default
+the two windows each get half the height of the window that was split.
+
+@kindex C-x 5
+@cmindex split-window-horizontally
+  @kbd{C-x 5} (@code{split-window-horizontally}) breaks the selected
+@cmindex split-window-horizontally
+window into two side-by-side windows.  
+
+
+@node Other Window, Change Window, Split Window, Multiple Windows
+@section Using Other Windows
+
+@table @kbd
+@item C-x o
+Select another window (@code{other-window}).  That is @kbd{o}, not zero.
+@cmindex other-window
+@item M-C-v
+Scroll the next window (@code{scroll-other-window}).
+@cmindex scroll-other-window
+@end table
+
+@kindex C-x o
+@cmindex other-window
+  To select a different window, use @kbd{C-x o} (@code{other-window}).
+@cmindex other-window
+That is an @kbd{o}, for `other', not a zero.  When there are more than two
+windows, this command moves through all the windows in a cyclic order,
+generally top to bottom and left to right.  After the rightmost and
+bottommost window, it goes back to the one at the upper left corner.  
+When the minibuffer is active, the minibuffer is the last window in the
+cycle; you can switch from the minibuffer window to one of the other
+windows, and later switch back and finish supplying the minibuffer argument
+that is requested.  
+
+@kindex C-M-v
+@cmindex scroll-other-window
+  The usual scrolling commands  apply to the selected
+window only, but there is one command to scroll the next window.
+@kbd{C-M-v} (@code{scroll-other-window}) scrolls the window that
+@cmindex scroll-other-window
+@kbd{C-x o} would select.  
+
+
+@node Change Window,  , Other Window, Multiple Windows
+@section Deleting and Rearranging Windows
+
+@table @kbd
+@item C-x 0
+Get rid of the selected window (@code{delete-window}).  That is a zero.
+@cmindex delete-window
+@item C-x 1
+Get rid of all windows except the selected one (@code{delete-other-windows}).
+@cmindex delete-other-windows
+@end table
+
+@kindex C-x 0
+@cmindex delete-window
+  To delete a window, type @kbd{C-x 0} (@code{delete-window}).  (That is
+a zero.)  The space occupied by the deleted window is given to an
+adjacent window.  Once a window is deleted, its attributes are forgotten.
+
+@kindex C-x 1
+@cmindex delete-other-windows
+  @kbd{C-x 1} (@code{delete-other-windows}) is more powerful than
+@kbd{C-x 0}; it deletes all the windows except the selected one (and the
+minibuffer); the selected window expands to use the whole frame.
+
+

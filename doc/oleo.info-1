@@ -1,0 +1,1632 @@
+This is oleo.info, produced by makeinfo version 4.0 from oleo.texi.
+
+   This file documents Oleo, the GNU spreadsheet.
+
+   This file is part of GNU Oleo.
+
+   Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+
+
+File: oleo.info,  Node: Top,  Next: Basics,  Prev: (dir),  Up: (dir)
+
+Oleo
+****
+
+   Oleo is the GNU spreadsheet program.  This documentation is of Oleo
+version {No value for `version'}, as of {No value for `update-date'}.
+It is by no means complete, nor necessarily accurate for that matter.
+
+* Menu:
+
+* Basics::
+* How to enter data::
+* Making changes::
+* Style::
+* Multiple Windows::
+* Options::
+* Printing and Plotting::
+* Macros::
+* Programs::
+* Keymaps::
+* Functions::
+* Extending Oleo::
+* Reporting Bugs::
+* Motif::
+* Database Access::
+* Key Index::
+* Command Index::
+* Function Index::
+* Options Index::
+* Concept Index::
+
+
+File: oleo.info,  Node: Basics,  Next: How to enter data,  Prev: Top,  Up: Top
+
+Basics
+******
+
+   `Oleo' is the GNU spreadsheet (1).
+
+   `Oleo' has more than one user interface.  The traditional `oleo'
+environment shows a curses based (character mode) user interface.  A
+bare bones user interface based on the X Window System exists as of
+version 1.6 which dates back to 1994.  In 1998, development started for
+a `motif' based user interface.  It should be more user friendly than
+the character based UI.
+
+   Most of this manual describes the character based user interface,
+the `motif' user interface is treaded in (*note Motif::).
+
+   To start Oleo, type `oleo'.  If `filename' is the name of a
+spreadsheet that you have saved from a previous `oleo' session, you can
+type `oleo filename' to start Oleo with the spreadsheet loaded.
+
+   To stop Oleo, type `C-x C-c'.  This will prompt you for the name of
+a file in which to save the current spreadsheet.  If you do not want to
+save it, type <RET>, otherwise type the name of the filename that you
+wish to save it in, and then press <RET>.
+
+   Type `C-z' to suspend `oleo'.  This does not do anything if you are
+running under X-windows.
+
+   If you wish to abort a command, type `C-g'
+
+* Menu:
+
+* Typing::                      How to type commands
+* Cell referencing::            Two ways of naming cells
+* The Screen::                  The parts of the  screen
+* Cursor and Mark::             The cell cursor and the mark
+* Recalculation::               How updating works
+* Movement::                    Moving around the spreadsheet
+* Mouse::                       Using the mouse
+* Regions and Variables::       How to use regions and variables
+* Getting Help::                Getting help
+* Saving and reading::          Saving and reading Spreadsheets
+* Command Line Options::        Command Line Options
+* .oleorc file::                The initialization file
+* Expressions::                 Types of expressions
+
+   ---------- Footnotes ----------
+
+   (1) better than the high priced spread
+
+
+File: oleo.info,  Node: Typing,  Next: Cell referencing,  Prev: Basics,  Up: Basics
+
+How to type commands
+====================
+
+   We use emacs abbreviations for keystrokes.  These examples should
+make the notation clear.
+`C-c'
+     Hold down the control key and press `c'
+
+`C-D'
+     Hold down the control key and press `D' (capital `D')
+
+`C-x c'
+     Hold down the control key and press `x', then press `c'
+
+`C-u C-x c'
+     Hold down the control key and press `ux', then press `c'
+
+`M-c'
+     Type an escape followed by a `c'.  If you can't find the escape
+     key, you can always type `C-['.
+
+`M-C-c'
+     Type an escape followed by  `C-c'.
+
+   Some commands are not bound to key strokes.  For instance, if you
+wish to erase the entire spreadsheet, you have to use the command
+`clear-spreadsheet'.  To execute a command, type `M-x' and then the
+command name:
+                    M-x clear-spreadsheet
+
+
+File: oleo.info,  Node: Cell referencing,  Next: The Screen,  Prev: Typing,  Up: Basics
+
+Cell Referencing
+================
+
+   Many commands and functions operate on a given cell or group of
+cells, and therefore take a cell or range reference (address) as an
+argument.  An individual cell is specified by its row/column
+coordinates, which start with row 1, column 1 in the upper left of the
+spreadsheet.  A "range" is a rectangular group of cells, specified by
+giving its left and rightmost columns and top and bottom rows.
+
+   A reference may be absolute or relative.  An "absolute" reference is
+measured from the upper left of the spreadsheet, and does not change
+when the cell containing it is moved or copied.  A "relative"
+reference, however, is measured as an offset from the cell it is in, and
+when moved points to the cell at the same offset relative to the new
+location.
+
+   There are two ways of addressing cells in Oleo, called `a0' and
+`noa0'.  To switch between the modes, use the `set-option' command:
+
+`M-x set-option a0'
+     Sets `a0' mode.
+
+`M-x set-option no a0'
+     Sets `noa0' mode.
+
+   In both modes the case of cell and range letters is ignored.
+
+* Menu:
+
+* noa0 mode::                   Using noa0 Mode
+* a0 mode::                     Using a0 Mode
+* Comparison::                  Comparing a0 and noa0 modes
+
+
+File: oleo.info,  Node: noa0 mode,  Next: a0 mode,  Prev: Cell referencing,  Up: Cell referencing
+
+noa0 Mode
+---------
+
+   In `noa0' mode (the default), absolute cell addresses have the form
+`RROWCCOL', where ROW and COL are the row and column (as integers).
+Thus, `R1C2' is the second cell from the left on the top row.       The
+cell in the leftmost uppermost corner is `R1C1', and the cell in the
+rightmost lowermost corner is `R65535C65535'.
+
+   Relative addresses have the form `R[ROWOFFSET]C[COLOFFSET]', as in
+`R[-1]C[+1]' (the cell above and to the right of the current cell).  An
+offset of 0 can be omitted, along with its square brackets: `RC[+2]'
+(the cell two columns to the right).  The plus signs of positive
+offsets can also be omitted.  Absolute and relative addresses can be
+combined, as in `R4C[-1]' (the cell in row four that's one left of the
+current cell).
+
+   Ranges in `noa0' mode are specified as `RROW1:ROW2CCOL1:COL2', where
+the row and column references may be either absolute or relative, and
+can be mixed.  Thus, `R1:4C1:[-2]' refers to the cells of rows one
+through 4, columns one through the second column to the left.  If ROW1 =
+ROW2 or COL1 = COL2, the colon and second number may be omitted, as in
+`R1:10C2' (rows one through ten in column two).
+
+
+File: oleo.info,  Node: a0 mode,  Next: Comparison,  Prev: noa0 mode,  Up: Cell referencing
+
+a0 Mode
+-------
+
+   In `a0' mode, relative references have the form COL_LET ROW_NUM,
+where COL_LET is the letter of the column and ROW-NUM is the row
+number.  COL_LET can be upper or lower case.  The cell in the leftmost
+uppermost corner is `A1', and the cell in the rightmost lowermost
+corner is `CRXO65535'. The columns are initially single letters (A-Z) ,
+then double letters (AA-ZZ), then triple letters (AAA-ZZZ), and finally
+some quadruple letters (AAAA-CRXO).
+
+   `B3' refers to the cell in the second column of row 3.  Since this
+is a relative reference, it will change when the containing cell is
+moved, to refer to the cell at the same relative position; e.g., if the
+cell is moved two columns to the right the reference will change to
+`D3'.
+
+   Absolute references have the form `$'COL_LET`$'ROW_NUM, as in `$A$1'
+(top left cell).  These do not change when the containing cell is
+moved.  Both types can be mixed with predictable results, e.g., `$A4'
+has an absolute column but a relative row.
+
+   Ranges are given as CELL_REF`:'CELL_REF or CELL_REF`.'CELL_REF,
+where the CELL_REFs describe diagonally opposite corners of the range.
+Thus, `A1:B2' refers to the topmost, leftmost four cells in the
+spreadsheet.
+
+
+File: oleo.info,  Node: Comparison,  Prev: a0 mode,  Up: Cell referencing
+
+Comparison
+----------
+
+   In order to get an understanding of these two addressing modes,
+assume that the cell cursor is in `E7' = `R7C5'.  The left hand column
+is `noa0' mode, and the right hand one is `a0' mode.
+
+                      R1C2              $B$1
+                      R[-1]C[+1]        F6
+                      RC[+2]            G7
+                      R4C[-1]           $D4
+
+
+File: oleo.info,  Node: The Screen,  Next: Cursor and Mark,  Prev: Cell referencing,  Up: Basics
+
+The Screen
+==========
+
+   The screen is divided into three parts: the input line, the status
+line, and the work area.
+
+* Menu:
+
+* Minibuffer::                  The input line
+* Status Line ::                The status line
+* Work Area::                   The work area and its borders
+
+
+File: oleo.info,  Node: Minibuffer,  Next: Status Line,  Prev: The Screen,  Up: The Screen
+
+The input line
+--------------
+
+   The input line is also referred to as the Minibuffer.  This is where
+you enter data into cells (*note Entering::).  You can change the
+location of the input line.  For example, to change the input line to
+the bottom of the screen, type
+
+     M-x set-option <RET> input -1
+
+   This can be made the default.  (*note .oleorc file::)
+
+
+File: oleo.info,  Node: Status Line,  Next: Work Area,  Prev: Minibuffer,  Up: The Screen
+
+The status line
+---------------
+
+   The status line describes the current status.  This includes:
+   *         The cell number (e.g., `A1' or `R1C1'), or the current
+     range (cursor to mark) if the mark is set (1)
+
+   *         The `C-u' repeat count of the current command (if set), in
+     curly braces
+
+   *         The value of the cell
+
+   *         The literal contents of the cell, if a formula
+
+   For instance, if the mark is located at cell `D4', the cell cursor
+is in cell `A11', the cell contents is `@sum(A1.B10)', and the sum of
+the entries in the region `A1.B10' is 89, then the status line is
+
+     *A11:D4 89 [@sum(A1.B10)]
+
+   The `*' indicates that the mark is set, and thus `A11:D4' is the
+range from the cursor cell to the mark.  You can change the location of
+the status line using `M-x set-option'.  To move the status line to the
+bottom of the screen, type
+
+     M-x set-option <RET> status -1
+
+   ---------- Footnotes ----------
+
+   (1) Note that the current range is given as upper-left corner to
+lower-right corner, even if the mark is to the lower _left_ of the
+cursor (or vice versa).  This is confusing.
+
+
+File: oleo.info,  Node: Work Area,  Prev: Status Line,  Up: The Screen
+
+The work area and its borders
+-----------------------------
+
+   The work area is surrounded by a border giving the row and column
+numbers.  When there are multiple windows, there will be several
+borders.  A cell is a box that can hold data.  The cell cursor is the
+highlighted rectangle indicating the `active cell'.  A region is a
+rectangular block of cells.  Regions are described by giving
+coordinates of the upper left cell and lower right cell.
+
+   The appearance of the screen can be changed (*note Appearance::).
+
+
+File: oleo.info,  Node: Cursor and Mark,  Next: Recalculation,  Prev: The Screen,  Up: Basics
+
+The cell cursor and the mark
+============================
+
+   Every window has its own cell cursor.  The most recently used window
+defines the current cell position.  There is one cell marker, called the
+`mark', global to the spreadsheet.
+
+`C-x j'
+     You are asked for a cell to go to, and the cell cursor is moved
+     there.  The cell can be either a cell name as in `R32C96', or a
+     variable.  This command starts with a default of wherever the
+     cursor was the last time this command was used.  (`goto-cell')
+
+`M-x j'
+     You are asked for a region. The cursor is placed in the top-left
+     corner of the region, and the cell-mark is placed at the opposite
+     corner of the region. (`goto-region')
+
+`C-@'
+     Set the cell mark to the current cell. (`mark-cell')
+
+`C-u C-@'
+     Set the cell cursor equal to the mark, and clear the mark,
+
+`C-x C-x'
+     Exchange the cell cursor and cell mark.
+     (`exchange-point-and-mark')
+
+`C-u C-x C-x'
+     Clear the mark.
+
+
+File: oleo.info,  Node: Recalculation,  Next: Movement,  Prev: Cursor and Mark,  Up: Basics
+
+How updating works
+==================
+
+   Oleo periodically recalculates the values of the spreadsheet that
+can change.  This calculation can be done between keystrokes, and
+usually stops when a key is pressed.  This behavior can be changed with
+the options `background' and `nobackground'.  The time between updates
+(initially 10 seconds) can be changed using the option `ticks'.   You
+can also disable automatic recalculation with the option `noauto'.  In
+this case, recalculation is only done when the `recalculate' command is
+used.  (*note Options::)
+
+`C-x !'
+     Recalculate the spreadsheet until all the cells whose values may
+     have changed have been evaluated.  If there are circular cell
+     references, the cells in the loop will be evaluated at most 40
+     times (this number subject to change!).  (`recalculate')
+
+
+File: oleo.info,  Node: Movement,  Next: Mouse,  Prev: Recalculation,  Up: Basics
+
+Moving around the spreadsheet
+=============================
+
+* Menu:
+
+* Single Cell Movement::        Moving to a neighboring cell
+* Scanning::                    Finding the next empty cell
+* Large Scale Movement::        Moving long distances
+* Movement examples::           Examples of movement commands
+* Screen Moving::               Moving by screens
+
+
+File: oleo.info,  Node: Single Cell Movement,  Next: Scanning,  Prev: Movement,  Up: Movement
+
+Moving to a neighboring cell
+----------------------------
+
+   The arrow keys work in the obvious fashion, moving the cell cursor
+one cell in the direction of the key.  In addition, there are keyboard
+commands
+
+`C-p'
+     Move up one cell (`up-cell')
+
+`C-n'
+     Move down one cell (`down-cell')
+
+`C-f'
+     Move forward (right) one cell (`right-cell')
+
+`C-b'
+     Move backward (left) one cell (`left-cell')
+
+   There are also commands for diagonal movements, but they are not
+bound to any keys.  These commands are `upleft-cell', `downleft-cell',
+`upright-cell', `downright-cell'.
+
+
+File: oleo.info,  Node: Scanning,  Next: Large Scale Movement,  Prev: Single Cell Movement,  Up: Movement
+
+Finding the next empty cell
+---------------------------
+
+   These commands move to the next empty cell in a given direction.  (1)
+
+`M-p'
+     Move to the first empty cell above the current cell in the current
+     column.  If given a repeat count, go to the N-th most empty cell.
+     (`scan-up')
+
+`M-n'
+     Move to the first empty cell below the current cell in the current
+     column.  If given a repeat count, go to the N-th most empty cell.
+     (`scan-down')
+
+`M-f'
+     Move to the first empty cell to the right of the current cell in
+     the current row.  If given a repeat count, go to the N-th most
+     empty cell.  (`scan-right')
+
+`M-b'
+     Move to the first empty cell to the left of the current cell in the
+     current row.  If given a repeat count, go to the N-th most empty
+     cell.  (`scan-left')
+
+   ---------- Footnotes ----------
+
+   (1) the doc doesn't seem to agree with the behavior; what is the
+intended behavior?  the repeat counts seem to be ignored.
+
+
+File: oleo.info,  Node: Large Scale Movement,  Next: Movement examples,  Prev: Scanning,  Up: Movement
+
+Moving long distances
+---------------------
+
+   These commands move over large areas of the spreadsheet, so they
+first set the mark to the current cell before moving (if it's not
+already set).  You can thus jump back to where you were with `C-x C-x'
+(`exchange-point-and-mark').
+
+`M-<'
+     Go to the upper left cell (1).  (`upper-left')
+
+`M->'
+     Go to lower right cell.  The lower right cell is the cell in the
+     rightmost column that has a value, and the lowermost row that has
+     a value.  There might not be any value in the lower right cell.
+     (`lower-right')
+
+`C-a'
+     Go to the beginning of the row.  With a `C-u' prefix argument N,
+     it also moves N-1 (2) rows down first. (`beginning-of-row')
+
+`C-e'
+     Go to the last cell of the current row (that has a value).  A
+     `C-u' prefix is also accepted. (`end-of-row')
+
+`M-C-a'
+     Go to the beginning of the column. (`beginning-of-column')
+
+`M-C-e'
+     Go to the last cell of the current column. (`end-of-column')
+
+   ---------- Footnotes ----------
+
+   (1) This is always cell `A1' in the current version, but supposedly
+might change in the future.
+
+   (2) why -1?
+
+
+File: oleo.info,  Node: Movement examples,  Next: Screen Moving,  Prev: Large Scale Movement,  Up: Movement
+
+Examples of movement commands
+-----------------------------
+
+   We use the spreadsheet below.  The blank squares are empty.
+
+
+                   | A | B | C | D | E | F |
+                 --|---|---|---|---|---|---|
+                 1 |   |   |   |   |   |   |
+                 --|---|---|---|---|---|---|
+                 2 |   |   | x |   | x |   |
+                 --|---|---|---|---|---|---|
+                 3 |   |   | x | x | x |   |
+                 --|---|---|---|---|---|---|
+                 4 |   | x |   |   |   |   |
+                 --|---|---|---|---|---|---|
+
+   The first column is the command, the second is the cell the cell
+cursor is in initially, and the third column is the location of the
+cell cursor at the end of the command.
+
+
+                     <M-<>       B4    =>    A1
+     
+                     <M->>       B4    =>    E4
+                     <M->>       C2    =>    E4
+     
+                     <C-a>       E4    =>    E1
+                     <C-a>       D4    =>    E1
+     
+                     <C-e>       A4    =>    B4
+                     <C-e>       A3    =>    E3
+                     <C-e>       A2    =>    E2
+                     <C-e>       A1    =>    A1
+     
+                     <M-C-a>     E2    =>    E1
+                     <M-C-e>     B1    =>    B4
+     
+                     <M-f>       A4    =>    C4
+                     <M-f>       A2    =>    D2
+
+
+File: oleo.info,  Node: Screen Moving,  Prev: Movement examples,  Up: Movement
+
+Moving by screens
+-----------------
+
+   These commands scroll the current window one screenful in the
+appropriate direction.  They try to leave the cell cursor in
+approximately the same place, so that `M-v' followed by `C-v' should
+leave the cell cursor in the original cell.  In addition to these
+commands, there are diagonal movements that are not bound to keys:
+`scroll-upright', `scroll-upleft', `scroll-downright',
+`scroll-downleft'.
+
+`M-v'
+     Scroll up one screenful. (`scroll-up')
+
+`C-v'
+     Scroll down one screenful. (`scroll-down')
+
+`C-x >'
+     Scroll right one screenful. (`scroll-right')
+
+`C-x <'
+     Scroll left one screenful. (`scroll-left')
+
+
+File: oleo.info,  Node: Mouse,  Next: Regions and Variables,  Prev: Movement,  Up: Basics
+
+Using the mouse
+===============
+
+   It is possible to use to mouse to move the cell cursor.
+`down-mouse-0' means to press the leftmost mouse button.
+
+`down-mouse-0'
+     Move to the cell pointed to by the mouse. (`mouse-goto')
+
+`down-mouse-1'
+     Set the mark to the cell pointed to by the mouse, but don't move
+     the cell cursor. (`mouse-mark')
+
+`down-mouse-2'
+     Set the mark to the current cell, and move to the cell pointed to
+     by the mouse. (`mouse-mark-and-goto') (1)
+
+   ---------- Footnotes ----------
+
+   (1) should these be changed - emacs uses 1 for 0, 2 for 1, and 3 for
+2
+
+
+File: oleo.info,  Node: Regions and Variables,  Next: Getting Help,  Prev: Mouse,  Up: Basics
+
+Regions and Variables
+=====================
+
+   Variables are symbolic names for regions of a spreadsheet.  Once
+defined, they can be used in cell formulas as region addresses.  They
+can also be used as arguments to any command that expects a region
+address.  A variable name should not be the name of a cell.  Thus, `A1'
+is not a good name for a variable.
+
+`C-x :'
+     Use this command to set a variable  (`set-variable'). For
+     instance, to set the variable `test1' to the region `B2:C3', type
+                  C-x :   test1    <RET>   B2:C3   <RET>
+
+`C-h v'
+     Shows the value of a variable.  To find the value of `test1', type
+                  C-h v test1 <RET>
+     If the variable has not been defined you get an error. If you
+     mistype `test1' as `tset1', you get the message
+                  there is no 'tset1'
+
+`C-h C-v'
+     This lists all variables and their current values.
+
+
+File: oleo.info,  Node: Getting Help,  Next: Saving and reading,  Prev: Regions and Variables,  Up: Basics
+
+Getting Help
+============
+
+`C-h'
+     Enter into the help system.  The commands below give various bits
+     of information about Oleo.
+
+`C-h C'
+     When a complex command is being invoked (i.e., when Oleo is
+     prompting you for arguments), `C-x C' displays documentation for
+     the command being invoked.  This can often be used to get more
+     information about what is being prompted for.
+
+`C-h c'
+     Give the name of the command (if any) associated with of the next
+     keystroke(s).  For instance, to find out command is executed when
+     you type  `M-p', type `C-h c M-p'. (`describe-key-briefly')
+
+`C-h k'
+     Give a brief description of the command associated with the next
+     keystroke(s).  For instance, to find out what `M-p' does, type
+     `C-h k M-p'. (`describe-key')
+
+`C-h f'
+     Give a  description of a command (one that you execute with
+     `M-x').  For instance, to find out exactly what `scan-up' does,
+     type `C-h f scan-up'.  (`describe-function')
+
+`C-h F'
+     Give a  description of a formula function.  For instance, to find
+     out how to use  `@sum', type `C-h F sum'.  Note that even though
+     `@sum' is used in `a0' mode, you must type `C-h F sum', not `C-h F
+     @sum'.  (`describe-formula-function')
+
+`C-h w'
+     Give the key(s) (if any) that a command is bound to.  For example,
+     to find which keys `scan-up' is bound to, type `C-h w scan-up'.
+     (`where-is')
+
+`C-h v'
+     Show the value of a variable.  (`show-variable')
+
+`C-h C-v'
+     Show the values of all the variables. (`show-all-variables')
+
+`C-h o'
+     Show all the options that have been set. (`show-options')
+
+`C-h W'
+     Display all the bindings of the keys. (`view-wallchart')
+
+`C-h C-w'
+     Write all the bindings of the keys to a file. (`write-wallchart')
+
+
+File: oleo.info,  Node: Saving and reading,  Next: Command Line Options,  Prev: Getting Help,  Up: Basics
+
+Saving and Reading Spreadsheets
+===============================
+
+   `Oleo' can save a spreadsheet, visit a saved one, or merge with a
+previously saved one.
+
+`C-x C-s'
+     Save the spreadsheet to a file, using the current file-format.
+     (`save-spreadsheet') (1)
+
+`C-x C-v'
+     Read in a file in the current file-format.  This erases the
+     current contents of the spreadsheet first.  This may ask for
+     confirmation.  (`visit-spreadsheet')
+
+`C-x i'
+     Read in a file and merge its contents into the current
+     spreadsheet.  Note that some file-formats, (like panic-save) won't
+     work with this command.  (`merge-spreadsheet')
+
+`M-x toggle-load-hooks'
+     Change whether load-hooks are run when spreadsheets are loaded.
+     When active, the find-alternate-spreadsheet command looks for a
+     variable called `load_hooks' and executes the macro at that
+     address.  With a positive prefix argument, turns load hooks on.
+     With a negative argument, turns them off.  With no argument, acts
+     as a toggle.  (2)
+
+   ---------- Footnotes ----------
+
+   (1) where is info on file formats?
+
+   (2) what is the default
+
+
+File: oleo.info,  Node: Command Line Options,  Next: .oleorc file,  Prev: Saving and reading,  Up: Basics
+
+Command Line Options
+====================
+
+   At the command line, Oleo has several options
+
+             oleo [options] [file]
+
+   where `file' is an optional spreadsheet to open.  The remaining
+options are
+
+`-q'
+`--quiet'
+     Be quiet. (1)
+
+`-V'
+`--version'
+     print out the version and exit
+
+`-h'
+`--help'
+     Describe these options
+
+`-f'
+`--ignore-init-file'
+     do not read the file `.oleorc' on startup
+
+`--nw'
+     do not use X-windows
+
+`-F x'
+`--format x'
+     set the default file type to x (oleo, list, sc, ...)
+
+`--filter'
+     stdin/stdout are used for reading and writing the spreadsheet Note
+     this only works well for X Window System user interfaces, or in
+     very specific circumstances.
+
+`-s x'
+`--separator x'
+     set separator for 'list' file type to x
+
+`-S'
+`--space'
+     set separator for 'list' file type to a space
+
+   ---------- Footnotes ----------
+
+   (1) But what does this really do?
+
+
+File: oleo.info,  Node: .oleorc file,  Next: Expressions,  Prev: Command Line Options,  Up: Basics
+
+The `.oleorc' file
+==================
+
+   If there is a file `.oleorc' located in the home directory, it is
+read when Oleo starts up.  For example, if you always want to use the
+`a0' reference system, and wish to have the status line  on the bottom
+line, rather than on the second line from the top, your `.oleorc' file
+could be (1)
+
+             set-option a0
+             set-option status -1
+
+   ---------- Footnotes ----------
+
+   (1) what else can go here? can I set the default font here?
+
+
+File: oleo.info,  Node: Expressions,  Prev: .oleorc file,  Up: Basics
+
+Expressions
+===========
+
+   A cell entry is a value or an expression of values (*note Oleo
+values::).
+
+* Menu:
+
+* Infix expressions::           Infix Expressions
+* Examples::                    Examples of infix expressions
+* Error values::                A List of Error Values
+
+
+File: oleo.info,  Node: Infix expressions,  Next: Examples,  Prev: Expressions,  Up: Expressions
+
+Infix Expressions
+-----------------
+
+   The following infix expressions are defined.  Values labeled N1 and
+N2 are numbers (floats or integers), BOOL booleans, STR strings, and
+VAL any type (but both sides must be the same type).
+
+`-N1'
+     Arithmetic negation: 0-N1
+
+`!BOOL'
+     Logical negation: `#TRUE' if BOOL is `#FALSE', `#FALSE' if
+     `#TRUE', and an error otherwise.
+
+`N1 ^ N2'
+     Exponentiation.  Note that a^b^c is defined to be a^(b^c).
+
+`N1 * N2'
+     Multiplication
+
+`N1 / N2'
+     Division
+
+`N1 + N2'
+     Addition
+
+`N1 - N2'
+     Subtraction
+
+`N1 % N2'
+     Modulus; the remainder of N1 / N2.
+
+`N1 >=N2'
+     `#TRUE' if N1 is greater than or equal to N2; else `#FALSE'
+
+`N1 > N2'
+     `#TRUE' if N1 is greater than  N2; else `#FALSE'
+
+`N1 < N2'
+     `#TRUE' if N1 is less than N2; else `#FALSE'
+
+`N1 <=N2'
+     `#TRUE' if N1 is less than or equal to N2; else `#FALSE'
+
+`VAL1 = VAL2'
+     Comparison: `#TRUE' if VAL1 and VAL2 can be considered equal,
+     `#FALSE' if not.  VAL1 and VAL2 can be numbers, strings, or
+     boolean values.
+
+`VAL1 != VAL2'
+     Equivalent to `!(VAL1 = VAL2)'.
+
+`STR1 & STR2'
+     Text concatenation of strings.
+
+`BOOL ? VAL1 : VAL2'
+     Like the C operator: if BOOL is `#TRUE', VAL1 is evaluated; if
+     BOOL is `#FALSE', VAL2 is evaluated; otherwise an error is
+     returned.
+
+`(EXPR)'
+     Overrides default precedence of expression EXPR.  Note that since
+     Oleo stores expressions in a byte-compiled form, unneeded
+     parentheses will mysteriously vanish.
+
+* Menu:
+
+* Examples::
+* Error values::
+
+
+File: oleo.info,  Node: Examples,  Next: Error values,  Prev: Infix expressions,  Up: Expressions
+
+Examples
+--------
+
+   Assume that the spreadsheet contains the figure below, where the
+block of X's marks the cursor.
+
+
+                      |  C  |  D  |
+                      |     |     |
+                   --------------------
+                      |     |     |
+                   2  |  3  |     |
+                   --------------------
+                      |     |     |
+                   3  | "A" | "B" |
+                   --------------------
+                      | XXX |     |
+                    4 | XXX |  7  |
+                   --------------------
+
+   Here are some computations in  `a0' mode.
+
+                     C2 * D4    =>     21
+     
+                     D4 % C2    =>     1
+     
+                     C2 = D4    =>     #FALSE
+     
+                     C3 < D3    =>     #TRUE
+     
+                     C3 & D3    =>     "AB"
+
+
+File: oleo.info,  Node: Error values,  Prev: Examples,  Up: Expressions
+
+Error Values
+------------
+
+   Error values are returned by the parser under various error
+conditions, such as invalid parameters to functions, badly formatted
+expressions, etc.
+
+`#TRUE'
+`#FALSE'
+     The boolean true and false values.  Not really errors, but
+     classified as such to distinguish them from numbers and strings.
+
+`#ERROR'
+     An unclassified error.
+
+`#BAD_INPUT'
+     Indicates an inappropriate parameter to a formula function.
+
+`#NON_NUMBER'
+     A numerical value was expected.
+
+`#NON_STRING'
+     A string value was expected.
+
+`#NON_BOOL'
+     A boolean value was expected.
+
+`#NON_RANGE'
+     A range value was expected.
+
+`#OUT_OF_RANGE'
+     An out-of-range value was given, such as a cell coordinate outside
+     a given cell range.
+
+`#NO_VALUES'
+     An error value.
+
+`#DIV_BY_ZERO'
+     A division by zero was attempted.
+
+`#BAD_NAME'
+     An error value that indicates an invalid variable name.  It may be
+     the symptom of an incorrectly written address, or a string literal
+     given without double quotes.
+
+`#NOT_AVAIL'
+     An error value.
+
+`#PARSE_ERROR'
+     A generic error value that indicates the parser failed to parse an
+     expression.
+
+`#NEED_OPEN'
+     An open parenthesis is missing.
+
+`#NEED_CLOSE'
+     A close parenthesis is missing.
+
+`#NEED_QUOTE'
+     A quote was expected; e.g., the terminating quote of a string
+     literal.
+
+`#UNK_CHAR'
+     An unknown character was encountered.
+
+`#UNK_FUNC'
+     An unknown function was called.
+
+`#INF'
+`#INFINITY'
+`#NINF'
+`#MINUS_INFINITY'
+`#NAN'
+`#NOT_A_NUMBER'
+     Various floating-point exceptions.  On some machines these may be
+     all the same value, or indistinguishable from other values.
+
+
+File: oleo.info,  Node: How to enter data,  Next: Making changes,  Prev: Basics,  Up: Top
+
+Entering Data
+*************
+
+* Menu:
+
+* Oleo values::
+* Entering::                    Entering values in a cell
+* Input Editing::               Editing in the input line
+* Cell Motion::                 Moving to the next input cell while editing
+
+
+File: oleo.info,  Node: Oleo values,  Next: Entering,  Prev: How to enter data,  Up: How to enter data
+
+The different values in Oleo
+============================
+
+   A value can be a literal (an immediate value, like `"foo"', `16', or
+`#TRUE'), a function call, or another expression.  There are 5 types of
+values:
+
+   * Integers.
+
+   * Floats, expressed in the usual format:
+     [`-']NNN[`.'NNN][`e'[`-']NNN], e.g., -103.14e-7 or .00000012 or
+     103.14.
+
+   * Strings, which are surrounded by double quotes.  To include
+     unusual characters, you can either quote them with a backslash
+     (e.g., `"This is \"quoted\"."') or use an octal escape code: `\NNN'
+     where NNN is the octal code for the ASCII value of the character.
+
+   * Expressions, such as `@sum(A1.B3)', or `A1 + B2'.
+
+   * Errors, which have alphabetic names and start with a `#' sign.
+
+   * Booleans, which are "error" values of either `#TRUE' or `#FALSE'.
+
+
+File: oleo.info,  Node: Entering,  Next: Input Editing,  Prev: Oleo values,  Up: How to enter data
+
+Entering values in a cell
+=========================
+
+   To enter values into an empty cell, simply start typing.  To replace
+the contents of a cell or of all cells in a region, use
+
+`='
+     Replace the contents of the current cell. (`set-cell')
+
+`M-='
+     Replace the contents of a region. (`set-cell-region')
+
+   For example, to put the numbers 2,3,...,11 in the  cells from `B1' to
+`B10', type
+             <M-=>  B1.B10   <RET>   @row()+1   <RET>
+
+
+File: oleo.info,  Node: Input Editing,  Next: Cell Motion,  Prev: Entering,  Up: How to enter data
+
+Editing in the input line
+=========================
+
+   When the spreadsheet is reading text input, you can use a few
+text-editing commands.  Note that there in no history mechanism and no
+yank command.  If you accidentally type `C-u', the text is _erased_.
+(1)
+
+   While the input area is active, the commands that move the cell
+cursor are disabled.  If you want to move the cell cursor, use the
+other-window command (`C-x o') to leave and later reenter the input
+area.
+
+`M-a'
+     Insert/over-write an absolute reference to the current
+     cell/region. (`insert-abs-ref')
+
+`M-r'
+     Insert/over-write a relative reference to the current cell/region.
+     (`insert-rel-ref')
+
+`C-e'
+     Insert/over-write the expression in the current cell into the
+     input area. (`insert-cell-expression')
+
+`M-e'
+     Insert/over-write the value (not the formula) of the current cell
+     into the input area. (`insert-cell-value')
+
+`C-a'
+     Move the cursor to the beginning of the text. (`cursor-begin-line')
+
+`C-e'
+     Move to the end of the text. (`cursor-end-line')
+
+`C-b'
+     Move the cursor back a character. (`cursor-back-char')
+
+`M-b'
+     Move back a word. (`cursor-back-word')
+
+`C-f'
+     Move forward a character. (`cursor-fwd-char')
+
+`M-f'
+     Move forward a word. (`cursor-fwd-word')
+
+`C-d'
+     Delete the character under the cursor. (`delete-next-char')
+
+`M-d'
+     Delete the word under the cursor.  (`delete-next-word')
+
+`C-?'
+     Delete the character to the left of the cursor.
+     (`delete-prev-char')
+
+`M-C-?'
+     Delete the word to the left of the cursor. (`delete-prev-word')
+
+`C-k'
+     Delete from the cursor to the end of the text. (`delete-to-end')
+
+`C-o'
+     Move the cursor into the cell area.
+
+   The following commands are not bound to any keys
+`toggle-overwrite'
+     Toggle between overwrite and insert mode.
+
+`delete-to-start'
+     Deletes from the cursor to the beginning of the line
+
+   Almost all editing commands remember what you typed the last time
+you used that command, and start you up editing a copy of that text.
+If you want to type in something completely new, just type `C-x' (or
+`C-u') and type in your new text.
+
+   ---------- Footnotes ----------
+
+   (1) This will be improved in the future.
+
+
+File: oleo.info,  Node: Cell Motion,  Prev: Input Editing,  Up: How to enter data
+
+Moving to the next input cell while editing
+===========================================
+
+   When you are finished entering data in a cell, you type <RET>. If
+you wish to enter data in the cell below, type either `C-i' or the
+down-arrow key, and you are placed in the  cell below, waiting for
+input.  If you type the up-arrow key, you are placed in the cell above,
+waiting for input.  If you type `C-j', you move to the right.  The
+direction of `C-i' can be changed - the commands are  given below.  For
+example, if you wish to move upwards when you type `C-i', type `C-x m
+^'.
+
+`C-i'
+     Enter the data, and move to next cell.  The tab key also does this.
+     (`next-edit')
+
+`C-j'
+     Enter the data, and move to next cell in alternative direction
+     (`next-edit-set')
+
+`C-x m ^'
+     `auto-move-up'
+
+`C-x m v'
+     `auto-move-down'
+
+`C-x m <'
+     `auto-move-left'
+
+`C-x m >'
+     `auto-move-right'
+
+`C-x m `'
+     `auto-move-up-left'
+
+`C-x m ''
+     `auto-move-up-right'
+
+`C-x m /'
+     `auto-move-down-left'
+
+`C-x m \'
+     `auto-move-down-right'
+
+`C-x m'
+     `auto-move-no-motion'
+
+
+File: oleo.info,  Node: Making changes,  Next: Style,  Prev: How to enter data,  Up: Top
+
+Making Changes
+**************
+
+* Menu:
+
+* Copying::             Copying cells and regions
+* Moving::              Moving Cells and regions
+* Deleting::            Deleting cells and regions
+* Insertion::           Inserting a new row or column
+
+
+File: oleo.info,  Node: Copying,  Next: Moving,  Prev: Making changes,  Up: Making changes
+
+Copying
+=======
+
+   Both the cells, and the calculated values in the cells, can be copied
+from one location to another. Note, however, that any relative cell
+addresses present in formulas will refer to different cells - those at
+the same offset from the new location.  In `a0' mode, this means that
+the relative addresses in the new locations' formula(s) will change to
+reflect the new cells they refer to.
+
+`M-c'
+     Copy a region.  Given two ranges, it copies the source range into
+     the destination range.  If the destination range size is a
+     multiple of the source range size, the source range is copied
+     multiple times.  If the destination range is given as a cell, that
+     cell is the location of the top-left corner of the destination
+     range.  (`copy-region')
+
+`M-C-c'
+     Copy just the values of one region to another.
+     (`copy-values-in-region')
+
+   Consider the  spreadsheet, where `B2' contains `@sum(C2.D2)':
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |   8   |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |       |   4   |   2   |
+            ------|-------|-------|-------|
+            Row 4 |       |   1   |   3   |
+            ------|-------|-------|-------|
+
+   If you type `M-c B2 <RET> B3.B4', then `B2' is unchanged, but `B3'
+contains `@sum(C3.D3)', since it was copied from a formula with
+relative addresses. Similarly, `B4' contains `@sum(C4.D4)'.  The
+display shows
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |   8   |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |   6   |   4   |   2   |
+            ------|-------|-------|-------|
+            Row 4 |   4   |   1   |   3   |
+            ------|-------|-------|-------|
+
+   If you had typed `M-C-c B2 <RET> B3.B4', then `B2' is unchanged,
+`B3' contains 8, `B4' contains 8, and the display shows
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |   8   |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |   8   |   4   |   2   |
+            ------|-------|-------|-------|
+            Row 4 |   8   |   1   |   3   |
+            ------|-------|-------|-------|
+
+
+File: oleo.info,  Node: Moving,  Next: Deleting,  Prev: Copying,  Up: Making changes
+
+Moving Cells and Regions
+========================
+
+`M-m'
+     This is similar to copy-region, except that the source region is
+     erased after the copy.  The two ranges must be the same size.
+     Relative addresses and variables whose ranges are inside the
+     source region are adjusted, as with `copy-region'. (1)
+     (`move-region')
+
+   Consider the previous spreadsheet, where `B2' contains `@sum(C2.D2)'.
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |   8   |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |       |   4   |   2   |
+            ------|-------|-------|-------|
+            Row 4 |       |   1   |   3   |
+            ------|-------|-------|-------|
+
+   If we type `M-m  B2  <RET>  B3', then `B2' is empty, `B3' contains
+`@sum(C3.D3)', and the display shows
+
+
+                  | Col B | Col C | Col D |
+            ------|-------|-------|-------|
+            Row 2 |       |   3   |   5   |
+            ------|-------|-------|-------|
+            Row 3 |   6   |   4   |   2   |
+            ------|-------|-------|-------|
+            Row 4 |       |   1   |   3   |
+            ------|-------|-------|-------|
+
+   ---------- Footnotes ----------
+
+   (1) This can be subtle - some good examples are needed
+
+
+File: oleo.info,  Node: Deleting,  Next: Insertion,  Prev: Moving,  Up: Making changes
+
+Deleting
+========
+
+`C-k'
+     Delete the current row.  With an argument count it deletes several
+     rows. (`delete-row') For instance, to delete the row containing
+     the cell cursor, and the next 4 rows, type `C-u 5 C-k'.
+
+`M-k'
+     Delete the current column.  With an argument count it deletes
+     several columns. (`delete-col') For instance, to delete the column
+     that the cell cursor is in, and the 3 columns to the right, type
+     `C-u 4 M-k'.
+
+`M-C-?'
+     Delete the contents (value, formula, format, etc) of a region.
+     This DOES NOT ask for confirmation.          (`delete-region')
+
+`M-x clear-spreadsheet'
+     This is an extreme action!  Erase all the values in the cells, and
+     reset all the heights and widths.
+
+
+File: oleo.info,  Node: Insertion,  Prev: Deleting,  Up: Making changes
+
+Inserting Rows and Columns
+==========================
+
+   These commands insert blank rows and columns.
+
+`C-o'
+     Insert a row above the cell cursor.  With an argument count it adds
+     several rows. (`insert-row') For instance, to add 5 rows above the
+     cell cursor, type `C-u 5 C-o'.
+
+`M-o'
+     Insert a column to the left of the cell cursor.  With an argument
+     count it adds several columns. (`insert-col') For instance, to add
+     4 rows to the left of  the cell cursor, type `C-u 4 M-o'.
+
+
+File: oleo.info,  Node: Style,  Next: Multiple Windows,  Prev: Making changes,  Up: Top
+
+Style
+*****
+
+   It is often important to change how the value of a cell is displayed.
+It is possible to change the height and width of a cell, the font used
+in a cell, the alignment and protection of a cell, and the formats used
+to represent numbers.  Entire rows and columns can be hidden.
+
+* Menu:
+
+* Alignment::                   Aligning cell entries
+* Formats for numbers::         Formats for numbers
+* Cell Height ::                Changing the height of cells
+* Width of Cells::              Changing the width of cells
+* Hidden Rows and Columns::     Creating hidden rows and columns
+* Protection::                  Protecting cells
+* Fonts (in X11)::              Working with X11 Fonts
+
+
+File: oleo.info,  Node: Alignment,  Next: Formats for numbers,  Up: Style
+
+Alignment
+=========
+
+   An entry in a cell can be aligned on the left, on the right, or
+centered.   All cells in a region can have their alignment set.  The
+default is left alignment.
+
+`M-a a'
+     Change the alignment of the cell under the cursor.  The options are
+     `def' (the default), `l' (left), `r' (right), and `c' (center).
+     (`set-cell-alignment').
+
+`M-r a'
+     Change the alignment of a region.  The options are the same as
+     above.  (`set-region-alignment').
+
+`M-d a'
+     Change the default alignment.  The options are `l' (left), `r'
+     (right), and `c' (center).  (`set-default-alignment').
+
+
+File: oleo.info,  Node: Formats for numbers,  Next: Cell Height,  Prev: Alignment,  Up: Style
+
+Formats for numbers
+===================
+
+   Oleo can display numbers in a variety of formats.  In addition to
+sixteen user-defined formats, you can choose from a variety of simple
+formats.  You can set the format for a cell, for a region, and change
+the default format.
+
+`M-a f'
+     Change the format of the cell under the cursor.  The options
+     include INTEGER, FLOAT, HIDDEN, GRAPH, GENERAL.X, DOLLAR.X,
+     COMMA.X, COMMA.X, PERCENT.X, FIXED.X, EXPONENT.X,  where X is an
+     integer from 0 to 14, or the word FLOAT.  (`set-cell-format').
+
+`M-r f'
+     Change the format of a region.  The options are the same as above.
+     (`set-region-format').
+
+`M-d f'
+     Change the default format.  The options are as above.
+     (`set-default-format').
+
+   There are some examples following a description of the simple and
+general formats.
+
+Simple Formats
+--------------
+
+`integer'
+     The number is rounded to an integer before being displayed.
+
+`float'
+     The number is displayed in normal, everyday notation, using
+     whatever precision is needed (or fits).
+
+`hidden'
+     The number is not displayed.  It is recalculated, etc as normal,
+     but the cell is displayed as if it were empty.
+
+`graph'
+     The number is displayed as a small graph.  If the number is close
+     to zero, it will be displayed as '0', If it is positive, a row of
+     '+'-es is displayed.  If it is negative, a row of '-'-es is
+     displayed.  For instance, the number 4.234 is displayed as ++++,
+     and the number -5.2 is displayed as ----.  If the number has
+     absolute value greater than 70 (1), then a string of 35 #'s is
+     displayed.
+
+General Formats
+---------------
+
+   The following formats require a precision.  The precision may be a
+number from zero to 14, in which case that number of digits will always
+be displayed after the decimal point (zero-padding or rounding the
+number as needed), or the precision may be 'float', in which case Oleo
+will use as many digits as necessary.
+
+`general'
+     This uses either normal or scientific notation, depending on the
+     magnitude of the number and the width of the column.
+
+`dollar'
+     Positive values are preceeded by '$', (so 3 is displayed as '$3').
+     Negative values are parenthesized (so -3 is displayed as '($3)'),
+     and all large values have a ',' every three digits (so 1000 is
+     displayed as '$1,000').
+
+`comma'
+     This is like the dollar option, but without the '$'.  Positive
+     numbers are presented normally, and negative ones are in
+     parenthesis.
+
+`percent'
+     The value is multiplied by 100, and is displayed with a trailing
+     '%'.  Thus .01 displays as '1%', while 1 displays as '100%'.
+
+`fixed'
+     The number is displayed in normal, everyday notation, using the
+     precision specified.  'fixed.float' is the same as 'float'.
+     'fixed.0' is the same as 'integer'.
+
+`exponent'
+     The number is displayed in scientific notation.
+
+StyleExamples
+-------------
+
+   Suppose that a cell contains `1234.567'.  If we set the format of
+the cell to the left hand column, the cell is displayed as in the right
+hand column:
+
+                integer          1234
+                hidden
+                general.float    1234.567
+                general.1        1234.6
+                dollar.0       $1,234
+                dollar.2       $1,234.57
+                comma.1         1,234.6
+                percent.0      123457%
+                fixed.1          1234.6
+                exponent.2        123e+03
+
+User Defined Formats
+--------------------
+
+   You can define up  to sixteen user-defined numeric formats.  The
+current parts of a format are in the table below.  We use the
+definition of the 'dollar' format for an example.  (2)
+
+`Example:'
+     What it is:
+
+`$'
+     What to print before positive numbers.
+
+`('
+     What to print before negative numbers.
+
+`'
+     What to print after positive numbers.
+
+`)'
+     What to print after negative numbers.
+
+`$0'
+     What to print if the number is zero.
+
+`,'
+     What to print between the thousands and the 	hundreds, etc.
+
+`.'
+     What to print for a decimal point.
+
+`0-14'
+`float'
+     The number of digits to print after the decimal point.  'float'
+     means use however many digits are needed, or however many will
+     fit, whichever is less. . .
+
+`number'
+     What to multiply the value by before printing.  Most often this
+     will be one, but it might be 100 if you're printing percentages,
+     or .000001 if you're printing in megabucks.  (Beware of overflow!)
+
+   Some advice: do not use digits for the headers, trailers, the comma,
+or the decimal point symbol.  Using digits will confuse the internal
+routines and produce incomprehensible results. . .  (3)
+
+   ---------- Footnotes ----------
+
+   (1) is this fixed?
+
+   (2) this does not appear to be implemented
+
+   (3) Should the set-user-format command check its input for validity?
+
+
+File: oleo.info,  Node: Cell Height,  Next: Width of Cells,  Prev: Formats for numbers,  Up: Style
+
+Changing the height of cells
+============================
+
+   The height of all the cells in a row is the same.  The default
+height of a row is 1.  A row of height 0 is not displayed, but is still
+updated just as if it were visible.  (1)
+
+`M-a h'
+     Change the height of the row containing the cell cursor.  The
+     options are a non-negative integer, or `def'.  (`set-cell-height').
+
+`M-r h'
+     Change the height of all cells in a region.  The options are the
+     same as above.  (`set-region-height').
+
+`M-d h'
+     Change the default height to a positive integer.
+     (`set-default-height').
+
+   ---------- Footnotes ----------
+
+   (1) what is the unit of height
+
+
+File: oleo.info,  Node: Width of Cells,  Next: Hidden Rows and Columns,  Prev: Cell Height,  Up: Style
+
+Changing the width of cells
+===========================
+
+   The width of all the cells in a column is the same.  The default
+width of a column is 11.  (1)  A column of width 0 is not displayed.
+
+`M-a w'
+     Change the width of the column containing the  cell cursor.  The
+     options are a non-negative integer, or `def'.  (`set-cell-width').
+
+`M-r w'
+     Change the width of all cells in a region.  The options are the
+     same as above.  (`set-region-width').
+
+`M-d w'
+     Change the default width to a positive integer.
+     (`set-default-width').
+
+   ---------- Footnotes ----------
+
+   (1) is it?
+
+
+File: oleo.info,  Node: Hidden Rows and Columns,  Next: Protection,  Prev: Width of Cells,  Up: Style
+
+Creating Hidden Rows and Columns
+================================
+
+   Rows and columns of the spreadsheet can be hidden, so that they do
+not appear on the screen.  They continue to exist, and are updated when
+necessary.  The following  hides the third column in `a0' mode
+
+                M-x set-region-width <RET> C1 <RET> 0 <RET>
+
+   or more simply,
+
+                M-r w C1 <RET> 0 <RET>
+
+   This  hides the third row in `noa0' mode
+
+                M-r h <RET> R3C1 <RET> 0 <RET>
+
+   If the cell cursor is located at any cell in the third column, then
+we can  hide the third column column:
+                M-a w  0 <RET>
+
+   Similarly, if the cell cursor is in the fourth row, we can hide the
+fourth row:
+                M-a h  0 <RET>
+
+   To make a row visible again, just set its height to some positive
+value.
+

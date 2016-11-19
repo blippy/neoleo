@@ -1,0 +1,44 @@
+# This file was created by GNU Oleo
+# format 2.1 (requires Oleo 1.99.9 or higher)
+F;DGFL8
+O;auto;background;a0;ticks 1
+C;c2;r2;K11
+C;r3;K22
+C;c3;r2;K33
+C;r3;K44
+C;c4;r2;K55
+C;r3;K66
+C;c5;r2;K77
+C;r3;K88
+C;c6;r2;K99
+C;r3;K0
+C;c10;r10;K10
+O;status 2
+W;N1;A10 3;C7 0 7;Ostandout
+G0,1,0,10,10
+G4,2,2,6,3
+GDx""
+GDy""
+Gt0
+Gt1
+Gt2
+Gt3
+Gt4
+Gt5
+Gt6
+Gt7
+Gt8
+Gt9
+Gr000.000000
+Gr010.000000
+Gr100.000000
+Gr110.000000
+Ga01
+Ga11
+Go0
+Gm00(null)
+Gm10(null)
+Dn
+Dh
+Du
+E

@@ -1,0 +1,118 @@
+@node   Cell referencing , The Screen, Typing, Basics
+@comment  node-name,  next,  previous,  up
+@section Cell Referencing
+@cindex Referencing cells
+@cindex Addressing cells
+@cindex Ranges
+
+  Many commands and functions operate on a given cell or group of cells,
+and therefore take a cell or range reference (address) as an argument.
+An individual cell is specified by its row/column coordinates, which
+start with row 1, column 1 in the upper left of the spreadsheet.  A
+@dfn{range} is a rectangular group of cells, specified by giving its
+left and rightmost columns and top and bottom rows.
+
+@cindex Absolute references
+@cindex Relative references
+  A reference may be absolute or relative.  An @dfn{absolute} reference
+is measured from the upper left of the spreadsheet, and does not change
+when the cell containing it is moved or copied.  A @dfn{relative}
+reference, however, is measured as an offset from the cell it is in, and
+when moved points to the cell at the same offset relative to the new
+location.
+
+  There are two ways of addressing cells in Oleo, called @code{a0} and
+@code{noa0}.  To switch between the modes, use the @code{set-option}
+command:
+@cmindex set-option
+
+@table @code
+@item M-x set-option a0
+  Sets @code{a0} mode.
+@item M-x set-option no a0
+  Sets @code{noa0} mode.
+@end table
+
+In both modes the case of cell and range letters is ignored.
+
+@menu
+* noa0 mode::                   Using noa0 Mode
+* a0 mode::                     Using a0 Mode
+* Comparison::                  Comparing a0 and noa0 modes
+@end menu
+
+
+@node   noa0 mode, a0 mode, Cell referencing, Cell referencing
+@subsection noa0 Mode
+@cindex noa0 mode
+@vindex noa0
+
+  In @code{noa0} mode (the default), absolute cell addresses have the
+form @w{@code{R@var{row}C@var{col}}}, where @var{row} and @var{col} are
+the row and column (as integers).  Thus, @code{R1C2} is the second cell
+from the left on the top row.       The cell in the leftmost uppermost corner
+is @code{R1C1}, and the cell in the rightmost lowermost corner is
+@code{R65535C65535}.  
+
+Relative addresses have the form
+@w{@code{R[@var{rowoffset}]C[@var{coloffset}]}}, as in @code{R[-1]C[+1]}
+(the cell above and to the right of the current cell).  An offset of 0
+can be omitted, along with its square brackets: @code{RC[+2]} (the cell
+two columns to the right).  The plus signs of positive offsets can also
+be omitted.  Absolute and relative addresses can be combined, as in
+@code{R4C[-1]} (the cell in row four that's one left of the current
+cell).
+
+  Ranges in @code{noa0} mode are specified as
+@w{@code{R@var{row1}:@var{row2}C@var{col1}:@var{col2}}}, where the row
+and column references may be either absolute or relative, and can be
+mixed.  Thus, @code{R1:4C1:[-2]} refers to the cells of rows one through
+4, columns one through the second column to the left.  If @var{row1} =
+@var{row2} or @var{col1} = @var{col2}, the colon and second number may
+be omitted, as in @code{R1:10C2} (rows one through ten in column two).
+
+@node   a0 mode, Comparison, noa0 mode, Cell referencing
+@subsection a0 Mode
+@cindex a0 mode
+@vindex a0
+
+  In @code{a0} mode, relative references have the form @w{@var{col_let}
+@var{row_num}}, where @var{col_let} is the letter of the column and
+@var{row-num} is the row number.  @var{col_let} can be upper or lower
+case.  The cell in the leftmost uppermost corner
+is @code{A1}, and the cell in the rightmost lowermost corner is
+@code{CRXO65535}. The columns are initially single letters (A-Z) , then
+double letters (AA-ZZ), then triple letters (AAA-ZZZ), and finally some
+quadruple letters (AAAA-CRXO).  
+
+@code{B3} refers to the cell in the second column of row 3.
+Since this is a relative reference, it will change when the containing
+cell is moved, to refer to the cell at the same relative position;
+e.g., if the cell is moved two columns to the right the reference will
+change to @code{D3}.
+
+  Absolute references have the form
+@code{$}@var{col_let}@code{$}@var{row_num}, as in @code{$A$1} (top left
+cell).  These do not change when the containing cell is moved.  Both
+types can be mixed with predictable results, e.g., @code{$A4} has an
+absolute column but a relative row.
+
+  Ranges are given as @var{cell_ref}@code{:}@var{cell_ref} or
+@var{cell_ref}@code{.}@var{cell_ref}, where the @var{cell_ref}s describe
+diagonally opposite corners of the range.  Thus, @code{A1:B2} refers to
+the topmost, leftmost four cells in the spreadsheet.
+
+@node Comparison,  , a0 mode, Cell referencing
+@subsection Comparison
+
+In order to get an understanding of these two addressing modes, assume that the
+cell cursor is in @code{E7} = @code{R7C5}.  The left hand column is @code{noa0}
+mode, and the right hand one is @code{a0} mode.
+
+@example
+                 R1C2              $B$1
+                 R[-1]C[+1]        F6
+                 RC[+2]            G7
+                 R4C[-1]           $D4
+@end example
+

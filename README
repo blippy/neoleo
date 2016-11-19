@@ -1,0 +1,133 @@
+Welcome to GNU Oleo!
+
+Oleo is a spreadsheet program covered by the GNU Copyleft (see the file
+COPYING included with this distribution for more information).
+
+As of this writing (February 1999), Oleo is in active development. Major
+changes are being made to the user interface, and lower-level changes
+affecting the Oleo file format, expression syntax and macro language will
+almost certainly follow in due course.  This is good news and bad news: On
+the positive side, it does mean that someone besides yourself will be
+concerned if you have problems compiling or running Oleo on a particular
+architecture; but it also means that you cannot expect the Oleo of tomorrow
+to behave in exactly the same way as the Oleo of today.
+
+We therefore encourage you to download and compile this program, and to use
+it, but for ephemeral tasks. If you have any problems, please send mail to
+bug-oleo@gnu.org.  User feedback is extremely important to Oleo development.
+
+At present, Oleo has the following features and (un-features):
+
+Features
+--------
+	* Works on character terminals and under X
+	* Macro language
+	    (still a bit untidy in places, but it works)
+	* Charts generated from spreadsheet data
+	    (interface is not yet stable, but the capability is in there)
+	* Sizeable library of expressions
+	    (doesn't currently include statistical regressions)
+	* File format conversions
+	    (support of this is still pretty primitive; don't plan
+	    on importing E*cel files anytime soon)
+	* Confirmed to compile and run out of the box on: Linux, FreeBSD
+
+As the above list shows, much work needs to be done to get Oleo to fulfill
+its potential utility.  The framework is in place for collaboration and the
+work has begun; to find out more, send a message to bug-oleo-request@gnu.org,
+with "subscribe" as the only word in the subject line, and your email address
+in the body of the message.  This list is the forum through which developers
+confer and keep one another posted about what's happening.  Everyone with an
+interest in the future of this application is encouraged to subscribe.
+
+Even if you just want to take Oleo out for a spin around the block, however,
+your comments will be welcomed by the developers.
+
+Before compiling, be sure that you have the necessary building blocks
+installed on your system:
+
+System Requirements
+-------------------
+
+The system requirements for Oleo depend upon the user interface or
+interfaces that you intend to compile into the binary.
+
+
+(1) Character Terminal Interface Only
+
+For the no-frills interface, try building with the following command line:
+
+  ./configure --without-x && make
+
+This no-frills character terminal interface does not offer support
+for plotting, but otherwise it has the same capabilities as the
+other versions.  This basic Oleo requires the following libraries:
+
+	* some version of curses (NCurses or Termcap/curses)
+	* GNU Gettext 0.10.32 (currently included in oleo)
+	* GNU texinfo (3.12) to build the documentation
+
+
+(2) Simple X11 Interface
+
+For very basic X11 support, try building with the following:
+
+  ./configure --without-motif && make
+
+This interface provides very little beyond the basic character terminal
+interface built with the previous command, but it will allow you to select a
+cell with the mouse and use the cursor keys in an Xterm.  Like the no-frills
+interface, this offers no support for plotting.  It of course requires the
+basic X11 libraries to compile.  To run an Oleo compiled with X11 with
+the character interface instead, run it with one of the command line options
+-x or --nw.
+
+
+(3) Motif Interface
+
+To build an Oleo with Motif support, try building with the following:
+
+  ./configure && make
+
+The Motif interface shows where Oleo is headed. A binary produced in this
+way can be used in character mode (i.e. by running it with the -x or --nw
+options) but not in the no-frills X mode. To compile with Motif support,
+you will need the following libraries on your system:
+
+	* Motif or LessTif, Xlt (from LessTif) and Xbae 4.6.2
+	* SciPlot (optional, for charts, if Xlt not used)
+	* GNU plotutils (optional, for charts)
+	* XmHTML (optional, for still-incomplete online documentation)
+
+
+Compiling from CVS
+------------------
+If you are brave enough to download Oleo directly from the CVS:
+
+    cvs -d :pserver:anoncvs@subversions.gnu.org:/cvsroot/oleo checkout oleo
+
+there are a few steps beyond the normal installation procedure
+that are required for a successful build.  This section assumes that
+you have the necessary development tools already installed on your system.
+
+    1.  Use aclocal to build aclocal.m4, the list of macros needed by
+	automake as requested by configure.in:
+
+	aclocal -I m4
+    
+    2.  Run autoheader to generate config.h.in template for configure.
+
+	autoheader
+    
+    3.  Run autoconf to build configure from configure.in:
+
+	autoconf
+    
+    4.  Run automake to generate Makefile.in from Makefile.am throughout
+	the tree.  The "-a" tells it to create links to the system verisons
+	of any missing required files.
+
+	automake -a
+
+Now run configure as before.
+

@@ -1,0 +1,29 @@
+# This file was created by GNU Oleo
+# format 2.0 (requires Oleo 1.6.14 or higher)
+F;DGFL8
+O;auto;background;a0;ticks 1
+C;c1;r1;K0.234
+F;r2;F%1D
+C;K0.234
+C;r4;Enow();K921102484
+F;r5;Fd2D
+C;Enow();K921102484
+F;r7;F,2D
+C;K123456789
+F;r8;F$1D
+C;K123456789
+F;c3;r1;F*D
+C;K1
+F;r2;F*D
+C;K3
+F;r3;F*D
+C;K4
+F;r4;F*D
+C;K6
+F;r5;F*D
+C;K5
+O;status 2
+W;N1;A6 1;C7 0 7;Ostandout
+GDx""
+GDy""
+E

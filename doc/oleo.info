@@ -1,0 +1,180 @@
+This is oleo.info, produced by makeinfo version 4.0 from oleo.texi.
+
+   This file documents Oleo, the GNU spreadsheet.
+
+   This file is part of GNU Oleo.
+
+   Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+
+
+Indirect:
+oleo.info-1: 888
+oleo.info-2: 50331
+oleo.info-3: 99293
+oleo.info-4: 148190
+
+Tag Table:
+(Indirect)
+Node: Top888
+Node: Basics1519
+Ref: Basics-Footnote-13526
+Node: Typing3569
+Node: Cell referencing4478
+Node: noa0 mode5815
+Node: a0 mode7098
+Node: Comparison8414
+Node: The Screen8882
+Node: Minibuffer9268
+Node: Status Line9727
+Ref: Status Line-Footnote-110778
+Node: Work Area10958
+Node: Cursor and Mark11553
+Node: Recalculation12630
+Node: Movement13557
+Node: Single Cell Movement14000
+Node: Scanning14680
+Ref: Scanning-Footnote-115646
+Node: Large Scale Movement15773
+Ref: Large Scale Movement-Footnote-116907
+Ref: Large Scale Movement-Footnote-217007
+Node: Movement examples17023
+Node: Screen Moving18543
+Node: Mouse19287
+Ref: Mouse-Footnote-119901
+Node: Regions and Variables19976
+Node: Getting Help20973
+Node: Saving and reading22872
+Ref: Saving and reading-Footnote-124051
+Ref: Saving and reading-Footnote-224090
+Node: Command Line Options24118
+Ref: Command Line Options-Footnote-125114
+Node: .oleorc file25152
+Ref: .oleorc file-Footnote-125686
+Node: Expressions25750
+Node: Infix expressions26103
+Node: Examples27761
+Node: Error values28720
+Node: How to enter data30483
+Node: Oleo values30823
+Node: Entering31759
+Node: Input Editing32314
+Ref: Input Editing-Footnote-134612
+Node: Cell Motion34657
+Node: Making changes35834
+Node: Copying36171
+Node: Moving38610
+Ref: Moving-Footnote-139966
+Node: Deleting40025
+Node: Insertion40858
+Node: Style41439
+Node: Alignment42228
+Node: Formats for numbers42923
+Ref: Formats for numbers-Footnote-147773
+Ref: Formats for numbers-Footnote-247796
+Ref: Formats for numbers-Footnote-347843
+Node: Cell Height47916
+Ref: Cell Height-Footnote-148657
+Node: Width of Cells48692
+Ref: Width of Cells-Footnote-149391
+Node: Hidden Rows and Columns49406
+Node: Protection50331
+Node: Fonts (in X11)51310
+Node: Multiple Windows52912
+Node: Windows53519
+Node: Split Window54233
+Node: Other Window54973
+Node: Change Window56041
+Node: Options56765
+Node: Appearance57228
+Ref: Appearance-Footnote-158600
+Node: Window Options58650
+Node: Other Options60324
+Ref: Other Options-Footnote-162446
+Ref: Other Options-Footnote-262461
+Ref: Other Options-Footnote-362493
+Node: Printing and Plotting62530
+Node: Writing Files62804
+Ref: Writing Files-Footnote-167475
+Node: Graphing67552
+Node: Clearing Plots69144
+Node: Data sets69574
+Ref: Data sets-Footnote-171558
+Node: The axes71590
+Ref: The axes-Footnote-172365
+Ref: The axes-Footnote-272379
+Node: Viewing Choices72396
+Node: Output Type73225
+Node: Style Options74270
+Ref: Style Options-Footnote-174991
+Node: Name Options75044
+Ref: Name Options-Footnote-175640
+Node: Macros75674
+Node: Keyboard Macros75849
+Ref: Keyboard Macros-Footnote-177584
+Node: Basic Kbd Macro77616
+Ref: Basic Kbd Macro-Footnote-179083
+Ref: Basic Kbd Macro-Footnote-279111
+Node: Save Kbd Macro79136
+Ref: Save Kbd Macro-Footnote-179632
+Node: Programs79658
+Node: One Line Programs79996
+Node: Long One Liners80940
+Node: Writing programs81299
+Ref: Writing programs-Footnote-183026
+Node: Commands in Programs83082
+Node: Keymaps83404
+Node: Functions87048
+Node: Boolean functions87869
+Node: Math functions88900
+Node: General math functions89270
+Ref: General math functions-Footnote-191230
+Node: Trigonometric functions91275
+Node: Statistical functions92329
+Node: String functions95420
+Ref: String functions-Footnote-197475
+Ref: String functions-Footnote-297551
+Node: Structural functions97679
+Node: Search functions99293
+Ref: Search functions-Footnote-1101667
+Node: Business functions101834
+Node: Date functions106123
+Node: Gsl functions112039
+Node: Extending Oleo113571
+Node: New at functions113783
+Node: Reporting Bugs118229
+Node: Motif119592
+Node: Motif Introduction119983
+Node: LessTif120361
+Node: Advantages120995
+Node: What you need121358
+Node: Alternatives122116
+Node: Using the mouse122422
+Node: Using the keyboard shortcuts123448
+Node: Using Help124264
+Node: Fallback124391
+Node: Motif Buttons in a Spreadsheet Cell124900
+Node: Database Access125498
+Node: Database Access Introduction125669
+Node: MySQL126294
+Node: Xbase126565
+Node: Key Index126647
+Node: Command Index131982
+Node: Function Index138818
+Node: Options Index145616
+Node: Concept Index148190
+
+End Tag Table

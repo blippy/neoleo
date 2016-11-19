@@ -1,0 +1,44 @@
+@node Database Access, , Motif, Top
+@chapter Accessing Databases
+
+@menu
+* Database Access Introduction::
+* MySQL::
+* Xbase::
+@end menu
+
+@node Database Access Introduction, MySQL, Database Access, Database Access
+@section Database Access Introduction
+
+Oleo can interface to database management systems (DBMSs) in more than one
+way.
+
+This is work in progress though, we expect the implementation to evolve
+quite a bit from the current status.
+
+Currently there are three ways of accessing databases from Oleo :
+@itemize @bullet
+@item reading a DBF (xbase) file
+@item reading rows of content from an MySQL database, prompted by the user
+@item reading the single result of an SQL query (to MySQL) into a cell
+@end itemize
+
+@ifhtml
+<A NAME="HelpMySQL">
+@end ifhtml
+
+@node MySQL, Xbase, Database Access Introduction, Database Access
+@section MySQL
+
+You can get a value from a database into a cell by putting a statement
+like 
+
+@example
+@@mysql_query("select max(salary) from salaries")
+@end example
+
+in the cell.
+
+@node Xbase, , MySQL, Database Access
+@section Xbase
+

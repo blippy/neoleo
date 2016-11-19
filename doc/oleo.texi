@@ -1,0 +1,175 @@
+\input texinfo    @c -*- texinfo -*-
+@c %**start of header
+
+@set version 1.99.13
+@set update-date July 29 2000
+@set update-month July 2000
+
+@setfilename oleo.info
+@settitle Oleo @value{version}
+@c make a command index:
+@defcodeindex cm
+@c %**end of header
+
+@clear smallbook
+
+@c Play with some whitespace settings:
+@tex
+\global\chapheadingskip = 15pt plus 4pt minus 2pt
+\global\secheadingskip = 12pt plus 3pt minus 2pt
+\global\subsecheadingskip = 9pt plus 2pt minus 2pt
+@end tex
+
+@c Use smaller whitespace between paragraphs in the 8.5x11 format:
+@ifclear smallbook
+@tex
+\global\parskip 6pt plus 1pt
+@end tex
+@end ifclear
+
+@finalout
+
+@ifinfo
+This file documents Oleo, the GNU spreadsheet.
+
+This file is part of GNU Oleo.
+
+Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Free Software Foundation.
+@end ifinfo
+
+@setchapternewpage odd
+@titlepage
+@title Oleo
+@subtitle The GNU Spreadsheet:  Version @value{version}
+@subtitle Documentation: @value{update-month}
+
+@c is this the Oleo or documentation author(s)? Let's include everyone
+@author 
+Tom Lord, Kai Getrost, Steve Fisk, Danny Backx
+@c The following two commands start the copyright page.
+@c Put it inside the titlepage to turn off headings:
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1993-2000 Free Software Foundation, Inc.
+Published by the Free Software Foundation @*
+675 Massachusetts Avenue, @*
+Cambridge, MA 02139 USA @*
+@c Printed copies are available for $15 each.@*
+@c ISBN-1882114-12-4
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Free Software Foundation.
+@end titlepage
+
+@node   Top, Basics, (dir), (dir)
+@top Oleo
+
+Oleo is the GNU spreadsheet program.  This documentation is of Oleo
+version @value{version}, as of @w{@value{update-date}.}  It is by no
+means complete, nor necessarily accurate for that matter.
+
+@menu
+* Basics::                      
+* How to enter data::           
+* Making changes::              
+* Style::                       
+* Multiple Windows::            
+* Options::                     
+* Printing and Plotting::       
+* Macros::                      
+* Programs::                    
+* Keymaps::                     
+* Functions::                   
+* Extending Oleo::
+* Reporting Bugs::
+* Motif::
+* Database Access::
+* Key Index::
+* Command Index::
+* Function Index::
+* Options Index::
+* Concept Index::
+@end menu
+
+@c @include running.texi
+@include basics.texi
+@include entering-data.texi
+@include making-changes.texi
+@include style.texi
+@include windows.texi
+@include options.texi
+@include print-plot.texi
+@include macros.texi
+@include programs.texi
+@include keymaps.texi
+@include functions.texi
+@include interface.texi
+@include bugs.texi
+@include motif.texi
+@include dbms.texi
+
+@page
+@node   Key Index, Command Index, Top, Top
+@unnumbered Key Index
+@printindex ky
+
+@node   Command Index, Function Index, Key Index, Top
+@unnumbered Command Index
+@printindex cm
+
+@node   Function Index, Options Index, Command Index, Top
+@unnumbered Function Index
+@printindex fn
+
+@c There aren't any builtin variables yet:
+@node   Options Index, Concept Index, Function Index, Top
+@unnumbered Options Index
+@printindex vr
+
+@node   Concept Index,  , Options Index, Top
+@unnumbered Concept Index
+@printindex cp
+
+@contents
+@bye
+
+
+@c Conventions
+
+@c         options(variables)              vrindex
+@c         commands                        cmindex
+@c         keys                            kyindex
+@c         functions(@things)              fnindex
+@c         concepts                        cpindex

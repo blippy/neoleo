@@ -1,0 +1,99 @@
+\input texinfo    @c -*- texinfo -*-
+@c %**start of header
+@setfilename ranlib.info
+
+@node Ranlib, , Top, Top
+@section Ranlib
+
+The ranlib libary from University of Texas contains  a large number of
+random number generators.
+
+
+@table @kbd
+
+@item Beta distribution.
+@code{@@betarand(@var{a},@var{b})}
+generates  a single random deviate from the beta distribution with
+parameters @var{a} and @var{b}.  The density of the beta distribution is
+@example
+
+               x^(a-1) * (1-x)^(b-1) / B(a,b) for 0 < x < 1
+@end example
+
+@item Chi Squared Distribution
+@code{@@chirand(@var{df})} generates a random deviate from a chisquare
+distribution with @var{df} degrees of freedom. @var{df} must be
+positive.
+
+@item  Exponential Distribution
+@code{@@exprand(@var{av})}
+     generates a single random deviate from an exponential
+     distribution with mean @var{av}.
+
+@item F distribution
+@code{@@fdist(@var{dfn},@var{dfd})} 
+generates a random deviate from the F
+distribution with @var{dfn} degrees of freedom in the numerator
+and @var{dfd} degrees of freedom in the denominator.  Both arguments
+must be positive.
+
+@item Gamma distribution
+@code{@@gammarand(@var{a},@var{r})}
+generates random deviates from the gamma distribution whose
+density is 
+@example
+
+          (a**r)/gamma(r) * x**(r-1) * exp(-a*x)
+@end example
+where @var{a} is the  location parameter of Gamma distribution
+and @var{r} is the  shape parameter of Gamma distribution.
+
+
+@item Non Central Chi Square Distribution
+@code{@@nchirand(@var{df},@var{xnonc})}
+     generates random deviate  from the  distribution  of a  noncentral
+     chisquare with @var{df} degrees  of freedom and noncentrality  parameter
+     @var{xnonc}. @var{df} must be greater than 1, and @var{xnonc} must
+     be positive.
+
+
+@item Non Central F distribution
+@code{@@nfrand(@var{dfn},@var{dfd},@var{xnonc})}
+     generates a random deviate from the  noncentral F 
+     distribution with @var{dfn} degrees of freedom in the numerator,
+     @var{dfd}      degrees of freedom in the denominator, and
+     noncentrality parameter @var{xnonc}.
+     @var{dfn} must be at least 1, @var{dfd} must be positive, and
+     @var{xnonc} must be non-negative.
+
+@item Normal Distribution
+@code{@@normalrand(@var{mu},@var{sd})}
+     generates a single random deviate from a normal distribution with
+     mean @var{mu}, and standard deviation, @var{sd}.
+
+@item Uniform Distribution
+@code{@@unirand(@var{low},@var{high})}
+     generates a real uniformly distributed between @var{low} and @var{high}.
+
+
+@item Binomial Distribution 
+@code{@@binomialrand(@var{n},@var{p})}         generates a single random
+deviate from a binomial       distribution with @var{n} trials, and 
+the  probability of an event in each trial is @var{p}.
+The result is a random deviate yielding the number of events
+from @var{n} independent trials, each of which has  a probability of
+event @var{p}. 
+
+@item  Poisson Distribution
+@code{@@poisonrand(@var{mu})}
+     generates a single random deviate from a Poisson
+     distribution with mean @var{mu}.
+
+
+@item Uniform Integers
+@code{@@intunirand(@var{low},@var{high})}
+generates an integer uniformly distributed between @var{low} and @var{high}.
+
+
+@end table
+

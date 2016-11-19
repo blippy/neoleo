@@ -1,0 +1,12 @@
+# This file was created by GNU Oleo
+# format 2.0 (requires Oleo 1.6.14 or higher)
+F;DGFL8
+O;auto;background;a0;ticks 1
+C;c1;r1;K1
+C;r2;K2
+C;r3;Esum(r[+0:-2]c);K126
+O;status 2
+W;N1;A3 2;C7 0 7;Ostandout
+GDx""
+GDy""
+E

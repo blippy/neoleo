@@ -1,0 +1,116 @@
+@node Macros, Programs, Printing and Plotting, Top
+@chapter  Macros
+
+
+@menu
+* Keyboard Macros::             
+* Basic Kbd Macro::             
+* Save Kbd Macro::              
+@end menu
+
+@node Keyboard Macros, Basic Kbd Macro, Macros, Macros
+@section Keyboard Macros
+
+@cindex Defining keyboard macros
+@cindex Keyboard macro
+  A @dfn{keyboard macro} is a command defined by the user to abbreviate a
+sequence of keys.  For example, if you discover that you are about to type
+@kbd{C-b} forty times, you can speed your work by defining a keyboard
+macro to do @kbd{C-b} and calling it with a repeat count of forty.
+@footnote{does repeat count work?}
+
+@c widecommands
+@table @kbd
+@item C-x (
+Start defining a keyboard macro (@code{start-kbd-macro}).
+@item C-x )
+End the definition of a keyboard macro (@code{end-kbd-macro}).
+@item C-x e
+Execute the most recent keyboard macro (@code{call-last-kbd-macro}).
+@item C-x =
+Store the most recent keyboard macro (@code{store-last-kbd-macro}).
+@end table
+
+  Keyboard macros differ from ordinary Oleo commands in that they are
+simply records of keystrokes.  This makes it
+easier for the novice to write them, and makes them more convenient as
+temporary hacks.  However, the Oleo command language is not powerful
+enough as a programming language to be useful for writing anything
+intelligent or general.  For such things, functions and programs must be used.
+
+  You define a keyboard macro while executing the commands which are the
+definition.  Put differently, as you define a keyboard macro, the
+definition is being executed for the first time.  This way, you can see
+what the effects of your commands are, so that you don't have to figure
+them out in your head.  When you are finished, the keyboard macro is
+defined and also has been, in effect, executed once.  You can then do the
+whole thing over again by invoking the macro.
+
+@menu
+* Basic Kbd Macro::     Defining and running keyboard macros.
+* Save Kbd Macro::      Saving  keyboard macros
+@end menu
+
+@node Basic Kbd Macro, Save Kbd Macro, Keyboard Macros, Macros
+@section Basic Use
+
+@kindex C-x (
+@kindex C-x )
+@kindex C-x e
+@cmindex start-kbd-macro
+@cmindex end-kbd-macro
+@cmindex call-last-kbd-macro
+  To start defining a keyboard macro, type the @kbd{C-x (} command
+(@code{start-kbd-macro}).  From then on, your keys continue to be
+executed, but also become part of the definition of the macro.  @samp{Def}
+appears in the status line to remind you of what is going on.
+@footnote{does it - it should}
+  When you are
+finished, the @kbd{C-x )} command (@code{end-kbd-macro}) terminates the
+definition (without becoming part of it!).  For example
+
+@example
+C-x ( M-f foo C-x )
+@end example
+
+@noindent
+defines a macro to move forward a word (while editing the input line)
+ and then insert @samp{foo}.
+
+  The macro thus defined can be invoked again with the @kbd{C-x e} command
+(@code{call-last-kbd-macro}), which may be given a repeat count as a
+numeric argument to execute the macro many times.  
+
+
+  If you wish to repeat an operation at regularly spaced places in the
+spreadsheet, define a macro and include as part of the macro the commands to move
+to the next place you want to use it.  
+
+
+
+
+  You can use function keys in a keyboard macro, just like keyboard
+keys.  You can even use mouse events, but be careful about that: when
+the macro replays the mouse event, it uses the original mouse position
+of that event, the position that the mouse had while you were defining
+the macro.  The effect of this may be hard to predict.  (Using the
+current mouse position would be even less predictable.)
+@footnote{is this correct?}
+
+
+@node Save Kbd Macro,  , Basic Kbd Macro, Macros
+@section Naming and Saving Keyboard Macros
+
+@cindex Saving keyboard macros
+@cmindex save-last-kbd-macro
+  If you wish to save a keyboard macro for longer than until you define the
+next one, you must give it a cell to store it in 
+ name using @kbd{M-x save-last-kbd-macro}.
+This reads a cell as an argument using the minibuffer and stores the
+macro in the cell.
+@footnote{isn't this C-x =?}
+
+@example
+M-x store-last-kbd-macro @key{RET} @var{cellname} @key{RET}
+@end example
+

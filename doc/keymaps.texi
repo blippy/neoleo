@@ -1,0 +1,109 @@
+@node Keymaps, Functions, Programs, Top
+@chapter Keymaps and defining keys
+
+What a key does when it is pressed depends on the context.  The listing
+of actions associated with a key in a given context is called a
+'keymap'.  Keymaps may have a 'default map'.  If a key is pressed which
+does not have an assigned meaning in that map, the map's default map is
+checked, and that map's default map, until a command is found or there
+are no more default maps to scan.
+
+The different keymaps, and their usage are as follows:
+
+@example
+  universal         The root of all keymaps.
+  main              The default keymap.
+  meta              Default @key{ESC} commands.
+  ansi              ANSI arrow keys.
+  trolx             Default @key{C-x} commands.
+  generic-*         More generic versions of the above, work everywhere.
+  mouse             Bindings for mouse buttons.
+  prefix            Number keys, and -, for argument prefix.
+  help              Various levels of help commands.
+@end example
+
+The diagram below shows the relationship between the various keymaps.
+The keymap to the left of a given keymap is its default.
+
+@example
+                  | generic-main ----| main
+                  |                  | read-string ---| read-<item>*
+		  |
+                  | generic-meta ----| meta
+                  |                  | meta-read-string --- meta-read-formula
+		  |
+                  | generic-ansi ----| ansi
+                  |                  | edit-ansi
+		  |
+                  | generic-trolx ---| trolx
+                  |                  | trolx-read-string
+  universal ------| mouse
+                  | generic-menu
+                  | prefix
+                  | meta-edit-ansi
+                  | read-keyseq
+                  | set-auto-motion
+                  | read-most-chars ---| read-char
+                  |                    | read-menu
+                  | press-any
+                  | view-info
+                  | set-*-attr  (cell, region, default)
+                  | generic-help ---| unprompted-help
+                                    | help
+                                    | verbose-help
+@end example
+
+@table @code
+@item M-x bind-key  
+This asks for the name of a keymap followed by a
+command name and a key to bind it to.  If the 'command' you
+give is a cell or region in the spreadsheet, it is taken as a
+macro, and bound to the key you specify.  For example, to make @key{C-1}
+move up one cell in the main keymap, type
+@cmindex bind-key
+
+@example
+        @key{M-x} bind-key @key{RET} main @key{RET} up-cell @key{C-1} @key{RET}
+@end example
+
+@item M-x unbind-key
+@cmindex unbind-key
+This asks for the name of a keymap and the key in that map to unbind.
+For example, to remove the default mapping bound to @kbd{M-k}, type
+@example
+	@key{M-k} unbind-key @key{RET} meta @key{RET} @key{k}
+@end example
+
+@item  M-x describe-key 
+@cmindex describe-key
+Have the user press a key, and then describe
+what function that key is bound to. (bound to @kbd{C-h c})
+@kindex C-h c
+
+@item M-x write-keys    
+@cmindex write-keys
+Write a list o@code{f commands} to a file that, when
+executed with read-commands, will return the keymaps to their
+current state.  To write a list of commands to the file
+@file{/tmp/name}, type
+
+@example
+        @kbd{M-x} write-keys @key{RET} /tmp/name @key{RET}
+@end example
+
+@item M-x read-commands	
+This command opens the file you specify, reads in each
+line, and executes them as if you'd typed them in to
+execute-command.  If any command needs more arguments than are
+included on the line, it will prompt you (interactively) for
+the missing information.
+
+
+@end table
+
+
+
+
+
+
+

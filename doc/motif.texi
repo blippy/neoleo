@@ -1,0 +1,157 @@
+@node Motif, Database Access, Reporting Bugs, Top
+@chapter A Motif Graphical User Interface for Oleo
+
+@menu
+* Motif Introduction::
+* LessTif::
+* Advantages::
+* What you need::
+* Alternatives::
+* Using the mouse::
+* Using the keyboard shortcuts::
+* Using Help::
+* Fallback::
+* Motif Buttons in a Spreadsheet Cell::
+@end menu
+
+@node Motif Introduction, LessTif, , Motif
+@section Motif Introduction
+
+Motif is a toolkit for building graphical user interfaces (GUIs)
+with the X Window System.
+
+Such a GUI has been built for oleo.
+The combination of oleo and its Motif interface
+comes close to professional quality spreadsheets
+that one can buy off the shelf.
+
+@node LessTif, Advantages, Motif Introduction, Motif
+@section LessTif
+
+When this manual talks about Motif,
+it refers to what is commonly referred to as OSF/Motif,
+a user interface toolkit for the X Window System which was
+originally developped by the Open Software Foundation (OSF).
+The OSF has merged with X/Open,
+the new name of the organisation is The Open Group.
+
+A free implementation of Motif, called LessTif,
+which is available from
+@uref{http://www.lesstif.org, the LessTif home page},
+can be used instead of Motif.
+
+LessTif is covered by the LGPL (Library General Public License).
+
+@node Advantages, What you need, LessTif, Motif
+@section Advantages
+
+Advantages to using either the Motif or the GTK interface to Oleo
+are the same as for any GUI: users with little experience will find
+it easier to get started with the application.
+The GUI interfaces also happen to be more aesthetically pleasing.
+
+@node What you need, Alternatives, Advantages, Motif
+@section What you need
+
+A user of Oleo typically only needs a recent Oleo distribution,
+which he installs through his operating system's standard mechanism.
+
+Someone who's building Oleo from sources will need several packages
+that Oleo depends on :
+@itemize @bullet
+@item Xbae widgets
+@url{http://www.lesstif.org}
+@url{ftp://ftp.lesstif.org/pub/hungry/lesstif/srcdist}
+@item XmHTML
+@url{http://www.xs4all.nl/~ripley/XmHTML}
+@item GNU plotutils
+@url{http://www.gnu.org/software/plotutils/plotutils.html}
+@item Motif or LessTif
+@url{http://www.opengroup.org}
+@url{http://www.lesstif.org}
+@item GNU gettext
+@url{http://www.gnu.org}
+@item GNU texinfo (3.12 or later)
+@url{http://www.gnu.org}
+@end itemize
+
+@node Alternatives, Using the mouse, What you need, Motif
+@section Alternatives
+
+Another toolkit for building GUIs is GTK.
+It is also freely available,
+and another user interface for oleo may be built with it too.
+
+GTK is the FSF's official GUI toolkit.
+
+@node Using the mouse, Using the keyboard shortcuts, Alternatives, Motif
+@section Using the mouse
+
+The mouse is used in the same manner as in any Motif application.
+
+The top of the Oleo window is a horizontal bar which is called the menu bar.
+It consists of a small number of buttons
+(represented by words such as File, Edit, ...).
+
+Using the mouse to point at such a word, you can click MB1
+on such a button to make a pulldown menu appear.
+MB1 is usually the left mouse button.
+
+The words in these pulldown menus are action buttons which should perform
+actions that the user can understand.
+
+You can select a cell in the spreadsheet by clicking MB1 in it.
+Once a cell is selected, its position and current value are displayed
+in a status area in the upper left of the Oleo window
+(just below the menu bar).
+The area to the right of that is the formula editor:
+it displays the formula on this cell, if any.
+
+Formulas should be edited in the formula editor.
+
+@node Using the keyboard shortcuts, Using Help, Using the mouse, Motif
+@section Using the keyboard shortcuts
+
+Using the method described above you can pull down a menu which reveals
+a number of action buttons. These buttons typically contain a text such
+as @code{Open   Ctrl-O}.
+
+Additionally, the O is underlined.
+
+The Ctrl-O means that you can press down the Control key on your keyboard,
+and while doing that, depress the O key. This should activate the button.
+
+The underlining means that once you've pulled down this menu,
+you should be able to activate this button by just the O key.
+
+The pulldown menu, which was indicated by the word File (with underlined F),
+can in itself be triggered by pressing the Alt key and depressing the F key.
+
+@node Using Help, Fallback, Using the keyboard shortcuts, Motif
+@section Using Help
+
+
+
+@node Fallback, Motif Buttons in a Spreadsheet Cell, Using Help, Motif
+@section Fallback
+
+If you have a version of oleo that has been built with Motif support,
+but you don't currently have an X Window System display
+(for instance you're using a dialup connection),
+then it is still possible to use the curses based character user interface.
+
+The command @code{oleo -t} should start Oleo with a curses based user interface,
+even if you're running in an X environment.
+
+@node Motif Buttons in a Spreadsheet Cell, , Fallback, Motif
+@section Motif Buttons in a Spreadsheet Cell
+
+You can put a button in a cell in the Motif version.
+The formula of the cell that you want to have a button should be
+@code{@ button("text", "cell-specification")}
+
+The first argument is the text that the button will show, the second argument
+is the cell whose content will be executed. That cell will typically contain a
+command like @code{psprint-region r3:45c8:13 invoice.ps}
+
+Note that this is currently an experimental feature.

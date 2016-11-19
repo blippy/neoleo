@@ -1,0 +1,704 @@
+@node Basics, How to enter data, Top, Top
+@chapter Basics
+ 
+
+@code{Oleo} is the GNU spreadsheet @footnote{better than the high priced
+spread}. 
+
+@code{Oleo} has more than one user interface.
+The traditional @code{oleo} environment shows a curses based (character mode)
+user interface.
+A bare bones user interface based on the X Window System exists as of
+version 1.6 which dates back to 1994.
+In 1998, development started for a @code{motif} based user interface.
+It should be more user friendly than the character based UI.
+
+Most of this manual describes the character based user interface,
+the @code{motif} user interface is treaded in (@pxref{Motif}).
+
+To start Oleo, type @code{oleo}.  If @code{filename} is the name of a
+spreadsheet that you have saved from a previous @code{oleo} session, you
+can type @code{oleo filename} to start Oleo with the spreadsheet
+loaded. 
+
+To stop Oleo, type @code{C-x C-c}.  This will prompt you for the name of
+a file in which to save the current spreadsheet.  If you do not want to save
+it, type @key{RET}, otherwise type the name of the filename that you
+wish to save it in, and then press @key{RET}.
+
+ Type @kbd{C-z} to suspend @code{oleo}.  This does not do anything if 
+you are running under X-windows. 
+@cmindex suspend-oleo
+
+If you wish to abort a command, type @kbd{C-g} 
+@cmindex break
+
+
+@menu
+* Typing::                      How to type commands
+* Cell referencing::            Two ways of naming cells
+* The Screen::                  The parts of the  screen
+* Cursor and Mark::             The cell cursor and the mark
+* Recalculation::               How updating works
+* Movement::                    Moving around the spreadsheet
+* Mouse::                       Using the mouse
+* Regions and Variables::       How to use regions and variables
+* Getting Help::                Getting help
+* Saving and reading::          Saving and reading Spreadsheets
+* Command Line Options::        Command Line Options
+* .oleorc file::                The initialization file
+* Expressions::                 Types of expressions
+@end menu
+
+
+@node Typing, Cell referencing, Basics, Basics
+@section How to type commands
+
+We use emacs abbreviations for keystrokes.  These examples should make
+the notation clear.
+@table @kbd
+@item C-c
+        Hold down the control key and press @kbd{c}
+@item C-D
+       Hold down the control key and press @kbd{D} (capital @kbd{D})
+@item C-x c
+       Hold down the control key and press @kbd{x}, then press @kbd{c}
+@item C-u C-x c
+        Hold down the control key and press @kbd{ux}, then press @kbd{c}
+@item M-c
+        Type an escape followed by a @kbd{c}.  If you can't find the
+escape key, you can always type @kbd{C-[}.  
+@item M-C-c
+        Type an escape followed by  @kbd{C-c}.  
+@end table
+
+Some commands are not bound to key strokes.  For instance, if you wish
+to erase the entire spreadsheet, you have to use the command
+@code{clear-spreadsheet}.  To execute a command, type @kbd{M-x} and then
+the command name:
+@example
+               M-x clear-spreadsheet
+@end example
+
+
+
+@include cell-refs.texi
+
+@node The Screen, Cursor and Mark, Cell referencing, Basics
+@section The Screen
+The screen is divided into three parts: the input line, the status
+line, and the work area.
+
+
+
+@menu
+* Minibuffer::                  The input line
+* Status Line ::                The status line
+* Work Area::                   The work area and its borders
+@end menu
+
+@node Minibuffer, Status Line , The Screen, The Screen
+@unnumberedsubsec The input line
+
+        The input line is also referred to as the Minibuffer.  This is
+where you enter data into cells (@pxref{Entering}).  You can change the
+location of the input line.  For example, to change the input line to the
+bottom of the screen, type
+
+@example
+M-x set-option @key{RET} input -1
+@end example
+
+This can be made the default.  (@pxref{.oleorc file})
+
+@node Status Line , Work Area, Minibuffer, The Screen
+@unnumberedsubsec The status line
+
+        The status line describes the current status.  This includes:
+@itemize @bullet
+@item 
+        The cell number (e.g., @code{A1} or @code{R1C1}), or the current
+range (cursor to mark) if the mark is set
+@footnote{Note that the current range is given as upper-left corner to
+lower-right corner, even if the mark is to the lower @emph{left} of the
+cursor (or vice versa).  This is confusing.}
+@item
+        The @kbd{C-u} repeat count of the current command (if set), in
+curly braces
+@item
+        The value of the cell
+@item        
+        The literal contents of the cell, if a formula
+@end itemize
+
+For instance, if the mark is located at cell @code{D4}, the cell cursor
+is in cell @code{A11}, the cell contents is @code{@@sum(A1.B10)}, and the
+sum of the entries in the region @code{A1.B10} is 89, then the status
+line is
+
+@example
+*A11:D4 89 [@@sum(A1.B10)]
+@end example
+
+The @samp{*} indicates that the mark is set, and thus @code{A11:D4} is
+the range from the cursor cell to the mark.  You can change the location
+of the status line using @code{M-x set-option}.  To move the status line
+to the bottom of the screen, type
+
+@example
+M-x set-option @key{RET} status -1
+@end example
+
+@node Work Area,  , Status Line , The Screen
+@unnumberedsubsec The work area and its borders
+
+The work area is surrounded by a border giving the row and column numbers.
+When there are multiple windows, there will be several borders.
+A cell is a box that can hold data.  The cell cursor is the highlighted
+rectangle indicating the `active cell'.  A region is a rectangular block
+of cells.  Regions are described by giving coordinates of the upper left
+cell and lower right cell.
+
+The appearance of the screen can be changed (@pxref{Appearance}).
+
+@node Cursor and Mark, Recalculation, The Screen, Basics
+@section The cell cursor and the mark
+Every window has its own cell cursor.  The most recently used window
+defines the current cell position.  There is one cell marker, called the
+`mark', global to the spreadsheet.
+
+@table @kbd
+@item C-x j
+You are asked for a cell to go to, and the cell cursor is moved
+there.  The cell can be either a cell name as in @kbd{R32C96},
+or a variable.  This command starts with a default of
+wherever the cursor was the last time this command was used.
+(@code{goto-cell})
+@cmindex goto-cell
+
+@item M-x j
+You are asked for a region. The cursor is placed in the top-left
+corner of the region, and the cell-mark is placed at the
+opposite corner of the region. (@code{goto-region})
+@cmindex goto-region
+
+@item C-@@
+        Set the cell mark to the current cell. (@code{mark-cell})
+@cmindex mark-cell
+
+@item C-u C-@@
+         Set the cell cursor equal to the mark, and clear the mark,
+
+@item C-x C-x
+        Exchange the cell cursor and cell mark.
+(@code{exchange-point-and-mark})
+@cmindex exchange-point-and-mark
+
+@item C-u C-x C-x
+         Clear the mark.
+@end table
+@kindex  C-u C-x C-x
+@kindex  C-x C-x
+@kindex  C-u C-@@
+@kindex  C-@@
+@kindex  M-x j
+@kindex  C-x j
+
+
+@node Recalculation, Movement, Cursor and Mark, Basics
+@section How updating works
+
+Oleo periodically recalculates the values of the spreadsheet 
+that can change.  This calculation can be done between keystrokes, and
+usually stops when a key is pressed.  This behavior can be changed with
+the options @code{background} and @code{nobackground}.  The time between
+updates (initially 10 seconds) can be changed using the option
+@code{ticks}.   You can also disable automatic recalculation with the
+option @code{noauto}.  In this case, recalculation is only done when the
+@code{recalculate} command is used.
+(@pxref{Options})
+@vindex background
+@vindex nobackground
+@vindex nobkgrnd
+@vindex bkgrnd
+@vindex ticks
+@vindex auto
+@vindex noauto
+
+
+
+@table @kbd
+@item C-x !
+Recalculate the spreadsheet until all the cells whose
+values may have changed have been evaluated.  If there are
+circular cell references, the cells in the loop will be
+evaluated at most 40 times (this number subject to change!).
+(@code{recalculate})
+@kindex C-x !
+@cmindex recalculate
+@end table
+
+
+@node Movement, Mouse, Recalculation, Basics
+@section Moving around the spreadsheet
+
+
+@menu
+* Single Cell Movement::        Moving to a neighboring cell
+* Scanning::                    Finding the next empty cell
+* Large Scale Movement::        Moving long distances
+* Movement examples::           Examples of movement commands
+* Screen Moving::               Moving by screens
+@end menu
+
+@node Single Cell Movement, Scanning, Movement, Movement
+@subsection Moving to a neighboring cell
+The arrow keys work in the obvious fashion, moving the cell cursor one
+cell in the direction of the key.  In addition, there are keyboard
+commands
+
+@table @kbd
+@item C-p
+        Move up one cell (@code{up-cell})
+@cmindex up-cell
+@item C-n
+        Move down one cell (@code{down-cell})
+@cmindex down-cell
+@item C-f
+        Move forward (right) one cell (@code{right-cell})
+@cmindex right-cell
+@item C-b
+        Move backward (left) one cell (@code{left-cell})
+@cmindex left-cell
+@end table
+@kindex  C-b
+@kindex  C-f
+@kindex  C-n
+@kindex  C-p
+
+There are also commands for diagonal movements, but they are not bound
+to any keys.  These commands are 
+@code{upleft-cell}, @code{downleft-cell},
+@code{upright-cell}, @code{downright-cell}.
+@cmindex upleft-cell
+@cmindex upright-cell
+@cmindex downleft-cell
+@cmindex downright-cell
+        
+@node Scanning, Large Scale Movement, Single Cell Movement, Movement
+@subsection Finding the next empty cell
+These commands move to the next empty cell in a given direction.
+@footnote{the doc doesn't seem to agree with the behavior; what is
+the intended behavior?  the repeat counts seem to be ignored.}
+
+@table @kbd
+@item M-p
+Move to the first empty cell above the current cell in the current
+column.  If given a repeat count, go to the N-th most empty cell.
+(@code{scan-up})
+@cmindex scan-up
+@item M-n
+Move to the first empty cell below the current cell in the current
+column.  If given a repeat count, go to the N-th most empty cell.
+(@code{scan-down})
+@cmindex scan-down
+@item M-f
+Move to the first empty cell to the right of the current cell in the
+current row.  If given a repeat count, go to the N-th most empty cell.
+(@code{scan-right})
+@cmindex scan-right
+@item M-b
+Move to the first empty cell to the left of the current cell in the
+current row.  If given a repeat count, go to the N-th most empty cell.
+(@code{scan-left})
+@cmindex scan-left
+@end table
+@kindex  M-b
+@kindex  M-f
+@kindex  M-n
+@kindex  M-p
+
+@node Large Scale Movement, Movement examples, Scanning, Movement
+@subsection Moving long distances
+
+
+These commands move over large areas of the spreadsheet, so they first
+set the mark to the current cell before moving (if it's not already
+set).  You can thus jump back to where you were with @kbd{C-x C-x}
+(@code{exchange-point-and-mark}).
+
+@table @kbd
+@item M-<
+Go to the upper left cell @footnote{This is always cell @code{A1} in
+the current version, but supposedly might change in the future.}. 
+(@code{upper-left})
+@cmindex upper-left
+
+@item M->
+Go to lower right cell.  
+The lower right cell is the cell in the rightmost column that has a value,
+and the lowermost row that has a value.  There might not be any value in
+the lower right cell. (@code{lower-right})
+@cmindex lower right
+
+@item C-a
+Go to the beginning of the row.  With a @kbd{C-u} prefix argument @var{n},
+it also moves @var{n}-1 @footnote{why -1?} rows down first. (@code{beginning-of-row})
+@cmindex beginning-of-row
+
+@item C-e
+Go to the last cell of the current row (that has a value).  A @kbd{C-u} prefix
+is also accepted. (@code{end-of-row})
+@cmindex end-of-row
+@item M-C-a
+Go to the beginning of the column. (@code{beginning-of-column})
+@cmindex beginning-of-column
+@item M-C-e
+Go to the last cell of the current column. (@code{end-of-column})
+@cmindex end-of-column
+@end table
+@kindex  M-C-e
+@kindex  M-C-a
+@kindex  C-e
+@kindex  C-a
+@kindex  M->
+@kindex  M-<
+
+@node Movement examples, Screen Moving, Large Scale Movement, Movement
+@subsection Examples of movement commands
+We use the spreadsheet below.  The blank squares are empty.
+
+@example
+
+              | A | B | C | D | E | F |
+            --|---|---|---|---|---|---|
+            1 |   |   |   |   |   |   |
+            --|---|---|---|---|---|---|
+            2 |   |   | x |   | x |   |
+            --|---|---|---|---|---|---|
+            3 |   |   | x | x | x |   |
+            --|---|---|---|---|---|---|
+            4 |   | x |   |   |   |   |
+            --|---|---|---|---|---|---|
+
+
+@end example
+
+The first column is the command, the second is the cell the cell cursor
+is in initially, and the third column is the location of the cell cursor
+at the end of the command.
+
+@example
+
+                @key{M-<}       B4    @result{}    A1
+
+                @key{M->}       B4    @result{}    E4
+                @key{M->}       C2    @result{}    E4
+                
+                @key{C-a}       E4    @result{}    E1
+                @key{C-a}       D4    @result{}    E1
+
+                @key{C-e}       A4    @result{}    B4
+                @key{C-e}       A3    @result{}    E3
+                @key{C-e}       A2    @result{}    E2
+                @key{C-e}       A1    @result{}    A1
+
+                @key{M-C-a}     E2    @result{}    E1
+                @key{M-C-e}     B1    @result{}    B4
+
+                @key{M-f}       A4    @result{}    C4
+                @key{M-f}       A2    @result{}    D2
+@end example
+        
+
+
+
+@node Screen Moving,  , Movement examples, Movement
+@subsection Moving by screens
+
+These commands scroll the current window one screenful in the appropriate
+direction.  They try to leave the cell cursor in approximately the same
+place, so that @kbd{M-v} followed by @kbd{C-v} should leave the cell
+cursor in the original cell.  In addition to these commands, there are
+diagonal movements that are not bound to keys:
+@code{scroll-upright},
+@code{scroll-upleft},
+@code{scroll-downright},
+@code{scroll-downleft}.
+@cmindex scroll-upleft
+@cmindex scroll-upright
+@cmindex scroll-downright
+@cmindex scroll-downleft
+
+@table @kbd
+@item M-v
+Scroll up one screenful. (@code{scroll-up})
+@cmindex scroll-up
+@cmindex scroll-up
+@item C-v
+Scroll down one screenful. (@code{scroll-down})
+@cmindex scroll-down
+@item C-x >
+Scroll right one screenful. (@code{scroll-right})
+@cmindex scroll-right
+@item C-x <
+Scroll left one screenful. (@code{scroll-left})
+@cmindex scroll-left
+@end table
+
+@kindex M-v
+@kindex C-v
+@kindex C-x >
+@kindex C-x <
+
+
+@node Mouse, Regions and Variables, Movement, Basics
+@section Using the mouse
+@comment  node-name,  next,  previous,  up
+
+It is possible to use to mouse to move the cell cursor.
+@kbd{down-mouse-0} means to press the leftmost mouse button.
+
+@table @kbd
+@item down-mouse-0
+Move to the cell pointed to by the mouse. (@code{mouse-goto})
+@cmindex mouse-goto
+
+@item down-mouse-1
+Set the mark to the cell pointed to by the mouse, but don't move the
+cell cursor. (@code{mouse-mark})
+@cmindex mouse-mark
+
+@item down-mouse-2
+Set the mark to the current cell, and move to the cell pointed to by the
+mouse. (@code{mouse-mark-and-goto})
+@footnote{should these be changed - emacs uses 1 for 0, 2 for 1, and 3
+for 2}
+
+@cmindex mouse-mark-and-goto
+@end table
+
+@node Regions and Variables, Getting Help, Mouse, Basics
+@section Regions and Variables
+
+Variables are symbolic names for regions of a spreadsheet.  Once
+defined, they can be used in cell formulas as region addresses.  They
+can also be used as arguments to any command that expects a region
+address.  A variable name should not be the name of a cell.  Thus,
+@code{A1} is not a good name for a variable.
+
+@table @kbd
+@item C-x :
+        Use this command to set a variable  (@code{set-variable}). For
+@cmindex set-variable
+instance, to set the variable @code{test1} to the region @code{B2:C3},
+type
+@example
+        C-x :   test1    @key{RET}   B2:C3   @key{RET}
+@end example
+
+@item C-h v
+        Shows the value of a variable.  To find the value of
+@code{test1}, type
+@example
+        C-h v test1 @key{RET}
+@end example
+If the variable has not been defined you get an error. If you mistype
+@code{test1} as @code{tset1}, you get the message
+@example
+        there is no 'tset1'
+@end example
+
+@item C-h C-v
+        This lists all variables and their current values.  
+@end table
+@kindex  C-h C-v
+@kindex  C-x :
+@kindex  C-h v
+
+
+@node Getting Help, Saving and reading, Regions and Variables, Basics
+@section Getting Help
+@table @kbd
+@item C-h
+@kindex  C-h
+        Enter into the help system.  The commands below give various
+bits of information about Oleo.
+
+@item C-h C
+@kindex  C-h C
+When a complex command is being invoked (i.e., when Oleo is prompting
+you for arguments), @kbd{C-x C} displays documentation for the
+command being invoked.  This can often be used to get more information
+about what is being prompted for.
+
+@item C-h c
+@kindex  C-h c
+        Give the name of the command (if any) associated with of the
+next keystroke(s).  For instance, to find out command is executed when
+you type  @kbd{M-p}, type
+@kbd{C-h c M-p}. (@code{describe-key-briefly})
+@cmindex describe-key-briefly
+
+@item C-h k
+@kindex  C-h k
+        Give a brief description of the command associated with the next
+keystroke(s).  For instance, to find out what @kbd{M-p} does, type
+@kbd{C-h k M-p}. (@code{describe-key})
+@cmindex describe-key
+
+@item C-h f
+@kindex  C-h f
+        Give a  description of a command (one that you execute with
+@kbd{M-x}).  For instance, to find out exactly what @samp{scan-up} does,
+type @kbd{C-h f scan-up}.  (@code{describe-function})
+@cmindex describe-function
+
+@item C-h F
+@kindex  C-h F
+        Give a  description of a formula function.
+For instance, to find out how to use  @samp{@@sum},
+type @kbd{C-h F sum}.  Note that even though @code{@@sum} is used in
+@code{a0} mode, you must type @kbd{C-h F sum}, not @kbd{C-h F @@sum}.
+(@code{describe-formula-function}) 
+@cmindex describe-formula-function
+
+@item C-h w
+@kindex  C-h w
+        Give the key(s) (if any) that a command is bound to.  For
+example, to find which keys @samp{scan-up} is bound to, type
+@kbd{C-h w scan-up}.  (@code{where-is})
+@cmindex where-is
+
+@item C-h v
+@kindex  C-h v
+        Show the value of a variable.  (@code{show-variable})
+@cmindex show-variable
+
+@item C-h C-v
+@kindex  C-h C-v
+        Show the values of all the variables. (@code{show-all-variables})
+@cmindex show-all-variables
+
+@item C-h o
+@kindex  C-h o
+        Show all the options that have been set. (@code{show-options})
+@cmindex show-options
+
+
+@item C-h W
+@kindex  C-h W
+        Display all the bindings of the keys. (@code{view-wallchart})
+@cmindex view-wallchart
+
+@item C-h C-w
+@kindex  C-h C-w
+        Write all the bindings of the keys to a file. (@code{write-wallchart})
+@cmindex write-wallchart
+@end table
+
+@node Saving and reading, Command Line Options, Getting Help, Basics
+@section Saving and Reading Spreadsheets
+
+@code{Oleo} can save a spreadsheet, visit a saved one, or merge with a
+previously saved one.
+
+@table @kbd
+@item C-x C-s
+Save the spreadsheet to a file, using the current
+file-format. (@code{save-spreadsheet})
+@cmindex save-spreadsheet
+@footnote{where is info on file formats?}
+
+@item C-x C-v 
+Read in a file in the current
+file-format.  This erases the current contents of the
+spreadsheet first.  This may ask for confirmation.
+(@code{visit-spreadsheet})
+@cmindex visit-spreadsheet
+
+@item C-x i
+Read in a file and merge its contents into the
+current spreadsheet.  Note that some file-formats, (like
+panic-save) won't work with this command.
+(@code{merge-spreadsheet})
+@cmindex merge-spreadsheet
+
+@item M-x toggle-load-hooks
+@cmindex toggle-load-hooks
+Change whether load-hooks are run when spreadsheets are loaded.
+When active, the find-alternate-spreadsheet command looks for a variable
+called `load_hooks' and executes the macro at that address.
+With a positive prefix argument, turns load hooks on.  With a negative
+argument, turns them off.  With no argument, acts as a toggle.
+@footnote{what is the default}
+@end table
+
+
+
+
+
+@node Command Line Options, .oleorc file, Saving and reading, Basics
+@section Command Line Options
+@comment  node-name,  next,  previous,  up
+@cindex Command Line Options
+
+At the command line, Oleo has several options
+
+@example
+        oleo [options] [file]
+@end example
+
+where @code{file} is an optional spreadsheet to open.  The remaining
+options are
+
+@table @code
+@item -q
+@itemx --quiet
+Be quiet. @footnote{But what does this really do?}
+@item -V
+@itemx --version
+print out the version and exit
+@item -h
+@itemx --help
+Describe these options
+@item -f
+@itemx --ignore-init-file
+do not read the file @file{.oleorc} on startup
+@item --nw
+do not use X-windows
+@item -F x
+@itemx --format x
+set the default file type to x (oleo, list, sc, ...)
+@itemx --filter
+stdin/stdout are used for reading and writing the spreadsheet
+Note this only works well for X Window System user interfaces,
+or in very specific circumstances.
+@item -s x
+@itemx --separator x
+set separator for 'list' file type to x
+@item -S
+@itemx --space
+set separator for 'list' file type to a space
+@end table
+
+
+@node .oleorc file, Expressions, Command Line Options, Basics
+@section The @file{.oleorc} file
+@cindex .oleorc
+@comment  node-name,  next,  previous,  up
+
+If there is a file @file{.oleorc} located in the home directory, it is
+read when Oleo starts up.  For example, if you always want to use the
+@code{a0} reference system, and wish to have the status line  on the bottom
+line, rather than on the second line from the top, your @file{.oleorc}
+file could be @footnote{what else can go here? can I set the default
+font here?}
+
+@example
+        set-option a0
+        set-option status -1
+@end example
+
+@include expressions.texi
+

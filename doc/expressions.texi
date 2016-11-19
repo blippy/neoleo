@@ -1,0 +1,178 @@
+@node   Expressions, , .oleorc file, Basics
+@section Expressions
+@cindex Expressions
+
+@ifhtml
+<A NAME="HelpExpressions">
+@end ifhtml
+  A cell entry is a value or an expression of values 
+(@pxref{Oleo values}).
+
+@menu
+* Infix expressions::           Infix Expressions
+* Examples::                    Examples of infix expressions
+* Error values::                A List of Error Values
+@end menu
+
+@node   Infix expressions, Examples, Expressions, Expressions
+@subsection Infix Expressions
+@cindex Infix expressions
+
+  The following infix expressions are defined.  Values labeled
+@var{N1} and @var{N2} are numbers (floats or integers), @var{bool} booleans,
+@var{str} strings, and @var{val} any type (but both sides must be the
+same type).
+
+@table @code
+@item -@var{N1}
+  Arithmetic negation: 0-@var{N1}
+@item !@var{bool}
+  Logical negation: @code{#TRUE} if @var{bool} is @code{#FALSE},
+@code{#FALSE} if @code{#TRUE}, and an error otherwise.
+@item @var{N1} ^ @var{N2}
+  Exponentiation.  Note that a^b^c is defined to be a^(b^c).
+@item @var{N1} * @var{N2}
+        Multiplication
+@itemx @var{N1} / @var{N2}
+        Division
+@itemx @var{N1} + @var{N2}
+        Addition
+@itemx @var{N1} - @var{N2}
+        Subtraction
+@item @var{N1} % @var{N2}
+  Modulus; the remainder of @var{N1} / @var{N2}.
+@item @var{N1} >=@var{N2}
+@code{#TRUE} if @var{N1} is greater than or equal to @var{N2}; else @code{#FALSE}
+@item @var{N1} > @var{N2}
+@code{#TRUE} if @var{N1} is greater than  @var{N2}; else @code{#FALSE}
+@item @var{N1} < @var{N2}
+@code{#TRUE} if @var{N1} is less than @var{N2}; else @code{#FALSE}
+@item @var{N1} <=@var{N2}
+@code{#TRUE} if @var{N1} is less than or equal to @var{N2}; else @code{#FALSE}
+@item @var{val1} = @var{val2}
+  Comparison: @code{#TRUE} if @var{val1} and @var{val2} can be
+considered equal, @code{#FALSE} if not.  @var{val1} and @var{val2} can
+be numbers, strings, or boolean values.
+@item @var{val1} != @var{val2}
+  Equivalent to @code{!(@var{val1} = @var{val2})}.
+@item @var{str1} & @var{str2}
+  Text concatenation of strings.
+@item @var{bool} ? @var{val1} : @var{val2}
+  Like the C operator: if @var{bool} is @code{#TRUE}, @var{val1} is
+evaluated; if @var{bool} is @code{#FALSE}, @var{val2} is evaluated;
+otherwise an error is returned.
+@item (@var{expr})
+  Overrides default precedence of expression @var{expr}.  Note that
+since Oleo stores expressions in a byte-compiled form, unneeded
+parentheses will mysteriously vanish.
+@end table
+
+@menu
+* Examples::                    
+* Error values::                
+@end menu
+
+@node Examples, Error values, Infix expressions, Expressions
+@subsection Examples
+
+Assume that the spreadsheet contains the figure below, where the
+block of X's marks the cursor.
+
+@example
+
+                 |  C  |  D  |  
+                 |     |     |   
+              --------------------
+                 |     |     |   
+              2  |  3  |     |   
+              --------------------
+                 |     |     |   
+              3  | "A" | "B" |   
+              --------------------
+                 | XXX |     |   
+               4 | XXX |  7  |   
+              --------------------
+@end example
+
+Here are some computations in  @code{a0} mode.
+
+@example
+                C2 * D4    @result{}     21
+
+                D4 % C2    @result{}     1
+
+                C2 = D4    @result{}     #FALSE
+
+                C3 < D3    @result{}     #TRUE
+
+                C3 & D3    @result{}     "AB"
+@end example
+
+
+
+
+
+@node   Error values,  , Examples, Expressions
+@subsection Error Values
+@cindex Error values
+
+@ifhtml
+<A NAME="HelpErrorValues">
+@end ifhtml
+
+  Error values are returned by the parser under various error
+conditions, such as invalid parameters to functions, badly formatted
+expressions, etc.
+
+@table @code
+@item #TRUE
+@itemx #FALSE
+  The boolean true and false values.  Not really errors, but classified
+as such to distinguish them from numbers and strings.
+@item #ERROR
+  An unclassified error.
+@item #BAD_INPUT
+  Indicates an inappropriate parameter to a formula function.
+@item #NON_NUMBER
+  A numerical value was expected.
+@item #NON_STRING
+  A string value was expected.
+@item #NON_BOOL
+  A boolean value was expected.
+@item #NON_RANGE
+  A range value was expected.
+@item #OUT_OF_RANGE
+  An out-of-range value was given, such as a cell coordinate outside a
+given cell range.
+@item #NO_VALUES
+  An error value.
+@item #DIV_BY_ZERO
+  A division by zero was attempted.
+@item #BAD_NAME
+  An error value that indicates an invalid variable name.  It may be the
+symptom of an incorrectly written address, or a string literal given
+without double quotes.
+@item #NOT_AVAIL
+  An error value.
+@item #PARSE_ERROR
+  A generic error value that indicates the parser failed to parse an
+expression.
+@item #NEED_OPEN
+  An open parenthesis is missing.
+@item #NEED_CLOSE
+  A close parenthesis is missing.
+@item #NEED_QUOTE
+  A quote was expected; e.g., the terminating quote of a string literal.
+@item #UNK_CHAR
+  An unknown character was encountered.
+@item #UNK_FUNC
+  An unknown function was called.
+@item #INF
+@itemx #INFINITY
+@itemx #NINF
+@itemx #MINUS_INFINITY
+@itemx #NAN
+@itemx #NOT_A_NUMBER
+  Various floating-point exceptions.  On some machines these may be all
+the same value, or indistinguishable from other values.
+@end table

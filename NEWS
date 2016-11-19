@@ -1,0 +1,342 @@
+===== Oleo 1.99.8 =====
+
+Lots of internal cleanup so the Motif version of Oleo stands a chance
+of running multiple windows simultaneously. The capability is there,
+it needs to be handled effectively from the menus.
+
+Printing is reworked to be more device independent. The original goal
+was to support my Epson printer (Stylus Color 400) and PCL in addition
+to PostScript. The Epson code may never become real but PCL looks ok.
+All this required using AFM (Adobe Font Metrics) files to get things to
+work reliably.
+
+Plotutils support is better, it can show windows with scrollbars, the
+user can resize the windows, etc.
+
+Unfortunately a lot of this needs work in the Motif code to make it
+more accessible to the user; this is for the next minor release.
+
+The raw X code has work to make it accept internationalised input
+(aka i18n support). I cloned the code I originally implemented in
+LessTif but it doesn't (yet) work here. Sigh.
+
+Documentation is now one HTML file (texi2html -monolithic) so it
+can be handled nicely by the XmHTML widget. This also makes access
+on the web page much more friendly when browsing the manual.
+
+===== Oleo 1.99.6 =====
+
+Database access (MySQL), internal cleanup of the source code,
+and user interface improvements.
+
+Oleo also works with the new version of Xbae (4.7) which was released
+July 1999.
+
+===== Oleo 1.99.4 =====
+
+Mostly released for a couple of bugfixes.
+They're in the ChangeLog.
+
+===== Oleo 1.99.3 =====
+
+Noteworthy changes in Oleo 1.99.3 :
+- SYLK support is much better. This means that the example files that
+  I have can be read without error. It does *not* mean that all the
+  contents of the files are treated. E.g. we have no support for cell
+  borders, multiple graphs, fonts, colour-filled cells, ...
+- Oleo now handles noa0 cell addresses of not only its own format
+  (such as RC[-2:-3]), but also RC[-2]:RC[-1] - which was needed for
+  reading SYLK files.
+- Printing is being restructured. PostScript, Epson Stylus Color, and
+  PCL support are on the drawing board - only PostScript currently
+  prints reasonable things.
+
+===== Oleo 1.99.1 =====
+
+This release is numbered 1.99.1 to indicate that we're working towards a
+2.0 release of Oleo.
+
+Stuff that has been added since 1.6 includes :
+- build support by GNU automake and GNU autoconf
+- bug fixes
+- source cleanup
+- Motif (LessTif in a free world) graphical user interface
+- GNU plotutils
+- internationalisation support (not many translations included though)
+- filter options allow Oleo to work as a traditional Unix filter program,
+  reading from standard input and writing to standard output.
+- recognise file name extensions at startup ("oleo q110399.csv" works)
+
+
+===== Oleo 1.6.13 =====
+
+Oleo 1.6.13 (dated 28 december 1998) has progressed in having a more and more
+usable Motif user interface.
+
+It's still largely unimplemented so those who need a good Motif programming
+exercise are invited to join.
+
+Please note that Xbae widgets can be found at
+  ftp://ftp.x.org/contrib/widgets/motif/Xbae-4.6.2.tar.gz
+in addition to its home page http://www.xbae.syd.net.au/ .
+
+===== Oleo 1.6.7 =====
+
+It's been a loooong time since the latest release of GNU Oleo : version
+1.6 dates from June 1994, it's late August 1998 when I'm writing this.
+
+IMPORTANT NOTE : this release is a teaser.
+
+Oleo is not quite ready for a new release now, as a couple of things are
+work in progress. This release is made to :
+* get the word out to people that something's happening, 
+* have people build this release and ensure it works for them.
+
+Since 1994, several people have picked up oleo and modernised it.
+Their names are in the AUTHORS file.
+
+Here's a (horribly incomplete) list of improvements :
+- build support with automake, autoconf
+- Motif interface (LessTif works too)
+- i18n (internationalisation)
+
+Important note when building : if "aclocal" complains about duplicates,
+then this probably means you have GNU gettext installed (this is good !),
+but aclocal can't handle macros in two places. You should just remove
+three files from oleo's m4 directory (gettext.m4, lcmessage.m4, progtest.m4).
+
+We should probably remove them and the intl/ directory from GNU Oleo.
+
+If you want to build the Motif interface, you need :
+- Xbae widgets (http://www.xbae.syd.net.au)
+
+You probably better also have :
+- XmHTML widget if you want help (http://www.xs4all.nl/~ripley/XmHTML)
+- SciPlot widget if you want graphics
+	(http://www.ae.utexas.edu/~rwmcm/SciPlot.html)
+- GNU gettext (http://www.gnu.org)
+
+===== Oleo 1.6 =====
+
+Many patches from volunteers have been applied.  See the ChangeLog to
+determine if your favorite long-standing bug has been fixed.
+
+The file EIGHTBIT contains some patches for Scandinavian character
+support.  They correspond to version 1.5 and may require some work for
+version 1.6.
+
+===== Oleo 1.5 =====
+
+Various bug and portability fixes.
+
+One central keybinding has change.  `=' is now bound to set-cell instead
+of edit-cell.  The difference is that edit-cell prompts you with the current
+formula setting fo the cell while set-cell prompts with an empty line.
+
+To restore the old behavior, you can put this line in your .oleorc:
+
+	bind-key main edit-cell =
+
+Also, when editting a cell formula, the function `insert-cell-expression'
+inserts the current formula setting of a cell.  By default, it is bound to 
+`M-e' (aka ESC e).
+
+** Problems with enums
+   Some user sent me mail explaining that he had problems with the way 
+   enums are used in the file graph.c.  Unfortunately, i lost that mail.
+   If that user sees this -- please send a message to bug-oleo@prep.ai.mit.edu.
+
+
+===== Oleo 1.4 =====
+
+A whole mess of bugfixes and portability fixes.
+
+Oleo still does not run on systems that lack the `select' system call.
+Volunteers who would like to port Oleo to such systems (perhaps
+adapting code form GNU Emacs) are encouraged to write to
+bug-oleo@prep.ai.mit.edu.
+
+===== Oleo 1.3.1 =====
+
+- Several compilation problems (io-edit.c, autoconf goodies) have been
+  fixed, as well as all reported bugs.
+
+- Date formula functions have been added using strftime, localtime, gmtime, mktime,
+  GNU get_date, and GNU posixtm.  
+
+  Oleo measures time using integers that count seconds.  Calendar dates
+  (as opposed to intervals of time) are measured from 1 Jan 1970 GMT.
+
+  The new Oleo functions are:
+
+	  Computing times from conventional representations:
+
+  hms_to_time		compute an interval from hours, minutes, and seconds
+  dhms_to_time		compute an interval from days, hours, minutes, and seconds
+
+  time_to_d		compute the number of days in an interval
+  time_to_h		   "	 "     "   "  hours   "    "
+  time_to_m 		   "	 "     "   "  minutes "    "
+  time_to_s 		   "	 "     "   "  seconds "    "
+
+  ymd			Convert a local year, month, and day to an absolute time.
+  ymd_dst		The same, but perhaps overriding normal d.s.t. conventions.
+
+  get_date		Parse a date in the style of GNU date or GNU tar.
+  posix_date		Parse a date following Posix syntax.
+
+
+	   Converting from absolute times to calendar times
+
+
+  local_year, local_month,		These convert with respect to
+  local_date, local_hour,		the local timezone.
+  local_min, local_sec,
+  local_isdst, local_yday, local_wday
+
+  gmt_year, gmt_month,			These convert with respect to
+  gmt_date, gmt_hour,			GMT.
+  gmt_min, gmt_sec,
+  gmt_isdst, gmt_yday, gmt_wday
+
+
+  Finally, the miscellaneous pile:
+
+  strftime		Format a time nicely (on-line help (^H^F) has details)
+
+
+===== Oleo 1.3 =====
+
+- Many keybindings have changed.  The new bindings more closely resemble Emacs.
+  Most commands are now bound to control or meta characters.
+  Alphanumeric characters begin cell entry.  There are a variety of
+  new motion commands.
+
+  The file KEYS contains a wallchart of Oleo bindings.  This file was
+  derived from the output of the command `M-x write-wallchart'.
+
+- There is now on-line help for interactive functions and formula
+  expressions.  ^H is the help prefix.
+
+- Argument prompting has changed.   Oleo's interactive behavior is now
+  much less like vi, and much more like Emacs.  For example, the
+  arguments to interactive functions are now prompted for indivdually
+  rather than with a single readline.
+
+- Oleo speaks gnuplot.  A series of graph commands (accessed via
+  `M-g') can be used to create gnuplot graphs of data in Oleo
+  spreadsheets.  X11 users can draw graphs on the screen.  Anyone can
+  generate postscript.
+
+- Tax forms!  A volunteer has created the spreadsheet irs-1992.oleo.
+  It contains spreadsheets for a number of federal and State of
+  Connecticut tax forms.  Thanks to Ronald Florence <ron@mlfarm.com>.
+
+- Larger address space.  By default, Oleo now provides 16 bit cell
+  addresses (there are 65535 rows and columns).
+
+
+
+===== Oleo 1.2.2 =====
+
+This is a bugfix release.  Nearly all bugs reported for 1.2.1 have
+been fixed (a few could not be reproduced).  Many portability problems
+have been fixed.
+
+Release 1.2.2 has been built and (minimally) tested on these systems:
+
+	RS/6000 running AIX
+	Sun4 running SunOS 4.1.1
+	Sun3 running SunOS 4.1.1_U1
+
+A more significant amount of testing has been done on DECstation
+5000's running Ultrix 4.2.
+
+===== Oleo 1.2.1 =====
+
+This is a bugfix release.  Various configuration problems and a few
+trivial bugs in the 1.2 release have been repaired.
+
+===== Oleo 1.2 =====
+
+This is primarily a bigfix release.  In addition, there are some new features.
+
+* New command line options
+
+  --version or -v: print out a version number
+  --quiet or -q: don't print the disclaimer
+  --ignore-init-file or -f: don't read commands from .oleorc or ~/.oleorc
+
+* New commands/Changes to commands
+
+  write-variables:  writes to a file or pipe the values of all variables 
+	that are bound to cells.  Variables bound to regions are not 
+	written.
+
+  read-variables: The inverse of write-variables.  Variables that are
+	bound to a range cause an error.  Variables not bound to a
+	cell are ignored.
+
+  Format-cell and format-region can now be used to set cell fonts.
+
+  set-region-forumla: This can be used to edit many cells at once.
+
+  {upper,lower}-{left,right}: These commands go to extremes.  They are
+  bound to M-{^Y ^U ^B and ^N}.
+
+  {insert,delete}-{row,column}: new commands bound to ^O, ^K, M-^O, M-^K.
+
+  {move,copy}-region: these commands now work (at least for many test cases).
+
+  exchange-point-and-mark: ^X ^X
+
+* File Format Changes
+
+  SYLK mode appears to have changed at some time in the past.  Older
+  (and correct, i presume)  versions write cell references in a0
+  format.  The last alpha and early beta releases use rc format.  
+  Now there are two file formats ``sylk'' and ``sylk-noa0''.
+  If older sylk files don't work with one, they may with the other.
+  Hopefully, between them, all oleo-generated sylk files can be read.
+  Users are encouraged to read and write files in ``oleo'' format (the
+  default).
+
+  Oleo file format has changed in a (hopefully) upward compatable way.
+
+  When reading sylk or oleo files, a format error now causes the read
+  to be aborted.
+
+  Oleo no longer generates a panic file on any signal (it dumps core
+  like everyone else).
+
+* X tweaks
+ 
+  The window now has a title.
+
+  Whatever key corresponds to Mod1Mask is treated as a meta key.
+
+  The resources oleo.geometry, oleo.foreground and oleo.background
+  have the expected effects.
+
+* New formula functions
+
+  In the `cells' package there is a new function vlookup_str that can
+  be used to search a table, using a keyword string.  See USING.
+
+===== Oleo 1.1 =====
+
+Sat Nov 21 21:03:31 1992
+
+This is a bugfix release.  Release 1.0 had a few trivial, but fatal
+bugs, and didn't work at all unless you editted global.h first.  If
+you had trouble with that release, please try this one.  
+
+If formulas don't seem to work at all, or if you experience core dumps
+when defining formulas, check to see that that the definition of
+CELLREF in globals.h is correct for your system.  The current
+definitions assume that characters are 8 bits, and the short integers
+are 16 bits.
+
+All reported bugs have been fixed.
+
+The opening disclaimer is no longer printed if you have a .oleorc file.

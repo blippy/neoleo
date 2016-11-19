@@ -1,0 +1,30 @@
+@node Reporting Bugs, Motif, Extending Oleo, Top
+@chapter Reporting Bugs
+
+
+
+   If you have problems with Oleo or think that you have found a bug,
+please report it; we cannot promise to do anything but we
+might well want to fix it.
+
+   Before reporting a bug, make sure you have actually found a real bug. 
+Carefully reread the documentation and see if it really says you can do what
+you're trying to do.  If it's not clear whether you should be able to do
+something or not, report that too; it's a bug in the documentation!
+
+   Before reporting a bug or trying to fix it yourself, try to isolate it to
+the smallest possible Oleo program and input data file that reproduces the
+problem.  Then send us the program and data file, some idea of what kind of
+Unix system you're using, and the exact results Oleo gave you.  Also say
+what you expected to occur; this will help us decide whether the problem was
+really in the documentation.
+
+   Once you have a precise problem, send e-mail to 
+@file{bug-oleo@@prep.ai.mit.edu}. 
+
+   Non-bug suggestions are always welcome as well.  If you have questions
+about things that are unclear in the documentation or are just obscure
+features, send a note to @file{bug-oleo@@prep.ai.mit.edu}.
+
+Also, if you wish to add to the documentation, please do so.  Send your
+additions to the address above.

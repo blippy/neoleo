@@ -1,0 +1,364 @@
+dnl
+dnl This is the configuration file for GNU oleo.
+dnl
+dnl $Id: configure.in,v 1.89 2001/03/08 08:28:15 danny Exp $
+dnl
+dnl Process this file with autoconf to produce a configure script.
+dnl
+AC_INIT(src/init.c)
+
+dnl
+dnl Need to be processed with Autoconf >= 2.13
+dnl
+AC_PREREQ(2.13)
+
+AM_INIT_AUTOMAKE([oleo], [1.99.16])
+GNU_PACKAGE="GNU $PACKAGE"
+AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE")
+
+dnl
+dnl Use of this macro will keep unexpected things from happening if
+dnl you're not familiar with automake.
+dnl
+dnl    if test -z "$enable_maintainer_mode"
+dnl    then
+dnl        enable_maintainer_mode=yes
+dnl    fi
+AM_MAINTAINER_MODE
+
+dnl Define available languages
+ALL_LINGUAS="en nl fr"
+
+AC_ARG_PROGRAM
+AM_CONFIG_HEADER(config.h)
+
+dnl
+dnl Find a C compiler, detect strange systems.
+dnl The order is important here.
+dnl
+AC_PROG_CC
+AC_AIX
+AC_ISC_POSIX
+AC_CYGWIN
+AC_EXEEXT
+
+dnl
+dnl for intl/
+dnl
+AC_CHECK_SIZEOF(short, 2)
+AC_CHECK_SIZEOF(int, 4)
+AC_CHECK_SIZEOF(long, 4)
+
+dnl
+dnl Dmalloc is a library to debug memory allocation.
+dnl Get it from www.dmalloc.com
+dnl
+AM_WITH_DMALLOC
+
+dnl
+dnl Now at last we can do checks for programs.
+dnl
+AC_PROG_YACC
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+AC_CHECK_PROG(HAVE_TEXI2HTML, texi2html, yes)
+AM_CONDITIONAL(HaveTexi2Html, test x$HAVE_TEXI2HTML = xyes)
+
+dnl
+dnl Get perl's location for texi2html
+dnl
+AC_PATH_PROG(HAVE_PERL, perl)
+AC_SUBST(HAVE_PERL)
+AM_CONDITIONAL(HavePerl, test x$HAVE_PERL != x)
+
+
+dnl
+dnl Dirty trick
+dnl
+if test -d /usr/local ; then
+dnl	CFLAGS="-I/usr/local/include $CFLAGS "
+	INCLUDES="-I/usr/local/include $INCLUDES "
+	LIBS="-L/usr/local/lib $LIBS "
+fi
+
+dnl
+dnl How good is the C compiler ?
+dnl
+AM_C_PROTOTYPES
+
+dnl
+dnl Checks for libraries.
+dnl
+AC_CHECK_LIB(ncurses, waddch, ,
+	AC_CHECK_LIB(curses, addch, ,
+		AC_CHECK_LIB(termlib, tgetent, ,
+			AC_CHECK_LIB(termcap, tgetent))))
+
+AC_CHECK_HEADERS(ncurses.h, break, ac_cv_lib_ncurses_waddch="no")
+
+dnl Check for sys_errlist[] and sys_nerr, check for declaration
+AC_MSG_CHECKING([for sys_errlist and sys_nerr])
+AC_CACHE_VAL(oleo_cv_sys_errlist,
+[AC_TRY_LINK([#include <errno.h>
+#include <stdio.h>],
+[  char *msg = sys_errlist[sys_nerr - 1];],
+      oleo_cv_sys_errlist=yes, oleo_cv_sys_errlist=no)])dnl
+      AC_MSG_RESULT($oleo_cv_sys_errlist)
+      if test $oleo_cv_sys_errlist = yes; then
+      AC_DEFINE(HAVE_SYS_ERRLIST)
+      fi
+
+dnl
+dnl This library is required on FreeBSD.
+dnl
+AC_CHECK_LIB(mytinfo, tputs)
+
+dnl
+dnl Good i18n on FreeBSD requires the XPG4 library
+dnl
+AC_CHECK_LIB(xpg4, setlocale)
+
+dnl
+dnl Check existence of a working math library
+dnl	The good old check with sqrtf fails on some systems.
+dnl	Is there a function that works on all ?
+dnl	Yes: "main" just detects presence of the library.
+dnl
+AC_CHECK_LIB(m, main)
+
+dnl
+dnl Checks for X11
+dnl
+AC_PATH_XTRA
+
+dnl There are cases where motif may be installed on a system, but X may not
+dnl be (Default on hppa1.1-hp-hpux10.20) therefor this this must all be wrapped
+if test "$no_x" = ""; then 
+    dnl
+    dnl Motif (LessTif)
+    dnl
+    AC_ARG_WITH(motif,
+	[  --without-motif              do not use Motif, even if detected],
+	[		case "${withval}" in
+	    y | ye | yes )	usemotif=yes ;;
+	    n | no )		usemotif=no ;;
+	    * )			usemotif=yes ;;
+	    esac],
+	[		with_motif=yes])
+
+    dnl
+    dnl If you ask not to have Xbae then you can't have Motif either.
+    dnl And the other way around.
+    dnl
+    dnl To make sure people know about this, we'll be harsh and abort.
+    dnl
+    if test "$with_Xbae" = "no" -a "$with_motif" = "yes" ; then
+	AC_MSG_ERROR(Cannot build Motif/LessTif interface without Xbae)
+    fi
+    if test "$with_Xbae" = "yes" -a "$with_motif" = "no" ; then
+	AC_MSG_ERROR(Cannot use Xbae without Motif/LessTif)
+    fi
+ 
+    dnl
+    dnl Checks for Motif
+    dnl These should not happen if --without-motif has been used.
+    dnl
+    if test "$with_motif" = "yes"; then
+	AC_FIND_MOTIF
+    fi
+    if test "$with_motif" = "yes"; then
+	AC_FIND_XBAE
+	if test "$with_xbae" = "no" ; then
+	    AC_MSG_ERROR(
+	      [Xbae not found; you must install it or use "--without-motif"])
+	    with_motif=no
+	fi
+    fi
+    if test "$with_motif" = "yes"; then
+	ICE_FIND_XmHTML
+	AC_FIND_XLT
+	if test "x$XLT_LIBS" != "x"; then
+	    CFLAGS="$XLT_CFLAGS $MOTIF_CFLAGS $X_CFLAGS $CFLAGS"
+	    LIBS="$XLT_LIBS $MOTIF_LIBS $X_LIBS $X_PRE_LIBS -lXt -lX11 -lXext $X_EXTRA_LIBS $LIBS"
+	    AC_DEFINE(HAVE_SciPlot_H)
+	else
+	    ICE_FIND_SciPlot
+	    CFLAGS="$MOTIF_CFLAGS $X_CFLAGS $CFLAGS"
+	    LIBS="$MOTIF_LIBS $X_LIBS $X_PRE_LIBS -lXt -lX11 $X_EXTRA_LIBS $LIBS"
+	fi
+	AC_CHECK_LIB(Xpm, main)
+    fi
+    if test "$with_motif" = "no"; then
+	dnl
+	dnl Add link to X11
+	dnl	This is only for the non-motif case.
+	dnl
+	with_x=yes
+	AC_LINK_X
+    fi
+fi dnl "$no_x" = "yes"
+
+dnl
+dnl This is an automake variable which allows you to use conditionals
+dnl in makefiles. We'll use it in the src/ directory to figure out
+dnl which files to compile.
+dnl
+AM_CONDITIONAL(UseMotif, test x$with_motif = xyes)
+
+dnl
+dnl Check whether a recent version of GNU PlotUtils is around
+dnl	This needs to be done after the X and Motif tests, because
+dnl	the libplot from GNU plotutils sometimes requires linking the
+dnl	X and Motif libraries
+dnl
+AC_CHECK_LIB(plot, pl_openpl_r,
+	AC_DEFINE(HAVE_LIBPLOT)
+	LIBS="$LIBS -lplot")
+
+AC_CHECK_LIB(sciplot, sp_begin_plot)
+if test x$ac_cv_lib_sciplot_sp_begin_plot = xyes; then
+	AC_DEFINE(HAVE_LIBSCIPLOT)
+fi
+
+dnl Checks for Guile
+dnl AC_CHECK_LIB(guile, scm_boot_guile)
+
+dnl Checks if -DDEBUG is requested
+AC_ARG_WITH(debug,
+[  --with-debug                 Send debugging info to stderr],
+[              case "${withval}" in
+                 y | ye | yes )         usedebug=yes ;;
+                 n | no )               usedebug=no ;;
+                 * )                    usedebug=yes ;;
+               esac],
+[              with_debug=no])
+
+if test $with_debug = yes; then
+  CFLAGS="$CFLAGS -DDEBUG"
+  if test "x$GCC" = "xyes"; then
+    if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`"; then
+      CFLAGS="$CFLAGS -Wall"
+    fi
+  fi
+fi
+           
+dnl
+dnl Checks for header files.
+dnl
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h malloc.h strings.h sys/time.h unistd.h)
+AC_CHECK_HEADERS(locale.h time.h math.h libintl.h)
+
+dnl
+dnl
+AC_CHECK_FUNC(XltCreateFontChooser, AC_DEFINE(HAVE_XLT_FONTCHOOSER))
+
+dnl
+dnl GNU GSL (GNU Scientific Library)
+dnl
+AC_CHECK_LIB(gsl, gsl_error,
+	LIBS="$LIBS -lgsl -lgslblas"
+	AC_DEFINE(HAVE_GSL),,
+	-lgslblas)
+
+dnl
+dnl MySQL client library ?
+dnl
+AC_CHECK_LIB(mysqlclient, mysql_connect)
+AM_CONDITIONAL(HaveMySQL, test x$ac_cv_lib_mysqlclient_mysql_connect = xyes)
+
+dnl
+dnl Checks for typedefs, structures, and compiler characteristics.
+dnl
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+dnl
+dnl Checks for library functions.
+dnl
+AC_FUNC_ALLOCA
+AC_TYPE_SIGNAL
+AC_FUNC_STRFTIME
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(ftime gethostname gettimeofday mktime select strdup strstr)
+AC_CHECK_FUNCS(putenv strcasecmp strerror getcwd rename)
+AM_FUNC_MKTIME
+AM_FUNC_OBSTACK
+
+dnl
+dnl CUPS is the Common UNIX Printing System
+dnl	http://www.cups.org
+dnl
+AC_CHECK_LIB(cups, cupsGetPrinters)
+
+dnl
+dnl
+dnl Xbase support (to read DBF files).
+dnl	You'll need to uncomment the lines below for Xbase support,
+dnl	as is indicated in the FAQ.
+dnl
+dnl AC_PROG_CXX
+AC_PROG_CXX_NONFATAL
+dnl
+dnl End Xbase support lines
+dnl
+if test "$CXX" != "no"; then
+  AC_LANG_SAVE
+  AC_LANG_CPLUSPLUS
+  AC_CHECK_LIB(xbase, main)
+  if test x$ac_cv_lib_xbase_main = xno; then
+    AC_CHECK_LIB(xdb, main)
+    AM_CONDITIONAL(HaveXbase, test x$ac_cv_lib_xdb_main = xyes)
+  else
+    AM_CONDITIONAL(HaveXbase, test x$ac_cv_lib_xbase_main = xyes)
+  fi
+  AC_LANG_RESTORE
+else
+  AM_CONDITIONAL(HaveXbase, false)
+fi
+
+dnl See if we're GNU Gettext friendly
+dnl
+AM_GNU_GETTEXT
+
+dnl
+dnl This used to cause all kinds of problems in an earlier revision
+dnl	of oleo. (Mostly because of using earlier auto* tools.)
+dnl
+dnl AC_LINK_FILES($nls_cv_header_libgt, $nls_cv_header_intl)
+
+dnl
+dnl Pass information about where we install to the source, to be
+dnl	able to read AFM files. Note this doesn't work if you
+dnl	install via "make install DESTDIR=/xxx"
+dnl
+if test "$prefix" != "NONE"; then
+	BUILD_PREFIX=$prefix
+else
+	BUILD_PREFIX=$ac_default_prefix
+fi
+AC_SUBST(BUILD_PREFIX)
+
+dnl
+dnl
+dnl
+
+AC_SUBST(LIBOBJS)
+
+AC_SUBST(include_motif)
+AC_SUBST(link_motif)
+AC_SUBST(include_xbae)
+AC_SUBST(link_xbae)
+AC_SUBST(include_xmhtml)
+AC_SUBST(link_xmhtml)
+AC_SUBST(include_sciplot)
+AC_SUBST(link_sciplot)
+
+AC_OUTPUT([Makefile oleobug doc/Makefile doc/texi2html lib/Makefile src/Makefile intl/Makefile m4/Makefile po/Makefile.in Xresources/Makefile examples/Makefile oleo.spec afm/Makefile],[sed -e "/POTFILES =/r po/POTFILES" po/Makefile.in > po/Makefile])

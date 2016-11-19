@@ -1,0 +1,27 @@
+mysql> create table koers (
+    -> naam char(32),
+    -> huidige float(10,2),
+    -> datum datetime,
+    -> verschil float(10,2),
+    -> hoogste float(10,2),
+    -> laagste float(10,2),
+    -> kweenie float(10,2),
+    -> volume float(10,2))\g
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> describe koers\g
+8 rows in set (0.00 sec)
+
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| naam     | char(32)    | YES  |     |         |       |
+| huidige  | float(10,2) | YES  |     |         |       |
+| datum    | datetime    | YES  |     |         |       |
+| verschil | float(10,2) | YES  |     |         |       |
+| hoogste  | float(10,2) | YES  |     |         |       |
+| laagste  | float(10,2) | YES  |     |         |       |
+| kweenie  | float(10,2) | YES  |     |         |       |
+| volume   | float(10,2) | YES  |     |         |       |
++----------+-------------+------+-----+---------+-------+
+

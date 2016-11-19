@@ -1,0 +1,39 @@
+# This file was created by GNU Oleo
+# format 2.0 (requires Oleo 1.6.14 or higher)
+#
+# Graph test (XY and bar chart)
+#
+F;DGFL8
+O;auto;background;a0;ticks 1
+F;W3 3 13
+C;c1;r1;K6
+C;r2;K5
+C;r3;K4
+C;r4;K3
+C;r5;K2
+C;r6;K1
+C;c2;r1;K4
+C;c3;K2
+C;r4;K3
+C;r5;K5
+C;r6;K2
+C;r7;K1
+C;r8;K8
+C;r9;K2
+C;c4;r1;K5
+C;r4;K36
+C;r5;K25
+C;r6;K16
+C;r7;K9
+C;r8;K4
+C;r9;K1
+C;c5;r1;K8
+O;status 2
+W;N1;A1 1;C7 0 7;Ostandout
+G0,1,1,1,6
+G1,3,4,3,9
+G2,4,4,4,9
+GTDit is een test voor graphs
+GDx"Tijd"
+GDy"Appelen"
+E

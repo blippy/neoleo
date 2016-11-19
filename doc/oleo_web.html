@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML>
+<HEAD>
+<TITLE>Oleo - GNU Project - Free Software Foundation (FSF)</TITLE>
+<LINK REV="made" HREF="mailto:webmasters@www.gnu.org">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#1F00FF" ALINK="#FF0000" VLINK="#9900DD">
+<H3>Oleo</H3>
+<A HREF="/graphics/gnu-head-sm.jpg"><IMG SRC="/graphics/gnu-head-sm.jpg"
+ALT=" [image of the Head of a GNU] "
+WIDTH="129" HEIGHT="122">&#32;(jpeg 7k)</A>
+<A HREF="/graphics/gnu-head.jpg">(jpeg 21k)</A>
+<A HREF="/philosophy/gif.html">no gifs due to patent problems</A>
+
+<P>
+Oleo has for a long time been GNU's spreadsheet.
+Now there's not only Oleo but also Gnumeric, the
+<A HREF="http://www.gnome.org">GNOME</A> spreadsheet.
+Gnumeric is a full featured spreadsheet,
+aiming to compete with commercial applications,
+and well integrated with GNOME.
+Oleo is a light-weight spreadsheet that'll work in almost any environment.
+<P>
+Oleo features a curses based interface (character mode),
+but also a LessTif (Motif) based graphical user interface.
+A screenshot of the Motif GUI is <A HREF="oleo1.png">here (11K png file)</A>.
+<P>
+The current development release of oleo is 
+<A HREF="ftp://alpha.gnu.org/pub/gnu/oleo/oleo-1.99.14.tar.gz">1.99.14</A> .
+Version 1.99.14 is also available from the regular GNU FTP server at
+<A HREF="ftp://ftp.gnu.org/pub/gnu/oleo/oleo-1.99.14.tar.gz">
+ftp://ftp.gnu.org/pub/gnu/oleo/oleo-1.99.14.tar.gz</A> .
+All the GNU mirrors should pick it up.
+<P>
+We're working on an upcoming Oleo 2.0 release.
+The current snapshots already implement the following 2.0 features :
+<UL>
+<LI> Motif/<A HREF="http://www.lesstif.org">LessTif</A> interface,
+     based on the <A HREF="http://www.lesstif.org/Xbae.html">Xbae</A>Matrix widget
+<LI> Access to the statistics functions of the GSL
+     (<A HREF="http://sources.redhat.com/gsl/">GNU Scientific Library</A>).
+<LI> Support for opening multiple spreadsheets, each in a Motif window,
+     at the same time.
+<LI> device independent graphics through
+     <A HREF="http://www.gnu.org/software/plotutils/plotutils.html">GNU plotutils</A>,
+     replacing the older gnuplot interface
+<LI> more portable build through autoconf and automake
+<LI> internationalised (i18n)
+<LI> updated documentation
+<LI> ANSI C code (removed K&amp;R stuff)
+<LI> filter mode (read file from stdin, save to stdout)
+<LI> better SYLK support
+<LI> improved printing (PostScript and PCL)
+<LI> database access (MySQL and DBF files)
+<LI> SciPlot graphics (Motif/LessTif only)
+<LI> cleaned up internals
+<LI> runs in character mode as well as in a GUI
+<LI> interface to <A HREF="http://www.cups.org">CUPS</A> to browse available printers
+</UL>
+<P>
+Details about recent changes are available in the ChangeLog file.
+There is a manually updated version of ChangeLog
+<A HREF="/software/oleo/ChangeLog">here</A>,
+you can get the latest version from CVSWEB using a URL like
+<A HREF="http://subversions.gnu.org/cgi-bin/cvsweb/~checkout~/oleo/ChangeLog?rev=1.134">
+http://subversions.gnu.org/cgi-bin/cvsweb/~checkout~/oleo/ChangeLog?rev=1.134</A>
+but then you need to know the latest version number (1.134 at the time I write this).
+<P>
+The Oleo documentation is now also available
+<A HREF="http://www.gnu.org/software/oleo/doc/oleo.html">online</A>.
+<P>
+Intermediate versions are available through anonymous CVS,
+and their source can be browsed online through
+<a href="http://subversions.gnu.org">the cvs-web interface</a>.
+The complete sources to Oleo are in the GNU CVS server at subversions.gnu.org.
+You can read more about this on
+<A HREF="http://www.gnu.org/software/devel.html">
+http://www.gnu.org/software/devel.html</A> .
+<P>
+This mailing list concern oleo :
+<UL>
+<LI> <I>bug-oleo@gnu.org</I> for reporting (and reading about) bugs in oleo.
+     <BR>
+     <A HREF="mailto:bug-oleo@gnu.org">send mail to bug-oleo@gnu.org</A>
+     <BR>
+     <A HREF="mailto:bug-oleo-request@gnu.org">subscribe to bug-oleo
+       (be sure to put the word subscribe in your subject line)</A>
+</UL>
+<P>
+The GNU mailing lists maintain <B>archives</B> of the messages sent to it.
+The archives can be queried by E-mails whose subject starts with
+the word <I>archive</I>.
+By sending a message with subject <I>archive help</I> to
+<A HREF="mailto:bug-oleo-request@gnu.org">bug-oleo-request@gnu.org</A>
+you will ask the server to send you a message with instructions for
+working with the archive server.
+<P>
+We recommend that you also send a message with the subject
+<I>archive ls latest</I>
+as "latest" is the name of a directory.
+<P>
+Our TODO and ChangeLog files are now web-accessible :
+<A HREF="http://www.gnu.org/software/oleo/TODO">TODO</A> ,
+<A HREF="http://www.gnu.org/software/oleo/ChangeLog">ChangeLog</A> .
+<P>
+Please note that LessTif is a freely available replacement for OSF/Motif.
+LessTif is licensed by the GNU LGPL and can be obtained from
+<A HREF="http://www.lesstif.org">www.lesstif.org</A>.
+
+<HR>
+
+Return to <A HREF="/home.html">GNU's home page</A>.
+
+<br>
+Please send FSF &amp; GNU inquiries &amp; questions to
+
+<A HREF="mailto:gnu@gnu.org"><EM>gnu@gnu.org</EM></A>.
+There are also <A HREF="/home.html#ContactInfo">other ways to contact</A> the FSF.
+
+<br>
+Please send comments on these web pages to
+<A HREF="mailto:webmasters@www.gnu.org"><EM>webmasters@www.gnu.org</EM></A>,
+send other questions to
+<A HREF="mailto:gnu@gnu.org"><EM>gnu@gnu.org</EM></A>.
+
+<br>
+Copyright (C) 2000 Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111,  USA
+
+<br>
+Verbatim copying and distribution is permitted
+in any medium, provided this notice is preserved.
+
+<P>
+Last update :
+<I> $Id: oleo_web.html,v 1.27 2000/11/25 10:02:04 danny Exp $</I>
+</P>
+</BODY>
+</HTML>

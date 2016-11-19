@@ -1,0 +1,1302 @@
+This is oleo.info, produced by makeinfo version 4.0 from oleo.texi.
+
+   This file documents Oleo, the GNU spreadsheet.
+
+   This file is part of GNU Oleo.
+
+   Copyright (C) 1993-2000 Free Software Foundation, Inc.
+
+   Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+   Permission is granted to copy and distribute modified versions of
+this manual under the conditions for verbatim copying, provided that
+the entire resulting derived work is distributed under the terms of a
+permission notice identical to this one.
+
+   Permission is granted to copy and distribute translations of this
+manual into another language, under the above conditions for modified
+versions, except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+
+
+File: oleo.info,  Node: Search functions,  Next: Business functions,  Prev: Structural functions,  Up: Functions
+
+Search Functions
+================
+
+   These functions search for a value or string in a range of cells, and
+return the index of the first cell that matches.  Cells are numbered
+from 1 in column-major order; e.g., in the range `r1:2c1:3' cell `r1c1'
+is index 1, cell `r2c1' is 2, cell `r1c2' is 3, etc.
+
+`member(RNG, VAL)'
+     Returns the index of the first cell in RNG that contains value
+     VAL, or 0 if no cells contain it.  VAL may be an error value.
+
+`smember(RNG, STR)'
+     Search for a substring.  Returns the index of the first cell in
+     RNG that is a substring of STR, or 0 if no cells are contained in
+     STR.  If STR is empty, it matches empty cells as well (1).
+
+`members(RNG, STR)'
+     Like `members()', but vice-versa: matches the first cell with a
+     substring of STR (i.e., STR is contained in the cell).  If STR is
+     empty, empty cells are still ignored (unlike `members()').
+
+`pmember(RNG, STR)'
+`memberp(RNG, STR)'
+     Same as `smember()' and `members()', respectively, but these
+     search for an _initial_ string STR of the cells in RNG.
+
+`index(RNG, INDEX)'
+`index(RNG, ROWOFFSET, COLOFFSET)'
+     The first form returns the contents of the cell at index INDEX in
+     RNG.  The second form returns the cell in RNG that is ROWOFFSET
+     rows and COLOFFSET columns from the upper left.
+
+`oneof(CHOICE, VAL1, ...)'
+     Case expression.  Returns VAL1 if CHOICE is 1, the next value if
+     2, etc.  If CHOICE is not a valid integer in the appropriate
+     range, `#OUT_OF_RANGE' is returned.  If no value arguments are
+     supplied, `#NO_VALUES' is returned.  Note that arguments must be
+     values; ranges are not allowed.
+
+   These functions are used to index into a table of entries:
+
+`hlookup(RNG, NUM, ROWOFFSET)'
+     Scans the top row of RNG looking for a number which is greater
+     than NUM, then returns the value in the cell that is ROWOFFSET
+     rows down from the top of the range.
+
+`vlookup(RNG, NUM, COLOFFSET)'
+     Like `vlookup()', but vertically: scans the first column of RNG
+     for a value greater than NUM, and returns the cell value COLOFFSET
+     columns to the right.
+
+`vlookup_str(RNG, STR, COLOFFSET)'
+     Like `vlookup()', but looks for string STR.
+
+   ---------- Footnotes ----------
+
+   (1) An empty cell is a cell with no value; a cell with an empty
+_string_ value (`""') would match anyway, since an empty string is a
+substring of an empty string.
+
+
+File: oleo.info,  Node: Business functions,  Next: Date functions,  Prev: Search functions,  Up: Functions
+
+Business Functions
+==================
+
+   Functions for various business-related calculations.  Rates are
+expressed as exactly, i.e. don't expect `10' to mean 10%, but rather use
+`0.10'.  The units for TERM are payment periods.  Thus, if you want to
+calculate any of the following using, for example, monthly
+componunding, you will want `pmt(p, r/12, t*12)', where T is in years.
+
+`pmt(P, R, TERM)'
+     Payment per period for a loan of principal P at rate R for   TERM
+     payments, assuming a fully amortizing loan which compounds   at
+     the payment rate.
+
+`pv(PMT, R, TERM)'
+     Present value of an investment that pays PMT at the end of each
+     of TERM periods with a discount (interest) rate of R.
+
+`npv(RNG, R)'
+     Net present value of an investment which will pay uneven payments.
+     The term   is calculated from the number of cells in range RNG,
+     with the first   cell corresponding to T=0 (i.e., assuming a
+     beginning of year paymest   stream).  Entries in the range can be
+     positive or negative, corresponding to   receipts or payments,
+     respectively.
+
+`irr(RNG, GUESS)'
+     Internal rate of return.  Given a range of cells corresponding to
+     uneven periodic payments, calculate the rate R such that
+     `npv(rng,r)==0'.  This function can be multivalued when entries
+     in the range change sign more than once, and hence returns
+     `#BAD_INPUT'   if it fails to converge.  Argument GUESS helps the
+     function return   more quickly, but is not critical.
+
+`fmrr(RNG, SAFE, REINVEST, REINVMIN)'
+     Financial management rate of return.  This function attempts to be
+     a more   encompassing and consistent version of the internal rate
+     of return, which   ignores the disposition of intermediate cash
+     in- and outflows.  The   `fmrr' function pulls back negative
+     values to the nearest positive ones   at the SAFE rate (e.g.
+     certificate of deposit rate), and pushes   forward all outflows to
+     the end of the period as specified by RNG.    These outflows
+     generate income at the REINVESTment rate if they   accumulate to
+     be over REINVINMIN, otherwise at the SAFE rate.
+
+`fv(PMT, R, TERM)'
+     Future value of an annuity that pays PMT at the end of each   of
+     TERM periods assuming a discount rate of R.
+
+`rate(FUT, PRES, TERM)'
+     Interest rate required to turn current principal PRES into
+     future principal FUT in TERM periods.
+
+`term(PMT, R, FUT)'
+     Number of periods required to collect FUT in payments of   PMT,
+     with an interest rate of R.
+
+`cterm(R, FUT, PRES)'
+     Number of periods required to collect FUT from a single deposit
+     of PRES, at an interest rate of R.
+
+`sln(COST, SCRAP, LIFE)'
+     Straight line depreciation of an asset that cost COST when new,
+     can be sold for SCRAP, and will last for LIFE periods.
+
+`syd(COST, SCRAP, LIFE, PER)'
+     Sum-of-the-digits depreciation in period PER of an asset that cost
+      COST, can be sold for SCRAP, and lasts LIFE periods.
+
+`ddb(COST, SCRAP, LIFE, PER)'
+     Double-declining-balance depreciation; similar to `syd()'.
+
+`anrate(PMT, P, TERM)'
+     Solve `pmt(pmt, r, term) == p' for R.
+
+`anterm(PMT, PRIN, R)'
+     Solve `pmt(pmt, r, term) == p' for TERM.
+
+`balance(P, R, TERM, N)'
+     After N payments (of `pmt(p, r, term)') towards a debt of   P at
+     interest rate R over TERM periods, this function   gives the
+     amount left due.
+
+`paidint(P, R, TERM, N)'
+     After N payments (of `pmt(p, r, term)') towards a debt of   P at
+     interest rate R over TERM periods, this function   gives the sum
+     of the amounts of the payments which have gone to service   the
+     interest on the debt.
+
+`kint(P, R, TERM, N)'
+     At period N, this amount goes towards paying the interest on the
+     amortizing loan at rate R, term TERM, and principal P.
+
+`kprin(P, R, TERM, N)'
+     At period N, this amount goes towards reducing the principal on the
+      amortizing loan at rate R, term TERM, and principal P.    Note
+     that `kint(p,r,term,n)+kprin(p,r,term,n)==pmt(p,r,term)'.
+
+`compbal(P, R, TERM)'
+     Compound balance.  Returns the value of principal P after earning
+     interest R over TERM terms.
+
+
+File: oleo.info,  Node: Date functions,  Next: Gsl functions,  Prev: Business functions,  Up: Functions
+
+Date Functions
+==============
+
+   Functions for manipulating date and time.  Arguments named TIME are
+times in seconds, either an arbitrary count or from a specific epoch
+(i.e., local time), unless otherwise noted.  Here are some examples.
+Assume that the date is December 16, 1994, and the time is 7:56 am.
+The left hand column is the command, and the right hand column is the
+result.
+
+
+               local_month(now())             11
+               ctime(now())                   Fri Dec 16 7:58:34 1994
+               strftime("%d-%b-%C",now())     11-12-94
+
+`now()'
+     Time of day.  Returns the current time in seconds since Jan 1 1970.
+
+`ctime(TIME)'
+     Converts TIME into a date/time string.  TIME is seconds since the
+     the epoch, as returned by `now()'.
+
+`hms_to_time(HOURS, MINUTES, SECONDS)'
+
+`dhms_to_time(DAYS, HOURS, MINUTES, SECONDS)'
+     Converts DAYS, HOURS, MINS, SECONDS to a count of seconds.
+
+`time_to_d(TIME)'
+
+`time_to_h(TIME)'
+
+`time_to_m(TIME)'
+
+`time_to_s(TIME)'
+     Returns the number of days, hours (0..23), minutes (0..59), or
+     seconds (0..59) in TIME seconds.
+
+`ymd(YEAR, MONTH, DAY)'
+
+`ymd_dst(YEAR, MONTH, DAY, DST)'
+     Convert YEAR, MONTH, and DAY to the number of seconds since
+     January 1, 1970 (typically).  The conversion assumes the local
+     time zone.  For `ymd_dst()', if DST is positive, daylight savings
+     time is assumed; if 0, standard time; and if negative, neither
+     (i.e., the same as `ymd()').
+
+`local_year(TIME)'
+
+`local_month(TIME)'
+     For a time in seconds (e.g., as returned by `now()') return its
+     year or month in the local timezone.
+
+`local_date(TIME)'
+     Returns the date in the local timezone of TIME.
+
+`local_hour(TIME)'
+
+`local_min(TIME)'
+
+`local_sec(TIME)'
+     Returns the hour, minutes or seconds in the local timezone of TIME.
+
+`local_isdst(TIME)'
+     Returns DST in the local timezone for TIME.  The return is
+     positive if daylight savings time is in effect, 0 otherwise.
+
+`local_yday(TIME)'
+
+`local_wday(TIME)'
+     Returns the give day-of-year (0..364 or 0..365 for leap years) or
+     day-of-week (0..6) in the local timezone for TIME.
+
+`gmt_year(TIME)'
+
+`gmt_month(TIME)'
+
+`gmt_date(TIME)'
+     Returns the year, month, or day in Greenwich of TIME.
+
+`gmt_hour(TIME)'
+
+`gmt_min(TIME)'
+
+`gmt_sec(TIME)'
+     Returns the hour, minutes or seconds in Greenwich of TIME.
+
+`gmt_isdst(TIME)'
+     Returns a positive value if daylight savings time is in effect in
+     Greenwich TIME, 0 otherwise.
+
+`gmt_yday(TIME)'
+
+`gmt_wday(TIME)'
+     Returns the day-of-year (0..365) or day-of-week (0..6) in
+     Greenwich.
+
+`get_date(DATE)'
+
+`posix_date(DATE)'
+     Parse a string date and return its time (seconds since epoch).  The
+     syntax of DATE is the same as is understood by GNU tar or GNU date
+     for `get_date()', and as per the Posix standard for `posix_date()'.
+
+`strftime(FORMAT, TIME)'
+     Returns a string according to FORMAT describing TIME (as returned
+     by `now()').  This function is implemented by the C library
+     function `strftime()'.  The following documentation describes the
+     GNU implementation of `strftime()'.  Your version of Oleo may have
+     been built with a different version, in which case, you can find
+     documentation in the `strftime()' man page.  (In the future this
+     anomaly will be removed).
+
+     Performs `%' substitutions similar to those in `printf()'.  Except
+     where noted, substituted fields have a fixed size; numeric fields
+     are padded if necessary.  Padding is with zeros by default; for
+     fields that display a single number, padding can be changed or
+     inhibited by following the `%' with one of the modifiers described
+     below.  Unknown field specifiers are copied as normal characters.
+     All other characters are copied to the output without change.
+
+     Supports a superset of the ANSI C field specifiers.
+
+     Literal character fields:
+    `%'
+          `%'
+
+    `n'
+          newline
+
+    `t'
+          tab
+
+     Numeric modifiers (a nonstandard extension):
+    `-'
+          do not pad the field
+
+    `_'
+          pad the field with spaces
+
+     Time fields:
+    `%H'
+          hour (`00'..`23')
+
+    `%I'
+          hour (`01'..`12')
+
+    `%k'
+          hour (` 0'..`23')
+
+    `%l'
+          hour (` 1'..`12')
+
+    `%M'
+          minute (`00'..`59')
+
+    `%p'
+          locale's AM or PM
+
+    `%r'
+          time, 12-hour (`HH:MM:SS A/PM')
+
+    `%R'
+          time, 24-hour (`HH:MM')
+
+    `%S'
+          second (`00'..`61')
+
+    `%T'
+          time, 24-hour (`HH:MM:SS')
+
+    `%X'
+          locale's time representation (`%H:%M:%S')
+
+    `%Z'
+          time zone (EDT), or nothing if no time zone is determinable
+
+     Date fields:
+    `%a'
+          locale's abbreviated weekday name (`Sun'..`Sat')
+
+    `%A'
+          locale's full weekday name, variable length
+          (`Sunday'..`Saturday')
+
+    `%b'
+          locale's abbreviated month name (`Jan'..`Dec')
+
+    `%B'
+          locale's full month name, variable length
+          (`January'..`December')
+
+    `%c'
+          locale's date and time (`Sat Nov 04 12:02:33 EST 1989')
+
+    `%C'
+          century (`00'..`99')
+
+    `%d'
+          day of month (`01'..`31')
+
+    `%e'
+          day of month (` 1'..`31')
+
+    `%D'
+          date (`MM/DD/YY')
+
+    `%h'
+          same as `%b'
+
+    `%j'
+          day of year (`001'..`366')
+
+    `%m'
+          month (`01'..`12')
+
+    `%U'
+          week number of year with Sunday as first day of week
+          (`00'..`53')
+
+    `%w'
+          day of week (`0'..`6')
+
+    `%W'
+          week number of year with Monday as first day of week
+          (`00'..`53')
+
+    `%x'
+          locale's date representation (`MM/DD/YY')
+
+    `%y'
+          last two digits of year (`00'..`99')
+
+    `%Y'
+          year (`1970'...)
+
+
+File: oleo.info,  Node: Gsl functions,  Prev: Date functions,  Up: Functions
+
+GSL Functions
+=============
+
+   The GNU Scientific Library (GSL) is a collection of routines for
+numerical computing.  The routines are written from scratch by the GSL
+team in C, and are meant to present a modern Applications Programming
+Interface (API) for C programmers, while allowing wrappers to be
+written for very high level languages.
+
+   More information about GSL is available from
+<http://sources.redhat.com/gsl/>
+
+   Currently only a small subset of the GSL functions (as they are in
+GSL 0.6) are made available in Oleo. They're most of the statistical
+functions :
+`gsl_stats_mean'
+
+`gsl_stats_variance'
+
+`gsl_stats_sd'
+
+`gsl_stats_absdev'
+
+`gsl_stats_skew'
+
+`gsl_stats_kurtosis'
+
+`gsl_stats_lag1_autocorrelation'
+
+`gsl_stats_median_from_sorted_data'
+
+`gsl_stats_quantile_from_sorted_data'
+
+`gsl_stats_variance_m'
+
+`gsl_stats_sd_m'
+
+`gsl_stats_variance_with_fixed_mean'
+
+`gsl_stats_sd_with_fixed_mean'
+
+`gsl_stats_absdev_m'
+
+`gsl_stats_skew_m_sd'
+
+`gsl_stats_kurtosis_m_sd'
+   The API made available in Oleo for these functions differs slightly
+from the native C API of GSL. The C API provides for a `stride' and a
+`number' parameter when passing a data array. In Oleo, both of these
+are not explicitly passed.
+
+   For example, the `gsl_stats_mean' function has just one parameter in
+Oleo, which is a range of cells from which it calculates the mean.
+`oleo_gsl_stats_kurtosis_m_sd' has three parameters : a range of cells,
+and two numbers.
+
+
+File: oleo.info,  Node: Extending Oleo,  Next: Reporting Bugs,  Prev: Functions,  Up: Top
+
+Extending the Oleo system
+*************************
+
+* Menu:
+
+* New at functions::            Adding new at Functions
+
+
+File: oleo.info,  Node: New at functions,  Prev: Extending Oleo,  Up: Extending Oleo
+
+Adding new at Functions
+=======================
+
+   It is easy to add new @ functions.  Suppose that I want to add a
+greatest common divisor function.  Here is a definition:
+     int gcd(i,k)
+         int i,k;
+     {
+       int c;
+       if ( i < 0 )  i = -i;
+       if ( k < 0 )  k = -k;
+       while ( k != 0 ) {
+         c = k;
+         k = i % k;
+         i = c;
+       }
+       return  i;
+     }
+
+   In Oleo, I would like to enter `@gcd(6,20)', and have the result `2'
+displayed.  The following files need to be changed or created:
+
+`my-new-functions.c'
+     We will create a new class of functions called INT_FUNS.  For
+     simplicity, there is only one function, `gcd', in this class, but
+     there could be many more. In addition to the code given above for
+     GCD, we need an interface between Oleo and GCD.
+          static void
+          do_gcd (p)
+               struct value *p;
+          {
+            int arg0 = p[0].Int;
+            int arg1 = p[1].Int;
+          
+            p->Int = gcd (arg0,arg1);
+            p->type = TYP_INT;
+          }
+
+     Next, we need to give information about the members of this new
+     class of functions.  The "II" refers to the two integer arguments.
+     For more examples, see `busi.c'.
+          struct function int_funs[] =
+          {
+            {C_FN2, X_A2, "II", do_gcd, "gcd"},
+            {0, 0, "", 0, 0},
+          };
+
+     Oleo also (as of release 1.99.6) requires a function in each file
+     to figure out how many new user accessible functions it contains.
+     Look in busi.c for a simple example (init_busi_function_count)
+     which will probably work for your new functions as well.  As you
+     can see the function simply takes information from the above array
+     and offers it to another Oleo module.
+
+     Finally, we need some standard headers and defines.  These are
+     probably not all necessary.
+
+          #include "funcdef.h"
+          #include "sysdef.h"
+          #include "global.h"
+          #include "cell.h"
+          #include "eval.h"
+          #include "errors.h"
+          
+          struct value
+            {
+              int type;
+              union vals x;
+            };
+          
+          #define Float	x.c_d
+          #define String	x.c_s
+          #define Int	x.c_l
+          #define Value	x.c_i
+          #define Rng	x.c_r
+
+`forminfo.c'
+     It's polite to add information about new functions.  This
+     information can be added in an appropriate place in `forminfo.c':
+          "gcd",
+          "find gcd                       gcd(a,b)",
+          ""
+          "The greatest common divisor of A and B.",
+          0,
+
+`byte-compile.c'
+     The byte compiler needs to be told about the new class of
+     functions.  We declare the new class of functions:
+          extern struct function int_funs[];
+     and instruct the compiler to read them by adding the class to the
+     appropriate structure.
+          static struct function *__usr_funs[] =
+          {
+            date_funs,
+            busi_funs,
+            string_funs,
+            cells_funs,
+            int_funs,
+          };
+          
+          extern int init_int_function_count(void);
+          
+          static init_function_count init_function_counts[] = {
+                  &init_date_function_count,
+                  &init_busi_function_count,
+                  &init_string_function_count,
+                  &init_cells_function_count,
+                  &init_int_function_count
+                  /* Add something here */
+          };
+
+`Makefile.am'
+     The file `my-new-functions.c' needs to be added to the list of
+     source files. Editing the file src/Makefile.am and adding to the
+     list of files named oleo_SOURCES will do :
+
+          oleo_SOURCES = parse.y byte-compile.c eval.c ref.c \
+           decompile.c sort.c regions.c utils.c lists.c\
+           io-term.c io-utils.c io-x11.c window.c io-edit.c\
+           line.c key.c format.c funcs.c \
+           hash.c ir.c io-curses.c font.c display.c init.c \
+           sylk.c oleofile.c sc.c list.c busi.c string.c cells.c \
+           cmd.c basic.c args.c \
+           stub.c input.c info.c help.c \
+           graph.c plot.c \
+           forminfo.c posixtm.y date.c xrdb.c \
+           $(GUI) $(XBSRC) $(MYSQL) \
+           print.c postscript.c pcl.c epson.c prtext.c \
+           my-new-functions.c
+
+
+File: oleo.info,  Node: Reporting Bugs,  Next: Motif,  Prev: Extending Oleo,  Up: Top
+
+Reporting Bugs
+**************
+
+   If you have problems with Oleo or think that you have found a bug,
+please report it; we cannot promise to do anything but we might well
+want to fix it.
+
+   Before reporting a bug, make sure you have actually found a real bug.
+Carefully reread the documentation and see if it really says you can do
+what you're trying to do.  If it's not clear whether you should be able
+to do something or not, report that too; it's a bug in the
+documentation!
+
+   Before reporting a bug or trying to fix it yourself, try to isolate
+it to the smallest possible Oleo program and input data file that
+reproduces the problem.  Then send us the program and data file, some
+idea of what kind of Unix system you're using, and the exact results
+Oleo gave you.  Also say what you expected to occur; this will help us
+decide whether the problem was really in the documentation.
+
+   Once you have a precise problem, send e-mail to
+`bug-oleo@prep.ai.mit.edu'.
+
+   Non-bug suggestions are always welcome as well.  If you have
+questions about things that are unclear in the documentation or are
+just obscure features, send a note to `bug-oleo@prep.ai.mit.edu'.
+
+   Also, if you wish to add to the documentation, please do so.  Send
+your additions to the address above.
+
+
+File: oleo.info,  Node: Motif,  Next: Database Access,  Prev: Reporting Bugs,  Up: Top
+
+A Motif Graphical User Interface for Oleo
+*****************************************
+
+* Menu:
+
+* Motif Introduction::
+* LessTif::
+* Advantages::
+* What you need::
+* Alternatives::
+* Using the mouse::
+* Using the keyboard shortcuts::
+* Using Help::
+* Fallback::
+* Motif Buttons in a Spreadsheet Cell::
+
+
+File: oleo.info,  Node: Motif Introduction,  Next: LessTif,  Up: Motif
+
+Motif Introduction
+==================
+
+   Motif is a toolkit for building graphical user interfaces (GUIs)
+with the X Window System.
+
+   Such a GUI has been built for oleo.  The combination of oleo and its
+Motif interface comes close to professional quality spreadsheets that
+one can buy off the shelf.
+
+
+File: oleo.info,  Node: LessTif,  Next: Advantages,  Prev: Motif Introduction,  Up: Motif
+
+LessTif
+=======
+
+   When this manual talks about Motif, it refers to what is commonly
+referred to as OSF/Motif, a user interface toolkit for the X Window
+System which was originally developped by the Open Software Foundation
+(OSF).  The OSF has merged with X/Open, the new name of the
+organisation is The Open Group.
+
+   A free implementation of Motif, called LessTif, which is available
+from the LessTif home page (http://www.lesstif.org), can be used
+instead of Motif.
+
+   LessTif is covered by the LGPL (Library General Public License).
+
+
+File: oleo.info,  Node: Advantages,  Next: What you need,  Prev: LessTif,  Up: Motif
+
+Advantages
+==========
+
+   Advantages to using either the Motif or the GTK interface to Oleo
+are the same as for any GUI: users with little experience will find it
+easier to get started with the application.  The GUI interfaces also
+happen to be more aesthetically pleasing.
+
+
+File: oleo.info,  Node: What you need,  Next: Alternatives,  Prev: Advantages,  Up: Motif
+
+What you need
+=============
+
+   A user of Oleo typically only needs a recent Oleo distribution,
+which he installs through his operating system's standard mechanism.
+
+   Someone who's building Oleo from sources will need several packages
+that Oleo depends on :
+   * Xbae widgets <http://www.lesstif.org>
+     <ftp://ftp.lesstif.org/pub/hungry/lesstif/srcdist>
+
+   * XmHTML <http://www.xs4all.nl/~ripley/XmHTML>
+
+   * GNU plotutils
+     <http://www.gnu.org/software/plotutils/plotutils.html>
+
+   * Motif or LessTif <http://www.opengroup.org>
+     <http://www.lesstif.org>
+
+   * GNU gettext <http://www.gnu.org>
+
+   * GNU texinfo (3.12 or later) <http://www.gnu.org>
+
+
+File: oleo.info,  Node: Alternatives,  Next: Using the mouse,  Prev: What you need,  Up: Motif
+
+Alternatives
+============
+
+   Another toolkit for building GUIs is GTK.  It is also freely
+available, and another user interface for oleo may be built with it too.
+
+   GTK is the FSF's official GUI toolkit.
+
+
+File: oleo.info,  Node: Using the mouse,  Next: Using the keyboard shortcuts,  Prev: Alternatives,  Up: Motif
+
+Using the mouse
+===============
+
+   The mouse is used in the same manner as in any Motif application.
+
+   The top of the Oleo window is a horizontal bar which is called the
+menu bar.  It consists of a small number of buttons (represented by
+words such as File, Edit, ...).
+
+   Using the mouse to point at such a word, you can click MB1 on such a
+button to make a pulldown menu appear.  MB1 is usually the left mouse
+button.
+
+   The words in these pulldown menus are action buttons which should
+perform actions that the user can understand.
+
+   You can select a cell in the spreadsheet by clicking MB1 in it.
+Once a cell is selected, its position and current value are displayed
+in a status area in the upper left of the Oleo window (just below the
+menu bar).  The area to the right of that is the formula editor: it
+displays the formula on this cell, if any.
+
+   Formulas should be edited in the formula editor.
+
+
+File: oleo.info,  Node: Using the keyboard shortcuts,  Next: Using Help,  Prev: Using the mouse,  Up: Motif
+
+Using the keyboard shortcuts
+============================
+
+   Using the method described above you can pull down a menu which
+reveals a number of action buttons. These buttons typically contain a
+text such as `Open   Ctrl-O'.
+
+   Additionally, the O is underlined.
+
+   The Ctrl-O means that you can press down the Control key on your
+keyboard, and while doing that, depress the O key. This should activate
+the button.
+
+   The underlining means that once you've pulled down this menu, you
+should be able to activate this button by just the O key.
+
+   The pulldown menu, which was indicated by the word File (with
+underlined F), can in itself be triggered by pressing the Alt key and
+depressing the F key.
+
+
+File: oleo.info,  Node: Using Help,  Next: Fallback,  Prev: Using the keyboard shortcuts,  Up: Motif
+
+Using Help
+==========
+
+
+File: oleo.info,  Node: Fallback,  Next: Motif Buttons in a Spreadsheet Cell,  Prev: Using Help,  Up: Motif
+
+Fallback
+========
+
+   If you have a version of oleo that has been built with Motif support,
+but you don't currently have an X Window System display (for instance
+you're using a dialup connection), then it is still possible to use the
+curses based character user interface.
+
+   The command `oleo -t' should start Oleo with a curses based user
+interface, even if you're running in an X environment.
+
+
+File: oleo.info,  Node: Motif Buttons in a Spreadsheet Cell,  Prev: Fallback,  Up: Motif
+
+Motif Buttons in a Spreadsheet Cell
+===================================
+
+   You can put a button in a cell in the Motif version.  The formula of
+the cell that you want to have a button should be ` button("text",
+"cell-specification")'
+
+   The first argument is the text that the button will show, the second
+argument is the cell whose content will be executed. That cell will
+typically contain a command like `psprint-region r3:45c8:13 invoice.ps'
+
+   Note that this is currently an experimental feature.
+
+
+File: oleo.info,  Node: Database Access,  Prev: Motif,  Up: Top
+
+Accessing Databases
+*******************
+
+* Menu:
+
+* Database Access Introduction::
+* MySQL::
+* Xbase::
+
+
+File: oleo.info,  Node: Database Access Introduction,  Next: MySQL,  Prev: Database Access,  Up: Database Access
+
+Database Access Introduction
+============================
+
+   Oleo can interface to database management systems (DBMSs) in more
+than one way.
+
+   This is work in progress though, we expect the implementation to
+evolve quite a bit from the current status.
+
+   Currently there are three ways of accessing databases from Oleo :
+   * reading a DBF (xbase) file
+
+   * reading rows of content from an MySQL database, prompted by the
+     user
+
+   * reading the single result of an SQL query (to MySQL) into a cell
+
+
+File: oleo.info,  Node: MySQL,  Next: Xbase,  Prev: Database Access Introduction,  Up: Database Access
+
+MySQL
+=====
+
+   You can get a value from a database into a cell by putting a
+statement like
+
+     @mysql_query("select max(salary) from salaries")
+
+   in the cell.
+
+
+File: oleo.info,  Node: Xbase,  Prev: MySQL,  Up: Database Access
+
+Xbase
+=====
+
+
+File: oleo.info,  Node: Key Index,  Next: Command Index,  Prev: Top,  Up: Top
+
+Key Index
+*********
+
+* Menu:
+
+* =:                                     Entering.
+* C-?:                                   Input Editing.
+* C-@:                                   Cursor and Mark.
+* C-a <1>:                               Input Editing.
+* C-a:                                   Large Scale Movement.
+* C-b <1>:                               Input Editing.
+* C-b:                                   Single Cell Movement.
+* C-d:                                   Input Editing.
+* C-e <1>:                               Input Editing.
+* C-e:                                   Large Scale Movement.
+* C-f <1>:                               Input Editing.
+* C-f:                                   Single Cell Movement.
+* C-h:                                   Getting Help.
+* C-h c <1>:                             Keymaps.
+* C-h c:                                 Getting Help.
+* C-h C:                                 Getting Help.
+* C-h C-v <1>:                           Getting Help.
+* C-h C-v:                               Regions and Variables.
+* C-h C-w:                               Getting Help.
+* C-h F:                                 Getting Help.
+* C-h f:                                 Getting Help.
+* C-h k:                                 Getting Help.
+* C-h o:                                 Getting Help.
+* C-h v <1>:                             Getting Help.
+* C-h v:                                 Regions and Variables.
+* C-h W:                                 Getting Help.
+* C-h w:                                 Getting Help.
+* C-k <1>:                               Deleting.
+* C-k:                                   Input Editing.
+* C-M-v:                                 Other Window.
+* C-n:                                   Single Cell Movement.
+* C-o <1>:                               Insertion.
+* C-o:                                   Input Editing.
+* C-p:                                   Single Cell Movement.
+* C-u C-@:                               Cursor and Mark.
+* C-u C-x C-x:                           Cursor and Mark.
+* C-v:                                   Screen Moving.
+* C-x !:                                 Recalculation.
+* C-x (:                                 Basic Kbd Macro.
+* C-x ):                                 Basic Kbd Macro.
+* C-x 0:                                 Change Window.
+* C-x 1:                                 Change Window.
+* C-x 2:                                 Split Window.
+* C-x 5:                                 Split Window.
+* C-x ::                                 Regions and Variables.
+* C-x <:                                 Screen Moving.
+* C-x >:                                 Screen Moving.
+* C-x C-x:                               Cursor and Mark.
+* C-x e:                                 Basic Kbd Macro.
+* C-x j:                                 Cursor and Mark.
+* C-x o:                                 Other Window.
+* M-<:                                   Large Scale Movement.
+* M-=:                                   Entering.
+* M->:                                   Large Scale Movement.
+* M-a:                                   Input Editing.
+* M-a a:                                 Alignment.
+* M-a f:                                 Formats for numbers.
+* M-a h:                                 Cell Height.
+* M-a o:                                 Fonts (in X11).
+* M-a p:                                 Protection.
+* M-a w:                                 Width of Cells.
+* M-b <1>:                               Input Editing.
+* M-b:                                   Scanning.
+* M-c:                                   Copying.
+* M-C-? <1>:                             Deleting.
+* M-C-?:                                 Input Editing.
+* M-C-a:                                 Large Scale Movement.
+* M-C-c:                                 Copying.
+* M-C-e:                                 Large Scale Movement.
+* M-d:                                   Input Editing.
+* M-d a:                                 Alignment.
+* M-d f:                                 Formats for numbers.
+* M-d h:                                 Cell Height.
+* M-d o:                                 Fonts (in X11).
+* M-d p:                                 Protection.
+* M-d w:                                 Width of Cells.
+* M-e:                                   Input Editing.
+* M-f <1>:                               Input Editing.
+* M-f:                                   Scanning.
+* M-k:                                   Deleting.
+* M-m:                                   Moving.
+* M-n:                                   Scanning.
+* M-o:                                   Insertion.
+* M-p:                                   Scanning.
+* M-r:                                   Input Editing.
+* M-r a:                                 Alignment.
+* M-r f:                                 Formats for numbers.
+* M-r h:                                 Cell Height.
+* M-r o:                                 Fonts (in X11).
+* M-r p:                                 Protection.
+* M-r w:                                 Width of Cells.
+* M-v:                                   Screen Moving.
+* M-x j:                                 Cursor and Mark.
+
+
+File: oleo.info,  Node: Command Index,  Next: Function Index,  Prev: Key Index,  Up: Top
+
+Command Index
+*************
+
+* Menu:
+
+* beginning-of-column:                   Large Scale Movement.
+* beginning-of-row:                      Large Scale Movement.
+* bind-key:                              Keymaps.
+* break:                                 Basics.
+* call-last-kbd-macro:                   Basic Kbd Macro.
+* clear-spreadsheet:                     Deleting.
+* copy-region:                           Copying.
+* copy-values-in-region:                 Copying.
+* cursor-back-char:                      Input Editing.
+* cursor-back-word:                      Input Editing.
+* cursor-begin-line:                     Input Editing.
+* cursor-end-line:                       Input Editing.
+* cursor-fwd-char:                       Input Editing.
+* cursor-fwd-word:                       Input Editing.
+* delete-col:                            Deleting.
+* delete-next-char:                      Input Editing.
+* delete-next-word:                      Input Editing.
+* delete-other-windows:                  Change Window.
+* delete-prev-char:                      Input Editing.
+* delete-prev-word:                      Input Editing.
+* delete-region:                         Deleting.
+* delete-row:                            Deleting.
+* delete-to-end:                         Input Editing.
+* delete-to-start:                       Input Editing.
+* delete-window:                         Change Window.
+* describe-formula-function:             Getting Help.
+* describe-function:                     Getting Help.
+* describe-key <1>:                      Keymaps.
+* describe-key:                          Getting Help.
+* describe-key-briefly:                  Getting Help.
+* down-cell:                             Single Cell Movement.
+* downleft-cell:                         Single Cell Movement.
+* downright-cell:                        Single Cell Movement.
+* end-kbd-macro:                         Basic Kbd Macro.
+* end-of-column:                         Large Scale Movement.
+* end-of-row:                            Large Scale Movement.
+* exchange-point-and-mark:               Cursor and Mark.
+* goto-cell:                             Cursor and Mark.
+* goto-region:                           Cursor and Mark.
+* insert-abs-ref:                        Input Editing.
+* insert-cell-expression:                Input Editing.
+* insert-cell-value:                     Input Editing.
+* insert-col:                            Insertion.
+* insert-rel-ref:                        Input Editing.
+* insert-row:                            Insertion.
+* latex-region:                          Writing Files.
+* left-cell:                             Single Cell Movement.
+* lower right:                           Large Scale Movement.
+* mark-cell:                             Cursor and Mark.
+* merge-spreadsheet:                     Saving and reading.
+* mouse-goto:                            Mouse.
+* mouse-mark:                            Mouse.
+* mouse-mark-and-goto:                   Mouse.
+* move-region:                           Moving.
+* next-edit:                             Cell Motion.
+* next-edit-set:                         Cell Motion.
+* other-window:                          Other Window.
+* print-region:                          Writing Files.
+* psprint-region:                        Writing Files.
+* recalculate:                           Recalculation.
+* right-cell:                            Single Cell Movement.
+* save-last-kbd-macro:                   Save Kbd Macro.
+* save-spreadsheet:                      Saving and reading.
+* scan-down:                             Scanning.
+* scan-left:                             Scanning.
+* scan-right:                            Scanning.
+* scan-up:                               Scanning.
+* scroll-down:                           Screen Moving.
+* scroll-downleft:                       Screen Moving.
+* scroll-downright:                      Screen Moving.
+* scroll-left:                           Screen Moving.
+* scroll-other-window:                   Other Window.
+* scroll-right:                          Screen Moving.
+* scroll-up:                             Screen Moving.
+* scroll-upleft:                         Screen Moving.
+* scroll-upright:                        Screen Moving.
+* set-cell:                              Entering.
+* set-cell-alignment:                    Alignment.
+* set-cell-font:                         Fonts (in X11).
+* set-cell-format:                       Formats for numbers.
+* set-cell-height:                       Cell Height.
+* set-cell-protection:                   Protection.
+* set-cell-region:                       Entering.
+* set-cell-width:                        Width of Cells.
+* set-default-alignment:                 Alignment.
+* set-default-font:                      Fonts (in X11).
+* set-default-format:                    Formats for numbers.
+* set-default-height:                    Cell Height.
+* set-default-point-size:                Fonts (in X11).
+* set-default-protection:                Protection.
+* set-default-ps-font:                   Writing Files.
+* set-default-width:                     Width of Cells.
+* set-option:                            Cell referencing.
+* set-page-size:                         Writing Files.
+* set-region-alignment:                  Alignment.
+* set-region-font:                       Fonts (in X11).
+* set-region-format:                     Formats for numbers.
+* set-region-height:                     Cell Height.
+* set-region-protection:                 Protection.
+* set-region-width:                      Width of Cells.
+* set-variable:                          Regions and Variables.
+* show-all-variables:                    Getting Help.
+* show-options:                          Getting Help.
+* show-variable:                         Getting Help.
+* split-window-horizontally:             Split Window.
+* split-window-vertically:               Split Window.
+* start-kbd-macro:                       Basic Kbd Macro.
+* suspend-oleo:                          Basics.
+* toggle-load-hooks:                     Saving and reading.
+* toggle-overwrite:                      Input Editing.
+* unbind-key:                            Keymaps.
+* up-cell:                               Single Cell Movement.
+* upleft-cell:                           Single Cell Movement.
+* upper-left:                            Large Scale Movement.
+* upright-cell:                          Single Cell Movement.
+* view-wallchart:                        Getting Help.
+* visit-spreadsheet:                     Saving and reading.
+* where-is:                              Getting Help.
+* write-keys:                            Keymaps.
+* write-wallchart:                       Getting Help.
+
+
+File: oleo.info,  Node: Function Index,  Next: Options Index,  Prev: Command Index,  Up: Top
+
+Function Index
+**************
+
+* Menu:
+
+* abs:                                   General math functions.
+* acos:                                  Trigonometric functions.
+* and:                                   Boolean functions.
+* anrate:                                Business functions.
+* anterm:                                Business functions.
+* asin:                                  Trigonometric functions.
+* atan:                                  Trigonometric functions.
+* avg:                                   Statistical functions.
+* balance:                               Business functions.
+* ceil:                                  General math functions.
+* cell:                                  Structural functions.
+* col:                                   Structural functions.
+* cols:                                  Structural functions.
+* compbal:                               Business functions.
+* concat:                                String functions.
+* cos:                                   Trigonometric functions.
+* count:                                 Statistical functions.
+* cterm:                                 Business functions.
+* ctime:                                 Date functions.
+* curcell:                               Structural functions.
+* ddb:                                   Business functions.
+* dhms_to_time:                          Date functions.
+* dtr:                                   Trigonometric functions.
+* edit:                                  String functions.
+* exp:                                   General math functions.
+* find:                                  String functions.
+* fixed:                                 General math functions.
+* floor:                                 General math functions.
+* fmrr:                                  Business functions.
+* fv:                                    Business functions.
+* get_date:                              Date functions.
+* gmt_date:                              Date functions.
+* gmt_hour:                              Date functions.
+* gmt_isdst:                             Date functions.
+* gmt_min:                               Date functions.
+* gmt_month:                             Date functions.
+* gmt_sec:                               Date functions.
+* gmt_wday:                              Date functions.
+* gmt_yday:                              Date functions.
+* gmt_year:                              Date functions.
+* hlookup:                               Search functions.
+* hms_to_time:                           Date functions.
+* if:                                    Boolean functions.
+* index:                                 Search functions.
+* int:                                   General math functions.
+* irr:                                   Business functions.
+* iserr:                                 Boolean functions.
+* isnum:                                 Boolean functions.
+* kint:                                  Business functions.
+* kprin:                                 Business functions.
+* len:                                   String functions.
+* local_date:                            Date functions.
+* local_hour:                            Date functions.
+* local_isdst:                           Date functions.
+* local_min:                             Date functions.
+* local_month:                           Date functions.
+* local_sec:                             Date functions.
+* local_wday:                            Date functions.
+* local_yday:                            Date functions.
+* local_year:                            Date functions.
+* log:                                   General math functions.
+* log10:                                 General math functions.
+* max:                                   Statistical functions.
+* member:                                Search functions.
+* memberp:                               Search functions.
+* members:                               Search functions.
+* mid:                                   String functions.
+* min:                                   Statistical functions.
+* my:                                    Structural functions.
+* negate:                                General math functions.
+* now:                                   Date functions.
+* npv:                                   Business functions.
+* oneof:                                 Search functions.
+* or:                                    Boolean functions.
+* paidint:                               Business functions.
+* pmember:                               Search functions.
+* pmt:                                   Business functions.
+* posix_date:                            Date functions.
+* prod:                                  Statistical functions.
+* pv:                                    Business functions.
+* rate:                                  Business functions.
+* repeat:                                String functions.
+* rnd:                                   General math functions.
+* row:                                   Structural functions.
+* rows:                                  Structural functions.
+* rtd:                                   Trigonometric functions.
+* sin:                                   Trigonometric functions.
+* sln:                                   Business functions.
+* smember:                               Search functions.
+* sqrt:                                  General math functions.
+* std:                                   Statistical functions.
+* strcap:                                String functions.
+* strftime:                              Date functions.
+* strlwr:                                String functions.
+* strupr:                                String functions.
+* substr:                                String functions.
+* sum:                                   Statistical functions.
+* syd:                                   Business functions.
+* tan:                                   Trigonometric functions.
+* term:                                  Business functions.
+* time_to_d:                             Date functions.
+* time_to_h:                             Date functions.
+* time_to_m:                             Date functions.
+* time_to_s:                             Date functions.
+* trim:                                  String functions.
+* var:                                   Statistical functions.
+* vlookup:                               Search functions.
+* vlookup_str:                           Search functions.
+* ymd:                                   Date functions.
+* ymd_dst:                               Date functions.
+
+
+File: oleo.info,  Node: Options Index,  Next: Concept Index,  Prev: Function Index,  Up: Top
+
+Options Index
+*************
+
+* Menu:
+
+* a0 <1>:                                Appearance.
+* a0:                                    a0 mode.
+* auto <1>:                              Other Options.
+* auto:                                  Recalculation.
+* background <1>:                        Other Options.
+* background:                            Recalculation.
+* backup:                                Other Options.
+* bkgrnd <1>:                            Other Options.
+* bkgrnd:                                Recalculation.
+* bkup_copy:                             Other Options.
+* edges:                                 Appearance.
+* file (format-name):                    Other Options.
+* input (number):                        Appearance.
+* link (wnum):                           Window Options.
+* list:                                  Appearance.
+* load (file-name):                      Other Options.
+* lockh:                                 Window Options.
+* lockv:                                 Window Options.
+* noa0 <1>:                              Appearance.
+* noa0:                                  noa0 mode.
+* noauto <1>:                            Other Options.
+* noauto:                                Recalculation.
+* nobackground <1>:                      Other Options.
+* nobackground:                          Recalculation.
+* nobackup:                              Other Options.
+* nobkgrnd <1>:                          Other Options.
+* nobkgrnd:                              Recalculation.
+* nobkup_copy:                           Other Options.
+* noedges:                               Appearance.
+* nolink:                                Window Options.
+* nolockh:                               Window Options.
+* nolockv:                               Window Options.
+* nopage:                                Window Options.
+* nopageh:                               Window Options.
+* nostandout:                            Appearance.
+* page:                                  Window Options.
+* pageh:                                 Window Options.
+* pagev:                                 Window Options.
+* print (number):                        Other Options.
+* standout:                              Appearance.
+* status (number):                       Appearance.
+* ticks:                                 Recalculation.
+* ticks (number):                        Other Options.
+* unlink:                                Window Options.
+

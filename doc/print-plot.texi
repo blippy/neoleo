@@ -1,0 +1,416 @@
+@c \input texinfo    @c -*- texinfo -*-
+@c @defcodeindex cm
+
+@node Printing and Plotting
+@chapter Printing and Plotting
+
+
+
+
+@menu
+* Writing Files::               Writing  ASCII and Postscript Files
+* Graphing::                    Graphing Using GNU Plotutils
+@end menu
+
+@node Writing Files, Graphing, Printing and Plotting, Printing and Plotting
+@section Writing  ASCII and Postscript Files
+
+Spreadsheets, and regions of spreadsheets,  can be printed in 
+ASCII, LaTeX, or postscript format.  For postscript files, the font and page
+size can be specified.
+
+@table @kbd
+@item M-C-p a
+@cmindex print-region
+Write a region to a file in ASCII format. 
+If the mark is set, you are prompted for a file name.  
+The region between mark and cell cursor will be printed in a tabular
+ASCII format. If the mark is not set, then you are first prompted for
+the region, and then for the file name.  (@code{print-region})
+For example, if the mark is not
+set, and you want to print the region A1.C20 to the file
+@file{/tmp/myfile}, then you type
+@example
+             @kbd{M-C-p a} A1.C20 @key{RET} /tmp/myfile @key{RET}
+@end example
+
+If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+@example
+             @kbd{M-C-p a}  /tmp/myfile @key{RET}
+@end example
+
+@item M-C-p l
+@cmindex latex-region
+Write a region to a file in LaTeX format.  By default the LaTeX code
+prints the entries in ruled boxes in portrait mode.  There are
+directions in the output file for the simple changes to print in
+landscape mode, or to have all the entries unboxed.  If your region
+contains a percent sign, then you must escape it by hand in the LaTeX
+file to make LaTeX run correctly.
+
+If the mark is set, you are prompted for a file name.  The region
+between mark and cell cursor will be printed in LaTeX format.  If the
+mark is not set, then you are first prompted for the region, and then
+for the file name.  (@code{latex-region}) For example, if the mark is
+not set, and you want to print the region A1.C20 to the file
+@file{/tmp/myfile.tex}, then you type
+@example
+             @kbd{M-C-p l} A1.C20 @key{RET} /tmp/myfile.tex @key{RET}
+@end example
+
+If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+@example
+             @kbd{M-C-p l}  /tmp/myfile.tex @key{RET}
+@end example
+
+@item M-C-p p p
+@cmindex psprint-region
+Write a region to a file in PostScript format.
+If the mark is set, you are prompted for a file name.  
+If the mark is not set, then you are first prompted for
+the region, and then for the file name.  (@code{psprint-region})
+For example, if the mark is not
+set, and you want to write the region A1.C20 in PostScript to the file
+@file{/tmp/myfile}, then you type
+@example
+             @kbd{M-C-p p p} A1.C20 @key{RET} /tmp/myfile @key{RET}
+@end example
+
+If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+@example
+             @kbd{M-C-p p p}  /tmp/myfile @key{RET}
+@end example
+
+@item M-C-p p f
+@cmindex set-default-ps-font
+        This command sets the default font used in printing a region in
+PostScript.  (@code{set-default-ps-font}) @pxref{Fonts (in X11)} for
+information about the possible fonts. 
+To set the font to 24 point courier, type
+@example
+           M-C-p p f courier 2.0 @key{RET}@footnote{actually, this does
+not print correctly - ghostscript gives an error}
+@end example
+
+
+@item M-C-p p s
+@cmindex set-page-size
+        Set the page size for the PostScript output
+(@code{set-page-size}). You are prompted for a pagesize.  There are
+several possible ways of describing a page size:
+
+@example
+        8.5x11          -- a page size in inches.
+        22x28c          -- a page size in centimeters.
+        612x792p        -- a page size in points.
+        letter          -- 8.5 x 11 in. (the default)
+@end example
+
+To set the correct page size for A4 paper, type
+
+@example
+         M-C-p p s A4 @key{RET}
+@end example
+
+
+The following table gives the possible paper sizes.  The 
+widths and heights are given in "points", of which there are 
+72 in an inch.  
+
+@example
+
+   Name            Width   Height    Comments
+   ------------------------------------------------
+   letter          612     792       8.5 x 11   in.   
+   landscape       792     612       11  x 8.5  in.   
+   tabloid         792     1224      11  x 17   in.    
+   ledger          1224    792       17  x 11   in.    
+   legal           612     1008      8.5 x 14   in.   
+   statement       396     612       5.5 x 8.5  in.   
+   executive       540     720       7.5 x 10   in.   
+   a3              842     1190    
+   a4              595     842     
+   latex-a4        523     770       A4 with 1in. margins
+   a5              420     595     
+   b4              729     1032    
+   b5              516     729           
+   folio           612     936       8.5 x 13  in.   
+   quarto          610     780     
+@end example
+
+@end table
+
+
+@node Graphing,  , Writing Files, Printing and Plotting
+@section Graphing Using GNU Plotutils
+
+Note: this chapter is only partially updated, however functionality
+has changed drastically !!
+
+Plotting in Oleo is done using GNU Plotutils. (Versions prior to
+Oleo 1.99.12 used gnuplot.) Currently these types of graphs are
+supported :
+@itemize @bullet
+@item XY
+@item bar
+@item pie
+@end itemize
+
+There are two modes in which Oleo can produce plots on the fly :
+@itemize @bullet
+@item in a Motif window
+@item in Xterm using its Tektronix emulation
+@end itemize
+
+The former is the default behaviour of you use the Motif interface
+of Oleo, the latter can be initialised by this sequence :
+@example
+        @kbd{M-g}  o  t  f - @key{RET}
+@end example
+
+This sequence sets output device to Tektronix, and output file to
+- which means to standard output. Sending Tektronix formatted output
+to an xterm will pop up xterm's Tektronix emulation window which
+shows the plot.
+
+The file examples/xy.oleo can be used to show a simple XY plot in
+this way.
+
+Oleo can print up to 10 different data sets at once.  The
+data sets are numbered 0,1,@dots{},9.  
+
+When the plot command (@kbd{p}) is chosen, all the currently defined
+data sets will be plotted.
+
+@menu
+* Clearing Plots::              Clearing the plots
+* Data sets::                   Choosing a data set
+* The axes::                    Changing the axes style
+* Viewing Choices::             Viewing your choices
+* Output Type::                 Choosing the output type
+* Style Options::               Picking a  plot style
+* Name Options::                Naming a data set
+@end menu
+
+@node Clearing Plots, Data sets, Graphing, Graphing
+@subsection Clearing the Plots
+
+The plot ranges and styles are remembered; if you decide to plot using
+@kbd{M-g}, you probably want to clear the ranges and styles using the
+@kbd{C} and @kbd{R} keys in the main graph menu:
+
+@table @kbd
+@item C
+Clear all the datasets (0-9) of their ranges.
+@item R
+Remove all the style information from all datasets
+@end table
+
+@node Data sets, The axes, Clearing Plots, Graphing
+@subsection Choosing a data set
+
+The key @kbd{d} is used to choose a range for a data set.
+If the mark is active, then the region between the mark and the current
+cell is chosen as the data set.  Otherwise, you are prompted for the
+range.   
+
+When you define a data set (using
+the @kbd{d} key in the graph menu), you select a number to refer to the
+data set.  If we are already in the graph menu (having typed @kbd{M-g}),
+then the following assigns the region G5.L6 to data set 4:
+@example
+                      d  4  @key{RET} G5.L6  @key{RET}
+@end example
+
+If the mark is set, then it is not necessary (nor possible) to enter the
+range.  Thus, 
+if the mark is set to G5 and the cursor is in L6, then these commands
+set the fourth data set to G5.L6:
+@example
+                      d  4  @key{RET}
+@end example
+
+@example
+                  | Col B | Col C | Col D | Col E | Col F |
+            ------|-------|-------|-------|-------|-------|
+            Row 2 |   11  |   33  |  55   |   77  |   99  |
+            ------|-------|-------|-------|-------|-------|
+            Row 3 |   22  |   44  |  66   |   88  |    0  |
+            ------|-------|-------| ------|-------|-------|
+@end example
+
+
+and that we are in the graph menu.
+@itemize @bullet
+@item
+If we type @kbd{d 4 RET B2.F3 RET}, then when we print there will be
+three line segments:
+
+@example
+     (11,33) -- (22,44) -- (55,77) -- (66,88)
+@end example
+
+@item
+If we type @kbd{d 4 RET B2.F3 RET}, then when we print there will be
+four line segments:
+
+@example
+     (11,22) -- (33,44) -- (55,66) -- (77,88) -- (99,0)
+@end example
+
+@item
+If we type @kbd{d 4 RET B2.F3 RET}, then when we print there will be
+nine line segments.  Notice that all the items in the first row are
+plotted, then all the ones in the second row, and so on.
+
+@example
+(0,11)--(1,33)--(2,55)--(3,77)--(4,99)--(5,22)--(6,44)--(7,66)--(8,88)--(9,0)
+@end example
+
+@end itemize
+
+
+
+Finally, you are asked about labels.  @footnote{I don't understand them}
+
+
+@node The axes, Viewing Choices, Data sets, Graphing
+@subsection Changing the axes style
+
+The commands @kbd{x} and @kbd{y} allow you to control the axes style.
+
+@table @kbd
+@item [
+You are prompted for the lower limit of the range.
+@item ]
+You are prompted for the upper limit of the range.
+For instance, to set the range of the x-axis to [-3,5], type the
+following in the graph menu:
+@example
+              x [ -3 @key{RET}
+              x ]  5 @key{RET}
+@end example
+
+@item s
+Use a symbolic expression for the range @footnote{what?}
+@item l
+Use values in the spreadsheet for the ticks on the axis.
+@footnote{example?}
+@item L
+Restore the default tick marks for the axis.  This undoes the effect of
+the @kbd{l} command.
+@end table
+
+
+
+
+@node Viewing Choices, Output Type, The axes, Graphing
+@comment  node-name,  next,  previous,  up
+@subsection Viewing your choices
+
+Typing @kbd{v} in the main graph menu gives a help screen with all of
+your choices.  A typical  help screen is
+
+@example
+    Graph type is XY plot.
+    
+    Parameter               Value
+    
+    output type             Tektronix
+    output file             -
+    x-axis title            "Tijd"
+    y-axis title            "Appelen"
+    logarithmic axes        -neither-
+    x-axis range            [def..def]
+    y-axis range            [def..def]
+    
+    Data Set 0
+      data for this set: A1:A6
+      style for this set: lines
+    
+    
+    Data Set 1
+      data for this set: C4:C9
+      style for this set: lines
+@end example
+
+
+@node Output Type, Style Options, Viewing Choices, Graphing
+@comment  node-name,  next,  previous,  up
+@subsection The Output Type
+
+The @kbd{o} key in the main graph menu selects the type of output.
+A graph can be drawn in several ways - see the table below.
+
+Note however that, depending on compilation parameters, not all
+of the options documented below may be available (e.g. no X or
+x commands).
+
+@table @kbd
+@item p
+Write a file of PostScript commands that draw that graph.
+@item X
+Draw the graph in an X window, in color.
+@item t
+Write Tektronix graphics terminal commands.
+@item r
+Write ReGIS commands (VT340 type terminals, most VT emulators don't support this)
+@item P
+Write PCL printer commands.
+@item h
+Write HP-GL plotter command language.
+@item i
+Write Adobe Illustrator format.
+@item m
+Write GNU Metaplot format.
+@item f
+Write FIG output
+@item n
+Write PNG (Portable Network Graphics, an unencumbered replacement for GIF)
+@item g
+Write GIF format
+@item x
+Draw the graph in an X window, in black and white.
+@end table
+
+
+@node Style Options, Name Options, Output Type, Graphing
+@comment  node-name,  next,  previous,  up
+@subsection Picking a plot style
+The @kbd{s} option on the main graph menu selects the graph style.  There
+are 5 possibilities:@footnote{gnuplot has 9 styles; should these be added?}
+
+@table @kbd
+@item lines
+The @emph{lines} style connects adjacent points with lines. (Default)
+@item points
+ The @emph{points} style displays a small symbol at each point.
+@item impulses
+ The @emph{impulses} style displays a vertical line from the x axis
+to each point. 
+@item dots
+The @emph{dots} style  plots a tiny dot at each point; this is useful for
+ scatter plots with many points.
+@item linespoints
+ The @emph{linespoints} style does both @emph{lines} and @emph{points}.
+@end table
+
+@node Name Options,  , Style Options, Graphing
+@comment  node-name,  next,  previous,  up
+@subsection Naming a data set
+The @kbd{d} option on the main graph menu allows a name to be attached
+to a data set.  The default name of the i-th data set is "Data set i".
+When the graphs are plotted, each graph is printed with a different line
+type, and the names of the data set and their line type are printed in
+the upper right corner. The name must be in quotes. @footnote{this is
+not a good choice}
+To add the name "my Fermat plot" 
+to  data set 3, type
+
+@example
+      n  3  @key{RET}   "my Fermat plot"  @key{RET}
+@end example
+
