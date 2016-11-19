@@ -30,6 +30,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include <dmalloc.h>
 #endif
 
+#include <errno.h>
 #include <libintl.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -89,7 +90,8 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "panic.h"
 #endif
 
-//#include "defuns.h" // mcarter
+#include "defuns.h" // mcarter
+
 
 #if	ENABLE_NLS
 extern char *gettext(char *);
@@ -242,7 +244,7 @@ do_set_option (char *ptr)
 
 		if (Preferences[i].copynext) {
 			ptr += strlen(Preferences[i].name) + 1;
-			((char *)Preferences[i].var) = strdup(ptr);
+			//((char *)Preferences[i].var) = strdup(ptr); mcarter
 		} else if (Preferences[i].var)
 			*((int *)Preferences[i].var) = Preferences[i].value;
 
@@ -788,7 +790,8 @@ init_maps (void)
 
   the_funcs = ck_malloc (sizeof (struct cmd_func *) * 2);
   num_funcs = 1;
-  the_funcs[0] = &cmd_funcs[0];
+  //the_funcs[0] = &cmd_funcs[0]; mcarter
+  the_funcs[0] = get_cmd_funcs();
 
   find_func (0, &end_macro_cmd, "end-macro");
   find_func (0, &digit_0_cmd, "digit-0");

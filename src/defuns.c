@@ -1,4 +1,3 @@
-#pragma once
 /*
  * $Id: defuns.h,v 1.3 2000/07/22 06:13:15 danny Exp $
  *
@@ -29,7 +28,32 @@
 
 /* First, build arrays containing FUNC_ARG strings. */
 
+#include "global.h"
+#include "cmd.h"
+#include "key.h"
+#include "io-term.h"
+#include "basic.h"
+#include "format.h"
+#include "print.h"
+#include "font.h"
+#include "io-x11.h"
+#include "io-edit.h"
+#include "regions.h"
+#include "help.h"
+#include "window.h"
+#include "font.h"
+#include "graph.h"
+#include "lists.h"
+
 /*
+#include "basic.h"
+#include "cmd.h"
+#include "font.h"
+#include "help.h"
+#include "io-edit.h"
+#include "io-term.h"
+*/
+
 #define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
 0, \
 }; \
@@ -50,7 +74,7 @@ static char * FAfnord[] =
 0,
 };
 
-// Docstrings 
+/* Docstrings */
 
 #undef DEFUN
 #undef DEFUN_3
@@ -80,7 +104,7 @@ static char * FDfnord[] =
 };
 
 
-// init_code 
+/* init_code */
 
 #undef DEFUN
 #undef DEFUN_3
@@ -109,7 +133,7 @@ static char * DFfnord[] =
 
 
 
-// Building the function table. 
+/* Building the function table. */
 
 #undef DEFUN
 #undef DEFUN_3
@@ -125,15 +149,11 @@ static char * DFfnord[] =
 	DEFUN_5(Sname, FDname, FAname, 0, Cname)
 #define DEFUN_3(Sname, FDname, Cname) \
 	DEFUN_5(Sname, FDname, 0, 0, Cname)
-*/
 
-//extern struct cmd_func cmd_funcs[];
-/*=
+struct cmd_func cmd_funcs[] =
 {
   { "fnord", FDfnord, FAfnord, DFfnord, fnord },
 #include "defun.h"
   { 0, 0, 0, 0, 0 }
 };
-*/
 
-get_cmd_funcs();

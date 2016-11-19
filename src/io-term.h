@@ -22,6 +22,7 @@
 
 #include <setjmp.h>
 #include "global.h"
+//#include "defuns.h"
 
 extern int using_x;
 extern int using_curses;
@@ -44,7 +45,17 @@ extern int default_fmt;
 extern int default_lock;
 
 
+// mcarter
 //extern struct cmd_func cmd_funcs[];
+/*
+struct cmd_func cmd_funcs[] =
+{
+	  { "fnord", FDfnord, FAfnord, DFfnord, fnord },
+#include "defun.h"
+	    { 0, 0, 0, 0, 0 }
+};
+*/
+
 
 /* When printing ascii output, this controls page width. */
 extern int modified;

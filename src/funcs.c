@@ -30,6 +30,7 @@
 #include <dmalloc.h>
 #endif
 
+
 #include "global.h"
 #include "cmd.h"
 #include "key.h"
@@ -50,7 +51,7 @@
 
 /* This include builds the function table, doc strings, and FUNC_ARGS strings.
  */
-#include "defuns.h"
+//#include "defuns.h"
 
 
 /* Returns 0 if the function is found.
