@@ -30,10 +30,13 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include <dmalloc.h>
 #endif
 
+#include <libintl.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "global.h"
 
@@ -86,9 +89,14 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "panic.h"
 #endif
 
+//#include "defuns.h" // mcarter
+
 #if	ENABLE_NLS
 extern char *gettext(char *);
 #endif
+
+// mcarter
+#define _(x) (x)
 
 /*
  * The ultimate global variable
@@ -985,7 +993,7 @@ main (int argc, char **argv)
 #if 0
   sleep(30);
 #endif
-#if 1	/* ENABLE_NLS */
+#if 0	/* ENABLE_NLS */ // mcarter
   setlocale(LC_ALL, "");
   bindtextdomain(PACKAGE, LOCALEDIR);
   textdomain(PACKAGE);
@@ -1022,9 +1030,9 @@ main (int argc, char **argv)
 	  {
 	  case 'v':
 	  case 'V':
-	    printf(_("%s %s\n"), GNU_PACKAGE, VERSION);
+	    printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
             printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
-            printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), GNU_PACKAGE);
+            printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
             printf(_("You may redistribute copies of %s\n"), PACKAGE);
             printf(_("under the terms of the GNU General Public License.\n"));
             printf(_("For more information about these matters, "));

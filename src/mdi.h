@@ -32,4 +32,4 @@ void	MdiSelectGlobal(int offset1, int offset2, void *ptr);
 int	MdiHasFile(void);
 void	MdiQuit(void);
 
-#endif	_MDI_H_
+#endif //	_MDI_H_
