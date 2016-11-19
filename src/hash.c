@@ -116,6 +116,9 @@ of char[size].  Free(address) frees same.  */
  * new array before we junk the old array!)
  *
  */
+
+#include <stdlib.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

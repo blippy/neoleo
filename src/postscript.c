@@ -30,6 +30,8 @@
 
 static char rcsid[] = "$Id: postscript.c,v 1.20 2001/02/13 23:38:06 danny Exp $";
 
+#include <stdlib.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

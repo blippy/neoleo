@@ -29,6 +29,7 @@
 #endif
 
 #include "funcdef.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include "sysdef.h"

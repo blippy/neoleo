@@ -24,6 +24,8 @@
 static char rcsid[] = "$Id: pcl.c,v 1.17 2001/02/13 23:38:06 danny Exp $";
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifndef	TEST
 #ifdef	HAVE_CONFIG_H
@@ -50,6 +52,8 @@ struct OleoGlobal	*Global;
 #endif
 
 #include "print.h"
+
+struct OleoGlobal	*Global; // mcarter
 
 static int	y;	/* absolute position on page */
 static float	border_width = 20.0,

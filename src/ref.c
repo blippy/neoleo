@@ -19,6 +19,9 @@
  * along with Oleo; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#include <stdlib.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -263,7 +266,7 @@ char *
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
   unsigned char *new_bytes;
-  extern double __plinf, __neinf, __nan;
+  extern double __plinf, __neinf; // mcarter , __nan;
 
   cur_row = row;
   cur_col = col;
@@ -348,7 +351,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	  else if (!stricmp (nname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = __nan;
+	      my_cell->cell_flt = NAN; // mcarter __nan;
 	    }
 	  else
 	    {

@@ -19,6 +19,8 @@
  */
 
 
+#include <unistd.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -31,11 +33,12 @@
 #include "funcdef.h"
 #include <stdio.h>
 
-#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
+//#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
+//#include <ncurses.h>
+//#else
+//#include <curses.h>
+//#endif
 #include <ncurses.h>
-#else
-#include <curses.h>
-#endif
 
 #include <fcntl.h>
 #include <errno.h>
@@ -590,7 +593,10 @@ _io_scan_for_input (int block)
 static void 
 _io_wait_for_input (void)
 {
-  pause ();
+	// mcarter 
+  //pause ();
+  int ch = getch();
+  ungetch(ch);
 }
 
 static int 

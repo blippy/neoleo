@@ -20,6 +20,8 @@
  * Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
+
 static char *rcsid = "$Id: ";
 
 #ifdef HAVE_CONFIG_H
@@ -71,7 +73,7 @@ char numb_oflo[] = "########################################";
 
 double __plinf;
 double __neinf;
-double __nan;
+//double __nan;
 
 char nname[] = "#NOT_A_NUMBER";
 char iname[] = "#INFINITY";
@@ -125,7 +127,7 @@ init_infinity (void)
   __neinf = divide (-1., 0.);
   (void) signal (SIGFPE, ignore_sig);
 #endif
-  __nan = __plinf + __neinf;
+  //__nan = __plinf + __neinf; // mcarter
 }
 
 

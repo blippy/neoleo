@@ -20,6 +20,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -89,7 +93,8 @@ panic (const char *s,...)
   va_list iggy;
 
   va_start (iggy, s);
-  fprintf (stderr, "%s %s:", GNU_PACKAGE, VERSION);
+  //fprintf (stderr, "%s %s:", GNU_PACKAGE, VERSION); mcarter
+  fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
   vfprintf (stderr, s, iggy);
   putc ('\n', stderr);
   va_end (iggy);
@@ -539,6 +544,7 @@ size_stack (bb)
   return b->used;
 }
 
+/* mcarter
 #ifndef HAVE_STRDUP
 char *
 strdup (str)
@@ -551,6 +557,7 @@ strdup (str)
   return ret;
 }
 #endif
+*/
 
 #ifndef _DEBUG_MALLOC_INC
 #ifndef HAVE_STRICMP
@@ -636,6 +643,7 @@ strincmp (const char * s1, const char * s2, size_t n)
 #endif
 #endif /* ndef _DEBUG_MALLOC_INC */
 
+/* mcarter
 #ifndef _DEBUG_MALLOC_INC
 #ifndef HAVE_STRSTR
 char *
@@ -645,11 +653,11 @@ strstr (const char *s, const char *wanted)
   register size_t len;
   register char firstc;
 
-  /*
-	 * The odd placement of the two tests is so "" is findable.
-	 * Also, we inline the first char for speed.
-	 * The ++ on scan has been moved down for optimization.
-	 */
+  
+	// * The odd placement of the two tests is so "" is findable.
+	// * Also, we inline the first char for speed.
+	// * The ++ on scan has been moved down for optimization.
+
   firstc = *wanted;
   len = strlen (wanted);
   for (scan = s; *scan != firstc || strncmp (scan, wanted, len) != 0;)
@@ -658,7 +666,9 @@ strstr (const char *s, const char *wanted)
   return scan;
 }
 #endif
-#endif /* ndef _DEBUG_MALLOC_INC */
+#endif 
+*/
+
 
 char *
 err_msg (void)

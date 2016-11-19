@@ -44,7 +44,7 @@ extern int default_fmt;
 extern int default_lock;
 
 
-extern struct cmd_func cmd_funcs[];
+//extern struct cmd_func cmd_funcs[];
 
 /* When printing ascii output, this controls page width. */
 extern int modified;

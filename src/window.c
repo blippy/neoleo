@@ -27,6 +27,8 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "global.h"
 #include "window.h"
 #include "io-generic.h"
