@@ -100,34 +100,16 @@ you will need the following libraries on your system:
 	* XmHTML (optional, for still-incomplete online documentation)
 
 
-Compiling from CVS
+Compiling from GIT
 ------------------
-If you are brave enough to download Oleo directly from the CVS:
 
-    cvs -d :pserver:anoncvs@subversions.gnu.org:/cvsroot/oleo checkout oleo
+    1.  Run the following command:
 
-there are a few steps beyond the normal installation procedure
-that are required for a successful build.  This section assumes that
-you have the necessary development tools already installed on your system.
+        autoreconf -iv
 
-    1.  Use aclocal to build aclocal.m4, the list of macros needed by
-	automake as requested by configure.in:
+    2.  configure as normal
 
-	aclocal -I m4
-    
-    2.  Run autoheader to generate config.h.in template for configure.
+See also
+--------
 
-	autoheader
-    
-    3.  Run autoconf to build configure from configure.in:
-
-	autoconf
-    
-    4.  Run automake to generate Makefile.in from Makefile.am throughout
-	the tree.  The "-a" tells it to create links to the system verisons
-	of any missing required files.
-
-	automake -a
-
-Now run configure as before.
-
+papoanaya has a version of oleo on github: https://github.com/papoanaya/oleo
