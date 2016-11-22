@@ -24,10 +24,13 @@
 #ifndef	_IO_MOTIF_H_
 #define	_IO_MOTIF_H_
 
-#include "config.h"
+//#include "config.h"
 #include "global.h"
 #include <Xm/Xm.h>
 #include <X11/Intrinsic.h>
+
+// mcarter TODO sort out internationalisation
+#define _(x) (x) 
 
 extern void versionCB(Widget, XtPointer, XtPointer);
 extern void QuitCB(Widget, XtPointer, XtPointer);

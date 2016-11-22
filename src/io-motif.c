@@ -25,7 +25,7 @@
 static char rcsid[] = "$Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $";
 
 #ifdef	HAVE_CONFIG_H
-#include "config.h"
+//#include "config.h"
 #endif
 
 #ifdef	WITH_DMALLOC
@@ -4754,7 +4754,7 @@ GscBuildSplash(Widget parent)
         skip_xpm_icon: /* XpmCreatePixmapFromData call failed -- skip it */
 
 	ac = 0;
-	x1 = XmStringCreateLtoR(GNU_PACKAGE " " VERSION "\n",
+	x1 = XmStringCreateLtoR(PACKAGE_NAME " " VERSION "\n",
 		"large");
 	x2 = XmStringCreateLtoR(CopyRightString, "small");
 	xms = XmStringConcat(x1, x2);
@@ -5951,7 +5951,8 @@ void QuitCB(Widget w, XtPointer client, XtPointer call)
 }
 
 static char *gpl_string =
-#include "gpl.h"
+//#include "gpl.h"
+"TODO: gpl_string"
 ;
 
 void gplCB(Widget w, XtPointer client, XtPointer call)
@@ -5991,7 +5992,7 @@ void versionCB(Widget w, XtPointer client, XtPointer call)
 
 	MotifSelectGlobal(w);
 
-	xms1 = XmStringCreateLtoR(GNU_PACKAGE " " VERSION,
+	xms1 = XmStringCreateLtoR(PACKAGE_VERSION " " VERSION,
 		XmFONTLIST_DEFAULT_TAG);
 	xms2 = XmStringCreateLtoR(CopyRightString, XmFONTLIST_DEFAULT_TAG);
 	xms = XmStringConcat(xms1, xms2);

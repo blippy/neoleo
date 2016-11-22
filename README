@@ -46,6 +46,17 @@ your comments will be welcomed by the developers.
 Before compiling, be sure that you have the necessary building blocks
 installed on your system:
 
+
+Front-ends
+----------
+
+    1.  ncurses (basic)
+
+    2. xlib (better)
+
+    3. motif+xbae (best). On Arch, xbae is in AUR, but I built from source due to its dependency on openotif. It is better to use lesstif.
+
+
 System Requirements
 -------------------
 
