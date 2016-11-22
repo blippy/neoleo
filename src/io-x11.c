@@ -32,9 +32,11 @@
 #ifndef X_DISPLAY_MISSING
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <sys/param.h>
-#define NeedFunctionPrototypes 0
+// #define NeedFunctionPrototypes 0 // mcarter
+#include <X11/XKBlib.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -402,13 +404,17 @@ static int
 xi18nlookup(XEvent *evp, char *buf, int nbytes, KeySym *keysym, Status *status)
 {
 	int	i;
-	static Status	s;
+	static Status	s; 
 
 #ifdef	X_I18N
+	//mcarter 2016-11-22 some dubious rewiring on my part
 	if (xic) {
-		i = XmbLookupString(xic, evp, buf, nbytes, keysym, &s);
+		i = XmbLookupString(xic, (XKeyPressedEvent *) evp, 
+				buf, nbytes, keysym, 
+				(int *) &s);
 	} else {
-		i = XLookupString(evp, buf, nbytes, keysym, &s);
+		i = XLookupString((XKeyEvent *) evp, buf, nbytes, keysym, 
+				(XComposeStatus *) &s);
 	}
 
 #ifdef	I18N_VERBOSE
@@ -2124,6 +2130,8 @@ reasonable_font (Xport port, char *name)
   return f;
 }
 
+
+
 extern void 
 xio_open_display (void)
 {
@@ -2385,8 +2393,16 @@ xio_open_display (void)
 			/* Loop through all keycodes in map */
 			for (i=0; i < OurModKeymap->max_keypermod; i++) {
 				if (tmpptr[i] != 0) {
+					/* mcarter 2016-11-22 update deprecated function
+					 * See http://stackoverflow.com/questions/9838385/replace-of-xkeycodetokeysym
+					 * 
+					* ModifierKeys[n] = 
+					*XKeycodeToKeysym(thePort->dpy,tmpptr[i], 0);
+					*/
+					int keysyms_per_keycode_return;
 					ModifierKeys[n] = 
-					XKeycodeToKeysym(thePort->dpy,tmpptr[i], 0);
+					XGetKeyboardMapping(thePort->dpy,tmpptr[i], 1, &keysyms_per_keycode_return);
+					// XFree( ModifierKeys[n]) ??
 					n++; 
 				} 
 			}

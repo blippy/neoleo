@@ -51,13 +51,16 @@
 #endif /* __GNUC__ not defined.  */
 #endif /* alloca not defined.  */
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include "sysdef.h"
 
 /* This should be included before the X include files; otherwise, we get
    warnings about redefining NULL under BSD 4.3.  */
 #include <sys/param.h>
-#define NeedFunctionPrototypes 0
+#define NeedFunctionPrototypes 1 // mcarter 2016-11-22 original value was 0
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

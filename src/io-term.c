@@ -98,8 +98,8 @@ extern char *gettext(char *);
 #endif
 
 // mcarter
-#define _(x) (x)
-#define X_DISPLAY_MISSING
+#define _(x) (x) // TODO get rid of this line
+//#define X_DISPLAY_MISSING
 
 /*
  * The ultimate global variable

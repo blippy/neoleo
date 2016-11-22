@@ -38,9 +38,6 @@
 #include "io-term.h"
 #include "io-utils.h"
 
-// mcarter
-#define X_DISPLAY_MISSING
-
 static char * default_oleo_name = "default";
 static char * default_x_name = "*times-medium-r-*";
 static char * default_ps_name = "Times-Roman";
