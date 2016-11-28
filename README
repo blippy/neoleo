@@ -1,20 +1,11 @@
-Welcome to GNU Oleo!
+Fork of the GNU oleo lightweight spreadsheet
 
-Oleo is a spreadsheet program covered by the GNU Copyleft (see the file
-COPYING included with this distribution for more information).
+(Ne)Oleo is a light-weight spreadsheet that will work in almost any environment. Oleo was an official GNU spreadsheet that had not been updated since 2000. It suffered from considerable bitrot. Neoleo is an update to Oleo that fixes these issues.
 
-As of this writing (February 1999), Oleo is in active development. Major
-changes are being made to the user interface, and lower-level changes
-affecting the Oleo file format, expression syntax and macro language will
-almost certainly follow in due course.  This is good news and bad news: On
-the positive side, it does mean that someone besides yourself will be
-concerned if you have problems compiling or running Oleo on a particular
-architecture; but it also means that you cannot expect the Oleo of tomorrow
-to behave in exactly the same way as the Oleo of today.
 
-We therefore encourage you to download and compile this program, and to use
-it, but for ephemeral tasks. If you have any problems, please send mail to
-bug-oleo@gnu.org.  User feedback is extremely important to Oleo development.
+
+
+
 
 At present, Oleo has the following features and (un-features):
 
