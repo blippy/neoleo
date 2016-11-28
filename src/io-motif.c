@@ -5846,6 +5846,12 @@ void motif_init(int *argc, char **argv)
 		/* options */		NULL, 0,
 		/* command line */	argc, argv);
 
+	// mcarter prevent segementation fault 
+	if(!dpy){
+		fprintf(stderr, "Could not open display. Try running with '-x' option\n");
+		exit(EXIT_FAILURE);
+	}
+
 	toplevel = XtVaAppCreateShell(PACKAGE, PACKAGE,
 		topLevelShellWidgetClass, dpy, NULL);
 	RegisterWMClose(toplevel);
