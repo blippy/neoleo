@@ -1,7 +1,7 @@
 # Order of linking of libraries for Motif seems to be important
 
 if HAVE_XBAE
-GUI = io-motif.c appres.c fallback.c oleo-icon.xpm
+GUI = io-motif.c appres.c fallback.c oleo_icon.xpm
 GUI_LINK = -lXm -lXt -lXbae
 GUI_DEFINES = -DHAVE_MOTIF
 else

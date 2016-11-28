@@ -1,3 +1,22 @@
+===== Oleo 3.0 =====
+
+Added X11 and Motif support, where available. 
+
+Still no internationalisation or documentation. Infrastructure is there,
+it just does not build as yet.
+
+Fixed bug whereby the original code seemed to crash if X support
+was built in, but there was no X display. A bit rude, that. It would
+be even better, though, if neoleo would automatically fall back to 
+ncurses.
+
+If you are downloading the file from github, most people, especially
+distro packagers wanting to do typical configure && make && make install
+should download the file neoleo-X.Y.tar.gz, rather than the
+source files.
+
+28-Nov-2016
+
 ===== Oleo 2.0 =====
 
 First successful compilation in 15 years!?
