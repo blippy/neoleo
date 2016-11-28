@@ -30,6 +30,17 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c
 		 $(GUI)
 	
 
+noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
+		 cmd.h decompile.h defun.h defuns.h display.h epson.h \
+		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
+		 funcs.h global.h graph.h hash.h help.h info.h init.h \
+		 input.h io-abstract.h io-curses.h io-edit.h \
+		 io-generic.h io-motif.h io-term.h io-utils.h io-x11.h \
+		 ir.h key.h line.h list.h lists.h mdi.h mysql.h node.h \
+		 oleofile.h oleo_plot.h oleosql.h oleo_xb.h parse.h pcl.h \
+		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
+		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
+		 sylk.h sysdef.h userpref.h utils.h window.h
 
 # exclude these for now:
 # appres.c io-motif.c plotter.c xbase.cpp
