@@ -1,4 +1,16 @@
-===== Oleo 3.0 =====
+===== neoleo 3.0.1 =====
+
+Fixed a schoolboy error in the way that make dist worked. It left
+out the headers.
+
+If you are downloading the file from github, most people, especially
+distro packagers wanting to do typical configure && make && make install
+should download the file neoleo-X.Y.Z.tar.gz, rather than the
+source files.
+
+28-Nov-2016
+
+===== neoleo 3.0 =====
 
 Added X11 and Motif support, where available. 
 
@@ -17,7 +29,7 @@ source files.
 
 28-Nov-2016
 
-===== Oleo 2.0 =====
+===== neoleo 2.0 =====
 
 First successful compilation in 15 years!?
 
