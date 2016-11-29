@@ -1,17 +1,22 @@
 Fork of the GNU oleo lightweight spreadsheet
 
-(Ne)Oleo is a light-weight spreadsheet that will work in almost any environment. Oleo was an official GNU spreadsheet that had not been updated since 2000. It suffered from considerable bitrot. Neoleo is an update to Oleo that fixes these issues.
+(Ne)Oleo is a light-weight spreadsheet that will work in almost any environment.
+Oleo was an official GNU spreadsheet that had not been updated since 2000. It 
+suffered from considerable bitrot. Neoleo is an update to Oleo that fixes these 
+issues.
 
 
 
+If you are downloading the file from github, most people, especially
+distro packagers wanting to do typical configure && make && make install
+should download the file neoleo-X.Y.Z.tar.gz, rather than the
+source files.
 
-
-
-At present, Oleo has the following features and (un-features):
 
 Features
 --------
-	* Works on character terminals and under X
+	* ncurses interface: neoleo -x , or neoleo -nw
+	* Motif+Xbae interface: neoleo
 	* Macro language
 	    (still a bit untidy in places, but it works)
 	* Charts generated from spreadsheet data
@@ -21,85 +26,27 @@ Features
 	* File format conversions
 	    (support of this is still pretty primitive; don't plan
 	    on importing E*cel files anytime soon)
-	* Confirmed to compile and run out of the box on: Linux, FreeBSD
-
-As the above list shows, much work needs to be done to get Oleo to fulfill
-its potential utility.  The framework is in place for collaboration and the
-work has begun; to find out more, send a message to bug-oleo-request@gnu.org,
-with "subscribe" as the only word in the subject line, and your email address
-in the body of the message.  This list is the forum through which developers
-confer and keep one another posted about what's happening.  Everyone with an
-interest in the future of this application is encouraged to subscribe.
-
-Even if you just want to take Oleo out for a spin around the block, however,
-your comments will be welcomed by the developers.
-
-Before compiling, be sure that you have the necessary building blocks
-installed on your system:
 
 
-Front-ends
-----------
 
-    1.  ncurses (basic)
-
-    2. xlib (better)
-
-    3. motif+xbae (best). On Arch, xbae is in AUR, but I built from source due to its dependency on openotif. It is better to use lesstif.
+Disabled features
+-----------------
 
 
-System Requirements
--------------------
+Formerly, the default was to build with ncurses+Motif+Xbae, downgradeable
+to:
+	* curses-only using: ./configure --without-x
+	* curses+X11  using: ./configure --without-motif
+To keep things simple, ncurses+Motif+Xbae is now built. This means that
+the Xbae library must be installed.
 
-The system requirements for Oleo depend upon the user interface or
-interfaces that you intend to compile into the binary.
 
-
-(1) Character Terminal Interface Only
-
-For the no-frills interface, try building with the following command line:
-
-  ./configure --without-x && make
-
-This no-frills character terminal interface does not offer support
-for plotting, but otherwise it has the same capabilities as the
-other versions.  This basic Oleo requires the following libraries:
-
-	* some version of curses (NCurses or Termcap/curses)
-	* GNU Gettext 0.10.32 (currently included in oleo)
+Code still exists, but is currently not compiled for:
+	* GNU Gettext 0.10.32
 	* GNU texinfo (3.12) to build the documentation
-
-
-(2) Simple X11 Interface
-
-For very basic X11 support, try building with the following:
-
-  ./configure --without-motif && make
-
-This interface provides very little beyond the basic character terminal
-interface built with the previous command, but it will allow you to select a
-cell with the mouse and use the cursor keys in an Xterm.  Like the no-frills
-interface, this offers no support for plotting.  It of course requires the
-basic X11 libraries to compile.  To run an Oleo compiled with X11 with
-the character interface instead, run it with one of the command line options
--x or --nw.
-
-
-(3) Motif Interface
-
-To build an Oleo with Motif support, try building with the following:
-
-  ./configure && make
-
-The Motif interface shows where Oleo is headed. A binary produced in this
-way can be used in character mode (i.e. by running it with the -x or --nw
-options) but not in the no-frills X mode. To compile with Motif support,
-you will need the following libraries on your system:
-
-	* Motif or LessTif, Xlt (from LessTif) and Xbae 4.6.2
-	* SciPlot (optional, for charts, if Xlt not used)
-	* GNU plotutils (optional, for charts)
-	* XmHTML (optional, for still-incomplete online documentation)
+	* SciPlot  for charts
+	* GNU plotutils for charts
+	* XmHTML for still-incomplete online documentation
 
 
 Compiling from GIT

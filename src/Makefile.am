@@ -1,13 +1,15 @@
 # Order of linking of libraries for Motif seems to be important
+# I have decided to mandate the use of the Xbae library, rather than
+# have it optional.
 
-if HAVE_XBAE
+#if HAVE_XBAE
 GUI = io-motif.c appres.c fallback.c oleo_icon.xpm
 GUI_LINK = -lXm -lXt -lXbae
 GUI_DEFINES = -DHAVE_MOTIF
-else
-GUI = io-x11.c
-GUI_LINK = 
-endif
+#else
+#GUI = io-x11.c
+#GUI_LINK = 
+#endif
 
 YFLAGS = -d
 

@@ -4,7 +4,8 @@ AC_CONFIG_SRCDIR([src/pcl.c])
 AM_INIT_AUTOMAKE([foreign])
 
 AC_CHECK_HEADERS([Xbae/Matrix.h])
-AM_CONDITIONAL([HAVE_XBAE], [test "x$ac_cv_header_Xbae_Matrix_h" = "xyes"])
+AS_IF([test "x$ac_cv_header_Xbae_Matrix_h" != "xyes"],
+      [AC_MSG_ERROR([Unable to find the Xbae headers])])
 #AM_CONDITIONAL([HAVE_MOTIF], [test "x$ac_cv_header_Xbae_Matrix_h" = "xyes"])
 
 AC_PROG_RANLIB

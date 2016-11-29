@@ -1,3 +1,8 @@
+===== neoleo 4.0.0 =====
+
+This package now REQUIRES the Xbae (and hence Motif) library.
+
+
 ===== neoleo 3.0.1 =====
 
 Fixed a schoolboy error in the way that make dist worked. It left
