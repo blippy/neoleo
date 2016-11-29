@@ -1,4 +1,4 @@
-Fork of the GNU oleo lightweight spreadsheet
+Lightweight curses/Motif spreadsheet based on GNU oleo
 
 (Ne)Oleo is a light-weight spreadsheet that will work in almost any environment.
 Oleo was an official GNU spreadsheet that had not been updated since 2000. It 
