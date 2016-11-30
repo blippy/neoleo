@@ -3560,8 +3560,53 @@ void EditRecalculateCB(Widget w, XtPointer client, XtPointer call)
 void CopyCB(Widget w, XtPointer client, XtPointer call)
 {
 	MotifSelectGlobal(w);
+	// mcarter: issue2
+	// code largely taken from
+	// http://www.oreilly.com/openbook/motif/vol6a/Vol6a_html/ch17.html
+	//
+       unsigned long item_id = 0;  /* clipboard item id */
+       int           status;
+       XmString      clip_label;
+       //char *        buf = cell_value_string(curow, cucol, True);
+       CELL * cp = find_cell(curow, cucol);
+       char * dec = decomp(curow, cucol, cp);
+       //char * buf = dec;
+       //char *        buf = print_cell(cp);
+       //static int    cnt = 0;
+       Display      *dpy = XtDisplayOfObject (w);
+       Window        window = XtWindowOfObject (w);
+       long private_id = 0x01E0;
+       //char         *data = (char *) client_data;
 
-	none(w, client, call);
+       //sprintf (buf, "%s-%d", data, ++cnt); /* make each copy unique */
+
+       printf("CopyCB():  R%dC%d:<%s>\n", curow, cucol, dec);
+       clip_label = XmStringCreateLocalized(PACKAGE);
+
+       /* start a copy -- retry till unlocked */
+       /* TODO manpage says that we shouldn't pass CurrentTime */
+       do
+           status = XmClipboardStartCopy (dpy, window,
+               clip_label, CurrentTime, NULL, NULL, &item_id);
+       while (status == ClipboardLocked);
+
+       XmStringFree (clip_label);
+
+       //puts("TODO copy clipboard");
+       //strcpy(buf, "HELLO"); // TODO 
+
+       do
+           status = XmClipboardCopy (dpy, window, item_id, "STRING",
+               //buf, (long) strlen (buf)+1, private_id, NULL);
+               dec, (long) strlen (dec)+1, private_id, NULL);
+       while (status == ClipboardLocked);
+
+       /* end the copy */
+       do
+           status = XmClipboardEndCopy (dpy, window, item_id);
+       while (status == ClipboardLocked);
+
+	//none(w, client, call);
 }
 
 void CutCB(Widget w, XtPointer client, XtPointer call)
@@ -3575,7 +3620,25 @@ void PasteCB(Widget w, XtPointer client, XtPointer call)
 {
 	MotifSelectGlobal(w);
 
-	none(w, client, call);
+	// mcarter: issue2
+	// http://www.oreilly.com/openbook/motif/vol6a/Vol6a_html/ch17.html
+	// Method of changing cell cribbed from LeaveCell()
+	long int status;
+	long private_id;
+	char buf[80];
+	Display *dpy = XtDisplayOfObject(w);
+	Window window = XtWindowOfObject(w);
+	unsigned long num_bytes;
+	status = XmClipboardRetrieve(dpy, window, "STRING", buf,
+			sizeof(buf) -1, &num_bytes, &private_id);
+	buf[num_bytes] = '\0';
+	if(status == XmClipboardSuccess || status == XmClipboardTruncate) { 
+		printf("PasteCB(): R%dC%d: <%s>\n", curow, cucol, buf);
+		new_value(curow, cucol, buf);
+		MotifUpdateDisplay();
+	}
+
+	//none(w, client, call);
 }
 
 /****************************************************************

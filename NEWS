@@ -1,6 +1,11 @@
 ===== neoleo 4.0.0 =====
 
-This package now REQUIRES the Xbae (and hence Motif) library.
+* Support for vanilla X11 dropped.
+
+* Use of Motif+Xbae library required
+
+* issue2: Added Copy (Ctrl-c) and Paste (Ctrl-v)
+  https://github.com/blippy/neoleo/issues/2
 
 
 ===== neoleo 3.0.1 =====
