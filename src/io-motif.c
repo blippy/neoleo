@@ -5931,15 +5931,19 @@ void motif_init(int *argc, char **argv)
 		resources, num_resources,
 		NULL);
 
+	// mcarter issue3 : disable splash screen
+	SplashShell = 0;
+	/*
 	if (AppRes.show_version > 0) {
 		long	t = AppRes.show_version;
 
 		SplashShell = GscBuildSplash(toplevel);
 		XtPopup(SplashShell, XtGrabNone);
 
-		/* Splash remains on screen for configurable time (milliseconds) */
+		// Splash visible for configurable time (milliseconds) 
 		XtAppAddTimeOut(app, t, PopDownSplash, 0);
 	}
+	*/
 
 	/* Without this we have NULL in cwin. */
 	io_init_windows(AppRes.rows, AppRes.columns, 1, 2, 1, 1, 1, 1);
