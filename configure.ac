@@ -1,17 +1,28 @@
 AC_PREREQ([2.69])
-AC_INIT([neoleo], [3.0.1], [alt.mcarter@gmail.com])
+AC_INIT([neoleo], [4.0.0], [alt.mcarter@gmail.com])
 AC_CONFIG_SRCDIR([src/pcl.c])
 AM_INIT_AUTOMAKE([foreign])
 
-AC_CHECK_HEADERS([Xbae/Matrix.h])
-AS_IF([test "x$ac_cv_header_Xbae_Matrix_h" != "xyes"],
-      [AC_MSG_ERROR([Unable to find the Xbae headers])])
-#AM_CONDITIONAL([HAVE_MOTIF], [test "x$ac_cv_header_Xbae_Matrix_h" = "xyes"])
 
 AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_YACC
 
+AC_ARG_WITH(motif,
+     [  --without-motif              do not use Motif, even if detected],
+     [               case "${withval}" in
+         y | ye | yes )      usemotif=yes ;;
+         n | no )            usemotif=no ;;
+         * )                 usemotif=yes ;;
+         esac],
+     [               usemotif=yes])
+
+AM_CONDITIONAL(UseMotif, test x$usemotif = xyes)
+if test "$usemotif" = "yes"; then
+   AC_CHECK_HEADERS([Xbae/Matrix.h])
+   AS_IF([test "x$ac_cv_header_Xbae_Matrix_h" != "xyes"],
+         [AC_MSG_ERROR([Xbae not found; you must install it or use "--without-motif"])])
+fi
 
 
 AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile])

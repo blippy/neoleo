@@ -2,14 +2,12 @@
 # I have decided to mandate the use of the Xbae library, rather than
 # have it optional.
 
-#if HAVE_XBAE
-GUI = io-motif.c appres.c fallback.c oleo_icon.xpm
-GUI_LINK = -lXm -lXt -lXbae
+if UseMotif
+GUI = io-motif.c appres.c fallback.c xrdb.c oleo_icon.xpm
+GUI_LINK = -lXm -lXt -lXbae -lX11
 GUI_DEFINES = -DHAVE_MOTIF
-#else
-#GUI = io-x11.c
-#GUI_LINK = 
-#endif
+endif
+
 
 YFLAGS = -d
 
@@ -17,8 +15,8 @@ bin_PROGRAMS = neoleo
 
 CLEANFILES = parse.c parse.h posixtm.c posixtm.h
 
-neoleo_CFLAGS = $(GUI_DEFINES)
-neoleo_LDADD = -lm -lncurses ../lib/liboleo.a $(GUI_LINK) -lX11
+neoleo_CFLAGS = $(GUI_DEFINES) -DX_DISPLAY_MISSING
+neoleo_LDADD = -lm -lncurses ../lib/liboleo.a $(GUI_LINK)
 neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c io-curses.c io-edit.c io-term.c io-utils.c \
@@ -27,9 +25,7 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c
 		 window.c \
 		 posixtm.y \
 		 defuns.c \
-		 mysql.c \
-		 xrdb.c \
-		 $(GUI)
+		 mysql.c   $(GUI)
 	
 
 noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
@@ -45,7 +41,7 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h
 
 # exclude these for now:
-# appres.c io-motif.c plotter.c xbase.cpp
+# io-x11.c plotter.c xbase.cpp
 
 
 ref.o : parse.h

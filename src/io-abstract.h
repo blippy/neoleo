@@ -72,11 +72,15 @@ EXTERN void (*io_erase) (int len);
 EXTERN void (*io_insert) (int len);
 EXTERN void (*io_over) (char *, int len);
 
-#ifndef X_DISPLAY_MISSING
+// mcarter - let's just define it without all that conditional nonsense
 extern int io_col_to_input_pos (int col);
+/*
+#ifndef X_DISPLAY_MISSING
+int io_col_to_input_pos (int col);
 #else
 #define io_col_to_input_pos(i)  0
 #endif
+*/
 
 
 /* Cell values */
