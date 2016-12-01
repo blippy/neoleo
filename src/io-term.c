@@ -990,8 +990,7 @@ oleo_catch_signals(void (*h)(int))
   }
 }
 
-int 
-main (int argc, char **argv)
+int main0(int argc, char **argv)
 {
   volatile int ignore_init_file = 0;
   FILE * init_fp[2];

@@ -3,20 +3,21 @@
 #
 # Process this file with automake to produce Makefile.in
 #
-noinst_LIBRARIES = liboleo.a
-
+#noinst_LIBRARIES = liboleo.la
+lib_LTLIBRARIES = liboleo.la
 #
 # The list of files here is incomplete :
 #	configure.in can add mktime.c and obstack.c through the LIBOBJS
 #	mechanism
 #
-liboleo_a_SOURCES = getdate.y getopt.c getopt1.c random.c
-liboleo_a_LIBADD = @LIBOBJS@
+liboleo_la_SOURCES = getdate.y getopt.c getopt1.c random.c
+liboleo_la_LDFLAGS = -shared
+liboleo_la_LIBADD = @LIBOBJS@
 
 noinst_HEADERS = getopt.h get_date.h obstack.h
 
-INCLUDES = -I.. -I$(srcdir) -I../intl
+AM_CPPFLAGS = -I.. -I$(srcdir) -I../intl
 
 CLEANFILES = getdate.c
-MAINTAINERCLEANFILES = Makefile.in
+#MAINTAINERCLEANFILES = Makefile.in
 

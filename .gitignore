@@ -1,3 +1,8 @@
+config.guess
+config.sub
+.libs
+libtool
+ltmain.sh
 test.oleo.old
 *.tar.gz
 neoleo-3.0/
@@ -14,6 +19,8 @@ config.log
 config.status
 .deps/
 *.o
+*.lo
+*.la
 neoleo
 ylwrap
 parse.c

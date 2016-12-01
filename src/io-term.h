@@ -101,5 +101,6 @@ void save_preferences();
 extern int option_filter;
 
 extern void oleo_catch_signals(void (*h)(int));
+int main0(int argc, char **argv);
 
 #endif /* IO_TERMH */

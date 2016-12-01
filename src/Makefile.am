@@ -12,12 +12,16 @@ endif
 YFLAGS = -d
 
 bin_PROGRAMS = neoleo
+neoleo_LDADD = libneoleo.la -ltcl8.6
+neoleo_SOURCES = main.c
 
-CLEANFILES = parse.c parse.h posixtm.c posixtm.h
+CLEANFILES = parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
 
-neoleo_CFLAGS = $(GUI_DEFINES) -DX_DISPLAY_MISSING
-neoleo_LDADD = -lm -lncurses ../lib/liboleo.a $(GUI_LINK)
-neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
+lib_LTLIBRARIES = libneoleo.la
+libneoleo_la_CFLAGS = $(GUI_DEFINES) -DX_DISPLAY_MISSING
+libneoleo_la_LIBADD = -lpthread -lm -lncurses ../lib/liboleo.la  $(GUI_LINK)
+libneoleo_la_LDFLAGS = -module -avoid-version -shared
+libneoleo_la_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c io-curses.c io-edit.c io-term.c io-utils.c \
 		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c pcl.c plot.c  parse.y \
@@ -25,6 +29,8 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c
 		 window.c \
 		 posixtm.y \
 		 defuns.c \
+		 neoleo_swig.c \
+		 neoleo_wrap.c \
 		 mysql.c   $(GUI)
 	
 
@@ -38,10 +44,14 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 oleofile.h oleo_plot.h oleosql.h oleo_xb.h parse.h pcl.h \
 		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
-		 sylk.h sysdef.h userpref.h utils.h window.h
+		 sylk.h sysdef.h userpref.h utils.h window.h \
+		 neoleo_swig.h
 
 # exclude these for now:
 # io-x11.c plotter.c xbase.cpp
 
 
 ref.o : parse.h
+
+neoleo_wrap.c : neoleo.i neoleo_swig.c neoleo_swig.h
+	swig -tcl8 neoleo.i

@@ -7,6 +7,7 @@ AM_INIT_AUTOMAKE([foreign])
 AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_YACC
+LT_INIT
 
 AC_ARG_WITH(motif,
      [  --without-motif              do not use Motif, even if detected],
