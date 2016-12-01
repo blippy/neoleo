@@ -2,7 +2,7 @@
 
 * Support for vanilla X11 dropped.
 
-* Use of Motif+Xbae library required
+* Conditional compilation for Motif+Xbae.
 
 * issue2: Added Copy (Ctrl-c) and Paste (Ctrl-v)
   https://github.com/blippy/neoleo/issues/2
