@@ -97,5 +97,6 @@ int graph_get_axis_ticktype(int axis);
 char *graph_get_axis_tickformat(int axis);
 
 typedef void (*plotter) (void);
+char *char_to_q_char(char *str);
 
 #endif  /* GRAPHH */

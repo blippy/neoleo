@@ -14,6 +14,7 @@ C;c4;r1;Erc[-1];K13
 C;r2;Er[-1]c + rc[-1];K41
 C;r3;K18
 C;c5;r1;E1 + rc[-1];K14
+C;r2;Er[-1]c + rc[-1];K55
 O;status 2
 W;N1;A2 5;C7 0 7;Ostandout
 GDx""

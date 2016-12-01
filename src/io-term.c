@@ -791,8 +791,13 @@ init_maps (void)
 
   the_funcs = ck_malloc (sizeof (struct cmd_func *) * 2);
   num_funcs = 1;
+
   //the_funcs[0] = &cmd_funcs[0]; mcarter
+  // TODO LOW mcarter: unhappy about diagnostic warning tweaks, but seems OK
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
   the_funcs[0] = get_cmd_funcs();
+#pragma GCC diagnostic pop  
 
   find_func (0, &end_macro_cmd, "end-macro");
   find_func (0, &digit_0_cmd, "digit-0");

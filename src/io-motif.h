@@ -60,7 +60,7 @@ struct MotifGlobalType {
 	Widget	configureGraph_w, copyDialog_w, optionsDialog_w, executeCommandDialog_w;
 	Widget	configureGraphInside_w;
 	struct rng	selection_range;
-	int	PuPlotter;
+	int PuPlotter;
 	PuFunction ThisPuFunction;
 	char	**rowlabels, **columnlabels;
 	short	*columnwidths;

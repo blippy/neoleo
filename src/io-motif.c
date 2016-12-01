@@ -93,6 +93,7 @@ static char rcsid[] = "$Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $";
 #include "window.h"
 #include "line.h"
 #include "font.h"
+#include "list.h"
 #include "lists.h"
 #include "ir.h"
 #include "display.h"
@@ -120,6 +121,24 @@ extern char *fallback[];
 #include "appres.h"
 
 GnuSheetAppres	AppRes;
+
+// mcarter compilation warning clean-up kludge
+int XtPointerToInt(XtPointer p)
+{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+	return (int) p;
+#pragma GCC diagnostic pop
+}
+
+// mcarter compilation another warning clean-up kludge
+XtPointer IntToXtPointer(int i)
+{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+	return (XtPointer) i;
+#pragma GCC diagnostic pop
+}
 
 /* Forward declarations */
 void CancelTemplate(Widget w, XtPointer client, XtPointer call);
@@ -1356,7 +1375,7 @@ void PuSelectPlotter(Widget w, XtPointer client, XtPointer call)
 
 	MotifSelectGlobal(w);
 
-	PuPlotter = (int)client;
+	PuPlotter = XtPointerToInt(client);
 
 	plotutils_set_device(PuPlotter);
 
@@ -2007,7 +2026,7 @@ static void MotifSetPrintType(Widget w, XtPointer client, XtPointer call)
 
 static void MotifSetPrintPage(Widget w, XtPointer client, XtPointer call)
 {
-	int	i = (int) client;
+	int	i = XtPointerToInt(client);
 
 	MotifSelectGlobal(w);
 
@@ -2256,7 +2275,7 @@ Widget MotifCreatePrintDialog(Widget s)
 		if (strcmp(AppRes.paper, PrintGetPageName(i)) == 0)
 			XtVaSetValues(menu, XmNmenuHistory, w, NULL);
 		XtAddCallback(w, XmNactivateCallback,
-			MotifSetPrintPage, (XtPointer)i);
+			MotifSetPrintPage, IntToXtPointer(i));
 		XmStringFree(xms);
 		XtManageChild(w);
 	}
@@ -3905,18 +3924,18 @@ void Yeah(Widget w, XtPointer client, XtPointer call)
 {
 	MotifSelectGlobal(w);
 
-	Global->MotifGlobal->fmt = formats_list[(int) client];
+	Global->MotifGlobal->fmt = formats_list[XtPointerToInt(client)];
 #if 0
 	fprintf(stderr, "Yeah %d->%d\n", (int)client, Global->MotifGlobal->fmt);
 #endif
 }
 
-int	date_format;
+int date_format;
 void MotifDateFormat(Widget w, XtPointer client, XtPointer call)
 {
 	MotifSelectGlobal(w);
 
-	date_format = (int) client;
+	date_format =  XtPointerToInt(client);
 }
 
 void CreateFormatsDialog(Widget p)
@@ -4073,8 +4092,12 @@ void CreateFormatsDialog(Widget p)
 		w = XmCreatePushButtonGadget(menu, "button", al, ac);
 		if (i == 0)
 			XtVaSetValues(menu, XmNmenuHistory, w, NULL);
+
+		XtPointer client_data = NULL;
+		// TODO LOW mcarter original code had client_data = (XtPointer)i
+		// but this function is apparently never called
 		XtAddCallback(w, XmNactivateCallback,
-			MotifDateFormat, (XtPointer)i);
+			MotifDateFormat, client_data);
 		XmStringFree(xms);
 		XtManageChild(w);
 	}
@@ -4160,7 +4183,8 @@ void FormatsDialogReset(Widget d)
 void FormatsDialog(Widget w, XtPointer client, XtPointer call)
 {
 	Widget	ok, cancel, help, tf;
-	int	c = (int)client, ac;
+	//int	c = (int)client, ac;
+	int	ac;
 	Arg	al[5];
 
 	MotifSelectGlobal(w);
@@ -4186,7 +4210,8 @@ void FormatsDialog(Widget w, XtPointer client, XtPointer call)
 	}
 
 	tf = XtNameToWidget(FormatD, "*formatsFrame*formatsTf");
-	if (tf) XtSetSensitive(tf, 1 - c);
+	Boolean sensitive = client == (XtPointer) 1;
+	if (tf) XtSetSensitive(tf, sensitive);
 
 	FormatsDialogReset(FormatD);
 	XtManageChild(FormatD);
@@ -4415,7 +4440,8 @@ void
 DoUserPreferences(Widget w, XtPointer client, XtPointer call)
 {
 	Widget	ok, cancel, help, tf;
-	int	c = (int)client, ac;
+	//int	c = (int)client, ac;
+	int	ac;
 	Arg	al[5];
 
 	MotifSelectGlobal(w);
@@ -4621,7 +4647,7 @@ void
 ConfigureMySQL(Widget w, XtPointer client, XtPointer call)
 {
 	Widget	ok, cancel, help, tf;
-	int	c = (int)client, ac;
+	int	ac;
 	Arg	al[5];
 
 	MotifSelectGlobal(w);
