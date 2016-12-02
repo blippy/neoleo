@@ -11,7 +11,7 @@ lib_LTLIBRARIES = liboleo.la
 #	mechanism
 #
 liboleo_la_SOURCES = getdate.y getopt.c getopt1.c random.c
-liboleo_la_LDFLAGS = -shared
+liboleo_la_LDFLAGS = -module -avoid-version -shared
 liboleo_la_LIBADD = @LIBOBJS@
 
 noinst_HEADERS = getopt.h get_date.h obstack.h

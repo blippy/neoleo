@@ -7,5 +7,5 @@
 
 %}
 
-%include "neoleo_swig.c"
+%include "neoleo_swig.h"
 

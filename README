@@ -69,7 +69,7 @@ Support is very limited and flakey at the moment, but you can do some
 cool things like this:
 $ rlwrap tclsh
 % load neoleo.so
-% start)swig_motif
+% start_swig_motif
 Open up the test.oleo spreadsheet manually
 % get_formula 2 2 ; # this gives you the formula at cell R2C2
 r[-1]c + rc[-1]

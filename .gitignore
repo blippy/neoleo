@@ -27,3 +27,4 @@ parse.c
 parse.h
 posixtm.c
 posixtm.h
+*.old

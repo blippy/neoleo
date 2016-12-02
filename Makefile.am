@@ -1,1 +1,1 @@
-SUBDIRS = lib src
+SUBDIRS = examples lib src

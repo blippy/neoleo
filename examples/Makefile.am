@@ -8,5 +8,8 @@ EXTRA_DIST = nogood.oleo plot.oleo shit.oleo xy.oleo types.oleo \
 	create_koers.txt data.sql mysql.oleo \
 	docs.oleo
 
+
+EXTRA_DIST += pivot-driver.tcl pivot-utils.tcl pivot.oleo pivot.r
+
 MAINTAINERCLEANFILES = Makefile.in
 

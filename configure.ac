@@ -1,10 +1,10 @@
 AC_PREREQ([2.69])
-AC_INIT([neoleo], [4.0.1], [alt.mcarter@gmail.com])
+AC_INIT([neoleo], [4.0.1X], [alt.mcarter@gmail.com])
 AC_CONFIG_SRCDIR([src/pcl.c])
 AM_INIT_AUTOMAKE([foreign])
 
 
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_YACC
 LT_INIT
@@ -26,5 +26,5 @@ if test "$usemotif" = "yes"; then
 fi
 
 
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile examples/Makefile lib/Makefile src/Makefile])
 AC_OUTPUT
