@@ -19,7 +19,7 @@ neoleo_LDADD = -ldl
 #neoleo_LDFLAGS = -static-libtool-libs
 neoleo_SOURCES = main.c
 
-BUILT_SOURCES = parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
+BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
 nodist_libneoleo_la_SOURCES = neoleo_wrap.c
 #nodist_libneoleo_la_SOURCES = $(BUILT_SOURCES)
 CLEANFILES = $(BUILT_SOURCES)
@@ -36,6 +36,7 @@ libneoleo_la_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c 
 		 postscript.c print.c prtext.c ref.c regions.c sc.c sort.c string.c stub.c sylk.c utils.c \
 		 window.c \
 		 defuns.c \
+		 getdate.y \
 		 parse.y \
 		 posixtm.y \
 		 neoleo_swig.c \
