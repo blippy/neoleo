@@ -5,9 +5,11 @@ O;auto;background;noa0;ticks 1
 C;c1;r1;K12
 C;r2;K15
 C;r3;K17
-C;c2;r1;Erc[-1];K12
+C;r4;Er[-1]c + rc[-1];K17
+C;c2;r1;Er[-1]c + rc[-1];K12
 C;r2;Er[-1]c + rc[-1];K27
 C;r3;Er[-1]c + rc[-1];K44
+C;r4;Er[-1]c + rc[-1];K61
 C;c3;r1;E1 + rc[-1];K13
 C;r2;E1 + rc[-1];K28
 C;c4;r1;Erc[-1];K13
@@ -16,7 +18,7 @@ C;r3;K18
 C;c5;r1;E1 + rc[-1];K14
 C;r2;Er[-1]c + rc[-1];K55
 O;status 2
-W;N1;A2 5;C7 0 7;Ostandout
+W;N1;A1 2;C7 0 7;Ostandout
 GDx""
 GDy""
 Gt0
