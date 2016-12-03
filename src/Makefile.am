@@ -10,7 +10,7 @@ endif
 
 
 YFLAGS = -d
-EXTRA_DIST = neoleo.i
+EXTRA_DIST = $(srcdir)/neoleo.i
 
 bin_PROGRAMS = neoleo
 #neoleo_LDADD = libneoleo.la -ltcl8.6
@@ -20,6 +20,7 @@ neoleo_LDADD = -ldl
 neoleo_SOURCES = main.c
 
 BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
+#dist_libneoleo_la_SOURCES = neoleo.i
 nodist_libneoleo_la_SOURCES = neoleo_wrap.c
 #nodist_libneoleo_la_SOURCES = $(BUILT_SOURCES)
 CLEANFILES = $(BUILT_SOURCES)
@@ -62,8 +63,8 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 
 ref.o : parse.h
 
-neoleo_wrap.c : neoleo.i neoleo_swig.c neoleo_swig.h
-	swig -tcl8 neoleo.i
+neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
+	swig -tcl8 $(srcdir)/neoleo.i
 
 #parse.c : parse.y
 
