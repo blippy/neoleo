@@ -36,7 +36,7 @@ libneoleo_la_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c 
 		 postscript.c print.c prtext.c ref.c regions.c sc.c sort.c string.c stub.c sylk.c utils.c \
 		 window.c \
 		 defuns.c \
-		 getdate.y \
+		 get_date.h getdate.y \
 		 parse.y \
 		 posixtm.y \
 		 neoleo_swig.c \

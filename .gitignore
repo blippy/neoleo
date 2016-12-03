@@ -23,8 +23,4 @@ config.status
 *.la
 neoleo
 ylwrap
-parse.c
-parse.h
-posixtm.c
-posixtm.h
 *.old
