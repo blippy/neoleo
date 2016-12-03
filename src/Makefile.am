@@ -1,3 +1,5 @@
+#VPATH = $(srcdir) $(builddir)
+
 # Order of linking of libraries for Motif seems to be important
 # I have decided to mandate the use of the Xbae library, rather than
 # have it optional.
@@ -19,9 +21,9 @@ neoleo_LDADD = -ldl
 #neoleo_LDFLAGS = -static-libtool-libs
 neoleo_SOURCES = main.c
 
-BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
+BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h $(top_builddir)/neoleo_wrap.c
 #dist_libneoleo_la_SOURCES = neoleo.i
-nodist_libneoleo_la_SOURCES = neoleo_wrap.c
+nodist_libneoleo_la_SOURCES = $(top_builddir)/neoleo_wrap.c
 #nodist_libneoleo_la_SOURCES = $(BUILT_SOURCES)
 CLEANFILES = $(BUILT_SOURCES)
 
@@ -63,8 +65,8 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 
 ref.o : parse.h
 
-neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
-	swig -tcl8 $(srcdir)/neoleo.i
+$(top_builddir)/neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
+	swig -tcl8 -outdir $(top_builddir) $(srcdir)/neoleo.i
 
 #parse.c : parse.y
 
