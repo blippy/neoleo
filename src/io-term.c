@@ -1263,13 +1263,16 @@ int main0(int argc, char **argv)
       ("{pushback-keystroke}{builtin-help _NON_WARRANTY_}");
 #endif /* 0 */
 
+
+  // mcarter 2016-12-03 refactor some seeming uncessary code duplication
+  /* out with the old ...
 #ifdef	HAVE_MOTIF
   if (using_motif) {
     motif_build_gui();
     setjmp (Global->error_exception);
     motif_main_loop();
   } else {
-    /* Compile with Motif but don't run with it. */
+    // Compile with Motif but don't run with it. 
     while (1)
     {
       setjmp (Global->error_exception);
@@ -1283,5 +1286,22 @@ int main0(int argc, char **argv)
       command_loop (0, 0);
     }
 #endif
+and in with the new ... */
+  if (using_motif) {
+#ifdef	HAVE_MOTIF
+    motif_build_gui();
+    setjmp (Global->error_exception);
+    motif_main_loop();
+    fprintf(stderr, "main0(): Unreachable motif code\n");
+#endif
+  } else {
+	  while (1) {
+		  setjmp (Global->error_exception);
+		  command_loop (0, 0);
+	  }
+  }
+
+
+
   return (0); /* Never Reached! */
 }
