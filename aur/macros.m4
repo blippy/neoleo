@@ -19,5 +19,5 @@ define(`RELEASE_SOURCE', `source=("https://github.com/blippy/neoleo/releases/dow
 define(`NONRELEASE_SOURCE', `source=("file://TARBALL")')
 ifdef(`MKRELEASE', `define(`SOURCE', `RELEASE_SOURCE')', `define(`SOURCE', `NONRELEASE_SOURCE')')
 
-ifdef(`MKCHROOT', `define(`CHROOT_CONFX', `--without-motif')', `define(`CHROOT_CONFX', `')')
+ifdef(`MKCHROOT', `define(`CONFX', `--without-motif')', `define(`CONFX', `')')
 divert(0)dnl

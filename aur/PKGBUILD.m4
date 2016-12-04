@@ -14,7 +14,7 @@ md5sums=('MD5SUM')
 
 build() {
 	cd "$pkgname-$pkgver"
-	./configure --prefix=/usr CHROOT_CONFX
+	./configure --prefix=/usr CONFX
 	make
 }
 
