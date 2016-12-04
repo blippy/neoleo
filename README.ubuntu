@@ -24,4 +24,8 @@ Didn't work
 Try adding package xbae, libxbae4m
 Still no success.
 
+For some bizarre reason, the following actually works:
+$ tclsh
+% load libneoleo.so
+% start_swig_motif
 
