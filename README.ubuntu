@@ -1,0 +1,27 @@
+UBUNTU 16.10
+
+The following packages should be installed:
+libxbae-dev
+swig
+tcl-dev
+
+tcl.h is stored /usr/include/tcl/tcl.h, rather than as /usr/include/tcl.h
+
+./configure CFLAGS="-I/usr/include/tcl"
+
+Running:
+$neoleo
+(warning) Font 8x13 could not be loaded.
+neoleo 2.0:Default font 8x13 could not be loaded.
+
+It bails out. neoleo -x works, though.
+
+Try rebuilding fonts:
+sudo fc-cache -f -v
+Didn't work
+
+
+Try adding package xbae, libxbae4m
+Still no success.
+
+
