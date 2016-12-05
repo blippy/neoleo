@@ -20,5 +20,5 @@ EXTRA_DIST = $(OLEOS) \
 
 EXTRA_DIST += pivot-driver.tcl pivot-utils.tcl pivot.r
 
-MAINTAINERCLEANFILES = Makefile.in
+#MAINTAINERCLEANFILES = Makefile.in
 
