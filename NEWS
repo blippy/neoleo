@@ -1,4 +1,4 @@
-===== neoleo 4.0.0 =====
+===== neoleo 4.0.1 =====
 
 * Support for vanilla X11 dropped.
 
@@ -10,6 +10,19 @@
 * issue3: Removed splash screen
   https://github.com/blippy/neoleo/issues/3
 
+* Added support for Tcl scripting
+
+05-Dec-2016
+
+===== neoleo 4.0.0 =====
+
+This is just an experimental compilation test. 
+
+In future, I anticipate packaging to be smoother.
+
+DO NOT USE.
+
+01-Dec-2016
 
 ===== neoleo 3.0.1 =====
 
