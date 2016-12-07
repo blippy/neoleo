@@ -2118,12 +2118,46 @@ do_got_command ()
 	return sc_resume_getting_arguments;
 }
 
+void 
+print_state(int state)
+{
+	char* state_str = 0;
+	switch(state) {
+		case sc_start:
+			state_str = "sc_start\0";
+			break;
+		case sc_new_cycle:
+			state_str = "sc_new_cycle\0";
+			break;
+		case sc_prefix_cmd_continuation:
+			state_str = "sc_prefix_cmd_continuation\0";
+			break;
+		case sc_got_command:
+			state_str = "sc_got_command\0";
+			break;
+		case sc_resume_getting_arguments:
+			state_str = "sc_resume_getting_arguments\0";
+			break;
+		case sc_end:
+			state_str = "sc_end\0";
+			break;
+		default:
+			assert(false);
+	}
+
+	OleoLog("cmd.c state=%s\n", state_str);
+
+
+
+}
+
 void
 inner_command_loop (int state, int iscmd)
 {
 
 	while (1)
 	  {
+		  print_state(state);
 		  switch (state)
 		    {
 		    case sc_start:
