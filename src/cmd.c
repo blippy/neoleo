@@ -62,6 +62,20 @@ local_free (p)
 #include "ref.h"
 #include "key.h"
 
+/* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
+ * unwind the disaster using state machines. An implementation of state 
+ * machines is shown here:
+ * http://stackoverflow.com/questions/1371460/state-machines-tutorials
+ */
+
+enum state_codes
+{
+	sc_start = 1,
+	sc_new_cycle,
+	sc_resume_getting_arguments, sc_end
+};
+
+
 #undef MIN
 #undef MAX
 #define MIN(A,B) ((A) < (B) ? (A) : (B))
@@ -801,8 +815,9 @@ free_cmd_frame (struct command_frame *frame)
 		    {
 			    if (frame->argv[argc].is_set
 				&& frame->argv[argc].style->destroy)
-				    frame->argv[argc].style->
-					    destroy (&frame->argv[argc]);
+				    frame->argv[argc].style->destroy (&frame->
+								      argv
+								      [argc]);
 			    free_line (&frame->argv[argc].text);
 			    if (frame->argv[argc].expanded_prompt &&
 				(frame->argv[argc].expanded_prompt !=
@@ -941,8 +956,8 @@ get_argument (char *prompt, struct prompt_style *style)
 	    && the_cmd_frame->cmd->init_code[cur_arg])
 	  {
 		  char *init_code =
-			  expand_prompt (the_cmd_frame->
-					 cmd->init_code[cur_arg]);
+			  expand_prompt (the_cmd_frame->cmd->
+					 init_code[cur_arg]);
 		  struct rng rng;
 		  rng.lr = rng.hr = rng.lc = rng.hc = 1;
 		  macro_only_input_stream (&rng, init_code,
@@ -977,8 +992,8 @@ exit_minibuffer (void)
 				      if (*extra)
 					      io_error_msg
 						      ("%s: extra characters in argument (%s)",
-						       the_cmd_frame->
-						       cmd->func_name, extra);
+						       the_cmd_frame->cmd->
+						       func_name, extra);
 			      }
 			    the_cmd_arg.is_set = 1;
 			    input_active = 0;
@@ -1111,7 +1126,8 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 						  {
 							  io_error_msg
 								  ("Ignoring extra operand to %s",
-								   cur_cmd->func_name);
+								   cur_cmd->
+								   func_name);
 							  while (*ptr
 								 && *ptr !=
 								 '}')
@@ -1200,8 +1216,8 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 					{
 						cur_keymap =
 							the_maps
-							[cur_keymap]->map_next->
-							id;
+							[cur_keymap]->
+							map_next->id;
 					}
 				      else
 					{
@@ -1261,13 +1277,13 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      if (*prompt == '#')
 						{
 							++prompt;
-							the_cmd_arg.
-								val.integer =
+							the_cmd_arg.val.
+								integer =
 								*prompt;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.do_prompt
-								= 0;
+							the_cmd_arg.
+								do_prompt = 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							{
@@ -1282,7 +1298,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						}
 					      else if (*prompt == '\'')
 						{
-							the_cmd_arg.timeout_seconds
+							the_cmd_arg.
+								timeout_seconds
 								= 3;
 							alarm_table[1].freq =
 								1;
@@ -1293,7 +1310,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						}
 					      else if (*prompt == '!')
 						{
-							the_cmd_arg.timeout_seconds
+							the_cmd_arg.
+								timeout_seconds
 								= 3;
 							alarm_table[1].freq =
 								1;
@@ -1352,7 +1370,9 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							style = 0;	/* shutup gcc -ansi -pendantic -Wall! */
 							io_error_msg
 								("func_args bug for %s",
-								 the_cmd_frame->cmd->func_name);
+								 the_cmd_frame->
+								 cmd->
+								 func_name);
 						}
 					      if (get_argument
 						  (prompt, style))
@@ -1375,8 +1395,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      the_cmd_arg.val.key.cmd.vector =
 						      -1;
 					      the_cmd_arg.val.key.cmd.code =
-						      the_cmd_frame->
-						      prev->top_keymap;
+						      the_cmd_frame->prev->
+						      top_keymap;
 					      the_cmd_arg.val.key.keys =
 						      &the_cmd_arg.text;
 					      if (get_argument
@@ -1423,15 +1443,16 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							++prompt;
 							map = expand_prompt
 								(prompt);
-							the_cmd_arg.val.
-								key.cmd.
-								vector = -1;
-							the_cmd_arg.val.
-								key.cmd.code =
+							the_cmd_arg.val.key.
+								cmd.vector =
+								-1;
+							the_cmd_arg.val.key.
+								cmd.code =
 								map_id (map);
-							the_cmd_arg.val.
-								key.keys =
-								&the_cmd_arg.text;
+							the_cmd_arg.val.key.
+								keys =
+								&the_cmd_arg.
+								text;
 						}
 					      else
 						{
@@ -1476,32 +1497,41 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 
 					      if (*prompt == '?')
 						{	/* Command wants to know if prefix provided */
-							the_cmd_arg.
-								val.integer =
-								(the_cmd_frame->prev->_raw_prefix.alloc
+							the_cmd_arg.val.
+								integer =
+								(the_cmd_frame->
+								 prev->
+								 _raw_prefix.
+								 alloc
 								 &&
-								 the_cmd_frame->prev->_raw_prefix.buf
-								 [0]);
+								 the_cmd_frame->
+								 prev->
+								 _raw_prefix.
+								 buf[0]);
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.do_prompt
-								= 0;
+							the_cmd_arg.
+								do_prompt = 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							init_arg_text
 								(&the_cmd_arg,
-								 the_cmd_arg.val.integer
-								 ? "1" : "0");
+								 the_cmd_arg.
+								 val.
+								 integer ? "1"
+								 : "0");
 						}
 					      else
 						{
-							the_cmd_arg.
-								val.integer =
-								the_cmd_frame->prev->_how_many;
+							the_cmd_arg.val.
+								integer =
+								the_cmd_frame->
+								prev->
+								_how_many;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.do_prompt
-								= 0;
+							the_cmd_arg.
+								do_prompt = 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							init_arg_text
@@ -1535,27 +1565,31 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 								++prompt;
 						}
 					      if ((type == 'N')
-						  && the_cmd_frame->
-						  prev->_raw_prefix.alloc
-						  && the_cmd_frame->
-						  prev->_raw_prefix.buf[0])
+						  && the_cmd_frame->prev->
+						  _raw_prefix.alloc
+						  && the_cmd_frame->prev->
+						  _raw_prefix.buf[0])
 						{
-							the_cmd_arg.
-								val.integer =
-								the_cmd_frame->prev->_how_many;
+							the_cmd_arg.val.
+								integer =
+								the_cmd_frame->
+								prev->
+								_how_many;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.do_prompt
-								= 1;
+							the_cmd_arg.
+								do_prompt = 1;
 							the_cmd_arg.style =
 								&number_style;
 							if ((low >= high)
 							    &&
 							    ((low >
-							      the_cmd_arg.
-							      val.integer)
+							      the_cmd_arg.val.
+							      integer)
 							     || (high <
-								 the_cmd_arg.val.integer)))
+								 the_cmd_arg.
+								 val.
+								 integer)))
 								io_error_msg
 									("Out of range %d (should be in [%d-%d]).");
 							else
@@ -1621,20 +1655,20 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						   && mark_is_set)
 						  || *prompt == '@')
 						{
-							the_cmd_arg.val.
-								range.lr =
+							the_cmd_arg.val.range.
+								lr =
 								MIN (mkrow,
 								     curow);
-							the_cmd_arg.val.
-								range.hr =
+							the_cmd_arg.val.range.
+								hr =
 								MAX (mkrow,
 								     curow);
-							the_cmd_arg.val.
-								range.lc =
+							the_cmd_arg.val.range.
+								lc =
 								MIN (mkcol,
 								     cucol);
-							the_cmd_arg.val.
-								range.hc =
+							the_cmd_arg.val.range.
+								hc =
 								MAX (mkcol,
 								     cucol);
 							mkrow = NON_ROW;
@@ -1650,8 +1684,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 									    init_arg_text
 										    (&the_cmd_arg,
 										     range_name
-										     (&the_cmd_arg.val.
-										      range));
+										     (&the_cmd_arg.
+										      val.range));
 								    }
 								  //goto new_cycle;
 								  return true;	// state machine
@@ -1659,17 +1693,22 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							else
 							  {	/* (Noninteractive mode and @) or r */
 								  ++prompt;
-								  the_cmd_arg.is_set
+								  the_cmd_arg.
+									  is_set
 									  = 1;
-								  the_cmd_arg.do_prompt
+								  the_cmd_arg.
+									  do_prompt
 									  = 1;
-								  the_cmd_arg.style
+								  the_cmd_arg.
+									  style
 									  =
 									  &range_style;
 								  init_arg_text
 									  (&the_cmd_arg,
 									   range_name
-									   (&the_cmd_arg.val.range));
+									   (&the_cmd_arg.
+									    val.
+									    range));
 							  }
 							goto next_arg;
 						}
@@ -1755,9 +1794,11 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      the_cmd_arg.expanded_prompt =
 						      expand_prompt (prompt);
 					      init_arg_text (&the_cmd_arg,
-							     the_cmd_arg.expanded_prompt);
+							     the_cmd_arg.
+							     expanded_prompt);
 					      the_cmd_arg.val.string =
-						      the_cmd_arg.expanded_prompt;
+						      the_cmd_arg.
+						      expanded_prompt;
 					      the_cmd_arg.is_set = 1;
 					      the_cmd_arg.do_prompt = 0;
 					      the_cmd_arg.style =
@@ -1773,28 +1814,24 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						      cucol;
 					      if (*prompt == '\'')
 						{
-							the_cmd_arg.val.
-								range.hr =
-								curow;
-							the_cmd_arg.val.
-								range.hc =
-								cucol;
+							the_cmd_arg.val.range.
+								hr = curow;
+							the_cmd_arg.val.range.
+								hc = cucol;
 						}
 					      else
 						{
-							the_cmd_arg.val.
-								range.hr =
-								mkrow;
-							the_cmd_arg.val.
-								range.hc =
-								mkcol;
+							the_cmd_arg.val.range.
+								hr = mkrow;
+							the_cmd_arg.val.range.
+								hc = mkcol;
 						}
 					      the_cmd_arg.is_set = 1;
 					      the_cmd_arg.do_prompt = 0;
 					      init_arg_text (&the_cmd_arg,
 							     range_name
-							     (&the_cmd_arg.val.
-							      range));
+							     (&the_cmd_arg.
+							      val.range));
 					      the_cmd_arg.style =
 						      &range_constant_style;
 					      goto next_arg;
@@ -1947,6 +1984,56 @@ recompute_numeric_value_of_prefix ()
 	io_update_status ();
 }
 
+int				// return next state
+call_destroy_restart ()
+{
+	int move_cursor = 0;
+	struct command_frame *frame = the_cmd_frame;
+	cmd_invoker stub = find_stub ();
+	if (frame->_curow != frame->prev->_curow
+	    || frame->_cucol != frame->prev->_cucol)
+	  {
+		  move_cursor = 1;
+		  io_hide_cell_cursor ();
+	  }
+	remove_cmd_frame (frame);
+
+	/* Add frame to the list of frames to be freed on error. */
+	frame->next = running_frames;
+	running_frames = frame;
+	if (move_cursor)
+		io_display_cell_cursor ();
+
+	if (!stub)
+		io_error_msg
+			("Don't know how to invoke %s!!!",
+			 frame->cmd->func_name);
+	else
+		stub (frame);
+
+	running_frames = running_frames->next;
+	frame->next = 0;
+	free_cmd_frame (frame);
+
+	/* If command_loop was called by execute_command, it should
+	 * return as soon as there is no more macro to evaluate.
+	 */
+	if ((!rmac && the_cmd_frame->input->prev_stream) || ioerror)
+	  {
+		  pop_input_stream ();
+		  ioerror = 0;
+		  return sc_end;	//state machine
+
+	  }
+	if (the_cmd_frame->cmd)
+		//goto resume_getting_arguments;
+		return sc_resume_getting_arguments;	// state machine
+
+	//return sc_resume_getting_arguments;	// state machine
+	//return sc_end;
+	return sc_new_cycle;
+}
+
 /*
  * This is the main loop of oleo.
  *
@@ -1964,6 +2051,7 @@ command_loop (int prefix, int iscmd)
 {
 
 	//puts("command_loop() started");
+	int new_state = sc_start;
 
 	/* We might be re-entering after a longjmp caused by an error.
 	 * In that case, we use an alternate entry point:
@@ -2096,48 +2184,23 @@ command_loop (int prefix, int iscmd)
 		  /* If this point is reached, call the interactive function,
 		   * destroy its frame, and restart the cycle.
 		   */
-		  {
-			  int move_cursor = 0;
-			  struct command_frame *frame = the_cmd_frame;
-			  cmd_invoker stub = find_stub ();
-			  if (frame->_curow != frame->prev->_curow
-			      || frame->_cucol != frame->prev->_cucol)
-			    {
-				    move_cursor = 1;
-				    io_hide_cell_cursor ();
-			    }
-			  remove_cmd_frame (frame);
+		  new_state = call_destroy_restart ();
+		  switch (new_state)
+		    {
+		    case sc_end:
+			    return;
+		    case sc_resume_getting_arguments:
+			    goto resume_getting_arguments;
+		    case sc_new_cycle:
+			    goto new_cycle; // we'll simply drop down into the while loop
+		    default:
+			    fprintf (stderr,
+				     "call_destroy_restart(): unknown state\n");
+			    fflush (stderr);
+			    abort ();	// should NEVER reach here
+		    }
 
-			  /* Add frame to the list of frames to be freed on error. */
-			  frame->next = running_frames;
-			  running_frames = frame;
-			  if (move_cursor)
-				  io_display_cell_cursor ();
 
-			  if (!stub)
-				  io_error_msg
-					  ("Don't know how to invoke %s!!!",
-					   frame->cmd->func_name);
-			  else
-				  stub (frame);
-
-			  running_frames = running_frames->next;
-			  frame->next = 0;
-			  free_cmd_frame (frame);
-
-			  /* If command_loop was called by execute_command, it should
-			   * return as soon as there is no more macro to evaluate.
-			   */
-			  if ((!rmac && the_cmd_frame->input->prev_stream)
-			      || ioerror)
-			    {
-				    pop_input_stream ();
-				    ioerror = 0;
-				    return;
-			    }
-			  if (the_cmd_frame->cmd)
-				  goto resume_getting_arguments;
-		  }
 	  }
 }
 
@@ -2485,11 +2548,11 @@ expand_prompt (char *str)
 					    struct rng rng;
 					    char *str;
 					    rng.lr = rng.hr =
-						    the_cmd_frame->
-						    prev->_setrow;
+						    the_cmd_frame->prev->
+						    _setrow;
 					    rng.lc = rng.hc =
-						    the_cmd_frame->
-						    prev->_setcol;
+						    the_cmd_frame->prev->
+						    _setcol;
 					    str = range_name (&rng);
 					    catn_line (&expanded, str,
 						       strlen (str));
@@ -2501,11 +2564,11 @@ expand_prompt (char *str)
 					    struct rng rng;
 					    char *str;
 					    rng.lr = rng.hr =
-						    the_cmd_frame->
-						    prev->_curow;
+						    the_cmd_frame->prev->
+						    _curow;
 					    rng.lc = rng.hc =
-						    the_cmd_frame->
-						    prev->_cucol;
+						    the_cmd_frame->prev->
+						    _cucol;
 					    str = range_name (&rng);
 					    catn_line (&expanded, str,
 						       strlen (str));
@@ -2525,18 +2588,18 @@ expand_prompt (char *str)
 				    {
 					    int argn = *src_pos - '0';
 					    if ((cmd_argc > argn)
-						&& the_cmd_frame->
-						argv[argn].is_set
-						&& the_cmd_frame->
-						argv[argn].text.buf)
+						&& the_cmd_frame->argv[argn].
+						is_set
+						&& the_cmd_frame->argv[argn].
+						text.buf)
 						    catn_line (&expanded,
-							       the_cmd_frame->argv
-							       [argn].text.
-							       buf,
+							       the_cmd_frame->
+							       argv[argn].
+							       text.buf,
 							       strlen
-							       (the_cmd_frame->argv
-								[argn].text.
-								buf));
+							       (the_cmd_frame->
+								argv[argn].
+								text.buf));
 					    else
 						    catn_line (&expanded,
 							       "????", 4);
