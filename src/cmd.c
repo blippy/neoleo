@@ -32,6 +32,7 @@
 #include "sysdef.h"
 #include <termios.h>
 #include <malloc.h>
+#include <stdbool.h>
 
 #ifdef	HAVE_MOTIF
 #include "io-motif.h"
@@ -960,70 +961,11 @@ set_default_arg (struct command_arg * arg, char * text, int len)
   setn_arg_text (arg, text, len);
 }
 
-/*
- * This is the main loop of oleo.
- *
- * It reads commands and their arguments, and evaluates them.
- * It (via real_get_chr) udpates the display and performs background recomputation.
- *
- * This function can also be used to evaluate a function without doing any
- * interaction.
- *
- * This is done by pushing a macro_only command frame (see execute_command).
- */
-
 void
-command_loop (int prefix, int iscmd)
+prefix_cmd_continuation_loop(bool goto_have_character)
 {
-
-  /* We might be re-entering after a longjmp caused by an error.
-   * In that case, we use an alternate entry point:
-   */
-  if (the_cmd_frame->cmd)
-    goto resume_getting_arguments;
-
-  /*
-   * Commands (notably execute_command) just tweek the command_frame
-   * state for some other command.  To accomplish this, there is an 
-   * entry point that avoid reinitializing the command_frame.
-   */
-  if (prefix)
-    {
-      prefix = 0;
-      goto prefix_cmd_continuation;
-    }
-  
-  while (1)
-    {
       int ch;			/* The next character to be keymapped. */
-
-    new_cycle:
-
-      if (!the_cmd_frame)
-	push_command_frame (0, 0, 0);
-
-      /* Reset the prefix argument. */
-      how_many = 1;
-      set_line (&raw_prefix, "");
-      io_update_status ();
-
-      /* Reset the keystate. */
-      cur_keymap = the_cmd_frame->top_keymap;
-
-      /* Some commands are prefix commands: they effect the 
-       * user's state without beginnging a new command cyle.
-       * Those commands return here:
-       */
-
-    prefix_cmd_continuation:
-      /* In this loop, we look for the next command to
-       * execute.  This may involve reading from a macro, 
-       * or the keyboard.  If there is time to kill, updates
-       * and evalutations are done.
-       *
-       * This loop is exited by `goto got_command'.
-       */
-
+      if(goto_have_character) goto have_character;
       while (1) {
 	  /* Get the next character.
 	   * However, if we are in a macro, and the next character
@@ -1052,7 +994,8 @@ command_loop (int prefix, int iscmd)
 		  cur_vector = 0;
 		  cur_cmd = end_macro_cmd;
 		  cur_chr = 0;
-		  goto got_command;
+		  //goto got_command;
+		  return; // state machine
 		  
 		case SPECIAL_CODE_A:
 		  ch = '\0';
@@ -1140,7 +1083,8 @@ command_loop (int prefix, int iscmd)
 		    }
 		  else
 		    rmac->mac_exe += len + 1;
-		  goto got_command;
+		  //goto got_command;
+		  return; // state machine
 		}
 	  }
 
@@ -1169,17 +1113,85 @@ command_loop (int prefix, int iscmd)
 		      cur_vector = 0;
 		      cur_cmd = 0;
 		      cur_chr = ch;
-		      goto got_command;
+		      //goto got_command;
+		      return; // state machine
 		  }
 	      } else {
 		  cur_vector = key->vector;
 		  cur_cmd =
 		    &(the_funcs[key->vector][key->code]);
 		  cur_chr = ch;
-		  goto got_command;
+		  //goto got_command;
+		  return; // state machine
 	      }
 	  }
 	}
+}
+/*
+ * This is the main loop of oleo.
+ *
+ * It reads commands and their arguments, and evaluates them.
+ * It (via real_get_chr) udpates the display and performs background recomputation.
+ *
+ * This function can also be used to evaluate a function without doing any
+ * interaction.
+ *
+ * This is done by pushing a macro_only command frame (see execute_command).
+ */
+
+void
+command_loop (int prefix, int iscmd)
+{
+
+  /* We might be re-entering after a longjmp caused by an error.
+   * In that case, we use an alternate entry point:
+   */
+  if (the_cmd_frame->cmd)
+    goto resume_getting_arguments;
+
+  /*
+   * Commands (notably execute_command) just tweek the command_frame
+   * state for some other command.  To accomplish this, there is an 
+   * entry point that avoid reinitializing the command_frame.
+   */
+  if (prefix)
+    {
+      prefix = 0;
+      goto prefix_cmd_continuation;
+    }
+  
+  while (1)
+    {
+      //int ch;			/* The next character to be keymapped. */
+
+    new_cycle:
+
+      if (!the_cmd_frame)
+	push_command_frame (0, 0, 0);
+
+      /* Reset the prefix argument. */
+      how_many = 1;
+      set_line (&raw_prefix, "");
+      io_update_status ();
+
+      /* Reset the keystate. */
+      cur_keymap = the_cmd_frame->top_keymap;
+
+      /* Some commands are prefix commands: they effect the 
+       * user's state without beginnging a new command cyle.
+       * Those commands return here:
+       */
+
+    prefix_cmd_continuation:
+      /* In this loop, we look for the next command to
+       * execute.  This may involve reading from a macro, 
+       * or the keyboard.  If there is time to kill, updates
+       * and evalutations are done.
+       *
+       * This loop is exited by `goto got_command'.
+       */
+	prefix_cmd_continuation_loop(false);
+
 
       /* Now the next command to begin has been read from a macro
        * or the keyboard.
@@ -1257,7 +1269,8 @@ command_loop (int prefix, int iscmd)
 	    {
 	      cur_keymap = the_cmd_frame->saved_cur_keymap;
 	      the_cmd_frame->saved_cur_keymap = -1;
-	      goto have_character;
+	      //goto have_character;
+	      prefix_cmd_continuation_loop(true); return; // state machine
 	    }
 	  /* Otherwise, signal an error and start from the top keymap. */
 	  io_bell ();
