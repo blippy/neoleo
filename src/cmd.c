@@ -801,9 +801,8 @@ free_cmd_frame (struct command_frame *frame)
 		    {
 			    if (frame->argv[argc].is_set
 				&& frame->argv[argc].style->destroy)
-				    frame->argv[argc].style->destroy (&frame->
-								      argv
-								      [argc]);
+				    frame->argv[argc].style->
+					    destroy (&frame->argv[argc]);
 			    free_line (&frame->argv[argc].text);
 			    if (frame->argv[argc].expanded_prompt &&
 				(frame->argv[argc].expanded_prompt !=
@@ -942,8 +941,8 @@ get_argument (char *prompt, struct prompt_style *style)
 	    && the_cmd_frame->cmd->init_code[cur_arg])
 	  {
 		  char *init_code =
-			  expand_prompt (the_cmd_frame->cmd->
-					 init_code[cur_arg]);
+			  expand_prompt (the_cmd_frame->
+					 cmd->init_code[cur_arg]);
 		  struct rng rng;
 		  rng.lr = rng.hr = rng.lc = rng.hc = 1;
 		  macro_only_input_stream (&rng, init_code,
@@ -978,8 +977,8 @@ exit_minibuffer (void)
 				      if (*extra)
 					      io_error_msg
 						      ("%s: extra characters in argument (%s)",
-						       the_cmd_frame->cmd->
-						       func_name, extra);
+						       the_cmd_frame->
+						       cmd->func_name, extra);
 			      }
 			    the_cmd_arg.is_set = 1;
 			    input_active = 0;
@@ -1081,13 +1080,14 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 						   cur_cmd->func_name;
 						   cur_cmd++)
 						      if (!strincmp
-							  ((char *) (rmac->
-								     mac_exe),
+							  ((char
+							    *)
+							   (rmac->mac_exe),
 							   cur_cmd->func_name,
 							   len)
-							  && cur_cmd->
-							  func_name[len] ==
-							  '\0')
+							  &&
+							  cur_cmd->func_name
+							  [len] == '\0')
 							{
 								cur_chr =
 									'\0';
@@ -1111,8 +1111,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 						  {
 							  io_error_msg
 								  ("Ignoring extra operand to %s",
-								   cur_cmd->
-								   func_name);
+								   cur_cmd->func_name);
 							  while (*ptr
 								 && *ptr !=
 								 '}')
@@ -1120,9 +1119,8 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 							  if (*ptr == '}')
 								  ptr++;
 						  }
-						else if (cur_cmd->
-							 func_args[0][0] ==
-							 '+')
+						else if (cur_cmd->func_args[0]
+							 [0] == '+')
 						  {
 							  unsigned char *start
 								  = ptr;
@@ -1201,8 +1199,9 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 				      else if (the_maps[cur_keymap]->map_next)
 					{
 						cur_keymap =
-							the_maps[cur_keymap]->
-							map_next->id;
+							the_maps
+							[cur_keymap]->map_next->
+							id;
 					}
 				      else
 					{
@@ -1262,13 +1261,13 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      if (*prompt == '#')
 						{
 							++prompt;
-							the_cmd_arg.val.
-								integer =
+							the_cmd_arg.
+								val.integer =
 								*prompt;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.
-								do_prompt = 0;
+							the_cmd_arg.do_prompt
+								= 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							{
@@ -1283,8 +1282,7 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						}
 					      else if (*prompt == '\'')
 						{
-							the_cmd_arg.
-								timeout_seconds
+							the_cmd_arg.timeout_seconds
 								= 3;
 							alarm_table[1].freq =
 								1;
@@ -1295,8 +1293,7 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						}
 					      else if (*prompt == '!')
 						{
-							the_cmd_arg.
-								timeout_seconds
+							the_cmd_arg.timeout_seconds
 								= 3;
 							alarm_table[1].freq =
 								1;
@@ -1355,9 +1352,7 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							style = 0;	/* shutup gcc -ansi -pendantic -Wall! */
 							io_error_msg
 								("func_args bug for %s",
-								 the_cmd_frame->
-								 cmd->
-								 func_name);
+								 the_cmd_frame->cmd->func_name);
 						}
 					      if (get_argument
 						  (prompt, style))
@@ -1380,8 +1375,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      the_cmd_arg.val.key.cmd.vector =
 						      -1;
 					      the_cmd_arg.val.key.cmd.code =
-						      the_cmd_frame->prev->
-						      top_keymap;
+						      the_cmd_frame->
+						      prev->top_keymap;
 					      the_cmd_arg.val.key.keys =
 						      &the_cmd_arg.text;
 					      if (get_argument
@@ -1428,16 +1423,15 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							++prompt;
 							map = expand_prompt
 								(prompt);
-							the_cmd_arg.val.key.
-								cmd.vector =
-								-1;
-							the_cmd_arg.val.key.
-								cmd.code =
+							the_cmd_arg.val.
+								key.cmd.
+								vector = -1;
+							the_cmd_arg.val.
+								key.cmd.code =
 								map_id (map);
-							the_cmd_arg.val.key.
-								keys =
-								&the_cmd_arg.
-								text;
+							the_cmd_arg.val.
+								key.keys =
+								&the_cmd_arg.text;
 						}
 					      else
 						{
@@ -1482,41 +1476,32 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 
 					      if (*prompt == '?')
 						{	/* Command wants to know if prefix provided */
-							the_cmd_arg.val.
-								integer =
-								(the_cmd_frame->
-								 prev->
-								 _raw_prefix.
-								 alloc
+							the_cmd_arg.
+								val.integer =
+								(the_cmd_frame->prev->_raw_prefix.alloc
 								 &&
-								 the_cmd_frame->
-								 prev->
-								 _raw_prefix.
-								 buf[0]);
+								 the_cmd_frame->prev->_raw_prefix.buf
+								 [0]);
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.
-								do_prompt = 0;
+							the_cmd_arg.do_prompt
+								= 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							init_arg_text
 								(&the_cmd_arg,
-								 the_cmd_arg.
-								 val.
-								 integer ? "1"
-								 : "0");
+								 the_cmd_arg.val.integer
+								 ? "1" : "0");
 						}
 					      else
 						{
-							the_cmd_arg.val.
-								integer =
-								the_cmd_frame->
-								prev->
-								_how_many;
+							the_cmd_arg.
+								val.integer =
+								the_cmd_frame->prev->_how_many;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.
-								do_prompt = 0;
+							the_cmd_arg.do_prompt
+								= 0;
 							the_cmd_arg.style =
 								&int_constant_style;
 							init_arg_text
@@ -1550,31 +1535,27 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 								++prompt;
 						}
 					      if ((type == 'N')
-						  && the_cmd_frame->prev->
-						  _raw_prefix.alloc
-						  && the_cmd_frame->prev->
-						  _raw_prefix.buf[0])
+						  && the_cmd_frame->
+						  prev->_raw_prefix.alloc
+						  && the_cmd_frame->
+						  prev->_raw_prefix.buf[0])
 						{
-							the_cmd_arg.val.
-								integer =
-								the_cmd_frame->
-								prev->
-								_how_many;
+							the_cmd_arg.
+								val.integer =
+								the_cmd_frame->prev->_how_many;
 							the_cmd_arg.is_set =
 								1;
-							the_cmd_arg.
-								do_prompt = 1;
+							the_cmd_arg.do_prompt
+								= 1;
 							the_cmd_arg.style =
 								&number_style;
 							if ((low >= high)
 							    &&
 							    ((low >
-							      the_cmd_arg.val.
-							      integer)
+							      the_cmd_arg.
+							      val.integer)
 							     || (high <
-								 the_cmd_arg.
-								 val.
-								 integer)))
+								 the_cmd_arg.val.integer)))
 								io_error_msg
 									("Out of range %d (should be in [%d-%d]).");
 							else
@@ -1640,20 +1621,20 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						   && mark_is_set)
 						  || *prompt == '@')
 						{
-							the_cmd_arg.val.range.
-								lr =
+							the_cmd_arg.val.
+								range.lr =
 								MIN (mkrow,
 								     curow);
-							the_cmd_arg.val.range.
-								hr =
+							the_cmd_arg.val.
+								range.hr =
 								MAX (mkrow,
 								     curow);
-							the_cmd_arg.val.range.
-								lc =
+							the_cmd_arg.val.
+								range.lc =
 								MIN (mkcol,
 								     cucol);
-							the_cmd_arg.val.range.
-								hc =
+							the_cmd_arg.val.
+								range.hc =
 								MAX (mkcol,
 								     cucol);
 							mkrow = NON_ROW;
@@ -1669,8 +1650,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 									    init_arg_text
 										    (&the_cmd_arg,
 										     range_name
-										     (&the_cmd_arg.
-										      val.range));
+										     (&the_cmd_arg.val.
+										      range));
 								    }
 								  //goto new_cycle;
 								  return true;	// state machine
@@ -1678,22 +1659,17 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 							else
 							  {	/* (Noninteractive mode and @) or r */
 								  ++prompt;
-								  the_cmd_arg.
-									  is_set
+								  the_cmd_arg.is_set
 									  = 1;
-								  the_cmd_arg.
-									  do_prompt
+								  the_cmd_arg.do_prompt
 									  = 1;
-								  the_cmd_arg.
-									  style
+								  the_cmd_arg.style
 									  =
 									  &range_style;
 								  init_arg_text
 									  (&the_cmd_arg,
 									   range_name
-									   (&the_cmd_arg.
-									    val.
-									    range));
+									   (&the_cmd_arg.val.range));
 							  }
 							goto next_arg;
 						}
@@ -1779,11 +1755,9 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 					      the_cmd_arg.expanded_prompt =
 						      expand_prompt (prompt);
 					      init_arg_text (&the_cmd_arg,
-							     the_cmd_arg.
-							     expanded_prompt);
+							     the_cmd_arg.expanded_prompt);
 					      the_cmd_arg.val.string =
-						      the_cmd_arg.
-						      expanded_prompt;
+						      the_cmd_arg.expanded_prompt;
 					      the_cmd_arg.is_set = 1;
 					      the_cmd_arg.do_prompt = 0;
 					      the_cmd_arg.style =
@@ -1799,24 +1773,28 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						      cucol;
 					      if (*prompt == '\'')
 						{
-							the_cmd_arg.val.range.
-								hr = curow;
-							the_cmd_arg.val.range.
-								hc = cucol;
+							the_cmd_arg.val.
+								range.hr =
+								curow;
+							the_cmd_arg.val.
+								range.hc =
+								cucol;
 						}
 					      else
 						{
-							the_cmd_arg.val.range.
-								hr = mkrow;
-							the_cmd_arg.val.range.
-								hc = mkcol;
+							the_cmd_arg.val.
+								range.hr =
+								mkrow;
+							the_cmd_arg.val.
+								range.hc =
+								mkcol;
 						}
 					      the_cmd_arg.is_set = 1;
 					      the_cmd_arg.do_prompt = 0;
 					      init_arg_text (&the_cmd_arg,
 							     range_name
-							     (&the_cmd_arg.
-							      val.range));
+							     (&the_cmd_arg.val.
+							      range));
 					      the_cmd_arg.style =
 						      &range_constant_style;
 					      goto next_arg;
@@ -1846,9 +1824,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 			      case '$':
 				      {
 					      /* Edit a cell's formula. */
-					      CELL *cp =
-						      find_cell (curow,
-								 cucol);
+					      CELL *cp = find_cell (curow,
+								    cucol);
 					      int do_init;
 					      ++prompt;
 					      if (*prompt == '\'')
@@ -1930,6 +1907,46 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 	return false;
 }
 
+void
+recompute_numeric_value_of_prefix ()
+{
+	//puts("recompute_numeric_value_of_prefix()");
+	int x = 0;
+	int presumed_digits = 0;
+	int sign = 1;
+
+	how_many = 1;
+	while (raw_prefix.buf[x])
+	  {
+		  if (isdigit (raw_prefix.buf[x]))
+		    {
+			    if (presumed_digits)
+				    how_many =
+					    how_many
+					    * 10 + (raw_prefix.buf[x] - '0');
+			    else
+			      {
+				      presumed_digits = 1;
+				      how_many = raw_prefix.buf[x] - '0';
+			      }
+		    }
+		  else if (raw_prefix.buf[x] == '-')
+			  sign *= -1;
+		  else
+		    {
+			    if (presumed_digits)
+			      {
+				      presumed_digits = 0;
+				      how_many = 1;
+			      }
+			    how_many *= 4;
+		    }
+		  ++x;
+	  }
+	how_many *= sign;
+	io_update_status ();
+}
+
 /*
  * This is the main loop of oleo.
  *
@@ -1945,6 +1962,8 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 void
 command_loop (int prefix, int iscmd)
 {
+
+	//puts("command_loop() started");
 
 	/* We might be re-entering after a longjmp caused by an error.
 	 * In that case, we use an alternate entry point:
@@ -1968,6 +1987,7 @@ command_loop (int prefix, int iscmd)
 		  //int ch;                 /* The next character to be keymapped. */
 
 		new_cycle:
+		  // puts("command_loop(): new_cycle");
 
 		  if (!the_cmd_frame)
 			  push_command_frame (0, 0, 0);
@@ -2026,56 +2046,8 @@ command_loop (int prefix, int iscmd)
 			    /* Store the last character typed in the raw-prefix. */
 			    catn_line (&raw_prefix, &ch, 1);
 			    /* Recompute the numeric value of the prefix. */
-			    {
-				    int x = 0;
-				    int presumed_digits = 0;
-				    int sign = 1;
-
-				    how_many = 1;
-				    while (raw_prefix.buf[x])
-				      {
-					      if (isdigit (raw_prefix.buf[x]))
-						{
-							if (presumed_digits)
-								how_many =
-									how_many
-									* 10 +
-									(raw_prefix.
-									 buf
-									 [x] -
-									 '0');
-							else
-							  {
-								  presumed_digits
-									  = 1;
-								  how_many =
-									  raw_prefix.
-									  buf
-									  [x]
-									  -
-									  '0';
-							  }
-						}
-					      else if (raw_prefix.buf[x] ==
-						       '-')
-						      sign *= -1;
-					      else
-						{
-							if (presumed_digits)
-							  {
-								  presumed_digits
-									  = 0;
-								  how_many =
-									  1;
-							  }
-							how_many *= 4;
-						}
-					      ++x;
-				      }
-				    how_many *= sign;
-				    io_update_status ();
-				    goto prefix_cmd_continuation;
-			    }
+			    recompute_numeric_value_of_prefix ();
+			    goto prefix_cmd_continuation;
 		    }
 
 		  /* Make sure we really mapped to a command. */
@@ -2513,11 +2485,11 @@ expand_prompt (char *str)
 					    struct rng rng;
 					    char *str;
 					    rng.lr = rng.hr =
-						    the_cmd_frame->prev->
-						    _setrow;
+						    the_cmd_frame->
+						    prev->_setrow;
 					    rng.lc = rng.hc =
-						    the_cmd_frame->prev->
-						    _setcol;
+						    the_cmd_frame->
+						    prev->_setcol;
 					    str = range_name (&rng);
 					    catn_line (&expanded, str,
 						       strlen (str));
@@ -2529,11 +2501,11 @@ expand_prompt (char *str)
 					    struct rng rng;
 					    char *str;
 					    rng.lr = rng.hr =
-						    the_cmd_frame->prev->
-						    _curow;
+						    the_cmd_frame->
+						    prev->_curow;
 					    rng.lc = rng.hc =
-						    the_cmd_frame->prev->
-						    _cucol;
+						    the_cmd_frame->
+						    prev->_cucol;
 					    str = range_name (&rng);
 					    catn_line (&expanded, str,
 						       strlen (str));
@@ -2553,18 +2525,18 @@ expand_prompt (char *str)
 				    {
 					    int argn = *src_pos - '0';
 					    if ((cmd_argc > argn)
-						&& the_cmd_frame->argv[argn].
-						is_set
-						&& the_cmd_frame->argv[argn].
-						text.buf)
+						&& the_cmd_frame->
+						argv[argn].is_set
+						&& the_cmd_frame->
+						argv[argn].text.buf)
 						    catn_line (&expanded,
-							       the_cmd_frame->
-							       argv[argn].
-							       text.buf,
+							       the_cmd_frame->argv
+							       [argn].text.
+							       buf,
 							       strlen
-							       (the_cmd_frame->
-								argv[argn].
-								text.buf));
+							       (the_cmd_frame->argv
+								[argn].text.
+								buf));
 					    else
 						    catn_line (&expanded,
 							       "????", 4);
@@ -2664,6 +2636,6 @@ one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
 			 keyseq->keys->buf, map_names[keyseq->cmd.code]);
 	else
 		execute_command
-			(the_funcs[keyseq->cmd.vector][keyseq->cmd.code].
-			 func_name);
+			(the_funcs[keyseq->cmd.vector]
+			 [keyseq->cmd.code].func_name);
 }
