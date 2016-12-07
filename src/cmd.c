@@ -1031,7 +1031,7 @@ set_default_arg (struct command_arg *arg, char *text, int len)
 	setn_arg_text (arg, text, len);
 }
 
-int // new state
+int				// new state
 prefix_cmd_continuation_loop (bool goto_have_character)
 {
 	int ch;			/* The next character to be keymapped. */
@@ -1243,7 +1243,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 		    }
 	  }
 
-	assert("we never reach here" == 0);
+	assert ("we never reach here" == 0);
 }
 
 bool				// return true if we have to jump to new_cycle upon completion 
@@ -2051,6 +2051,73 @@ do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
 	return call_destroy_restart ();
 }
 
+int				// return a new state
+do_got_command ()
+{
+	/* There are some commands that are implemented right here. */
+	if (cur_cmd == break_cmd)
+	  {
+		  io_bell ();
+		  set_info (0);
+		  if (input_active)
+			  pop_unfinished_command ();	/* Abort a complex command. */
+		  //goto new_cycle;
+		  return sc_new_cycle;	// state machine
+	  }
+
+	/* The binding of all keys associated with the prefix arg. */
+	if (cur_cmd == universal_arg_cmd)
+	  {
+		  char ch = cur_chr;
+		  int prefix_map = map_id ("prefix");
+		  /* Make sure the prefix-arg keymap is in place. */
+		  if (cur_keymap != prefix_map)
+		    {
+			    the_cmd_frame->saved_cur_keymap
+				    = the_cmd_frame->top_keymap;
+			    cur_keymap = prefix_map;
+		    }
+		  /* Store the last character typed in the raw-prefix. */
+		  catn_line (&raw_prefix, &ch, 1);
+		  /* Recompute the numeric value of the prefix. */
+		  recompute_numeric_value_of_prefix ();
+		  //goto prefix_cmd_continuation;
+		  return sc_prefix_cmd_continuation;
+	  }
+
+	/* Make sure we really mapped to a command. */
+	if (!cur_cmd || !cur_cmd->func_func)
+	  {
+		  /* If a character is unmapped in the prefix map,
+		   * retry mapping in the last-used normal keymap.
+		   */
+		  if (the_cmd_frame->saved_cur_keymap >= 0)
+		    {
+			    cur_keymap = the_cmd_frame->saved_cur_keymap;
+			    the_cmd_frame->saved_cur_keymap = -1;
+			    //goto have_character;
+			    prefix_cmd_continuation_loop (true);
+			    return sc_resume_getting_arguments;	// state machine
+		    }
+		  /* Otherwise, signal an error and start from the top keymap. */
+		  io_bell ();
+		  //goto new_cycle;
+		  return sc_new_cycle;	// state machine
+	  }
+
+	/* The next step is to gather the arguments with which to call
+	 * the function interactively.
+	 */
+	/* Whever a new command is encountered, we begin by creating a 
+	 * frame in which to store its arguments.
+	 * This initializes the new frame on the basis of cur_cmd in 
+	 * the_cmd_frame.  
+	 */
+	push_command_frame (0, 0, 0);
+
+	return sc_resume_getting_arguments;
+}
+
 void
 inner_command_loop (int state, int iscmd)
 {
@@ -2063,7 +2130,7 @@ inner_command_loop (int state, int iscmd)
 
 		    case sc_new_cycle:
 
-			  new_cycle:
+			    //new_cycle:
 
 			    /* Some commands are prefix commands: they effect the 
 			     * user's state without beginnging a new command cyle.
@@ -2074,7 +2141,7 @@ inner_command_loop (int state, int iscmd)
 			    assert (state == sc_prefix_cmd_continuation);
 			    break;
 		    case sc_prefix_cmd_continuation:
-			  prefix_cmd_continuation:
+			    //prefix_cmd_continuation:
 			    /* In this loop, we look for the next command to
 			     * execute.  This may involve reading from a macro, 
 			     * or the keyboard.  If there is time to kill, updates
@@ -2083,7 +2150,7 @@ inner_command_loop (int state, int iscmd)
 			     * This loop is exited by `goto got_command'.
 			     */
 			    state = prefix_cmd_continuation_loop (false);
-			    assert(state == sc_got_command);
+			    assert (state == sc_got_command);
 			    break;
 
 			    // fallthrough
@@ -2092,70 +2159,13 @@ inner_command_loop (int state, int iscmd)
 			    /* Now the next command to begin has been read from a macro
 			     * or the keyboard.
 			     */
-			  got_command:
+			    //got_command:
 
-			    /* There are some commands that are implemented right here. */
-			    if (cur_cmd == break_cmd)
-			      {
-				      io_bell ();
-				      set_info (0);
-				      if (input_active)
-					      pop_unfinished_command ();	/* Abort a complex command. */
-				      goto new_cycle;
-			      }
-
-			    /* The binding of all keys associated with the prefix arg. */
-			    if (cur_cmd == universal_arg_cmd)
-			      {
-				      char ch = cur_chr;
-				      int prefix_map = map_id ("prefix");
-				      /* Make sure the prefix-arg keymap is in place. */
-				      if (cur_keymap != prefix_map)
-					{
-						the_cmd_frame->saved_cur_keymap
-							=
-							the_cmd_frame->top_keymap;
-						cur_keymap = prefix_map;
-					}
-				      /* Store the last character typed in the raw-prefix. */
-				      catn_line (&raw_prefix, &ch, 1);
-				      /* Recompute the numeric value of the prefix. */
-				      recompute_numeric_value_of_prefix ();
-				      goto prefix_cmd_continuation;
-			      }
-
-			    /* Make sure we really mapped to a command. */
-			    if (!cur_cmd || !cur_cmd->func_func)
-			      {
-				      /* If a character is unmapped in the prefix map,
-				       * retry mapping in the last-used normal keymap.
-				       */
-				      if (the_cmd_frame->saved_cur_keymap >=
-					  0)
-					{
-						cur_keymap =
-							the_cmd_frame->saved_cur_keymap;
-						the_cmd_frame->saved_cur_keymap
-							= -1;
-						//goto have_character;
-						prefix_cmd_continuation_loop
-							(true);
-						return;	// state machine
-					}
-				      /* Otherwise, signal an error and start from the top keymap. */
-				      io_bell ();
-				      goto new_cycle;
-			      }
-
-			    /* The next step is to gather the arguments with which to call
-			     * the function interactively.
-			     */
-			    /* Whever a new command is encountered, we begin by creating a 
-			     * frame in which to store its arguments.
-			     * This initializes the new frame on the basis of cur_cmd in 
-			     * the_cmd_frame.  
-			     */
-			    push_command_frame (0, 0, 0);
+			    state = do_got_command ();
+			    assert (state == sc_resume_getting_arguments
+				    || state == sc_new_cycle
+				    || state == sc_prefix_cmd_continuation);
+			    break;
 
 			    /* After some other command finishes from underneath a complex command,
 			     * flow returns here. 
@@ -2164,8 +2174,9 @@ inner_command_loop (int state, int iscmd)
 			    // fallthrough
 
 		    case sc_resume_getting_arguments:
-			  resume_getting_arguments:
-			    state = do_resume_getting_arguments (interactive_mode, iscmd);
+			    //resume_getting_arguments:
+			    state = do_resume_getting_arguments
+				    (interactive_mode, iscmd);
 
 			    assert (state == sc_new_cycle
 				    || state == sc_resume_getting_arguments
@@ -2180,21 +2191,6 @@ inner_command_loop (int state, int iscmd)
 			    fflush (stderr);
 			    abort ();	// should NEVER reach here
 
-			    /*
-			       switch (state)
-			       {
-			       case sc_end:
-			       return;
-			       case sc_resume_getting_arguments:
-			       goto resume_getting_arguments;
-			       case sc_new_cycle:
-			       goto new_cycle;        // we'll simply drop down into the while loop
-			       default:
-			       fprintf (stderr, "call_destroy_restart(): unknown state\n");
-			       fflush (stderr);
-			       abort ();              // should NEVER reach here
-			       }
-			     */
 
 
 		    }
