@@ -1031,7 +1031,7 @@ set_default_arg (struct command_arg *arg, char *text, int len)
 	setn_arg_text (arg, text, len);
 }
 
-void
+int // new state
 prefix_cmd_continuation_loop (bool goto_have_character)
 {
 	int ch;			/* The next character to be keymapped. */
@@ -1072,7 +1072,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 				      cur_cmd = end_macro_cmd;
 				      cur_chr = 0;
 				      //goto got_command;
-				      return;	// state machine
+				      return sc_got_command;	// state machine
 
 			      case SPECIAL_CODE_A:
 				      ch = '\0';
@@ -1186,7 +1186,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 				      else
 					      rmac->mac_exe += len + 1;
 				      //goto got_command;
-				      return;	// state machine
+				      return sc_got_command;	// state machine
 			      }
 		    }
 
@@ -1227,7 +1227,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 						cur_cmd = 0;
 						cur_chr = ch;
 						//goto got_command;
-						return;	// state machine
+						return sc_got_command;	// state machine
 					}
 			      }
 			    else
@@ -1238,10 +1238,12 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 						[key->code]);
 				      cur_chr = ch;
 				      //goto got_command;
-				      return;	// state machine
+				      return sc_got_command;	// state machine
 			      }
 		    }
 	  }
+
+	assert("we never reach here" == 0);
 }
 
 bool				// return true if we have to jump to new_cycle upon completion 
@@ -2080,7 +2082,9 @@ inner_command_loop (int state, int iscmd)
 			     *
 			     * This loop is exited by `goto got_command'.
 			     */
-			    prefix_cmd_continuation_loop (false);
+			    state = prefix_cmd_continuation_loop (false);
+			    assert(state == sc_got_command);
+			    break;
 
 			    // fallthrough
 
