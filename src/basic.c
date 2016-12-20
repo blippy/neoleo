@@ -32,7 +32,7 @@
 
 #include <ctype.h>
 #include "sysdef.h"
-#include "global.h"
+//#include "global.h"
 #include "basic.h"
 #include "cmd.h"
 #include "regions.h"

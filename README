@@ -68,13 +68,16 @@ Neoleo is now available as a shared library, making it callable from Tcl.
 Support is very limited and flakey at the moment, but you can do some
 cool things like this:
 $ rlwrap tclsh
-% load neoleo.so
+% load libneoleo.so
 % start_swig_motif
 Open up the test.oleo spreadsheet manually
 % get_formula 2 2 ; # this gives you the formula at cell R2C2
 r[-1]c + rc[-1]
 
 Pretty cool, huh?
+
+See the examples directory for more stuff you can do with Tcl,
+esp. headless.tcl (which crashes currently)
 
 Links
 -----

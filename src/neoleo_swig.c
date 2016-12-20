@@ -7,15 +7,22 @@
 #include "io-motif.h"
 #endif
 
+#include "basic.h"
+#include "io-cmd.h"
 #include "io-term.h"
 #include "cell.h"
+#include "mdi.h"
+#include "mysql.h"
 
-void *main1(void *td)
+
+void *
+main1(void *td)
 {
         main0(0, NULL);
 }
 
-void start_swig_motif()
+void 
+start_swig_motif()
 {
 #ifdef HAVE_MOTIF
         pthread_t tid;
@@ -30,8 +37,44 @@ void start_swig_motif()
 
 }
 
-char * get_formula(int curow, int cucol)
+char * 
+get_formula(int curow, int cucol)
 {
         CELL *cp = find_cell(curow, cucol);
         return decomp(curow, cucol, cp);
+}
+
+int // returns 1 => OK
+swig_read_file_and_run_hooks(char *name, int ismerge)
+{
+        FILE *fp = fopen(name, "r");
+        if(fp == 0) return 0;
+        read_file_and_run_hooks(fp, ismerge, name);
+        fclose(fp);
+        return 1;
+
+}
+
+int neot_test0(int argc, char ** argv)
+{
+        puts("neot test starting");
+        MdiInitialize();
+        //PlotInit
+        AllocateDatabaseGlobal();
+        InitializeGlobals();
+	cmd_graphics();
+        //# parse_command_line # skip for now
+        init_basics();
+
+        //# the following causes crash:
+        int read_status = swig_read_file_and_run_hooks("../examples/pivot.oleo", 0);
+        if(read_status == 1) {
+                puts("read worked");
+        } else {
+                puts("read coultn' find file");
+        }
+
+
+        puts("finished test");
+        return 0;
 }

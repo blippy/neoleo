@@ -50,6 +50,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "init.h"
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
+#include "io-cmd.h"
 #include "io-curses.h"
 #include "io-edit.h"
 #include "io-generic.h"
@@ -859,7 +860,8 @@ continue_oleo (int sig)
     cont_curses ();
 }
 
-void InitializeGlobals(void)
+void 
+InitializeGlobals(void)
 {
   Global->display_opened = 0;
   Global->return_from_error = 0;
@@ -990,7 +992,108 @@ oleo_catch_signals(void (*h)(int))
   }
 }
 
-int main0(int argc, char **argv)
+void
+parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
+{
+	int opt;
+
+	while (1) {
+		opt = getopt_long (argc, argv, short_options, long_options, (int *)0);
+		if (opt == EOF)
+			break;
+
+#if 0
+		if (opt)
+			fprintf(stderr, PACKAGE " option %c\n", opt);
+		else {
+			fprintf(stderr, PACKAGE " optind %d option %s strange ...\n",
+					optind, argv[optind]);
+		}
+#endif
+
+		switch (opt)
+		{
+			case 'v':
+			case 'V':
+				printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
+				printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
+				printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
+				printf(_("You may redistribute copies of %s\n"), PACKAGE);
+				printf(_("under the terms of the GNU General Public License.\n"));
+				printf(_("For more information about these matters, "));
+				printf(_("see the files named COPYING.\n"));
+				exit (0);
+				break;
+			case 'q':
+				spread_quietly = 1;
+				break;
+			case 'f':
+				*ignore_init_file = 1;
+				break;
+			case 'x':
+				no_x = 1;
+				break;
+			case 't':
+				no_gtk = 1;
+				no_motif = 1;
+				break;
+			case 'h':
+				show_usage ();
+				exit (0);
+				break;
+			case 's':
+				option_separator = argv[optind][0];
+#if 0
+				fprintf(stderr, PACKAGE " set list file separator to %c\n", option_separator);
+#endif
+				optind++;
+				list_set_separator(option_separator);
+				break;
+			case 'S':
+				option_separator = ' ';
+				list_set_separator(option_separator);
+				break;
+			case 'F':
+#if 0
+				fprintf(stderr, "F: optind %d argv[optind] '%s' optopt %d %c\n",
+						optind, argv[optind], optopt, optopt);
+#endif
+				option_format = argv[optind];
+				file_set_default_format(option_format);
+				optind++;
+				break;
+			case '-':
+				option_filter = 1;
+				break;
+		}
+	}
+
+
+	if (argc - optind > 1)
+	{
+		if (no_motif)
+		{
+			show_usage ();
+			exit (1);
+		}
+	}
+}
+
+
+void
+init_basics()
+{
+	init_infinity ();
+	init_mem ();
+	init_eval ();
+	init_refs ();
+	init_cells ();
+	init_fonts ();
+	init_info ();
+}
+
+int 
+main0(int argc, char **argv)
 {
   volatile int ignore_init_file = 0;
   FILE * init_fp[2];
@@ -1013,101 +1116,14 @@ int main0(int argc, char **argv)
   InitializeGlobals();
 
   /* Set up the minimal io handler. */
-#if 0
+//#if 0
   cmd_graphics ();
-#endif
+//#endif
 
-  {
-    int opt;
+  parse_command_line(argc, argv, &ignore_init_file);
 
-    while (1) {
-	opt = getopt_long (argc, argv, short_options, long_options, (int *)0);
-	if (opt == EOF)
-		break;
 
-#if 0
-	if (opt)
-		fprintf(stderr, PACKAGE " option %c\n", opt);
-	else {
-		fprintf(stderr, PACKAGE " optind %d option %s strange ...\n",
-			optind, argv[optind]);
-	}
-#endif
-
-	switch (opt)
-	  {
-	  case 'v':
-	  case 'V':
-	    printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
-            printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
-            printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
-            printf(_("You may redistribute copies of %s\n"), PACKAGE);
-            printf(_("under the terms of the GNU General Public License.\n"));
-            printf(_("For more information about these matters, "));
-            printf(_("see the files named COPYING.\n"));
-	    exit (0);
-	    break;
-	  case 'q':
-	    spread_quietly = 1;
-	    break;
-	  case 'f':
-	    ignore_init_file = 1;
-	    break;
-	  case 'x':
-	    no_x = 1;
-	    break;
-          case 't':
-            no_gtk = 1;
-            no_motif = 1;
-            break;
-	  case 'h':
-	    show_usage ();
-	    exit (0);
-	    break;
-	  case 's':
-	    option_separator = argv[optind][0];
-#if 0
-	fprintf(stderr, PACKAGE " set list file separator to %c\n", option_separator);
-#endif
-	    optind++;
-	    list_set_separator(option_separator);
-	    break;
-	  case 'S':
-	    option_separator = ' ';
-	    list_set_separator(option_separator);
-	    break;
-	  case 'F':
-#if 0
-	fprintf(stderr, "F: optind %d argv[optind] '%s' optopt %d %c\n",
-		optind, argv[optind], optopt, optopt);
-#endif
-	    option_format = argv[optind];
-	    file_set_default_format(option_format);
-	    optind++;
-	    break;
-	  case '-':
-		option_filter = 1;
-		break;
-	  }
-      }
-  }
-
-  if (argc - optind > 1)
-    {
-      if (no_motif)
-      {
-        show_usage ();
-        exit (1);
-      }
-    }
-
-  init_infinity ();
-  init_mem ();
-  init_eval ();
-  init_refs ();
-  init_cells ();
-  init_fonts ();
-  init_info ();
+  init_basics();
 
   /* Find the init files. 
    * This is done even if ignore_init_file is true because

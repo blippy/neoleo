@@ -21,6 +21,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "global.h"
+
 enum motion_magic
 {
   magic_up = 0,
