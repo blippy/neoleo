@@ -48,5 +48,7 @@ cmd_graphics (void)
 	io_inputize_cursor = _io_inputize_cursor;
 	io_display_cell_cursor = _io_display_cell_cursor;
 	*/
+
+	//nwin = 1;
 }
 

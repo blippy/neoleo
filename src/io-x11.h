@@ -20,13 +20,13 @@
 #ifndef IO_X11H
 #define IO_X11H
 
-#ifndef X_DISPLAY_MISSING
+//#ifndef X_DISPLAY_MISSING
 
 extern void get_x11_args (int * argc_p, char ** argv);
 extern int io_col_to_input_pos (int c);
 extern void x11_graphics (void);
 extern void set_x_default_point_size (int l);
 
-#endif /* X_DISPLAY_MISSING */
+//#endif /* X_DISPLAY_MISSING */
 
 #endif /* IO_X11H */

@@ -1,5 +1,8 @@
 #VPATH = $(srcdir) $(builddir)
 
+GUI_DEFINES = -DX_DISPLAY_MISSING
+GUI_DEFINES = -DHAVE_X 
+
 # Order of linking of libraries for Motif seems to be important
 # I have decided to mandate the use of the Xbae library, rather than
 # have it optional.
@@ -7,7 +10,7 @@
 if UseMotif
 GUI = io-motif.c appres.c fallback.c xrdb.c oleo_icon.xpm
 GUI_LINK = -lXm -lXt -lXbae -lX11
-GUI_DEFINES = -DHAVE_MOTIF
+GUI_DEFINES += -DHAVE_MOTIF
 endif
 
 
@@ -28,7 +31,7 @@ nodist_libneoleo_la_SOURCES = neoleo_wrap.c
 CLEANFILES = $(BUILT_SOURCES)
 
 lib_LTLIBRARIES = libneoleo.la
-libneoleo_la_CFLAGS = $(GUI_DEFINES) -DX_DISPLAY_MISSING
+libneoleo_la_CFLAGS = $(GUI_DEFINES) 
 #libneoleo_la_LIBADD = -lpthread -lm -lncurses ../lib/liboleo.la  -ltcl8.6 $(GUI_LINK)
 libneoleo_la_LIBADD = -lpthread -lm -lncurses   -ltcl8.6 $(GUI_LINK)
 libneoleo_la_LDFLAGS = -module -avoid-version -shared

@@ -62,9 +62,10 @@ int neot_test0(int argc, char ** argv)
         //PlotInit
         AllocateDatabaseGlobal();
         InitializeGlobals();
-	cmd_graphics();
         //# parse_command_line # skip for now
         init_basics();
+
+	cmd_graphics(); // in leui of calling choose_display
 
         //# the following causes crash:
         int read_status = swig_read_file_and_run_hooks("../examples/pivot.oleo", 0);

@@ -38,6 +38,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "global.h"
 
@@ -75,14 +76,15 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 
 #include "userpref.h"
 #include "mysql.h"
-#ifdef	HAVE_MOTIF
+//#ifdef	HAVE_MOTIF
 #include "io-motif.h"
-#endif
+//#endif
 
 #ifdef HAVE_LIBGTK
 #include "gtk/gtk.h"
 #endif 
 
+#include "io-x11.h"
 #include "list.h"
 #include "sc.h"
 #include "sylk.h"
@@ -141,6 +143,28 @@ static struct option long_options[] =
 
 /* Avoid needless messages to stdout. */
 int spread_quietly = 0;
+
+/* work out out basic capabilities */
+#ifdef HAVE_LIBGTK
+bool have_gtk = true;
+#else
+bool have_gtk = false;
+void gtk_graphics() {}; // stub it out
+#endif
+
+#ifdef HAVE_MOTIF
+bool have_motif = true;
+#else
+bool have_motif = false;
+#endif
+
+#ifdef HAVE_X
+bool have_x = true;
+#else
+bool have_x = false;
+//void x11_graphics() {}; // stub it out
+void get_x11_args(int *argc, char **argv); // stub out
+#endif
 
 /* Avoid using Displays no matter what else. (-x --no-x) */
 int no_gtk = 0;
@@ -1092,6 +1116,68 @@ init_basics()
 	init_info ();
 }
 
+  
+void
+choose_display(int argc, char **argv, bool force_cmd_graphics)
+{
+	if(force_cmd_graphics) {
+		cmd_graphics();
+	} else if(no_x) {
+	       	if (no_curses) {
+			printf("choose_display() is using cmd_graphics\n");
+			cmd_graphics();
+			//fprintf(stderr, "No toolkit to use: No X, no curses\n");
+			//exit(EXIT_FAILURE);
+		} else {
+		       	tty_graphics ();
+	      		using_curses = TRUE;
+	      		/* Allow the disclaimer to be read. */
+	      		/* if (!init_fpc && !spread_quietly)
+			 * 		  sleep (5); */
+	      	}
+	} else {
+
+		//#if defined(HAVE_LIBGTK) && !defined(HAVE_MOTIF)
+		if (have_gtk && !have_motif && !no_gtk) {
+
+			//gtk_init(&argc, &argv); // mcarter 2016-12-20 I don't think this was every used
+
+			gtk_graphics ();
+			using_gtk = TRUE;
+			no_x = TRUE;
+			no_curses = TRUE;
+		}  
+		//#endif
+
+		//#ifdef HAVE_MOTIF
+		if (have_motif && !no_motif) {
+
+			motif_init(&argc, argv);
+
+			using_gtk = FALSE;
+			using_motif = TRUE;
+			no_x = TRUE;
+			no_curses = TRUE;
+		}  
+		//#endif
+
+		//#ifndef X_DISPLAY_MISSING
+		if (have_x && !no_x) {
+			get_x11_args (&argc, argv);
+			if (Global->io_x11_display_name) {
+				x11_graphics();
+				using_x = TRUE;
+				no_curses = TRUE;
+				puts("chose_display() chose X");
+			}
+		} 
+		//#endif /* X_DISPLAY_MISSING */
+
+		// TODO what about case that you don't have X?
+	  
+	}
+}
+
 int 
 main0(int argc, char **argv)
 {
@@ -1116,9 +1202,9 @@ main0(int argc, char **argv)
   InitializeGlobals();
 
   /* Set up the minimal io handler. */
-//#if 0
+#if 0
   cmd_graphics ();
-//#endif
+#endif
 
   parse_command_line(argc, argv, &ignore_init_file);
 
@@ -1152,49 +1238,8 @@ main0(int argc, char **argv)
   FD_ZERO (&exception_fd_set);
   FD_ZERO (&exception_pending_fd_set);
 
-#if defined(HAVE_LIBGTK) && !defined(HAVE_MOTIF)
-   if ((!no_gtk)&&(!no_x)) {
-
-	gtk_init(&argc, &argv);
-
-	gtk_graphics ();
-	using_gtk = TRUE;
-	no_x = TRUE;
-	no_curses = TRUE;
-   }  
-#endif
-
-#ifdef HAVE_MOTIF
-   if ((!no_motif)&&(!no_x)) {
-
-	motif_init(&argc, argv);
-
-	using_gtk = FALSE;
-	using_motif = TRUE;
-	no_x = TRUE;
-	no_curses = TRUE;
-   }  
-#endif
-
-#ifndef X_DISPLAY_MISSING
-  if (!no_x) {
-    get_x11_args (&argc, argv);
-    if (Global->io_x11_display_name) {
-      x11_graphics ();
-      using_x = TRUE;
-      no_curses = TRUE;
-    }
-  } 
-#endif /* X_DISPLAY_MISSING */
-	  
-  if (!no_curses) {
-	  tty_graphics ();
-	  using_curses = TRUE;
-	  /* Allow the disclaimer to be read. */
-	  /* if (!init_fpc && !spread_quietly)
-		  sleep (5); */
-  }
-
+  bool force_cmd_graphics = false;
+  choose_display(argc, argv, force_cmd_graphics);
   io_open_display ();
 
   init_graphing ();
