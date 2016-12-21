@@ -720,6 +720,7 @@ io_set_cwin (struct window *win)
 void 
 io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
+	if(running_headless()) return;
   struct window *win;
 
   for (win = wins; win < &wins[nwin]; win++)

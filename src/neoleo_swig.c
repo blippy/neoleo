@@ -81,6 +81,8 @@ int neot_test0(int argc, char ** argv)
                 puts("read coultn' find file");
         }
 
+	printf("Forumal at (2,2) is:%s\n", get_formula(2,2));
+
 
         puts("finished test");
         return 0;

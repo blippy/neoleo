@@ -127,7 +127,12 @@ void set_headless(bool newval)
 	m_headless = true;
 }
 
-/* end headless sectgion */
+bool running_headless()
+{
+	return m_headless;
+}
+
+/* end headless section */
 
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;

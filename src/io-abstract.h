@@ -101,6 +101,7 @@ EXTERN void (*io_inputize_cursor) (void);
 EXTERN void (*io_command_loop) (int);
 
 void set_headless(bool newval);
+bool running_headless();
 void (*set_curow)(int nrow);
 void (*set_cucol)(int ncol);
 void (*io_recenter_cur_win)(void);
