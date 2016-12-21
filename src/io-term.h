@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdbool.h>
 #include <setjmp.h>
 #include "global.h"
 //#include "defuns.h"
@@ -91,11 +92,11 @@ extern void InitializeGlobals(void);
 void save_preferences();
 
 #ifndef FALSE
-#define FALSE 0
+#define FALSE false
 #endif /* FALSE */
 
 #ifndef TRUE
-#define TRUE 1
+#define TRUE true
 #endif /* TRUE */
 
 extern int option_filter;
@@ -103,5 +104,6 @@ extern int option_filter;
 extern void oleo_catch_signals(void (*h)(int));
 int main0(int argc, char **argv);
 void init_basics();
+void choose_display(int argc, char **argv, bool force_cmd_graphics);
 
 #endif /* IO_TERMH */

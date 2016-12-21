@@ -482,7 +482,6 @@ recenter_window (void)
 {
   io_recenter_cur_win ();
 }
-
 /* Trivial front-end commands. */
 
 

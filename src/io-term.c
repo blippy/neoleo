@@ -51,7 +51,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "init.h"
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
-#include "io-cmd.h"
+#include "io-headless.h"
 #include "io-curses.h"
 #include "io-edit.h"
 #include "io-generic.h"
@@ -113,6 +113,21 @@ struct OleoGlobal *Global = NULL;
 struct OleoGlobal	__tempGlobal,
 			*Global = &__tempGlobal;
 #endif
+
+/* headless section
+ *
+ * some kludges introduced by mcarter starting 21-Dec-2016
+ * becase headless mode does not have a command frame
+ */
+
+static bool m_headless = false;
+
+void set_headless(bool newval)
+{
+	m_headless = true;
+}
+
+/* end headless sectgion */
 
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;
@@ -884,6 +899,29 @@ continue_oleo (int sig)
     cont_curses ();
 }
 
+static void 
+_default_set_curow(int nrow)
+{
+	curow = nrow;
+}
+
+static void
+_default_set_cucol(int ncol)
+{
+	cucol = ncol;
+}
+
+static void 
+_default_io_recenter_cur_win (void)
+{
+  cwin->win_curow = curow;
+  cwin->win_cucol = cucol;
+  recenter_named_window (cwin);
+  io_repaint_win (cwin);
+  if (cwin->link > 0)
+    io_repaint_win (&wins[cwin->link]);
+}
+
 void 
 InitializeGlobals(void)
 {
@@ -939,6 +977,10 @@ InitializeGlobals(void)
   /* End initialize */
 
   __make_backups = 1;
+
+  io_recenter_cur_win = _default_io_recenter_cur_win;
+  set_curow = _default_set_curow;
+  set_cucol = _default_set_cucol;
 }
 
 void
@@ -1121,11 +1163,11 @@ void
 choose_display(int argc, char **argv, bool force_cmd_graphics)
 {
 	if(force_cmd_graphics) {
-		cmd_graphics();
+		headless_graphics();
 	} else if(no_x) {
 	       	if (no_curses) {
 			printf("choose_display() is using cmd_graphics\n");
-			cmd_graphics();
+			headless_graphics();
 			//fprintf(stderr, "No toolkit to use: No X, no curses\n");
 			//exit(EXIT_FAILURE);
 		} else {

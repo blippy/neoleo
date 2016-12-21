@@ -1,14 +1,16 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "neoleo_swig.h"
+#include "io-abstract.h"
 
 #ifdef HAVE_MOTIF
 #include "io-motif.h"
 #endif
 
 #include "basic.h"
-#include "io-cmd.h"
+#include "io-headless.h"
 #include "io-term.h"
 #include "cell.h"
 #include "mdi.h"
@@ -58,6 +60,7 @@ swig_read_file_and_run_hooks(char *name, int ismerge)
 int neot_test0(int argc, char ** argv)
 {
         puts("neot test starting");
+	set_headless(true);
         MdiInitialize();
         //PlotInit
         AllocateDatabaseGlobal();
@@ -65,10 +68,13 @@ int neot_test0(int argc, char ** argv)
         //# parse_command_line # skip for now
         init_basics();
 
-	cmd_graphics(); // in leui of calling choose_display
+	//cmd_graphics(); // in leui of calling choose_display
+	bool force_cmd_graphics = true;
+	choose_display(argc, argv, force_cmd_graphics);
+	io_open_display();
 
         //# the following causes crash:
-        int read_status = swig_read_file_and_run_hooks("../examples/pivot.oleo", 0);
+        int read_status = swig_read_file_and_run_hooks("/home/mcarter/repos/neoleo/examples/pivot.oleo", 0);
         if(read_status == 1) {
                 puts("read worked");
         } else {

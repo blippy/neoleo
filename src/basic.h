@@ -61,7 +61,12 @@ extern void goto_window (char *text);
 extern void other_window (void);
 extern int set_window_option (int set_opt, char *text);
 extern void show_window_options (void);
+
+/* mcarter 21-Dec-216: following function is causing confusion. 
+ * I don't think it should be here??
+ */
 extern void recenter_window (void);
+
 extern void suspend_oleo (void);
 extern void recalculate (int all);
 extern void kill_oleo (void);

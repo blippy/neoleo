@@ -22,4 +22,4 @@
 /* An interface that basically does nothing at all! It is useful for when
  * you do not want a display, such as the use of Tcl
  * */
-void cmd_graphics(void);
+void headless_graphics(void);

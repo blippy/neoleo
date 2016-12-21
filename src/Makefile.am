@@ -38,7 +38,7 @@ libneoleo_la_LDFLAGS = -module -avoid-version -shared
 libneoleo_la_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
-		 io-cmd.c io-curses.c io-edit.c io-term.c io-utils.c \
+		 io-headless.c io-curses.c io-edit.c io-term.c io-utils.c \
 		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c pcl.c plot.c  \
 		 postscript.c print.c prtext.c ref.c regions.c sc.c sort.c string.c stub.c sylk.c utils.c \
 		 window.c \
@@ -54,7 +54,7 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 cmd.h decompile.h defun.h defuns.h display.h epson.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h graph.h hash.h help.h info.h init.h \
-		 input.h io-abstract.h io-cmd.h io-curses.h io-edit.h \
+		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-motif.h io-term.h io-utils.h io-x11.h \
 		 ir.h key.h line.h list.h lists.h mdi.h mysql.h node.h \
 		 oleofile.h oleo_plot.h oleosql.h oleo_xb.h parse.h pcl.h \

@@ -290,6 +290,11 @@ recenter_window (struct window *win)
 		   &(win->screen.lc), &(win->screen.hc));
 }
 
+void
+recenter_named_window(struct window *w)
+{
+	recenter_window(w);
+}
 
 /*
  * RESIZE_SCREEN adjusts the windows list after a screen size change.
@@ -981,16 +986,6 @@ io_scroll_cell_cursor (int magic, int repeat)
     io_repaint_win (&wins[cwin->link]);
 }
 
-void 
-io_recenter_cur_win (void)
-{
-  cwin->win_curow = curow;
-  cwin->win_cucol = cucol;
-  recenter_window (cwin);
-  io_repaint_win (cwin);
-  if (cwin->link > 0)
-    io_repaint_win (&wins[cwin->link]);
-}
 
 void 
 io_recenter_all_win (void)
@@ -1147,8 +1142,10 @@ io_read_window_config (char * line)
       win->win_cucol = ncol;
       if (win == cwin)
 	{
-	  curow = nrow;
-	  cucol = ncol;
+	  //curow = nrow;
+	  set_curow(nrow);
+	  //cucol = ncol;
+	  set_cucol(ncol);
 	}
       recenter_window (win);
     }

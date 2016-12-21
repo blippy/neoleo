@@ -19,6 +19,9 @@
  * along with Oleo; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#include <stdbool.h>
+
 #ifdef DEFINE_IO_VARS
 #define EXTERN
 #else
@@ -96,5 +99,10 @@ EXTERN void (*io_inputize_cursor) (void);
 
 /* The main loop */
 EXTERN void (*io_command_loop) (int);
+
+void set_headless(bool newval);
+void (*set_curow)(int nrow);
+void (*set_cucol)(int ncol);
+void (*io_recenter_cur_win)(void);
 
 #endif /* IO_ABSTRACTH */
