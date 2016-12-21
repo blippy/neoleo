@@ -177,7 +177,7 @@ extern void io_shift_cell_cursor (int dirn, int repeat);
 extern void io_scroll_cell_cursor (int magic, int repeat);
 //extern void default_io_recenter_cur_win (void);
 extern void recenter_named_window(struct window *w);
-extern void io_recenter_all_win (void);
+//extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
 extern void io_write_window_config (struct line * out);
 extern void io_read_window_config (char * line);

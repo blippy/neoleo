@@ -79,6 +79,7 @@ headless_graphics(void)
 
 	set_headless(true);
 	io_recenter_cur_win = do_nothing;
+	io_recenter_all_win = do_nothing;
 	set_curow = _set_curow;
 	set_cucol = _set_cucol;
 	//nwin = 1;

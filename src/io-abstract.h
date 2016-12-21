@@ -104,5 +104,6 @@ void set_headless(bool newval);
 void (*set_curow)(int nrow);
 void (*set_cucol)(int ncol);
 void (*io_recenter_cur_win)(void);
+void (*io_recenter_all_win)(void);
 
 #endif /* IO_ABSTRACTH */

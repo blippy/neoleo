@@ -987,18 +987,6 @@ io_scroll_cell_cursor (int magic, int repeat)
 }
 
 
-void 
-io_recenter_all_win (void)
-{
-  int n;
-  if (!nwin)
-    return;
-  cwin->win_curow = curow;
-  cwin->win_cucol = cucol;
-  for (n = 0; n < nwin; n++)
-    recenter_window (&wins[n]);
-  io_repaint ();
-}
 
 void 
 io_set_win_flags (struct window *w, int f)

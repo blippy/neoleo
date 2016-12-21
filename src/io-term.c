@@ -922,6 +922,18 @@ _default_io_recenter_cur_win (void)
     io_repaint_win (&wins[cwin->link]);
 }
 
+static void
+_default_io_recenter_all_win(void)
+{
+  int n;
+  if (!nwin)
+    return;
+  cwin->win_curow = curow;
+  cwin->win_cucol = cucol;
+  for (n = 0; n < nwin; n++)
+    recenter_named_window (&wins[n]);
+  io_repaint ();
+}
 void 
 InitializeGlobals(void)
 {
@@ -978,6 +990,7 @@ InitializeGlobals(void)
 
   __make_backups = 1;
 
+  io_recenter_all_win = _default_io_recenter_all_win;
   io_recenter_cur_win = _default_io_recenter_cur_win;
   set_curow = _default_set_curow;
   set_cucol = _default_set_cucol;
