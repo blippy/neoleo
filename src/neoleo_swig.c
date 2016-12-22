@@ -109,9 +109,11 @@ int neot_test0(int argc, char ** argv)
         }
 
 	printf("Formula at (2,2) is:%s\n", get_formula(2,2));
+	decomp_free();
 
 	set_cell(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
 	printf("Formula at (1,1) is:%s\n", get_formula(1,1));
+	decomp_free();
 
 
 	FreeGlobals();
