@@ -2,9 +2,9 @@
 %module neoleo
 
 %{
-/* first go */
 #include "neoleo_swig.h"
 #include "basic.h"
+#include "ref.h"
 //#include "global.h"
 #include "io-term.h"
 #include "mdi.h"
@@ -16,6 +16,7 @@
 
 %include "neoleo_swig.h"
 //%include "basic.h"
+%include "ref.h"
 //%include "global.h"
 //%include "io-term.h"
 %include "mdi.h"

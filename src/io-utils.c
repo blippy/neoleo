@@ -1494,7 +1494,8 @@ fmt_get_format()
 {
 }
 
-void FileSetCurrentFileName(const char *s)
+void 
+FileSetCurrentFileName(const char *s)
 {
 	if (Global->FileName)
 		free(Global->FileName);

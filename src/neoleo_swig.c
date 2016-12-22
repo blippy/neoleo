@@ -2,12 +2,20 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// check for leaks, as suggested at 
+// http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
+#include <sanitizer/lsan_interface.h>
+
+
 #include "neoleo_swig.h"
 #include "io-abstract.h"
 
-#ifdef HAVE_MOTIF
+
+
+
+//#ifdef HAVE_MOTIF
 #include "io-motif.h"
-#endif
+//#endif
 
 #include "basic.h"
 #include "io-headless.h"
@@ -15,6 +23,7 @@
 #include "cell.h"
 #include "mdi.h"
 #include "mysql.h"
+#include "ref.h"
 
 
 void *
@@ -45,6 +54,14 @@ get_formula(int curow, int cucol)
         CELL *cp = find_cell(curow, cucol);
         return decomp(curow, cucol, cp);
 }
+
+/*
+void
+set_cell(int r, int c, char* str)
+{
+
+}
+*/
 
 int // returns 1 => OK
 swig_read_file_and_run_hooks(char *name, int ismerge)
@@ -81,9 +98,14 @@ int neot_test0(int argc, char ** argv)
                 puts("read coultn' find file");
         }
 
-	printf("Forumal at (2,2) is:%s\n", get_formula(2,2));
+	printf("Formula at (2,2) is:%s\n", get_formula(2,2));
+
+	set_cell(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
+	printf("Formula at (1,1) is:%s\n", get_formula(1,1));
 
 
         puts("finished test");
+
+	__lsan_do_leak_check();
         return 0;
 }

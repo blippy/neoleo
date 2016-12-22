@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# mcarter 22-Dec-2016 my own configuration experiments.
+# Everyone else should ignore this file
+
+#./configure 'CFLAGS=-O0 -g' --prefix=$HOME/.local
+
+# Using sanitizer:
+./configure 'CFLAGS=-O0 -g -fsanitize=address' --prefix=$HOME/.local
+
