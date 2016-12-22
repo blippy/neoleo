@@ -119,7 +119,7 @@ struct OleoGlobal	__tempGlobal,
  * some kludges introduced by mcarter starting 21-Dec-2016
  * becase headless mode does not have a command frame
  */
-
+/*
 static bool m_headless = false;
 
 void set_headless(bool newval)
@@ -131,7 +131,7 @@ bool running_headless()
 {
 	return m_headless;
 }
-
+*/
 /* end headless section */
 
 /* These are the hooks used to do file-io. */
@@ -904,41 +904,8 @@ continue_oleo (int sig)
     cont_curses ();
 }
 
-static void 
-_default_set_curow(int nrow)
-{
-	curow = nrow;
-}
 
-static void
-_default_set_cucol(int ncol)
-{
-	cucol = ncol;
-}
 
-static void 
-_default_io_recenter_cur_win (void)
-{
-  cwin->win_curow = curow;
-  cwin->win_cucol = cucol;
-  recenter_named_window (cwin);
-  io_repaint_win (cwin);
-  if (cwin->link > 0)
-    io_repaint_win (&wins[cwin->link]);
-}
-
-static void
-_default_io_recenter_all_win(void)
-{
-  int n;
-  if (!nwin)
-    return;
-  cwin->win_curow = curow;
-  cwin->win_cucol = cucol;
-  for (n = 0; n < nwin; n++)
-    recenter_named_window (&wins[n]);
-  io_repaint ();
-}
 void 
 InitializeGlobals(void)
 {
@@ -995,10 +962,12 @@ InitializeGlobals(void)
 
   __make_backups = 1;
 
+  /*
   io_recenter_all_win = _default_io_recenter_all_win;
   io_recenter_cur_win = _default_io_recenter_cur_win;
   set_curow = _default_set_curow;
   set_cucol = _default_set_cucol;
+  */
 }
 
 void

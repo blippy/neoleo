@@ -863,6 +863,8 @@ pop_unfinished_command (void)
 void
 recover_from_error (void)
 {
+	if(!the_cmd_frame) return; // maybe running headless
+
 	/* pop input streams until the bottom is reached. */
 	while (the_cmd_frame->input->prev_stream)
 		pop_input_stream ();
@@ -2772,3 +2774,18 @@ one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
 			(the_funcs[keyseq->cmd.vector]
 			 [keyseq->cmd.code].func_name);
 }
+
+void 
+set_curow(int nrow)
+{
+	if(!the_cmd_frame) return; // maybe running headless
+	the_cmd_frame->_curow = nrow;
+}
+
+void
+set_cucol(int ncol)
+{
+	if(!the_cmd_frame) return; // maybe running headless
+	the_cmd_frame->_cucol = ncol;
+}
+

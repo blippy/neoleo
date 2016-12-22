@@ -7,6 +7,7 @@ do_nothing(void)
 	return;
 }
 
+
 static void
 _io_open_display(void)
 {
@@ -23,14 +24,14 @@ _io_open_display(void)
 
 static int m_nrow = 1;
 static void
-_set_curow(int nrow)
+XXX_set_curow(int nrow)
 {
 	m_nrow = nrow;
 }
 
 static int m_ncol = 1;
 static void
-_set_cucol(int ncol)
+XXX_set_cucol(int ncol)
 {
 	m_ncol = ncol;
 }
@@ -46,9 +47,15 @@ headless_graphics(void)
 	 */
 
 	//io_command_loop = _io_command_loop;
+
 	io_open_display = _io_open_display;
+	//io_open_display = do_nothing;
+
 	//io_redisp = _io_redisp;
+
+	//io_repaint = do_nothing;
 	io_repaint = do_nothing;
+
 	/*
 	io_repaint_win = _io_repaint_win;
 	io_close_display = _io_close_display;
@@ -77,11 +84,13 @@ headless_graphics(void)
 	*/
 
 
+	/*
 	set_headless(true);
 	io_recenter_cur_win = do_nothing;
 	io_recenter_all_win = do_nothing;
 	set_curow = _set_curow;
 	set_cucol = _set_cucol;
+	*/
 	//nwin = 1;
 }
 

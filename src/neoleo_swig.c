@@ -60,7 +60,7 @@ swig_read_file_and_run_hooks(char *name, int ismerge)
 int neot_test0(int argc, char ** argv)
 {
         puts("neot test starting");
-	set_headless(true);
+	//set_headless(true);
         MdiInitialize();
         //PlotInit
         AllocateDatabaseGlobal();

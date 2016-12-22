@@ -290,8 +290,35 @@ recenter_window (struct window *win)
 		   &(win->screen.lc), &(win->screen.hc));
 }
 
+void 
+io_recenter_cur_win (void)
+{
+	//if(!cwin || !the_cmd_frame || ! curow) return; // maybe running headless
+	if(!the_cmd_frame) return; // maybe running headless
+
+	cwin->win_curow = curow;
+	cwin->win_cucol = cucol;
+	io_recenter_named_window (cwin);
+	io_repaint_win (cwin);
+	if (cwin->link > 0)
+		io_repaint_win (&wins[cwin->link]);
+}
+
 void
-recenter_named_window(struct window *w)
+io_recenter_all_win(void)
+{
+	if(!the_cmd_frame) return; // maybe running headless
+	int n;
+	if (!nwin)
+		return;
+	cwin->win_curow = curow;
+	cwin->win_cucol = cucol;
+	for (n = 0; n < nwin; n++)
+		io_recenter_named_window (&wins[n]);
+	io_repaint ();
+}
+void
+io_recenter_named_window(struct window *w)
 {
 	recenter_window(w);
 }
@@ -720,16 +747,18 @@ io_set_cwin (struct window *win)
 void 
 io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	if(running_headless()) return;
-  struct window *win;
+	if(!the_cmd_frame) return; // maybe running headless
+	//if(running_headless()) return;
+	if(!wins) return; // maybe we're running headless
+	struct window *win;
 
-  for (win = wins; win < &wins[nwin]; win++)
-    {
-      if (r < win->screen.lr || r > win->screen.hr
-	  || c < win->screen.lc || c > win->screen.hc)
-	continue;
-      io_pr_cell_win (win, r, c, cp);
-    }
+	for (win = wins; win < &wins[nwin]; win++)
+	{
+		if (r < win->screen.lr || r > win->screen.hr
+				|| c < win->screen.lc || c > win->screen.hc)
+			continue;
+		io_pr_cell_win (win, r, c, cp);
+	}
 }
 
 void

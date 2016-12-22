@@ -360,4 +360,7 @@ extern void view_info (char * name, int ignore);
 extern void with_keymap (char * mapname);
 extern void one_cmd_with_keymap (char * mapname, struct key_sequence * keyseq);
 
+void set_curow(int nrow);
+void set_cucol(int nrow);
+
 #endif
