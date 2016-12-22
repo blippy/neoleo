@@ -6,5 +6,5 @@
 #./configure 'CFLAGS=-O0 -g' --prefix=$HOME/.local
 
 # Using sanitizer:
-./configure 'CFLAGS=-O0 -g -fsanitize=address' --prefix=$HOME/.local
+./configure 'CFLAGS= -Werror -O0 -g -fsanitize=address' --prefix=$HOME/.local
 

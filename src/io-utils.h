@@ -49,7 +49,8 @@ extern int says_default (char * str);
 
 extern void FileSetCurrentFileName(const char *s);
 extern char *FileGetCurrentFileName(void);
-extern void FileCloseCurrent(void);
+//extern void FileCloseCurrent(void);
+extern void FileCloseCurrentFile(void);
 extern char *file_get_default_format(void);
 extern char *file_get_format(int);
 extern char *file_get_pattern(char *fmt);

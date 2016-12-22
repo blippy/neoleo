@@ -5874,7 +5874,16 @@ void MotifGlobalInitialize(void)
 	Global->MotifGlobal->needrecalculate = False;
 }
 
-void motif_init(int *argc, char **argv)
+/*
+void 
+xio_set_window_name(char *s)
+{
+	MotifSetWindowName
+}
+*/
+
+void 
+motif_init(int *argc, char **argv)
 {
 	Display	*dpy;
 
@@ -5908,6 +5917,8 @@ void motif_init(int *argc, char **argv)
 	io_display_cell_cursor = xio_display_cell_cursor;
 	io_cellize_cursor = xio_cellize_cursor;
 	io_inputize_cursor = xio_inputize_cursor;
+	//io_set_window_name = xio_set_window_name;
+	io_set_window_name = MotifSetWindowName;
 
 	/*
 	 * XAPPLRESDIR is a variable that can be set to determine

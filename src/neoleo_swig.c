@@ -20,6 +20,7 @@
 #include "basic.h"
 #include "io-headless.h"
 #include "io-term.h"
+#include "io-utils.h"
 #include "cell.h"
 #include "mdi.h"
 #include "mysql.h"
@@ -74,6 +75,15 @@ swig_read_file_and_run_hooks(char *name, int ismerge)
 
 }
 
+void FreeGlobals()
+{
+	/* TODO - make more accassable - neoleo doesn't seem
+	 * to clean up after itself.
+	 *
+	 * This functionality is far from complete */
+	FileCloseCurrentFile();
+}
+
 int neot_test0(int argc, char ** argv)
 {
         puts("neot test starting");
@@ -103,6 +113,8 @@ int neot_test0(int argc, char ** argv)
 	set_cell(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
 	printf("Formula at (1,1) is:%s\n", get_formula(1,1));
 
+
+	FreeGlobals();
 
         puts("finished test");
 

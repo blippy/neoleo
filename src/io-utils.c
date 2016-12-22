@@ -1494,19 +1494,24 @@ fmt_get_format()
 {
 }
 
+
+
 void 
 FileSetCurrentFileName(const char *s)
 {
-	if (Global->FileName)
-		free(Global->FileName);
-	Global->FileName = NULL;
-	if (s)
-		Global->FileName = strdup(s);
+	FileCloseCurrentFile();
+	if(!s) return;
+	Global->FileName = strdup(s);
 
+
+/* old way:
 #if HAVE_MOTIF
 	if (using_motif)
 		MotifSetWindowName(Global->FileName);
 #endif
+... new way: */
+
+	io_set_window_name(Global->FileName);
 }
 
 char *FileGetCurrentFileName(void)
@@ -1519,11 +1524,15 @@ void FileCloseCurrentFile(void)
 	if (Global->FileName)
 		free(Global->FileName);
 	Global->FileName = NULL;
-
+	
+/*
 #if HAVE_MOTIF
 	if (using_motif)
 		MotifSetWindowName("");
 #endif
+*/
+
+	io_set_window_name("");
 }
 
 void OleoSetEncoding(char *s)

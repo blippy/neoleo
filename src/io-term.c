@@ -904,7 +904,10 @@ continue_oleo (int sig)
     cont_curses ();
 }
 
-
+/* set an adapter stub that does nothing */
+void _do_nothing_const_char_s(const char *s)
+{
+}
 
 void 
 InitializeGlobals(void)
@@ -968,6 +971,9 @@ InitializeGlobals(void)
   set_curow = _default_set_curow;
   set_cucol = _default_set_cucol;
   */
+
+  io_set_window_name = _do_nothing_const_char_s;
+
 }
 
 void
