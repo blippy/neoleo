@@ -1346,10 +1346,11 @@ void
 read_file_and_run_hooks (FILE * fp, int ismerge, char * name)
 {
 	char	*ext = NULL;
-  if (!ismerge)
-    {
-      FileSetCurrentFileName(name ? ck_savestr (name) : 0);
-    }
+	if (!ismerge)
+	{
+		//FileSetCurrentFileName(name ? ck_savestr (name) : 0);
+		FileSetCurrentFileName(name); // callee duplicates string
+	}
 	ext = strrchr(name, '.');
 	if (! ext) {
 		read_file_generic(fp, ismerge, NULL, name);
@@ -1358,13 +1359,13 @@ read_file_and_run_hooks (FILE * fp, int ismerge, char * name)
 		read_file_generic(fp, ismerge, ext, name);
 	}
 
-  if (UserPreferences.run_load_hooks)
-    {
-      struct var * v;
-      v = find_var (load_hooks_string, sizeof(load_hooks_string)-1);
-      if (v && v->var_flags != VAR_UNDEF)
-	execute_command (load_hooks_string);
-    }
+	if (UserPreferences.run_load_hooks)
+	{
+		struct var * v;
+		v = find_var (load_hooks_string, sizeof(load_hooks_string)-1);
+		if (v && v->var_flags != VAR_UNDEF)
+			execute_command (load_hooks_string);
+	}
 }
 
 /* If TURN_ON is 0, this toggles whether load hooks are run.
