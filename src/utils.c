@@ -950,6 +950,10 @@ astol (char **ptr)
  *	There is no particular attempt to reduce mpys/divs
  *	those machines that are still out there (eg. PDP11/Small)
  *	that shun floating point arithmetic might rethink this routine.
+ *
+ *	mcarter 23-Dec-2016: I'm not sure we need this function anymore.
+ *	I wrote a much simplified astof(). I'm not sure why this one
+ *	is needed.
  */
 
 static double exps0[10] =
@@ -964,7 +968,7 @@ static double exps1[10] =
 #define REGISTER register
 
 double
-astof (char **sp)
+XXX_astof (char **sp)
 {
   REGISTER char *s;
   REGISTER char *cp;
@@ -1097,6 +1101,26 @@ astof (char **sp)
     res = -res;
   *sp = s;
   return (res);
+}
+
+double
+astof (char **sp)
+{
+	char *s = *sp;
+	while (isspace (*s))
+	{
+		s++;
+		if (*s == '\0')
+		{
+			*sp = s;
+			return (0.0);
+		}
+	}
+
+	double ret = atof(s);
+	while(*s != '\0') s++;
+	*sp = s;
+	return ret;
 }
 
 #ifdef TEST_ASTOF

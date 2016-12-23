@@ -84,6 +84,17 @@ void FreeGlobals()
 	FileCloseCurrentFile();
 }
 
+void get_set(int r, int c, char* s)
+{
+	set_cell(r, c, s); // rounding nasty
+	printf("Formula at (%d,%d) is:%s\n", r, c, get_formula(r,c));
+	decomp_free();
+	recalculate(1);
+	printf("Cell value at (%d,%d) is:%s\n", r, c, cell_value_string(r,c, 0));
+	puts("");
+}
+
+
 int neot_test0(int argc, char ** argv)
 {
         puts("neot test starting");
@@ -111,9 +122,12 @@ int neot_test0(int argc, char ** argv)
 	printf("Formula at (2,2) is:%s\n", get_formula(2,2));
 	decomp_free();
 
-	set_cell(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
-	printf("Formula at (1,1) is:%s\n", get_formula(1,1));
-	decomp_free();
+	get_set(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
+	get_set(1, 1, "63.36"); // rounding nasty
+	get_set(2, 1, "1 + R[-1]C");
+
+	printf("Test atof(63.36):%f\n", atof("63.36"));
+
 
 
 	FreeGlobals();
