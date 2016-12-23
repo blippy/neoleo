@@ -1010,6 +1010,15 @@ _io_command_loop (int a)
 }
 
 void
+_io_run_curses_main_loop(void)
+{
+	  while (1) {
+		  setjmp (Global->error_exception);
+		  command_loop (0, 0);
+	  }
+}
+
+void
 tty_graphics (void)
 {
   FD_SET (0, &read_fd_set);
@@ -1042,4 +1051,7 @@ tty_graphics (void)
   io_cellize_cursor = _io_cellize_cursor;
   io_inputize_cursor = _io_inputize_cursor;
   io_display_cell_cursor = _io_display_cell_cursor;
+
+  // added by mcarter:
+  io_run_main_loop = _io_run_curses_main_loop;
 }

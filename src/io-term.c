@@ -905,9 +905,13 @@ continue_oleo (int sig)
 }
 
 /* set an adapter stub that does nothing */
-void _do_nothing_const_char_s(const char *s)
+void
+_do_nothing_const_char_s(const char *s)
 {
 }
+
+void
+_do_nothing() { }; /* stub */
 
 void 
 InitializeGlobals(void)
@@ -973,6 +977,7 @@ InitializeGlobals(void)
   */
 
   io_set_window_name = _do_nothing_const_char_s;
+  io_run_main_loop = _do_nothing;
 
 }
 
@@ -1348,56 +1353,8 @@ main0(int argc, char **argv)
   }
 
   io_recenter_cur_win ();
-
   Global->display_opened = 1;
-
-#if 0
-  /* FIXME - Find better way of doing this */
-  /* Display openning Copyright screen */
-  if (!command_line_file)
-    run_string_as_macro
-      ("{pushback-keystroke}{builtin-help _NON_WARRANTY_}");
-#endif /* 0 */
-
-
-  // mcarter 2016-12-03 refactor some seeming uncessary code duplication
-  /* out with the old ...
-#ifdef	HAVE_MOTIF
-  if (using_motif) {
-    motif_build_gui();
-    setjmp (Global->error_exception);
-    motif_main_loop();
-  } else {
-    // Compile with Motif but don't run with it. 
-    while (1)
-    {
-      setjmp (Global->error_exception);
-      command_loop (0, 0);
-    }
-  }
-#else
-  while (1)
-    {
-      setjmp (Global->error_exception);
-      command_loop (0, 0);
-    }
-#endif
-and in with the new ... */
-  if (using_motif) {
-#ifdef	HAVE_MOTIF
-    motif_build_gui();
-    setjmp (Global->error_exception);
-    motif_main_loop();
-    fprintf(stderr, "main0(): Unreachable motif code\n");
-#endif
-  } else {
-	  while (1) {
-		  setjmp (Global->error_exception);
-		  command_loop (0, 0);
-	  }
-  }
-
-
+  io_run_main_loop();
 
   return (0); /* Never Reached! */
 }

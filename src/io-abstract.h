@@ -110,4 +110,6 @@ void (*io_recenter_all_win)(void);
 */
 
 EXTERN void (*io_set_window_name)(const char *s);
+EXTERN void (*io_run_main_loop)(void);
+
 #endif /* IO_ABSTRACTH */

@@ -5882,6 +5882,16 @@ xio_set_window_name(char *s)
 }
 */
 
+void
+_io_run_motif_main_loop(void)
+{
+	motif_build_gui();
+	setjmp (Global->error_exception);
+	motif_main_loop();
+	fprintf(stderr, "main0(): Unreachable motif code\n");
+
+}
+
 void 
 motif_init(int *argc, char **argv)
 {
@@ -5984,6 +5994,9 @@ motif_init(int *argc, char **argv)
 
 	/* Without this we have NULL in cwin. */
 	io_init_windows(AppRes.rows, AppRes.columns, 1, 2, 1, 1, 1, 1);
+
+	// added by mcarter
+	io_run_main_loop = _io_run_motif_main_loop;
 }
 
 void RaiseSplash()
