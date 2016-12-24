@@ -59,7 +59,8 @@
  * The output parameters can be NULL.
  */
 
-int find_function (int * vec_out, struct cmd_func ** cmd_out, char * name, int len)
+int 
+find_function (int * vec_out, struct cmd_func ** cmd_out, char * name, int len)
 {
   int vector;
   struct cmd_func * cmd;
@@ -80,7 +81,8 @@ static struct cmd_func * named_macro_strings = 0;
 static int num_named_macro_strings = 0;
 static int named_macro_vec;
 
-void init_named_macro_strings (void)
+void 
+init_named_macro_strings (void)
 {
   named_macro_strings =
     (struct cmd_func *) ck_malloc (sizeof (struct cmd_func));
@@ -89,7 +91,8 @@ void init_named_macro_strings (void)
 }
 
 
-void name_macro_string (char * name, char * str)
+void 
+name_macro_string (char * name, char * str)
 {
   int i = num_named_macro_strings;
   ++num_named_macro_strings;
