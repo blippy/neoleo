@@ -12,6 +12,11 @@ distro packagers wanting to do typical configure && make && make install
 should download the file neoleo-X.Y.Z.tar.gz, rather than the
 source files.
 
+Quick start
+-----------
+
+Create ~/.oleorc with the following line:
+set-default-format general.float
 
 Features
 --------

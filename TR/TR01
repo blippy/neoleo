@@ -13,6 +13,13 @@ to `general.float'.
 This is achieved by issuing the command:
 M-a f general.float
 
+
+Recommendation
+--------------
+
+Users should put the following line in their ~/.oleorc file:
+set-default-format general.float
+
 Dev notes
 ---------
 
