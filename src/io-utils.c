@@ -594,6 +594,16 @@ pr_flt (val, fmt, prec)
   int isneg;
   int comlen;
 
+  /* mcarter 24-Dec-2016
+   * we sometimes get pesky 99999... in the decimals
+   * To fix it, we need to tweak the number by introducing
+   * a bit of fake rounding
+   */
+  {
+	  //long double dd = roundl(val * pow(10, FLOAT_PRECISION))/ pow(10, FLOAT_PRECISION);
+	  val += (val>0? 1.0 : -1.0)/pow(10, 14);
+  }
+
   val *= fmt->scale;
 
   if (val == __plinf)
@@ -647,7 +657,7 @@ pr_flt (val, fmt, prec)
     {
       int p1;
 
-      p1 = (prec == FLOAT_PRECISION) ? 15 : (prec > 0) ? prec : -prec;
+      p1 = (prec == FLOAT_PRECISION) ? 11 : (prec > 0) ? prec : -prec;
       pf = fmt->decpt;
       while (pf && *pf)
 	*fptr++ = *pf++;
