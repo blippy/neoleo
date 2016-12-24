@@ -1,0 +1,32 @@
+TR01: Formatting of cell values.
+
+Neoleo has some formatting oddities whereby values entered as,
+for example, 16.36, come out as 16.369999999999999 in both
+the editor and the region and the cells.
+
+A recent commit (on 24-Dec-2016) fixed this issue, "to a large extent". 
+The editor
+now appears right, but not necessarily the cells themselves. To
+fix this issue, it is recommended that users set the default format
+to `general.float'.
+
+This is achieved by issuing the command:
+M-a f general.float
+
+Dev notes
+---------
+
+This problem arises due to the fact that neoleo converts strings ("16.36")
+to imprecise doubles. When they are printed, the accuracy of the numbers
+was reproduced to 15 decimal places, which unfortunately consisted of
+...999 .
+
+To circumvent this, io-utils.c:pr_flt() tries to bump the input value
+to just above the 999 threshold. I suspect that for certain large values
+this might not work, due to the precision with which doubles are stored.
+
+In the cells themselves, pr_flt() is only called when the format is 
+general.float, which is why it is best to set this as the default
+format. Users can still over-ride the default on a cell or range basis.
+
+Created: 24-Dec-2016

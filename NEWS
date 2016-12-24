@@ -12,6 +12,9 @@
 
 * Added support for Tcl scripting
 
+* Issued TR01: Formatting of cell values.
+  Applicable to users and devs
+
 05-Dec-2016
 
 ===== neoleo 4.0.0 =====

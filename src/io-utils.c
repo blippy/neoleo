@@ -597,7 +597,10 @@ pr_flt (val, fmt, prec)
   /* mcarter 24-Dec-2016
    * we sometimes get pesky 99999... in the decimals
    * To fix it, we need to tweak the number by introducing
-   * a bit of fake rounding
+   * a bit of fake rounding by bumping the value.
+   *
+   * See TR01: Formatting of cell values.
+   * This is a "technical report", which is availabe in the directory TR
    */
   {
 	  //long double dd = roundl(val * pow(10, FLOAT_PRECISION))/ pow(10, FLOAT_PRECISION);
