@@ -128,6 +128,8 @@ int neot_test0(int argc, char ** argv)
 
 	printf("Test atof(63.36):%f\n", atof("63.36"));
 
+	puts(pr_flt(1163.36, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(2688.9, &fxt, FLOAT_PRECISION));
 
 
 	FreeGlobals();

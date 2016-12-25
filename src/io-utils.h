@@ -62,5 +62,31 @@ extern void OleoSetEncoding(char *);
 extern void OleoUserPrefEncoding(char *);
 extern char *OleoGetEncoding(void);
 
+
+/* Structures/vars/functions for dealing with formatting floating-point
+   numbers, etc */
+
+struct user_fmt {
+    char *name,		/* Format name */
+	*p_hdr,		/* Positive header */
+	*n_hdr,		/* Negative header */
+	*p_trl,		/* Positive trailer */
+	*n_trl,		/* Negative trailer */
+	*zero,		/* How to represent a 0 */
+	*comma,		/* Thousands separator */
+	*decpt;		/* Decimal point */
+    unsigned char prec;	/* Precision */
+    double scale;	/* Scale */
+};
+
+
+extern struct user_fmt dol;
+extern struct user_fmt cma;
+extern struct user_fmt pct;
+extern struct user_fmt fxt;
+
+char* pr_flt (double val, struct user_fmt *fmt, int prec);
+
+
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
 #endif

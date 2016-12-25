@@ -59,8 +59,8 @@ static char *rcsid = "$Id: ";
 
 
 /* Routines for formatting cell values */
-struct user_fmt;
-static char *pr_flt (double, struct user_fmt *, int);
+//struct user_fmt;
+//static char *pr_flt (double, struct user_fmt *, int);
 static char *pr_int (long, struct user_fmt *, int);
 
 /* Constants */
@@ -141,23 +141,7 @@ char print_buf[BIGFLT + 20];
 #endif
 
 
-
-/* Structures/vars/functions for dealing with formatting floating-point
-   numbers, etc */
-
-struct user_fmt {
-    char *name,		/* Format name */
-	*p_hdr,		/* Positive header */
-	*n_hdr,		/* Negative header */
-	*p_trl,		/* Positive trailer */
-	*n_trl,		/* Negative trailer */
-	*zero,		/* How to represent a 0 */
-	*comma,		/* Thousands separator */
-	*decpt;		/* Decimal point */
-    unsigned char prec;	/* Precision */
-    double scale;	/* Scale */
-};
-
+/* Variables */
 
 struct user_fmt dol =
 { "dollar", "$", "($", 0, ")", "$0", ",", ".", FLOAT_PRECISION, 1};
@@ -175,7 +159,8 @@ struct user_fmt pct =
 struct user_fmt fxt =
 { "fixed", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1};
 
-/* Variables */
+
+
 
 #define NUM_USER_FMT (16)
 struct user_fmt u[NUM_USER_FMT] =
@@ -579,11 +564,8 @@ pr_int (val, fmt, prec)
   return pt;
 }
 
-static char *
-pr_flt (val, fmt, prec)
-     double val;
-     struct user_fmt *fmt;
-     int prec;
+char *
+pr_flt (double val, struct user_fmt *fmt, int prec)
 {
   char *iptr;
   char *fptr;
@@ -604,7 +586,8 @@ pr_flt (val, fmt, prec)
    */
   {
 	  //long double dd = roundl(val * pow(10, FLOAT_PRECISION))/ pow(10, FLOAT_PRECISION);
-	  val += (val>0? 1.0 : -1.0)/pow(10, 14);
+	  int dp = 15 - ceil(log10(fabs(val)));
+	  val += (val>0? 1.0 : -1.0)/pow(10, dp);
   }
 
   val *= fmt->scale;
