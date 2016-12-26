@@ -1124,7 +1124,7 @@ astof (char **sp)
 }
 
 #ifdef TEST_ASTOF
-main ()
+main_utils ()
 {
   char buf[80];
   char *ptr;

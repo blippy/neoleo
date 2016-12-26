@@ -469,7 +469,7 @@ fatal (msg, prog, x1, x2, x3, x4, x5)
     exit (1);
 }
 
-main (argc, argv)
+main_xrdb (argc, argv)
     int argc;
     char **argv;
 {

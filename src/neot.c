@@ -12,7 +12,7 @@
 
 
 int 
-main(int argc, char **argv)
+main_neot(int argc, char **argv)
 {
 	//void *handle;
 	//double (*cosine)(double);

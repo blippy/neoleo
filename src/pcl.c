@@ -310,7 +310,8 @@ stricmp (const char * s1, const char * s2)
     return chr1 - chr2;
 }
 
-int main(int argc, char *argv[])
+int
+main_pcl(int argc, char *argv[])
 {
 	struct PrintDriver	*pd = &PCLPrintDriver;
 	FILE			*fp = fopen("test.out", "w");
