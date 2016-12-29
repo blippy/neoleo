@@ -104,6 +104,6 @@ extern int option_filter;
 extern void oleo_catch_signals(void (*h)(int));
 int main0(int argc, char **argv);
 void init_basics();
-void choose_display(int argc, char **argv, bool force_cmd_graphics);
+void choose_display(bool force_cmd_graphics);
 
 #endif /* IO_TERMH */

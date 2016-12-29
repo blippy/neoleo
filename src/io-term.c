@@ -1166,7 +1166,7 @@ init_basics()
 
   
 void
-choose_display(int argc, char **argv, bool force_cmd_graphics)
+choose_display(bool force_cmd_graphics)
 {
 	if(force_cmd_graphics) {
 		headless_graphics();
@@ -1200,7 +1200,8 @@ choose_display(int argc, char **argv, bool force_cmd_graphics)
 		//#ifdef HAVE_MOTIF
 		if (have_motif && !no_motif) {
 
-			motif_init(&argc, argv);
+			//motif_init(&(Global->argc), Global->argv);
+			motif_graphics();
 
 			using_gtk = FALSE;
 			using_motif = TRUE;
@@ -1211,7 +1212,8 @@ choose_display(int argc, char **argv, bool force_cmd_graphics)
 
 		//#ifndef X_DISPLAY_MISSING
 		if (have_x && !no_x) {
-			get_x11_args (&argc, argv);
+			//get_x11_args (&(Global->argc), Global->argv);
+			get_x11_args ();
 			if (Global->io_x11_display_name) {
 				x11_graphics();
 				using_x = TRUE;
@@ -1248,6 +1250,8 @@ main0(int argc, char **argv)
   PlotInit();
   AllocateDatabaseGlobal();
   InitializeGlobals();
+  Global->argc = argc;
+  Global->argv = argv;
 
   /* Set up the minimal io handler. */
 #if 0
@@ -1292,7 +1296,7 @@ main0(int argc, char **argv)
   FD_ZERO (&exception_pending_fd_set);
 
   bool force_cmd_graphics = false;
-  choose_display(argc, argv, force_cmd_graphics);
+  choose_display(force_cmd_graphics);
   io_open_display ();
 
   init_graphing ();

@@ -5893,7 +5893,8 @@ _io_run_motif_main_loop(void)
 }
 
 void 
-motif_init(int *argc, char **argv)
+//motif_init(int *argc, char **argv)
+motif_graphics()
 {
 	Display	*dpy;
 
@@ -5954,7 +5955,7 @@ motif_init(int *argc, char **argv)
 	XtAppSetFallbackResources(app, fallback);
 	dpy = XtOpenDisplay(app, NULL, PACKAGE, PACKAGE,
 		/* options */		NULL, 0,
-		/* command line */	argc, argv);
+		/* command line */	&(Global->argc), Global->argv);
 
 	// mcarter prevent segementation fault 
 	if(!dpy){

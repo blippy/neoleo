@@ -352,6 +352,10 @@ struct OleoGlobal {
 	int				had_error;
 
 	char				*oldLocale;
+
+	/* added by mcarter: */
+	int argc;
+	char** argv;
 };
 
 extern struct OleoGlobal *Global;

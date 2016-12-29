@@ -22,7 +22,8 @@
 
 //#ifndef X_DISPLAY_MISSING
 
-extern void get_x11_args (int * argc_p, char ** argv);
+//extern void get_x11_args (int * argc_p, char ** argv);
+extern void get_x11_args ();
 extern int io_col_to_input_pos (int c);
 extern void x11_graphics (void);
 extern void set_x_default_point_size (int l);

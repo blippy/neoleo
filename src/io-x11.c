@@ -155,7 +155,8 @@ static XrmDatabase rdb;
 static KeySym RetKeySym;
 
 void
-get_x11_args (int * argc_p, char ** argv)
+//get_x11_args (int * argc_p, char ** argv)
+get_x11_args ()
 {
   char	*locale;
 

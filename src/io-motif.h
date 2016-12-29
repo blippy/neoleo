@@ -34,7 +34,8 @@
 
 extern void versionCB(Widget, XtPointer, XtPointer);
 extern void QuitCB(Widget, XtPointer, XtPointer);
-extern void motif_init(int *argc, char **argv);
+//extern void motif_init(int *argc, char **argv);
+extern void motif_graphics();
 extern void ResetColumnWidths(void);
 extern void MotifUpdateWidth(int, int);
 extern void motif_build_gui(void);
