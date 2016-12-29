@@ -2482,6 +2482,9 @@ x11_graphics (void)
   io_cellize_cursor = xio_cellize_cursor;
   io_inputize_cursor = xio_inputize_cursor;
 
+  //io_run_main_loop = _io_run_x11_main_loop;
+  io_run_main_loop = fairly_std_main_loop;
+
   get_x11_args();
   if(Global->io_x11_display_name == 0){
 	  fprintf(stderr, "Could not open display. Try running with '-x' option\n");

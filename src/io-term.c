@@ -165,6 +165,19 @@ int (*set_file_opts) (int, char *) = oleo_set_options;
 void (*show_file_opts) () = oleo_show_options;
 
 
+EXTERN void
+fairly_std_main_loop(void)
+{
+	/* This is considered the "standard" loop. It works
+	 * with curses and X11, but Motif and headless require
+	 * their own special cases.
+	 */
+	  while (1) {
+		  setjmp (Global->error_exception);
+		  command_loop (0, 0);
+	  }
+}
+
 static bool	option_tests = false;
 static char	option_separator = '\t';
 static char	*option_format = NULL;

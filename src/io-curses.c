@@ -1009,6 +1009,7 @@ _io_command_loop (int a)
 	command_loop (a, 0);
 }
 
+/*
 void
 _io_run_curses_main_loop(void)
 {
@@ -1017,6 +1018,7 @@ _io_run_curses_main_loop(void)
 		  command_loop (0, 0);
 	  }
 }
+*/
 
 void
 tty_graphics (void)
@@ -1053,5 +1055,6 @@ tty_graphics (void)
   io_display_cell_cursor = _io_display_cell_cursor;
 
   // added by mcarter:
-  io_run_main_loop = _io_run_curses_main_loop;
+  //io_run_main_loop = _io_run_curses_main_loop;
+  io_run_main_loop = fairly_std_main_loop;
 }
