@@ -100,6 +100,15 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #if	ENABLE_NLS
 extern char *gettext(char *);
 #endif
+void
+init_native_language_support()
+{
+#if 0	/* ENABLE_NLS */ // mcarter
+	setlocale(LC_ALL, "");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
+#endif
+}
 
 // mcarter
 #define _(x) (x) // TODO get rid of this line
@@ -1237,29 +1246,14 @@ main0(int argc, char **argv)
   volatile int init_fpc = 0;
   int command_line_file = 0;	/* was there one? */
 
-#if 0
-  sleep(30);
-#endif
-#if 0	/* ENABLE_NLS */ // mcarter
-  setlocale(LC_ALL, "");
-  bindtextdomain(PACKAGE, LOCALEDIR);
-  textdomain(PACKAGE);
-#endif
-
+  init_native_language_support();
   MdiInitialize();	/* Create initial Global structure */
   PlotInit();
   AllocateDatabaseGlobal();
   InitializeGlobals();
   Global->argc = argc;
   Global->argv = argv;
-
-  /* Set up the minimal io handler. */
-#if 0
-  cmd_graphics ();
-#endif
-
   parse_command_line(argc, argv, &ignore_init_file);
-
   init_basics();
 
   if(option_tests) {
