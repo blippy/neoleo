@@ -95,6 +95,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 
 #include "defuns.h" // mcarter
 
+#include "neoleo_swig.h"
 
 #if	ENABLE_NLS
 extern char *gettext(char *);
@@ -140,11 +141,13 @@ void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 void (*show_file_opts) () = oleo_show_options;
 
+
+static bool	option_tests = false;
 static char	option_separator = '\t';
 static char	*option_format = NULL;
 int		option_filter = 0;
 
-static char short_options[] = "VqfxthsFSv";
+static char short_options[] = "VqfxthsFSTv";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,			'V'},
@@ -157,6 +160,7 @@ static struct option long_options[] =
 	{"space",		0,	NULL,			'S'},
 	{"format",		1,	NULL,			'F'},
 	{"filter",		0,	NULL,			'-'},
+	{"tests",		0,	NULL,			'T'},
 	{"version",		0,	NULL,			'v'},
 	{NULL,			0,	NULL,			0}
 };
@@ -889,6 +893,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   -x, --nw                 disable graphics and fallback to curses\n\
   -s x, --separator x	   set separator for 'list' file type to x\n\
   -S, --space		   set separator for 'list' file type to a space\n\
+  -T, --tests              run test suite\n\
   -F x, --format x	   set default file type to x (oleo, list, sc  ...)\n\
   --filter		   read file from stdin, write to stdout on exit\n\
 \n\
@@ -1126,6 +1131,9 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 				file_set_default_format(option_format);
 				optind++;
 				break;
+			case 'T':
+				option_tests = true;
+				break;
 			case '-':
 				option_filter = 1;
 				break;
@@ -1248,8 +1256,13 @@ main0(int argc, char **argv)
 
   parse_command_line(argc, argv, &ignore_init_file);
 
-
   init_basics();
+
+  if(option_tests) {
+	  headless_tests();
+	  exit(EXIT_SUCCESS);
+  }
+
 
   /* Find the init files. 
    * This is done even if ignore_init_file is true because

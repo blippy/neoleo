@@ -95,20 +95,14 @@ void get_set(int r, int c, char* s)
 }
 
 
-int neot_test0(int argc, char ** argv)
+void
+headless_tests()
 {
-        puts("neot test starting");
-	//set_headless(true);
-        MdiInitialize();
-        //PlotInit
-        AllocateDatabaseGlobal();
-        InitializeGlobals();
-        //# parse_command_line # skip for now
-        init_basics();
-
 	//cmd_graphics(); // in leui of calling choose_display
 	bool force_cmd_graphics = true;
-	choose_display(argc, argv, force_cmd_graphics);
+
+	//choose_display(argc, argv, force_cmd_graphics);
+	headless_graphics();
 	io_open_display();
 
         //# the following causes crash:
@@ -122,7 +116,8 @@ int neot_test0(int argc, char ** argv)
 	printf("Formula at (2,2) is:%s\n", get_formula(2,2));
 	decomp_free();
 
-	get_set(1, 1, "\"foo\""); // NB must enquote strings otherwise it segfault trying to find or make foo as var
+	char str[] = "\"foo\"";
+	get_set(1, 1, str); // NB must enquote strings otherwise it segfault trying to find or make foo as var
 	get_set(1, 1, "63.36"); // rounding nasty
 	get_set(2, 1, "1 + R[-1]C");
 
@@ -137,5 +132,19 @@ int neot_test0(int argc, char ** argv)
         puts("finished test");
 
 	__lsan_do_leak_check();
+}
+
+int neot_test0(int argc, char ** argv)
+{
+        puts("neot test starting");
+	//set_headless(true);
+        MdiInitialize();
+        //PlotInit
+        AllocateDatabaseGlobal();
+        InitializeGlobals();
+        //# parse_command_line # skip for now
+        init_basics();
+
+	headless_tests();
         return 0;
 }

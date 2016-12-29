@@ -17,19 +17,22 @@ endif
 YFLAGS = -d
 EXTRA_DIST = $(srcdir)/neoleo.i
 
-bin_PROGRAMS = neoleo 
+bin_PROGRAMS = neoleo neot
+neoleo_LDADD = -ldl
+neoleo_SOURCES = main.c
 
+neot_LDADD = -ldl
+neot_SOURCES = neot.c
 
 BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
-#nodist_libneoleo_la_SOURCES = neoleo_wrap.c
+nodist_libneoleo_la_SOURCES = neoleo_wrap.c
 CLEANFILES = $(BUILT_SOURCES)
 
-#lib_LTLIBRARIES = libneoleo.la
-neoleo_CFLAGS = $(GUI_DEFINES) -Dmain0=main
-neoleo_LDADD = -lm -lncurses $(GUI_LINK)
-#neoleo_LDFLAGS = -e main0 
-#neoleo_la_LDFLAGS = -module -avoid-version -shared
-neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
+lib_LTLIBRARIES = libneoleo.la
+libneoleo_la_CFLAGS = $(GUI_DEFINES) 
+libneoleo_la_LIBADD = -lpthread -lm -lncurses   -ltcl8.6 $(GUI_LINK)
+libneoleo_la_LDFLAGS = -module -avoid-version -shared
+libneoleo_la_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
 		 io-headless.c io-curses.c io-edit.c io-term.c io-utils.c \
