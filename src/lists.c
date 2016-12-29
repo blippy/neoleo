@@ -38,9 +38,6 @@
 #include "lists.h"
 #include "funcdef.h"
 
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#endif
 
 #include "sysdef.h"
 #ifndef _DEBUG_MALLOC_INC

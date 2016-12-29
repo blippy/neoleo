@@ -57,7 +57,19 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
+
+#ifdef HAVE_X
+#pragma message "HAVE_X is defined"
 #include "io-x11.h"
+bool have_x = true;
+#else
+#pragma message "HAVE_X is undefined"
+bool have_x = false;
+void get_x11_args() {}
+void x11_graphics() {}
+#endif
+
+
 #include "key.h"
 #include "line.h"
 #include "lists.h"
@@ -76,15 +88,17 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 
 #include "userpref.h"
 #include "mysql.h"
-//#ifdef	HAVE_MOTIF
+
+#ifdef	HAVE_MOTIF
 #include "io-motif.h"
-//#endif
+#else
+void motif_graphics() {}
+#endif
 
 #ifdef HAVE_LIBGTK
 #include "gtk/gtk.h"
 #endif 
 
-#include "io-x11.h"
 #include "list.h"
 #include "sc.h"
 #include "sylk.h"
@@ -191,13 +205,6 @@ bool have_motif = true;
 bool have_motif = false;
 #endif
 
-#ifdef HAVE_X
-bool have_x = true;
-#else
-bool have_x = false;
-//void x11_graphics() {}; // stub it out
-void get_x11_args(int *argc, char **argv); // stub out
-#endif
 
 /* Avoid using Displays no matter what else. (-x --no-x) */
 int no_gtk = 0;
@@ -1222,13 +1229,12 @@ choose_display(bool force_cmd_graphics)
 		//#ifndef X_DISPLAY_MISSING
 		if (have_x && !no_x) {
 			//get_x11_args (&(Global->argc), Global->argv);
-			get_x11_args ();
-			if (Global->io_x11_display_name) {
-				x11_graphics();
-				using_x = TRUE;
-				no_curses = TRUE;
-				puts("chose_display() chose X");
-			}
+			//get_x11_args ();
+			//if (Global->io_x11_display_name) {
+			x11_graphics();
+			using_x = TRUE;
+			no_curses = TRUE;
+			//}
 		} 
 		//#endif /* X_DISPLAY_MISSING */
 

@@ -34,10 +34,8 @@
 #include <termios.h>
 #include <malloc.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#endif
 
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free

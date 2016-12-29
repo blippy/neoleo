@@ -46,9 +46,6 @@
 #include "cmd.h"
 #include "ref.h"
 
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#endif
 
 struct value
   {

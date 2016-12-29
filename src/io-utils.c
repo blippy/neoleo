@@ -45,9 +45,11 @@ static char *rcsid = "$Id: ";
 #include "io-term.h"
 #include "cmd.h"
 #include "sylk.h"
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#endif
+
+//#ifdef	HAVE_MOTIF
+//#include "io-motif.h"
+//#endif
+
 #include "basic.h"
 #include "oleofile.h"
 #include "sc.h"

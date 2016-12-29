@@ -1,6 +1,8 @@
 #VPATH = $(srcdir) $(builddir)
 
-GUI_DEFINES = -DX_DISPLAY_MISSING
+GUI_SRCS = 
+GUI_LINK = 
+#GUI_DEFINES = -DX_DISPLAY_MISSING
 GUI_DEFINES = -DHAVE_X 
 
 # Order of linking of libraries for Motif seems to be important
@@ -8,11 +10,13 @@ GUI_DEFINES = -DHAVE_X
 # have it optional.
 
 if UseMotif
-GUI = io-motif.c appres.c fallback.c xrdb.c oleo_icon.xpm
-GUI_LINK = -lXm -lXt -lXbae -lX11
+GUI_SRCS = io-motif.c appres.c fallback.c oleo_icon.xpm
+GUI_LINK += -lXm -lXt -lXbae 
 GUI_DEFINES += -DHAVE_MOTIF
 endif
 
+GUI_SRCS += io-x11.c xrdb.c
+GUI_LINK += -lX11
 
 YFLAGS = -d
 EXTRA_DIST = $(srcdir)/neoleo.i
@@ -41,7 +45,7 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c
 		 parse.y \
 		 posixtm.y \
 		 neoleo_swig.c \
-		 mysql.c   $(GUI)
+		 mysql.c   $(GUI_SRCS)
 	
 
 noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \

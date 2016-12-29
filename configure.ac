@@ -4,11 +4,9 @@ AC_CONFIG_SRCDIR([src/pcl.c])
 AM_INIT_AUTOMAKE([foreign])
 
 
-#PKG_PROG_PKG_CONFIG
-#AC_PROG_RANLIB
 AC_PROG_CC
 AC_PROG_YACC
-LT_INIT
+#LT_INIT
 #AX_PKG_SWIG([], [], [ AC_MSG_ERROR([SWIG is required to build..]) ])
 #AX_PKG_SWIG()
 

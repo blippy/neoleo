@@ -34,6 +34,7 @@
 #endif
 
 #include <ctype.h>
+#include <stdlib.h>
 #include "global.h"
 #include "graph.h"
 #include "cmd.h"

@@ -2367,6 +2367,7 @@ xio_open_display (void)
 
 	/* Figure out the KeySyms for our modifiers */
 	XModifierKeymap *OurModKeymap;
+	//XModifierKeymap OurModKeymap[];
 	KeySym *ModifierKeys;
 
 	/* First get the modifiers */
@@ -2397,12 +2398,14 @@ xio_open_display (void)
 					/* mcarter 2016-11-22 update deprecated function
 					 * See http://stackoverflow.com/questions/9838385/replace-of-xkeycodetokeysym
 					 * 
-					* ModifierKeys[n] = 
-					*XKeycodeToKeysym(thePort->dpy,tmpptr[i], 0);
-					*/
+					 * ModifierKeys[n] = 
+					 *XKeycodeToKeysym(thePort->dpy,tmpptr[i], 0);
+					 */
 					int keysyms_per_keycode_return;
-					ModifierKeys[n] = 
-					XGetKeyboardMapping(thePort->dpy,tmpptr[i], 1, &keysyms_per_keycode_return);
+					KeySym* kp = XGetKeyboardMapping(thePort->dpy,tmpptr[i], 1, &keysyms_per_keycode_return);
+#pragma message "Casting skullduggery" // mcarter 29-Dec-2016
+					KeySym* kp1 = (KeySym *)ModifierKeys[n];
+					kp1 = kp;
 					// XFree( ModifierKeys[n]) ??
 					n++; 
 				} 
@@ -2478,6 +2481,12 @@ x11_graphics (void)
   io_display_cell_cursor = xio_display_cell_cursor;
   io_cellize_cursor = xio_cellize_cursor;
   io_inputize_cursor = xio_inputize_cursor;
+
+  get_x11_args();
+  if(Global->io_x11_display_name == 0){
+	  fprintf(stderr, "Could not open display. Try running with '-x' option\n");
+	  exit(EXIT_FAILURE);
+  }
 }
 
 void

@@ -110,6 +110,7 @@ static char rcsid[] = "$Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $";
 
 #include "io-motif.h"		/* To get warnings when inconsistent */
 
+
 #ifdef	HAVE_XmHTML_H
 #include <XmHTML/XmHTML.h>
 #endif

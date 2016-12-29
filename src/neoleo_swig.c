@@ -1,22 +1,15 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 // check for leaks, as suggested at 
 // http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
-#include <sanitizer/lsan_interface.h>
+//#include <sanitizer/lsan_interface.h>
 
 
 #include "neoleo_swig.h"
 #include "io-abstract.h"
-
-
-
-
-//#ifdef HAVE_MOTIF
-#include "io-motif.h"
-//#endif
-
 #include "basic.h"
 #include "io-headless.h"
 #include "io-term.h"
@@ -131,7 +124,7 @@ headless_tests()
 
         puts("finished test");
 
-	__lsan_do_leak_check();
+	//__lsan_do_leak_check();
 }
 
 int neot_test0(int argc, char ** argv)
