@@ -29,5 +29,5 @@ fi
 
 
 
-AC_CONFIG_FILES([Makefile examples/Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile examples/Makefile src/Makefile])
 AC_OUTPUT

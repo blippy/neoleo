@@ -1,3 +1,3 @@
 #EXTRA_DIST = src/neoleo.i
 
-SUBDIRS = examples src
+SUBDIRS = doc examples src
