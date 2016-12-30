@@ -7,7 +7,6 @@ arch=('i686' 'x86_64')
 url="https://github.com/blippy/neoleo"
 license=('GPL')
 DEPENDS
-makedepends=('swig')
 SOURCE
 md5sums=('MD5SUM')
 

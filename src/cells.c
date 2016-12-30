@@ -638,12 +638,16 @@ do_varval (struct value *p)
 static void
 do_button(struct value *p)
 {
-#ifdef	HAVE_MOTIF
-  MotifButton(cur_row, cur_col, p->String, (p+1)->String);
-#endif
 
-  p->type = TYP_STR;
-  p->String = (p+1)->String;
+	/* 
+#ifdef	HAVE_MOTIF
+MotifButton(cur_row, cur_col, p->String, (p+1)->String);
+#endif
+... use io_do_button() instead:*/
+	io_do_button(cur_row, cur_col, p->String, (p+1)->String);
+
+	p->type = TYP_STR;
+	p->String = (p+1)->String;
 }
 
 struct function cells_funs[] =

@@ -11,13 +11,14 @@ changequote`'')
 define(`RQ',`changequote(<,>)dnl`
 'changequote`'')
 
-define(`CHROOT_DEPENDS', `depends=(RQ()`ncurses'RQ() RQ()`tcl'RQ())')
-define(`NONCHROOT_DEPENDS', `depends=(RQ()`ncurses'RQ() RQ()`tcl'RQ() RQ()`xbae'RQ())')
+define(`BASE_DEPENDS', `depends=(RQ()`ncurses'RQ()  RQ()`libxt'RQ())')
+define(`CHROOT_DEPENDS', `BASE_DEPENDS')
+define(`NONCHROOT_DEPENDS', `BASE_DEPENDS')
 ifdef(`MKCHROOT', `define(`DEPENDS', `CHROOT_DEPENDS')', `define(`DEPENDS', `NONCHROOT_DEPENDS')')
 
 define(`RELEASE_SOURCE', `source=("https://github.com/blippy/neoleo/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")')
 define(`NONRELEASE_SOURCE', `source=("file://TARBALL")')
 ifdef(`MKRELEASE', `define(`SOURCE', `RELEASE_SOURCE')', `define(`SOURCE', `NONRELEASE_SOURCE')')
 
-ifdef(`MKCHROOT', `define(`CONFX', `--without-motif')', `define(`CONFX', `')')
+ifdef(`MKCHROOT', `define(`CONFX', `--without-motif')', `define(`CONFX', `--without-motif')')
 divert(0)dnl

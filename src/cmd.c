@@ -2481,14 +2481,16 @@ io_error_msg (char *str, ...)
 		  vsprintf (buf, str, foo);
 
 		  if (Global->return_from_error)
-		    {
-			    Global->had_error++;	/* Indicate that we had an error */
-			    MessageAppend (1, buf);
-			    return;
-		    }
+		  {
+			  Global->had_error++;	/* Indicate that we had an error */
+			  // MessageAppend (1, buf); // now becomes:
+			  io_append_message(1, buf);
+			  return;
+		  }
 
 		  recover_from_error ();
-		  MessageAppend (1, buf);
+		  //MessageAppend (1, buf); // now becomes:
+		  io_append_message(1, buf);
 		  longjmp (Global->error_exception, 1);
 	  }
 	else
@@ -2570,7 +2572,8 @@ io_info_msg (char *str, ...)
 #ifdef	HAVE_MOTIF
 	if (using_motif)
 	  {
-		  MessageAppend (1, buf);
+		  //MessageAppend (1, buf); // replaced by
+		  io_append_message(1, buf);
 	  }
 	else
 #endif

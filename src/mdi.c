@@ -35,13 +35,14 @@ static char rcsid[] = "$Id: mdi.c,v 1.10 2001/02/13 23:38:06 danny Exp $";
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "io-abstract.h"
 #include "io-term.h"
 #include "mysql.h"
 #include "global.h"
 
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#endif
+//#ifdef	HAVE_MOTIF
+//#include "io-motif.h"
+//#endif
 
 #ifndef	False
 #define	False	0
@@ -58,7 +59,7 @@ static struct OleoGlobal	*globals = 0;
 /*
  * Hack.
  * This file only works well with Motif/LessTif anyway
- */
+/
 #ifndef	HAVE_MOTIF
 void MotifGlobalInitialize()
 {
@@ -68,6 +69,7 @@ void MessageAppend()
 {
 }
 #endif
+*/
 
 void MdiError(int offset1, int offset2, void *ptr)
 {
@@ -76,17 +78,23 @@ void MdiError(int offset1, int offset2, void *ptr)
 		"MdiSelectGlobal: no match for offset %d,%d ptr %p\n",
 		offset1, offset2, ptr);
 #endif
-	MessageAppend(True,
+	// MessageAppend becomes io_append_message 
+	io_append_message(True,
 		"MdiSelectGlobal: no match for offset %d,%d ptr %p\n",
 		offset1, offset2, ptr);
 }
 
 static void AllocateSubStructures(void)
 {
+	/* mcarter 30-Dec-2016: I don't think this is necessary
+	 * as InitializeGlobals() should take care of it
+	 *
+	 *
 	PlotInit();
 	AllocateDatabaseGlobal();
 	MotifGlobalInitialize();
 	InitializeGlobals();
+	*/
 }
 
 void
@@ -144,7 +152,8 @@ MdiOpen()
 void
 MdiClose()
 {
-	MessageAppend(False, "Closing file '%s'", Global->FileName);
+	// MessageAppend becomes io_append_message
+	io_append_message(False, "Closing file '%s'", Global->FileName);
 
 	/* Indicate file closed */
 	free(Global->FileName);

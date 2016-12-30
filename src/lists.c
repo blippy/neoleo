@@ -649,15 +649,18 @@ get_nodef_width (CELLREF col)
 void 
 set_width (CELLREF col, int wid)
 {
-  int *ptr;
+	int *ptr;
 
-  ptr = make (col, &Global->wids, sizeof (int), COL_BUF);
-  *ptr = wid;
+	ptr = make (col, &Global->wids, sizeof (int), COL_BUF);
+	*ptr = wid;
 
+	/* replace this:
 #ifdef	HAVE_MOTIF
-  if (using_motif)
-	MotifUpdateWidth(col, wid);
+if (using_motif)
+MotifUpdateWidth(col, wid);
 #endif
+with: */
+	io_update_width(col, wid);
 }
 
 void 

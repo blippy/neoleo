@@ -112,5 +112,8 @@ void (*io_recenter_all_win)(void);
 EXTERN void (*io_set_window_name)(const char *s);
 EXTERN void (*io_run_main_loop)(void);
 EXTERN void fairly_std_main_loop(void);
+EXTERN void (*io_do_button)(int r, int c, char *lbl, char *cmd);
+EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
+EXTERN void (*io_update_width)(int col, int wid);
 
 #endif /* IO_ABSTRACTH */

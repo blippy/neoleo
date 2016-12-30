@@ -5,7 +5,7 @@
 
 #./configure 'CFLAGS=-O0 -g' --prefix=$HOME/.local
 
-M=--without-motif
+#M=--without-motif
 #SAN=-fsanitize=address
 
 ./configure $M "CFLAGS= -Werror -O0 -g $SAN" --prefix=$HOME/.local

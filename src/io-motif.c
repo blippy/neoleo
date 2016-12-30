@@ -195,7 +195,7 @@ void Debug(char *src, char *fmt, ...)
 	}
 }
 
-void MessageAppend(Boolean beep, char *fmt, ...)
+void MessageAppend(bool beep, char *fmt, ...)
 {
 	XmTextPosition	pos;
 	int		i;
@@ -5999,6 +5999,9 @@ motif_graphics()
 
 	// added by mcarter
 	io_run_main_loop = _io_run_motif_main_loop;
+	io_do_button = MotifButton;
+	io_append_message = MessageAppend;
+	io_update_width = MotifUpdateWidth;
 }
 
 void RaiseSplash()

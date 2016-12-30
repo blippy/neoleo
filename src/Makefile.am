@@ -10,7 +10,7 @@ GUI_DEFINES = -DHAVE_X
 # have it optional.
 
 if UseMotif
-GUI_SRCS = io-motif.c appres.c fallback.c oleo_icon.xpm
+GUI_SRCS += io-motif.c appres.c fallback.c oleo_icon.xpm
 GUI_LINK += -lXm -lXt -lXbae 
 GUI_DEFINES += -DHAVE_MOTIF
 endif
@@ -24,13 +24,13 @@ EXTRA_DIST = $(srcdir)/neoleo.i
 bin_PROGRAMS = neoleo 
 
 
-BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h neoleo_wrap.c
-#nodist_libneoleo_la_SOURCES = neoleo_wrap.c
+BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h 
+#BUILT_SOURCES += neoleo_wrap.c
 CLEANFILES = $(BUILT_SOURCES)
 
 #lib_LTLIBRARIES = libneoleo.la
 neoleo_CFLAGS = $(GUI_DEFINES) -Dmain0=main
-neoleo_LDADD = -lm -lncurses $(GUI_LINK)
+neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
 #neoleo_LDFLAGS = -e main0 
 #neoleo_la_LDFLAGS = -module -avoid-version -shared
 neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
@@ -62,16 +62,11 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 neoleo_swig.h
 
 # exclude these for now:
-# io-x11.c plotter.c xbase.cpp
+# plotter.c xbase.cpp
 
 
 ref.o : parse.h
 
-neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
-	swig -tcl8 -o $@ $<
+#neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
+#	swig -tcl8 -o $@ $<
 
-#parse.c : parse.y
-
-#parse.h : parse.y
-
-#posixtm.c posixtm.h : posixtm.y

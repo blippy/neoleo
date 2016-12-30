@@ -28,6 +28,7 @@
 #include "global.h"
 #include <Xm/Xm.h>
 #include <X11/Intrinsic.h>
+#include <stdbool.h>
 
 // mcarter TODO sort out internationalisation
 #define _(x) (x) 
@@ -41,10 +42,10 @@ extern void MotifUpdateWidth(int, int);
 extern void motif_build_gui(void);
 extern void motif_main_loop(void);
 extern void MotifSetWindowName(const char *);
-extern void MessageAppend(Boolean beep, char *fmt, ...); 
+extern void MessageAppend(bool beep, char *fmt, ...); 
 extern void MotifGlobalInitialize(void);
 
-extern void MotifButton(int, int, char *, char *);
+extern void MotifButton(int r, int c, char *lbl, char *cmd);
 
 struct MotifGlobalType {
 	XtAppContext app_c;
