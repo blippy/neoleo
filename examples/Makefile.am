@@ -2,6 +2,8 @@
 # $Header: /cvs/oleo/examples/Makefile.am,v 1.9 2001/02/08 00:21:23 pw Exp $
 #
 
+exampledir = $(datadir)/oleo/examples
+
 OLEOS = docs.oleo \
 	loop.oleo \
 	mysql.oleo\
@@ -19,6 +21,9 @@ EXTRA_DIST = $(OLEOS) \
 
 
 EXTRA_DIST += pivot-driver.tcl pivot-utils.tcl pivot.r
+
+
+dist_example_DATA = $(EXTRA_DIST)
 
 #MAINTAINERCLEANFILES = Makefile.in
 

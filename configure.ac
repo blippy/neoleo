@@ -2,6 +2,7 @@ AC_PREREQ([2.69])
 AC_INIT([neoleo], [4.0.1], [alt.mcarter@gmail.com])
 AC_CONFIG_SRCDIR([src/pcl.c])
 AM_INIT_AUTOMAKE([foreign])
+AC_CONFIG_MACRO_DIRS([m4])
 
 
 AC_PROG_CC
