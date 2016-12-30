@@ -1,16 +1,16 @@
 ===== neoleo 4.0.1 =====
 
-* Support for vanilla X11 dropped.
+* doc files now generated
 
 * Conditional compilation for Motif+Xbae.
 
 * issue2: Added Copy (Ctrl-c) and Paste (Ctrl-v)
+  for Motif
   https://github.com/blippy/neoleo/issues/2
 
 * issue3: Removed splash screen
   https://github.com/blippy/neoleo/issues/3
 
-* Added support for Tcl scripting
 
 * Issued TR01: Formatting of cell values.
   Applicable to users and devs
