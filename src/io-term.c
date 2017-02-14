@@ -1102,6 +1102,20 @@ oleo_catch_signals(void (*h)(int))
 }
 
 void
+print_version()
+{
+	printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
+	printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
+	printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
+	printf(_("You may redistribute copies of %s\n"), PACKAGE);
+	printf(_("under the terms of the GNU General Public License.\n"));
+	printf(_("For more information about these matters, "));
+	printf(_("see the files named COPYING.\n"));
+	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
+	// will probably call exit after printing this
+}
+
+void
 parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 {
 	int opt;
@@ -1124,13 +1138,7 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 		{
 			case 'v':
 			case 'V':
-				printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
-				printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
-				printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
-				printf(_("You may redistribute copies of %s\n"), PACKAGE);
-				printf(_("under the terms of the GNU General Public License.\n"));
-				printf(_("For more information about these matters, "));
-				printf(_("see the files named COPYING.\n"));
+				print_version();
 				exit (0);
 				break;
 			case 'q':
