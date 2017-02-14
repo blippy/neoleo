@@ -73,13 +73,14 @@ extern char * x_get_string_resource (XrmDatabase, char *, char *);
 extern XrmDatabase x_load_resources (Display *, char *, char *);
 extern char * getenv (const char *);
 
-static char *emergency_font_name = "8x13";
-static char *cell_font_name = "times_roman12";
-static char *default_font_name = "8x13";
-static char *input_font_name = "8x13";
-static char *status_font_name = "6x10";
-static char *text_line_font_name = "8x13";
-static char *label_font_name = "5x8";
+#define FONTA "fixed" /* originally 8x13" */
+static char *emergency_font_name = FONTA;
+static char *cell_font_name = "fixed"; // originally "times_roman12";
+static char *default_font_name = FONTA;
+static char *input_font_name = FONTA;
+static char *status_font_name = "fixed"; // originally "6x10";
+static char *text_line_font_name = FONTA;
+static char *label_font_name = "fixed"; // originally "5x8";
 static char *default_bg_color_name = "black";
 static char *default_fg_color_name = "white";
 
@@ -2115,20 +2116,20 @@ xio_redisp (void)
 static XFontStruct *
 reasonable_font (Xport port, char *name)
 {
-  XFontStruct *f = XLoadQueryFont (port->dpy, name);
-  
-  if (!f)
-    {
-      fprintf(stderr, "(warning) Font %s could not be loaded.\n", name);
-      f = XLoadQueryFont (port->dpy, default_font_name);
-      if (!f)
+	XFontStruct *f = XLoadQueryFont (port->dpy, name);
+
+	if (!f)
 	{
-	  panic ("Default font %s could not be loaded.\n",
-		 default_font_name);
-	  exit(0);
+		fprintf(stderr, "(warning) Font %s could not be loaded.\n", name);
+		f = XLoadQueryFont (port->dpy, default_font_name);
+		if (!f)
+		{
+			panic ("Default font %s could not be loaded.\n",
+					default_font_name);
+			exit(0);
+		}
 	}
-    }
-  return f;
+	return f;
 }
 
 
