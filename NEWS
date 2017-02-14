@@ -1,3 +1,10 @@
+===== neoleo NEXT =====
+
+* issue4: Fonts now work in X11
+  https://github.com/blippy/neoleo/issues/5
+
+Date?
+
 ===== neoleo 4.0.1 =====
 
 * doc files now generated
@@ -10,7 +17,6 @@
 
 * issue3: Removed splash screen
   https://github.com/blippy/neoleo/issues/3
-
 
 * Issued TR01: Formatting of cell values.
   Applicable to users and devs
