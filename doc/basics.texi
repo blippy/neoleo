@@ -670,7 +670,7 @@ do not use X-windows
 @item -F x
 @itemx --format x
 set the default file type to x (oleo, list, sc, ...)
-@itemx --filter
+@item --filter
 stdin/stdout are used for reading and writing the spreadsheet
 Note this only works well for X Window System user interfaces,
 or in very specific circumstances.

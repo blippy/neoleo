@@ -201,7 +201,7 @@ $\pi$,
 @findex asin
   The arc sine (in radians) of @var{val}.
 
-@itemx acos(@var{val})
+@item acos(@var{val})
 @findex acos
   The arc  cosine (in radians) of @var{val}.
 

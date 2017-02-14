@@ -186,7 +186,7 @@ We use the definition of the 'dollar' format for an example.
                 What to print before positive numbers.
 @item	(		
                 What to print before negative numbers.
-@item			
+@item	FIXME
                 What to print after positive numbers.
 @item	)		
                 What to print after negative numbers.

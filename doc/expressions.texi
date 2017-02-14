@@ -33,11 +33,11 @@ same type).
   Exponentiation.  Note that a^b^c is defined to be a^(b^c).
 @item @var{N1} * @var{N2}
         Multiplication
-@itemx @var{N1} / @var{N2}
+@item @var{N1} / @var{N2}
         Division
-@itemx @var{N1} + @var{N2}
+@item @var{N1} + @var{N2}
         Addition
-@itemx @var{N1} - @var{N2}
+@item @var{N1} - @var{N2}
         Subtraction
 @item @var{N1} % @var{N2}
   Modulus; the remainder of @var{N1} / @var{N2}.

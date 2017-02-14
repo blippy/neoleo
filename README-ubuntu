@@ -1,3 +1,14 @@
+NEXT VERSION
+
+The following packages should be installed:
+texinfo 
+texi2html
+
+No longer required:
+libxbae-dev
+swig
+tcl-dev
+
 UBUNTU 16.10 + NEOLEO 4.0.1
 ===========================
 

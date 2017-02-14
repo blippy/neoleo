@@ -65,8 +65,7 @@ by the Free Software Foundation.
 @subtitle Documentation: @value{update-month}
 
 @c is this the Oleo or documentation author(s)? Let's include everyone
-@author 
-Tom Lord, Kai Getrost, Steve Fisk, Danny Backx
+@author Tom Lord, Kai Getrost, Steve Fisk, Danny Backx
 @c The following two commands start the copyright page.
 @c Put it inside the titlepage to turn off headings:
 @page
