@@ -1,9 +1,16 @@
 ===== neoleo NEXT =====
+BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
 * issue4: Fonts now work in X11
   https://github.com/blippy/neoleo/issues/5
 
+* removed support for Tcl scripting
+
+* reinstated support for X11
+
 Date?
+
+
 
 ===== neoleo 4.0.1 =====
 
@@ -21,7 +28,13 @@ Date?
 * Issued TR01: Formatting of cell values.
   Applicable to users and devs
 
+* support for vanilla X11 dropped
+
+* added support for Tcl scripting
+
 05-Dec-2016
+
+
 
 ===== neoleo 4.0.0 =====
 
@@ -32,6 +45,8 @@ In future, I anticipate packaging to be smoother.
 DO NOT USE.
 
 01-Dec-2016
+
+
 
 ===== neoleo 3.0.1 =====
 
@@ -44,6 +59,8 @@ should download the file neoleo-X.Y.Z.tar.gz, rather than the
 source files.
 
 28-Nov-2016
+
+
 
 ===== neoleo 3.0 =====
 
@@ -74,6 +91,7 @@ to have a basic compile.
 Excluded: internationalisation, documentation, X11 and Motif interface.
 
 19-Nov-2016
+
 
 
 ===== Oleo 1.99.8 =====
@@ -158,6 +176,7 @@ Please note that Xbae widgets can be found at
   ftp://ftp.x.org/contrib/widgets/motif/Xbae-4.6.2.tar.gz
 in addition to its home page http://www.xbae.syd.net.au/ .
 
+
 ===== Oleo 1.6.7 =====
 
 It's been a loooong time since the latest release of GNU Oleo : version
@@ -194,6 +213,8 @@ You probably better also have :
 	(http://www.ae.utexas.edu/~rwmcm/SciPlot.html)
 - GNU gettext (http://www.gnu.org)
 
+
+
 ===== Oleo 1.6 =====
 
 Many patches from volunteers have been applied.  See the ChangeLog to
@@ -223,6 +244,7 @@ inserts the current formula setting of a cell.  By default, it is bound to
    Some user sent me mail explaining that he had problems with the way 
    enums are used in the file graph.c.  Unfortunately, i lost that mail.
    If that user sees this -- please send a message to bug-oleo@prep.ai.mit.edu.
+
 
 
 ===== Oleo 1.4 =====
@@ -281,6 +303,7 @@ bug-oleo@prep.ai.mit.edu.
   Finally, the miscellaneous pile:
 
   strftime		Format a time nicely (on-line help (^H^F) has details)
+
 
 
 ===== Oleo 1.3 =====
