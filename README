@@ -18,6 +18,18 @@ Quick start
 Create ~/.oleorc with the following line:
 set-default-format general.float
 
+Documents and examples
+----------------------
+
+Neoleo installs examples and html documentation in a shared directory.
+The location of this directory is dependent on the `prefix' option
+supplied during the package configuration. It defaults to 
+`/usr/local/share/oleo'. To determine the actual location, type:
+	neoleo --version
+The line prefixed with `Datadir:' will give you the required information.
+
+You should explore that directory to see what is available.
+
 Features
 --------
 	* ncurses interface: neoleo -x , or neoleo -nw
