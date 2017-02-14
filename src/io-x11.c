@@ -1882,7 +1882,7 @@ draw_labels (void)
 	  int x;
 	  int len;
 	  
-	  sprintf (buf, "#%d", 1 + win - wins);
+	  sprintf (buf, "#%ld", 1 + win - wins);
 	  for (x = len = 0; buf[x]; ++x)
 	    {
 	      int cwid = XTextWidth (thePort->label_font, buf, 1);
