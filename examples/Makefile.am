@@ -4,7 +4,8 @@
 
 exampledir = $(datadir)/oleo/examples
 
-OLEOS = docs.oleo \
+OLEOS = blank.oleo \
+	docs.oleo \
 	loop.oleo \
 	mysql.oleo\
 	nogood.oleo \
