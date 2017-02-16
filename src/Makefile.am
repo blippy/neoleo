@@ -31,7 +31,8 @@ BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h
 CLEANFILES = $(BUILT_SOURCES)
 
 #lib_LTLIBRARIES = libneoleo.la
-neoleo_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
+#neoleo_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
+AM_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
 #neoleo_LDFLAGS = -e main0 
 #neoleo_la_LDFLAGS = -module -avoid-version -shared
