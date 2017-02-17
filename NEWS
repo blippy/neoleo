@@ -8,6 +8,8 @@ BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
 * reinstated support for X11
 
+* `shell' command added. See also TR2.
+
 Date?
 
 

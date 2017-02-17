@@ -101,9 +101,9 @@ extern int stricmp (const char *, const char *);
 #ifndef HAVE_STRINCMP
 extern int strincmp (const char *, const char *, size_t);
 #endif
-#ifndef HAVE_STRSTR
-extern char *strstr (const char *, const char *);
-#endif
+//#ifndef HAVE_STRSTR
+//extern char *strstr (const char *, const char *);
+//#endif
 #endif /* _DEBUG_MALLOC_INC */
 
 #else  /* !defined(__STDC__) */
@@ -112,14 +112,14 @@ extern char *strstr (const char *, const char *);
 #ifndef HAVE_STRDUP
 extern char *strdup ();
 #endif
-#ifndef HAVE_STRSTR
-extern char *strstr ();
-#endif
+//#ifndef HAVE_STRSTR
+//extern char *strstr ();
+//#endif
 #endif /* _DEBUG_MALLOC_INC */
 
 #endif /* !defined(__STDC__) */
 
-extern char *getenv ();
+//extern char *getenv ();
 
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void

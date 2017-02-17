@@ -1,4 +1,4 @@
-This is oleo.info, produced by makeinfo version 6.1 from oleo.texi.
+This is oleo.info, produced by makeinfo version 6.3 from oleo.texi.
 
 This file documents Oleo, the GNU spreadsheet.
 
@@ -1592,7 +1592,7 @@ File: oleo.info,  Node: Multiple Windows,  Next: Options,  Prev: Style,  Up: Top
 5 Multiple Windows
 ******************
 
-Oleo can split a spreadsheet into two or more windows.  The windows
+Oleo can split a spreadsheet into two or more windows. The windows
 showing the spreadsheet can show different parts of it.  Only one
 spreadsheet can be displayed at a time.
 
@@ -2377,6 +2377,7 @@ File: oleo.info,  Node: Programs,  Next: Keymaps,  Prev: Macros,  Up: Top
 * One Line Programs::           Writing One Line Programs
 * Long One Liners::             Multiple Commands in One Line
 * Writing programs::            Writing Programs
+* Running Shell Commands::      Running shell commands
 * Commands in Programs::        Commands available in programs
 
 
@@ -2468,9 +2469,57 @@ file), the commands in this file can be executed:
    (1) yes it's trivial - how about something complex!
 
 
+File: oleo.info,  Node: Running Shell Commands,  Prev: Writing programs,  Up: Programs
+
+9.4 Running shell commands
+==========================
+
+'M-x shell'
+
+     This command runs the shell command you specify, reads in each line
+     output to stdout by the command, and executes them as if you had
+     typed them in to 'execute-command'.  It is similar to
+     'read-commands'.
+
+     The features/non-features of 'shell' are:
+        * The command must be somewhere that neoleo can find it:
+          typically in your 'PATH' environment variable.
+        * It is language-neutral.  You can write in any language: bash,
+          python, perl, a binary, etc..
+        * Two-way communication between 'neoleo' and the command is not
+          possible.  'neoleo' just takes commands that are printed to
+          stdout and executes them.  Unlike 'read-commands', though, the
+          commands can be generated programmatically.
+        * 'neoleo' does not automatically update the display after the
+          execution of each command.  You will therefore have to wait
+          until the script is finished to see the effect.
+
+     Here is an example, which is a copy of the bash script 'oleo42.sh'
+     in the 'examples' directory:
+          #!/usr/bin/env bash
+          # Example script that enters the value 42 in the next cell down
+          # Ensure that the script is somewhere in your $PATH
+          # Run it using
+          #       M-x shell oleo42.sh
+
+
+          #echo `date` hello from oleo42.sh >> /tmp/oleo-shell
+          echo down-cell
+          echo edit-cell 42
+
+     This will move the cursor down one cell, and enter the value 42.
+
+     To execute the script, ensure that it is somewhere in your 'PATH',
+     and type:
+          M-x shell <RET> oleo42.sh <RET>
+
+     A more elaborate script, written in python, is
+     'examples/oleo-brownian.py'.
+
+
 File: oleo.info,  Node: Commands in Programs,  Prev: Writing programs,  Up: Programs
 
-9.4 Commands available in programs
+9.5 Commands available in programs
 ==================================
 
 The commands available in programs are listed in the command index
@@ -3956,6 +4005,8 @@ Command Index
 * set-region-width:                      Width of Cells.       (line 14)
 * set-variable:                          Regions and Variables.
                                                                (line 13)
+* shell:                                 Running Shell Commands.
+                                                               (line  7)
 * show-all-variables:                    Getting Help.         (line 46)
 * show-options:                          Getting Help.         (line 49)
 * show-variable:                         Getting Help.         (line 43)
@@ -4312,87 +4363,88 @@ Node: Hidden Rows and Columns49724
 Node: Protection50651
 Node: Fonts (in X11)51633
 Node: Multiple Windows53243
-Node: Windows53850
-Node: Split Window54566
-Node: Other Window55313
-Node: Change Window56387
-Node: Options57118
-Node: Appearance57582
-Ref: Appearance-Footnote-158961
-Node: Window Options59012
-Node: Other Options60686
-Ref: Other Options-Footnote-162816
-Ref: Other Options-Footnote-262831
-Ref: Other Options-Footnote-362863
-Node: Printing and Plotting62900
-Node: Writing Files63178
-Ref: Writing Files-Footnote-167847
-Node: Graphing67924
-Node: Clearing Plots69521
-Node: Data sets69959
-Ref: Data sets-Footnote-171951
-Node: The axes71983
-Ref: The axes-Footnote-172764
-Ref: The axes-Footnote-272778
-Node: Viewing Choices72795
-Node: Output Type73607
-Node: Style Options74651
-Ref: Style Options-Footnote-175376
-Node: Name Options75429
-Ref: Name Options-Footnote-176036
-Node: Macros76070
-Node: Keyboard Macros76289
-Ref: Keyboard Macros-Footnote-178027
-Node: Basic Kbd Macro78059
-Ref: Basic Kbd Macro-Footnote-179529
-Ref: Basic Kbd Macro-Footnote-279557
-Node: Save Kbd Macro79582
-Ref: Save Kbd Macro-Footnote-180082
-Node: Programs80108
-Node: One Line Programs80450
-Node: Long One Liners81399
-Node: Writing programs81763
-Ref: Writing programs-Footnote-183495
-Node: Commands in Programs83551
-Node: Keymaps83878
-Node: Functions87526
-Node: Boolean functions88350
-Node: Math functions89384
-Node: General math functions89764
-Ref: General math functions-Footnote-191733
-Node: Trigonometric functions91778
-Node: Statistical functions92840
-Node: String functions95949
-Ref: String functions-Footnote-197999
-Ref: String functions-Footnote-298075
-Node: Structural functions98203
-Node: Search functions99825
-Ref: Search functions-Footnote-1102198
-Node: Business functions102365
-Node: Date functions106592
-Node: Gsl functions112489
-Node: Extending Oleo114016
-Node: New at functions114234
-Node: Reporting Bugs118644
-Node: Motif120010
-Node: Motif Introduction120407
-Node: LessTif120792
-Node: Advantages121432
-Node: What you need121802
-Node: Alternatives122562
-Node: Using the mouse122874
-Node: Using the keyboard shortcuts123908
-Node: Using Help124731
-Node: Fallback124868
-Node: Motif Buttons in a Spreadsheet Cell125384
-Node: Database Access125992
-Node: Database Access Introduction126169
-Node: MySQL126799
-Node: Xbase127077
-Node: Key Index127169
-Node: Command Index134347
-Node: Function Index144117
-Node: Options Index154492
-Node: Concept Index157924
+Node: Windows53849
+Node: Split Window54565
+Node: Other Window55312
+Node: Change Window56386
+Node: Options57117
+Node: Appearance57581
+Ref: Appearance-Footnote-158960
+Node: Window Options59011
+Node: Other Options60685
+Ref: Other Options-Footnote-162815
+Ref: Other Options-Footnote-262830
+Ref: Other Options-Footnote-362862
+Node: Printing and Plotting62899
+Node: Writing Files63177
+Ref: Writing Files-Footnote-167846
+Node: Graphing67923
+Node: Clearing Plots69520
+Node: Data sets69958
+Ref: Data sets-Footnote-171950
+Node: The axes71982
+Ref: The axes-Footnote-172763
+Ref: The axes-Footnote-272777
+Node: Viewing Choices72794
+Node: Output Type73606
+Node: Style Options74650
+Ref: Style Options-Footnote-175375
+Node: Name Options75428
+Ref: Name Options-Footnote-176035
+Node: Macros76069
+Node: Keyboard Macros76288
+Ref: Keyboard Macros-Footnote-178026
+Node: Basic Kbd Macro78058
+Ref: Basic Kbd Macro-Footnote-179528
+Ref: Basic Kbd Macro-Footnote-279556
+Node: Save Kbd Macro79581
+Ref: Save Kbd Macro-Footnote-180081
+Node: Programs80107
+Node: One Line Programs80504
+Node: Long One Liners81453
+Node: Writing programs81817
+Ref: Writing programs-Footnote-183549
+Node: Running Shell Commands83605
+Node: Commands in Programs85480
+Node: Keymaps85807
+Node: Functions89455
+Node: Boolean functions90279
+Node: Math functions91313
+Node: General math functions91693
+Ref: General math functions-Footnote-193662
+Node: Trigonometric functions93707
+Node: Statistical functions94769
+Node: String functions97878
+Ref: String functions-Footnote-199928
+Ref: String functions-Footnote-2100004
+Node: Structural functions100132
+Node: Search functions101754
+Ref: Search functions-Footnote-1104127
+Node: Business functions104294
+Node: Date functions108521
+Node: Gsl functions114418
+Node: Extending Oleo115945
+Node: New at functions116163
+Node: Reporting Bugs120573
+Node: Motif121939
+Node: Motif Introduction122336
+Node: LessTif122721
+Node: Advantages123361
+Node: What you need123731
+Node: Alternatives124491
+Node: Using the mouse124803
+Node: Using the keyboard shortcuts125837
+Node: Using Help126660
+Node: Fallback126797
+Node: Motif Buttons in a Spreadsheet Cell127313
+Node: Database Access127921
+Node: Database Access Introduction128098
+Node: MySQL128728
+Node: Xbase129006
+Node: Key Index129098
+Node: Command Index136276
+Node: Function Index146184
+Node: Options Index156559
+Node: Concept Index159991
 
 End Tag Table

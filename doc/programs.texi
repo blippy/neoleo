@@ -7,6 +7,7 @@
 * One Line Programs::           Writing One Line Programs
 * Long One Liners::             Multiple Commands in One Line
 * Writing programs::            Writing Programs
+* Running Shell Commands::      Running shell commands
 * Commands in Programs::        Commands available in programs
 @end menu
 
@@ -107,6 +108,63 @@ edit-cell rc[-1]/36.0
 
 
 
+@node Running Shell Commands,  , Writing programs, Programs
+@section Running shell commands
+
+@table @code
+@item M-x shell
+@cmindex shell
+
+This command runs the shell command you specify, reads in each line 
+output to stdout by the command, and executes them as if you had
+typed them in to @code{execute-command}. It is similar 
+to @code{read-commands}.
+
+The features/non-features of @code{shell} are:
+@itemize @bullet
+@item
+The command must be somewhere that neoleo can find it: typically in
+your @code{PATH} environment variable.
+@item
+It is language-neutral. You can write in any language: bash, python, perl, 
+a binary, etc..
+@item
+Two-way communication between @code{neoleo} and the command is not 
+possible. @code{neoleo} just takes commands that are printed to stdout
+and executes them. Unlike @code{read-commands}, though, the commands
+can be generated programmatically.
+@item
+@code{neoleo} does not automatically update the display after the
+execution of each command. You will therefore have to wait until the
+script is finished to see the effect.
+@end itemize
+
+Here is an example, which is a copy of the bash script @code{oleo42.sh} in 
+the @code{examples} directory:
+@example
+#!/usr/bin/env bash
+# Example script that enters the value 42 in the next cell down
+# Ensure that the script is somewhere in your $PATH
+# Run it using
+#       M-x shell oleo42.sh
+
+
+#echo `date` hello from oleo42.sh >> /tmp/oleo-shell
+echo down-cell
+echo edit-cell 42
+@end example
+
+This will move the cursor down one cell, and enter the value 42.
+
+To execute the script, ensure that it is somewhere in your @code{PATH},
+and type:
+@example
+M-x shell <RET> oleo42.sh <RET>
+@end example
+
+A more elaborate script, written in python, is @code{examples/oleo-brownian.py}.
+
+@end table
 
 @node Commands in Programs,  , Writing programs, Programs
 @section Commands available in programs

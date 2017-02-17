@@ -106,6 +106,7 @@ extern void set_region_formula (struct rng * rng, char * str);
 extern void goto_edit_cell (int c);
 extern void goto_set_cell (int c);
 extern void read_cmds_cmd (FILE *fp);
+extern void run_shell(char *cmd);
 extern void read_file_and_run_hooks (FILE * fp, int ismerge, char * name);
 extern void toggle_load_hooks (int turn_on);
 extern void write_cmd (FILE *fp, char * name);

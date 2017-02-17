@@ -1442,6 +1442,16 @@ DEFUN ("read-commands", FDread_cmds_cmd, FAread_cmds_cmd, read_cmds_cmd)
 "be discarded.",
 #endif
 
+DEFUN("shell", FDrun_shell, FArun_shell, run_shell)
+#ifdef FUNC_ARG_STRINGS
+"sRun shell command file? ",
+#endif
+#ifdef DOC_STRINGS
+"Run Neoleo commands from an external command printed to stdout.",
+"The syntax for the output is as for `read-commands', except that",
+"comments and line continuations have not been implemented.",	
+#endif
+
 DEFUN ("toggle-load-hooks",
        FDtoggle_load_hooks, FAtoggle_load_hooks, toggle_load_hooks)
 #ifdef FUNC_ARG_STRINGS

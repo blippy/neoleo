@@ -1,0 +1,56 @@
+TR02: command creation.
+
+Overview
+--------
+
+If you create a command, you need to:
+* implement the function in basic.c
+* add the function header into basic.h
+* expose function in defun.h
+
+You should also document the function.
+
+defun.h
+-------
+
+If your command takes arguments then FUNC_ARG_STRINGS should be used
+to describe the type of arguments. If the prefix is `fr', for example,
+oleo will check that a user-supplied argument is a file that can be
+read. Thus oleo will do some appropriate validation before calling your 
+function.
+
+A (very) incomplete list of type specs is:
+$  edit cell formala (?)
+fr file read, e.f. read_cmd()
+fw file write, e.g. write_cmd()
+s  string style e.g. shell()
+R  range
+S  symbol
+
+You can, of course, obtain clues as the type to use by inspecting other
+functions in defun.h. The actual parsing seems to be done in
+	cmd.c:resume_getting_arguments_loop()
+which can be browsed to obtain further clues as to what types to use.
+
+
+string style passes the argument literally, so `foo' (without the quotes)
+becomes `foo' trivially, `foo bar' becomes `foo bar', and `"foo bar"`
+becomes `"foo bar"', and so on.
+
+
+shell()
+-------
+
+`shell' is a function that I, Mark Carter, wrote in Feb 2017, which I am
+using here as an example. `shell' allows a user to run an external
+command.
+
+It was written by examining the way that
+	basic.c:read_cmds_cmd()
+worked.
+
+A pipe is set up in
+	basic.c:run_shell()
+I created the file shell.cc to read the output from the command, split it
+into lines, and send each line into execute_command(). It is easier
+to achieve in C++ than C.

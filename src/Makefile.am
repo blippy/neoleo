@@ -36,19 +36,25 @@ AM_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
 #neoleo_LDFLAGS = -e main0 
 #neoleo_la_LDFLAGS = -module -avoid-version -shared
-neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c date.c decompile.c display.c \
-		 epson.c eval.c font.c format.c forminfo.c funcs.c graph.c gsl.c hash.c help.c \
+neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
+		 date.c decompile.c display.c \
+		 epson.c eval.c font.c format.c forminfo.c funcs.c \
+		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
 		 io-headless.c io-curses.c io-edit.c io-term.c io-utils.c \
-		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c pcl.c plot.c  \
-		 postscript.c print.c prtext.c ref.c regions.c sc.c sort.c string.c stub.c sylk.c utils.c \
+		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c \
+		 pcl.c plot.c  postscript.c print.c prtext.c \
+		 ref.c regions.c \
+		 sc.c sort.c string.c stub.c sylk.c utils.c \
 		 window.c \
 		 defuns.c \
 		 get_date.h getdate.y \
 		 parse.y \
 		 posixtm.y \
 		 neoleo_swig.c \
-		 mysql.c   $(GUI_SRCS)
+		 mysql.c   \
+		 shell.cc \
+		 $(GUI_SRCS)
 	
 
 noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
@@ -62,6 +68,7 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h \
+		 shell.h \
 		 neoleo_swig.h
 
 # exclude these for now:

@@ -346,7 +346,7 @@ extern void setn_arg_text (struct command_arg * arg, char * text, int len);
 extern void init_arg_text (struct command_arg * arg, char * text);
 extern void set_default_arg (struct command_arg * arg, char * text, int len);
 extern void command_loop (int prefix, int iscmd);
-extern void execute_command (char *str);
+void execute_command (char *str);
 extern int get_chr (void);
 extern void display_msg (char * msg, int c);
 extern void pushback_keystroke (int c);
