@@ -1,25 +1,7 @@
-TO MAKE THE DOCS:
-
-install gettext
-~~~~~~~~~~~~~~~
-
-Provides msgexec, needed by texi2html
-
-https://ftp.gnu.org/pub/gnu/gettext/
-wget https://ftp.gnu.org/pub/gnu/gettext/gettext-0.19.8.tar.xz
 
 
-Gave up configuring it. cygwin took forever trying to process the
-configure script
+PREREQUISITES
 
-install texi2html 
-~~~~~~~~~~~~~~~~~
-
-provides texi2html
-needs msgexec, provided by gettext
-
-http://download.savannah.gnu.org/releases/texi2html/
-
-wget http://download.savannah.gnu.org/releases/texi2html/texi2html-5.0.tar.bz2
-
-
+Aside from all the compilation tools, ensure you install:
+* bison
+* texi2html
