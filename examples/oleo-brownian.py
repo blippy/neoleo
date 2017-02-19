@@ -30,6 +30,7 @@ for n in range(10):
     out('goto-cell r' + str(r) + 'c' + str(c))
     out('set-cell "X"')
     out('recalculate')
+    out('redraw-screen')
     time.sleep(0.5)
     out('set-cell "."')
 
