@@ -1009,17 +1009,6 @@ _io_command_loop (int a)
 	command_loop (a, 0);
 }
 
-/*
-void
-_io_run_curses_main_loop(void)
-{
-	  while (1) {
-		  setjmp (Global->error_exception);
-		  command_loop (0, 0);
-	  }
-}
-*/
-
 void
 tty_graphics (void)
 {
