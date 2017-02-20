@@ -1,15 +1,9 @@
-#AM_CPPFLAGS=-DDATADIR='$(datadir)'
-
-#VPATH = $(srcdir) $(builddir)
-
 GUI_SRCS = 
 GUI_LINK = 
 #GUI_DEFINES = -DX_DISPLAY_MISSING
 GUI_DEFINES = -DHAVE_X 
 
 # Order of linking of libraries for Motif seems to be important
-# I have decided to mandate the use of the Xbae library, rather than
-# have it optional.
 
 if UseMotif
 GUI_SRCS += io-motif.c appres.c fallback.c oleo_icon.xpm
@@ -27,15 +21,10 @@ bin_PROGRAMS = neoleo
 
 
 BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h 
-#BUILT_SOURCES += neoleo_wrap.c
 CLEANFILES = $(BUILT_SOURCES)
 
-#lib_LTLIBRARIES = libneoleo.la
-#neoleo_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
 AM_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
-#neoleo_LDFLAGS = -e main0 
-#neoleo_la_LDFLAGS = -module -avoid-version -shared
 neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \
@@ -76,7 +65,3 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 
 
 ref.o : parse.h
-
-#neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
-#	swig -tcl8 -o $@ $<
-

@@ -1,0 +1,89 @@
+TR03: Tcl/swig
+
+The Tcl interface was wihtdrawn after v4.0.1. 
+
+Below is a description of some of the things I needed to do in order
+to get Tcl to work.
+
+
+MAIN ROUTINE
+------------
+
+You will need to create a library that is called dynamically. The calling
+will look like:
+---- main.c
+#include <stdlib.h>
+#include <stdio.h>
+#include <dlfcn.h>
+
+#include "io-term.h"
+
+
+// dynamic linking taken from
+// http://tldp.org/HOWTO/Program-Library-HOWTO/dl-libraries.html
+
+
+int 
+main(int argc, char **argv)
+{
+	//void *handle;
+	//double (*cosine)(double);
+	int (*main0)(int , char **);
+	char *error;
+
+	void *handle = dlopen ("libneoleo.so", RTLD_LAZY);
+	//handle = dlopen ("libneoleo.so", RTLD_NOW);
+	if (!handle) {
+		fputs (dlerror(), stderr);
+		exit(1);
+	}
+
+	//cosine = dlsym(handle, "main0");
+	main0 = dlsym(handle, "main0");
+	if ((error = dlerror()) != NULL)  {
+		fputs(error, stderr);
+		exit(1);
+	}
+
+	//printf ("%f\n", (*cosine)(2.0));
+	int ret_status = (*main0)(argc, argv);
+	dlclose(handle);
+
+	return ret_status;
+}
+---- main.c end
+
+MAKEFILE.AM
+-----------
+
+Incomplete. Consider it some hints.
+
+BUILT_SOURCES += neoleo_wrap.c
+lib_LTLIBRARIES = libneoleo.la
+neoleo_la_LDFLAGS = -module -avoid-version -shared
+
+neoleo_wrap.c : $(srcdir)/neoleo.i neoleo_swig.c neoleo_swig.h
+	swig -tcl8 -o $@ $<
+
+
+USAGE
+-----
+
+The following was originally in the README:
+
+Neoleo is now available as a shared library, making it callable from Tcl.
+
+Support is very limited and flakey at the moment, but you can do some
+cool things like this:
+$ rlwrap tclsh
+% load libneoleo.so
+% start_swig_motif
+Open up the test.oleo spreadsheet manually
+% get_formula 2 2 ; # this gives you the formula at cell R2C2
+r[-1]c + rc[-1]
+
+Pretty cool, huh?
+
+See the examples directory for more stuff you can do with Tcl,
+esp. headless.tcl (which crashes currently)
+
