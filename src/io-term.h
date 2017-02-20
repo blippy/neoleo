@@ -1,5 +1,6 @@
-#ifndef IO_TERMH
-#define IO_TERMH
+#pragma once
+//#ifndef IO_TERMH
+//#define IO_TERMH
 /*
  * $Id: io-term.h,v 1.10 2001/02/07 03:16:10 pw Exp $
  *
@@ -19,6 +20,13 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 
 #include <stdbool.h>
 #include <setjmp.h>
@@ -106,4 +114,13 @@ int main0(int argc, char **argv);
 void init_basics();
 void choose_display(bool force_cmd_graphics);
 
-#endif /* IO_TERMH */
+bool get_option_tests();
+void parse_command_line(int argc, char **argv, volatile int *ignore_init_file);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
+//#endif /* IO_TERMH */

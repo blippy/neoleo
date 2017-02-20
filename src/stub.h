@@ -1,5 +1,11 @@
-#ifndef STUBH
-#define STUBH
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+//#ifndef STUBH
+//#define STUBH
 
 /*
  * $Id : $
@@ -30,4 +36,8 @@ typedef void (*cmd_invoker) (struct command_frame *);
 
 extern cmd_invoker find_stub (void);
 
-#endif  /* STUBH */
+#ifdef __cplusplus
+}
+#endif
+
+//#endif  /* STUBH */

@@ -23,7 +23,8 @@
 void *
 main1(void *td)
 {
-        main0(0, NULL);
+        //main0(0, NULL);
+        main(0, NULL);
 }
 
 void 

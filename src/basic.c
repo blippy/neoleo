@@ -1429,7 +1429,7 @@ static char load_hooks_string[] = "load_hooks";
  * read function process this.
  */
 void
-read_file_and_run_hooks (FILE * fp, int ismerge, char * name)
+read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 {
 	char	*ext = NULL;
 	if (!ismerge)

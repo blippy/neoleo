@@ -227,7 +227,7 @@ start_entering_macro (void)
 		  return;
 	  }
 	making_macro_size = 20;
-	making_macro = making_macro_start = ck_malloc (5 + making_macro_size);
+	making_macro = making_macro_start = (unsigned char*)ck_malloc (5 + making_macro_size);
 }
 
 void
@@ -485,7 +485,8 @@ real_get_chr (void)
 	static int saved_char, have_saved_char = 0;
 
 	/* A buffer of characters read in one burst from the kbd. */
-	static unsigned char ibuf[256];
+	//static unsigned char ibuf[256];
+	static char ibuf[256];
 	static int i_in;	/* chars buffered */
 	static int i_cnt;	/* buffer position */
 
@@ -611,7 +612,7 @@ real_get_chr (void)
 		      (making_macro_start + making_macro_size))
 		    {
 			    making_macro_start =
-				    ck_realloc (making_macro_start,
+				    (unsigned char *)ck_realloc (making_macro_start,
 						5 + making_macro_size * 2);
 			    making_macro =
 				    (making_macro_start + making_macro_size);
@@ -622,7 +623,7 @@ real_get_chr (void)
 }
 
 void
-OleoLog (char *fmt, ...)
+OleoLog (const char *fmt, ...)
 {
 #if 0
 	va_list ap;
@@ -1008,14 +1009,14 @@ exit_minibuffer (void)
 
 
 void
-setn_arg_text (struct command_arg *arg, char *text, int len)
+setn_arg_text (struct command_arg *arg, const char *text, int len)
 {
 	setn_line (&arg->text, text, len);
 	arg->cursor = len;
 }
 
 void
-init_arg_text (struct command_arg *arg, char *text)
+init_arg_text (struct command_arg *arg, const char *text)
 {
 	setn_arg_text (arg, text, strlen (text));
 }
@@ -2121,25 +2122,27 @@ do_got_command ()
 void 
 print_state(int state)
 {
-	char* state_str = 0;
+	//char* state_str = 0;
+	char state_str[80];
+#define SET_ST_STR(x) strcpy(state_str, x)
 	switch(state) {
 		case sc_start:
-			state_str = "sc_start\0";
+			SET_ST_STR("sc_start\0");
 			break;
 		case sc_new_cycle:
-			state_str = "sc_new_cycle\0";
+			SET_ST_STR("sc_new_cycle\0");
 			break;
 		case sc_prefix_cmd_continuation:
-			state_str = "sc_prefix_cmd_continuation\0";
+			SET_ST_STR("sc_prefix_cmd_continuation\0");
 			break;
 		case sc_got_command:
-			state_str = "sc_got_command\0";
+			SET_ST_STR("sc_got_command\0");
 			break;
 		case sc_resume_getting_arguments:
-			state_str = "sc_resume_getting_arguments\0";
+			SET_ST_STR("sc_resume_getting_arguments\0");
 			break;
 		case sc_end:
-			state_str = "sc_end\0";
+			SET_ST_STR("sc_end\0");
 			break;
 		default:
 			assert(false);
@@ -2288,8 +2291,7 @@ static struct line exec_cmd_line = { 0, 0 };
  * they are literal rather than macro syntax.
  */
 static void
-quote_macro_args (args)
-     char *args;
+quote_macro_args (char *args)
 {
 	while (*args)
 	  {
@@ -2462,7 +2464,7 @@ pushback_keystroke (int c)
 }
 
 void
-io_error_msg (char *str, ...)
+io_error_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];
@@ -2556,7 +2558,7 @@ io_error_msg (char *str, ...)
 
 
 void
-io_info_msg (char *str, ...)
+io_info_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];

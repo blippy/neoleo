@@ -1,3 +1,9 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * $Id: mysql.h,v 1.3 2000/08/10 21:02:51 danny Exp $
  *
@@ -17,9 +23,13 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef MYSQL_H 
-#define MYSQL_H 
+//#ifndef MYSQL_H 
+//#define MYSQL_H 
 
 extern void AllocateDatabaseGlobal(void);
+#ifdef __cplusplus
+}
+#endif
 
-#endif /* MYSQL_H */
+
+//#endif /* MYSQL_H */

@@ -1,5 +1,6 @@
-#ifndef UTILSH
-#define UTILSH
+#pragma once
+//#ifndef UTILSH
+//#define UTILSH
 
 /*
  * $Id: utils.h,v 1.4 2000/08/10 21:02:51 danny Exp $
@@ -20,6 +21,10 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include "funcdef.h"
 #include "global.h"
@@ -31,7 +36,7 @@ extern int __backup_by_copying;
 extern VOIDSTAR ck_malloc (size_t);
 extern VOIDSTAR ck_calloc (size_t);
 extern VOIDSTAR ck_realloc (void *,size_t);
-extern char * ck_savestr (char *);
+extern char * ck_savestr (const char *);
 extern char * ck_savestrn (char *, int);
 extern void ck_free (VOIDSTAR);
 #define ck_remalloc(OLD, SIZE) \
@@ -45,7 +50,7 @@ extern int string_to_char (char **);
 extern FILE *xopen_with_backup (const char *,const char *);
 extern int xclose (FILE *);
 extern char *err_msg (void);
-extern char *mk_sprintf (char *, ...);
+extern char *mk_sprintf (const char *, ...);
 
 extern void init_mem (void);
 extern void init_eval (void);
@@ -56,5 +61,7 @@ extern VOIDSTAR init_stack (void);
 extern VOIDSTAR pop_stack (VOIDSTAR);
 extern void push_stack (VOIDSTAR, VOIDSTAR);
 extern void flush_stack (VOIDSTAR);
-
+#ifdef __cplusplus
+}
 #endif
+//#endif

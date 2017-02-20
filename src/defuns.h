@@ -1,4 +1,11 @@
 #pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 /*
  * $Id: defuns.h,v 1.3 2000/07/22 06:13:15 danny Exp $
  *
@@ -137,3 +144,8 @@ static char * DFfnord[] =
 */
 
 struct cmd_func** get_cmd_funcs();
+
+#ifdef __cplusplus
+}
+#endif
+

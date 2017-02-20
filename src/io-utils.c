@@ -1386,7 +1386,7 @@ write_file_generic(FILE *fp, struct rng *rng, char *format)
 }
 
 int
-read_file_generic_2(FILE *fp, int ismerge, char *format, char *name)
+read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 {
 	if (stricmp ("oleo", format) == 0) {
 		oleo_read_file(fp, ismerge);
@@ -1461,7 +1461,7 @@ file_get_pattern(char *fmt)
 }
 
 void
-read_file_generic(FILE *fp, int ismerge, char *format, char *name)
+read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
 {
 	if (format == NULL) {
 		if (defaultformat)
@@ -1533,9 +1533,9 @@ void FileCloseCurrentFile(void)
 	io_set_window_name("");
 }
 
-void OleoSetEncoding(char *s)
+void OleoSetEncoding(const char *s)
 {
-	extern void PrintSetEncoding(char *encoding);  /* in print.c */
+	extern void PrintSetEncoding(const char *encoding);  /* in print.c */
 
 	if (Global && Global->encoding)
 		free(Global->encoding);

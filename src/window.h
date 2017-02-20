@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: window.h,v 1.6 2001/01/10 20:16:32 danny Exp $
  *
@@ -18,8 +19,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef WINDOWH
-#define WINDOWH
+//#ifndef WINDOWH
+//#define WINDOWH
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 #include "cell.h"
@@ -186,4 +192,8 @@ extern void dequeue_mouse_event (struct mouse_event *out, int seq);
 extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
 		 int lr, int lc) ;
 
+#ifdef __cplusplus
+}
 #endif
+
+//#endif

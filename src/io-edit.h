@@ -1,5 +1,12 @@
-#ifndef IO_EDITH
-#define IO_EDITH
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+//#ifndef IO_EDITH
+//#define IO_EDITH
 
 /*
  * $Id: io-edit.h,v 1.5 2000/08/10 21:02:50 danny Exp $
@@ -56,4 +63,9 @@ extern void insert_current_filename (void);
 extern void exit_self_inserting (int c);
 extern void insert_context_word (void);
 
+#ifdef __cplusplus
+}
 #endif
+
+
+//#endif

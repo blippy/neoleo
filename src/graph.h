@@ -1,5 +1,12 @@
-#ifndef GRAPHH
-#define GRAPHH
+#pragma once
+//#ifndef GRAPHH
+//#define GRAPHH
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 
 /*
  * $Id: graph.h,v 1.10 2000/08/10 21:02:50 danny Exp $
@@ -39,7 +46,7 @@ extern enum graph_axis chr_to_axis (int c);
 extern char * graph_quoted_str (char *str);
 extern void graph_postscript (char * file, int kind, int spectrum, char * font, int pt_size);
 extern void graph_set_axis_title (int axis_c, char * title);
-extern void graph_set_logness (int axis_c, int explicit, int newval);
+extern void graph_set_logness (int axis_c, int is_explicit, int newval);
 extern void graph_check_range (char * val);
 extern void graph_set_axis_lo (int axis_c, char * val);
 extern void graph_set_axis_hi (int axis_c, char * val);
@@ -99,4 +106,9 @@ char *graph_get_axis_tickformat(int axis);
 typedef void (*plotter) (void);
 char *char_to_q_char(char *str);
 
-#endif  /* GRAPHH */
+
+#ifdef __cplusplus
+}
+#endif
+
+//#endif  /* GRAPHH */

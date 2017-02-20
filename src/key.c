@@ -389,7 +389,7 @@ map_id(const char *name)
 }
 
 void
-create_keymap (char * mapname, char * parentname)
+create_keymap (const char * mapname, char * parentname)
 {
   int map = map_id (mapname);
   int parent = parentname ? map_id (parentname) : -1;

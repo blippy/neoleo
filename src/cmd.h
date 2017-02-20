@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef CMDH
 #define CMDH
 
@@ -35,6 +37,9 @@
 #include "funcs.h"
 #include "info.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef void (*alarm_fn)(void);
 
 struct alarm_entry
@@ -342,25 +347,30 @@ extern void free_cmd_frame (struct command_frame * frame);
 extern void pop_unfinished_command (void);
 extern void recover_from_error (void);
 extern void exit_minibuffer (void);
-extern void setn_arg_text (struct command_arg * arg, char * text, int len);
-extern void init_arg_text (struct command_arg * arg, char * text);
+extern void setn_arg_text (struct command_arg * arg, const char * text, int len);
+extern void init_arg_text (struct command_arg * arg, const char * text);
 extern void set_default_arg (struct command_arg * arg, char * text, int len);
 extern void command_loop (int prefix, int iscmd);
 void execute_command (char *str);
 extern int get_chr (void);
 extern void display_msg (char * msg, int c);
 extern void pushback_keystroke (int c);
-extern void io_error_msg (char *str,...);
-extern void io_info_msg (char *str,...);
+extern void io_error_msg (const char *str,...);
+extern void io_info_msg (const char *str,...);
 extern char * expand_prompt (char * str);
 extern void set_info (char * name);
 extern void page_info_backwards (int rep);
 extern void page_info (int rep);
 extern void view_info (char * name, int ignore);
-extern void with_keymap (char * mapname);
+void with_keymap (char * mapname);
 extern void one_cmd_with_keymap (char * mapname, struct key_sequence * keyseq);
 
 void set_curow(int nrow);
 void set_cucol(int nrow);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

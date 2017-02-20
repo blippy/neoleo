@@ -1,5 +1,12 @@
-#ifndef INFOH
-#define INFOH
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+//#ifndef INFOH
+//#define INFOH
 
 /*
  * $Id: info.h,v 1.4 2000/08/10 21:02:50 danny Exp $
@@ -36,4 +43,8 @@ extern void io_text_start (void);
 extern void io_text_line (char * format, ...);
 extern void io_text_finish (void);
 
-#endif  /* INFOH */
+#ifdef __cplusplus
+}
+#endif
+
+//#endif  /* INFOH */

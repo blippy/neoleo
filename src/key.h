@@ -1,5 +1,12 @@
-#ifndef KEYH
-#define KEYH
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+//#ifndef KEYH
+//#define KEYH
 /*
  * $Id: key.h,v 1.10 2001/02/07 03:16:44 pw Exp $
  *
@@ -69,7 +76,12 @@ extern void write_keys_cmd (FILE *fp);
 extern void clear_keymap (struct keymap *m);
 extern int map_idn (const char *name, int n);
 extern int map_id(const char *name);
-extern void create_keymap (char * mapname, char * parentname);
+extern void create_keymap (const char * mapname, char * parentname);
 extern void set_map_prompt (char * map, char * str);
 
-#endif  /* KEYH */
+#ifdef __cplusplus
+}
+#endif
+
+
+//#endif  /* KEYH */

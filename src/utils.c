@@ -399,7 +399,7 @@ ck_free (void * mem)
 }
 
 char *
-ck_savestr (char *str)
+ck_savestr (const char *str)
 {
   char *newstr = 0;
   if (str)
@@ -454,7 +454,7 @@ ck_realloc (void *ptr, size_t size)
 
 /* Do a sprintf into an allocated buffer. */
 char *
-mk_sprintf (char *str,...)
+mk_sprintf (const char *str,...)
 {
   va_list iggy;
   char tmpbuf[1024 * 8];

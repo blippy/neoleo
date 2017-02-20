@@ -1,5 +1,10 @@
-#ifndef IO_ABSTRACTH
-#define IO_ABSTRACTH
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//#ifndef IO_ABSTRACTH
+//#define IO_ABSTRACTH
 /*
  * $Id: io-abstract.h,v 1.8 2000/08/10 21:02:50 danny Exp $
  *
@@ -116,4 +121,8 @@ EXTERN void (*io_do_button)(int r, int c, char *lbl, char *cmd);
 EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
 EXTERN void (*io_update_width)(int col, int wid);
 
-#endif /* IO_ABSTRACTH */
+#ifdef __cplusplus
+}
+#endif
+
+//#endif /* IO_ABSTRACTH */

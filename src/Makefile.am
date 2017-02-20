@@ -23,7 +23,7 @@ bin_PROGRAMS = neoleo
 BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h 
 CLEANFILES = $(BUILT_SOURCES)
 
-AM_CFLAGS = $(GUI_DEFINES) -Dmain0=main -DDATADIR="\"$(datadir)\""
+AM_CFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
 neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
 		 date.c decompile.c display.c \
@@ -42,6 +42,7 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
 		 posixtm.y \
 		 neoleo_swig.c \
 		 mysql.c   \
+		 main.cc \
 		 shell.cc \
 		 $(GUI_SRCS)
 	

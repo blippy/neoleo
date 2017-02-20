@@ -103,7 +103,7 @@ void ReencodeFont(char *fn, FILE *fp)
 	fprintf(fp, "/%sISO /%s reencodeISO\n", fn, fn);
 }
 
-void PostScriptEncoding(char *encoding)
+void PostScriptEncoding(const char *encoding)
 {
 	if (ps_encoding)
 		free(ps_encoding);

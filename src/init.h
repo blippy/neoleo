@@ -1,5 +1,6 @@
-#ifndef INITH
-#define INITH
+#pragma once
+//#ifndef INITH
+//#define INITH
 
 /*
  * $Id: init.h,v 1.5 2001/02/07 03:15:44 pw Exp $
@@ -20,6 +21,17 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 extern void run_init_cmds (void);
 
+#ifdef __cplusplus
+}
 #endif
+
+//#endif

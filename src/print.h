@@ -1,3 +1,10 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /*
  * Copyright © 1993, 1999 Free Software Foundation, Inc.
  * 
@@ -18,8 +25,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef PRINTH
-#define PRINTH
+//#ifndef PRINTH
+//#define PRINTH
 
 extern void put_ps_string (char *str, FILE *fp);
 extern void psprint_region (FILE * fp, struct rng * rng, float wid, float hgt, char * font);
@@ -78,7 +85,7 @@ struct PrintDriver {
 	/*
 	 * Set the encoding (the character set), usually ISOLatin1.
 	 */
-	void	(*set_encoding)(char *encoding);
+	void	(*set_encoding)(const char *encoding);
 	/*
 	 * Set border width and height.
 	 */
@@ -89,4 +96,10 @@ char *PrintGetType(int);
 void PrintSetType(char *);
 
 void PrintSetInterline(int);
-#endif /* PRINTH */
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//#endif /* PRINTH */

@@ -180,7 +180,7 @@ void EpsonPaperSize(int wid, int ht, FILE *fp)
 	fputc(hi, fp);
 }
 
-void EpsonSetEncoding(char *encoding)
+void EpsonSetEncoding(const char *encoding)
 {
 }
 

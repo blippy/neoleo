@@ -563,7 +563,7 @@ PrintSetInterline(int i)
 }
 
 void
-PrintSetEncoding(char *encoding)
+PrintSetEncoding(const char *encoding)
 {
 	AfmSetEncoding(encoding);
 	Global->CurrentPrintDriver->set_encoding(encoding);

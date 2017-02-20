@@ -1,5 +1,6 @@
-#ifndef FUNCSH
-#define FUNCSH
+#pragma once
+//#ifndef FUNCSH
+//#define FUNCSH
 /*
  * $Id: funcs.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -19,6 +20,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "global.h"
 
 
@@ -121,8 +127,14 @@ extern struct cmd_func **the_funcs;
 
 #define find_func(VEC,CMD,NAME) find_function(VEC,CMD,NAME,strlen(NAME))
 
-extern int find_function (int * vec_out, struct cmd_func ** cmd_out, char * name, int len);
+extern int find_function (int * vec_out, struct cmd_func ** cmd_out, const char * name, int len);
 extern void init_named_macro_strings (void);
 extern void name_macro_string (char * name, char * str);
 
-#endif  /* FUNCSH */
+#ifdef __cplusplus
+}
+#endif
+
+
+
+//#endif  /* FUNCSH */

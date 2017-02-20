@@ -145,12 +145,12 @@ graph_get_axis_title (int axis_c)
 }
 
 void
-graph_set_logness (int axis_c, int explicit, int newval)
+graph_set_logness (int axis_c, int is_explicit, int newval)
 {
   enum graph_axis axis = chr_to_axis (axis_c);
   static struct line msg_buf;
 
-  if (!explicit)
+  if (!is_explicit)
     newval = !Global->PlotGlobal->graph_logness [axis];
   else
     newval = (newval > 0);

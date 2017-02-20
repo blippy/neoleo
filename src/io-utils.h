@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: io-utils.h,v 1.12 2000/08/10 21:02:50 danny Exp $
  *
@@ -17,8 +18,13 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef IO_UTILSH
-#define IO_UTILSH
+//#ifndef IO_UTILSH
+//#define IO_UTILSH
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #include "global.h"
 #include "cell.h"
@@ -56,9 +62,9 @@ extern char *file_get_format(int);
 extern char *file_get_pattern(char *fmt);
 extern void file_set_default_format(char *);
 extern void write_file_generic(FILE *, struct rng *, char *);
-extern void read_file_generic(FILE *, int, char *, char *);
+extern void read_file_generic(FILE *, int, char *, const char *);
 
-extern void OleoSetEncoding(char *);
+extern void OleoSetEncoding(const char *);
 extern void OleoUserPrefEncoding(char *);
 extern char *OleoGetEncoding(void);
 
@@ -89,4 +95,9 @@ char* pr_flt (double val, struct user_fmt *fmt, int prec);
 
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
+
+#ifdef __cplusplus
+}
 #endif
+
+//#endif

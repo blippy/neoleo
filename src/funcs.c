@@ -60,7 +60,7 @@
  */
 
 int 
-find_function (int * vec_out, struct cmd_func ** cmd_out, char * name, int len)
+find_function (int * vec_out, struct cmd_func ** cmd_out, const char * name, int len)
 {
   int vector;
   struct cmd_func * cmd;

@@ -75,7 +75,7 @@ void TextPrinterPaperSize(int wid, int ht, FILE *fp)
 {
 }
 
-void TextSetEncoding(char *encoding)
+void TextSetEncoding(const char *encoding)
 {
 }
 

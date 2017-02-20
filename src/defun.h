@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * $Id: defun.h,v 1.7 2000/08/10 21:02:50 danny Exp $
  *
@@ -2429,3 +2433,9 @@ DEFUN_3 ("plotutils-clear-datasets", FDplotutils_clear_datasets, graph_clear_dat
 #endif
 
 #endif	/* ~ HAVE_LIBPLOT */
+
+
+#ifdef __cplusplus
+}
+#endif
+

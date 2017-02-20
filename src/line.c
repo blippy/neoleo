@@ -37,7 +37,7 @@
 #include <stdarg.h>
 
 void
-set_line (struct line *line, char *string)
+set_line (struct line *line, const char *string)
 {
   int len;
 
@@ -58,7 +58,7 @@ set_line (struct line *line, char *string)
 }
 
 void
-setn_line (struct line *line, char *string, int n)
+setn_line (struct line *line, const char *string, int n)
 {
   int len = n;
   if (line->alloc <= len)
@@ -77,7 +77,7 @@ setn_line (struct line *line, char *string, int n)
 #define Max(A,B)  ((A) > (B) ? (A) : (B))
 
 void
-catn_line (struct line *line, char *string, int n)
+catn_line (struct line *line, const char *string, int n)
 {
   int len = (line->buf ? strlen (line->buf) : 0);
   if (line->alloc <= len + n + 1)
@@ -92,7 +92,7 @@ catn_line (struct line *line, char *string, int n)
 
 
 void
-sprint_line (struct line *line, char * fmt, ...)
+sprint_line (struct line *line, const char * fmt, ...)
 {
   va_list iggy;
   int len;

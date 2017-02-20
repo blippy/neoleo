@@ -247,7 +247,7 @@ void PCLPaperSize(int wid, int ht, FILE *fp)
 	fprintf(fp, "\033&l26A");
 }
 
-void PCLSetEncoding(char *encoding)
+void PCLSetEncoding(const char *encoding)
 {
 	if (pcl_encoding)
 		free(pcl_encoding);

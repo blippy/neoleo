@@ -1,3 +1,9 @@
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /*
  *  $Id: mdi.h,v 1.4 2000/08/10 21:02:51 danny Exp $
  *
@@ -21,9 +27,8 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef	_MDI_H_
-
-#define	_MDI_H_
+//#ifndef	_MDI_H_
+//#define	_MDI_H_
 
 void	MdiOpen();
 void	MdiClose();
@@ -32,4 +37,9 @@ void	MdiSelectGlobal(int offset1, int offset2, void *ptr);
 int	MdiHasFile(void);
 void	MdiQuit(void);
 
-#endif //	_MDI_H_
+#ifdef __cplusplus
+}
+#endif
+
+
+//#endif //	_MDI_H_
