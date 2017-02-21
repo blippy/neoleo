@@ -2468,92 +2468,43 @@ io_error_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];
-	char buf2[1000];
 
-#if 1
+	/*
+	 * This is made robust against errors that occur before
+	 * the io hooks have been initialized.
+	 */
+	if (Global->display_opened)
+		io_bell ();
+
+	va_start (foo, str);
+	vsprintf (buf, str, foo);
 	/*
 	 * Experimental : don't always crash on error.
 	 */
-#ifdef	HAVE_MOTIF
 	extern int using_motif;
 
-	if (using_motif)
-	  {
-		  va_start (foo, str);
-		  vsprintf (buf, str, foo);
+	if (using_motif) {
 
-		  if (Global->return_from_error)
-		  {
-			  Global->had_error++;	/* Indicate that we had an error */
-			  // MessageAppend (1, buf); // now becomes:
-			  io_append_message(1, buf);
-			  return;
-		  }
+		if (Global->return_from_error) {
+			Global->had_error++;
+			io_append_message(1, buf);
+			return;
+		}
 
-		  recover_from_error ();
-		  //MessageAppend (1, buf); // now becomes:
-		  io_append_message(1, buf);
-		  longjmp (Global->error_exception, 1);
-	  }
-	else
-#endif
-	  {
-		  /*
-		   * This is made robust against errors that occur before
-		   * the io hooks have been initialized.
-		   */
-		  if (Global->display_opened)
-			  io_bell ();
+		recover_from_error ();
+		io_append_message(1, buf);
+	} else  {
+		char buf2[1000];
+		sprintf (buf2, "display-msg %s", buf);
+		recover_from_error ();
 
-		  va_start (foo, str);
-		  vsprintf (buf, str, foo);
-		  sprintf (buf2, "display-msg %s", buf);
-		  recover_from_error ();
+		if (Global->display_opened)
+			execute_command (buf2);
+		else
+			fprintf (stderr, "oleo: %s\n", buf);
 
-		  if (Global->display_opened)
-			  execute_command (buf2);
-		  else
-			  fprintf (stderr, "oleo: %s\n", buf);
-
-		  longjmp (Global->error_exception, 1);
-	  }
-#else
-
-#ifdef	HAVE_MOTIF
-	extern int using_motif;
-
-	if (using_motif)
-	  {
-		  va_start (foo, str);
-		  vsprintf (buf, str, foo);
-
-		  recover_from_error ();
-		  MessageAppend (1, buf);
-		  longjmp (Global->error_exception, 1);
-	  }
-	else
-#endif
-	  {
-		  /*
-		   * This is made robust against errors that occur before
-		   * the io hooks have been initialized.
-		   */
-		  if (Global->display_opened)
-			  io_bell ();
-
-		  va_start (foo, str);
-		  vsprintf (buf, str, foo);
-		  sprintf (buf2, "display-msg %s", buf);
-		  recover_from_error ();
-
-		  if (Global->display_opened)
-			  execute_command (buf2);
-		  else
-			  fprintf (stderr, "oleo: %s\n", buf);
-
-		  longjmp (Global->error_exception, 1);
-	  }
-#endif
+	}
+	longjmp (Global->error_exception, 1);
 }
 
 
