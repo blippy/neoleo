@@ -34,6 +34,7 @@
 #include <ctype.h>
 #include "sysdef.h"
 //#include "global.h"
+#include "atlast.h"
 #include "basic.h"
 #include "cmd.h"
 #include "regions.h"
@@ -1337,6 +1338,11 @@ read_cmds_cmd (FILE *fp)
     }
 }
 
+void
+forth(char* cmd)
+{
+	atl_eval(cmd);
+}
 
 /* see also read_cmds_cmd() for the inspiration of this function.
  * See TR02 for a discussion about this function, and creating

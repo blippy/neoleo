@@ -14,6 +14,9 @@ endif
 GUI_SRCS += io-x11.c xrdb.c
 GUI_LINK += -lX11
 
+FORTH_HDRS = atlast.h atldef.h
+FORTH_SRCS = atlast.c atoleo.c
+
 YFLAGS = -d
 EXTRA_DIST = $(srcdir)/neoleo.i
 
@@ -44,7 +47,8 @@ neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
 		 mysql.c   \
 		 main.cc \
 		 shell.cc \
-		 $(GUI_SRCS)
+		 $(GUI_SRCS) \
+		 $(FORTH_SRCS)
 	
 
 noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
@@ -59,7 +63,8 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h \
 		 shell.h \
-		 neoleo_swig.h
+		 neoleo_swig.h \
+		 $(FORTH_HDRS)
 
 # exclude these for now:
 # plotter.c xbase.cpp

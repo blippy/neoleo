@@ -43,6 +43,7 @@ necessarily accurate for that matter.
 * Programs::                    
 * Keymaps::                     
 * Functions::                   
+* Forth Interpreter::
 * Extending Oleo::
 * Reporting Bugs::
 * Motif::
@@ -2613,7 +2614,7 @@ The keymap to the left of a given keymap is its default.
      prompt you (interactively) for the missing information.
 
 
-File: oleo.info,  Node: Functions,  Next: Extending Oleo,  Prev: Keymaps,  Up: Top
+File: oleo.info,  Node: Functions,  Next: Forth Interpreter,  Prev: Keymaps,  Up: Top
 
 11 Functions
 ************
@@ -3372,9 +3373,48 @@ Oleo, which is a range of cells from which it calculates the mean.
 and two numbers.
 
 
+File: oleo.info,  Node: Forth Interpreter,  Next: Extending Oleo,  Prev: Functions,  Up: Top
+
+12 Forth Interpreter
+********************
+
+'Oleo' embeds John Walker's Public domain 'atlast' 64-bit interpreter.
+It uses version 2.0.  Further details can be found here
+(https://www.fourmilab.ch/atlast/).  A general programming guide and
+words are available here (file://atlast2.html), and is quite extensive.
+
+   Technical details for developers are outlined in Technical Release
+TR04, which is within the TR directory of the source distribution.
+
+   This document only concentrates on 'Oleo'-specific Forth concepts.
+Only a proof-of-concept word ('4life') has been added at this stage, but
+it is hoped that more words will be added in due course.  The
+infrastructure is already there.
+
+'M-x forth'
+     This command evaluates the input you supply using the Forth
+     interpreter.  For example, set the current cell to the value '42':
+          M-x forth <RET> 4life <RET>
+
+     A fancier example:
+          M-x forth <RET> 2 3 + . cr <RET>
+     Adds 2 and 3 together to give 5.  '.'  prints the top of the stack:
+     in this case it will be 5.  'cr' prints a newline.  NB: 1) use 'cr'
+     to ensure the output is flushed to the terminal, 2) you will
+     probably only want to execute the command when 'neoleo' is using an
+     X-windows display, as the output will interfere with ncurses
+     displays.
+
+   A list of 'Oleo'-specific words now follows:
+
+'4life'
+     Sets the current cell to '42'.  Currently only useful only as a
+     proof-of-concept, of course.
+
+
 File: oleo.info,  Node: Extending Oleo,  Next: Reporting Bugs,  Prev: Functions,  Up: Top
 
-12 Extending the Oleo system
+13 Extending the Oleo system
 ****************************
 
 * Menu:
@@ -3384,7 +3424,7 @@ File: oleo.info,  Node: Extending Oleo,  Next: Reporting Bugs,  Prev: Functions,
 
 File: oleo.info,  Node: New at functions,  Prev: Extending Oleo,  Up: Extending Oleo
 
-12.1 Adding new at Functions
+13.1 Adding new at Functions
 ============================
 
 It is easy to add new @ functions.  Suppose that I want to add a
@@ -3522,7 +3562,7 @@ displayed.  The following files need to be changed or created:
 
 File: oleo.info,  Node: Reporting Bugs,  Next: Motif,  Prev: Extending Oleo,  Up: Top
 
-13 Reporting Bugs
+14 Reporting Bugs
 *****************
 
 If you have problems with Oleo or think that you have found a bug,
@@ -3555,7 +3595,7 @@ your additions to the address above.
 
 File: oleo.info,  Node: Motif,  Next: Database Access,  Prev: Reporting Bugs,  Up: Top
 
-14 A Motif Graphical User Interface for Oleo
+15 A Motif Graphical User Interface for Oleo
 ********************************************
 
 * Menu:
@@ -3574,7 +3614,7 @@ File: oleo.info,  Node: Motif,  Next: Database Access,  Prev: Reporting Bugs,  U
 
 File: oleo.info,  Node: Motif Introduction,  Next: LessTif,  Up: Motif
 
-14.1 Motif Introduction
+15.1 Motif Introduction
 =======================
 
 Motif is a toolkit for building graphical user interfaces (GUIs) with
@@ -3587,7 +3627,7 @@ one can buy off the shelf.
 
 File: oleo.info,  Node: LessTif,  Next: Advantages,  Prev: Motif Introduction,  Up: Motif
 
-14.2 LessTif
+15.2 LessTif
 ============
 
 When this manual talks about Motif, it refers to what is commonly
@@ -3605,7 +3645,7 @@ of Motif.
 
 File: oleo.info,  Node: Advantages,  Next: What you need,  Prev: LessTif,  Up: Motif
 
-14.3 Advantages
+15.3 Advantages
 ===============
 
 Advantages to using either the Motif or the GTK interface to Oleo are
@@ -3616,7 +3656,7 @@ happen to be more aesthetically pleasing.
 
 File: oleo.info,  Node: What you need,  Next: Alternatives,  Prev: Advantages,  Up: Motif
 
-14.4 What you need
+15.4 What you need
 ==================
 
 A user of Oleo typically only needs a recent Oleo distribution, which he
@@ -3637,7 +3677,7 @@ that Oleo depends on :
 
 File: oleo.info,  Node: Alternatives,  Next: Using the mouse,  Prev: What you need,  Up: Motif
 
-14.5 Alternatives
+15.5 Alternatives
 =================
 
 Another toolkit for building GUIs is GTK. It is also freely available,
@@ -3648,7 +3688,7 @@ and another user interface for oleo may be built with it too.
 
 File: oleo.info,  Node: Using the mouse,  Next: Using the keyboard shortcuts,  Prev: Alternatives,  Up: Motif
 
-14.6 Using the mouse
+15.6 Using the mouse
 ====================
 
 The mouse is used in the same manner as in any Motif application.
@@ -3675,7 +3715,7 @@ the formula on this cell, if any.
 
 File: oleo.info,  Node: Using the keyboard shortcuts,  Next: Using Help,  Prev: Using the mouse,  Up: Motif
 
-14.7 Using the keyboard shortcuts
+15.7 Using the keyboard shortcuts
 =================================
 
 Using the method described above you can pull down a menu which reveals
@@ -3698,13 +3738,13 @@ depressing the F key.
 
 File: oleo.info,  Node: Using Help,  Next: Fallback,  Prev: Using the keyboard shortcuts,  Up: Motif
 
-14.8 Using Help
+15.8 Using Help
 ===============
 
 
 File: oleo.info,  Node: Fallback,  Next: Motif Buttons in a Spreadsheet Cell,  Prev: Using Help,  Up: Motif
 
-14.9 Fallback
+15.9 Fallback
 =============
 
 If you have a version of oleo that has been built with Motif support,
@@ -3718,7 +3758,7 @@ interface, even if you're running in an X environment.
 
 File: oleo.info,  Node: Motif Buttons in a Spreadsheet Cell,  Prev: Fallback,  Up: Motif
 
-14.10 Motif Buttons in a Spreadsheet Cell
+15.10 Motif Buttons in a Spreadsheet Cell
 =========================================
 
 You can put a button in a cell in the Motif version.  The formula of the
@@ -3734,7 +3774,7 @@ typically contain a command like 'psprint-region r3:45c8:13 invoice.ps'
 
 File: oleo.info,  Node: Database Access,  Prev: Motif,  Up: Top
 
-15 Accessing Databases
+16 Accessing Databases
 **********************
 
 * Menu:
@@ -3746,7 +3786,7 @@ File: oleo.info,  Node: Database Access,  Prev: Motif,  Up: Top
 
 File: oleo.info,  Node: Database Access Introduction,  Next: MySQL,  Prev: Database Access,  Up: Database Access
 
-15.1 Database Access Introduction
+16.1 Database Access Introduction
 =================================
 
 Oleo can interface to database management systems (DBMSs) in more than
@@ -3764,7 +3804,7 @@ evolve quite a bit from the current status.
 
 File: oleo.info,  Node: MySQL,  Next: Xbase,  Prev: Database Access Introduction,  Up: Database Access
 
-15.2 MySQL
+16.2 MySQL
 ==========
 
 You can get a value from a database into a cell by putting a statement
@@ -3777,7 +3817,7 @@ like
 
 File: oleo.info,  Node: Xbase,  Prev: MySQL,  Up: Database Access
 
-15.3 Xbase
+16.3 Xbase
 ==========
 
 
@@ -3935,6 +3975,7 @@ Command Index
 * end-of-column:                         Large Scale Movement. (line 30)
 * end-of-row:                            Large Scale Movement. (line 26)
 * exchange-point-and-mark:               Cursor and Mark.      (line 29)
+* forth:                                 Forth Interpreter.    (line 20)
 * goto-cell:                             Cursor and Mark.      (line 14)
 * goto-region:                           Cursor and Mark.      (line 19)
 * insert-abs-ref:                        Input Editing.        (line 18)
@@ -4262,7 +4303,8 @@ Concept Index
 * Defining keyboard macros:              Keyboard Macros.      (line  6)
 * Error values:                          Error values.         (line  6)
 * Expressions:                           Expressions.          (line  6)
-* Extending:                             Gsl functions.        (line 43)
+* Extending:                             Forth Interpreter.    (line 38)
+* Forth:                                 Forth Interpreter.    (line  6)
 * Functions:                             Functions.            (line  6)
 * Functions, business:                   Business functions.   (line  6)
 * Functions, date and time:              Date functions.       (line  6)
@@ -4299,152 +4341,153 @@ Concept Index
 
 Tag Table:
 Node: Top885
-Node: Basics1673
-Ref: Basics-Footnote-13681
-Node: Typing3724
-Node: Cell referencing4632
-Node: noa0 mode5972
-Node: a0 mode7259
-Node: Comparison8584
-Node: The Screen9061
-Node: Minibuffer9452
-Node: Status Line9908
-Ref: Status Line-Footnote-110921
-Node: Work Area11101
-Node: Cursor and Mark11693
-Node: Recalculation12778
-Node: Movement13708
-Node: Single Cell Movement14159
-Node: Scanning14845
-Ref: Scanning-Footnote-115817
-Node: Large Scale Movement15944
-Ref: Large Scale Movement-Footnote-117089
-Ref: Large Scale Movement-Footnote-217189
-Node: Movement examples17205
-Node: Screen Moving18711
-Node: Mouse19465
-Ref: Mouse-Footnote-120088
-Node: Regions and Variables20163
-Node: Getting Help21166
-Node: Saving and reading23074
-Ref: Saving and reading-Footnote-124258
-Ref: Saving and reading-Footnote-224297
-Node: Command Line Options24325
-Ref: Command Line Options-Footnote-125321
-Node: .oleorc file25359
-Ref: .oleorc file-Footnote-125899
-Node: Expressions25964
-Node: Infix expressions26324
-Node: Examples28007
-Node: Error values28956
-Node: How to enter data30712
-Node: Oleo values31073
-Node: Entering32009
-Node: Input Editing32569
-Ref: Input Editing-Footnote-134872
-Node: Cell Motion34917
-Node: Making changes36087
-Node: Copying36428
-Node: Moving38874
-Ref: Moving-Footnote-140233
-Node: Deleting40292
-Node: Insertion41124
-Node: Style41710
-Node: Alignment42500
-Node: Formats for numbers43197
-Ref: Formats for numbers-Footnote-148087
-Ref: Formats for numbers-Footnote-248110
-Ref: Formats for numbers-Footnote-348157
-Node: Cell Height48230
-Ref: Cell Height-Footnote-148974
-Node: Width of Cells49009
-Ref: Width of Cells-Footnote-149709
-Node: Hidden Rows and Columns49724
-Node: Protection50651
-Node: Fonts (in X11)51633
-Node: Multiple Windows53243
-Node: Windows53849
-Node: Split Window54565
-Node: Other Window55312
-Node: Change Window56386
-Node: Options57117
-Node: Appearance57581
-Ref: Appearance-Footnote-158960
-Node: Window Options59011
-Node: Other Options60685
-Ref: Other Options-Footnote-162815
-Ref: Other Options-Footnote-262830
-Ref: Other Options-Footnote-362862
-Node: Printing and Plotting62899
-Node: Writing Files63177
-Ref: Writing Files-Footnote-167846
-Node: Graphing67923
-Node: Clearing Plots69520
-Node: Data sets69958
-Ref: Data sets-Footnote-171950
-Node: The axes71982
-Ref: The axes-Footnote-172763
-Ref: The axes-Footnote-272777
-Node: Viewing Choices72794
-Node: Output Type73606
-Node: Style Options74650
-Ref: Style Options-Footnote-175375
-Node: Name Options75428
-Ref: Name Options-Footnote-176035
-Node: Macros76069
-Node: Keyboard Macros76288
-Ref: Keyboard Macros-Footnote-178026
-Node: Basic Kbd Macro78058
-Ref: Basic Kbd Macro-Footnote-179528
-Ref: Basic Kbd Macro-Footnote-279556
-Node: Save Kbd Macro79581
-Ref: Save Kbd Macro-Footnote-180081
-Node: Programs80107
-Node: One Line Programs80504
-Node: Long One Liners81453
-Node: Writing programs81817
-Ref: Writing programs-Footnote-183549
-Node: Running Shell Commands83605
-Node: Commands in Programs85480
-Node: Keymaps85807
-Node: Functions89455
-Node: Boolean functions90279
-Node: Math functions91313
-Node: General math functions91693
-Ref: General math functions-Footnote-193662
-Node: Trigonometric functions93707
-Node: Statistical functions94769
-Node: String functions97878
-Ref: String functions-Footnote-199928
-Ref: String functions-Footnote-2100004
-Node: Structural functions100132
-Node: Search functions101754
-Ref: Search functions-Footnote-1104127
-Node: Business functions104294
-Node: Date functions108521
-Node: Gsl functions114418
-Node: Extending Oleo115945
-Node: New at functions116163
-Node: Reporting Bugs120573
-Node: Motif121939
-Node: Motif Introduction122336
-Node: LessTif122721
-Node: Advantages123361
-Node: What you need123731
-Node: Alternatives124491
-Node: Using the mouse124803
-Node: Using the keyboard shortcuts125837
-Node: Using Help126660
-Node: Fallback126797
-Node: Motif Buttons in a Spreadsheet Cell127313
-Node: Database Access127921
-Node: Database Access Introduction128098
-Node: MySQL128728
-Node: Xbase129006
-Node: Key Index129098
-Node: Command Index136276
-Node: Function Index146184
-Node: Options Index156559
-Node: Concept Index159991
+Node: Basics1695
+Ref: Basics-Footnote-13703
+Node: Typing3746
+Node: Cell referencing4654
+Node: noa0 mode5994
+Node: a0 mode7281
+Node: Comparison8606
+Node: The Screen9083
+Node: Minibuffer9474
+Node: Status Line9930
+Ref: Status Line-Footnote-110943
+Node: Work Area11123
+Node: Cursor and Mark11715
+Node: Recalculation12800
+Node: Movement13730
+Node: Single Cell Movement14181
+Node: Scanning14867
+Ref: Scanning-Footnote-115839
+Node: Large Scale Movement15966
+Ref: Large Scale Movement-Footnote-117111
+Ref: Large Scale Movement-Footnote-217211
+Node: Movement examples17227
+Node: Screen Moving18733
+Node: Mouse19487
+Ref: Mouse-Footnote-120110
+Node: Regions and Variables20185
+Node: Getting Help21188
+Node: Saving and reading23096
+Ref: Saving and reading-Footnote-124280
+Ref: Saving and reading-Footnote-224319
+Node: Command Line Options24347
+Ref: Command Line Options-Footnote-125343
+Node: .oleorc file25381
+Ref: .oleorc file-Footnote-125921
+Node: Expressions25986
+Node: Infix expressions26346
+Node: Examples28029
+Node: Error values28978
+Node: How to enter data30734
+Node: Oleo values31095
+Node: Entering32031
+Node: Input Editing32591
+Ref: Input Editing-Footnote-134894
+Node: Cell Motion34939
+Node: Making changes36109
+Node: Copying36450
+Node: Moving38896
+Ref: Moving-Footnote-140255
+Node: Deleting40314
+Node: Insertion41146
+Node: Style41732
+Node: Alignment42522
+Node: Formats for numbers43219
+Ref: Formats for numbers-Footnote-148109
+Ref: Formats for numbers-Footnote-248132
+Ref: Formats for numbers-Footnote-348179
+Node: Cell Height48252
+Ref: Cell Height-Footnote-148996
+Node: Width of Cells49031
+Ref: Width of Cells-Footnote-149731
+Node: Hidden Rows and Columns49746
+Node: Protection50673
+Node: Fonts (in X11)51655
+Node: Multiple Windows53265
+Node: Windows53871
+Node: Split Window54587
+Node: Other Window55334
+Node: Change Window56408
+Node: Options57139
+Node: Appearance57603
+Ref: Appearance-Footnote-158982
+Node: Window Options59033
+Node: Other Options60707
+Ref: Other Options-Footnote-162837
+Ref: Other Options-Footnote-262852
+Ref: Other Options-Footnote-362884
+Node: Printing and Plotting62921
+Node: Writing Files63199
+Ref: Writing Files-Footnote-167868
+Node: Graphing67945
+Node: Clearing Plots69542
+Node: Data sets69980
+Ref: Data sets-Footnote-171972
+Node: The axes72004
+Ref: The axes-Footnote-172785
+Ref: The axes-Footnote-272799
+Node: Viewing Choices72816
+Node: Output Type73628
+Node: Style Options74672
+Ref: Style Options-Footnote-175397
+Node: Name Options75450
+Ref: Name Options-Footnote-176057
+Node: Macros76091
+Node: Keyboard Macros76310
+Ref: Keyboard Macros-Footnote-178048
+Node: Basic Kbd Macro78080
+Ref: Basic Kbd Macro-Footnote-179550
+Ref: Basic Kbd Macro-Footnote-279578
+Node: Save Kbd Macro79603
+Ref: Save Kbd Macro-Footnote-180103
+Node: Programs80129
+Node: One Line Programs80526
+Node: Long One Liners81475
+Node: Writing programs81839
+Ref: Writing programs-Footnote-183571
+Node: Running Shell Commands83627
+Node: Commands in Programs85502
+Node: Keymaps85829
+Node: Functions89477
+Node: Boolean functions90304
+Node: Math functions91338
+Node: General math functions91718
+Ref: General math functions-Footnote-193687
+Node: Trigonometric functions93732
+Node: Statistical functions94794
+Node: String functions97903
+Ref: String functions-Footnote-199953
+Ref: String functions-Footnote-2100029
+Node: Structural functions100157
+Node: Search functions101779
+Ref: Search functions-Footnote-1104152
+Node: Business functions104319
+Node: Date functions108546
+Node: Gsl functions114443
+Node: Forth Interpreter115970
+Node: Extending Oleo117538
+Node: New at functions117756
+Node: Reporting Bugs122166
+Node: Motif123532
+Node: Motif Introduction123929
+Node: LessTif124314
+Node: Advantages124954
+Node: What you need125324
+Node: Alternatives126084
+Node: Using the mouse126396
+Node: Using the keyboard shortcuts127430
+Node: Using Help128253
+Node: Fallback128390
+Node: Motif Buttons in a Spreadsheet Cell128906
+Node: Database Access129514
+Node: Database Access Introduction129691
+Node: MySQL130321
+Node: Xbase130599
+Node: Key Index130691
+Node: Command Index137869
+Node: Function Index147850
+Node: Options Index158225
+Node: Concept Index161657
 
 End Tag Table

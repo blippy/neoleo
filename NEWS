@@ -1,6 +1,10 @@
 ===== neoleo NEXT =====
 BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
+* atlast Forth (64-bit) embedded.
+
+* 32-bit support dropped, as Oleo relies on the atlast 64-bit version.
+
 * issue4: Fonts now work in X11
   https://github.com/blippy/neoleo/issues/5
 

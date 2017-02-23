@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CMDH
-#define CMDH
+//#ifndef CMDH
+//#define CMDH
 
 /*
  * $Id: cmd.h,v 1.9 2001/02/14 19:22:57 danny Exp $
@@ -373,4 +373,4 @@ void set_cucol(int nrow);
 #endif
 
 
-#endif
+//#endif

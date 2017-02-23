@@ -1,0 +1,38 @@
+TR04: atlast Forth subsystem
+
+FILES OVERVIEW
+--------------
+
+Copied over from John Walker's tarball:
+* doc/atlast2.html
+* src/atlast.c
+* src/atlast.h - see below
+* src/atldef.h
+
+New files which implement oleo-specific functionality:
+* src/atoleo.c
+* src/atoleo.h
+
+Existing files which have been modified:
+* src/basic.c - wrote forth() function
+* src/basic.h - added forth(0 signature
+* src/cmd.h   - extern "C" wrapper added
+* src/defun.h - DEFUN forth
+* src/main.cc - added init_atoleo() to main()
+
+ATLAST.H
+--------
+
+Extern "C" wrappers were placed in the header file to make it 
+compatable with both C and C++.
+
+John Walker's Makefile defined some compilation macros. In order not to
+clutter up Makefile.am with yet more commands, I just defined them
+in the file as follows:
+
+#define MEMSTAT
+#define EXPORT
+#define READONLYSTRINGS
+
+
+

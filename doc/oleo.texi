@@ -111,6 +111,7 @@ means complete, nor necessarily accurate for that matter.
 * Programs::                    
 * Keymaps::                     
 * Functions::                   
+* Forth Interpreter::
 * Extending Oleo::
 * Reporting Bugs::
 * Motif::
@@ -134,6 +135,7 @@ means complete, nor necessarily accurate for that matter.
 @include programs.texi
 @include keymaps.texi
 @include functions.texi
+@include forth.texi
 @include interface.texi
 @include bugs.texi
 @include motif.texi
