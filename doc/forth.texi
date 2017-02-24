@@ -71,7 +71,19 @@ A list of @code{Oleo}-specific words now follows.
 
 @table @code
 @item 4life
-Sets the current cell to `42'. Currently only useful only as a 
+@code{( -- )} Sets the current cell to `42'. Currently only useful only as a 
 proof-of-concept, of course.
 @end table
 
+@table @code
+@item 4xcmd
+@code{( str -- )} Executes the @code{oleo} command given in `str'. Example:
+@example
+"down-cell" 4xcmd
+@end example
+moves the cursor down a cell. 
+
+@code{4xcmd} is fairly inefficient in the sense that it calls two
+interpreters: Forth, and then the in-built @code{oleo} one. However,
+it does mean that whatever a command can do, Forth can do.
+@end table

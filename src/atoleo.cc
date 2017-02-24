@@ -9,12 +9,11 @@
 extern "C" {
 #endif
 
-
 /*
 prim p4eval()
 {
 	Sl(1);
-	char *cmd = S0;
+	char *cmd = (char *)S0;
 	Pop;
 
 	atl_eval(cmd);
@@ -24,17 +23,21 @@ prim p4eval()
 prim p4life()
 {
 	char str[] = "42";
-	//puts("TODO plife");
-	//edit_cell("42");
-	//set_cell(curow, cucol, "42");
-	//io_repaint();
 	new_value(curow, cucol, str);
-	//atl_eval("\"added the meaning of life\" type cr");
+}
+
+prim p4xcmd()
+{
+	Sl(1);
+        char *cmd = (char *)S0;
+        Pop;
+	execute_command(cmd);
 }
 
 static struct primfcn oleop[] = {
 	//{"04EVAL",	p4eval},
 	{"04LIFE",	p4life},
+	{"04XCMD",	p4xcmd},
 	{NULL,		(codeptr) 0 }
 };
 
