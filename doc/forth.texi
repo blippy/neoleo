@@ -2,6 +2,14 @@
 @chapter Forth Interpreter
 @cindex Forth
 
+@menu
+* Forth::		Implementation-specific notes on atlast
+* Calling Forth::	How to invoke Forth from oleo
+* Oleo words::		Forth words specific to oleo
+@end menu
+
+@node Forth, Calling Forth, Forth Interpreter, Forth Interpreter
+@section Implementation-specific notes on atlast
 @code{Oleo} embeds John Walker's Public domain @code{atlast}
 64-bit interpreter. It uses version 2.0. Further details can be found 
 @url{https://www.fourmilab.ch/atlast/, here}.
@@ -12,10 +20,29 @@ and is quite extensive.
 Technical details for developers are outlined in Technical Release TR04,
 which is within the TR directory of the source distribution.
 
-This document only concentrates on @code{Oleo}-specific Forth concepts.
+@b{Strings} should be enclosed in double-quotes, like so:
+@example
+"hello world"
+@end example
+Unlike most Forths, `"' is not a separate word, so there is no need
+to put whitespace after it at the start of the string. This 
+principle also works in definitions:
+@example
+: hi "hello world" type cr ;
+@end example
+Double-quotes are placed in strings by escaping them with `\':
+@example
+"\"Quoth the raven\""
+@end example
+
+The rest of this document only concentrates on @code{Oleo}-specific 
+Forth concepts.
 Only a proof-of-concept word (@code{4life}) has been added at this
 stage, but it is hoped that more words will be added in due course.
 The infrastructure is already there.
+
+@node Calling Forth, Oleo words, Forth, Forth Interpreter
+@section How to invoke Forth from oleo
 
 @table @code
 @item M-x forth
@@ -38,7 +65,9 @@ as the output will interfere with ncurses displays.
 
 @end table
 
-A list of @code{Oleo}-specific words now follows:
+@node Oleo words, Extending Oleo, Calling Forth, Forth Interpreter
+@section Forth words specific to oleo 
+A list of @code{Oleo}-specific words now follows.
 
 @table @code
 @item 4life
