@@ -5,6 +5,11 @@
 #include "cmd.h"
 #include "ref.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /*
 prim p4eval()
 {
@@ -18,11 +23,12 @@ prim p4eval()
 
 prim p4life()
 {
+	char str[] = "42";
 	//puts("TODO plife");
 	//edit_cell("42");
 	//set_cell(curow, cucol, "42");
 	//io_repaint();
-	new_value(curow, cucol, "42");
+	new_value(curow, cucol, str);
 	//atl_eval("\"added the meaning of life\" type cr");
 }
 
@@ -38,3 +44,9 @@ init_atoleo()
 	atl_init();
 	atl_primdef(oleop);
 }
+
+
+#ifdef __cplusplus
+}
+#endif
+

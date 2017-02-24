@@ -15,7 +15,7 @@ GUI_SRCS += io-x11.c xrdb.c
 GUI_LINK += -lX11
 
 FORTH_HDRS = atlast.h atldef.h
-FORTH_SRCS = atlast.c atoleo.c
+FORTH_SRCS = atlast.c atoleo.cc
 
 YFLAGS = -d
 EXTRA_DIST = $(srcdir)/neoleo.i

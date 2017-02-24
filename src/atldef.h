@@ -20,6 +20,11 @@
 
 #include "atlast.h"                   /* Define user linkage structures */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef void (*codeptr)();	      /* Machine code pointer */
 
 /*  Dictionary word entry  */
@@ -57,7 +62,7 @@ typedef dictword **rstackitem;
 /*  Primitive definition table entry  */
 
 struct primfcn {
-    char *pname;
+    const char *pname;
     codeptr pcode;
 };
 
@@ -152,7 +157,9 @@ void stakover(), rstakover(), heapover(), badpointer(),
 #endif
 
 /* Functions called by exported extensions. */
-extern void atl_primdef(), atl_error();
+//extern void atl_primdef()
+Exported void atl_primdef(struct primfcn *pt);
+extern void atl_error();
 extern dictword *atl_lookup(), *atl_vardef();
 extern stackitem *atl_body();
 extern int atl_exec();
@@ -267,3 +274,8 @@ extern char *atl_fgetsp();
 #define Isfile(x) Hpc(x); if (*((stackitem *)(x))!=FileSent) {V printf("\nNot a file\n");return;}
 #define FileD(x)  ((FILE *) *(((stackitem *) (x)) + 1))
 #define Isopen(x) if (FileD(x) == NULL) {V printf("\nFile not open\n");return;}
+
+#ifdef __cplusplus
+}
+#endif
+

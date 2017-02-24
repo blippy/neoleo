@@ -2962,8 +2962,7 @@ static struct primfcn primt[] = {
 		     allocated word items, we get one buffer for all
 		     the items and link them internally within the buffer. */
 
-Exported void atl_primdef(pt)
-  struct primfcn *pt;
+Exported void atl_primdef(struct primfcn *pt)
 {
     struct primfcn *pf = pt;
     dictword *nw;
@@ -3002,7 +3001,7 @@ Exported void atl_primdef(pt)
     nw[n - 1].wnext = dict;
     dict = nw;
     for (i = 0; i < n; i++) {
-	nw->wname = pt->pname;
+	nw->wname = (char *)pt->pname; // naughty hack: make it unconst
 #ifdef WORDSUSED
 #ifdef READONLYSTRINGS
     	nw->wname = cp;
