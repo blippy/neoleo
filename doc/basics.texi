@@ -605,12 +605,14 @@ previously saved one.
 
 @table @kbd
 @item C-x C-s
+@kindex C-x C-s
 Save the spreadsheet to a file, using the current
 file-format. (@code{save-spreadsheet})
 @cmindex save-spreadsheet
 @footnote{where is info on file formats?}
 
 @item C-x C-v 
+@kindex C-x C-v
 Read in a file in the current
 file-format.  This erases the current contents of the
 spreadsheet first.  This may ask for confirmation.
@@ -618,6 +620,7 @@ spreadsheet first.  This may ask for confirmation.
 @cmindex visit-spreadsheet
 
 @item C-x i
+@kindex C-x i
 Read in a file and merge its contents into the
 current spreadsheet.  Note that some file-formats, (like
 panic-save) won't work with this command.
