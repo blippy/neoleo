@@ -21,7 +21,7 @@ EXTRA_DIST = $(OLEOS) \
 	create_koers.txt data.sql 
 
 
-EXTRA_DIST += pivot-driver.tcl pivot-utils.tcl pivot.r
+EXTRA_DIST += pivot.r
 
 
 dist_example_DATA = $(EXTRA_DIST)
