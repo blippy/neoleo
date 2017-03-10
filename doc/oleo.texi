@@ -107,6 +107,7 @@ means complete, nor necessarily accurate for that matter.
 * Multiple Windows::            
 * Options::                     
 * Printing and Plotting::       
+* Examples and Utilities::
 * Macros::                      
 * Programs::                    
 * Keymaps::                     
@@ -131,6 +132,7 @@ means complete, nor necessarily accurate for that matter.
 @include windows.texi
 @include options.texi
 @include print-plot.texi
+@include examples.texi
 @include macros.texi
 @include programs.texi
 @include keymaps.texi

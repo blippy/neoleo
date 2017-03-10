@@ -1,4 +1,4 @@
-@node Macros, Programs, Printing and Plotting, Top
+@node Macros, Programs, Examples and Utilities, Top
 @chapter  Macros
 
 

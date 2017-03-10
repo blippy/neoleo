@@ -6,7 +6,7 @@
 info_TEXINFOS = oleo.texi
 
 TEXIS=		basics.texi bugs.texi cell-refs.texi entering-data.texi \
-		expressions.texi forth.texi functions.texi \
+		examples.texi expressions.texi forth.texi functions.texi \
 		interface.texi keymaps.texi \
 		macros.texi making-changes.texi options.texi print-plot.texi \
 		programs.texi ranlib.texi style.texi texinfo.tex windows.texi \

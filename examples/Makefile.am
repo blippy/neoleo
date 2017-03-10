@@ -17,7 +17,7 @@ OLEOS = blank.oleo \
 	xy.oleo
 
 EXTRA_DIST = $(OLEOS) \
-	q110399.csv formula.sylk paine.slk \
+	q110399.csv formula.sylk oleo.pm6 paine.slk \
 	create_koers.txt data.sql 
 
 
