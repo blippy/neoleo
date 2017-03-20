@@ -26,7 +26,7 @@ struct node
     unsigned short add_byte;
     union
       {
-	double v_float;
+	num v_float;
 	char *v_string;
 	long v_int;
 	struct node *v_subs[2];

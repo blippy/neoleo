@@ -20,6 +20,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+// TODO LOW reinstate these business functions at some point
+//
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -42,7 +44,8 @@ struct value
     union vals x;
   };
 
-#define Float	x.c_d
+//#define Float	x.c_d
+#define Dec	x.c_dec
 #define String	x.c_s
 #define Int	x.c_l
 #define Value	x.c_i
@@ -66,7 +69,8 @@ npv (rng, rate, putres)
 {
   double npv;
   int i;
-  double f;
+  //double f;
+  dec f;
   CELL *cell_ptr;
   char *strptr;
 
@@ -667,18 +671,19 @@ do_kprin (p)
 	}
       principal -= tmp_pmt - int_part;
     }
-  p->Float = tmp_pmt - int_part;
+  //p->Float = tmp_pmt - int_part;
+  p->Dec = tmp_pmt - int_part;
 }
 
 static void
-do_compbal (p)
-     struct value *p;
+do_compbal (struct value *p)
 {
-  double principal = (p)->Float;
-  double rate = (p + 1)->Float;
-  double term = (p + 2)->Float;
+  dec principal = (p)->Dec;
+  dec rate = (p + 1)->Dec;
+  dec term = (p + 2)->Dec;
 
-  p->Float = principal * pow (1 + rate, term);
+  //p->Float = principal * pow (1 + rate, term);
+  p->Dec = principal * pow (1 + rate, term);
 }
 
 struct function busi_funs[] =

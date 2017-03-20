@@ -956,9 +956,9 @@ astol (char **ptr)
  *	is needed.
  */
 
-static double exps0[10] =
+static num exps0[10] =
 {1E0, 1E1, 1E2, 1E3, 1E4, 1E5, 1E6, 1E7, 1E8, 1E9};
-static double exps1[10] =
+static num exps1[10] =
 {1E00, 1E10, 1E20, 1E30
 #ifndef vax
  ,1E40, 1E50, 1E60, 1E70, 1E80, 1E90
@@ -967,14 +967,14 @@ static double exps1[10] =
 
 #define REGISTER register
 
-double
-XXX_astof (char **sp)
+num
+astof (char **sp)
 {
   REGISTER char *s;
   REGISTER char *cp;
   long ipart, epart;
   int neg = 0;
-  double res;
+  num res;
   int n;
 
   s = *sp;
@@ -1006,7 +1006,7 @@ XXX_astof (char **sp)
     {
       for (n = 0, ipart = 0; n < 6 && isdigit (*s); n++)
 	ipart = ipart * 10 + *s++ - '0';
-      res = res * exps0[n] + (double) ipart;
+      res = res * exps0[n] + (num) ipart;
     }
   if (s == cp)
     {
@@ -1035,9 +1035,9 @@ XXX_astof (char **sp)
 	  if (m >= 100)
 	    continue;
 	  if (m >= 10)
-	    res += ((double) ipart) / (exps1[m / 10] * exps0[m % 10]);
+	    res += ((num) ipart) / (exps1[m / 10] * exps0[m % 10]);
 	  else
-	    res += ((double) ipart) / exps0[m];
+	    res += ((num) ipart) / exps0[m];
 	}
     }
   /*
@@ -1064,7 +1064,7 @@ XXX_astof (char **sp)
 #ifndef vax
 	  while (epart >= 100)
 	    {
-	      res /= 1E100;
+	      res /= 1E100DD;
 	      epart -= 100;
 	    }
 #endif
@@ -1081,7 +1081,7 @@ XXX_astof (char **sp)
 #ifndef vax
 	  while (epart >= 100)
 	    {
-	      res *= 1E100;
+	      res *= 1E100DD;
 	      epart -= 100;
 	    }
 #endif
@@ -1103,8 +1103,8 @@ XXX_astof (char **sp)
   return (res);
 }
 
-double
-astof (char **sp)
+num
+XXXX_astof (char **sp)
 {
 	char *s = *sp;
 	while (isspace (*s))
@@ -1117,7 +1117,8 @@ astof (char **sp)
 		}
 	}
 
-	double ret = atof(s);
+	//double ret = atof(s);
+	num ret = (num) atof(s);
 	while(*s != '\0') s++;
 	*sp = s;
 	return ret;

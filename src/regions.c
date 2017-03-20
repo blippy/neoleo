@@ -863,7 +863,7 @@ cmp_cells (int n1, int n2)
 	      else
 		{
 		  t1 = TYP_FLT;
-		  v1.c_d = 0.0;
+		  v1.c_n = 0.0;
 		}
 	    }
 	  else if (t2 == 0)
@@ -881,7 +881,7 @@ cmp_cells (int n1, int n2)
 	      else
 		{
 		  t2 = TYP_FLT;
-		  v2.c_d = 0.0;
+		  v2.c_n = 0.0;
 		}
 	    }
 	  else if (t1 == TYP_STR)
@@ -899,18 +899,18 @@ cmp_cells (int n1, int n2)
 	  else if (t1 == TYP_INT)
 	    {
 	      t1 = TYP_FLT;
-	      v1.c_d = (double) v1.c_l;
+	      v1.c_n = (num) v1.c_l;
 	    }
 	  else
 	    {
 	      t2 = TYP_FLT;
-	      v2.c_d = (double) v2.c_l;
+	      v2.c_n = (num) v2.c_l;
 	    }
 	}
       if (t1 == TYP_STR)
 	cmpval = strcmp (v1.c_s, v2.c_s);
       else if (t1 == TYP_FLT)
-	cmpval = (v1.c_d < v2.c_d) ? -1 : ((v1.c_d > v2.c_d) ? 1 : 0);
+	cmpval = (v1.c_n < v2.c_n) ? -1 : ((v1.c_n > v2.c_n) ? 1 : 0);
       else if (t1 == TYP_INT)
 	cmpval = (v1.c_l < v2.c_l) ? -1 : ((v1.c_l > v2.c_l) ? 1 : 0);
       else

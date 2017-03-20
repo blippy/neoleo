@@ -224,7 +224,7 @@ set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
       switch (type)
 	{
 	case TYP_FLT:
-	  cp->cell_flt = value->c_d;
+	  cp->cell_flt = value->c_n;
 	  cp->cell_formula = 0;
 	  break;
 

@@ -28,7 +28,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 AM_CFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
-neoleo_SOURCES = afm.c args.c basic.c busi.c byte-compile.c cells.c cmd.c \
+neoleo_SOURCES = afm.c args.c basic.c  byte-compile.c cells.c cmd.c \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
@@ -67,7 +67,7 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 $(FORTH_HDRS)
 
 # exclude these for now:
-# plotter.c xbase.cpp
+# busi.c plotter.c xbase.cpp
 
 
 ref.o : parse.h

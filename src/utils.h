@@ -28,6 +28,7 @@ extern "C" {
 #include <stdio.h>
 #include "funcdef.h"
 #include "global.h"
+#include "numeric.h"	
 
 extern char *argv_name;
 extern int __make_backups;
@@ -45,6 +46,7 @@ extern void ck_free (VOIDSTAR);
 extern void get_usr_stats (int, char **);
 extern void set_usr_stats (int, char **);
 
+extern num astof(char **sp);
 extern char *char_to_string (int);
 extern int string_to_char (char **);
 extern FILE *xopen_with_backup (const char *,const char *);

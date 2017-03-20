@@ -99,6 +99,11 @@ headless_tests()
 	headless_graphics();
 	io_open_display();
 
+	get_set(1, 1, "1.1+2"); // rounding nasty
+	get_set(1, 1, "1.1+2.2"); // rounding nasty
+
+	get_set(1, 1, "63.36"); // rounding nasty
+
         //# the following causes crash:
         int read_status = swig_read_file_and_run_hooks("/home/mcarter/repos/neoleo/examples/pivot.oleo", 0);
         if(read_status == 1) {
@@ -112,13 +117,14 @@ headless_tests()
 
 	char str[] = "\"foo\"";
 	get_set(1, 1, str); // NB must enquote strings otherwise it segfault trying to find or make foo as var
-	get_set(1, 1, "63.36"); // rounding nasty
 	get_set(2, 1, "1 + R[-1]C");
 
-	printf("Test atof(63.36):%f\n", atof("63.36"));
+	//printf("Test atof(63.36):%f\n", atof("63.36"));
 
-	puts(pr_flt(1163.36, &fxt, FLOAT_PRECISION));
-	puts(pr_flt(2688.9, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(1163.36DL, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(-1163.36DL, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(3575.06DL, &fxt, FLOAT_PRECISION));
 
 
 	FreeGlobals();

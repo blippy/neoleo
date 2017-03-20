@@ -1,5 +1,6 @@
-#ifndef CELLH
-#define CELLH
+#pragma once
+//#ifndef CELLH
+//#define CELLH
 
 /*
  * $Id: cell.h,v 1.14 2001/02/13 23:38:05 danny Exp $
@@ -31,13 +32,15 @@
 #include "global.h"
 #include "font.h"
 
+
 union vals
   {
-    double c_d;
-    char *c_s;
-    long c_l;
-    int c_i;
-    struct rng c_r;
+	  num c_n;
+	  //double c_d;
+	  char *c_s;
+	  long c_l;
+	  int c_i;
+	  struct rng c_r;
   };
 
 /* An actual cell structure.  These cannot be variable-length, since they are
@@ -90,7 +93,8 @@ typedef struct cell CELL;
 #define VAR_DANGLING_RANGE 4
 
 /* Shorthand for the cell union */
-#define cell_flt	c_z.c_d
+//#define cell_flt	c_z.c_d
+#define cell_flt	c_z.c_n
 #define cell_str	c_z.c_s
 #define cell_int	c_z.c_l
 #define cell_bol	c_z.c_i
@@ -173,4 +177,4 @@ extern char *decomp (CELLREF, CELLREF, CELL *);
 extern char *decomp_formula (CELLREF, CELLREF, CELL *, int);
 extern void decomp_free (void);
 
-#endif
+//#endif

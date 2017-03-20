@@ -53,7 +53,7 @@ struct value
     union vals x;
   };
 
-#define Float	x.c_d
+#define Float	x.c_n
 #define String	x.c_s
 #define Int	x.c_l
 #define Value	x.c_i
@@ -389,16 +389,15 @@ do_memberp (p)
 }
 
 static void
-do_hlookup (p)
-     struct value *p;
+do_hlookup (struct value *p)
 {
 
   struct rng *rng = &((p)->Rng);
-  double fltval = (p + 1)->Float;
+  num fltval = (p + 1)->Float;
   long offset = (p + 2)->Int;
 
   CELL *cell_ptr;
-  double f;
+  num f;
   CELLREF col;
   CELLREF row;
   char *strptr;
@@ -458,11 +457,12 @@ do_vlookup (p)
 {
 
   struct rng *rng = &((p)->Rng);
-  double fltval = (p + 1)->Float;
+  num fltval = (p + 1)->Float;
   long offset = (p + 2)->Int;
 
   CELL *cell_ptr;
-  double f;
+  //double f;
+  num f;
   CELLREF col;
   CELLREF row;
   char *strptr;

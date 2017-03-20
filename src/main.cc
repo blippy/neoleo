@@ -1,6 +1,12 @@
 #include <string>
 #include <vector>
 
+//#include <decimal/decimal.h>
+//extern "C" {
+//#include <decimal/decimal>
+//typedef std::decimal::decimal128 num;
+//}
+
 //extern "C" {
 #include "atlast.h"
 #include "atoleo.h"

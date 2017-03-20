@@ -45,7 +45,7 @@ struct value {
 	union vals x;
 };
 
-#define Float	x.c_d
+#define Float	x.c_n
 #define String	x.c_s
 #define Int	x.c_l
 #define Value	x.c_i

@@ -62,7 +62,6 @@ static char *rcsid = "$Id: ";
 
 /* Routines for formatting cell values */
 //struct user_fmt;
-//static char *pr_flt (double, struct user_fmt *, int);
 static char *pr_int (long, struct user_fmt *, int);
 
 /* Constants */
@@ -190,13 +189,13 @@ struct user_fmt u[NUM_USER_FMT] =
    on print_buf */
 
 char *
-flt_to_str (double val)
+flt_to_str (num val)
 {
   double f;
 
-  if (val == __plinf)
+  if (val == (num) __plinf)
     return iname;
-  if (val == __neinf)
+  if (val == (num) __neinf)
     return mname;
   f = fabs (val);
   if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
@@ -218,34 +217,38 @@ flt_to_str (double val)
 char *
 flt_to_str_fmt (CELL *cp)
 {
-  int j = GET_FORMAT(cp);	/* Only format, not precision */
-  int p;
-  double f;
+	int j = GET_FORMAT(cp);	/* Only format, not precision */
+	int p;
 
-  if (j == FMT_DEF)
-    j = default_fmt;
+	if (j == FMT_DEF)
+		j = default_fmt;
 
-  p = GET_PRECISION(cp);
+	p = GET_PRECISION(cp);
 
-  if (cp->cell_flt == __plinf)
-    return iname;
-  if (cp->cell_flt == __neinf)
-    return mname;
-  f = fabs (cp->cell_flt);
-  if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
-    {
-      sprintf (print_buf, "%e", cp->cell_flt);
-      return print_buf;
-    }
-  switch (j)
-    {
-      case FMT_FXT:
-      case FMT_DOL:
-      case FMT_PCT:
-        return pr_flt (cp->cell_flt, &fxt, p);
-      default:
-        return flt_to_str (cp->cell_flt);
-    }
+	if(false) { 
+		/* TODO suppressed for now */
+		double f;
+		if ((double) cp->cell_flt == __plinf)
+			return iname;
+		if ((double) cp->cell_flt == __neinf)
+			return mname;
+		f = fabs ( (double) cp->cell_flt);
+		if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
+		{
+			sprintf (print_buf, "%e", cp->cell_flt);
+			return print_buf;
+		}
+	}
+
+	switch (j)
+	{
+		case FMT_FXT:
+		case FMT_DOL:
+		case FMT_PCT:
+			return pr_flt (cp->cell_flt, &fxt, p);
+		default:
+			return flt_to_str (cp->cell_flt);
+	}
 }
 
 char *
@@ -354,9 +357,9 @@ print_cell (CELL * cp)
 
 	case FMT_EXP:
 	handle_exp:
-	  if (cp->cell_flt == __plinf)
+	  if ((double) cp->cell_flt == __plinf)
 	    return iname;
-	  if (cp->cell_flt == __neinf)
+	  if ((double) cp->cell_flt == __neinf)
 	    return mname;
 	  if (p == FLOAT_PRECISION)
 	    sprintf (print_buf, "%e", cp->cell_flt);
@@ -566,8 +569,182 @@ pr_int (val, fmt, prec)
   return pt;
 }
 
+num
+modn(num x, num *iptr)
+{
+	num sgn = 1;
+	num x1 = x;
+	if(x1 <0) { sgn = -1;}
+	x1 *= sgn;
+
+	num x2 = floor(x1);
+	//*iptr = sgn * (x1-x2);
+	//return sgn * x2;
+	*iptr = sgn * x2;
+	return sgn * (x1-x2);
+}
+
 char *
-pr_flt (double val, struct user_fmt *fmt, int prec)
+pr_flt (num val, struct user_fmt *fmt, int prec)
+{
+  char *iptr;
+  char *fptr;
+  char *pptr;
+  char *pf, *pff;
+  //double fract, integer, tmpval;
+  num fract, integer, tmpval;
+  int n;
+  int isneg;
+  int comlen;
+
+
+  val *= (num) fmt->scale;
+
+  if (val == (num) __plinf)
+    return iname;
+  if (val == (num) __neinf)
+    return mname;
+  if (val != val)
+    return nname;
+
+  iptr = &print_buf[BIGFLT];
+  fptr = &print_buf[BIGFLT];
+
+
+  if (val == 0)
+    return fmt->zero ? fmt->zero : "";
+
+  if (val < 0)
+    {
+      isneg = 1;
+      val = -val;
+    }
+  else
+    isneg = 0;
+
+  comlen = 0;
+  if (fmt->comma && *(fmt->comma))
+    for (pf = fmt->comma; *pf; comlen++, pf++)
+      ;
+
+  fract = modn (val, &integer);
+  n = 0;
+  do
+    {
+      if (iptr < &print_buf[comlen])
+	return numb_oflo;
+      tmpval = modn (integer / 10, &integer);
+      *--iptr = '0' + (int) ((tmpval + NUM_HUNDREDTH) * NUM_TEN);
+      if (comlen && n++ == 2 && integer)
+	{
+	  n = 0;
+	  pff = fmt->comma;
+	  pf = pff + comlen;
+	  do
+	    *--iptr = *--pf;
+	  while (pf != pff);
+	}
+    }
+  while (integer);
+
+  if (prec)
+    {
+      int p1;
+
+      p1 = (prec == FLOAT_PRECISION) ? 11 : (prec > 0) ? prec : -prec;
+      pf = fmt->decpt;
+      while (pf && *pf)
+	*fptr++ = *pf++;
+      /* *fptr++='.'; */
+      if (fract)
+	{
+	  do
+	    {
+	      fract = modn (fract * 10, &tmpval);
+	      *fptr++ = '0' + (int) tmpval;
+	    }
+	  while (--p1 && fract);
+	}
+      if (prec > 0 && prec != FLOAT_PRECISION)
+	while (p1--)
+	  *fptr++ = '0';
+      else
+	{
+	  fract = 0;
+	  while (fptr[-1] == '0')
+	    --fptr;
+	  while (!isdigit (fptr[-1]))
+	    --fptr;
+	  *fptr = '\0';
+	}
+    }
+  if (fract)
+    {
+      (void) modn (fract * 10, &tmpval);
+      if (tmpval > 4)
+	{
+	  iptr[-1] = '0';
+	  for (pptr = fptr - 1;; --pptr)
+	    {
+	      if (!isdigit (*pptr))
+		continue;
+	      else if (*pptr == '9')
+		{
+		  if (pptr == fptr - 1 && pptr > &print_buf[BIGFLT] && (prec < 0 || prec == FLOAT_PRECISION))
+		    {
+		      --fptr;
+		      while (!isdigit (pptr[-1]))
+			{
+			  --fptr;
+			  --pptr;
+			}
+		      *pptr = '\0';
+		    }
+		  else
+		    *pptr = '0';
+		}
+	      else
+		{
+		  (*pptr)++;
+		  break;
+		}
+	    }
+	  if (pptr < iptr)
+	    {
+	      --iptr;
+	      if (n == 3)
+		{
+		  char tmpch;
+
+		  tmpch = *iptr++;
+		  for (pf = pff = fmt->comma; *pf; pf++)
+		    ;
+		  do
+		    *--iptr = *--pf;
+		  while (pf != pff);
+		  *--iptr = tmpch;
+		}
+	    }
+	}
+    }
+  pf = pff = (isneg) ? fmt->n_hdr : fmt->p_hdr;
+  if (pf && *pf)
+    {
+      while (*pf)
+	pf++;
+      do
+	*--iptr = *--pf;
+      while (pf != pff);
+    }
+
+  pf = (isneg) ? fmt->n_trl : fmt->p_trl;
+  while (pf && *pf)
+    *fptr++ = *pf++;
+  *fptr = 0;
+  return iptr;
+}
+char *
+XXX_pr_flt (double val, struct user_fmt *fmt, int prec)
 {
   char *iptr;
   char *fptr;

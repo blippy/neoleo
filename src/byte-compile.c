@@ -64,7 +64,9 @@ local_free (p)
 extern int yyparse (void);
 
 extern struct function date_funs[];
+#ifdef BUSI
 extern struct function busi_funs[];
+#endif
 extern struct function string_funs[];
 extern struct function cells_funs[];
 extern struct function mysql_functions[];
@@ -225,7 +227,9 @@ struct function the_funs[] =
 static struct function *__usr_funs[] =
 {
 	date_funs,
+#ifdef BUSI
 	busi_funs,
+#endif
 	string_funs,
 	cells_funs,
 	mysql_functions,
@@ -238,7 +242,9 @@ static struct function *__usr_funs[] =
  * it defines.
  */
 extern int init_date_function_count(void);
+#ifdef BUSI
 extern int init_busi_function_count(void);
+#endif
 extern int init_string_function_count(void);
 extern int init_cells_function_count(void);
 extern int init_mysql_function_count(void);
@@ -249,7 +255,9 @@ typedef int (*init_function_count)(void);
 
 static init_function_count init_function_counts[] = {
 	&init_date_function_count,
+#ifdef BUSI
 	&init_busi_function_count,
+#endif
 	&init_string_function_count,
 	&init_cells_function_count,
 	&init_mysql_function_count,
@@ -406,8 +414,7 @@ rot_patch (n1, n2)
    and a way to encode longer branches would be a *good* idea.
  */
 unsigned char *
-parse_and_compile (string)
-     char *string;
+parse_and_compile (char *string)
 {
   struct node *new_node;
   struct node *node;
@@ -537,7 +544,7 @@ loop:
 
     case C_FLT:
       (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (double));
+      (void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num));
       break;
 
     case C_INT:
