@@ -59,6 +59,8 @@
 #include "regions.h"
 #include "input.h"
 #include "info.h"
+#include "xrdb.h"
+#include "io-x11.h"
 
 #include <locale.h>
 
@@ -67,22 +69,23 @@ extern double rint (double);
 #else
 #define rint(x) (((x)<0) ? ceil((x)-.5) : floor((x)+.5))
 #endif
-static void record_damage ();
+//static void record_damage ();
+typedef struct sXport *Xport;
+static void record_damage (Xport port, int x, int y, int w, int h);
 
-extern char * x_get_string_resource (XrmDatabase, char *, char *);
 extern XrmDatabase x_load_resources (Display *, char *, char *);
 extern char * getenv (const char *);
 
 #define FONTA "fixed" /* originally 8x13" */
-static char *emergency_font_name = FONTA;
-static char *cell_font_name = "fixed"; // originally "times_roman12";
-static char *default_font_name = FONTA;
-static char *input_font_name = FONTA;
-static char *status_font_name = "fixed"; // originally "6x10";
-static char *text_line_font_name = FONTA;
-static char *label_font_name = "fixed"; // originally "5x8";
-static char *default_bg_color_name = "black";
-static char *default_fg_color_name = "white";
+static const char *emergency_font_name = FONTA;
+static const char *cell_font_name = "fixed"; // originally "times_roman12";
+static const char *default_font_name = FONTA;
+static const char *input_font_name = FONTA;
+static const char *status_font_name = "fixed"; // originally "6x10";
+static const char *text_line_font_name = FONTA;
+static const char *label_font_name = "fixed"; // originally "5x8";
+static const char *default_bg_color_name = "black";
+static const char *default_fg_color_name = "white";
 
 /* The geometry of the first window. */
 static int geom_x = 0;
@@ -95,12 +98,13 @@ static char geom_string[] = "675x350+0+0";
 static Display * theDisplay;
 static struct sXport *thePort;
 
+static void record_damage (Xport port, int x, int y, int w, int h);
 /* i18n */
 static XIC	xic = 0;
 static XIM	xim = 0;
 
-static char * rdb_class_name = "Oleo";
-static char * rdb_name = "oleo";
+static const char * rdb_class_name = "Oleo";
+static const char * rdb_name = "oleo";
 
 #if 0
 static XrmOptionDescRec x11_options[] =
@@ -127,7 +131,7 @@ static int
 #define RDB_NAME_SIZE	256
 
 static char * 
-resource_name (char * left, char * right)
+resource_name (const char * left, const char * right)
 {
   static char bufs[RDB_NAME_BUF][RDB_NAME_SIZE];
   static int buf_pos = 0;
@@ -206,7 +210,7 @@ get_x11_args ()
   RetKeySym = XStringToKeysym("Return");
 
   /* Load the resource databases in a manner not unlike emacs :). */
-  rdb = x_load_resources (theDisplay, 0, rdb_class_name);
+  rdb = x_load_resources (theDisplay, 0, (char *) rdb_class_name);
   
 #if 0
   /* Merge in the command line database.  */
@@ -217,18 +221,18 @@ get_x11_args ()
   {
     char * val;
     
-    val = x_get_string_resource (rdb, class_of ("Foreground"), 
-				 name_of("foreground"));
+    val = x_get_string_resource (rdb, class_of ((char *) "Foreground"), 
+				 name_of((char *)"foreground"));
     if (val)
       default_fg_color_name = val;
     
-    val = x_get_string_resource (rdb, class_of ("Background"), 
-				 name_of("background"));
+    val = x_get_string_resource (rdb, class_of ((char *)"Background"), 
+				 name_of((char *)"background"));
     if (val)
       default_bg_color_name = val;
     
-    val = x_get_string_resource (rdb, class_of ("Geometry"),
-				 name_of("geometry"));
+    val = x_get_string_resource (rdb, class_of ((char *)"Geometry"),
+				 name_of((char *)"geometry"));
     if (val)
       XGeometry (theDisplay, DefaultScreen(theDisplay), val, geom_string,
 		 0, 1, 1, 0, 0, &geom_x, &geom_y, &geom_w, &geom_h);
@@ -236,7 +240,6 @@ get_x11_args ()
 }
 
 static int x11_opened = 0;
-typedef struct sXport *Xport;
 
 struct sXport
 {
@@ -292,7 +295,7 @@ GetXIC(Display *theDisplay)
 	long		mask;
 #endif
 
-	static char	*styles[] =
+	static const char	*styles[] =
 	{
 		"OverTheSpot",
 		"OffTheSpot",
@@ -312,7 +315,7 @@ GetXIC(Display *theDisplay)
 	};
 
 	/* FIX ME this should be user configurable such as in Motif */
-	static char *preeditTypes = "OffTheSpot,OverTheSpot,Root";
+	static const char *preeditTypes = "OffTheSpot,OverTheSpot,Root";
 
 	if (!XSupportsLocale()) {
 #ifdef	I18N_VERBOSE
@@ -537,7 +540,7 @@ xio_redraw_input_cursor (int on)
 
   inp = (iv->input_area
 	 ? iv->input_area->buf + iv->visibility_begin
-	 : "");
+	 : (char *) "");
   start = (XTextWidth (thePort->input_font, inp, offset) + iv->prompt_wid);
 
   cursor_text.font = thePort->input_font->fid;
@@ -550,7 +553,7 @@ xio_redraw_input_cursor (int on)
   else
     {
       cwid = XTextWidth (thePort->input_font, " ", 1);
-      cursor_text.chars = " ";
+      cursor_text.chars = (char *) " ";
     }
   xdraw_text_item (thePort, start, ypos, cwid, input_rows,
 		  thePort->input_font,
@@ -570,10 +573,9 @@ xio_inputize_cursor (void)
   xio_redraw_input_cursor (1);
 }
 
+//static int
 static int
-x_input_metric (str, len)
-     char * str;
-     int len;
+x_input_metric (char * str, int len)
 {
   return XTextWidth (thePort->input_font, str, len);
 }
@@ -698,7 +700,7 @@ io_col_to_input_pos (int c)
   struct input_view * iv = &thePort->input_view;
   char * prompt = (iv->expanded_keymap_prompt
 		   ? iv->expanded_keymap_prompt
-		   : (iv->prompt ? iv->prompt : ""));
+		   : (iv->prompt ? iv->prompt : (char *) ""));
   int prompt_wid = iv->prompt_metric (prompt, strlen(prompt));
 
   c -= prompt_wid;
@@ -980,7 +982,7 @@ xset_text (XTextItem *xtext, char *text, int len)
 {
   if (xtext->nchars < len)
     {
-      xtext->chars = ck_remalloc (xtext->chars, len);
+      xtext->chars = (char *) ck_remalloc (xtext->chars, len);
       xtext->nchars = len;
     }
   if (len)
@@ -1017,7 +1019,7 @@ draw_input (void)
     {
       XTextItem more_text;
       int mwid = XTextWidth (thePort->input_font, "[more]", 6);
-      more_text.chars = "[MORE]";
+      more_text.chars = (char *) "[MORE]";
       more_text.nchars = 6;
       more_text.delta = 0;
       more_text.font = thePort->input_font->fid;
@@ -1173,7 +1175,8 @@ xio_update_status (void)
     
     l = strlen (ptr);
     c = cram (Global->scr_cols - mplen - thePort->status_font->max_bounds.width,
-	      thePort->status_font, ptr, l, (dec ? " [...]" : "..."));
+	      thePort->status_font, ptr, l, 
+	      (dec ? (char *) " [...]" : (char *) "..."));
     if (c)
       bcopy (ptr, pos, c);
     pos += c;
@@ -1198,7 +1201,8 @@ xio_update_status (void)
     if (dec)
       {
 	l = strlen (dec);
-	c = cram (Global->scr_cols - wid, thePort->status_font, dec, l, "[...]");
+	c = cram (Global->scr_cols - wid, thePort->status_font, 
+			dec, l, (char *) "[...]");
 	*pos++ = '[';
 	if (c < l)
 	  {
@@ -2114,7 +2118,7 @@ xio_redisp (void)
 }
 
 static XFontStruct *
-reasonable_font (Xport port, char *name)
+reasonable_font (Xport port, const char *name)
 {
 	XFontStruct *f = XLoadQueryFont (port->dpy, name);
 
@@ -2373,7 +2377,7 @@ xio_open_display (void)
 
 	/* First get the modifiers */
 	OurModKeymap = XGetModifierMapping(thePort->dpy);
-	ModifierKeys = malloc(OurModKeymap->max_keypermod * sizeof(KeySym) * 8);
+	ModifierKeys = (KeySym*) malloc(OurModKeymap->max_keypermod * sizeof(KeySym) * 8);
 
     for (arrow = 0; arrow < 4; ++arrow)
       {
@@ -2404,7 +2408,7 @@ xio_open_display (void)
 					 */
 					int keysyms_per_keycode_return;
 					KeySym* kp = XGetKeyboardMapping(thePort->dpy,tmpptr[i], 1, &keysyms_per_keycode_return);
-#pragma message "Casting skullduggery" // mcarter 29-Dec-2016
+//#pragma message "Casting skullduggery" // mcarter 29-Dec-2016
 					KeySym* kp1 = (KeySym *)ModifierKeys[n];
 					kp1 = kp;
 					// XFree( ModifierKeys[n]) ??
@@ -2420,7 +2424,7 @@ xio_open_display (void)
 		     base_char[mod] + arrow);
 	    XRebindKeysym (thePort->dpy, arrows[arrow],
 			   ModifierKeys, n,
-			   string, strlen(string));
+			   (const unsigned char*) string, strlen(string));
 	  }
       }
 	XFreeModifiermap(OurModKeymap);

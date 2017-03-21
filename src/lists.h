@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: lists.h,v 1.5 2000/08/10 21:02:51 danny Exp $
  *
@@ -18,8 +19,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef LISTSH
-#define LISTSH
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 extern float height_scale;
@@ -78,4 +81,9 @@ struct find
   char fini;
   int ele;
 };
+
+
+#ifdef __cplusplus
+}
 #endif
+

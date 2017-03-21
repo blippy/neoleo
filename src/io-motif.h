@@ -1,3 +1,4 @@
+#pragma once
 /*
  *  $Id: io-motif.h,v 1.17 2000/08/10 21:02:50 danny Exp $
  *
@@ -21,8 +22,10 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef	_IO_MOTIF_H_
-#define	_IO_MOTIF_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#include "config.h"
 #include "global.h"
@@ -136,4 +139,7 @@ struct MotifGlobalType {
 
 #define	ExecuteCommandDialog		Global->MotifGlobal->executeCommandDialog_w
 
+#ifdef __cplusplus
+}
 #endif
+

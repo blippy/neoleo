@@ -123,7 +123,7 @@ io_text_start (void)
 
 
 void
-io_text_line (char * format, ...)
+io_text_line (const char * format, ...)
 {
   va_list ap;
   char txt[1000];

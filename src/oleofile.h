@@ -1,5 +1,4 @@
-#ifndef OLEOH
-#define OLEOH
+#pragma once
 
 /*
  * $Id: oleofile.h,v 1.4 2000/08/10 21:02:51 danny Exp $
@@ -20,9 +19,17 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void oleo_read_file (FILE *, int);
 extern void oleo_write_file (FILE *, struct rng *);
 extern int oleo_set_options (int, char *);
 extern void oleo_show_options (void);
 
+#ifdef __cplusplus
+}
 #endif
+

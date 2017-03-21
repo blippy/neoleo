@@ -40,11 +40,10 @@ extern struct info_buffer * find_or_make_info (char * name);
 extern void clear_info (struct info_buffer * buf);
 extern void print_info (struct info_buffer * buf, char * format, ...);
 extern void io_text_start (void);
-extern void io_text_line (char * format, ...);
+extern void io_text_line (const char * format, ...);
 extern void io_text_finish (void);
 
 #ifdef __cplusplus
 }
 #endif
 
-//#endif  /* INFOH */

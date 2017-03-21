@@ -351,9 +351,7 @@ XrmRepresentation x_rm_string = 0;	/* Quark representation */
 /* Load X resources based on the display and a possible -xrm option. */
 
 XrmDatabase
-x_load_resources (display, xrm_string, myclass)
-     Display *display;
-     char *xrm_string, *myclass;
+x_load_resources (Display *display, char *xrm_string, char *myclass)
 {
   XrmDatabase rdb;
   XrmDatabase db;
@@ -436,16 +434,14 @@ x_get_resource (rdb, name, class, expected_type, ret_value)
    database RDB. */
 
 char *
-x_get_string_resource (rdb, class, name)
-     XrmDatabase rdb;
-     char *name, *class;
+x_get_string_resource (XrmDatabase rdb, char *name, char *a_class)
 {
   XrmValue value;
 
   if (!x_rm_string)
     x_rm_string = XrmStringToQuark (XrmStringType);
 
-  if (x_get_resource (rdb, name, class, x_rm_string, &value))
+  if (x_get_resource (rdb, name, a_class, x_rm_string, &value))
     return (char *) value.addr;
 
   return (char *) 0;

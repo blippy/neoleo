@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: io-x11.h,v 1.6 2000/08/10 21:02:50 danny Exp $
  *
@@ -17,8 +18,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef IO_X11H
-#define IO_X11H
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //#ifndef X_DISPLAY_MISSING
 
@@ -27,7 +31,11 @@ extern void get_x11_args ();
 extern int io_col_to_input_pos (int c);
 extern void x11_graphics (void);
 extern void set_x_default_point_size (int l);
+//extern char * x_get_string_resource (XrmDatabase, char *, char *);
 
 //#endif /* X_DISPLAY_MISSING */
 
-#endif /* IO_X11H */
+#ifdef __cplusplus
+}
+#endif
+

@@ -22,4 +22,15 @@
 /* An interface that basically does nothing at all! It is useful for when
  * you do not want a display, such as the use of Tcl
  * */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 void headless_graphics(void);
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -1,6 +1,4 @@
 #pragma once
-//#ifndef IO_TERMH
-//#define IO_TERMH
 /*
  * $Id: io-term.h,v 1.10 2001/02/07 03:16:10 pw Exp $
  *

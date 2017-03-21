@@ -1,5 +1,4 @@
-#ifndef DISPLAYH
-#define DISPLAYH
+#pragma once
 
 /*
  * $Id: display.h,v 1.4 2000/08/10 21:02:50 danny Exp $
@@ -20,6 +19,12 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "global.h"
 #include "font.h"
 #include "cell.h"
@@ -98,4 +103,9 @@ extern int pr_display_cell (struct display *, CELLREF, CELLREF, CELL *);
 #define dpy_aref(DPY,R,C) \
    ((DPY)->cells + (((R) - (DPY)->range.lr) * dpy_cols(DPY)) \
     + ((C) - (DPY)->range.lc))
+
+
+#ifdef __cplusplus
+}
 #endif
+

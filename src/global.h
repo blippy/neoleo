@@ -1,5 +1,4 @@
-#ifndef GLOBALH
-#define GLOBALH
+#pragma once
 /*
  * $Id: global.h,v 1.20 2001/02/14 20:54:50 danny Exp $
  *
@@ -19,6 +18,12 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 
 #include "sysdef.h"
 #include "utils.h"
@@ -401,4 +406,8 @@ extern struct OleoGlobal *Global;
 #define	OLEO_NUM_KEYS	256
 #endif
 
-#endif	/* GLOBALH */
+
+#ifdef __cplusplus
+}
+#endif
+

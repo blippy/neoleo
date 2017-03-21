@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: sylk.h,v 1.5 2000/08/10 21:02:51 danny Exp $
  *
@@ -18,13 +19,19 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef SYLKH
-#define SYLKH
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 
 extern void sylk_read_file (FILE *,int);
 extern void sylk_write_file (FILE *,struct rng *);
 extern  int sylk_set_options (int, char *);
 extern void sylk_show_options (void);
 
-#endif
 
+
+#ifdef __cplusplus
+}
+#endif

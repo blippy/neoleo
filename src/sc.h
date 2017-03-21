@@ -1,5 +1,4 @@
-#ifndef SCH
-#define SCH
+#pragma once
 /*
  * $Id: sc.h,v 1.4 2000/08/10 21:02:51 danny Exp $
  *
@@ -20,6 +19,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
 #include "global.h"
 
 extern void sc_read_file (FILE *,int);
@@ -27,4 +32,7 @@ extern void sc_write_file (FILE *,struct rng *);
 extern  int sc_set_options (int, char *);
 extern void sc_show_options (void);
 
+#ifdef __cplusplus
+}
 #endif
+

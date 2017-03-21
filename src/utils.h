@@ -1,6 +1,4 @@
 #pragma once
-//#ifndef UTILSH
-//#define UTILSH
 
 /*
  * $Id: utils.h,v 1.4 2000/08/10 21:02:51 danny Exp $
@@ -59,6 +57,9 @@ extern void init_eval (void);
 extern void init_refs (void);
 extern void init_cells (void);
 extern VOIDSTAR init_stack (void);
+#ifndef HAVE_STRINCMP
+extern int strincmp (const char *, const char *, size_t);
+#endif
 
 extern VOIDSTAR pop_stack (VOIDSTAR);
 extern void push_stack (VOIDSTAR, VOIDSTAR);

@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: ir.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -17,8 +18,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef INTRECTANGLEH
-#define INTRECTANGLEH
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #include "proto.h"
 /*  t. lord	Thu Feb 13 00:44:35 1992	*/
@@ -80,4 +84,8 @@ extern int xx_IRhits_point (xx_IntRectangle rect, int x, int y);
 extern void xx_IRclip (xx_IntRectangle r1, xx_IntRectangle r2);
 extern int xx_IRsubtract (xx_IntRectangle outv, xx_IntRectangle a, xx_IntRectangle b);
 
+
+#ifdef __cplusplus
+}
 #endif
+

@@ -29,9 +29,13 @@
 /* A union of possible values for a location in the spreadsheet
    (or a location to evaluate to:  This includes c_r, which
    a VAR, etc may evaluate to, but which no cell can ever contain */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "global.h"
 #include "font.h"
-
 
 union vals
   {
@@ -177,4 +181,7 @@ extern char *decomp (CELLREF, CELLREF, CELL *);
 extern char *decomp_formula (CELLREF, CELLREF, CELL *, int);
 extern void decomp_free (void);
 
-//#endif
+#ifdef __cplusplus
+}
+#endif
+

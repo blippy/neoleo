@@ -98,9 +98,6 @@ extern struct tm * gmtime (const time_t *);
 #ifndef HAVE_STRICMP
 extern int stricmp (const char *, const char *);
 #endif
-#ifndef HAVE_STRINCMP
-extern int strincmp (const char *, const char *, size_t);
-#endif
 //#ifndef HAVE_STRSTR
 //extern char *strstr (const char *, const char *);
 //#endif

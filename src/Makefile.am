@@ -6,12 +6,12 @@ GUI_DEFINES = -DHAVE_X
 # Order of linking of libraries for Motif seems to be important
 
 if UseMotif
-GUI_SRCS += io-motif.c appres.c fallback.c oleo_icon.xpm
+GUI_SRCS += io-motif.cc appres.c fallback.c oleo_icon.xpm
 GUI_LINK += -lXm -lXt -lXbae 
 GUI_DEFINES += -DHAVE_MOTIF
 endif
 
-GUI_SRCS += io-x11.c xrdb.c
+GUI_SRCS += io-x11.cc xrdb.c
 GUI_LINK += -lX11
 
 FORTH_HDRS = atlast.h atldef.h
@@ -27,13 +27,14 @@ BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h
 CLEANFILES = $(BUILT_SOURCES)
 
 AM_CFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+AM_CXXFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
-neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.c \
+neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.cc \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
-		 io-headless.c io-curses.c io-edit.c io-term.c io-utils.c \
+		 io-headless.c io-curses.c io-edit.c io-term.cc io-utils.c \
 		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c \
 		 pcl.c plot.c  postscript.c print.c prtext.c \
 		 ref.c regions.c \

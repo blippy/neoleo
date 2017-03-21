@@ -1,5 +1,4 @@
-#ifndef IO_GENERICH
-#define IO_GENERICH
+#pragma once
 /*
  * $Id: io-generic.h,v 1.6 2000/08/10 21:02:50 danny Exp $
  *
@@ -47,10 +46,9 @@ extern void (*write_file) (FILE *, struct rng *);
 extern int (*set_file_opts) (int, char *);
 extern void (*show_file_opts) (void);
 
-extern int get_chr (void);		/* read from kbd or macro */
+//extern int get_chr (void);		/* read from kbd or macro */
 extern int set_window_option (int set_opt, char *text);
 extern void show_window_options (void);
 
 extern const int rowmagic[], colmagic[];
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef REGIONSH
-#define REGIONSH
+#pragma once
 
 /*
  * $Id: regions.h,v 1.6 2000/08/10 21:02:51 danny Exp $
@@ -20,6 +19,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "global.h"
 
 struct cmp
@@ -54,4 +58,7 @@ extern void swp_cells (int n1, int n2);
 extern void rot_cells (int n1, int n2);
 extern void precision_region (struct rng *, int);
 
+#ifdef __cplusplus
+}
 #endif
+

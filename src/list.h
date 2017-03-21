@@ -1,6 +1,4 @@
-#ifndef LISTH
-#define LISTH
-
+#pragma once
 /*
  * $Id: list.h,v 1.6 2000/08/10 21:02:50 danny Exp $
  *
@@ -20,6 +18,12 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 extern void list_read_file (FILE *, int);
 extern void list_write_file (FILE *, struct rng *);
 extern int list_set_options (int, char *);
@@ -27,4 +31,8 @@ extern void list_show_options (void);
 extern int list_set_separator(char sep);
 extern char list_get_separator(void);
 
+
+#ifdef __cplusplus
+}
 #endif
+

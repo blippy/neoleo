@@ -20,7 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
+static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -59,7 +59,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "io-utils.h"
 
 #ifdef HAVE_X
-#pragma message "HAVE_X is defined"
+//#pragma message "HAVE_X is defined"
 #include "io-x11.h"
 bool have_x = true;
 #else
@@ -274,7 +274,7 @@ struct UserPreferences UserPreferences;
  * Set cont to 1 if processing in do_set_option is to continue.
  */
 static struct pref {
-	char	*name;
+	const char	*name;
 	void	*var;
 	int	value;
 	void	(*trigger)(char *);
@@ -440,8 +440,8 @@ save_preferences(void)
 	FILE	*fp;
 	int	i;
 
-	rc = malloc(strlen(home) + strlen(RCFILE) + 4);
-	rc2 = malloc(strlen(home) + strlen(RCFILE) + 4);
+	rc = (char *) malloc(strlen(home) + strlen(RCFILE) + 4);
+	rc2 = (char *)malloc(strlen(home) + strlen(RCFILE) + 4);
 
 	sprintf(rc, "%s/%s", home, RCFILE);
 	sprintf(rc2, "%s/%s.bak", home, RCFILE);
@@ -554,7 +554,8 @@ read_mp_usr_fmt (char *ptr)
   int i;
 
   for (i = 0; i < 9; i++)
-    buf[i] = "";
+	  buf[i] = '\0';
+    //buf[i] = "";
   p = ptr;
   while (*p == ';')
     {
@@ -852,7 +853,8 @@ int
 add_usr_cmds (struct cmd_func *new_cmds)
 {
   num_funcs++;
-  the_funcs = ck_realloc (the_funcs, num_funcs * sizeof (struct cmd_func *));
+  the_funcs = (cmd_func**) ck_realloc (the_funcs, 
+		  num_funcs * sizeof (struct cmd_func *));
   the_funcs[num_funcs - 1] = new_cmds;
   return num_funcs - 1;
 }
@@ -862,7 +864,7 @@ add_usr_cmds (struct cmd_func *new_cmds)
  * which version of oleo this executable is.
  */
 
-static char *what_version = "@(#)" PACKAGE " " VERSION ;
+static const char *what_version = "@(#)" PACKAGE " "  VERSION ;
 
 static void
 show_usage (void)
@@ -907,6 +909,12 @@ _do_nothing_const_char_s(const char *s)
 
 void
 _do_nothing() { }; /* stub */
+
+void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
+	
+void _io_append_message_nothing(bool beep, char *fmt, ...) {};
+
+void _io_update_width_nothing(int col, int wid) {};
 
 void 
 InitializeGlobals(void)
@@ -975,14 +983,8 @@ InitializeGlobals(void)
 
 	io_set_window_name = _do_nothing_const_char_s;
 	io_run_main_loop = _do_nothing;
-
-	void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
 	io_do_button = _io_do_button_nothing;
-
-	void _io_append_message_nothing(bool beep, char *fmt, ...) {};
 	io_append_message = _io_append_message_nothing;
-
-	void _io_update_width_nothing(int col, int wid) {};
 	io_update_width = _io_update_width_nothing;
 
 }

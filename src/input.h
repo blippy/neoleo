@@ -1,5 +1,4 @@
-#ifndef INPUTH
-#define INPUTH
+#pragma once
 /*
  * $Id: input.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -19,6 +18,10 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif  
 
 /* Display-generic updating logic for the input area. */
 typedef int (*text_measure) (char * str, int len);
@@ -84,4 +87,8 @@ extern void iv_erase (struct input_view * this_iv, int len);
 extern void iv_insert (struct input_view * this_iv, int len);
 extern void iv_over (struct input_view * this_iv, int len);
 
-#endif  /* INPUTH */
+
+#ifdef __cplusplus
+}       
+#endif
+
