@@ -1,3 +1,5 @@
+#include <exception>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -8,6 +10,7 @@
 //}
 
 //extern "C" {
+#include "assert.h"
 #include "atlast.h"
 #include "atoleo.h"
 #include "basic.h"
@@ -24,10 +27,22 @@
 #include "print.h"
 //}
 
+using std::cout;
+using std::endl;
 using std::string;
 using std::vector;
 
 #define _(x) (x) // TODO get rid of this line
+
+/* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++ 
+ * */
+class OleoJmp : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "a longjmp was called";
+	}
+};
 
 void
 init_native_language_support()
@@ -75,6 +90,35 @@ init_maps (void)
 }
 
 
+void
+read_init_file(int ignore_init_file, int init_fpc,
+		char **init_file_names, FILE **init_fp)
+{
+	volatile int x;
+	//cout << "read_init_file(): init_fpc = " << init_fpc << endl;
+	for (x = 0; x < init_fpc; ++x)
+	{
+
+		try {
+			if (setjmp (Global->error_exception))
+				throw OleoJmp();
+			if (!ignore_init_file)
+				read_cmds_cmd (init_fp[x]);
+		} catch (OleoJmp& e) {
+			string msg = string("   error occured in init file ")
+				+ init_file_names [x]
+				+ " near line "
+				+ std::to_string(Global->sneaky_linec)
+				+ "\n";
+			const char *m = _(msg.c_str());
+			fprintf(stderr, m);
+			io_info_msg(m);
+		}
+
+		assert(x < init_fpc);
+	       	fclose (init_fp[x]);
+	}
+}
 
 int 
 main(int argc, char **argv)
@@ -87,15 +131,6 @@ main(int argc, char **argv)
 
 
 	init_atoleo();
-	/*
-	{
-		string s = "4life";
-		vector<char> v(s.begin(), s.end());
-		v.push_back(0);
-		char *cmd = &v[0];
-		atl_eval(cmd);
-	}
-	*/
 
 	init_native_language_support();
 	MdiInitialize();	/* Create initial Global structure */
@@ -163,24 +198,7 @@ main(int argc, char **argv)
 
 	oleo_catch_signals(&got_sig);
 
-	/* Read the init file. */
-	{
-		volatile int x;
-		for (x = 0; x < init_fpc; ++x)
-		{
-			if (setjmp (Global->error_exception))
-			{
-				fprintf (stderr, _("   error occured in init file %s near line %d."),
-						init_file_names [x], Global->sneaky_linec);
-				io_info_msg(_("   error occured in init file %s near line %d."),
-						init_file_names [x], Global->sneaky_linec);
-			}
-			else
-				if (!ignore_init_file)
-					read_cmds_cmd (init_fp[x]);
-			fclose (init_fp[x]);
-		}
-	}
+	read_init_file(ignore_init_file, init_fpc, init_file_names, init_fp);
 
 
 	if (option_filter) {
