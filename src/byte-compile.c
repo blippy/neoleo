@@ -61,6 +61,7 @@ local_free (p)
 #include "hash.h"
 #include "ref.h"
 
+#define BUSI
 extern int yyparse (void);
 
 extern struct function date_funs[];

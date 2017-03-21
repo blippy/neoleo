@@ -1,6 +1,9 @@
 ===== neoleo NEXT =====
 BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
+* decimals are used instead of floats. This should greatly improve
+  formatting
+
 * added examples/oleo.pm6 - converts oleo files to csv
 
 * atlast Forth (64-bit) embedded.

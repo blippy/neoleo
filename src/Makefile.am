@@ -28,7 +28,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 AM_CFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
-neoleo_SOURCES = afm.c args.c basic.c  byte-compile.c cells.c cmd.c \
+neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.c \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
@@ -57,7 +57,8 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 funcs.h global.h graph.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-motif.h io-term.h io-utils.h io-x11.h \
-		 ir.h key.h line.h list.h lists.h mdi.h mysql.h node.h \
+		 ir.h key.h line.h list.h lists.h mdi.h mysql.h \
+		 node.h  numeric.h \
 		 oleofile.h oleo_plot.h oleosql.h oleo_xb.h parse.h pcl.h \
 		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
@@ -67,7 +68,7 @@ noinst_HEADERS = afm.h appres.h args.h basic.h byte-compile.h cell.h \
 		 $(FORTH_HDRS)
 
 # exclude these for now:
-# busi.c plotter.c xbase.cpp
+# plotter.c xbase.cpp
 
 
 ref.o : parse.h

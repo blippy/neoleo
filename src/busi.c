@@ -44,8 +44,7 @@ struct value
     union vals x;
   };
 
-//#define Float	x.c_d
-#define Dec	x.c_dec
+#define Float	x.c_n
 #define String	x.c_s
 #define Int	x.c_l
 #define Value	x.c_i
@@ -70,7 +69,7 @@ npv (rng, rate, putres)
   double npv;
   int i;
   //double f;
-  dec f;
+  num f;
   CELL *cell_ptr;
   char *strptr;
 
@@ -97,7 +96,7 @@ npv (rng, rate, putres)
 	  if (*strptr)
 	    return NON_NUMBER;
 	know_f:
-	  npv += f * (1.0 / (pow (1.0 + rate, (double) i)));
+	  npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
 	  break;
 
 	case TYP_ERR:
@@ -671,19 +670,17 @@ do_kprin (p)
 	}
       principal -= tmp_pmt - int_part;
     }
-  //p->Float = tmp_pmt - int_part;
-  p->Dec = tmp_pmt - int_part;
+  p->Float = tmp_pmt - int_part;
 }
 
 static void
 do_compbal (struct value *p)
 {
-  dec principal = (p)->Dec;
-  dec rate = (p + 1)->Dec;
-  dec term = (p + 2)->Dec;
+  num principal = (p)->Float;
+  num rate = (p + 1)->Float;
+  num term = (p + 2)->Float;
 
-  //p->Float = principal * pow (1 + rate, term);
-  p->Dec = principal * pow (1 + rate, term);
+  p->Float = principal * (num) pow (1 + rate, term);
 }
 
 struct function busi_funs[] =
