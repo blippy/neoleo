@@ -62,6 +62,8 @@
 #include "xrdb.h"
 #include "io-x11.h"
 
+#include "oleox.hpp"
+
 #include <locale.h>
 
 #if defined(HAVE_RINT)
@@ -787,6 +789,9 @@ xio_scan_for_input (int blockp)
 				se_buf[se_chars_buffered] |= META_BIT;
 
 			if (se_keysym == RetKeySym) {
+
+				/* mcarter 22-Mar-2017
+				 * REPLACE THE FOLLOWING FREAKISH MESS ...
 				jmp_buf tmp_exception;
 
 				bcopy(Global->error_exception, tmp_exception, sizeof(jmp_buf));
@@ -800,12 +805,28 @@ xio_scan_for_input (int blockp)
 					pop_unfinished_command ();
 					bcopy(tmp_exception, Global->error_exception,
 						sizeof(jmp_buf));
-					longjmp (Global->error_exception, 1); /**/
+					longjmp (Global->error_exception, 1); 
 				} else {
 					execute_command (se_buf);
 					bcopy(tmp_exception, Global->error_exception,
 						sizeof(jmp_buf));
-				}
+				} 
+				... BY ... */
+				se_buf[se_chars_buffered] = '\0';
+
+				try {
+					execute_command (se_buf);
+				} catch(OleoJmp& e) {
+					fprintf(stderr, "Error in send_event command: %s\n", se_buf);
+					se_buf[0] = '\0';
+					se_chars_buffered = 0;
+					set_info (0);
+					pop_unfinished_command ();
+					throw OleoJmp("Rethrow of OleoJmp from  xio_scan_for_input()");
+				} 
+				// end of freakish Frankensteinian refactoring
+
+
 				se_buf[0] = '\0';
 				se_chars_buffered = 0;
 			} else {

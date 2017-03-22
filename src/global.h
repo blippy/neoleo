@@ -107,7 +107,7 @@ enum graph_pair_ordering
   graph_num_pair_orders = graph_cols_implicit + 1
 };
 
-#include <setjmp.h>
+//#include <setjmp.h>
 
 /*
  * All kinds of other global stuff
@@ -301,8 +301,11 @@ struct OleoGlobal {
 /* Jump here on error.  This simply restarts the top 
  * level command loop.  User state should have been 
  * reset appropriately before the longjmp.
+ *
+ * mcarter 22-Mar-2017 I am trying to eliminate set/longjmps
+ * in favour of exception handling in C++
  */
-	jmp_buf				error_exception;
+	//jmp_buf				error_exception;
 /* From Window.c */
 	int				scr_lines, scr_cols, user_input, user_status, input,
 					status, input_rows, status_rows, label_rows, label_emcols;

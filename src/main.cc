@@ -27,6 +27,9 @@
 #include "print.h"
 //}
 
+#include "oleox.hpp"
+
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::string;
@@ -34,15 +37,6 @@ using std::vector;
 
 #define _(x) (x) // TODO get rid of this line
 
-/* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++ 
- * */
-class OleoJmp : public std::exception
-{
-	virtual const char* what() const throw()
-	{
-		return "a longjmp was called";
-	}
-};
 
 void
 init_native_language_support()
@@ -100,11 +94,13 @@ read_init_file(int ignore_init_file, int init_fpc,
 	{
 
 		try {
-			if (setjmp (Global->error_exception))
-				throw OleoJmp();
+			//if (setjmp (Global->error_exception))
+			//	throw OleoJmp("OleoJmp from read_init_file()");
 			if (!ignore_init_file)
 				read_cmds_cmd (init_fp[x]);
 		} catch (OleoJmp& e) {
+			//cout << e.what() << endl;
+			cerr << "OleoJmp caught by read_init_file()" << endl;
 			string msg = string("   error occured in init file ")
 				+ init_file_names [x]
 				+ " near line "
@@ -120,6 +116,34 @@ read_init_file(int ignore_init_file, int init_fpc,
 	}
 }
 
+void
+init_maps_and_macros()
+{
+	
+/*
+	if (setjmp (Global->error_exception))
+	{
+		fprintf (stderr, _("Error in the builtin init scripts (a bug!).\n"));
+		io_close_display(69);
+		exit (69);
+	}
+	else
+	{
+		init_maps ();
+		init_named_macro_strings ();
+		run_init_cmds ();
+	}
+	*/
+	try {
+		init_maps();
+		init_named_macro_strings ();
+                run_init_cmds ();
+	} catch (OleoJmp& e) {
+		fprintf (stderr, _("Error in the builtin init scripts (a bug!).\n"));
+                io_close_display(69);
+                exit (69);
+	}
+}
 int 
 main(int argc, char **argv)
 {
@@ -183,18 +207,7 @@ main(int argc, char **argv)
 	PrintInit();
 	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
 
-	if (setjmp (Global->error_exception))
-	{
-		fprintf (stderr, _("Error in the builtin init scripts (a bug!).\n"));
-		io_close_display(69);
-		exit (69);
-	}
-	else
-	{
-		init_maps ();
-		init_named_macro_strings ();
-		run_init_cmds ();
-	}
+	init_maps_and_macros();
 
 	oleo_catch_signals(&got_sig);
 
@@ -208,11 +221,13 @@ main(int argc, char **argv)
 		/* fixme: record file name */
 
 		if ((fp = fopen (argv[optind], "r"))) {
-			if (setjmp (Global->error_exception)) {
+			try {
+				read_file_and_run_hooks (fp, 0, argv[optind]);
+			} catch (OleoJmp& e) {
+			//if (setjmp (Global->error_exception)) {
 				fprintf (stderr, _(", error occured reading '%s'\n"), argv[optind]);
 				io_info_msg(_(", error occured reading '%s'\n"), argv[optind]);
-			} else
-				read_file_and_run_hooks (fp, 0, argv[optind]);
+			} 
 			fclose (fp);
 			command_line_file = 1;
 			FileSetCurrentFileName(argv[optind]);

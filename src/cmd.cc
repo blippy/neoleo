@@ -35,7 +35,7 @@
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
+#include "oleox.hpp"
 
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free
@@ -388,7 +388,8 @@ error_alarm ()
 		    {
 			    pop_unfinished_command ();
 			    alarm_table[2].freq = 0;
-			    longjmp (Global->error_exception, 1);
+			    //longjmp (Global->error_exception, 1);
+			    throw OleoJmp("OleJmp from error_alarm()");
 		    }
 	  }
 	else
@@ -2504,7 +2505,9 @@ io_error_msg (const char *str, ...)
 			fprintf (stderr, "oleo: %s\n", buf);
 
 	}
-	longjmp (Global->error_exception, 1);
+	//longjmp (Global->error_exception, 1);
+	throw OleoJmp("OleoJmp from io_error_msg()");
+
 }
 
 

@@ -31,6 +31,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #endif
 
 #include <errno.h>
+#include <iostream>
 #include <libintl.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -57,6 +58,11 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
+
+#include "oleox.hpp"
+
+using std::cerr;
+using std::endl;
 
 #ifdef HAVE_X
 //#pragma message "HAVE_X is defined"
@@ -164,8 +170,13 @@ fairly_std_main_loop(void)
 	 * their own special cases.
 	 */
 	  while (1) {
-		  setjmp (Global->error_exception);
-		  command_loop (0, 0);
+		  //setjmp (Global->error_exception);
+		  try {
+			  command_loop (0, 0);
+		  } catch (OleoJmp& e) {
+			  //cerr << "OleoJmp caught in fairly_std_main_loop()" 
+			//	  << endl;
+		  }
 	  }
 }
 
