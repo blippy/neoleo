@@ -1,10 +1,16 @@
 #include <stdio.h>
 
 #include "atldef.h"
+#include "atlast.h"
 #include "atoleo.h"
 #include "basic.h"
 #include "cmd.h"
 #include "ref.h"
+
+// For some reason, S1() macro doesn't compile here, so
+// redefining them again seems to "fix" the problem.
+// Bizarre
+#define S1A(x) if ((stk-stack)<(x)) {stakunder(); return Memerrs;}
 
 //#ifdef __cplusplus
 //extern "C" {
@@ -20,6 +26,20 @@ prim p4eval()
 	atl_eval(cmd);
 }
 */
+
+
+prim p4included()
+{
+
+	S1A(1); 
+	char *path = (char *)S0;
+	Pop;
+	FILE *fp = fopen(path, "r");
+	if(!fp) return;
+	int stat = atl_load(fp);
+
+	fclose(fp);
+}
 
 prim p4life()
 {
@@ -51,6 +71,7 @@ prim p4xcmd()
 
 static struct primfcn oleop[] = {
 	//{"04EVAL",	p4eval},
+	{"04INCLUDED",	p4included},
 	{"04LIFE",	p4life},
 	{"04PRFORM",	p4prform},
 	{"04XCMD",	p4xcmd},

@@ -6,7 +6,7 @@ BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
 * added examples/oleo.pm6 - converts oleo files to csv
 
-* atlast Forth (64-bit) embedded. Words added: 4life, 4prform, 4xcmd
+* atlast Forth (64-bit) embedded. Words added: 4life, 4included, 4prform, 4xcmd
 
 * added `-H' headless mode, which accept Forth commands
 

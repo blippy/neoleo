@@ -3465,8 +3465,7 @@ void atl_break()
 
 /*  ATL_LOAD  --  Load a file into the system.	*/
 
-int atl_load(fp)
-  FILE *fp;
+int atl_load(FILE *fp)
 {
     int es = ATL_SNORM;
     char s[134];

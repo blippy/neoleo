@@ -29,6 +29,7 @@ extern "C" {
 #define READONLYSTRINGS
 
 
+#include <stdio.h>
 #include <stdint.h>
 
 typedef int64_t atl_int;    	      /* Stack integer type */
@@ -71,7 +72,8 @@ extern atl_int atl_errline;	      /* Line number where last atl_load()
 /*  Entry points  */
 
 extern void atl_init(), atl_mark(), atl_unwind(), atl_break();
-extern int atl_load();
+//extern int atl_load();
+int atl_load(FILE *fp);
 extern void atl_memstat();
 
 /* mcarter 23-Feb-2017:
