@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+
 
 #include "atldef.h"
 #include "atlast.h"
@@ -85,6 +89,12 @@ init_atoleo()
 	atl_primdef(oleop);
 }
 
+
+
+/* ****************************************************************** */
+/* a repl using readline */
+
+/*
 void
 forth_repl()
 {
@@ -93,7 +103,40 @@ forth_repl()
 			fgets(t, 132, stdin) != NULL)
 		atl_eval(t);
 }
+*/
 
+// taken from http://web.mit.edu/gnu/doc/html/rlman_2.html
+char *
+rl_gets()
+{
+	static char *line_read = (char *)NULL;
+
+	if(read_line) {
+		// if buffer allocated, return the mmeory to the free pool
+		free(line_read);
+		line_read = (char *)NULL;
+	}
+
+	line_read = readline("-> ");
+
+	if(line_read && *line_read)
+		add_history(line_read);
+
+	return line_read;
+}
+
+void
+forth_repl()
+{
+	char *line;
+	while(line = rl_gets())
+		atl_eval(line);
+}
+
+
+
+
+/* ****************************************************************** */
 
 //#ifdef __cplusplus
 //}
