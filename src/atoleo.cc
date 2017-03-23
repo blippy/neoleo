@@ -31,6 +31,15 @@ prim p4eval()
 }
 */
 
+void try_reading_forth_file(const char *path)
+{
+	if(!path) return;
+	FILE *fp = fopen(path, "r");
+	if(!fp) return;
+	int stat = atl_load(fp);
+	fclose(fp);
+}
+
 
 prim p4included()
 {
@@ -38,11 +47,7 @@ prim p4included()
 	S1A(1); 
 	char *path = (char *)S0;
 	Pop;
-	FILE *fp = fopen(path, "r");
-	if(!fp) return;
-	int stat = atl_load(fp);
-
-	fclose(fp);
+	try_reading_forth_file(path);
 }
 
 prim p4life()

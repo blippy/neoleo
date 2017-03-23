@@ -188,9 +188,10 @@ int		option_filter = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "VqfxtHhsFSTv";
+static char short_options[] = "4:VqfxtHhsFSTv";
 static struct option long_options[] =
 {
+	{"forth",		1,	NULL,	'4'},
 	{"version",		0,	NULL,	'V'},
 	{"quiet",		0,	NULL,	'q'},
 	{"ignore-init-file",	0,	NULL,	'f'},
@@ -238,6 +239,7 @@ int using_gtk = 0;
 int using_motif = 0;
 bool user_wants_headless = false;
 
+char *command_line_forth_file=NULL;
 
 /* Cell size paramaters. */
 unsigned int default_width = 8;
@@ -891,6 +893,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "), PACKAGE);
   printf(_("\
 \n\
+  -4 FILE, --forth FILE    run a Forth FILE at start-up\n\
   -H, --headless           run without all toolkits\n\
   -h, --help               display this help and exit\n\
   -V, --version            output version information and exit\n\
@@ -1115,6 +1118,11 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 
 		switch (opt)
 		{
+			case '4':
+				command_line_forth_file = optarg;
+				//command_line_forth_file = argv[optind];
+                                //optind++;
+				break;
 			case 'v':
 			case 'V':
 				print_version();

@@ -213,6 +213,7 @@ main(int argc, char **argv)
 
 	read_init_file(ignore_init_file, init_fpc, init_file_names, init_fp);
 
+	try_reading_forth_file(command_line_forth_file);
 
 	if (option_filter) {
 		read_file_and_run_hooks(stdin, 0, "stdin");
