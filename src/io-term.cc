@@ -30,6 +30,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include <dmalloc.h>
 #endif
 
+#include <assert.h>
 #include <errno.h>
 #include <iostream>
 #include <libintl.h>
@@ -187,22 +188,23 @@ int		option_filter = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "VqfxthsFSTv";
+static char short_options[] = "VqfxtHhsFSTv";
 static struct option long_options[] =
 {
-	{"version",		0,	NULL,			'V'},
-	{"quiet",		0,	NULL,			'q'},
-	{"ignore-init-file",	0,	NULL,			'f'},
-	{"nw",			0,	NULL,			'x'},
-	{"no-toolkit",		0,	NULL,			't'},
-	{"help",		0,	NULL,			'h'},
-	{"separator",		1,	NULL,			's'},
-	{"space",		0,	NULL,			'S'},
-	{"format",		1,	NULL,			'F'},
-	{"filter",		0,	NULL,			'-'},
-	{"tests",		0,	NULL,			'T'},
-	{"version",		0,	NULL,			'v'},
-	{NULL,			0,	NULL,			0}
+	{"version",		0,	NULL,	'V'},
+	{"quiet",		0,	NULL,	'q'},
+	{"ignore-init-file",	0,	NULL,	'f'},
+	{"nw",			0,	NULL,	'x'},
+	{"no-toolkit",		0,	NULL,	't'},
+	{"headless",		0,	NULL,	'H'},
+	{"help",		0,	NULL,	'h'},
+	{"separator",		1,	NULL,	's'},
+	{"space",		0,	NULL,	'S'},
+	{"format",		1,	NULL,	'F'},
+	{"filter",		0,	NULL,	'-'},
+	{"tests",		0,	NULL,	'T'},
+	{"version",		0,	NULL,	'v'},
+	{NULL,			0,	NULL,	0}
 };
 
 /* Avoid needless messages to stdout. */
@@ -234,6 +236,7 @@ int using_x = 0;
 int using_curses = 0;
 int using_gtk = 0;
 int using_motif = 0;
+bool user_wants_headless = false;
 
 
 /* Cell size paramaters. */
@@ -888,6 +891,7 @@ Usage: %s [OPTION]... [FILE]...\n\
 "), PACKAGE);
   printf(_("\
 \n\
+  -H, --headless           run without all toolkits\n\
   -h, --help               display this help and exit\n\
   -V, --version            output version information and exit\n\
   -q, --quiet              do not display startup messages\n\
@@ -1129,6 +1133,9 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 				no_gtk = 1;
 				no_motif = 1;
 				break;
+			case 'H':
+				user_wants_headless = true;
+				break;
 			case 'h':
 				show_usage ();
 				exit (0);
@@ -1191,9 +1198,14 @@ init_basics()
 void
 choose_display(bool force_cmd_graphics)
 {
-	if(force_cmd_graphics) {
+	//assert(user_wants_headless);
+
+	if(force_cmd_graphics || user_wants_headless) {
 		headless_graphics();
-	} else if(no_x) {
+		return;
+	}
+
+	if(no_x) {
 	       	if (no_curses) {
 			printf("choose_display() is using cmd_graphics\n");
 			headless_graphics();

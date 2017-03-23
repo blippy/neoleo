@@ -574,7 +574,7 @@ _io_input_avail (void)
 }
 
 static void 
-_io_scan_for_input (int block)
+_curses_io_scan_for_input (int block)
 {
   /* This function only exists because X kbd events don't generate
    * SIGIO. Under curses, the SIGIO hander does the work of this
@@ -1021,7 +1021,7 @@ tty_graphics (void)
   io_repaint_win = _io_repaint_win;
   io_close_display = _io_close_display;
   io_input_avail = _io_input_avail;
-  io_scan_for_input = _io_scan_for_input;
+  io_scan_for_input = _curses_io_scan_for_input;
   io_wait_for_input = _io_wait_for_input;
   io_read_kbd = _io_read_kbd;
   io_nodelay = _io_nodelay;

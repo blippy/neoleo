@@ -7,7 +7,7 @@ extern "C" {
 
 
 void init_atoleo();
-
+void forth_repl();
 
 
 #ifdef __cplusplus
