@@ -9,6 +9,7 @@
 @settitle Oleo @value{version}
 @c make a command index:
 @defcodeindex cm
+@defindex fs
 @c %**end of header
 
 @clear smallbook
@@ -119,6 +120,7 @@ means complete, nor necessarily accurate for that matter.
 * Database Access::
 * Key Index::
 * Command Index::
+* Forth Word Index::
 * Function Index::
 * Options Index::
 * Concept Index::
@@ -148,11 +150,15 @@ means complete, nor necessarily accurate for that matter.
 @unnumbered Key Index
 @printindex ky
 
-@node   Command Index, Function Index, Key Index, Top
+@node   Command Index, Forth Word Index, Key Index, Top
 @unnumbered Command Index
 @printindex cm
 
-@node   Function Index, Options Index, Command Index, Top
+@node   Forth Word Index, Function Index, Command Index, Top
+@unnumbered Forth Word Index
+@printindex fs
+
+@node   Function Index, Options Index, Forth Word Index, Top
 @unnumbered Function Index
 @printindex fn
 

@@ -3,12 +3,91 @@
 @cindex Forth
 
 @menu
+* Tutorial::		Getting started
 * Forth::		Implementation-specific notes on atlast
 * Calling Forth::	How to invoke Forth from oleo
 * Oleo words::		Forth words specific to oleo
 @end menu
 
-@node Forth, Calling Forth, Forth Interpreter, Forth Interpreter
+
+
+
+@node Tutorial, Forth, Forth Interpreter, Forth Interpreter
+@section Tutorial
+You can call call Forth from an interface like ncurses, but in this
+tutorial I will show you how to interact with @code{Oleo} from the 
+command line. You can use this approach to put @code{Oleo} within
+a UNIX pipeline.
+
+Start @code{Oleo} in headless mode:
+@example
+$ neoleo -H
+@end example
+You are now at a Forth interactive shell. Forth has a silly word
+called @code{4life}, which sets the formula of the current cell to
+the meaning of life, which we all know is `42':
+@example
+-> 4life
+@end example
+
+Let's print the formula for the cell to prove that we have, indeed,
+set it to the value 42:
+@example
+-> 4prform
+Formula at (1,1) is:42
+@end example
+
+Forth has a word called @code{4xcmd}, which executes the internal, non-Forth
+string. For example, there is currently no word for @code{down-cell}, even though it is an @code{Oleo} command. We can make the cursor move down a cell as follows:
+@example
+-> "down-cell" 4xcmd
+@end example
+
+Let's prove that we moved down:
+@example
+-> 4prform
+Formula at (2,1) is:
+@end example
+
+Instead of typing the @code{4xcmd} all the time, let's define a Forth
+word to move down a cell:
+@example
+-> : down-cell "down-cell" 4xcmd ;
+-> down-cell
+-> down-cell
+-> 4prform
+Formula at (4,1) is:
+@end example
+
+Now let's edit a cell, first to set it's value to 16, and then to set it to the string @code{foo bar}:
+@example
+-> "edit-cell 16" 4xcmd 4prform
+Formula at (4,1) is:16
+-> "edit-cell \"foo bar\"" 4xcmd 4prform
+Formula at (4,1) is:"foo bar"
+@end example
+
+Now let's quit @code{Oleo} by typing @code{Ctl-d}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@node Forth, Calling Forth, Tutorial, Forth Interpreter
 @section Implementation-specific notes on atlast
 @code{Oleo} embeds John Walker's Public domain @code{atlast}
 64-bit interpreter. It uses version 2.0. Further details can be found 
@@ -69,14 +148,66 @@ as the output will interfere with ncurses displays.
 @section Forth words specific to oleo 
 A list of @code{Oleo}-specific words now follows.
 
+
+@table @code
+@item 4included
+@fsindex 4included
+@code{( str -- )} Loads and executes a Forth file identified in `str'.
+
+Example:
+@example
+"simple.fs" included \ gives a dictionary which defines `gnu'
+gnu 
+---
+Output:
+
+  ,           ,    
+ /             \   
+((__-^^-,-^^-__))  
+ `-_---' `---_-'   
+  `--|o` 'o|--'    
+       `  /       
+      ): :(        
+      :o_o:        
+       "-"         
+
+@end example
+@end table
+
 @table @code
 @item 4life
+@fsindex 4life ( -- )
 @code{( -- )} Sets the current cell to `42'. Currently only useful only as a 
 proof-of-concept, of course.
 @end table
 
+
+
+@table @code
+@item 4prform
+@fsindex 4prform
+@code{( -- )} Prints the formula at the current cell, together with the
+cell row and number.
+
+Example:
+@example
+4life \ set the current cell to 42
+4prform 
+---
+Output:
+Formula at (1,1) is:42
+@end example
+@end table
+
+
+
+
+
+
+
 @table @code
 @item 4xcmd
+@fsindex 4xcmd
 @code{( str -- )} Executes the @code{oleo} command given in `str'. Example:
 @example
 "down-cell" 4xcmd
