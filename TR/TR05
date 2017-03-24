@@ -1,0 +1,45 @@
+TR05: Legacy Oleo
+
+Notes on how to compile the original version of Oleo
+
+Resources
+=========
+
+* https://lists.gnu.org/mailman/listinfo/bug-oleo
+* http://savannah.gnu.org/projects/oleo/
+* My notes on compilation problems:
+	http://lists.gnu.org/archive/html/bug-oleo/2017-03/msg00003.html
+  largely reproduced below
+
+
+I have taken a look at your CVS repo, done some hacking, and I have been able to compile oleo! It runs! I do not have things in a suitable form for a patch, but here is an overview of the results of my investigations so far:
+
+* src/Markefile.am:8 Need to get rid of `../lib/ansi2knr'
+Googling around, this seems to way to convert ANSI C definitions to K&R (Kernighan and Ritchie "traditional C"). I'm happy to drop that, as nobody should be using such an antiquated compiler
+
+* doc/*texi compilation fails
+The fixes for these are pretty trivial and non-controversial.
+
+* libxp
+autoreconf has a problem with LT_HAVE_LIBXP. I have commented it out for now, and was able to obtain a build. However, the root cause appears to be "underquoting" in m4/xp.m4. My knowledge `m4' is practically non-existent, but I will take a look to see if I can fix whatever seems to be the problem.
+
+* So, in summary, it should be too difficult to get oleo working again. I'm not sure if you are aware, but there is apparently a patch for oleo here:
+https://launchpadlibrarian.net/19062178/oleo_1.99.16-11.diff.gz
+It seems to patch the tar distribution: `configuration' in particular. So although it's not exactly what we want, it's worth noting its existence.
+
+* On Arch Linux, there seems to be a recent attempt at building oleo:
+	https://aur.archlinux.org/packages/oleo/
+oleo 1.99.16-3 x64 from 2017-02-18 does not build, asper my comment dated
+2017-03-04
+
+
+* Not sure if this is relevant: configure.in :
+	AM_C_PROTOTYPES may be a problem
+
+
+
+
+
+
+Author:  Mark Carter
+Created: 24-Mar-2017
