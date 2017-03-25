@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -70,6 +71,15 @@ prim p4prform()
 	decomp_free();
 }
 
+prim p4system()
+{
+	S1A(1);
+	char *command = (char *)S0;
+	Pop;
+	system(command);
+}
+
+
 prim p4xcmd()
 {
 	Sl(1);
@@ -83,6 +93,7 @@ static struct primfcn oleop[] = {
 	{"04INCLUDED",	p4included},
 	{"04LIFE",	p4life},
 	{"04PRFORM",	p4prform},
+	{"04SYSTEM",	p4system},
 	{"04XCMD",	p4xcmd},
 	{NULL,		(codeptr) 0 }
 };

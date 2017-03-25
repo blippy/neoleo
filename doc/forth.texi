@@ -114,6 +114,21 @@ Double-quotes are placed in strings by escaping them with `\':
 "\"Quoth the raven\""
 @end example
 
+String are defined using @code{string}. To create the string @code{s} with 80 characters, for example:
+@example
+80 string s
+@end example
+Set it to a value, append more text, and finally print it out:
+@example
+-> "hello " s strcpy
+-> "world"  s strcat
+-> s type cr
+hello world
+@end example
+
+
+
+
 The rest of this document only concentrates on @code{Oleo}-specific 
 Forth concepts.
 Only a proof-of-concept word (@code{4life}) has been added at this
@@ -201,6 +216,16 @@ Formula at (1,1) is:42
 
 
 
+
+@table @code
+@item 4system
+@fsindex 4system
+@code{( str -- )} Execute a shell command. For example, list all the files in
+the current directory:
+@example
+"ls -1" 4system
+@end example
+@end table
 
 
 

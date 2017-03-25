@@ -11,3 +11,6 @@
 	"save-spreadsheet " cmd strcpy 
 	sname cmd  strcat ;
 : sss cmd 4xcmd ; \ save spreadsheet
+
+
+: ls "ls" 4system ; \ list contents of directory
