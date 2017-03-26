@@ -33,7 +33,6 @@ You should explore that directory to see what is available.
 Features
 --------
 	* ncurses interface: neoleo -x , or neoleo -nw
-	* Motif+Xbae interface: neoleo
 	* Macro language
 	    (still a bit untidy in places, but it works)
 	* Charts generated from spreadsheet data
@@ -43,21 +42,11 @@ Features
 	* File format conversions
 	    (support of this is still pretty primitive; don't plan
 	    on importing E*cel files anytime soon)
-	* Tcl extension (see below)
 
 
 
 Disabled features
 -----------------
-
-
-Formerly, the default was to build with ncurses+Motif+Xbae, downgradeable
-to:
-	* curses-only using: ./configure --without-x
-	* curses+X11  using: ./configure --without-motif
-To keep things simple, ncurses+Motif+Xbae is now built. This means that
-the Xbae library must be installed.
-
 
 Code still exists, but is currently not compiled for:
 	* GNU Gettext 0.10.32
@@ -65,6 +54,15 @@ Code still exists, but is currently not compiled for:
 	* SciPlot  for charts
 	* GNU plotutils for charts
 	* XmHTML for still-incomplete online documentation
+
+
+Motif
+-----
+
+The Motif front-end is disabled by default. To configure using Motif:
+	configure --with-motif
+This front-end requires that the XBae library and header files are
+installed.
 
 
 Compiling from GIT
