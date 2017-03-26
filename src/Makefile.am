@@ -26,9 +26,15 @@ bin_PROGRAMS = neoleo
 BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h 
 CLEANFILES = $(BUILT_SOURCES)
 
-AM_CFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-AM_CXXFLAGS = $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-neoleo_LDADD = -lm -lncurses -lpthread $(GUI_LINK)
+if  UseAsan
+ASAN_FLAGSC = -fsanitize=address
+ASAN_FLAGSL = -lasan
+endif
+
+AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+AM_CXXFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpthread $(GUI_LINK)
+#neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.cc \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \

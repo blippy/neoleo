@@ -8,7 +8,8 @@
 
 #MX=--with-motif # default: commented
 #SAN=-fsanitize=address
+SAN=--with-asan
 
-./configure $MX "CFLAGS= -Werror -O0 -g $SAN" --prefix=$HOME/.local
+./configure $MX $SAN "CFLAGS= -Werror -O0 -g " --prefix=$HOME/.local
 
 
