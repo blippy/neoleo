@@ -1323,7 +1323,7 @@ goto_set_cell (int c)
 void 
 read_cmds_cmd (FILE *fp)
 {
-  struct line line;
+  struct line line; // TODO It would be nice to eliminate all of these using C++
   char *ptr;
   init_line (&line);
   Global->sneaky_linec = 0;
@@ -1336,6 +1336,7 @@ read_cmds_cmd (FILE *fp)
 	continue;
       execute_command (ptr);
     }
+  free_line(&line);
 }
 
 void
