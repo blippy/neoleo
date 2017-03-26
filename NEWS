@@ -26,6 +26,8 @@ BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
 * `shell' command added. See also TR2.
 
+* Motif no longer a default build. Use `--with-motif' if you want it.
+
 Date?
 
 

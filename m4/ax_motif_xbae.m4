@@ -1,18 +1,18 @@
 AC_DEFUN([AX_MOTIF_XBAE], [
 AC_ARG_WITH(motif,
-     [  --without-motif              do not use Motif, even if detected],
+     [  --with-motif       Compile using Motif],
      [               case "${withval}" in
          y | ye | yes )      usemotif=yes ;;
          n | no )            usemotif=no ;;
-         * )                 usemotif=yes ;;
+         * )                 usemotif=no ;;
          esac],
-     [               usemotif=yes])
+     [               usemotif=no])
 
 AM_CONDITIONAL(UseMotif, test x$usemotif = xyes)
 if test "$usemotif" = "yes"; then
    AC_CHECK_HEADERS([Xbae/Matrix.h])
    AS_IF([test "x$ac_cv_header_Xbae_Matrix_h" != "xyes"],
-         [AC_MSG_ERROR([Xbae not found; you must install it or use "--without-motif"])])
+         [AC_MSG_ERROR([Xbae not found; avoid using "--with-motif"])])
 fi
 
 ])dnl AX_MOTIF_XBAE

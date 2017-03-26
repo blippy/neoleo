@@ -2,7 +2,7 @@
 # $Header: /cvs/oleo/examples/Makefile.am,v 1.9 2001/02/08 00:21:23 pw Exp $
 #
 
-exampledir = $(datadir)/oleo/examples
+exampledir = $(datadir)/neoleo/examples
 
 OLEOS = blank.oleo \
 	docs.oleo \

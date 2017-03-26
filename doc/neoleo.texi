@@ -5,7 +5,7 @@
 @set update-date July 29 2000
 @set update-month July 2000
 
-@setfilename oleo.info
+@setfilename neoleo.info
 @settitle Oleo @value{version}
 @c make a command index:
 @defcodeindex cm

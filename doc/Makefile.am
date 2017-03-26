@@ -3,7 +3,7 @@
 #
 # Process this file with automake to produce Makefile.in
 #
-info_TEXINFOS = oleo.texi
+info_TEXINFOS = neoleo.texi
 
 TEXIS=		basics.texi bugs.texi cell-refs.texi entering-data.texi \
 		examples.texi expressions.texi forth.texi functions.texi \
@@ -12,23 +12,18 @@ TEXIS=		basics.texi bugs.texi cell-refs.texi entering-data.texi \
 		programs.texi ranlib.texi style.texi texinfo.tex windows.texi \
 		motif.texi dbms.texi
 
-EXTRA_DIST=	$(TEXIS) oleo_web.html texi2html oleo1.png
+EXTRA_DIST=	$(TEXIS) atlast2.html oleo_web.html oleo1.png
 noinst_DATA =	oleo_web.html $(TEXIS)
 
-oleo.info:	oleo.texi $(TEXIS)
+neoleo.info:	neoleo.texi $(TEXIS)
 
-#if HavePerl
 
-htmldir=	$(prefix)/share/oleo
-html_DATA=	atlast2.html oleo.html
+htmldir=	$(prefix)/share/neoleo
+html_DATA=	atlast2.html 
 
-#oleo.html:	$(srcdir)/oleo.texi ${TEXIS} $(top_builddir)/doc/texi2html
-#		@HAVE_PERL@ $(top_builddir)/doc/texi2html $(srcdir)/oleo.texi
+neoleo.html:	$(srcdir)/neoleo.texi ${TEXIS}
+		$(MAKEINFOHTML) $(srcdir)/neoleo.texi
 
-oleo.html:	$(srcdir)/oleo.texi ${TEXIS}
-		texi2html $(srcdir)/oleo.texi
-
-#endif
 
 DISTCLEANFILES = $(html_DATA)
 MAINTAINERCLEANFILES = Makefile.in
