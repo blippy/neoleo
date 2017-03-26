@@ -2,7 +2,7 @@
 pkgname=neoleo
 pkgver=VERSION
 pkgrel=1
-pkgdesc="Lightweight curses/Motif spreadsheet based on GNU oleo"
+pkgdesc="Lightweight curses spreadsheet based on GNU oleo"
 arch=('x86_64')
 url="https://github.com/blippy/neoleo"
 license=('GPL')
