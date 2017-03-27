@@ -20,8 +20,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-// TODO LOW reinstate these business functions at some point
-//
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

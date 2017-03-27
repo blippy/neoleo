@@ -1,6 +1,4 @@
-#ifndef BYTE_COMPILEH
-#define BYTE_COMPILEH
-
+#pragma once
 /*
  * $Id: byte-compile.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -20,9 +18,16 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-extern unsigned char *parse_and_compile (char *);
-extern void byte_free (unsigned char *);
-extern int is_constant (unsigned char *);
-
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+extern unsigned char *parse_and_compile (char *string);
+extern void byte_free (unsigned char *form);
+//extern int is_constant (unsigned char *);
+extern int is_constant (unsigned char *bytes);
+
+#ifdef __cplusplus
+}
+#endif
+

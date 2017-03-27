@@ -47,6 +47,7 @@
 #include "ref.h"
 #include "cmd.h"
 
+
 static void add_ref_fm (struct ref_fm **, CELLREF, CELLREF);
 static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
 static void flush_range_ref (struct rng *, CELLREF, CELLREF);
@@ -2586,7 +2587,7 @@ find_or_make_var (char *string, int len)
   ret->v_rng.hr = 0;
   ret->v_rng.hc = 0;
   ret->var_ref_fm = 0;
-  hash_insert (the_vars, ret->var_name, ret);
+  hash_insert (the_vars, ret->var_name, (char *)ret);
   string[len] = ch;
   return ret;
 }

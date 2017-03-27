@@ -70,7 +70,7 @@ extern long random (void);
 
 extern int n_usr_funs;
 
-double to_int ();
+//double to_int ();
 static int deal_area ();
 static void add_int ();
 static void add_flt ();

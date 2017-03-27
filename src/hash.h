@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: hash.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -19,8 +20,11 @@
  * along with GAS; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef hashH
-#define hashH
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* define the type of bindings: */
 #undef  VOIDSTAR
@@ -56,10 +60,15 @@ void hash_die ();
 void hash_say ();
 char *hash_delete ();		/* previous value         */
 char *hash_relpace ();		/* previous value         */
-char *hash_insert ();		/* error string           */
+//char *hash_insert ();		/* error string           */
+char * hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value);
 char *hash_apply ();		/* 0 means OK             */
 VOIDSTAR hash_find ();		/* value                  */
 char *hash_jam ();		/* error text (internal)  */
-#endif /* #ifdef hashH */
+//#endif /* #ifdef hashH */
 
-/* end: hash.c */
+
+#ifdef __cplusplus
+}
+#endif
+

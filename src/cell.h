@@ -1,7 +1,4 @@
 #pragma once
-//#ifndef CELLH
-//#define CELLH
-
 /*
  * $Id: cell.h,v 1.14 2001/02/13 23:38:05 danny Exp $
  *
@@ -170,6 +167,7 @@ typedef struct cell CELL;
  * careful not to add new ones.
  */
 
+int init_cells_function_count(void);
 extern CELL *find_cell (CELLREF, CELLREF);
 extern CELL *find_or_make_cell (CELLREF, CELLREF);
 extern void find_cells_in_range (struct rng *);

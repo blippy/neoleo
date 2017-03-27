@@ -1,5 +1,4 @@
-#ifndef EVALH
-#define EVALH
+#pragma once
 /*
  * $Id: eval.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -21,6 +20,11 @@
  * along with Oleo; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "cell.h"
 
 
@@ -238,4 +242,9 @@ extern double rtd (double);
 extern double dtr (double);
 extern double to_int (double);
 
+
+#ifdef __cplusplus
+}
 #endif
+
+

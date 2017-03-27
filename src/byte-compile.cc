@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <math.h>
 #include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
@@ -60,9 +61,19 @@ local_free (p)
 #include "eval.h"
 #include "hash.h"
 #include "ref.h"
+#include "sort.h"
+#include "busi.h"
+#include "date.h"
+#include "hash.h"
+#include "parse.h"
+#include "stringo.h"
+#include "cell.h"
+#include "mysql.h"
+#include "gsl.h"
+#include "byte-compile.h"
 
 #define BUSI
-extern int yyparse (void);
+//extern int yyparse (void);
 
 extern struct function date_funs[];
 #ifdef BUSI
@@ -76,7 +87,7 @@ extern struct function gsl_functions[];
 extern char *instr;
 extern int parse_error;
 extern struct node *parse_return;
-extern void sort ();
+//extern void sort ();
 
 static void add_backpatch (unsigned, unsigned);
 
@@ -95,49 +106,66 @@ void *tmp_mem_start;
 
 
 #define V (void(*)())
+//#define VV(x) (void(*x)(double))
+double acos1(double x) { return acos(x); }
+double asin1(double x) { return asin(x); }
+double atan1(double x) { return atan(x); }
+double atan2_1(double x, double y) { return atan2(x, y); }
+double ceil1(double x) { return ceil(x); }
+double cos1(double x) { return cos(x);}
+double exp1(double x) { return exp(x) ; }
+double fabs1(double x) { return  fabs(x); }
+double floor1(double x) { return  floor(x); }
+double log1(double x) { return log(x); }
+double log10_1(double x) { return log10(x); }
+double pow1(double x, double y) { return pow(x, y); }
+double sin1(double x) { return sin(x); }
+double sqrt1(double x) { return sqrt(x); }
+double tan1(double x) { return tan(x); }
 
+#define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
  */
 struct function the_funs[] =
 {
-  {0, X_A0, "", 0, "<END>"},
-  {0, X_A0, "", 0, "<DUMMY1>"},
+  {0, X_A0, "", 0, S "<END>"},
+  {0, X_A0, "", 0, S "<DUMMY1>"},
 
-  {C_IF | R | INF (1), X_A1 | X_J, "D", 0, "?"},
-  {C_IF | R | INF (1), X_A1 | X_JL, "D", 0, "?"},
-  {C_IF, X_A1 | X_J, "D", 0, "if"},
-  {C_IF, X_A1 | X_JL, "D", 0, "if"},
-  {C_ANDOR, X_A1 | X_J, "D", 0, "and"},
+  {C_IF | R | INF (1), X_A1 | X_J, "D", 0, S "?"},
+  {C_IF | R | INF (1), X_A1 | X_JL, "D", 0, S "?"},
+  {C_IF, X_A1 | X_J, "D", 0, S "if"},
+  {C_IF, X_A1 | X_JL, "D", 0, S "if"},
+  {C_ANDOR, X_A1 | X_J, "D", 0, S "and"},
 /* { C_ANDOR|L|INF(3), X_A1, "DD", 0,		"&" }, */
-  {C_ANDOR, X_A1 | X_JL, "D", 0, "and"},
+  {C_ANDOR, X_A1 | X_JL, "D", 0, S "and"},
 /* { C_ANDOR|L|INF(3), X_A1, "DD", 0,		"&" }, */
-  {C_ANDOR, X_A1 | X_J, "D", 0, "or"},
+  {C_ANDOR, X_A1 | X_J, "D", 0, S "or"},
 /* { C_ANDOR|L|INF(2), X_A1, "DD", 0,		"|" }, */
-  {C_ANDOR, X_A1 | X_JL, "D", 0, "or"},
+  {C_ANDOR, X_A1 | X_JL, "D", 0, S "or"},
 /* { C_ANDOR|L|INF(2), X_A1, "DD", 0,		"|" }, */
-  {C_STR, X_A0 | X_J, "", 0, "\"%s\""},
-  {C_STR, X_A0 | X_JL, "", 0, "\"%s\""},
+  {C_STR, X_A0 | X_J, "", 0, S "\"%s\""},
+  {C_STR, X_A0 | X_JL, "", 0,S  "\"%s\""},
 
-  {C_CELL, X_A0, "", 0, "$%s$%u"},
-  {C_CELL, X_A0, "", 0, "$%s%u"},
-  {C_CELL, X_A0, "", 0, "%s$%u"},
-  {C_CELL, X_A0, "", 0, "%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s%u:%s%u"},
+  {C_CELL, X_A0,  "", 0, S "$%s$%u"},
+  {C_CELL, X_A0, "", 0, S "$%s%u"},
+  {C_CELL, X_A0, "", 0, S "%s$%u"},
+  {C_CELL, X_A0, "", 0, S "%s%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s$%u:$%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s%u:$%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s$%u:$%s%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s%u:$%s%u"},
+  {C_RANGE, X_A0, "", 0, S "%s$%u:$%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "%s%u:$%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "%s$%u:$%s%u"},
+  {C_RANGE, X_A0, "", 0, S "%s%u:$%s%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s$%u:%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s%u:%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s$%u:%s%u"},
+  {C_RANGE, X_A0, "", 0, S "$%s%u:%s%u"},
+  {C_RANGE, X_A0, "", 0, S "%s$%u:%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "%s%u:%s$%u"},
+  {C_RANGE, X_A0, "", 0, S "%s$%u:%s%u"},
+  {C_RANGE, X_A0, "", 0, S "%s%u:%s%u"},
 
   {C_CONST, X_A0, "", 0, tname},
   {C_CONST, X_A0, "", 0, fname},
@@ -145,80 +173,80 @@ struct function the_funs[] =
   {C_CONST, X_A0, "", 0, iname},
   {C_CONST, X_A0, "", 0, mname},
   {C_CONST, X_A0, "", 0, nname},
-  {C_ERR, X_A0 | X_J, "", 0, "%s"},
-  {C_FLT, X_A0, "", 0, "%.15g"},
-  {C_INT, X_A0, "", 0, "%ld"},
+  {C_ERR, X_A0 | X_J, "", 0,S  "%s"},
+  {C_FLT, X_A0, "", 0, S "%.15g"},
+  {C_INT, X_A0, "", 0, S "%ld"},
 
-  {C_VAR, X_A0, "", 0, "%s"},
+  {C_VAR, X_A0, "", 0, S "%s"},
 
-  {C_UNA, X_A1, "F", 0, "-"},
-  {C_UNA, X_A1, "B", 0, "!"},
+  {C_UNA, X_A1, "F", 0, S "-"},
+  {C_UNA, X_A1, "B", 0, S "!"},
 
-  {C_INF | L | INF (6), X_A2, "NN", 0, "-"},
-  {C_INF | L | INF (7), X_A2, "NN", 0, "/"},
-  {C_INF | L | INF (7), X_A2, "NN", 0, "%"},
-  {C_INF | L | INF (7), X_A2, "NN", 0, "*"},
-  {C_INF | L | INF (6), X_A2, "NN", 0, "+"},
-  {C_INF | L | INF (2), X_A2, "SS", 0, "&"},
-  {C_INF | N | INF (4), X_A2, "AA", 0, "="},
-  {C_INF | N | INF (5), X_A2, "AA", 0, ">="},
-  {C_INF | N | INF (5), X_A2, "AA", 0, ">"},
-  {C_INF | N | INF (5), X_A2, "AA", 0, "<"},
-  {C_INF | N | INF (5), X_A2, "AA", 0, "<="},
-  {C_INF | N | INF (4), X_A2, "AA", 0, "!="},
-  {C_INF | R | INF (8), X_A2, "FF", V pow, "^"},
+  {C_INF | L | INF (6), X_A2, "NN", 0, S "-"},
+  {C_INF | L | INF (7), X_A2, "NN", 0, S "/"},
+  {C_INF | L | INF (7), X_A2, "NN", 0, S "%"},
+  {C_INF | L | INF (7), X_A2, "NN", 0, S "*"},
+  {C_INF | L | INF (6), X_A2, "NN", 0, S "+"},
+  {C_INF | L | INF (2), X_A2, "SS", 0, S "&"},
+  {C_INF | N | INF (4), X_A2, "AA", 0, S "="},
+  {C_INF | N | INF (5), X_A2, "AA", 0, S ">="},
+  {C_INF | N | INF (5), X_A2, "AA", 0, S ">"},
+  {C_INF | N | INF (5), X_A2, "AA", 0, S "<"},
+  {C_INF | N | INF (5), X_A2, "AA", 0, S "<="},
+  {C_INF | N | INF (4), X_A2, "AA", 0, S "!="},
+  {C_INF | R | INF (8), X_A2, "FF", V pow1, S "^"},
 
-  {C_FN0, X_A0, "", 0, "pi"},
-  {C_FN0X, X_A0, "", 0, "row"},
-  {C_FN0X, X_A0, "", 0, "col"},
-  {C_FN0 | C_T, X_A0, "", 0, "now"},
+  {C_FN0, X_A0, "", 0, S "pi"},
+  {C_FN0X, X_A0, "", 0, S "row"},
+  {C_FN0X, X_A0, "", 0, S "col"},
+  {C_FN0 | C_T, X_A0, "", 0, S "now"},
 
-  {C_FN1, X_A1, "F", V fabs, "abs"},
-  {C_FN1, X_A1, "F", V acos, "acos"},
-  {C_FN1, X_A1, "F", V asin, "asin"},
-  {C_FN1, X_A1, "F", V atan, "atan"},
-  {C_FN1, X_A1, "F", V ceil, "ceil"},
-  {C_FN1, X_A1, "F", V to_int, "int"},
-  {C_FN1, X_A1, "F", V floor, "floor"},
-  {C_FN1, X_A1, "F", V cos, "cos"},
-  {C_FN1, X_A1, "F", V dtr, "dtr"},
-  {C_FN1, X_A1, "F", V exp, "exp"},
-  {C_FN1, X_A1, "F", V log, "log"},
-  {C_FN1, X_A1, "F", V log10, "log10"},
-  {C_FN1, X_A1, "F", V rtd, "rtd"},
-  {C_FN1, X_A1, "F", V sin, "sin"},
-  {C_FN1, X_A1, "F", V sqrt, "sqrt"},
-  {C_FN1, X_A1, "F", V tan, "tan"},
-  {C_FN1, X_A1, "I", 0, "ctime"},
-  {C_FN1, X_A1, "A", 0, "negate"},
-  {C_FN1, X_A1, "A", 0, "not"},
-  {C_FN1, X_A1, "A", 0, "iserr"},
-  {C_FN1, X_A1, "A", 0, "isnum"},
+  {C_FN1, X_A1, "F", V fabs1, S "abs"},
+  {C_FN1, X_A1, "F", V acos1, S "acos"},
+  {C_FN1, X_A1, "F", V asin1, S "asin"},
+  {C_FN1, X_A1, "F", V atan1, S "atan"},
+  {C_FN1, X_A1, "F", V ceil1, S "ceil"},
+  {C_FN1, X_A1, "F", V to_int, S "int"},
+  {C_FN1, X_A1, "F", V floor1, S "floor"},
+  {C_FN1, X_A1, "F", V cos1, S "cos"},
+  {C_FN1, X_A1, "F", V dtr, S "dtr"},
+  {C_FN1, X_A1, "F", V exp1, S "exp"},
+  {C_FN1, X_A1, "F", V log1, S "log"},
+  {C_FN1, X_A1, "F", V log10_1, S "log10"},
+  {C_FN1, X_A1, "F", V rtd, S "rtd"},
+  {C_FN1, X_A1, "F", V sin1, S "sin"},
+  {C_FN1, X_A1, "F", V sqrt1, S "sqrt"},
+  {C_FN1, X_A1, "F", V tan1, S "tan"},
+  {C_FN1, X_A1, "I", 0, S "ctime"},
+  {C_FN1, X_A1, "A", 0, S "negate"},
+  {C_FN1, X_A1, "A", 0, S "not"},
+  {C_FN1, X_A1, "A", 0, S "iserr"},
+  {C_FN1, X_A1, "A", 0, S "isnum"},
 
-  {C_FN1 | C_T, X_A1, "I", 0, "rnd"},
-  {C_FN1, X_A1, "R", 0, "rows"},
-  {C_FN1, X_A1, "R", 0, "cols"},
-  {C_FN2, X_A2, "FF", V atan2, "atan2"},
+  {C_FN1 | C_T, X_A1, "I", 0, S "rnd"},
+  {C_FN1, X_A1, "R", 0, S "rows"},
+  {C_FN1, X_A1, "R", 0, S "cols"},
+  {C_FN2, X_A2, "FF", V atan2_1, S "atan2"},
 #ifdef HAVE_HYPOT
-  {C_FN2, X_A2, "FF", V hypot, "hypot"},
+  {C_FN2, X_A2, "FF", V hypot, S "hypot"},
 #else
-  {C_FN2, X_A2, "FF", 0, "*&%$%*"},
+  {C_FN2, X_A2, "FF", 0, S "*&%$%*"},
 #endif
-  {C_FN2, X_A2, "FI", 0, "fixed"},
-  {C_FN2, X_A2, "AA", 0, "iferr"},
-  {C_FN2, X_A2, "RI", 0, "index"},
-  {C_FN3, X_A3, "RII", 0, "index"},
-  {C_FNN, X_AN, "IAAA", 0, "oneof"},
+  {C_FN2, X_A2, "FI", 0, S "fixed"},
+  {C_FN2, X_A2, "AA", 0, S "iferr"},
+  {C_FN2, X_A2, "RI", 0,  S "index"},
+  {C_FN3, X_A3, "RII", 0, S "index"},
+  {C_FNN, X_AN, "IAAA", 0, S "oneof"},
 
-  {C_FNN, X_AN, "SIIA", 0, "file"},
-  {C_FNN, X_AN, "EEEE", 0, "sum"},
-  {C_FNN, X_AN, "EEEE", 0, "prod"},
-  {C_FNN, X_AN, "EEEE", 0, "avg"},
-  {C_FNN, X_AN, "EEEE", 0, "std"},
-  {C_FNN, X_AN, "EEEE", 0, "max"},
-  {C_FNN, X_AN, "EEEE", 0, "min"},
-  {C_FNN, X_AN, "EEEE", 0, "count"},
-  {C_FNN, X_AN, "EEEE", 0, "var"},
+  {C_FNN, X_AN, "SIIA", 0, S "file"},
+  {C_FNN, X_AN, "EEEE", 0, S "sum"},
+  {C_FNN, X_AN, "EEEE", 0, S "prod"},
+  {C_FNN, X_AN, "EEEE", 0, S "avg"},
+  {C_FNN, X_AN, "EEEE", 0, S "std"},
+  {C_FNN, X_AN, "EEEE", 0, S "max"},
+  {C_FNN, X_AN, "EEEE", 0, S "min"},
+  {C_FNN, X_AN, "EEEE", 0, S "count"},
+  {C_FNN, X_AN, "EEEE", 0, S "var"},
 
 };
 
@@ -281,8 +309,8 @@ struct function **usr_funs = __usr_funs;
 /* ... A whole huge empty space, then ... */
 struct function skip_funs[] =
 {
-  {C_SKIP, X_A0 | X_J, "", 0, "<Skip %u>"},
-  {C_SKIP, X_A0 | X_JL, "", 0, "<SkipL %u>"},
+  {C_SKIP, X_A0 | X_J, "", 0,  (char *)"<Skip %u>"},
+  {C_SKIP, X_A0 | X_JL,  "", 0,  (char *)"<SkipL %u>"},
 };
 
 /* The memory allocated here is used for several things, but byte_compile
@@ -298,18 +326,18 @@ init_mem ()
     usr_n_funs[i] = init_function_counts[i]();
 
   parse_hash = hash_new ();
-  hash_insert (parse_hash, the_funs[F_IF].fn_str, &the_funs[F_IF]);
-  hash_insert (parse_hash, the_funs[AND].fn_str, &the_funs[AND]);
-  hash_insert (parse_hash, the_funs[OR].fn_str, &the_funs[OR]);
+  hash_insert ((hash_control *)parse_hash, the_funs[F_IF].fn_str, (char *) &the_funs[F_IF]);
+  hash_insert ((hash_control *)parse_hash, the_funs[AND].fn_str, (char *) &the_funs[AND]);
+  hash_insert ((hash_control *)parse_hash, the_funs[OR].fn_str, (char *) &the_funs[OR]);
   for (n = F_PI; n < USR1; n++)
-    hash_insert (parse_hash, the_funs[n].fn_str, &the_funs[n]);
+    hash_insert ((hash_control *)parse_hash, the_funs[n].fn_str, (char *) &the_funs[n]);
 
   for (n = 0; n < n_usr_funs; n++)
     {
       int nn;
 
       for (nn = 0; usr_funs[n][nn].fn_str; nn++)
-	hash_insert (parse_hash, usr_funs[n][nn].fn_str, &usr_funs[n][nn]);
+	hash_insert ((hash_control *)parse_hash, usr_funs[n][nn].fn_str,(char *)  &usr_funs[n][nn]);
 #ifdef TEST
       if (usr_n_funs[n] != nn)
 	{
@@ -328,9 +356,7 @@ init_mem ()
 
 /* Stash away a backpatch for future editing. */
 static void
-add_backpatch (from, to)
-     unsigned from;
-     unsigned to;
+add_backpatch (unsigned from, unsigned to)
 {
   if (!patches)
     {
@@ -349,9 +375,7 @@ add_backpatch (from, to)
 }
 
 static int
-cmp_patch (n1, n2)
-     int n1;
-     int n2;
+cmp_patch (int n1, int n2)
 {
   int ret;
 
@@ -360,9 +384,7 @@ cmp_patch (n1, n2)
 }
 
 static void
-swp_patch (n1, n2)
-     int n1;
-     int n2;
+swp_patch (int n1, int n2)
 {
   struct backpatch tmp;
 
@@ -372,9 +394,7 @@ swp_patch (n1, n2)
 }
 
 static void
-rot_patch (n1, n2)
-     int n1;
-     int n2;
+rot_patch (int n1, int n2)
 {
   struct backpatch tmp;
   tmp = patches[n2];
@@ -431,7 +451,7 @@ parse_and_compile (char *string)
   patches_used = 0;
   if (yyparse () || parse_error)
     {
-      ret = ck_malloc (strlen (string) + 5);
+      ret = (unsigned char*) ck_malloc (strlen (string) + 5);
       ret[0] = CONST_ERR;
       ret[1] = 2;
       ret[2] = parse_error;
@@ -728,7 +748,7 @@ loop:
 
   (void) obstack_1grow (&tmp_mem, 0);
 
-  while ((node = (pop_stack (str_stack))))
+  while (node = (struct node *) pop_stack (str_stack))
     {
       add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
       (void) obstack_grow (&tmp_mem, node->n_x.v_string, strlen (node->n_x.v_string) + 1);
@@ -756,11 +776,11 @@ loop:
       int start;
 
       /* ... Sort the patches list ... */
-      sort (patches_used, cmp_patch, swp_patch, rot_patch);
+      sort ((int) patches_used, (int (*)()) cmp_patch, (void (*)()) swp_patch, (void (*)())rot_patch);
 
       while (need_relax)
 	{
-	  ret = ck_realloc (ret, buf_siz + need_relax);
+	  ret = (unsigned char *)ck_realloc (ret, buf_siz + need_relax);
 	  for (n_lo = 0; n_lo < patches_used; n_lo++)
 	    {
 	      offset = (patches[n_lo].to - patches[n_lo].from) - 1;
@@ -815,8 +835,7 @@ loop:
    they don't need to be specially freed anymore.
  */
 void
-byte_free (form)
-     unsigned char *form;
+byte_free (unsigned char *form)
 {
   /* no longer needed
 	unsigned char *f;
@@ -890,8 +909,7 @@ byte_free (form)
    is a constant, we can free it, and never try to recompute its value.
    This returns non-zero if the expression is constant.*/
 int
-is_constant (bytes)
-     unsigned char *bytes;
+is_constant (unsigned char *bytes)
 {
   /* It's constant, but it's already been dealt with.
 	   Pretend it isn't. */

@@ -23,9 +23,8 @@ extern "C" {
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-//#ifndef MYSQL_H 
-//#define MYSQL_H 
 
+int init_mysql_function_count(void);
 extern void AllocateDatabaseGlobal(void);
 #ifdef __cplusplus
 }

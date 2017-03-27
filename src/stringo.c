@@ -39,6 +39,7 @@
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
+#include "stringo.h"
 
 struct value {
 	int	type;

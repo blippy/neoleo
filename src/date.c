@@ -35,6 +35,7 @@
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
+#include "date.h"
 
 struct value
   {

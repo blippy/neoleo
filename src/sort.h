@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: sort.h,v 1.4 2000/08/10 21:02:51 danny Exp $
  *
@@ -20,4 +21,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 extern int sort (int, int (*)(), void (*)(), void (*)());
+
+#ifdef __cplusplus
+}
+#endif
+
+

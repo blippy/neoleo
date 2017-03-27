@@ -35,7 +35,7 @@ AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpthread $(GUI_LINK)
 #neoleo_LDADD += -lasan
-neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.cc \
+neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.cc cells.c cmd.cc \
 		 date.c decompile.c display.c \
 		 epson.c eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
@@ -44,7 +44,7 @@ neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.c cells.c cmd.cc \
 		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c \
 		 pcl.c plot.c  postscript.c print.c prtext.c \
 		 ref.c regions.c \
-		 sc.c sort.c string.c stub.c sylk.c utils.c \
+		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
 		 window.c \
 		 defuns.c \
 		 get_date.h getdate.y \

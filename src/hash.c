@@ -417,10 +417,7 @@ hash_replace (handle, string, value)
  */
 
 char *				/* return error string */
-hash_insert (handle, string, value)
-     register struct hash_control *handle;
-     register char *string;
-     register VOIDSTAR value;
+hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value)
 {
   register struct hash_entry *entry;
   register char *retval;

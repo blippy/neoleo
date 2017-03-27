@@ -62,7 +62,7 @@ find_or_make_info (char * name)
   strcpy (buf->name, name);
   buf->len = 0;
   buf->text = 0;
-  hash_insert (info_buffers, buf->name, buf);
+  hash_insert (info_buffers, buf->name, (char *) buf);
   return buf;
 }
 
