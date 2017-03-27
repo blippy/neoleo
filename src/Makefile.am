@@ -50,10 +50,10 @@ neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.cc cells.c cmd.cc \
 		 get_date.h getdate.y \
 		 parse.y \
 		 posixtm.y \
-		 neoleo_swig.c \
 		 mysql.c   \
 		 main.cc \
 		 shell.cc \
+		 tests.cc \
 		 $(GUI_SRCS) \
 		 $(FORTH_SRCS)
 	
@@ -71,7 +71,7 @@ noinst_HEADERS = afm.h appres.h args.h atoleo.h basic.h byte-compile.h cell.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  xrdb.h \
 		 shell.h \
-		 neoleo_swig.h \
+		 tests.h \
 		 $(FORTH_HDRS)
 
 # exclude these for now:

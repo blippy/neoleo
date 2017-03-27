@@ -116,7 +116,7 @@ void motif_graphics() {}
 
 #include "defuns.h" // mcarter
 
-#include "neoleo_swig.h"
+//#include "neoleo_swig.h"
 
 #if	ENABLE_NLS
 extern char *gettext(char *);

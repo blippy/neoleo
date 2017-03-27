@@ -58,7 +58,7 @@ prim p4life()
 }
 
 char * 
-get_formula(int r, int c)
+atl_get_formula(int r, int c)
 {
         CELL *cp = find_cell(r, c);
         return decomp(r, c, cp);
@@ -67,7 +67,7 @@ get_formula(int r, int c)
 prim p4prform()
 {
 	int r = curow, c = cucol;
-	printf("Formula at (%d,%d) is:%s\n", r, c, get_formula(r,c));
+	printf("Formula at (%d,%d) is:%s\n", r, c, atl_get_formula(r,c));
 	decomp_free();
 }
 

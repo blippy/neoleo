@@ -1,14 +1,20 @@
-#include <pthread.h>
+#include <string>
+//#include <pthread.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <vector>
+
+#include <obstack.h>
+using std::string;
+using std::vector;
 
 // check for leaks, as suggested at 
 // http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
 //#include <sanitizer/lsan_interface.h>
 
 
-#include "neoleo_swig.h"
+#include "tests.h"
 #include "io-abstract.h"
 #include "basic.h"
 #include "io-headless.h"
@@ -78,9 +84,13 @@ void FreeGlobals()
 	FileCloseCurrentFile();
 }
 
-void get_set(int r, int c, char* s)
+void get_set(int r, int c, const string& s)
 {
-	set_cell(r, c, s); // rounding nasty
+	vector<char> v(s.begin(), s.end());
+	v.push_back(0);
+	char *str = &v[0];
+
+	set_cell(r, c, str); // rounding nasty
 	printf("Formula at (%d,%d) is:%s\n", r, c, get_formula(r,c));
 	decomp_free();
 	recalculate(1);
@@ -99,32 +109,48 @@ headless_tests()
 	headless_graphics();
 	io_open_display();
 
-	get_set(1, 1, "1.1+2"); // rounding nasty
-	get_set(1, 1, "1.1+2.2"); // rounding nasty
+	if(false) get_set(1, 1, "1.1+2");
+	if(false) get_set(1, 1, "1.1+2.2");
+	if(false) get_set(1, 1, "63.36");
 
-	get_set(1, 1, "63.36"); // rounding nasty
+	if(false) {
+		char s1[] = "/home/mcarter/repos/neoleo/examples/pivot.oleo"; // TODO generalise
+	        int read_status = swig_read_file_and_run_hooks(s1, 0);
+        	if(read_status == 1) {
+                	puts("read worked");
+	        } else {
+        	        puts("read couldn't find file");
+	        }
+	}
 
-        //# the following causes crash:
-        int read_status = swig_read_file_and_run_hooks("/home/mcarter/repos/neoleo/examples/pivot.oleo", 0);
-        if(read_status == 1) {
-                puts("read worked");
-        } else {
-                puts("read coultn' find file");
-        }
-
-	printf("Formula at (2,2) is:%s\n", get_formula(2,2));
-	decomp_free();
+	if(false) {
+		printf("Formula at (2,2) is:%s\n", get_formula(2,2));
+		decomp_free();
+	}
 
 	char str[] = "\"foo\"";
-	get_set(1, 1, str); // NB must enquote strings otherwise it segfault trying to find or make foo as var
-	get_set(2, 1, "1 + R[-1]C");
+	if(true) {
+		// NB must enquote strings otherwise it segfault trying to find or make foo as var
+	       	get_set(1, 1, str); 
+		obstack_free (&tmp_mem, tmp_mem_start);
+		/* causes the following output in sanitiser:
+		 * Direct leak of 4 byte(s) in 1 object(s) allocated from:
+		 *     #0 0x7f68d0831e40 in __interceptor_malloc /build/gcc/src/gcc/libsanitizer/asan/asan_malloc_linux.cc:62
+		 *     #1 0x4acd1e in ck_malloc /home/mcarter/repos/neoleo/src/utils.c:388
+		 *     #2 0x4c9851 in yylex /home/mcarter/repos/neoleo/src/parse.y:402
+		 *     #3 0x4c4a14 in yyparse /home/mcarter/repos/neoleo/src/parse.c:1422
+		 *     #4 0x41933e in parse_and_compile /home/mcarter/repos/neoleo/src/byte-compile.cc:456
+		 */
+	}
+
+	if(true) get_set(2, 1, "1 + R[-1]C");
 
 	//printf("Test atof(63.36):%f\n", atof("63.36"));
 
 	puts(pr_flt(1163.36DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(-1163.36DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
-	puts(pr_flt(3575.06DL, &fxt, FLOAT_PRECISION));
+	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
 
 	FreeGlobals();

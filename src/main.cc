@@ -21,7 +21,7 @@
 #include "io-term.h"
 #include "io-utils.h"
 #include "mdi.h"
-#include "neoleo_swig.h"
+#include "tests.h"
 #include "graph.h"
 #include "mysql.h"
 #include "print.h"
