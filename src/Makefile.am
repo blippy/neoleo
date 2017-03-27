@@ -18,7 +18,7 @@ FORTH_HDRS = atlast.h atldef.h
 FORTH_SRCS = atlast.c atoleo.cc
 
 YFLAGS = -d
-EXTRA_DIST = $(srcdir)/neoleo.i
+#EXTRA_DIST = $(srcdir)/neoleo.i
 
 bin_PROGRAMS = neoleo 
 
