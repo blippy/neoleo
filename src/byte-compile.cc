@@ -65,7 +65,9 @@ local_free (p)
 #include "busi.h"
 #include "date.h"
 #include "hash.h"
+extern "C" {
 #include "parse.h"
+}
 #include "stringo.h"
 #include "cell.h"
 #include "mysql.h"
@@ -73,7 +75,9 @@ local_free (p)
 #include "byte-compile.h"
 
 #define BUSI
-//extern int yyparse (void);
+//extern "C" {
+//extern int yyparse(void);
+//}
 
 extern struct function date_funs[];
 #ifdef BUSI

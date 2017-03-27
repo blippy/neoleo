@@ -33,7 +33,7 @@ endif
 
 AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpthread $(GUI_LINK)
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.cc cells.c cmd.cc \
 		 date.c decompile.c display.c \
@@ -78,4 +78,5 @@ noinst_HEADERS = afm.h appres.h args.h atoleo.h basic.h byte-compile.h cell.h \
 # plotter.c xbase.cpp
 
 
+# byte-compile.o : parse.h
 ref.o : parse.h
