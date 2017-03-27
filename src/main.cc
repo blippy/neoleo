@@ -85,24 +85,23 @@ init_maps (void)
 
 
 void
-read_init_file(int ignore_init_file, int init_fpc,
-		char **init_file_names, FILE **init_fp)
+read_init_files()
 {
-	volatile int x;
-	//cout << "read_init_file(): init_fpc = " << init_fpc << endl;
-	for (x = 0; x < init_fpc; ++x)
-	{
+	vector<string> fnames;
+	char *home = getenv ("HOME");
+	if (home) fnames.push_back(string(home) + "/" + RCFILE);
+	fnames.push_back(RCFILE);
+
+	for(const auto& fname:fnames) {
+		FILE *fp = fopen(fname.c_str(), "r");
+		if(!fp) continue;
 
 		try {
-			//if (setjmp (Global->error_exception))
-			//	throw OleoJmp("OleoJmp from read_init_file()");
-			if (!ignore_init_file)
-				read_cmds_cmd (init_fp[x]);
+			read_cmds_cmd(fp);
 		} catch (OleoJmp& e) {
-			//cout << e.what() << endl;
 			cerr << "OleoJmp caught by read_init_file()" << endl;
 			string msg = string("   error occured in init file ")
-				+ init_file_names [x]
+				+ fname
 				+ " near line "
 				+ std::to_string(Global->sneaky_linec)
 				+ "\n";
@@ -111,8 +110,7 @@ read_init_file(int ignore_init_file, int init_fpc,
 			io_info_msg(m);
 		}
 
-		assert(x < init_fpc);
-	       	fclose (init_fp[x]);
+		fclose(fp);
 	}
 }
 
@@ -147,10 +145,7 @@ init_maps_and_macros()
 int 
 main(int argc, char **argv)
 {
-	volatile int ignore_init_file = 0;
-	FILE * init_fp[2];
-	char * init_file_names[2];
-	volatile int init_fpc = 0;
+	int ignore_init_file = 0;
 	int command_line_file = 0;	/* was there one? */
 
 
@@ -172,27 +167,6 @@ main(int argc, char **argv)
 	}
 
 
-	/* Find the init files. 
-	 * This is done even if ignore_init_file is true because
-	 * it effects whether the disclaimer will be shown.
-	 */
-	{
-		char *ptr, *home;
-
-		home = getenv ("HOME");
-		if (home)
-		{
-			ptr = mk_sprintf ("%s/%s", home, RCFILE);
-			init_fp[init_fpc] = fopen (ptr, "r");
-			init_file_names[init_fpc] = ptr;
-			if (init_fp[init_fpc])
-				++init_fpc;
-		}
-
-		init_fp[init_fpc] = fopen (RCFILE, "r");
-		if (init_fp[init_fpc])
-			++init_fpc;
-	}
 
 	FD_ZERO (&read_fd_set);
 	FD_ZERO (&read_pending_fd_set);
@@ -211,7 +185,7 @@ main(int argc, char **argv)
 
 	oleo_catch_signals(&got_sig);
 
-	read_init_file(ignore_init_file, init_fpc, init_file_names, init_fp);
+	if(!ignore_init_file) read_init_files();
 
 	try_reading_forth_file(command_line_forth_file);
 
