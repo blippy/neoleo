@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <vector>
 
-#include <obstack.h>
+//#include <obstack.h>
 using std::string;
 using std::vector;
 
@@ -132,7 +132,7 @@ headless_tests()
 	if(true) {
 		// NB must enquote strings otherwise it segfault trying to find or make foo as var
 	       	get_set(1, 1, str); 
-		obstack_free (&tmp_mem, tmp_mem_start);
+		//obstack_free (&tmp_mem, tmp_mem_start); // this doesn't help
 		/* causes the following output in sanitiser:
 		 * Direct leak of 4 byte(s) in 1 object(s) allocated from:
 		 *     #0 0x7f68d0831e40 in __interceptor_malloc /build/gcc/src/gcc/libsanitizer/asan/asan_malloc_linux.cc:62
