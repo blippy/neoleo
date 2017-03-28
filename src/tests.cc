@@ -24,6 +24,11 @@ using std::vector;
 #include "mdi.h"
 #include "mysql.h"
 #include "ref.h"
+extern "C" {
+#include "parse.h"
+}
+#include "byte-compile.h"
+
 
 
 void *
@@ -109,6 +114,12 @@ headless_tests()
 	headless_graphics();
 	io_open_display();
 
+	extern char * instr; // used for parsing
+	instr = (char *) "\"foo\"";
+	yyparse();
+	char str1[] =  "\"foo\"";
+	parse_and_compile(str1);
+
 	if(false) get_set(1, 1, "1.1+2");
 	if(false) get_set(1, 1, "1.1+2.2");
 	if(false) get_set(1, 1, "63.36");
@@ -128,10 +139,10 @@ headless_tests()
 		decomp_free();
 	}
 
-	char str[] = "\"foo\"";
-	if(true) {
+	if(false){
+		char str[] = "\"foo\"";
 		// NB must enquote strings otherwise it segfault trying to find or make foo as var
-	       	get_set(1, 1, str); 
+		get_set(1, 1, str); 
 		//obstack_free (&tmp_mem, tmp_mem_start); // this doesn't help
 		/* causes the following output in sanitiser:
 		 * Direct leak of 4 byte(s) in 1 object(s) allocated from:
