@@ -43,7 +43,7 @@ neoleo_SOURCES = afm.c args.c basic.c  busi.c byte-compile.cc cells.c cmd.cc \
 		 io-headless.c io-curses.c io-edit.c io-term.cc io-utils.c \
 		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c \
 		 pcl.c plot.c  postscript.c print.c prtext.c \
-		 ref.c regions.c \
+		 ref.cc regions.c \
 		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
 		 window.c \
 		 defuns.c \

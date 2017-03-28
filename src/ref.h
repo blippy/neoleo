@@ -3,11 +3,6 @@
 extern "C" {
 #endif
 
-
-//#ifndef REFH
-//#define REFH
-//
-//
 /*
  * $Id: ref.h,v 1.6 2000/08/10 21:02:51 danny Exp $
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
@@ -73,5 +68,3 @@ extern void flush_variables (void);
 #ifdef __cplusplus
 }
 #endif
-
-//#endif

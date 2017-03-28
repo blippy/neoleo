@@ -30,13 +30,13 @@
 #include <dmalloc.h>
 #endif
 
+#include "global.h"
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
 #include "sysdef.h"
-#include "global.h"
 #include "cell.h"
 #include "eval.h"
 #include "io-abstract.h"
@@ -48,7 +48,7 @@
 #include "cmd.h"
 
 
-static void add_ref_fm (struct ref_fm **, CELLREF, CELLREF);
+static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);
 static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
 static void flush_range_ref (struct rng *, CELLREF, CELLREF);
 extern void shift_formula (int r, int c, int dn, int ov);
@@ -150,7 +150,7 @@ new_value (CELLREF row, CELLREF col, char *string)
   cp = find_cell (row, col);
   if (((!cp || GET_LCK (cp) == LCK_DEF) && default_lock == LCK_LCK) || (cp && GET_LCK (cp) == LCK_LCK))
     {
-      return "cell is locked";
+      return (char *) "cell is locked";
     }
 
   set_cell (row, col, string);
@@ -205,7 +205,7 @@ set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
       if (cp && GET_TYP (cp))
 	{
 	  if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-	    return "cell is locked";
+	    return (char *) "cell is locked";
 	  my_cell = cp;
 	  flush_old_value ();
 	  SET_TYP (cp, 0);
@@ -217,7 +217,7 @@ set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
     {
       cp = find_or_make_cell (row, col);
       if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-	return "cell is locked";
+	return (char *) "cell is locked";
       my_cell = cp;
       flush_old_value ();
       SET_TYP (cp, type);
@@ -299,7 +299,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 		panic ("Can't find \" in read_new value");
 	    }
 	  *sp = '\0';
-	  nsp = my_cell->cell_str = ck_malloc (sp - val);
+	  nsp = my_cell->cell_str = (char *) ck_malloc (sp - val);
 	  for (sp = val + 1; *sp;)
 	    *nsp++ = *sp++;
 	  *nsp++ = '\0';
@@ -317,7 +317,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	      v = val;
 	      my_cell->cell_flt = astof (&v);
 	      if (*v)
-		return "unknown number";
+		return (char *) "unknown number";
 	    }
 	}
       else if (val[0] == '#')
@@ -546,7 +546,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       fp = cpf->cell_formula;
       hi = 0;
       if (!moving)
-	moving = init_stack ();
+	moving = (char*)init_stack ();
       while ((byte = *fp++) != ENDCOMP)
 	{
 	  unsigned char * refloc = fp - 1;
@@ -674,10 +674,10 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       hi++;
       len = hi - cpf->cell_formula;
       my_cell->cell_formula = cpf->cell_formula;
-      cpf->cell_formula = ck_malloc (hi - cpf->cell_formula);
+      cpf->cell_formula = (unsigned char *) ck_malloc (hi - cpf->cell_formula);
       if (len)
 	bcopy (my_cell->cell_formula, cpf->cell_formula, len);
-      while ((fp = pop_stack (moving)))
+      while ((fp = (unsigned char*) pop_stack (moving)))
 	{
 	  byte = fp[-1];
 	  if ((byte | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL))
@@ -1055,7 +1055,7 @@ find_fm_ref (void)
 #endif
     }
 
-  tmp = ck_malloc (sizeof (struct ref_fm) + (fm_tmp_ref->refs_used - 1) * sizeof (struct ref_array));
+  tmp = (ref_fm*) ck_malloc (sizeof (struct ref_fm) + (fm_tmp_ref->refs_used - 1) * sizeof (struct ref_array));
   tmp->refs_next = fm_list[hash];
   fm_list[hash] = tmp;
   tmp->refs_refcnt = 1;
@@ -1127,7 +1127,7 @@ add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
     {
       if (!fm_tmp_ref)
 	{
-	  fm_tmp_ref = ck_malloc (sizeof (struct ref_fm));
+	  fm_tmp_ref = (ref_fm*) ck_malloc (sizeof (struct ref_fm));
 	  fm_tmp_ref_alloc = 1;
 	}
       fm_tmp_ref->refs_used = 1;
@@ -1138,9 +1138,9 @@ add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
     {
       if (fm_tmp_ref_alloc <= from->refs_used)
 	{
-	  fm_tmp_ref =
-	    ck_realloc (fm_tmp_ref, sizeof (struct ref_fm)
-			+ from->refs_used * sizeof (struct ref_array)) ;
+		size_t size = sizeof (struct ref_fm)
+			+ (size_t)(from->refs_used) * sizeof (struct ref_array);
+      		fm_tmp_ref =   (ref_fm *)ck_realloc (fm_tmp_ref, size);
 	  fm_tmp_ref_alloc = from->refs_used + 1;
 	}
       fm_tmp_ref->refs_used = from->refs_used + 1;
@@ -1279,7 +1279,7 @@ find_to_ref (void)
     }
 
   /* io_error_msg("Miss. .."); */
-  tmp = ck_malloc (sizeof (struct ref_to) + to_tmp_ref->refs_used - 1);
+  tmp = (ref_to*) ck_malloc (sizeof (struct ref_to) + to_tmp_ref->refs_used - 1);
   tmp->refs_next = to_list[hash];
   to_list[hash] = tmp;
   tmp->refs_refcnt = 1;
@@ -1301,7 +1301,7 @@ add_ref_to (int whereto)
     {
       if (!to_tmp_ref)
 	{
-	  to_tmp_ref = ck_malloc (sizeof (struct ref_to));
+	  to_tmp_ref = (ref_to*) ck_malloc (sizeof (struct ref_to));
 	  to_tmp_ref_alloc = 1;
 	}
       to_tmp_ref->refs_used = 1;
@@ -1311,7 +1311,7 @@ add_ref_to (int whereto)
     {
       if (to_tmp_ref_alloc <= from->refs_used)
 	{
-	  to_tmp_ref = ck_realloc (to_tmp_ref, sizeof (struct ref_to) + from->refs_used);
+	  to_tmp_ref = (ref_to*) ck_realloc (to_tmp_ref, sizeof (struct ref_to) + from->refs_used);
 	  to_tmp_ref_alloc = from->refs_used + 1;
 	}
       to_tmp_ref->refs_used = from->refs_used + 1;
@@ -1614,7 +1614,7 @@ shift_outside (struct rng *fm, int dn, int ov)
    */
 
   if (!moving)
-    moving = init_stack ();
+    moving = (char *) init_stack ();
 
   find_cells_in_range (fm);
 
@@ -1965,7 +1965,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 	}
     }
 
-  while ((ptr = pop_stack (moving)))
+  while ((ptr = (char *) pop_stack (moving)))
     {
       if (ptr == DEF_REF)
 	{
@@ -2448,9 +2448,9 @@ old_new_var_value (char *v_name, int v_namelen, char *v_newval)
     {
       n = parse_cell_or_range (&v_newval, &tmp_rng);
       if (!n)
-	return "Can't parse cell or range";
+	return (char *) "Can't parse cell or range";
       if (*v_newval)
-	return "Junk after cell or range";
+	return (char *) "Junk after cell or range";
       newflag = ((n | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL)) ? VAR_CELL : VAR_RANGE;
     }
   else
@@ -2556,7 +2556,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 void
 for_all_vars (void (*func) (char *, struct var *))
 {
-  hash_apply (the_vars, func);
+  hash_apply (the_vars, (char* (*)()) func);
 }
 
 /* Find a variable in the list of variables, or create it if it doesn't

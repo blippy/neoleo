@@ -56,14 +56,14 @@ struct hash_control
 
 /*						returns		  */
 struct hash_control *hash_new ();	/* [control block]	  */
-void hash_die ();
+void hash_die (struct hash_control *handle)	;
 void hash_say ();
 char *hash_delete ();		/* previous value         */
 char *hash_relpace ();		/* previous value         */
 //char *hash_insert ();		/* error string           */
 char * hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value);
-char *hash_apply ();		/* 0 means OK             */
-VOIDSTAR hash_find ();		/* value                  */
+char * hash_apply (struct hash_control *handle, char *(*function) ()); /* 0 means OK */
+VOIDSTAR hash_find(struct hash_control *handle, char *string);
 char *hash_jam ();		/* error text (internal)  */
 //#endif /* #ifdef hashH */
 

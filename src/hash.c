@@ -298,8 +298,7 @@ hash_new ()			/* create a new hash table */
  * No errors are recoverable.
  */
 void
-hash_die (handle)
-     struct hash_control *handle;
+hash_die (struct hash_control *handle)
 {
   free ((char *) handle->hash_where);
   free ((char *) handle);
@@ -615,9 +614,7 @@ hash_grow (handle)		/* make a hash table grow */
  * yet. (The function has no graceful failures.)
  */
 char *
-hash_apply (handle, function)
-     struct hash_control *handle;
-     char *(*function) ();
+hash_apply (struct hash_control *handle, char *(*function) ())
 {
   register struct hash_entry *entry;
   register struct hash_entry *wall;
@@ -639,9 +636,7 @@ hash_apply (handle, function)
  * Given symbol string, find value (if any). Return found value or NULL.
  */
 VOIDSTAR
-hash_find (handle, string)	/* return char* or NULL */
-     struct hash_control *handle;
-     char *string;
+hash_find(struct hash_control *handle, char *string)
 {
   register struct hash_entry *entry;
 

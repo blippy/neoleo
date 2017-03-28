@@ -176,16 +176,17 @@ struct rng
  * These structures are hash-consed and shared.  The hash-cons procedure
  * will re-use a particular structure if there is only one reference to it.
  */
+  struct ref_array
+    {
+      CELLREF ref_row;
+      CELLREF ref_col;
+    };
 struct ref_fm
 {
   struct ref_fm *refs_next;
   unsigned short refs_refcnt;
   unsigned short refs_used;
-  struct ref_array
-    {
-      CELLREF ref_row;
-      CELLREF ref_col;
-    } fm_refs[1];
+  struct ref_array  fm_refs[1];
 };
 
 /* refs_to is a vector of locations in a formula where the
