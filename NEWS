@@ -1,6 +1,8 @@
 ===== neoleo NEXT =====
 BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
+* falls back to terminal automatically if X11 display not detected
+
 * decimals are used instead of floats. This should greatly improve
   formatting
 

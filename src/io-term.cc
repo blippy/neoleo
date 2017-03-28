@@ -136,25 +136,6 @@ struct OleoGlobal	__tempGlobal,
 			*Global = &__tempGlobal;
 #endif
 
-/* headless section
- *
- * some kludges introduced by mcarter starting 21-Dec-2016
- * becase headless mode does not have a command frame
- */
-/*
-static bool m_headless = false;
-
-void set_headless(bool newval)
-{
-	m_headless = true;
-}
-
-bool running_headless()
-{
-	return m_headless;
-}
-*/
-/* end headless section */
 
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;
@@ -171,13 +152,9 @@ fairly_std_main_loop(void)
 	 * their own special cases.
 	 */
 	  while (1) {
-		  //setjmp (Global->error_exception);
 		  try {
 			  command_loop (0, 0);
-		  } catch (OleoJmp& e) {
-			  //cerr << "OleoJmp caught in fairly_std_main_loop()" 
-			//	  << endl;
-		  }
+		  } catch (OleoJmp& e) { }
 	  }
 }
 
@@ -1206,25 +1183,19 @@ init_basics()
 void
 choose_display(bool force_cmd_graphics)
 {
-	//assert(user_wants_headless);
-
 	if(force_cmd_graphics || user_wants_headless) {
 		headless_graphics();
 		return;
 	}
 
-	if(no_x) {
+	bool no_display = NULL == getenv("DISPLAY");
+	if(no_x || no_display) {
 	       	if (no_curses) {
 			printf("choose_display() is using cmd_graphics\n");
 			headless_graphics();
-			//fprintf(stderr, "No toolkit to use: No X, no curses\n");
-			//exit(EXIT_FAILURE);
 		} else {
 		       	tty_graphics ();
 	      		using_curses = TRUE;
-	      		/* Allow the disclaimer to be read. */
-	      		/* if (!init_fpc && !spread_quietly)
-			 * 		  sleep (5); */
 	      	}
 	} else {
 
