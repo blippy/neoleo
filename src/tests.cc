@@ -114,11 +114,17 @@ headless_tests()
 	headless_graphics();
 	io_open_display();
 
-	extern char * instr; // used for parsing
-	instr = (char *) "\"foo\"";
-	yyparse();
-	char str1[] =  "\"foo\"";
-	parse_and_compile(str1);
+	if(false) {
+		extern char * instr; // used for parsing
+		instr = (char *) "\"foo\"";
+		yyparse();
+	}
+
+	if(true) {
+		// this causes leak
+		char str1[] =  "\"foo\"";
+		parse_and_compile(str1);
+	}
 
 	if(false) get_set(1, 1, "1.1+2");
 	if(false) get_set(1, 1, "1.1+2.2");
