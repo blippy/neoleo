@@ -1,6 +1,4 @@
-#ifndef DECOMPILEH
-#define DECOMPILEH
-
+#pragma once
 /*
  * $Id: decompile.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -21,7 +19,14 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void decomp_free (void);
 extern char * backslash_a_string (char *string, int add_quote);
 
-#endif  /* DECOMPILEH */
+#ifdef __cplusplus
+}
+#endif
+

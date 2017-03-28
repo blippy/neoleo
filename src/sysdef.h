@@ -1,5 +1,4 @@
-#ifndef SYSDEFH
-#define SYSDEFH
+#pragma once
 /*
  * $Id: sysdef.h,v 1.7 2001/02/04 15:54:21 danny Exp $
  *
@@ -19,6 +18,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include <sys/types.h>
 
 #ifdef HAVE_SYS_TIME_H
@@ -129,5 +133,8 @@ extern char *strdup ();
 #ifndef __STDC__
 #define volatile
 #endif
-
+#ifdef __cplusplus
+}
 #endif
+
+

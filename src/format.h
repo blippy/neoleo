@@ -1,5 +1,4 @@
-#ifndef FORMATH
-#define FORMATH
+#pragma once
 /*
  * $Id: format.h,v 1.5 2000/08/10 21:02:50 danny Exp $
  *
@@ -19,6 +18,10 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "global.h"
 #include "cell.h"
 
@@ -28,4 +31,7 @@ extern int str_to_fmt (char *ptr);
 extern char * jst_to_str (int jst);
 extern int chr_to_jst (int chr);
 
-#endif /* FORMATH */
+#ifdef __cplusplus
+}
+#endif
+

@@ -59,17 +59,18 @@
 const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
 const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
 
+#define S (char *)
 static char * motion_name[] =  
 {
-  "up",
-  "down",
-  "right",
-  "left",
-  "up right",
-  "up left",
-  "down right",
-  "down left",
-  "no motion"
+  S "up",
+  S "down",
+  S "right",
+  S "left",
+  S "up right",
+  S "up left",
+  S "down right",
+  S "down left",
+  S "no motion"
 };
 
 
@@ -238,14 +239,14 @@ open_window (char *text)
 void
 hsplit_window (void)
 {
-  open_window ("h50%");
+  open_window (S "h50%");
 }
 
 
 void
 vsplit_window (void)
 {
-  open_window ("v50%");
+  open_window (S "v50%");
 }
 
 
@@ -367,35 +368,35 @@ set_window_option (int set_opt, char *text)
   opts[] =
   {
     {
-      "reverse", WIN_EDGE_REV
+      S "reverse", WIN_EDGE_REV
     }
     ,
     {
-      "standout", WIN_EDGE_REV
+      S "standout", WIN_EDGE_REV
     }
     ,
     {
-      "page", WIN_PAG_HZ | WIN_PAG_VT
+      S "page", WIN_PAG_HZ | WIN_PAG_VT
     }
     ,
     {
-      "pageh", WIN_PAG_HZ
+      S "pageh", WIN_PAG_HZ
     }
     ,
     {
-      "pagev", WIN_PAG_VT
+      S "pagev", WIN_PAG_VT
     }
     ,
     {
-      "lockh", WIN_LCK_HZ
+      S "lockh", WIN_LCK_HZ
     }
     ,
     {
-      "lockv", WIN_LCK_VT
+      S "lockv", WIN_LCK_VT
     }
     ,
     {
-      "edges", WIN_EDGES
+      S "edges", WIN_EDGES
     }
   };
   if ((stat = (!strincmp (text, "status", 6) && isspace (text[6])))
@@ -973,7 +974,7 @@ kill_cell_cmd (void)
       io_error_msg ("Cell %s is locked", cell_name (curow, cucol));
       return;
     }
-  new_value (curow, cucol, "");
+  new_value (curow, cucol, S "");
   bzero(&(cp->cell_flags), sizeof(cp->cell_flags));
   cp->cell_font = 0;
   Global->modified = 1;
@@ -1027,9 +1028,9 @@ sort_region_cmd (char *ptr)
 	{
 	  sort_keys_alloc++;
 	  if (sort_keys_alloc > 1)
-	    sort_keys = ck_realloc (sort_keys, sort_keys_alloc * sizeof (struct cmp));
+	    sort_keys = (cmp *) ck_realloc (sort_keys, sort_keys_alloc * sizeof (struct cmp));
 	  else
-	    sort_keys = ck_malloc (sizeof (struct cmp));
+	    sort_keys = (cmp *)ck_malloc (sizeof (struct cmp));
 	}
       sort_keys[sort_keys_num].mult = 1;
       if (*ptr == '+')
@@ -1064,7 +1065,7 @@ sort_region_cmd (char *ptr)
       if (sort_keys_alloc == 0)
 	{
 	  sort_keys_alloc++;
-	  sort_keys = ck_malloc (sizeof (struct cmp));
+	  sort_keys = (cmp *)ck_malloc (sizeof (struct cmp));
 	}
       sort_keys[0].mult = 1;
       sort_keys[0].row = 0;
@@ -1307,7 +1308,7 @@ void
 goto_edit_cell (int c)
 {
   pushed_back_char = c;
-  execute_command ("edit-cell");
+  execute_command (S "edit-cell");
 }
 
 /* This allows keys to be bound for immediate destructive editing.
@@ -1317,7 +1318,7 @@ void
 goto_set_cell (int c)
 {
   pushed_back_char = c;
-  execute_command ("set-cell");
+  execute_command (S "set-cell");
 }
 
 void 
@@ -1444,7 +1445,7 @@ read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 		//FileSetCurrentFileName(name ? ck_savestr (name) : 0);
 		FileSetCurrentFileName(name); // callee duplicates string
 	}
-	ext = strrchr(name, '.');
+	ext = strrchr(S name, '.');
 	if (! ext) {
 		read_file_generic(fp, ismerge, NULL, name);
 	} else {
@@ -1518,9 +1519,9 @@ set_region_height (struct rng * rng, char * height)
     ++height;
 
   if (   !*height
-      || words_imatch (&height, "d")
-      || words_imatch (&height, "def")
-      || words_imatch (&height, "default"))
+      || words_imatch (&height, S "d")
+      || words_imatch (&height, S "def")
+      || words_imatch (&height, S "default"))
     hgt = 0;
   else
     {
@@ -1557,9 +1558,9 @@ set_region_width (struct rng * rng, char * width)
     ++width;
 
   if (   !*width
-      || words_imatch (&width, "d")
-      || words_imatch (&width, "def")
-      || words_imatch (&width, "default"))
+      || words_imatch (&width, S "d")
+      || words_imatch (&width, S "def")
+      || words_imatch (&width, S "default"))
     wid = 0;
   else
     {
@@ -1659,9 +1660,9 @@ set_def_height (char * height)
     ++height;
 
   if (   !*height
-      || words_imatch (&height, "d")
-      || words_imatch (&height, "def")
-      || words_imatch (&height, "default"))
+      || words_imatch (&height, S "d")
+      || words_imatch (&height, S "def")
+      || words_imatch (&height, S "default"))
     hgt = 1;
   else
     {
@@ -1690,9 +1691,9 @@ set_def_width (char * width)
     ++width;
 
   if (   !*width
-      || words_imatch (&width, "d")
-      || words_imatch (&width, "def")
-      || words_imatch (&width, "default"))
+      || words_imatch (&width, S "d")
+      || words_imatch (&width, S "def")
+      || words_imatch (&width, S "default"))
     wid = 8;
   else
     {
