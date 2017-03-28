@@ -3,13 +3,6 @@
 #include <string>
 #include <vector>
 
-//#include <decimal/decimal.h>
-//extern "C" {
-//#include <decimal/decimal>
-//typedef std::decimal::decimal128 num;
-//}
-
-//extern "C" {
 #include "assert.h"
 #include "atlast.h"
 #include "atoleo.h"
@@ -25,7 +18,6 @@
 #include "graph.h"
 #include "mysql.h"
 #include "print.h"
-//}
 
 #include "oleox.hpp"
 
@@ -65,13 +57,7 @@ init_maps (void)
 
   the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
   num_funcs = 1;
-
-  //the_funcs[0] = &cmd_funcs[0]; mcarter
-  // TODO LOW mcarter: unhappy about diagnostic warning tweaks, but seems OK
-//#pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wincompatible-pointer-types"
   the_funcs[0] = (cmd_func *) get_cmd_funcs();
-//#pragma GCC diagnostic pop  
 
   find_func (0, &end_macro_cmd, "end-macro");
   find_func (0, &digit_0_cmd, "digit-0");
@@ -117,21 +103,6 @@ read_init_files()
 void
 init_maps_and_macros()
 {
-	
-/*
-	if (setjmp (Global->error_exception))
-	{
-		fprintf (stderr, _("Error in the builtin init scripts (a bug!).\n"));
-		io_close_display(69);
-		exit (69);
-	}
-	else
-	{
-		init_maps ();
-		init_named_macro_strings ();
-		run_init_cmds ();
-	}
-	*/
 	try {
 		init_maps();
 		init_named_macro_strings ();
