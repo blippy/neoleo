@@ -165,6 +165,28 @@ A list of @code{Oleo}-specific words now follows.
 
 
 @table @code
+@item 4getenv
+@fsindex 4getenv
+@code{( s1 s2 -- )} get an environment variable at s1 and copy it
+to the string at s2. For example:
+@example
+-> 80 s string
+-> "HOME" s 4getenv
+-> s type
+/home/luser
+@end example
+If the environment variable specfied in s1 does not exist, then
+s2 will be of length 0. s2 is not checked that it has sufficient
+memory to store the result, so be careful. 
+
+Ideally, a flag would exist to indicate success or failure, and
+whether the string had sufficient storage space.
+@end table
+
+
+
+
+@table @code
 @item 4included
 @fsindex 4included
 @code{( str -- )} Loads and executes a Forth file identified in `str'.

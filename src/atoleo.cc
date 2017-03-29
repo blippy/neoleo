@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -41,6 +42,19 @@ void try_reading_forth_file(const char *path)
 	fclose(fp);
 }
 
+prim p4getenv()
+{
+	S1A(2);
+	Hpc(S0);
+	Hpc(S1);
+	char *result = getenv((char *)S1);
+	char *dest = (char *) S0;
+	if(result)
+		strcpy(dest, result);
+	else
+		dest[0] = '\0';
+	Pop2;
+}
 
 prim p4included()
 {
@@ -90,6 +104,7 @@ prim p4xcmd()
 
 static struct primfcn oleop[] = {
 	//{"04EVAL",	p4eval},
+	{"04GETENV",	p4getenv},
 	{"04INCLUDED",	p4included},
 	{"04LIFE",	p4life},
 	{"04PRFORM",	p4prform},
