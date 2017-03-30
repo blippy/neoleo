@@ -45,11 +45,6 @@ static char *rcsid = "$Id: ";
 #include "io-term.h"
 #include "cmd.h"
 #include "sylk.h"
-
-//#ifdef	HAVE_MOTIF
-//#include "io-motif.h"
-//#endif
-
 #include "basic.h"
 #include "oleofile.h"
 #include "sc.h"
@@ -1677,16 +1672,6 @@ FileSetCurrentFileName(const char *s)
 	FileCloseCurrentFile();
 	if(!s) return;
 	Global->FileName = strdup(s);
-
-
-/* old way:
-#if HAVE_MOTIF
-	if (using_motif)
-		MotifSetWindowName(Global->FileName);
-#endif
-... new way: */
-
-	io_set_window_name(Global->FileName);
 }
 
 char *FileGetCurrentFileName(void)
@@ -1699,15 +1684,6 @@ void FileCloseCurrentFile(void)
 	if (Global->FileName)
 		free(Global->FileName);
 	Global->FileName = NULL;
-	
-/*
-#if HAVE_MOTIF
-	if (using_motif)
-		MotifSetWindowName("");
-#endif
-*/
-
-	io_set_window_name("");
 }
 
 void OleoSetEncoding(const char *s)

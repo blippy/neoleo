@@ -1,6 +1,9 @@
 ===== neoleo NEXT =====
 BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
+* default name for spreadsheets is now `unnamed.oleo' in the absence
+	of any other information
+
 * neoleo now opens a non-existent file
 
 * falls back to terminal automatically if X11 display not detected

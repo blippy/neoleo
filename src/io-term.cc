@@ -902,6 +902,7 @@ void
 InitializeGlobals(void)
 {
 	Global->FileName = NULL;
+	FileSetCurrentFileName("unnamed.oleo");
 	Global->display_opened = 0;
 	Global->return_from_error = 0;
 
