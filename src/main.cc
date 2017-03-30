@@ -163,25 +163,18 @@ main(int argc, char **argv)
 	if (option_filter) {
 		read_file_and_run_hooks(stdin, 0, "stdin");
 	} else if (argc - optind == 1) {
-		FILE * fp;
-		/* fixme: record file name */
-
-		if ((fp = fopen (argv[optind], "r"))) {
+		if (FILE *fp = fopen (argv[optind], "r")) {
 			try {
 				read_file_and_run_hooks (fp, 0, argv[optind]);
 			} catch (OleoJmp& e) {
-			//if (setjmp (Global->error_exception)) {
 				fprintf (stderr, _(", error occured reading '%s'\n"), argv[optind]);
 				io_info_msg(_(", error occured reading '%s'\n"), argv[optind]);
 			} 
 			fclose (fp);
-			command_line_file = 1;
-			FileSetCurrentFileName(argv[optind]);
-		} else {
-			fprintf (stderr, _("Can't open %s: %s\n"), argv[optind], err_msg ());
-			io_info_msg(_("Can't open %s: %s\n"), argv[optind], err_msg ());
 		}
 
+		command_line_file = 1;
+		FileSetCurrentFileName(argv[optind]);
 		optind++;
 	}
 
