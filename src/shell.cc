@@ -15,8 +15,6 @@ using std::string;
 using std::vector;
 
 
-extern "C"
-{
 
 #include "cmd.h"
 #include "shell.h"
@@ -57,5 +55,3 @@ run_shell_output_commands(int fildes)
 
 }
 
-
-} // extern "C"
