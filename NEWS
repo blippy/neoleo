@@ -1,5 +1,9 @@
 ===== neoleo NEXT =====
 BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
+Date?
+
+* Fixed issue 6: Install the FAQ and README
+	https://github.com/blippy/neoleo/issues/6
 
 * default name for spreadsheets is now `unnamed.oleo' in the absence
 	of any other information
@@ -36,7 +40,6 @@ BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
 
 * Motif no longer a default build. Use `--with-motif' if you want it.
 
-Date?
 
 
 
