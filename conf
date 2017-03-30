@@ -10,6 +10,7 @@
 #SAN=-fsanitize=address
 #SAN=--with-asan
 
-./configure $MX $SAN "CFLAGS= -Werror -O0 -g " --prefix=$HOME/.local
+./configure $MX $SAN "CFLAGS= -Werror -Wunused-result -O0 -g " "CXXFLAGS= -Wunused-result " --prefix=$HOME/.local
+
 
 

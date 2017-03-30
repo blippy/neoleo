@@ -1386,10 +1386,10 @@ run_shell(char* cmd)
 		case 0:
 			/* Child. */
 			close(1); /* Close current stdout. */
-			dup( cp[1]); /* Make stdout go to write
+			(void)dup( cp[1]); /* Make stdout go to write
 					end of pipe. */
 			close(0); /* Close current stdin. */
-			dup( pc[0]); /* Make stdin come from read
+			(void)dup( pc[0]); /* Make stdin come from read
 					end of pipe. */
 			close( pc[1]);
 			close( cp[0]);

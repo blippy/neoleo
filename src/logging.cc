@@ -27,7 +27,7 @@ Log m_log;
 Log::Log()
 {
 	//if(!m_ofs.is_open()) {
-		system("mkdir -p $HOME/.neoleo/logs");
+		(void) system("mkdir -p $HOME/.neoleo/logs");
 		std::string logname = std::string(getenv("HOME")) 
 			+ "/.neoleo/logs/log.txt";
 		m_ofs.open(logname, std::ofstream::out | std::ofstream::app);

@@ -3,22 +3,22 @@ Packaging directory for Arch Linux
 It's really here only for my (mcarter) benefit. If someone takes over the packaging then they may also find it useful. Otherwise, you can just ignore it.
 
 When you think everything is fine :
-1. `make setup':
-   * runs a `make dist' to create the tarball. This needs to be run first on account of versioning info and checksums
-   * creates PKGBUILD files in each of the following directories:
-     * chroot - for a chrooted test of the build which must exclude xbae because it is not in AUR
-     * full - for a non-chrooted test build which includes xbae
-     * release - a git'd repo which is destined for release
 
-2. `make distcheck' - takes some time, and runs `make distcheck' at the top level to ensure package integrity. Make sure it seems to run OK
+1. At top level:
+	make dist && make distcheck
+   Ensure everything runs smoothly
 
-3. `make full' to check that it can be built normally
+2. Run
+	mksetup
+   to create the build directories: `test' and `release'
 
-4. `make chroot', which will ensure all the package requirements are in place, and works with a clean chroot environment. 
+3. Check that it will build in principle:
+	cd test ; makepkg
 
-5. Once you are happy that it passes, tag, commit and upload the release to github
+4. Once you are happy that it passes, tag, commit and upload the release to github
 
-6. `make release' to ensure everything worki from the github website.
+5. Check that it builds from github:
+	cd release ; makepkg
 
-7. `cd release ; git commit -a ; git push' to release into AUR
+6. `cd release ; git commit -a ; git push' to release into AUR
 

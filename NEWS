@@ -1,6 +1,5 @@
-===== neoleo NEXT =====
-BACKWARD COMPATABILITY BREAK - THEREFORE MAJOR VERSION UPDATE REQUIRED
-Date?
+===========================================================================
+VERSION 5.0.0 RELEASED Date?
 
 * Fixed issue 6: Install the FAQ and README
 	https://github.com/blippy/neoleo/issues/6

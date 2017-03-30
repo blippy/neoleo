@@ -90,7 +90,7 @@ prim p4system()
 	S1A(1);
 	char *command = (char *)S0;
 	Pop;
-	system(command);
+	(void)system(command);
 }
 
 
