@@ -18,6 +18,7 @@
 #include "graph.h"
 #include "mysql.h"
 #include "print.h"
+#include "logging.h"
 
 #include "oleox.hpp"
 

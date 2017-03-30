@@ -41,7 +41,9 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
 		 io-headless.c io-curses.c io-edit.c io-term.cc io-utils.c \
-		 ir.c key.c legend.c line.c list.c lists.c mdi.c oleofile.c \
+		 ir.c key.c \
+		 legend.c line.c list.c lists.c logging.cc \
+		 mdi.c oleofile.c \
 		 pcl.c plot.c  postscript.c print.c prtext.c \
 		 ref.cc regions.c \
 		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
@@ -64,9 +66,12 @@ noinst_HEADERS = afm.h appres.h args.h atoleo.h basic.h byte-compile.h cell.h \
 		 funcs.h global.h graph.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-motif.h io-term.h io-utils.h io-x11.h \
-		 ir.h key.h line.h list.h lists.h mdi.h mysql.h \
+		 ir.h key.h \
+		 line.h list.h lists.h logging.h \
+		 mdi.h mysql.h \
 		 node.h  numeric.h \
-		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h parse.h pcl.h \
+		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
+		 parse.h pcl.h \
 		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  xrdb.h \
