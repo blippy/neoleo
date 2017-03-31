@@ -1,5 +1,7 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
 #include <errno.h>
+#include <unistd.h>
+
 #include "atoleo.h"
 #include "io-abstract.h"
 #include "cmd.h"

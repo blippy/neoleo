@@ -1,5 +1,4 @@
 #include <string>
-//#include <pthread.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -38,21 +37,6 @@ main1(void *td)
         main(0, NULL);
 }
 
-void 
-start_swig_motif()
-{
-#ifdef HAVE_MOTIF
-        pthread_t tid;
-        //motif_main_loop();
-        int error = pthread_create(&tid, NULL, main1, NULL);
-        if(error != 0) 
-                fprintf(stderr, "Couldn't run motif thread\n");
-#else
-        fprintf(stderr, "No motif available; "
-                        "segfault likely.\n");
-#endif
-
-}
 
 char * 
 get_formula(int curow, int cucol)

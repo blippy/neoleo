@@ -96,11 +96,6 @@ void x11_graphics() {}
 #include "userpref.h"
 #include "mysql.h"
 
-#ifdef	HAVE_MOTIF
-#include "io-motif.h"
-#else
-void motif_graphics() {}
-#endif
 
 #include "list.h"
 #include "sc.h"
@@ -185,22 +180,14 @@ static struct option long_options[] =
 int spread_quietly = 0;
 
 
-#ifdef HAVE_MOTIF
-bool have_motif = true;
-#else
-bool have_motif = false;
-#endif
-
 
 /* Avoid using Displays no matter what else. (-x --no-x) */
 int no_x = 0;
 int no_curses = 0;
-int no_motif = 0;
 
 /* What kind of display? */
 int using_x = 0;
 int using_curses = 0;
-int using_motif = 0;
 bool user_wants_headless = false;
 
 char *command_line_forth_file=NULL;
@@ -990,7 +977,7 @@ oleo_catch_signals(void (*h)(int))
   /*
    * It makes little sense to block all signals when using X
    */
-  if ((! using_x) &&  (! using_motif)) {
+  if (! using_x) {
 #ifdef SIGINT
   signal (SIGINT, h);
 #endif
@@ -1103,9 +1090,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 			case 'x':
 				no_x = 1;
 				break;
-			case 't':
-				no_motif = 1;
-				break;
 			case 'H':
 				user_wants_headless = true;
 				break;
@@ -1146,11 +1130,8 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 
 	if (argc - optind > 1)
 	{
-		if (no_motif)
-		{
-			show_usage ();
-			exit (1);
-		}
+		show_usage ();
+		exit (1);
 	}
 }
 
@@ -1188,16 +1169,6 @@ choose_display(bool force_cmd_graphics)
 	} else {
 
 
-		//#ifdef HAVE_MOTIF
-		if (have_motif && !no_motif) {
-
-			//motif_init(&(Global->argc), Global->argv);
-			motif_graphics();
-			using_motif = TRUE;
-			no_x = TRUE;
-			no_curses = TRUE;
-		}  
-		//#endif
 
 		//#ifndef X_DISPLAY_MISSING
 		if (have_x && !no_x) {

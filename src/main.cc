@@ -1,6 +1,7 @@
 #include <exception>
 #include <iostream>
 #include <string>
+#include <unistd.h>
 #include <vector>
 
 #include "assert.h"

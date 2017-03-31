@@ -5,11 +5,11 @@ GUI_DEFINES = -DHAVE_X
 
 # Order of linking of libraries for Motif seems to be important
 
-if UseMotif
-GUI_SRCS += io-motif.cc appres.c fallback.c oleo_icon.xpm
-GUI_LINK += -lXm -lXt -lXbae 
-GUI_DEFINES += -DHAVE_MOTIF
-endif
+#if UseMotif
+#GUI_SRCS += io-motif.cc appres.c fallback.c oleo_icon.xpm
+#GUI_LINK += -lXm -lXt -lXbae 
+#GUI_DEFINES += -DHAVE_MOTIF
+#endif
 
 GUI_SRCS += io-x11.cc xrdb.c
 GUI_LINK += -lX11
@@ -60,7 +60,7 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 $(FORTH_SRCS)
 	
 
-noinst_HEADERS = afm.h appres.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
+noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h epson.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h graph.h gsl.h hash.h help.h info.h init.h \

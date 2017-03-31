@@ -2479,32 +2479,17 @@ io_error_msg (const char *str, ...)
 
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
-	/*
-	 * Experimental : don't always crash on error.
-	 */
-	extern int using_motif;
 
-	if (using_motif) {
+	char buf2[1000];
+	sprintf (buf2, "display-msg %s", buf);
+	recover_from_error ();
 
-		if (Global->return_from_error) {
-			Global->had_error++;
-			io_append_message(1, buf);
-			return;
-		}
+	if (Global->display_opened)
+		execute_command (buf2);
+	else
+		fprintf (stderr, "oleo: %s\n", buf);
 
-		recover_from_error ();
-		io_append_message(1, buf);
-	} else  {
-		char buf2[1000];
-		sprintf (buf2, "display-msg %s", buf);
-		recover_from_error ();
 
-		if (Global->display_opened)
-			execute_command (buf2);
-		else
-			fprintf (stderr, "oleo: %s\n", buf);
-
-	}
 	//longjmp (Global->error_exception, 1);
 	throw OleoJmp("OleoJmp from io_error_msg()");
 
