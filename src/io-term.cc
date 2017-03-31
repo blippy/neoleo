@@ -156,7 +156,7 @@ int		option_filter = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "4:VqfxtHhsFSTv";
+static char short_options[] = "4:VqfxHhsFSTv";
 static struct option long_options[] =
 {
 	{"forth",		1,	NULL,	'4'},
@@ -164,7 +164,6 @@ static struct option long_options[] =
 	{"quiet",		0,	NULL,	'q'},
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"nw",			0,	NULL,	'x'},
-	{"no-toolkit",		0,	NULL,	't'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
 	{"separator",		1,	NULL,	's'},
@@ -850,7 +849,6 @@ Usage: %s [OPTION]... [FILE]...\n\
   -V, --version            output version information and exit\n\
   -q, --quiet              do not display startup messages\n\
   -f, --ignore-init-file   ignore settings defined in init file\n\
-  -t, --no-toolkit         disable X toolkit\n\
   -x, --nw                 disable graphics and fallback to curses\n\
   -s x, --separator x	   set separator for 'list' file type to x\n\
   -S, --space		   set separator for 'list' file type to a space\n\
@@ -1159,31 +1157,21 @@ choose_display(bool force_cmd_graphics)
 
 	bool no_display = NULL == getenv("DISPLAY");
 	if(no_x || no_display) {
-	       	if (no_curses) {
+		if (no_curses) {
 			printf("choose_display() is using cmd_graphics\n");
 			headless_graphics();
 		} else {
-		       	tty_graphics ();
-	      		using_curses = TRUE;
-	      	}
-	} else {
+			tty_graphics ();
+			using_curses = TRUE;
+		}
+	} else if (have_x && !no_x) {
+		x11_graphics();
+		using_x = TRUE;
+		no_curses = TRUE;
+	} 
 
-
-
-		//#ifndef X_DISPLAY_MISSING
-		if (have_x && !no_x) {
-			//get_x11_args (&(Global->argc), Global->argv);
-			//get_x11_args ();
-			//if (Global->io_x11_display_name) {
-			x11_graphics();
-			using_x = TRUE;
-			no_curses = TRUE;
-			//}
-		} 
-		//#endif /* X_DISPLAY_MISSING */
-
-		// TODO what about case that you don't have X?
-	  
-	}
+	// TODO what about case that you don't have X?
+	assert(false);  
+	
 }
 
