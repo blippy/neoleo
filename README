@@ -1,4 +1,4 @@
-Lightweight curses/Motif spreadsheet based on GNU oleo
+Lightweight curses/X11 spreadsheet based on GNU oleo
 
 (Ne)Oleo is a light-weight spreadsheet that will work in almost any environment.
 Oleo was an official GNU spreadsheet that had not been updated since 2000. It 
@@ -55,14 +55,6 @@ Code still exists, but is currently not compiled for:
 	* GNU plotutils for charts
 	* XmHTML for still-incomplete online documentation
 
-
-Motif
------
-
-The Motif front-end is disabled by default. To configure using Motif:
-	configure --with-motif
-This front-end requires that the XBae library and header files are
-installed.
 
 
 Compiling from GIT
