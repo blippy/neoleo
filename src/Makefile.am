@@ -65,7 +65,7 @@ noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h graph.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
-		 io-generic.h io-motif.h io-term.h io-utils.h io-x11.h \
+		 io-generic.h io-term.h io-utils.h io-x11.h \
 		 ir.h key.h \
 		 line.h list.h lists.h logging.h \
 		 mdi.h mysql.h \

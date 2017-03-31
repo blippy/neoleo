@@ -653,13 +653,6 @@ set_width (CELLREF col, int wid)
 
 	ptr = make (col, &Global->wids, sizeof (int), COL_BUF);
 	*ptr = wid;
-
-	/* replace this:
-#ifdef	HAVE_MOTIF
-if (using_motif)
-MotifUpdateWidth(col, wid);
-#endif
-with: */
 	io_update_width(col, wid);
 }
 

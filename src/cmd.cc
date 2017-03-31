@@ -2503,25 +2503,10 @@ io_info_msg (const char *str, ...)
 	char buf[1000];
 	char buf2[1000];
 
-#ifdef	HAVE_MOTIF
-	extern int using_motif;
-#endif
-
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
-
-#ifdef	HAVE_MOTIF
-	if (using_motif)
-	  {
-		  //MessageAppend (1, buf); // replaced by
-		  io_append_message(1, buf);
-	  }
-	else
-#endif
-	  {
-		  sprintf (buf2, "display-msg %s", buf);
-		  execute_command (buf2);
-	  }
+	sprintf (buf2, "display-msg %s", buf);
+	execute_command (buf2);
 }
 
 

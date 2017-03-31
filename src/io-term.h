@@ -33,7 +33,6 @@ extern "C" {
 
 extern int using_x;
 extern int using_curses;
-extern int using_motif;
 extern bool user_wants_headless;
 //extern jmp_buf error_exception;
 extern char *command_line_forth_file;
