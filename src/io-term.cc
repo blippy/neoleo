@@ -1044,7 +1044,7 @@ print_version()
 	printf(_("For more information about these matters, "));
 	printf(_("see the files named COPYING.\n"));
 	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
-	printf("Datadir: %s/oleo\n", DATADIR);
+	printf("Datadir: %s/neoleo\n", DATADIR);
 	// will probably call exit after printing this
 }
 
