@@ -1546,7 +1546,7 @@ DEFUN ("define-font", FDdefine_font, FAdefine_font, define_font)
 #endif
 
 /* Printing Commands */
-
+/*
 DEFUN ("set-page-size", FDset_page_size, FAset_page_size, set_page_size_cmd)
 #ifdef FUNC_ARG_STRINGS
 "sSet page size? ",
@@ -1564,7 +1564,9 @@ DEFUN ("set-page-size", FDset_page_size, FAset_page_size, set_page_size_cmd)
 "To see a complete list of available names, see the Oleo source file",
 "`print.c'.",
 #endif
+*/
 
+/*
 DEFUN ("set-default-ps-font",
        FDset_ps_font_cmd, FAset_ps_font_cmd, set_ps_font_cmd)
 #ifdef FUNC_ARG_STRINGS
@@ -1594,6 +1596,8 @@ DEFUN ("psprint-region",
 #ifdef DOC_STRINGS
 "Print the contents of REGION (in PostScript) to FILE.",
 #endif
+*/
+
 
 /* Control of X11 GUI Display */
 

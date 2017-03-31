@@ -84,14 +84,14 @@ void x11_graphics() {}
 #define obstack_chunk_free free
 #include "obstack.h"
 #include "oleofile.h"
-#include "print.h"
+//#include "print.h"
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
 #include "funcs.h"
 #include "graph.h"
 #include "mdi.h"
-#include "postscript.h"
+//#include "postscript.h"
 
 #include "userpref.h"
 #include "mysql.h"
@@ -929,8 +929,8 @@ InitializeGlobals(void)
 	Global->auto_motion_direction = magic_down;
 	Global->sl_sep = '\t';
 
-	Global->CurrentPrintDriver = &PostScriptPrintDriver;
-	Global->zoom = 1.0;
+	//Global->CurrentPrintDriver = &PostScriptPrintDriver;
+	//Global->zoom = 1.0;
 
 	Global->mouse_id = 0;
 

@@ -37,14 +37,14 @@ neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 date.c decompile.c display.c \
-		 epson.c eval.c font.c format.c forminfo.c funcs.c \
+		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
 		 io-headless.c io-curses.c io-edit.c io-term.cc io-utils.c \
 		 ir.c key.c \
 		 legend.c line.c list.c lists.c logging.cc \
 		 mdi.c oleofile.c \
-		 pcl.c plot.c  postscript.c print.c prtext.c \
+		 plot.c  \
 		 ref.cc regions.c \
 		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
 		 window.c \
@@ -61,7 +61,7 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 	
 
 noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
-		 cmd.h date.h decompile.h defun.h defuns.h display.h epson.h \
+		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h graph.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
@@ -71,8 +71,8 @@ noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 mdi.h mysql.h \
 		 node.h  numeric.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
-		 parse.h pcl.h \
-		 posixtm.h postscript.h print.h proto.h prtext.h ref.h \
+		 parse.h \
+		 posixtm.h proto.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stringo.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  xrdb.h \
 		 shell.h \

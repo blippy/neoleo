@@ -639,6 +639,8 @@ static char *init_cmds[] =
   "",
 # endif	/* WITH_GNUPLOT */
 #endif	/* ~ HAVE_LIBPLOT */
+
+#ifdef HAVE_PRINTING
   "# printing",
   "",
   "create-keymap print-commands universal",
@@ -663,6 +665,8 @@ static char *init_cmds[] =
   "bind-key psprint-commands psprint-region P",
   "",
   "",
+#endif // HAVE_PRINTING
+
   "# Other init commands:",
   "define-font times *times-medium-r-* Times-Roman",
   "define-font times-italic *times-medium-i-* Times-Italic",
@@ -687,21 +691,22 @@ static char *init_cmds[] =
 void 
 run_init_cmds (void)
 {
-  char **p = init_cmds;
-  while (*p)
-    {
-      char * cmd = strdup (*p++);
-      int len = strlen (cmd);
-      while (len && *p && (cmd [len - 1] == '\\')
-	     && ((len == 1) || cmd[len - 2] != '\\'))
+	char **p = init_cmds;
+	while (*p)
 	{
-	  cmd [len - 1] = '\0';
-	  len += strlen (*p);
-	  cmd = ck_realloc (cmd, len + 1);
-	  strcat (cmd, *p);
-	  ++p;
+		char * cmd = strdup (*p++);
+		int len = strlen (cmd);
+		while (len && *p && (cmd [len - 1] == '\\')
+				&& ((len == 1) || cmd[len - 2] != '\\'))
+		{
+			cmd [len - 1] = '\0';
+			len += strlen (*p);
+			cmd = ck_realloc (cmd, len + 1);
+			strcat (cmd, *p);
+			++p;
+		}
+		//puts(cmd);
+		execute_command (cmd);
+		free (cmd);
 	}
-      execute_command (cmd);
-      free (cmd);
-    }
 }

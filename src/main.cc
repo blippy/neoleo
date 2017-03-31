@@ -18,7 +18,7 @@
 #include "tests.h"
 #include "graph.h"
 #include "mysql.h"
-#include "print.h"
+//#include "print.h"
 #include "logging.h"
 
 #include "oleox.hpp"
@@ -151,7 +151,7 @@ main(int argc, char **argv)
 	io_open_display ();
 
 	init_graphing ();
-	PrintInit();
+	//PrintInit();
 	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
 
 	init_maps_and_macros();
