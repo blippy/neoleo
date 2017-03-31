@@ -44,6 +44,15 @@ DEFUN_3 ("suspend-oleo", FDsuspend_oleo, suspend_oleo)
 "Stop Oleo and return to its superior process.  Oleo may be resumed.",
 #endif
 
+DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, show_main_menu)
+#ifdef FUNC_ARG_STRINGS
+"+#0",
+"p",
+#endif
+#ifdef DOC_STRINGS
+"Show the main menu.",
+#endif
+
 /* Spreadsheet Cursor Motion Commands and Cell Mark */
 
   /* By convention, motion and scrolling commands take a magic number

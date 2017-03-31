@@ -26,13 +26,19 @@ a file in which to save the current spreadsheet.  If you do not want to save
 it, type @key{RET}, otherwise type the name of the filename that you
 wish to save it in, and then press @key{RET}.
 
- Type @kbd{C-z} to suspend @code{oleo}.  This does not do anything if 
+Type @kbd{C-z} to suspend @code{oleo}.  This does not do anything if 
 you are running under X-windows. 
 @cmindex suspend-oleo
 
 If you wish to abort a command, type @kbd{C-g} 
 @cmindex break
 
+
+@table @kbd
+@item C-m
+Display a menu (experimental)
+@cmindex show-menu
+@end table
 
 @menu
 * Typing::                      How to type commands

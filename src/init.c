@@ -94,6 +94,7 @@ static char *init_cmds[] =
   "bind-key generic-trolx kill-oleo ^c",
   "bind-key generic-trolx recalculate !",
   "bind-key generic-meta exec x",
+  "bind-key generic-main show-menu ^m",
   "",
   "# Prefix argument handling",
   "# This keymap is magicly invoked within command_loop in cmd.c.",

@@ -32,6 +32,7 @@
 #include "proto.h"
 #include "funcdef.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 //#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
 //#include <ncurses.h>
@@ -39,6 +40,8 @@
 //#include <curses.h>
 //#endif
 #include <ncurses.h>
+#include <menu.h>
+#include <panel.h>
 
 #include <fcntl.h>
 #include <errno.h>
@@ -50,6 +53,7 @@
 #include "cell.h"
 #include "cmd.h"
 #include "line.h"
+#include "io-curses.h"
 #include "io-generic.h"
 #include "io-edit.h"
 #include "io-term.h"
@@ -71,6 +75,137 @@ static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
+
+#define S (char *)
+void
+show_main_menu()
+{
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
+#define CTRLD 	4
+	char *choices[] = {
+		S "Choice 1",
+		S "Choice 2",
+		S "Choice 3",
+		S "Choice 4",
+		S "Exit",
+	};
+	if(true) {
+		keypad(stdscr, TRUE);
+		WINDOW *w = newwin(30, 30, 10, 10);
+		box(w, 0, 0);
+		PANEL  *p = new_panel(w);
+		update_panels();
+		doupdate();
+
+		if(false){
+			int n_choices = ARRAY_SIZE(choices);
+			ITEM **my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+
+			for(int i = 0; i < n_choices; ++i)
+				my_items[i] = new_item(choices[i], choices[i]);
+			my_items[n_choices] = (ITEM *)NULL;
+
+			MENU *my_menu = new_menu((ITEM **)my_items);
+			//mvprintw(LINES - 2, 0, "F1 to Exit");
+			set_menu_win(my_menu, w);
+			//set_menu_sub(my_menu, w);
+			//overlay(menuwin, stdscr);
+			post_menu(my_menu);
+			wrefresh(w);
+
+			int c;
+			while((c = wgetch(w)) != KEY_F(1))
+			{   switch(c)
+				{	case KEY_DOWN:
+					menu_driver(my_menu, REQ_DOWN_ITEM);
+					break;
+					case KEY_UP:
+					menu_driver(my_menu, REQ_UP_ITEM);
+					break;
+				}
+				wrefresh(w);
+			}	
+			unpost_menu(my_menu);
+
+			free_item(my_items[0]);
+			free_item(my_items[1]);
+			free_menu(my_menu);
+			//delwin(w);
+		}
+
+		getch();
+		del_panel(p);
+		keypad(stdscr, FALSE);
+		return;
+	}
+
+	/* taken from
+	 * http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/menus.html
+	 */
+	ITEM **my_items;
+	int c;				
+	int n_choices, i;
+	ITEM *cur_item;
+
+	WINDOW *menuwin = newwin(10, 40, 14, 14);
+	box(menuwin, 0, 0);
+	PANEL *p = new_panel(menuwin);
+	update_panels;
+	doupdate();
+	refresh();
+	wrefresh(menuwin);
+	keypad(stdscr, TRUE);
+	//getch();
+	//keypad(stdscr, FALSE);
+	//return;
+	//initscr();
+	//cbreak();
+	//noecho();
+	keypad(menuwin, TRUE); // enable arrow keys
+	//keypad(win, TRUE);
+
+	n_choices = ARRAY_SIZE(choices);
+	my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+
+	for(i = 0; i < n_choices; ++i)
+		my_items[i] = new_item(choices[i], choices[i]);
+	my_items[n_choices] = (ITEM *)NULL;
+
+	MENU *my_menu = new_menu((ITEM **)my_items);
+	//mvprintw(LINES - 2, 0, "F1 to Exit");
+	set_menu_win(my_menu, menuwin);
+	set_menu_sub(my_menu, menuwin);
+	//overlay(menuwin, stdscr);
+	post_menu(my_menu);
+	wrefresh(menuwin);
+
+	while((c = wgetch(menuwin)) != KEY_F(1))
+	{   switch(c)
+		{	case KEY_DOWN:
+			menu_driver(my_menu, REQ_DOWN_ITEM);
+			break;
+			case KEY_UP:
+			menu_driver(my_menu, REQ_UP_ITEM);
+			break;
+		}
+		wrefresh(menuwin);
+	}	
+	unpost_menu(my_menu);
+
+	free_item(my_items[0]);
+	free_item(my_items[1]);
+	free_menu(my_menu);
+	delwin(menuwin);
+	del_panel(p);
+	keypad(stdscr, FALSE);
+	refresh();
+	//overlay(stdscr, menuwin);
+	wrefresh(stdscr);
+	refresh();
+	//io_flush();
+	//endwin();
+}
+
 
 static int
 curses_metric (char * str, int len)
@@ -268,13 +403,11 @@ _io_hide_cell_cursor (void)
 /* Functions, etc for dealing with cell contents being displayed
 	on top of other cells. */
 
+struct s { CELLREF row, clo, chi; } ;
 struct slops
 {
   int s_alloc, s_used;
-  struct s
-    {
-      CELLREF row, clo, chi;
-    } s_b[1];
+  struct s s_b[1];
 };
 
 static void 
@@ -282,7 +415,7 @@ flush_slops (VOIDSTAR where)
 {
   struct slops *s;
 
-  s = where;
+  s = (slops *) where;
   if (s)
     s->s_used = 0;
 }
@@ -293,7 +426,7 @@ find_slop (VOIDSTAR where, CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
   int n;
   struct slops *s;
 
-  s = where;
+  s = (slops*) where;
   if (!s)
     return 0;
   for (n = 0; n < s->s_used; n++)
@@ -314,7 +447,7 @@ kill_slop (VOIDSTAR where, CELLREF r, CELLREF clo, CELLREF chi)
   int n;
   struct slops *s;
 
-  s = where;
+  s = (slops *) where;
   for (n = 0; n < s->s_used; n++)
     {
       if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
@@ -335,7 +468,7 @@ set_slop (VOIDSTAR *wherep, CELLREF r, CELLREF clo, CELLREF chi)
   sp = (struct slops **) wherep;
   if (!*sp)
     {
-      (*sp) = ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
+      (*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
       (*sp)->s_alloc = 2;
       (*sp)->s_used = 1;
       n = 0;
@@ -346,7 +479,7 @@ set_slop (VOIDSTAR *wherep, CELLREF r, CELLREF clo, CELLREF chi)
       if ((*sp)->s_alloc == n)
 	{
 	  (*sp)->s_alloc = n * 2;
-	  (*sp) = ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
+	  (*sp) = (slops*) ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
 	}
     }
   (*sp)->s_b[n].row = r;
@@ -361,7 +494,7 @@ change_slop (VOIDSTAR where,
   int n;
   struct slops *s;
 
-  s = where;
+  s = (slops*)where;
   for (n = 0; n < s->s_used; n++)
     {
       if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
@@ -391,6 +524,8 @@ _io_open_display (void)
   // io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
   info_rows = 1;
   print_width = columns;		/* Make ascii print width == terminal width. */
+
+  //show_main_menu();
 }
 
 void

@@ -36,6 +36,7 @@
 #include "format.h"
 //#include "print.h"
 #include "font.h"
+#include "io-curses.h"
 #include "io-x11.h"
 #include "io-edit.h"
 #include "regions.h"

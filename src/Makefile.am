@@ -33,14 +33,14 @@ endif
 
 AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  $(GUI_LINK)
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 date.c decompile.c display.c \
 		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
-		 io-headless.c io-curses.c io-edit.c io-term.cc io-utils.c \
+		 io-headless.c io-curses.cc io-edit.c io-term.cc io-utils.c \
 		 ir.c key.c \
 		 legend.c line.c list.c lists.c logging.cc \
 		 mdi.c oleofile.c \
