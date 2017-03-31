@@ -20,5 +20,5 @@ When you think everything is fine :
 5. Check that it builds from github:
 	cd release ; makepkg
 
-6. `cd release ; git commit -a ; git push' to release into AUR
+6. `cd release ; makepkg --printsrcinfo > .SRCINFO ; git commit -a ; git push' to release into AUR
 
