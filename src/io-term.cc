@@ -1171,7 +1171,6 @@ choose_display(bool force_cmd_graphics)
 	} 
 
 	// TODO what about case that you don't have X?
-	assert(false);  
 	
 }
 
