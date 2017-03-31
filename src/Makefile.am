@@ -79,8 +79,6 @@ noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 tests.h \
 		 $(FORTH_HDRS)
 
-# exclude these for now:
-# plotter.c xbase.cpp
 
 
 # byte-compile.o : parse.h
