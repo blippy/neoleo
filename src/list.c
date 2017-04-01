@@ -39,6 +39,7 @@
 #include "regions.h"
 #include "io-utils.h"
 #include "cmd.h"
+#include "ref.h"
 
 /* This file reads/writes files containing values in separated lists,
    sl_sep is the separating character.  This isn't really a save-file
