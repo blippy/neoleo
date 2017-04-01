@@ -1,3 +1,4 @@
+
 GUI_SRCS = 
 GUI_LINK = -lreadline
 #GUI_DEFINES = -DX_DISPLAY_MISSING
@@ -32,7 +33,7 @@ ASAN_FLAGSL = -lasan
 endif
 
 AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-AM_CXXFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
