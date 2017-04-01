@@ -31,8 +31,8 @@ extern "C" {
 #include "global.h"
 //#include "defuns.h"
 
-extern int using_x;
-extern int using_curses;
+extern bool using_x;
+extern bool using_curses;
 extern bool user_wants_headless;
 //extern jmp_buf error_exception;
 extern char *command_line_forth_file;

@@ -181,12 +181,12 @@ int spread_quietly = 0;
 
 
 /* Avoid using Displays no matter what else. (-x --no-x) */
-int no_x = 0;
-int no_curses = 0;
+bool no_x = false;
+bool no_curses = false;
 
 /* What kind of display? */
-int using_x = 0;
-int using_curses = 0;
+bool using_x = false;
+bool using_curses = false;
 bool user_wants_headless = false;
 
 char *command_line_forth_file=NULL;
@@ -1150,27 +1150,32 @@ init_basics()
 void
 choose_display(bool force_cmd_graphics)
 {
+	using_curses = false;
+	using_x      = false;
+
 	if(force_cmd_graphics || user_wants_headless) {
 		headless_graphics();
 		return;
 	}
 
+#ifndef HAVE_X
+	have_x = false;
+#endif
 	bool no_display = NULL == getenv("DISPLAY");
-	if(no_x || no_display) {
-		if (no_curses) {
-			printf("choose_display() is using cmd_graphics\n");
-			headless_graphics();
-		} else {
-			tty_graphics ();
-			using_curses = TRUE;
-		}
-	} else if (have_x && !no_x) {
+	if(have_x && ! no_display) {
 		x11_graphics();
-		using_x = TRUE;
-		no_curses = TRUE;
-	} 
+		using_x = true;
+		return;
+	}
 
-	// TODO what about case that you don't have X?
+	if(!no_curses) {
+		tty_graphics ();
+		using_curses = true;
+		return;
+	}
+
+	// if all else fails, choose headless
+	headless_graphics();
 	
 }
 

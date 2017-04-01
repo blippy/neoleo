@@ -3,6 +3,8 @@ VERSION 6.0.0 IN DEVELOPMENT
 
 * Removed support for: Motif, printing
 
+* X11 being deprecated. `configure --with-x' if you still want it.
+
 
 ===========================================================================
 VERSION 5.0.0 RELEASED 31-MAR-2017

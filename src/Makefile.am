@@ -1,19 +1,12 @@
 
 GUI_SRCS = 
-GUI_LINK = -lreadline
+GUI_LINK =
+if UseX
 #GUI_DEFINES = -DX_DISPLAY_MISSING
 GUI_DEFINES = -DHAVE_X 
-
-# Order of linking of libraries for Motif seems to be important
-
-#if UseMotif
-#GUI_SRCS += io-motif.cc appres.c fallback.c oleo_icon.xpm
-#GUI_LINK += -lXm -lXt -lXbae 
-#GUI_DEFINES += -DHAVE_MOTIF
-#endif
-
 GUI_SRCS += io-x11.cc xrdb.c
 GUI_LINK += -lX11
+endif
 
 FORTH_HDRS = atlast.h atldef.h
 FORTH_SRCS = atlast.c atoleo.cc
@@ -34,7 +27,7 @@ endif
 
 AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  -lpanel  $(GUI_LINK)
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 date.c decompile.c display.c \

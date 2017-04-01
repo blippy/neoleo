@@ -2,9 +2,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-//#ifndef IO_ABSTRACTH
-//#define IO_ABSTRACTH
 /*
  * $Id: io-abstract.h,v 1.8 2000/08/10 21:02:50 danny Exp $
  *
@@ -80,16 +77,9 @@ EXTERN void (*io_erase) (int len);
 EXTERN void (*io_insert) (int len);
 EXTERN void (*io_over) (char *, int len);
 
-// mcarter - let's just define it without all that conditional nonsense
-extern int io_col_to_input_pos (int col);
-/*
-#ifndef X_DISPLAY_MISSING
+#ifdef HAVE_X
 int io_col_to_input_pos (int col);
-#else
-#define io_col_to_input_pos(i)  0
 #endif
-*/
-
 
 /* Cell values */
 EXTERN void (*io_hide_cell_cursor) (void);
@@ -125,4 +115,3 @@ EXTERN void (*io_update_width)(int col, int wid);
 }
 #endif
 
-//#endif /* IO_ABSTRACTH */
