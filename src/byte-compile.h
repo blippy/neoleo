@@ -22,7 +22,7 @@
 extern "C" {
 #endif
 
-extern unsigned char *parse_and_compile (char *string);
+extern unsigned char *parse_and_compile (const char *string);
 extern void byte_free (unsigned char *form);
 //extern int is_constant (unsigned char *);
 extern int is_constant (unsigned char *bytes);

@@ -104,7 +104,7 @@ struct cell_buf
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
 void
-set_cell (CELLREF row, CELLREF col, char *string)
+set_cell (CELLREF row, CELLREF col, const char *string)
 {
   unsigned char *ret;
 
@@ -143,7 +143,7 @@ extern int default_lock;
    updates and prints the results.  It returns an error msg on error. . .
  */
 char *
-new_value (CELLREF row, CELLREF col, char *string)
+new_value (CELLREF row, CELLREF col, const char *string)
 {
   CELL *cp;
 

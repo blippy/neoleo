@@ -269,7 +269,7 @@ extern void no_more_cells (void);
 extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
 
-extern char *new_value (CELLREF, CELLREF, char *);
+//extern char *new_value (CELLREF, CELLREF, const char *);
 
 extern unsigned char parse_cell_or_range (char **, struct rng *);
 

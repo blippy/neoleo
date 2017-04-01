@@ -33,6 +33,10 @@
 #include "funcdef.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <vector>
+
+using std::vector;
 
 //#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
 //#include <ncurses.h>
@@ -66,6 +70,8 @@
 #include "input.h"
 #include "info.h"
 #include <term.h>
+#include "logging.h"
+#include "ref.h"
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
@@ -76,134 +82,65 @@ static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
 
-#define S (char *)
 void
 show_main_menu()
 {
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-#define CTRLD 	4
-	char *choices[] = {
-		S "Choice 1",
-		S "Choice 2",
-		S "Choice 3",
-		S "Choice 4",
-		S "Exit",
+	struct choice {
+		char shortcut;
+		std::string text;
 	};
-	if(true) {
-		keypad(stdscr, TRUE);
-		WINDOW *w = newwin(30, 30, 10, 10);
-		box(w, 0, 0);
-		PANEL  *p = new_panel(w);
-		update_panels();
-		doupdate();
 
-		if(false){
-			int n_choices = ARRAY_SIZE(choices);
-			ITEM **my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+	std::vector<struct choice> choices1 { 
+		{'0', "Close window"},
+			{'c', "Copy cell"},
+			{'v', "Paste cell"}
+	};
 
-			for(int i = 0; i < n_choices; ++i)
-				my_items[i] = new_item(choices[i], choices[i]);
-			my_items[n_choices] = (ITEM *)NULL;
+	keypad(stdscr, TRUE);
+	WINDOW *w = newwin(5, 30, 0, 0);
+	box(w, 0, 0);
+	PANEL  *p = new_panel(w);
+	update_panels();
+	doupdate();
 
-			MENU *my_menu = new_menu((ITEM **)my_items);
-			//mvprintw(LINES - 2, 0, "F1 to Exit");
-			set_menu_win(my_menu, w);
-			//set_menu_sub(my_menu, w);
-			//overlay(menuwin, stdscr);
-			post_menu(my_menu);
-			wrefresh(w);
-
-			int c;
-			while((c = wgetch(w)) != KEY_F(1))
-			{   switch(c)
-				{	case KEY_DOWN:
-					menu_driver(my_menu, REQ_DOWN_ITEM);
-					break;
-					case KEY_UP:
-					menu_driver(my_menu, REQ_UP_ITEM);
-					break;
-				}
-				wrefresh(w);
-			}	
-			unpost_menu(my_menu);
-
-			free_item(my_items[0]);
-			free_item(my_items[1]);
-			free_menu(my_menu);
-			//delwin(w);
-		}
-
-		getch();
-		del_panel(p);
-		keypad(stdscr, FALSE);
-		return;
+	int r =0;
+	for(const auto & c:choices1){
+		r++;
+		mvwprintw(w, r, 1, "%c %s", c.shortcut, c.text.c_str());
 	}
 
-	/* taken from
-	 * http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/menus.html
-	 */
-	ITEM **my_items;
-	int c;				
-	int n_choices, i;
-	ITEM *cur_item;
+	wrefresh(w);
 
-	WINDOW *menuwin = newwin(10, 40, 14, 14);
-	box(menuwin, 0, 0);
-	PANEL *p = new_panel(menuwin);
-	update_panels;
-	doupdate();
-	refresh();
-	wrefresh(menuwin);
-	keypad(stdscr, TRUE);
-	//getch();
-	//keypad(stdscr, FALSE);
-	//return;
-	//initscr();
-	//cbreak();
-	//noecho();
-	keypad(menuwin, TRUE); // enable arrow keys
-	//keypad(win, TRUE);
+	char sel = '\0';
+	while(!sel) {
+		const char c = wgetch(w);
+		if( c == '0' || c == 'c' || c == 'v') sel =c;
+	}
 
-	n_choices = ARRAY_SIZE(choices);
-	my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
-
-	for(i = 0; i < n_choices; ++i)
-		my_items[i] = new_item(choices[i], choices[i]);
-	my_items[n_choices] = (ITEM *)NULL;
-
-	MENU *my_menu = new_menu((ITEM **)my_items);
-	//mvprintw(LINES - 2, 0, "F1 to Exit");
-	set_menu_win(my_menu, menuwin);
-	set_menu_sub(my_menu, menuwin);
-	//overlay(menuwin, stdscr);
-	post_menu(my_menu);
-	wrefresh(menuwin);
-
-	while((c = wgetch(menuwin)) != KEY_F(1))
-	{   switch(c)
-		{	case KEY_DOWN:
-			menu_driver(my_menu, REQ_DOWN_ITEM);
-			break;
-			case KEY_UP:
-			menu_driver(my_menu, REQ_UP_ITEM);
-			break;
-		}
-		wrefresh(menuwin);
-	}	
-	unpost_menu(my_menu);
-
-	free_item(my_items[0]);
-	free_item(my_items[1]);
-	free_menu(my_menu);
-	delwin(menuwin);
+	// TODO we prolly have to delete the win, too.
 	del_panel(p);
 	keypad(stdscr, FALSE);
-	refresh();
-	//overlay(stdscr, menuwin);
-	wrefresh(stdscr);
-	refresh();
-	//io_flush();
-	//endwin();
+
+	// now actually do something
+	static std::string copied_cell_formula = ""; // TODO HIGH needs to be global
+	switch(sel) {
+		case 'c': // copy
+			{
+				CELL *cp = find_cell(curow, cucol);
+				char *dec = decomp(curow, cucol, cp);
+				copied_cell_formula = std::string(dec);
+				//log_debug(copied_cell_formula.c_str());
+			}
+			break;
+		case 'v': // paste
+			{
+				new_value(curow, cucol, copied_cell_formula.c_str());
+			}
+			break;
+		case '0': // just close the window. No action required
+		default:
+			break; 
+	}
 }
 
 

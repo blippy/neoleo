@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -439,7 +440,7 @@ rot_patch (int n1, int n2)
    and a way to encode longer branches would be a *good* idea.
  */
 unsigned char *
-parse_and_compile (char *string)
+parse_and_compile (const char *string)
 {
   struct node *new_node;
   struct node *node;
@@ -450,7 +451,15 @@ parse_and_compile (char *string)
   int need_relax;
   int byte;
 
+  // mcarter 01-Apr-2017 Trying to make string a const
+#if 0 // old way
   instr = string;
+#else
+  instr = (char *) alloca(strlen(string) +1);
+  assert(instr);
+  strcpy(instr, string);
+
+#endif
   parse_error = 0;
   patches_used = 0;
   if (yyparse () || parse_error)
