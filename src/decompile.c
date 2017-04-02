@@ -27,6 +27,7 @@
 #ifdef	WITH_DMALLOC
 #include <dmalloc.h>
 #endif
+#include <string.h>
 
 #include <stdarg.h>
 #include <ctype.h>

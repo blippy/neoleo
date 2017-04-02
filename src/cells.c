@@ -33,6 +33,7 @@
 #include "obstack.h"
 #include "funcdef.h"
 #include "sysdef.h"
+#include <string.h>
 
 #include "global.h"
 #include "cell.h"

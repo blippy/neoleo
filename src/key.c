@@ -30,6 +30,7 @@
 #endif
 
 #include <ctype.h>
+#include <string.h>
 
 #include "key.h"
 #include "cmd.h"

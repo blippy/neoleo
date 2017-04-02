@@ -31,6 +31,7 @@ static char *rcsid = "$Id: ";
 #ifdef	WITH_DMALLOC
 #include <dmalloc.h>
 #endif
+#include <string.h>
 
 #include <stdio.h>
 #include <ctype.h>

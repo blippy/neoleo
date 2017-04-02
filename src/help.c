@@ -26,6 +26,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "global.h"
 #include "cmd.h"
 #include "key.h"

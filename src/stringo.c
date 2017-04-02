@@ -28,6 +28,7 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
 #include <ctype.h>
 #include "funcdef.h"
 #define obstack_chunk_alloc ck_malloc

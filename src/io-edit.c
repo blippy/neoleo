@@ -27,6 +27,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "funcdef.h"
 #include <stdio.h>
 #include <fcntl.h>

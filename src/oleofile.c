@@ -28,6 +28,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>

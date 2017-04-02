@@ -25,6 +25,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "global.h"
 #include "format.h"
 #include "line.h"

@@ -29,6 +29,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "proto.h"
 #include "init.h"
 #include "global.h"

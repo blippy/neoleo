@@ -37,6 +37,7 @@
 
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "global.h"
 #include "graph.h"
