@@ -66,7 +66,7 @@ htmldir=	$(prefix)/share/neoleo
 html_DATA	= neoleo.html
 
 $(MAIN_HTML):	$(srcdir)/neoleo.texi ${TEXIS}
-		texi2html  $(srcdir)/neoleo.texi
+		makeinfo --html --no-split $(srcdir)/neoleo.texi
 		
 #$(MAKEINFOHTML)  $(srcdir)/neoleo.texi
 		

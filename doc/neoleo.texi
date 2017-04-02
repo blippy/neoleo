@@ -2,11 +2,11 @@
 @c %**start of header
 
 @set version 1.99.13
-@set update-date July 29 2000
-@set update-month July 2000
+@set update-date 2 April 2017
+@set update-month April 2017
 
 @setfilename neoleo.info
-@settitle Oleo @value{version}
+@settitle Neoleo @value{version}
 @c make a command index:
 @defcodeindex cm
 @defindex fs
