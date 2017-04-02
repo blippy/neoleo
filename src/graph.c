@@ -24,6 +24,7 @@
  * data structures in Oleo.
  */
 
+#define PCHECK if(!Global->PlotGlobal) return;
 #undef	GRAPH_VERBOSE
 
 #ifdef HAVE_CONFIG_H
@@ -318,6 +319,7 @@ graph_presets (void)
 {
   enum graph_axis axis;
 
+  PCHECK
   if (using_curses) {
 	if (getenv("DISPLAY")) {
 		/*
@@ -363,6 +365,7 @@ graph_clear_datasets (void)
 void
 init_graphing (void)
 {
+	return; // mcarter 02-Apr-2017 disabled most plotting
   //PlotInit();
 
   graph_presets ();
@@ -671,6 +674,7 @@ plotutils_hpgl(void)
 void
 plotutils_tek(void)
 {
+	PCHECK
 	Global->PlotGlobal->device = GRAPH_TEK;
 }
 
@@ -811,6 +815,7 @@ plotutils_set_axis_labels(int axis_c, struct rng * rng)
 void
 plotutils_set_filename(char *file)
 {
+	PCHECK
   if (Global->PlotGlobal->output_file)
 	free(Global->PlotGlobal->output_file);
   Global->PlotGlobal->output_file = strdup(file);
