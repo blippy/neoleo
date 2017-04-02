@@ -34,6 +34,7 @@
 #include "funcdef.h"
 #include "sysdef.h"
 #include <string.h>
+#include <string>
 
 #include "global.h"
 #include "cell.h"
@@ -677,3 +678,26 @@ int init_cells_function_count(void)
 {
         return sizeof(cells_funs) / sizeof(struct function) - 1;
 }
+
+//////////////////////////////////////////////////////////////////////
+// for copying and pasting cells
+
+
+static std::string m_copied_cell_formula = "";
+
+void
+copy_cell_formula()
+{
+	CELL *cp = find_cell(curow, cucol);
+	char *dec = decomp(curow, cucol, cp);
+	m_copied_cell_formula = std::string(dec);
+	// TODO I think we need to free dec
+}
+
+void 
+paste_cell_formula()
+{	
+	new_value(curow, cucol, m_copied_cell_formula.c_str());
+}
+
+//////////////////////////////////////////////////////////////////////

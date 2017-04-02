@@ -180,6 +180,9 @@ extern char *decomp (CELLREF, CELLREF, CELL *);
 extern char *decomp_formula (CELLREF, CELLREF, CELL *, int);
 extern void decomp_free (void);
 
+void copy_cell_formula();
+void paste_cell_formula();
+
 #ifdef __cplusplus
 }
 #endif

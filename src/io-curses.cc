@@ -122,20 +122,12 @@ show_main_menu()
 	keypad(stdscr, FALSE);
 
 	// now actually do something
-	static std::string copied_cell_formula = ""; // TODO HIGH needs to be global
 	switch(sel) {
 		case 'c': // copy
-			{
-				CELL *cp = find_cell(curow, cucol);
-				char *dec = decomp(curow, cucol, cp);
-				copied_cell_formula = std::string(dec);
-				//log_debug(copied_cell_formula.c_str());
-			}
+			copy_cell_formula();
 			break;
 		case 'v': // paste
-			{
-				new_value(curow, cucol, copied_cell_formula.c_str());
-			}
+			paste_cell_formula();
 			break;
 		case '0': // just close the window. No action required
 		default:
