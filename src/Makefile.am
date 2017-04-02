@@ -9,10 +9,8 @@ GUI_LINK += -lX11
 endif
 
 # Oops. Forth assume 64-bit. cygwin is 32-bit
-#ifdef USE_FORTH
 #FORTH_HDRS = atlast.h atldef.h
 #FORTH_SRCS = atlast.c atoleo.cc
-#endif
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i

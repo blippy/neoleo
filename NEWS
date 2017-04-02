@@ -1,9 +1,15 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
-* Removed support for: Motif, printing
+* Removed support for: Motif, printing, plotting
+  There is too much maintenance work in it. I'm not sure anyone even
+  uses neoleo for more than 5 minutes anyway.
 
 * X11 being deprecated. `configure --with-x' if you still want it.
+
+* Disabled Forth. I want neoleo to work on 32-bit systems, but the
+  the version installed required 64-bit. I cannot get the 32-bit
+  system to work, so I have "temporarily" disabled it.
 
 
 ===========================================================================

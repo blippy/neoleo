@@ -16,7 +16,8 @@
 // For some reason, S1() macro doesn't compile here, so
 // redefining them again seems to "fix" the problem.
 // Bizarre
-#define S1A(x) if ((stk-stack)<(x)) {stakunder(); return Memerrs;}
+//#define S1A(x) if ((stk-stack)<(x)) {stakunder(); return Memerrs;}
+#define S1A atl__sp[-2]
 
 //#ifdef __cplusplus
 //extern "C" {
