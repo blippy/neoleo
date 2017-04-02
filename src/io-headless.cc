@@ -1,11 +1,20 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
 #include <errno.h>
 #include <unistd.h>
+#include <iostream>
+#include <string>
+
 
 #include "atoleo.h"
 #include "io-abstract.h"
+#include "io-headless.h"
 #include "cmd.h"
 #include "window.h"
+
+
+using std::cin;
+using std::cout;
+using std::endl;
 
 static void 
 do_nothing(void)
@@ -150,9 +159,18 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 static void
 _io_run_main_loop()
 {
-#ifdef HAVE_FORTH
+#ifdef HAVE_FORTH	
 	forth_repl();
+	return;
 #endif
+
+	std::string line;
+	while(getline(std::cin, line)) {
+		if(line == "bye") return;
+		execute_command(line.c_str());
+		//std::cout << line << endl;
+	}
+	
 }
 
 void

@@ -36,7 +36,7 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
-		 io-headless.c io-curses.cc io-edit.c io-term.cc io-utils.c \
+		 io-headless.cc io-curses.cc io-edit.c io-term.cc io-utils.c \
 		 ir.c key.c \
 		 legend.c line.c list.c lists.c logging.cc \
 		 mdi.c oleofile.c \
