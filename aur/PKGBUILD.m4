@@ -6,7 +6,7 @@ pkgdesc="Lightweight curses/X11 spreadsheet based on GNU oleo"
 arch=('x86_64')
 url="https://github.com/blippy/neoleo"
 license=('GPL')
-depends=('ncurses')
+depends=('ncurses' 'readline')
 source=(SOURCE)
 md5sums=('MD5SUM')
 
