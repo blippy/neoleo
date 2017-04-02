@@ -106,546 +106,548 @@ oleo_read_file (fp, ismerge)
       ptr = cbuf;
       switch (*ptr)
 	{
-	case '#':		/* comment line -- ignored */
-	  break;
-	case '%':		/* Font or pixel size data. */
-	  ptr++;
-	  switch (*ptr) {
-	    case 'F':		/* %F font-name */
-	      if (fnt_map_size == fnt_map_alloc)
-		{
-		  fnt_map_alloc = (fnt_map_alloc + 1) * 2;
-		  fnt_map =
-		    ((struct font_memo **)
-		     ck_remalloc
-		     (fnt_map, fnt_map_alloc * sizeof (struct font_memo *)));
-		}
-	      fnt_map[fnt_map_size++] = parsed_matching_font (ptr + 1);
-	      break;
-	    case 'f':		/* %f range font-name */
-	      {
-		struct rng rng;
-		/* This field only occurs in files written by 1.1
-		 * oleo.  It's presense indicates that when parsing
-		 * format fields, we should *not* reset cell fonts to 0.
-		 */
-		font_spec_in_format = 0;
-		++ptr;
-		while (isspace (*ptr))
-		  ++ptr;
-		if (!parse_cell_or_range (&ptr, &rng))
-		  goto bad_field;
-		while (isspace (*ptr))
-		  ++ptr;
-		{
-		  struct font_memo * fm = parsed_matching_font (ptr);
-		  set_region_font (&rng, fm->names->oleo_name, fm->scale);
-		}
-		break;
-	      }
-	    default:		/* % with something invalid */
-	      goto bad_field;
-	    }
-	  break;
-	case 'F':		/* Format field */
-	  vlen = 0;
-	  ptr++;
-	  fnt = 0;	/* The font must be explicitly overriden for a cell. */
-	  while (*ptr)
-	    {
-	      if (*ptr != ';')
-		goto bad_field;
-	      ptr++;
-	      switch (*ptr++) {
-		  int clo, chi, cwid;
-		case 'C':	/* Column from rows 1 to 255 */
-		  czcol = astol (&ptr);
-		  vlen = 2;
-		  break;
-
-		case 'D':	/* Default format */
-		  switch (*ptr++)
-		    {
-		    case 'G':
-		      default_fmt = FMT_GEN;
-		      break;
-		    case 'E':
-		      default_fmt = FMT_EXP;
-		      break;
-		    case 'F':
-		      default_fmt = FMT_FXT;
-		      break;
-		    case '$':
-		      default_fmt = FMT_DOL;
-		      break;
-		    case '*':	/* * format implemented as +- format */
-		      default_fmt = FMT_GPH;
-		      break;
-		    case ',':	/* JF */
-		      default_fmt = FMT_CMA;
-		      break;
-		    case 'U':
-		      default_fmt = FMT_USR;
-		      break;
-		    case '%':
-		      default_fmt = FMT_PCT;
-		      break;
-		    case 'H':
-		      default_fmt = FMT_HID;
-		      break;
-		    case 'd':	/* Date */
-			default_fmt = FMT_DATE;
+		case '#':		/* comment line -- ignored */
 			break;
-		      /* End of JF */
-		    default:
-		      io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
-		      break;
-		    }
-		  if (*ptr == 'F')
-		    {
-		      prc = default_prc = FLOAT_PRECISION;
-		      ptr++;
-		    }
-		  else
-		    default_prc = prc = astol (&ptr);
-
-		  switch (*ptr++)
-		    {
-		    case 'C':
-		      default_jst = JST_CNT;
-		      break;
-		    case 'L':
-		      default_jst = JST_LFT;
-		      break;
-		    case 'R':
-		      default_jst = JST_RGT;
-		      break;
-		    case 'G':	/* General format not supported */
-		    default:
-		      io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-		      break;
-		    }
-		  default_width = astol (&ptr);
-		  break;
-
-		case 'f': /* Font specification */
-		  {
-		    int id;
-		    id = astol(&ptr);
-		    if (id < 0 || id >= fnt_map_size)
-		      {
-			io_error_msg ("Line %d: Undefined font (%d)\n",
-				      lineno, id);
+		case '%':		/* Font or pixel size data. */
+			ptr++;
+			switch (*ptr) {
+				case 'F':		/* %F font-name */
+					if (fnt_map_size == fnt_map_alloc)
+					{
+						fnt_map_alloc = (fnt_map_alloc + 1) * 2;
+						fnt_map =
+							((struct font_memo **)
+							 ck_remalloc
+							 (fnt_map, fnt_map_alloc * sizeof (struct font_memo *)));
+					}
+					fnt_map[fnt_map_size++] = parsed_matching_font (ptr + 1);
+					break;
+				case 'f':		/* %f range font-name */
+					{
+						struct rng rng;
+						/* This field only occurs in files written by 1.1
+						 * oleo.  It's presense indicates that when parsing
+						 * format fields, we should *not* reset cell fonts to 0.
+						 */
+						font_spec_in_format = 0;
+						++ptr;
+						while (isspace (*ptr))
+							++ptr;
+						if (!parse_cell_or_range (&ptr, &rng))
+							goto bad_field;
+						while (isspace (*ptr))
+							++ptr;
+						{
+							struct font_memo * fm = parsed_matching_font (ptr);
+							set_region_font (&rng, fm->names->oleo_name, fm->scale);
+						}
+						break;
+					}
+				default:		/* % with something invalid */
+					goto bad_field;
+			}
 			break;
-		      }
-		    fnt = fnt_map[id];
-		    break;
-		  }
+		case 'F':		/* Format field */
+			vlen = 0;
+			ptr++;
+			fnt = 0;	/* The font must be explicitly overriden for a cell. */
+			while (*ptr)
+			{
+				if (*ptr != ';')
+					goto bad_field;
+				ptr++;
+				switch (*ptr++) {
+					int clo, chi, cwid;
+					case 'C':	/* Column from rows 1 to 255 */
+					czcol = astol (&ptr);
+					vlen = 2;
+					break;
 
-		case 'F':
-		  switch (*ptr++)
-		    {
-		    case 'D':
-		      fmt = FMT_DEF;
-		      break;
-		    case 'G':
-		      fmt = FMT_GEN;
-		      break;
-		    case 'E':
-		      fmt = FMT_EXP;
-		      break;
-		    case 'F':
-		      fmt = FMT_FXT;
-		      break;
-		    case '$':
-		      fmt = FMT_DOL;
-		      break;
-		    case '*':	/* JF implemented as +- format */
-		      fmt = FMT_GPH;
-		      break;
-		    case ',':	/* JF */
-		      fmt = FMT_CMA;
-		      break;
-		    case 'U':
-		      fmt = FMT_USR;
-		      break;
-		    case '%':
-		      fmt = FMT_PCT;
-		      break;
-		    case 'H':
-		      fmt = FMT_HID;
-		      break;	/* END of JF */
-		    case 'd':
-			fmt = FMT_DATE;
+					case 'D':	/* Default format */
+					switch (*ptr++)
+					{
+						case 'G':
+							default_fmt = FMT_GEN;
+							break;
+						case 'E':
+							default_fmt = FMT_EXP;
+							break;
+						case 'F':
+							default_fmt = FMT_FXT;
+							break;
+						case '$':
+							default_fmt = FMT_DOL;
+							break;
+						case '*':	/* * format implemented as +- format */
+							default_fmt = FMT_GPH;
+							break;
+						case ',':	/* JF */
+							default_fmt = FMT_CMA;
+							break;
+						case 'U':
+							default_fmt = FMT_USR;
+							break;
+						case '%':
+							default_fmt = FMT_PCT;
+							break;
+						case 'H':
+							default_fmt = FMT_HID;
+							break;
+						case 'd':	/* Date */
+							default_fmt = FMT_DATE;
+							break;
+							/* End of JF */
+						default:
+							io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
+							break;
+					}
+					if (*ptr == 'F')
+					{
+						prc = default_prc = FLOAT_PRECISION;
+						ptr++;
+					}
+					else
+						default_prc = prc = astol (&ptr);
+
+					switch (*ptr++)
+					{
+						case 'C':
+							default_jst = JST_CNT;
+							break;
+						case 'L':
+							default_jst = JST_LFT;
+							break;
+						case 'R':
+							default_jst = JST_RGT;
+							break;
+						case 'G':	/* General format not supported */
+						default:
+							io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+							break;
+					}
+					default_width = astol (&ptr);
+					break;
+
+					case 'f': /* Font specification */
+					{
+						int id;
+						id = astol(&ptr);
+						if (id < 0 || id >= fnt_map_size)
+						{
+							io_error_msg ("Line %d: Undefined font (%d)\n",
+									lineno, id);
+							break;
+						}
+						fnt = fnt_map[id];
+						break;
+					}
+
+					case 'F':
+					switch (*ptr++)
+					{
+						case 'D':
+							fmt = FMT_DEF;
+							break;
+						case 'G':
+							fmt = FMT_GEN;
+							break;
+						case 'E':
+							fmt = FMT_EXP;
+							break;
+						case 'F':
+							fmt = FMT_FXT;
+							break;
+						case '$':
+							fmt = FMT_DOL;
+							break;
+						case '*':	/* JF implemented as +- format */
+							fmt = FMT_GPH;
+							break;
+						case ',':	/* JF */
+							fmt = FMT_CMA;
+							break;
+						case 'U':
+							fmt = FMT_USR;
+							break;
+						case '%':
+							fmt = FMT_PCT;
+							break;
+						case 'H':
+							fmt = FMT_HID;
+							break;	/* END of JF */
+						case 'd':
+							fmt = FMT_DATE;
+							break;
+						case 'C':
+						default:
+							io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
+							fmt = FMT_DEF;
+							break;
+					}
+					if (*ptr == 'F') {
+						prc = FLOAT_PRECISION;
+						ptr++;
+					} else {
+						prc = astol(&ptr);
+					}
+					switch (*ptr++)
+					{
+						case 'C':
+							jst = JST_CNT;
+							break;
+						case 'L':
+							jst = JST_LFT;
+							break;
+						case 'R':
+							jst = JST_RGT;
+							break;
+						case 'D':
+							jst = JST_DEF;
+							break;
+						default:
+							io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+							jst = JST_DEF;
+							break;
+					}
+					vlen = 1;
+					break;
+					case 'R':	/* Row from cols 1 to 63 */
+					czrow = astol (&ptr);
+					vlen = 4;
+					break;
+
+					case 'W':	/* Width of clo to chi is cwid */
+					clo = astol (&ptr);
+					chi = astol (&ptr);
+					cwid = astol (&ptr) + 1;
+					for (; clo <= chi; clo++) {
+						set_width (clo, cwid);
+					}
+					break;
+
+					case 'H':	/* JF: extension */
+					clo = astol (&ptr);
+					chi = astol (&ptr);
+					cwid = astol (&ptr) + 1;
+					for (; clo <= chi; clo++)
+						set_height (clo, cwid);
+					break;
+					case 'c':
+					ccol = astol (&ptr);
+					break;
+					case 'r':
+					crow = astol (&ptr);
+					break;
+
+					default:
+					goto bad_field;
+				}
+			}
+			switch (vlen)
+			{
+				case 1:
+					cp = find_or_make_cell (crow, ccol);
+					SET_FORMAT (cp, fmt);
+					SET_PRECISION(cp, prc);
+					SET_JST (cp, jst);
+					if (font_spec_in_format)
+						cp->cell_font = fnt;
+					break;
+				case 2:
+					rng.lr = MIN_ROW;
+					rng.lc = czcol;
+					rng.hr = mx_row;
+					rng.hc = czcol;
+					make_cells_in_range (&rng);
+					while ((cp = next_cell_in_range ()))
+					{
+						SET_FORMAT (cp, fmt);
+						SET_PRECISION(cp, prc);
+						SET_JST (cp, jst);
+						if (font_spec_in_format)
+							cp->cell_font = fnt;
+					}
+					break;
+				case 4:
+					rng.lr = czrow;
+					rng.lc = MIN_COL;
+					rng.hr = czrow;
+					rng.hc = mx_col;
+					make_cells_in_range (&rng);
+					while ((cp = next_cell_in_range ()))
+					{
+						SET_FORMAT (cp, fmt);
+						SET_JST (cp, jst);
+						if (font_spec_in_format)
+							cp->cell_font = fnt;
+					}
+					break;
+				default:
+					break;
+			}
 			break;
-		    case 'C':
-		    default:
-		      io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
-		      fmt = FMT_DEF;
-		      break;
-		    }
-		  if (*ptr == 'F') {
-		      prc = FLOAT_PRECISION;
-		      ptr++;
-		  } else {
-		    prc = astol(&ptr);
-		  }
-		  switch (*ptr++)
-		    {
-		    case 'C':
-		      jst = JST_CNT;
-		      break;
-		    case 'L':
-		      jst = JST_LFT;
-		      break;
-		    case 'R':
-		      jst = JST_RGT;
-		      break;
-		    case 'D':
-		      jst = JST_DEF;
-		      break;
-		    default:
-		      io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-		      jst = JST_DEF;
-		      break;
-		    }
-		  vlen = 1;
-		  break;
-		case 'R':	/* Row from cols 1 to 63 */
-		  czrow = astol (&ptr);
-		  vlen = 4;
-		  break;
 
-		case 'W':	/* Width of clo to chi is cwid */
-		  clo = astol (&ptr);
-		  chi = astol (&ptr);
-		  cwid = astol (&ptr) + 1;
-		  for (; clo <= chi; clo++) {
-			set_width (clo, cwid);
-		    }
-		  break;
+		case 'B':		/* Boundry field, ignored */
+			ptr++;
+			while (*ptr)
+			{
+				if (*ptr != ';')
+					goto bad_field;
+				ptr++;
+				switch (*ptr++)
+				{
+					case 'c':
+						mx_col = astol (&ptr);
+						if (mx_col > MAX_COL)
+						{
+							io_error_msg ("Boundry column %lu too large!", mx_col);
+							mx_col = MAX_COL;
+						}
+						break;
+					case 'r':
+						mx_row = astol (&ptr);
+						if (mx_row > MAX_ROW)
+						{
+							io_error_msg ("Boundry row %lu too large!", mx_row);
+							mx_row = MAX_ROW;
+						}
+						break;
+					default:
+						goto bad_field;
+				}
+			}
+			break;
 
-		case 'H':	/* JF: extension */
-		  clo = astol (&ptr);
-		  chi = astol (&ptr);
-		  cwid = astol (&ptr) + 1;
-		  for (; clo <= chi; clo++)
-		    set_height (clo, cwid);
-		  break;
-		case 'c':
-		  ccol = astol (&ptr);
-		  break;
-		case 'r':
-		  crow = astol (&ptr);
-		  break;
+		case 'N':		/* A Name field */
+			if (ptr[1] != 'N')
+				goto bad_field;
+			ptr += 2;
+			vname = 0;
+			vval = 0;
+			while (*ptr)
+			{
+				if (*ptr != ';')
+					goto bad_field;
+				*ptr++ = '\0';
+				switch (*ptr++)
+				{
+					case 'N':	/* Name is */
+						vname = ptr;
+						while (*ptr && *ptr != ';')
+							ptr++;
+						vlen = ptr - vname;
+						break;
+					case 'E':	/* Expression is */
+						vval = ptr;
+						while (*ptr && *ptr != ';')
+							ptr++;
+						break;
+					default:
+						--ptr;
+						goto bad_field;
+				}
+			}
+			if (!vname || !vval)
+				goto bad_field;
+			*ptr = '\0';
+			ptr = old_new_var_value (vname, vlen, vval);
+			if (ptr)
+				io_error_msg ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
+			break;
 
+		case 'C':		/* A Cell entry */
+			cprot = 0;
+			cval = 0;
+			cexp = 0;
+			cval = 0;
+			ptr++;
+			while (*ptr)
+			{
+				int quotes;
+
+				if (*ptr != ';')
+					goto bad_field;
+				*ptr++ = '\0';
+				switch (*ptr++)
+				{
+					case 'c':
+						ccol = astol (&ptr);
+						break;
+					case 'r':
+						crow = astol (&ptr);
+						break;
+					case 'R':
+						czrow = astol (&ptr);
+						break;
+					case 'C':
+						czcol = astol (&ptr);
+						break;
+					case 'P':	/* This cell is Protected */
+						cprot++;
+						break;
+					case 'K':	/* This cell's Konstant value */
+						cval = ptr;
+						quotes = 0;
+						while (*ptr && (*ptr != ';' || quotes > 0))
+							if (*ptr++ == '"')
+								quotes = !quotes;
+						break;
+					case 'E':	/* This cell's Expression */
+						cexp = ptr;
+						quotes = 0;
+						while (*ptr && (*ptr != ';' || quotes > 0))
+							if (*ptr++ == '"')
+								quotes = !quotes;
+
+						break;
+					case 'G':
+						strcpy (expbuf, cval);
+						break;
+					case 'D':
+						strcpy (expbuf, cexp);
+						break;
+					case 'S':
+						cexp = expbuf;
+						break;
+					default:
+						--ptr;
+						goto bad_field;
+				}
+			}
+			*ptr = '\0';
+			if (cexp && cval && strcmp (cexp, cval))
+			{
+				ptr = read_new_value (crow, ccol, cexp, cval);
+				if (ptr)
+				{
+					io_error_msg ("Line %d: %d,%d: Read '%s' %s", lineno, crow, ccol, cexp, ptr);
+					break;
+				}
+			}
+			else if (cval)
+			{
+				ptr = read_new_value (crow, ccol, 0, cval);
+				if (ptr)
+				{
+					io_error_msg ("Line %d: %d,%d: Val '%s' %s", lineno, crow, ccol, cexp, ptr);
+					break;
+				}
+			}
+			else if (cexp)
+			{
+				ptr = read_new_value (crow, ccol, cexp, 0);
+				if (ptr)
+				{
+					io_error_msg ("Line %d: %d,%d: Exp '%s' %s", lineno, crow, ccol, cexp, ptr);
+					break;
+				}
+			}
+			if (cprot)
+				SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
+			if (ismerge)
+				push_cell (crow, ccol);
+			/* ... */
+			break;
+		case 'E':	/* End of input ?? */
+			break;
+		case 'W':
+			io_read_window_config (ptr + 2);
+			break;
+		case 'U':
+			/* JF extension:  read user-defined formats */
+			read_mp_usr_fmt (ptr + 1);
+			break;
+			/* JF extension: read uset-settable options */
+		case 'O':
+			Global->a0 = next_a0;
+			read_mp_options (ptr + 2);
+			next_a0 = Global->a0;
+			Global->a0 = 0;
+			break;
+		case 'G':	/* Graph data */
+#if 0 // just ignore graph data
+			/*	  fprintf(stderr, "Graph input line '%s'\n", cbuf);	*/
+			switch (*(ptr+1)) {
+				case 'T':	/* Graph Title */
+					graph_set_title(cbuf+2);
+					break;
+				case 'D':	/* Axis title : GDxtitle */
+					graph_set_axis_title(cbuf[2], cbuf+3);
+					break;
+				case 't':	/* Graph data title : Gtxtitle */
+					graph_set_data_title(cbuf[2] - '0', cbuf+3);
+					break;
+				case 'a':	/* Automatic axis setting : Gax0 or Gax1 */
+					graph_set_axis_auto(cbuf[2] - '0', cbuf[3] == '1');
+					break;
+				case 'o':	/* Whether to draw line to offscreen data points */
+					graph_set_linetooffscreen(cbuf[2] == '1');
+					break;
+				case 'r':	/* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
+					if (cbuf[3] == '0')
+						graph_set_axis_lo('x' + cbuf[2] - '0', &cbuf[4]);
+					else if (cbuf[3] == '1')
+						graph_set_axis_hi('x' + cbuf[2] - '0', &cbuf[4]);
+					break;
+				case 'L':	/* Axis logness GLx0 or GLx1 */
+					graph_set_logness(cbuf[2], 1, cbuf[3] == '1');
+					break;
+				case '0': case '1': case '2': case '3':
+				case '4': case '5': case '6': case '7':
+				case '8': case '9':
+					{
+						int	i, a, b, c, d;
+						struct rng r;
+						sscanf(cbuf, "G%d,%d,%d,%d,%d", &i, &a, &b, &c, &d);
+						r.lc = a;
+						r.lr = b;
+						r.hc = c;
+						r.hr = d;
+						graph_set_data(i, &r);
+					}
+					break;
+				case 'm':	/* Tick marks Gmxts, x = 0 or 1, t = 0 .. 4 (the tick type),
+						 * s is the format string, if any.
+						 */
+					{
+						int	axis, tp;
+
+						axis = cbuf[2] - '0';
+						tp = cbuf[3] - '0';
+
+						graph_set_axis_ticks(axis, tp, strdup(&cbuf[4]));
+					}
+					break;
+				default:
+					fprintf(stderr, "Graph: invalid line '%s'\n", cbuf);
+			}
+#endif
+			break;
+		case 'D':	/* Database Access */
+			ptr++;
+			switch (*ptr) {
+				case 'u':
+					DatabaseSetUser(ptr+1);
+					break;
+				case 'h':
+					DatabaseSetHost(ptr+1);
+					break;
+				case 'n':
+					DatabaseSetName(ptr+1);
+					break;
+				default:
+					io_error_msg("Line %d - unknown code %s\n", lineno, cbuf);
+			}
+			break;
 		default:
-		  goto bad_field;
-		}
-	    }
-	  switch (vlen)
-	    {
-	    case 1:
-	      cp = find_or_make_cell (crow, ccol);
-	      SET_FORMAT (cp, fmt);
-		  SET_PRECISION(cp, prc);
-	      SET_JST (cp, jst);
-	      if (font_spec_in_format)
-		cp->cell_font = fnt;
-	      break;
-	    case 2:
-	      rng.lr = MIN_ROW;
-	      rng.lc = czcol;
-	      rng.hr = mx_row;
-	      rng.hc = czcol;
-	      make_cells_in_range (&rng);
-	      while ((cp = next_cell_in_range ()))
-		{
-		  SET_FORMAT (cp, fmt);
-		  SET_PRECISION(cp, prc);
-		  SET_JST (cp, jst);
-		  if (font_spec_in_format)
-		    cp->cell_font = fnt;
-		}
-	      break;
-	    case 4:
-	      rng.lr = czrow;
-	      rng.lc = MIN_COL;
-	      rng.hr = czrow;
-	      rng.hc = mx_col;
-	      make_cells_in_range (&rng);
-	      while ((cp = next_cell_in_range ()))
-		{
-		  SET_FORMAT (cp, fmt);
-		  SET_JST (cp, jst);
-		  if (font_spec_in_format)
-		    cp->cell_font = fnt;
-		}
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-
-	case 'B':		/* Boundry field, ignored */
-	  ptr++;
-	  while (*ptr)
-	    {
-	      if (*ptr != ';')
-		goto bad_field;
-	      ptr++;
-	      switch (*ptr++)
-		{
-		case 'c':
-		  mx_col = astol (&ptr);
-		  if (mx_col > MAX_COL)
-		    {
-		      io_error_msg ("Boundry column %lu too large!", mx_col);
-		      mx_col = MAX_COL;
-		    }
-		  break;
-		case 'r':
-		  mx_row = astol (&ptr);
-		  if (mx_row > MAX_ROW)
-		    {
-		      io_error_msg ("Boundry row %lu too large!", mx_row);
-		      mx_row = MAX_ROW;
-		    }
-		  break;
-		default:
-		  goto bad_field;
-		}
-	    }
-	  break;
-
-	case 'N':		/* A Name field */
-	  if (ptr[1] != 'N')
-	    goto bad_field;
-	  ptr += 2;
-	  vname = 0;
-	  vval = 0;
-	  while (*ptr)
-	    {
-	      if (*ptr != ';')
-		goto bad_field;
-	      *ptr++ = '\0';
-	      switch (*ptr++)
-		{
-		case 'N':	/* Name is */
-		  vname = ptr;
-		  while (*ptr && *ptr != ';')
-		    ptr++;
-		  vlen = ptr - vname;
-		  break;
-		case 'E':	/* Expression is */
-		  vval = ptr;
-		  while (*ptr && *ptr != ';')
-		    ptr++;
-		  break;
-		default:
-		  --ptr;
-		  goto bad_field;
-		}
-	    }
-	  if (!vname || !vval)
-	    goto bad_field;
-	  *ptr = '\0';
-	  ptr = old_new_var_value (vname, vlen, vval);
-	  if (ptr)
-	    io_error_msg ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
-	  break;
-
-	case 'C':		/* A Cell entry */
-	  cprot = 0;
-	  cval = 0;
-	  cexp = 0;
-	  cval = 0;
-	  ptr++;
-	  while (*ptr)
-	    {
-	      int quotes;
-
-	      if (*ptr != ';')
-		goto bad_field;
-	      *ptr++ = '\0';
-	      switch (*ptr++)
-		{
-		case 'c':
-		  ccol = astol (&ptr);
-		  break;
-		case 'r':
-		  crow = astol (&ptr);
-		  break;
-		case 'R':
-		  czrow = astol (&ptr);
-		  break;
-		case 'C':
-		  czcol = astol (&ptr);
-		  break;
-		case 'P':	/* This cell is Protected */
-		  cprot++;
-		  break;
-		case 'K':	/* This cell's Konstant value */
-		  cval = ptr;
-		  quotes = 0;
-		  while (*ptr && (*ptr != ';' || quotes > 0))
-		    if (*ptr++ == '"')
-		      quotes = !quotes;
-		  break;
-		case 'E':	/* This cell's Expression */
-		  cexp = ptr;
-		  quotes = 0;
-		  while (*ptr && (*ptr != ';' || quotes > 0))
-		    if (*ptr++ == '"')
-		      quotes = !quotes;
-
-		  break;
-		case 'G':
-		  strcpy (expbuf, cval);
-		  break;
-		case 'D':
-		  strcpy (expbuf, cexp);
-		  break;
-		case 'S':
-		  cexp = expbuf;
-		  break;
-		default:
-		  --ptr;
-		  goto bad_field;
-		}
-	    }
-	  *ptr = '\0';
-	  if (cexp && cval && strcmp (cexp, cval))
-	    {
-	      ptr = read_new_value (crow, ccol, cexp, cval);
-	      if (ptr)
-		{
-		  io_error_msg ("Line %d: %d,%d: Read '%s' %s", lineno, crow, ccol, cexp, ptr);
-		  break;
-		}
-	    }
-	  else if (cval)
-	    {
-	      ptr = read_new_value (crow, ccol, 0, cval);
-	      if (ptr)
-		{
-		  io_error_msg ("Line %d: %d,%d: Val '%s' %s", lineno, crow, ccol, cexp, ptr);
-		  break;
-		}
-	    }
-	  else if (cexp)
-	    {
-	      ptr = read_new_value (crow, ccol, cexp, 0);
-	      if (ptr)
-		{
-		  io_error_msg ("Line %d: %d,%d: Exp '%s' %s", lineno, crow, ccol, cexp, ptr);
-		  break;
-		}
-	    }
-	  if (cprot)
-	    SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
-	  if (ismerge)
-	    push_cell (crow, ccol);
-	  /* ... */
-	  break;
-	case 'E':	/* End of input ?? */
-	  break;
-	case 'W':
-	  io_read_window_config (ptr + 2);
-	  break;
-	case 'U':
-	  /* JF extension:  read user-defined formats */
-	  read_mp_usr_fmt (ptr + 1);
-	  break;
-	  /* JF extension: read uset-settable options */
-	case 'O':
-	  Global->a0 = next_a0;
-	  read_mp_options (ptr + 2);
-	  next_a0 = Global->a0;
-	  Global->a0 = 0;
-	  break;
-	case 'G':	/* Graph data */
-/*	  fprintf(stderr, "Graph input line '%s'\n", cbuf);	*/
-	  switch (*(ptr+1)) {
-	  case 'T':	/* Graph Title */
-	    graph_set_title(cbuf+2);
-	    break;
-	  case 'D':	/* Axis title : GDxtitle */
-	    graph_set_axis_title(cbuf[2], cbuf+3);
-	    break;
-	  case 't':	/* Graph data title : Gtxtitle */
-	    graph_set_data_title(cbuf[2] - '0', cbuf+3);
-	    break;
-	  case 'a':	/* Automatic axis setting : Gax0 or Gax1 */
-	    graph_set_axis_auto(cbuf[2] - '0', cbuf[3] == '1');
-	    break;
-	  case 'o':	/* Whether to draw line to offscreen data points */
-	    graph_set_linetooffscreen(cbuf[2] == '1');
-	    break;
-	  case 'r':	/* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
-	    if (cbuf[3] == '0')
-		graph_set_axis_lo('x' + cbuf[2] - '0', &cbuf[4]);
-	    else if (cbuf[3] == '1')
-		graph_set_axis_hi('x' + cbuf[2] - '0', &cbuf[4]);
-	    break;
-	  case 'L':	/* Axis logness GLx0 or GLx1 */
-	    graph_set_logness(cbuf[2], 1, cbuf[3] == '1');
-	    break;
-	  case '0': case '1': case '2': case '3':
-	  case '4': case '5': case '6': case '7':
-	  case '8': case '9':
-            {
-	      int	i, a, b, c, d;
-	      struct rng r;
-	      sscanf(cbuf, "G%d,%d,%d,%d,%d", &i, &a, &b, &c, &d);
-	      r.lc = a;
-	      r.lr = b;
-	      r.hc = c;
-	      r.hr = d;
-	      graph_set_data(i, &r);
-	    }
-	    break;
-	  case 'm':	/* Tick marks Gmxts, x = 0 or 1, t = 0 .. 4 (the tick type),
-			 * s is the format string, if any.
-			 */
-	    {
-		int	axis, tp;
-
-		axis = cbuf[2] - '0';
-		tp = cbuf[3] - '0';
-
-		graph_set_axis_ticks(axis, tp, strdup(&cbuf[4]));
-	    }
-		break;
-	  default:
-	    fprintf(stderr, "Graph: invalid line '%s'\n", cbuf);
-	  }
-	  break;
-	case 'D':	/* Database Access */
-		ptr++;
-		switch (*ptr) {
-		case 'u':
-			DatabaseSetUser(ptr+1);
-			break;
-		case 'h':
-			DatabaseSetHost(ptr+1);
-			break;
-		case 'n':
-			DatabaseSetName(ptr+1);
-			break;
-		default:
-			io_error_msg("Line %d - unknown code %s\n", lineno, cbuf);
-		}
-		break;
-	default:
-	bad_field:
-	  Global->a0 = old_a0;
-	  if (!ismerge)
-	    clear_spreadsheet ();
-	  io_recenter_all_win ();
-	  io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, cbuf);
-	  Global->return_from_error = 0;
-	  return;
+bad_field:
+			Global->a0 = old_a0;
+			if (!ismerge)
+				clear_spreadsheet ();
+			io_recenter_all_win ();
+			io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, cbuf);
+			Global->return_from_error = 0;
+			return;
 	}	/* End of switch */
     }
   if (!feof (fp)) {

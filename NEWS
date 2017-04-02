@@ -11,6 +11,9 @@ VERSION 6.0.0 IN DEVELOPMENT
   the version installed required 64-bit. I cannot get the 32-bit
   system to work, so I have "temporarily" disabled it.
 
+* Fixed crash with importing oleo graphs. We now just ignore them!
+  issue 8 : https://github.com/blippy/neoleo/issues/8
+
 
 ===========================================================================
 VERSION 5.0.0 RELEASED 31-MAR-2017
