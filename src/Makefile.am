@@ -54,6 +54,10 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 $(FORTH_SRCS)
 	
 
+# not present on some systems like cygwin
+# Ideally obstack would be removed as a dependency anyway
+neoleo_SOURCES += obstack.c
+
 noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
@@ -73,7 +77,7 @@ noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 tests.h \
 		 $(FORTH_HDRS)
 
-
+noinst_HEADERS += obstack.h
 
 # byte-compile.o : parse.h
 ref.o : parse.h
