@@ -28,6 +28,7 @@
 
 
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <assert.h>
@@ -1343,7 +1344,9 @@ read_cmds_cmd (FILE *fp)
 void
 forth(char* cmd)
 {
+#ifdef HAVE_FORTH
 	atl_eval(cmd);
+#endif
 }
 
 /* see also read_cmds_cmd() for the inspiration of this function.

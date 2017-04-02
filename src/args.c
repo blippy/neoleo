@@ -26,6 +26,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include <ctype.h>
 #include "global.h"
 #define DEFINE_STYLES	1

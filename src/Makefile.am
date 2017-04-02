@@ -4,12 +4,15 @@ GUI_LINK =
 if UseX
 #GUI_DEFINES = -DX_DISPLAY_MISSING
 GUI_DEFINES = -DHAVE_X 
-GUI_SRCS += io-x11.cc xrdb.c
+GUI_SRCS += io-x11.cc plot.c xrdb.c
 GUI_LINK += -lX11
 endif
 
-FORTH_HDRS = atlast.h atldef.h
-FORTH_SRCS = atlast.c atoleo.cc
+# Oops. Forth assume 64-bit. cygwin is 32-bit
+#ifdef USE_FORTH
+#FORTH_HDRS = atlast.h atldef.h
+#FORTH_SRCS = atlast.c atoleo.cc
+#endif
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
@@ -26,7 +29,8 @@ ASAN_FLAGSL = -lasan
 endif
 
 AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+# permissive flag is set due to pesky obstack
+AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\"" -fpermissive
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
@@ -38,7 +42,6 @@ neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
 		 ir.c key.c \
 		 legend.c line.c list.c lists.c logging.cc \
 		 mdi.c oleofile.c \
-		 plot.c  \
 		 ref.cc regions.c \
 		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
 		 window.c \

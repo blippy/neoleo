@@ -35,6 +35,7 @@
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include "oleox.hpp"
 
 #ifndef _DEBUG_MALLOC_INC

@@ -150,7 +150,9 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 static void
 _io_run_main_loop()
 {
+#ifdef HAVE_FORTH
 	forth_repl();
+#endif
 }
 
 void

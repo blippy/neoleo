@@ -363,7 +363,7 @@ graph_clear_datasets (void)
 void
 init_graphing (void)
 {
-  PlotInit();
+  //PlotInit();
 
   graph_presets ();
   graph_clear_datasets ();

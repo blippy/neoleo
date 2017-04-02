@@ -206,7 +206,8 @@ struct ref_to
 #define EXP_ADD_RNG		sizeof(struct rng)
 
 extern struct obstack tmp_mem;
-extern VOIDSTAR tmp_mem_start;
+//extern VOIDSTAR tmp_mem_start;
+extern char * tmp_mem_start;
 
 /* Defined in io-utils.c: */
 #define ERR_MAX		17

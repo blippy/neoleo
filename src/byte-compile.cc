@@ -35,6 +35,7 @@
 
 /* FIXME #include "funcdef.h" */
 #include <stdio.h>
+#include <string.h>
 
 #include "sysdef.h"
 
@@ -107,7 +108,7 @@ static int patches_used;
 static void *fn_stack;
 static void *str_stack;
 struct obstack tmp_mem;
-void *tmp_mem_start;
+char *tmp_mem_start;
 
 
 #define V (void(*)())
@@ -356,7 +357,7 @@ init_mem ()
   fn_stack = init_stack ();
   str_stack = init_stack ();
   obstack_begin (&tmp_mem, 400);
-  tmp_mem_start = obstack_alloc (&tmp_mem, 0);
+  tmp_mem_start = (char *) obstack_alloc (&tmp_mem, 0);
 }
 
 /* Stash away a backpatch for future editing. */
@@ -439,13 +440,13 @@ rot_patch (int n1, int n2)
    subexpressions, instead of silently failing as they do now.  Error checking
    and a way to encode longer branches would be a *good* idea.
  */
-unsigned char *
+char *
 parse_and_compile (const char *string)
 {
   struct node *new_node;
   struct node *node;
   const struct function *f;
-  unsigned char *ret;
+  char *ret;
   int n;
   unsigned buf_siz;
   int need_relax;
@@ -464,7 +465,7 @@ parse_and_compile (const char *string)
   patches_used = 0;
   if (yyparse () || parse_error)
     {
-      ret = (unsigned char*) ck_malloc (strlen (string) + 5);
+      ret = (char*) ck_malloc (strlen (string) + 5);
       ret[0] = CONST_ERR;
       ret[1] = 2;
       ret[2] = parse_error;
@@ -768,7 +769,7 @@ loop:
     }
 
   buf_siz = obstack_object_size (&tmp_mem);
-  ret = (unsigned char *) ck_malloc (buf_siz);
+  ret = (char *) ck_malloc (buf_siz);
   bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
 
   need_relax = 0;
@@ -793,7 +794,7 @@ loop:
 
       while (need_relax)
 	{
-	  ret = (unsigned char *)ck_realloc (ret, buf_siz + need_relax);
+	  ret = (char *)ck_realloc (ret, buf_siz + need_relax);
 	  for (n_lo = 0; n_lo < patches_used; n_lo++)
 	    {
 	      offset = (patches[n_lo].to - patches[n_lo].from) - 1;

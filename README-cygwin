@@ -4,4 +4,5 @@ PREREQUISITES
 
 Aside from all the compilation tools, ensure you install:
 * bison
-* texi2html
+* libncurses-devel
+* libreadline-devel

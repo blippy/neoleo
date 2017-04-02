@@ -30,6 +30,8 @@
 #include <dmalloc.h>
 #endif
 
+#include <string.h>
+
 #include "global.h"
 #include "funcdef.h"
 #include <stdio.h>
