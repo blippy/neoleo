@@ -31,7 +31,7 @@ AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\"" -fpermissive
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
-neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.c cmd.cc \
+neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.cc cmd.cc \
 		 date.c decompile.c display.c \
 		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \

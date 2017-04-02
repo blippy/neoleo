@@ -47,17 +47,18 @@ union vals
 /* An actual cell structure.  These cannot be variable-length, since they are
    allocated as a variable-length array on a col structure. */
 
-struct cell
-  {
-    /* char *cell_string; */
-    struct cell_flags {
+    struct cell_flags_s {
 	unsigned int	cell_unused:	1;	/* Was 2 */
 	unsigned int	cell_lock:	2;
 	unsigned int	cell_type:	3;
 	unsigned int	cell_justify:	2;
 	unsigned int	cell_format:	4;	/* Was 3 */
 	unsigned int	cell_precision:	4;
-    } cell_flags;
+    }; 
+struct cell
+  {
+    /* char *cell_string; */
+    struct cell_flags_s cell_flags;
     unsigned short cell_cycle;
     struct font_memo *cell_font;
     struct ref_fm *cell_refs_from;

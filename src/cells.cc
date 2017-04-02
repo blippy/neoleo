@@ -69,11 +69,11 @@ struct value
 
 
 static int
-cell (row, col, dowhat, p)
-     long row;
-     long col;
-     char *dowhat;
-     struct value *p;
+cell_mc (
+     long row,
+     long col,
+     char *dowhat,
+     struct value *p)
 {
   struct func
     {
@@ -200,23 +200,21 @@ cell (row, col, dowhat, p)
 
 
 static void
-do_curcell (p)
-     struct value *p;
+do_curcell (struct value *p)
 {
   int tmp;
 
-  tmp = cell (curow, cucol, p->String, p);
+  tmp = cell_mc (curow, cucol, p->String, p);
   if (tmp)
     ERROR (tmp);
 }
 
 static void
-do_my (p)
-     struct value *p;
+do_my (value *p)
 {
   int tmp;
 
-  tmp = cell (cur_row, cur_col, p->String, p);
+  tmp = cell_mc (cur_row, cur_col, p->String, p);
   if (tmp)
     ERROR (tmp);
 }
@@ -225,8 +223,7 @@ do_my (p)
    error, we find the first occurence of that ERROR in the range */
 
 static void
-do_member (p)
-     struct value *p;
+do_member (struct value *p)
 {
   CELLREF crow;
   CELLREF ccol;
@@ -277,8 +274,8 @@ do_member (p)
 }
 
 static void
-do_smember (p)
-     struct value *p;
+do_smember (
+     struct value *p)
 {
   CELLREF crow;
   CELLREF ccol;
@@ -305,8 +302,8 @@ do_smember (p)
 }
 
 static void
-do_members (p)
-     struct value *p;
+do_members (
+     struct value *p)
 {
   CELLREF crow;
   CELLREF ccol;
@@ -333,8 +330,8 @@ do_members (p)
 }
 
 static void
-do_pmember (p)
-     struct value *p;
+do_pmember (
+     struct value *p)
 {
   CELLREF crow;
   CELLREF ccol;
@@ -360,8 +357,8 @@ do_pmember (p)
 }
 
 static void
-do_memberp (p)
-     struct value *p;
+do_memberp (
+     struct value *p)
 {
   CELLREF crow;
   CELLREF ccol;
@@ -453,8 +450,8 @@ out:
 }
 
 static void
-do_vlookup (p)
-     struct value *p;
+do_vlookup (
+     struct value *p)
 {
 
   struct rng *rng = &((p)->Rng);
@@ -519,8 +516,8 @@ out:
 }
 
 static void
-do_vlookup_str (p)
-     struct value *p;
+do_vlookup_str (
+     struct value *p)
 {
 
   struct rng *rng = &((p)->Rng);
@@ -573,12 +570,12 @@ out:
 
 
 static void
-do_cell (p)
-     struct value *p;
+do_cell (
+     struct value *p)
 {
   int tmp;
 
-  tmp = cell (p->Int, (p + 1)->Int, (p + 2)->String, p);
+  tmp = cell_mc (p->Int, (p + 1)->Int, (p + 2)->String, p);
   if (tmp)
     ERROR (tmp);
 }
@@ -630,12 +627,15 @@ do_varval (struct value *p)
         return;
     }
     p->String = (p+2)->String;
-    tmp = cell (vr, vc, p->String, p);
+    tmp = cell_mc (vr, vc, p->String, p);
     if (tmp)
       ERROR (tmp);
   }
 }
 
+#define S (char *)
+#define T (void (*)())
+//#define T
 static void
 do_button(struct value *p)
 {
@@ -653,22 +653,22 @@ MotifButton(cur_row, cur_col, p->String, (p+1)->String);
 
 struct function cells_funs[] =
 {
-  {C_FN1 | C_T, X_A1, "S", do_curcell, "curcell"},
-  {C_FN1 | C_T, X_A1, "S", do_my, "my"},
-  {C_FN3 | C_T, X_A3, "IIS", do_cell, "cell"},
-  {C_FN3 | C_T, X_A3, "ISS", do_varval, "varval"},
+  {C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
+  {C_FN1 | C_T, X_A1, "S", T do_my, S "my"},
+  {C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
+  {C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
 
-  {C_FN2, X_A2, "RA", do_member, "member"},
-  {C_FN2, X_A2, "RS", do_smember, "smember"},
-  {C_FN2, X_A2, "RS", do_members, "members"},
-  {C_FN2, X_A2, "RS", do_pmember, "pmember"},
-  {C_FN2, X_A2, "RS", do_memberp, "memberp"},
+  {C_FN2, X_A2, "RA", T do_member, S "member"},
+  {C_FN2, X_A2, "RS", T do_smember, S "smember"},
+  {C_FN2, X_A2, "RS", T do_members, S "members"},
+  {C_FN2, X_A2, "RS", T do_pmember, S "pmember"},
+  {C_FN2, X_A2, "RS", T do_memberp, S "memberp"},
 
-  {C_FN3, X_A3, "RFI", do_hlookup, "hlookup"},
-  {C_FN3, X_A3, "RFI", do_vlookup, "vlookup"},
-  {C_FN3, X_A3, "RSI", do_vlookup_str, "vlookup_str"},
+  {C_FN3, X_A3, "RFI", T do_hlookup, S "hlookup"},
+  {C_FN3, X_A3, "RFI", T do_vlookup, S "vlookup"},
+  {C_FN3, X_A3, "RSI", T do_vlookup_str, S "vlookup_str"},
 
-  {C_FN2,	X_A2,	"SS",	do_button,	"button" },
+  {C_FN2,	X_A2,	"SS",	T do_button,	S "button" },
 
   {0, 0, "", 0, 0},
 };
