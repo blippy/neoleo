@@ -1009,6 +1009,7 @@ oleo_write_file (fp, rng)
   if (rng == &all_rng)
     write_mp_windows (fp);
 
+  if(false) { // graph stuff now doesn't work
   /* Graphs */
   for (i=0; i<NUM_DATASETS; i++) {
 	struct rng	r;
@@ -1071,7 +1072,7 @@ oleo_write_file (fp, rng)
   fprintf(fp, "Gm1%c%s\n",
 	'0' + graph_get_axis_ticktype(1),
 	graph_get_axis_tickformat(1) ? graph_get_axis_tickformat(1) : "(null)");
-
+  }
   /* Database stuff */
   if (DatabaseInitialised()) {
 	fprintf(fp, "Dn%s\n", DatabaseGetName() ? DatabaseGetName() : "");

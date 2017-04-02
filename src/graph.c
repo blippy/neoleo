@@ -35,6 +35,7 @@
 #include <dmalloc.h>
 #endif
 
+#include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -311,6 +312,7 @@ graph_set_data(int data_set, struct rng * rng)
 struct rng
 graph_get_data(int data_set)
 {
+	assert(false);
 	return Global->PlotGlobal->graph_data[data_set];
 }
 
