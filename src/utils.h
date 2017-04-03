@@ -44,7 +44,7 @@ extern void ck_free (VOIDSTAR);
 extern void get_usr_stats (int, char **);
 extern void set_usr_stats (int, char **);
 
-extern num_c astof(char **sp);
+extern num_s astof(char **sp);
 extern char *char_to_string (int);
 extern int string_to_char (char **);
 extern FILE *xopen_with_backup (const char *,const char *);
