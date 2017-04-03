@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <iostream>
 #include <string>
 #include <stdio.h>
 #include <stdbool.h>
@@ -6,6 +8,7 @@
 
 //#include <obstack.h>
 using std::string;
+using std::cout;
 using std::vector;
 
 // check for leaks, as suggested at 
@@ -45,13 +48,6 @@ get_formula(int curow, int cucol)
         return decomp(curow, cucol, cp);
 }
 
-/*
-void
-set_cell(int r, int c, char* str)
-{
-
-}
-*/
 
 int // returns 1 => OK
 swig_read_file_and_run_hooks(char *name, int ismerge)
@@ -73,13 +69,23 @@ void FreeGlobals()
 	FileCloseCurrentFile();
 }
 
-void get_set(int r, int c, const string& s)
+void
+set_cell_from_string(int r,int  c, const string & s)
 {
 	vector<char> v(s.begin(), s.end());
 	v.push_back(0);
 	char *str = &v[0];
 
-	set_cell(r, c, str); // rounding nasty
+	//char * str = (char *) malloc(s.size()+1);
+	//strcpy(str, s.c_str());
+
+	//set_cell(r, c, str); 
+	new_value(r, c, str); 
+}
+
+void get_set(int r, int c, const string& s)
+{
+	set_cell_from_string(r, c, s);
 	printf("Formula at (%d,%d) is:%s\n", r, c, get_formula(r,c));
 	decomp_free();
 	recalculate(1);
@@ -97,6 +103,12 @@ headless_tests()
 	//choose_display(argc, argv, force_cmd_graphics);
 	headless_graphics();
 	io_open_display();
+
+	default_fmt = FMT_GEN;
+	set_cell_from_string(2, 2, "23.3");
+        CELL *cp = find_cell(2, 2);
+	assert(cp);
+	cout << "23.3=" << print_cell(cp) << "=\n";
 
 	if(false) {
 		extern char * instr; // used for parsing
@@ -161,17 +173,3 @@ headless_tests()
 	//__lsan_do_leak_check();
 }
 
-int neot_test0(int argc, char ** argv)
-{
-        puts("neot test starting");
-	//set_headless(true);
-        MdiInitialize();
-        //PlotInit
-        AllocateDatabaseGlobal();
-        InitializeGlobals();
-        //# parse_command_line # skip for now
-        init_basics();
-
-	headless_tests();
-        return 0;
-}
