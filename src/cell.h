@@ -32,11 +32,12 @@ extern "C" {
 #endif
 
 #include "global.h"
+#include "numeric.h"
 #include "font.h"
 
 union vals
   {
-	  num c_n;
+	  num_c c_n;
 	  //double c_d;
 	  char *c_s;
 	  long c_l;

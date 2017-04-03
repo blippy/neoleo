@@ -28,12 +28,14 @@ extern "C" {
 
 #include "global.h"
 #include "cell.h"
+#include "numeric.h"
+
 extern char numb_oflo[];
 extern char *bname[];
 extern char print_buf[];
 
 extern void init_infinity (void);
-extern char * flt_to_str (num val);
+extern char * flt_to_str (num_c val);
 extern char * flt_to_str_fmt (CELL *cp);
 extern char * long_to_str (long val);
 extern char * print_cell (CELL *cp);
@@ -92,7 +94,7 @@ extern struct user_fmt pct;
 extern struct user_fmt fxt;
 
 //char* pr_flt (double val, struct user_fmt *fmt, int prec);
-char* pr_flt (num val, struct user_fmt *fmt, int prec);
+char* pr_flt (num_c val, struct user_fmt *fmt, int prec);
 
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"

@@ -50,6 +50,7 @@ static char *rcsid = "$Id: ";
 #include "oleofile.h"
 #include "sc.h"
 #include "list.h"
+#include "numeric.h"
 
 #ifdef	HAVE_TIME_H
 #include <time.h>
@@ -185,7 +186,7 @@ struct user_fmt u[NUM_USER_FMT] =
    on print_buf */
 
 char *
-flt_to_str (num val)
+flt_to_str (num_c val)
 {
   double f;
 
