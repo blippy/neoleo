@@ -47,6 +47,7 @@
 #include "io-term.h"
 #include "cmd.h"
 #include "ref.h"
+#include "utils.h"
 
 
 struct value

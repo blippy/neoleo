@@ -15,17 +15,19 @@ typedef _Decimal64 num_c;
 #endif
 
 #if USE_DECIMAL
-	typedef _Decimal64 num_t;
+	typedef _Decimal64 _num_t;
 	#define E100 1E100DD
 	#define NUM_HUNDREDTH 0.01DD
 	#define NUM_TEN 10.0DD
 #else
-	typedef double num_t;
+	typedef double _num_t;
 	#define E100 1E100
 	#define NUM_HUNDREDTH 0.01
 	#define NUM_TEN 10.0
 #endif
 
+typedef _num_t num_t;	
+//typedef  uint8_t num_t[8];
 
 //typedef struct { uint8_t bytes[8]; }  num_s;
 //typedef  uint8_t num_s[8];

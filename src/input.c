@@ -33,6 +33,7 @@
 #include "cmd.h"
 #include "window.h"
 #include "io-abstract.h"
+#include "utils.h"
 
 
 /* In the functions below, we only ever deal with one input_view at a 

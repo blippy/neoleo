@@ -48,6 +48,7 @@
 #include "format.h"
 #include "lists.h"
 #include "regions.h"
+#include "utils.h"
 
 /* Shorthand */
 

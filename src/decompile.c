@@ -37,6 +37,7 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "cmd.h"
+#include "utils.h"
 
 struct pr_node
   {

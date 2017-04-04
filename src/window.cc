@@ -39,6 +39,7 @@
 #include "cmd.h"
 #include "lists.h"
 #include "regions.h"
+#include "utils.h"
 
 /* Low level window operators. */
 

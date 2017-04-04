@@ -37,7 +37,7 @@
 #include "global.h"
 #include "lists.h"
 #include "funcdef.h"
-
+#include "utils.h"
 
 #include "sysdef.h"
 #ifndef _DEBUG_MALLOC_INC

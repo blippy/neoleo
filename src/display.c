@@ -34,6 +34,7 @@
 #include "lists.h"
 #include "cell.h"
 #include "io-utils.h"
+#include "utils.h"
 
 struct cell_display *
 cell_display_of (struct display *disp, CELLREF r, CELLREF c)

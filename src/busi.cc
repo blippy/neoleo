@@ -36,6 +36,7 @@
 #include "eval.h"
 #include "errors.h"
 #include "busi.h"
+#include "utils.h"
 
 struct value
   {

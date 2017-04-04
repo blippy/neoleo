@@ -43,7 +43,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include <stdbool.h>
 
 #include "global.h"
-
+#include "utils.h"
 #include "basic.h"
 #include "cell.h"
 #include "cmd.h"

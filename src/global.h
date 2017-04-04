@@ -26,8 +26,8 @@ extern "C" {
 
 
 #include "sysdef.h"
-#include "utils.h"
-#include "numeric.h"
+//#include "utils.h"
+//#include "numeric.h"
 
 
 
@@ -250,11 +250,11 @@ extern const char oleo_version_string[];
 extern long astol (char **);
 extern void panic (const char *, ...);
 
-extern VOIDSTAR init_stack (void);
-extern void flush_stack (void *);
-extern void push_stack (void *, void *);
-extern VOIDSTAR pop_stack (void *);
-extern int size_stack (void *);
+//extern VOIDSTAR init_stack (void);
+//extern void flush_stack (void *);
+//extern void push_stack (void *, void *);
+//extern VOIDSTAR pop_stack (void *);
+//extern int size_stack (void *);
 
 extern void add_ref (CELLREF, CELLREF);
 extern void add_range_ref (struct rng *);

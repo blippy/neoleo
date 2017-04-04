@@ -27,8 +27,9 @@ extern "C" {
 
 
 /* define the type of bindings: */
-#undef  VOIDSTAR
-#define VOIDSTAR	char *
+//#undef  VOIDSTAR
+//#define VOIDSTAR	char *
+
 
 struct hash_entry
 {

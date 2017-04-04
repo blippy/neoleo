@@ -20,6 +20,7 @@
 #include "mysql.h"
 //#include "print.h"
 #include "logging.h"
+#include "utils.h"
 
 #include "oleox.hpp"
 

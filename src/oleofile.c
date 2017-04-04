@@ -30,6 +30,7 @@
 
 #include <string.h>
 
+#include "utils.h"
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>

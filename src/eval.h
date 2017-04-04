@@ -26,6 +26,7 @@ extern "C" {
 #endif
 
 #include "cell.h"
+#include "utils.h"
 
 
 /* Despite the name, this file contains the #defines for all the byte-compiled

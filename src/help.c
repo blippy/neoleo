@@ -36,6 +36,7 @@
 #include "help.h"
 #include "key.h"
 #include "io-utils.h"
+#include "utils.h"
 
 #ifndef alloca
 #ifdef __GNUC__

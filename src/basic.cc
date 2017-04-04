@@ -54,6 +54,7 @@
 #include "decompile.h"
 #include "userpref.h"
 #include "shell.h"
+#include "utils.h"
 
 
 /* Used by motion commands. */

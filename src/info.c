@@ -33,6 +33,7 @@
 #include "hash.h"
 #include "cmd.h"
 #include <stdarg.h>
+#include "utils.h"
 
 struct hash_control * info_buffers;
 

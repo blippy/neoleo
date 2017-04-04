@@ -21,6 +21,8 @@
 #ifndef LINEH
 #define LINEH
 
+#include <stdio.h>
+
 #define LINE_MIN 28
 
 struct line

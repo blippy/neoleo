@@ -35,6 +35,7 @@
 #include "global.h"
 #include "line.h"
 #include <stdarg.h>
+#include "utils.h"
 
 void
 set_line (struct line *line, const char *string)

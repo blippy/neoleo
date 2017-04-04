@@ -51,6 +51,7 @@ static char *rcsid = "$Id: ";
 #include "sc.h"
 #include "list.h"
 #include "numeric.h"
+#include "utils.h"
 
 #ifdef	HAVE_TIME_H
 #include <time.h>

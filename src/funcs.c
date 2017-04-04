@@ -47,6 +47,7 @@
 #include "font.h"
 #include "graph.h"
 #include "lists.h"
+#include "utils.h"
 
 
 /* This include builds the function table, doc strings, and FUNC_ARGS strings.

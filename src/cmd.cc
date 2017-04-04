@@ -61,6 +61,7 @@ local_free (p)
 #include "stub.h"
 #include "ref.h"
 #include "key.h"
+#include "utils.h"
 
 /* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
  * unwind the disaster using state machines. An implementation of state 

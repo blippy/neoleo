@@ -38,6 +38,7 @@
 #include "io-generic.h"
 #include "io-utils.h"
 #include "io-term.h"
+#include "utils.h"
 
 struct keymap **the_maps;
 char **map_names;

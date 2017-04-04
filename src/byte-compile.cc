@@ -75,6 +75,7 @@ extern "C" {
 #include "mysql.h"
 #include "gsl.h"
 #include "byte-compile.h"
+#include "utils.h"
 
 #define BUSI
 //extern "C" {
