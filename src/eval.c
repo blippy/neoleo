@@ -110,15 +110,15 @@ unsigned short current_cycle;
 CELLREF cur_row;
 CELLREF cur_col;
 
-num rintn(num n)
+num_t rintn(num_t n)
 {
 	double d1 = n;
 	double d2 = rint(d1);
-	num res = d2;
+	num_t res = d2;
 	return res;
 }
 
-static num exp10_arr[] =
+static num_t exp10_arr[] =
 {
   1E0, 1E1, 1E2, 1E3, 1E4,
   1E5, 1E6, 1E7, 1E8, 1E9,
@@ -983,8 +983,8 @@ eval_expression (expr)
 			if (tmp < -29 || tmp > 29)
 				ERROR (OUT_OF_RANGE);
 			if (tmp < 0) {
-				num f1 = (p->Float) / exp10_arr[-tmp];
-				num f2 = rintn(f1);
+				num_t f1 = (p->Float) / exp10_arr[-tmp];
+				num_t f2 = rintn(f1);
 				//num f3 = f2 * exp10_arr[-tmp];
 				p->Float = rintn (f2) * exp10_arr[-tmp];
 			} else {

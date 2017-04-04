@@ -579,7 +579,7 @@ loop:
 
     case C_FLT:
       (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num));
+      (void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num_t));
       break;
 
     case C_INT:

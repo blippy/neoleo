@@ -68,7 +68,7 @@ npv (
   double npv;
   int i;
   //double f;
-  num f;
+  num_t f;
   CELL *cell_ptr;
   char *strptr;
 
@@ -674,11 +674,11 @@ do_kprin (
 static void
 do_compbal (struct value *p)
 {
-  num principal = (p)->Float;
-  num rate = (p + 1)->Float;
-  num term = (p + 2)->Float;
+  num_t principal = (p)->Float;
+  num_t rate = (p + 1)->Float;
+  num_t term = (p + 2)->Float;
 
-  p->Float = principal * (num) pow (1 + rate, term);
+  p->Float = principal * (num_t) pow (1 + rate, term);
 }
 
 struct function busi_funs[] =

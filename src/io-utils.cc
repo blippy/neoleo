@@ -185,13 +185,13 @@ struct user_fmt u[NUM_USER_FMT] =
    on print_buf */
 
 char *
-flt_to_str (num val)
+flt_to_str (num_t val)
 {
   double f;
 
-  if (val == (num) __plinf)
+  if (val == (num_t) __plinf)
     return iname;
-  if (val == (num) __neinf)
+  if (val == (num_t) __neinf)
     return mname;
   f = fabs (val);
   if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
@@ -565,15 +565,15 @@ pr_int (
   return pt;
 }
 
-num
-modn(num x, num *iptr)
+num_t
+modn(num_t x, num_t *iptr)
 {
-	num sgn = 1;
-	num x1 = x;
+	num_t sgn = 1;
+	num_t x1 = x;
 	if(x1 <0) { sgn = -1;}
 	x1 *= sgn;
 
-	num x2 = floor(x1);
+	num_t x2 = floor(x1);
 	//*iptr = sgn * (x1-x2);
 	//return sgn * x2;
 	*iptr = sgn * x2;
@@ -581,24 +581,24 @@ modn(num x, num *iptr)
 }
 
 char *
-pr_flt (num val, struct user_fmt *fmt, int prec)
+pr_flt (num_t val, struct user_fmt *fmt, int prec)
 {
   char *iptr;
   char *fptr;
   char *pptr;
   char *pf, *pff;
   //double fract, integer, tmpval;
-  num fract, integer, tmpval;
+  num_t fract, integer, tmpval;
   int n;
   int isneg;
   int comlen;
 
 
-  val *= (num) fmt->scale;
+  val *= (num_t) fmt->scale;
 
-  if (val == (num) __plinf)
+  if (val == (num_t) __plinf)
     return iname;
-  if (val == (num) __neinf)
+  if (val == (num_t) __neinf)
     return mname;
   if (val != val)
     return nname;

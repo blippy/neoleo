@@ -84,7 +84,7 @@ byte_decompile (expr)
      unsigned char *expr;
 {
   unsigned char byte;
-  num tmp_flt;
+  num_t tmp_flt;
   long tmp_lng;
   char *tmp_str;
   struct var *v;
@@ -520,8 +520,8 @@ next_byte:
       break;
 
     case C_FLT:
-      bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_flt, sizeof (num));
-      expr += sizeof (num);
+      bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_flt, sizeof (num_t));
+      expr += sizeof (num_t);
       new = n_alloc (20, 1000, f->fn_str, (double) tmp_flt); 
       new->len = strlen (new->string);
       break;

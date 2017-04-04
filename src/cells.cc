@@ -392,11 +392,11 @@ do_hlookup (struct value *p)
 {
 
   struct rng *rng = &((p)->Rng);
-  num fltval = (p + 1)->Float;
+  num_t fltval = (p + 1)->Float;
   long offset = (p + 2)->Int;
 
   CELL *cell_ptr;
-  num f;
+  num_t f;
   CELLREF col;
   CELLREF row;
   char *strptr;
@@ -456,12 +456,12 @@ do_vlookup (
 {
 
   struct rng *rng = &((p)->Rng);
-  num fltval = (p + 1)->Float;
+  num_t fltval = (p + 1)->Float;
   long offset = (p + 2)->Int;
 
   CELL *cell_ptr;
   //double f;
-  num f;
+  num_t f;
   CELLREF col;
   CELLREF row;
   char *strptr;

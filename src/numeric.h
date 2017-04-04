@@ -11,18 +11,21 @@
 //typedef __d64 _Decimal64;
 #else
 typedef _Decimal64 num_c;
-#define USE_DECIMAL 1
+#define USE_DECIMAL 0
 #endif
 
 #if USE_DECIMAL
-typedef _Decimal64 num;
-#define NUM_HUNDREDTH 0.01DD
-#define NUM_TEN 10.0DD
+	typedef _Decimal64 num_t;
+	#define E100 1E100DD
+	#define NUM_HUNDREDTH 0.01DD
+	#define NUM_TEN 10.0DD
 #else
-typedef double num;
-#define NUM_HUNDREDTH 0.01
-#define NUM_TEN 10.0
+	typedef double num_t;
+	#define E100 1E100
+	#define NUM_HUNDREDTH 0.01
+	#define NUM_TEN 10.0
 #endif
 
 
-typedef struct { uint8_t bytes[8]; } num_s;
+//typedef struct { uint8_t bytes[8]; }  num_s;
+//typedef  uint8_t num_s[8];
