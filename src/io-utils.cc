@@ -93,16 +93,15 @@ char *date_formats[] = {
 };
 
 static double
-divide (a, b)
-     double a;
-     double b;
+divide (
+     double a,
+     double b)
 {
   return a / b;
 }
 
 static RETSIGTYPE
-ignore_sig (sig)
-     int sig;
+ignore_sig (int sig)
 {
   (void) signal (SIGFPE, ignore_sig);
 }
@@ -186,7 +185,7 @@ struct user_fmt u[NUM_USER_FMT] =
    on print_buf */
 
 char *
-flt_to_str (num_c val)
+flt_to_str (num val)
 {
   double f;
 
@@ -494,10 +493,10 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
 }
 
 static char *
-pr_int (val, fmt, prec)
-     long val;
-     struct user_fmt *fmt;
-     int prec;
+pr_int (
+     long val,
+     struct user_fmt *fmt,
+     int prec)
 {
   char *pf, *pff, *pt;
   long int n;

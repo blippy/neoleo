@@ -26,23 +26,24 @@ ASAN_FLAGSC = -fsanitize=address
 ASAN_FLAGSL = -lasan
 endif
 
-AM_CFLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+COMMON_FLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
+AM_CFLAGS = $(COMMON_FLAGS)
 # permissive flag is set due to pesky obstack
-AM_CXXFLAGS = -std=gnu++14 $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\"" -fpermissive
+AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
-neoleo_SOURCES = afm.c args.c basic.cc  busi.c byte-compile.cc cells.cc cmd.cc \
+neoleo_SOURCES = afm.cc args.cc basic.cc  busi.c byte-compile.cc cells.cc cmd.cc \
 		 date.c decompile.c display.c \
 		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
-		 io-headless.cc io-curses.cc io-edit.c io-term.cc io-utils.c \
+		 io-headless.cc io-curses.cc io-edit.c io-term.cc io-utils.cc \
 		 ir.c key.c \
 		 legend.c line.c list.c lists.c logging.cc \
 		 mdi.c oleofile.c \
 		 ref.cc regions.c \
 		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
-		 window.c \
+		 window.cc \
 		 defuns.c \
 		 get_date.h getdate.y \
 		 parse.y \
@@ -73,7 +74,7 @@ noinst_HEADERS = afm.h args.h atoleo.h basic.h byte-compile.h busi.h cell.h \
 		 parse.h \
 		 posixtm.h proto.h ref.h \
 		 regions.h sc.h sciplot.h sciplotI.h sort.h stringo.h stub.h stubs.h \
-		 sylk.h sysdef.h userpref.h utils.h window.h  xrdb.h \
+		 sylk.h sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
 		 tests.h \
 		 $(FORTH_HDRS)

@@ -60,6 +60,7 @@
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
+#include "io-utils.h"
 
 #if defined(HAVE_RINT)
 extern double rint (double);

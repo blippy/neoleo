@@ -37,7 +37,7 @@ extern "C" {
 
 union vals
   {
-	  num_c c_n;
+	  num c_n;
 	  //double c_d;
 	  char *c_s;
 	  long c_l;

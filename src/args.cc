@@ -103,9 +103,9 @@ symbol_verify (char ** end, struct command_arg * arg)
 }
 
 char *
-word_verify (end, arg)
-     char ** end;
-     struct command_arg * arg;
+word_verify (
+     char ** end,
+     struct command_arg * arg)
 {
   char * e = *end;
   char * start = *end;

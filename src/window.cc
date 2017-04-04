@@ -1173,7 +1173,7 @@ io_read_window_config (char * line)
       int hv = 0;
       int where;
       int link;
-      struct window *new;
+      struct window *neww;
 
       switch (*split++)
 	{
@@ -1209,26 +1209,26 @@ io_read_window_config (char * line)
       wins = ck_realloc (wins, nwin * sizeof (struct window));
       cwin = wins;
       win = &wins[wnum];
-      new = &wins[nwin - 1];
+      neww = &wins[nwin - 1];
 
       win->numc -= (hv ? 0 : where);
       win->numr -= (hv ? where : 0);
       win->win_curow = curow;
       win->win_cucol = cucol;
 
-      new->flags = WIN_EDGES | WIN_EDGE_REV;	/* Mplan defaults */
-      new->lh_wid = 0;		/* For now */
-      new->link = link;
+      neww->flags = WIN_EDGES | WIN_EDGE_REV;	/* Mplan defaults */
+      neww->lh_wid = 0;		/* For now */
+      neww->link = link;
 
-      new->win_over = win->win_over + (hv ? -win->lh_wid : win->numc);
-      new->win_down = win->win_down + (hv ? win->numr + 1 : 0);
-      new->numc = (hv ? win->numc + win->lh_wid : where);
-      new->numr = (hv ? where - 1 : win->numr);
-      new->win_curow = curow;
-      new->win_cucol = cucol;
-      set_numcols (new, curow);
+      neww->win_over = win->win_over + (hv ? -win->lh_wid : win->numc);
+      neww->win_down = win->win_down + (hv ? win->numr + 1 : 0);
+      neww->numc = (hv ? win->numc + win->lh_wid : where);
+      neww->numr = (hv ? where - 1 : win->numr);
+      neww->win_curow = curow;
+      neww->win_cucol = cucol;
+      set_numcols (neww, curow);
       recenter_window (win);
-      recenter_window (new);
+      recenter_window (neww);
     }
   if (opts)
     {
@@ -1255,7 +1255,7 @@ init_mouse (void)
   Global->free_mouse->prev = Global->free_mouse;
 }
 
-static int mouse_location ();
+static int mouse_location (CELLREF *cr, CELLREF *cc, struct mouse_event *ev);
 
 int 
 enqueue_mouse_event (int r, int c, int button, int downp)
