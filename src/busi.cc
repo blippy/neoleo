@@ -35,6 +35,7 @@
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
+#include "busi.h"
 
 struct value
   {
@@ -49,20 +50,20 @@ struct value
 #define Rng	x.c_r
 
 static double
-pmt (principal, rate, term)
-     double principal;
-     double rate;
-     double term;
+pmt (
+     double principal,
+     double rate,
+     double term)
 {
   return (principal * rate) / (1 - pow (1 + rate, -(term)));
 }
 
 
 static int
-npv (rng, rate, putres)
-     struct rng *rng;
-     double rate;
-     double *putres;
+npv (
+     struct rng *rng,
+     double rate,
+     double *putres)
 {
   double npv;
   int i;
@@ -110,15 +111,15 @@ npv (rng, rate, putres)
 }
 
 static void
-do_pmt (p)
-     struct value *p;
+do_pmt (
+     struct value *p)
 {
   p->Float = pmt (p->Float, (p + 1)->Float, (p + 2)->Float);
 }
 
 static void
-do_pv (p)
-     struct value *p;
+do_pv (
+     struct value *p)
 {
   double payment, interest, term;
 
@@ -130,8 +131,7 @@ do_pv (p)
 }
 
 static void
-do_npv (p)
-     struct value *p;
+do_npv ( struct value *p)
 {
   int tmp;
 
@@ -146,10 +146,10 @@ do_npv (p)
 }
 
 static void
-do_irr (p)
-     struct value *p;
+do_irr (
+     struct value *p)
 {
-  double try;
+  double try1;
   double res;
   double mint, maxt;
   double minr, maxr;
@@ -194,7 +194,7 @@ do_irr (p)
 	  return;
 	}
     }
-  try = (p + 1)->Float;
+  try1 = (p + 1)->Float;
   for (i = 0;; i++)
     {
       if (i == 40)
@@ -203,7 +203,7 @@ do_irr (p)
 	  p->type = TYP_ERR;
 	  return;
 	}
-      tmp = npv (&(p->Rng), try, &res);
+      tmp = npv (&(p->Rng), try1, &res);
       if (tmp)
 	{
 	  p->Value = tmp;
@@ -214,36 +214,36 @@ do_irr (p)
 	break;
       if (res > 0)
 	{
-	  maxt = try;
+	  maxt = try1;
 	  maxr = res;
 	}
       else if (res < 0)
 	{
-	  mint = try;
+	  mint = try1;
 	  minr = res;
 	}
       if (minr / -10 > maxr)
 	{
 	  /* it is quite near maxt */
-	  try = (maxt * 10 + mint) / 11;
+	  try1 = (maxt * 10 + mint) / 11;
 	}
       else if (minr / -2 > maxr)
 	{
-	  try = (maxt * 2 + mint) / 3;
+	  try1 = (maxt * 2 + mint) / 3;
 	}
       else if (minr * -10 < maxr)
 	{
 	  /* It is quite near mint */
-	  try = (maxt + mint * 10) / 11;
+	  try1 = (maxt + mint * 10) / 11;
 	}
       else if (minr * -2 < maxr)
 	{
-	  try = (maxt + mint * 2) / 3;
+	  try1 = (maxt + mint * 2) / 3;
 	}
       else
-	try = (maxt + mint) / 2;
+	try1 = (maxt + mint) / 2;
     }
-  p->Float = try;
+  p->Float = try1;
   p->type = TYP_FLT;
 }
 
@@ -353,8 +353,8 @@ do_fmrr(struct value *p)
 }
 
 static void
-do_fv (p)
-     struct value *p;
+do_fv (
+     struct value *p)
 {
   double payment = p->Float;
   double interest = (p + 1)->Float;
@@ -364,8 +364,8 @@ do_fv (p)
 }
 
 static void
-do_rate (p)
-     struct value *p;
+do_rate (
+     struct value *p)
 {
   double future = p->Float;
   double present = (p + 1)->Float;
@@ -375,8 +375,8 @@ do_rate (p)
 }
 
 static void
-do_term (p)
-     struct value *p;
+do_term (
+     struct value *p)
 {
   double payment = p->Float;
   double interest = (p + 1)->Float;
@@ -386,8 +386,8 @@ do_term (p)
 }
 
 static void
-do_cterm (p)
-     struct value *p;
+do_cterm (
+     struct value *p)
 {
   double interest = (p)->Float;
   double future = (p + 1)->Float;
@@ -397,8 +397,8 @@ do_cterm (p)
 }
 
 static void
-do_sln (p)
-     struct value *p;
+do_sln (
+     struct value *p)
 {
   double cost = (p)->Float;
   double salvage = (p + 1)->Float;
@@ -414,8 +414,8 @@ do_sln (p)
 }
 
 static void
-do_syd (p)
-     struct value *p;
+do_syd (
+     struct value *p)
 {
   double cost, salvage, life, period;
 
@@ -440,8 +440,8 @@ do_syd (p)
 
 
 static void
-do_ddb (p)
-     struct value *p;
+do_ddb (
+     struct value *p)
 {
   double cost = (p)->Float;
   double salvage = (p + 1)->Float;
@@ -473,8 +473,8 @@ do_ddb (p)
 }
 
 static void
-do_anrate (p)
-     struct value *p;
+do_anrate (
+     struct value *p)
 {
   double in_pmt = (p)->Float;
   double present = (p + 1)->Float;
@@ -525,8 +525,8 @@ do_anrate (p)
 }
 
 static void
-do_anterm (p)
-     struct value *p;
+do_anterm (
+     struct value *p)
 {
   double payment = (p)->Float;
   double principal = (p + 1)->Float;
@@ -537,8 +537,8 @@ do_anterm (p)
 
 
 static void
-do_balance (p)
-     struct value *p;
+do_balance (
+     struct value *p)
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
@@ -570,8 +570,8 @@ do_balance (p)
 }
 
 static void
-do_paidint (p)
-     struct value *p;
+do_paidint (
+     struct value *p)
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
@@ -605,8 +605,8 @@ do_paidint (p)
 }
 
 static void
-do_kint (p)
-     struct value *p;
+do_kint (
+     struct value *p)
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
@@ -639,8 +639,8 @@ do_kint (p)
 }
 
 static void
-do_kprin (p)
-     struct value *p;
+do_kprin (
+     struct value *p)
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
