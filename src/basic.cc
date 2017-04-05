@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include "sysdef.h"
 //#include "global.h"
-#include "atlast.h"
+//#include "atlast.h"
 #include "basic.h"
 #include "cmd.h"
 #include "regions.h"

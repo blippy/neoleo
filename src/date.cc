@@ -37,6 +37,8 @@
 #include "errors.h"
 #include "date.h"
 #include "utils.h"
+#include "posixtm.h"
+#include "get_date.h"
 
 struct value
   {
@@ -50,13 +52,12 @@ struct value
 #define Value	x.c_i
 #define Rng	x.c_r
 
-
 
-struct timeb;
-extern time_t get_date (char *, struct timeb *);
-extern time_t posixtime (char *);
+//struct timeb;
+//extern time_t get_date (char *, struct timeb *);
+//extern time_t posixtime (char *);
 
-
+
 
 /* These functions simply provide convenient syntax for expressing intervals 
  * of time.
@@ -132,8 +133,7 @@ dt_ymd (long y, long mo, long d)
 
 #define TM_ACCESS(FN,FIELD,TMFN)			\
 static long						\
-FN (clk)						\
-     long clk;					\
+FN (long clk)						\
 {							\
   time_t t = (time_t)clk;				\
   struct tm * tm = TMFN(&t);				\
@@ -204,41 +204,41 @@ dt_posix_date (char * date)
 
 
 static void
-l_l (fn, p)
-     long (*fn)();
-     struct value * p;
+l_l (
+     long (*fn)(long int),
+     struct value * p)
 {
   p[0].Int = fn (p->Int);
 }
 
 static void
-l_lll (fn, p)
-     long (*fn)();
-     struct value * p;
+l_lll (
+     long (*fn)(long int, long int, long int),
+     struct value * p)
 {
   p[0].Int = fn (p[0].Int, p[1].Int, p[2].Int);
 }
 
 static void
-l_llll (fn, p)
-     long (*fn)();
-     struct value * p;
+l_llll (
+     long (*fn)(long int, long int, long int, long int),
+     struct value * p)
 {
   p[0].Int = fn (p[0].Int, p[1].Int, p[2].Int, p[3].Int);
 }
 
 static void
-l_s (fn, p)
-     long (*fn)();
-     struct value * p;
+l_s (
+     long (*fn)(char *),
+     struct value * p)
 {
   p[0].Int = fn (p[0].String);
   p[0].type = TYP_INT;
 }
 
-
 
-#define CALLER(FN,CALL,VIA) static void FN (p) struct value * p; { VIA(CALL,p); }
+
+#define CALLER(FN,CALL,VIA) static void FN (struct value * p) { VIA(CALL,p); }
 
 CALLER(do_hms_to_time, dt_hms_to_time, l_lll)
 CALLER(do_dhms_to_time, dt_dhms_to_time, l_llll)
@@ -269,11 +269,10 @@ CALLER(do_gmt_wday, dt_gmt_wday, l_l)
 CALLER(do_get_date, dt_get_date, l_s)
 CALLER(do_posix_date, dt_posix_date, l_s)
 
-
 
 void
-do_strftime (p)
-     struct value * p;
+do_strftime (
+     struct value * p)
 {
   p[0].String = dt_strftime (p[0].String, p[1].Int);
 }

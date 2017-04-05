@@ -1,3 +1,4 @@
+#pragma once
 /*  Copyright (C) 1995 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -13,6 +14,10 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -43,4 +48,11 @@
 # endif
 #endif /* defined (vms) */
 
-time_t get_date PARAMS ((const char *p, const time_t *now));
+//time_t get_date PARAMS ((const char *p, const time_t *now));
+time_t get_date (const char *p, const time_t *now);
+//n function ‘long int get_date(char*)’:
+
+#ifdef __cplusplus
+}
+#endif
+
