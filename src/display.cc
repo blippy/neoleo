@@ -51,8 +51,7 @@ cell_display_of (struct display *disp, CELLREF r, CELLREF c)
 }
 
 void 
-free_display (disp)
-     struct display *disp;
+free_display (struct display *disp)
 {
   int rows = disp->range.hr - disp->range.lr + 1;
   int cols = disp->range.hc - disp->range.lc + 1;
@@ -75,9 +74,9 @@ free_display (disp)
 }
 
 void 
-damage (disp, cd)
-     struct display *disp;
-     struct cell_display *cd;
+damage (
+     struct display *disp,
+     struct cell_display *cd)
 {
   if (cd && !cd->next_damaged)
     {
@@ -162,18 +161,18 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
   return 1;
 }
 
-static void null_metric (cd, disp)
-     struct cell_display * cd;
-     struct display * disp;
+static void null_metric (
+     struct cell_display * cd,
+     struct display * disp)
 {}
 
 static void 
-_build_display (disp, range, metric, vdata, scalep)
-     struct display *disp;
-     struct rng *range;
-     cell_display_metric metric;
-     void *vdata;
-     int scalep;
+_build_display (
+     struct display *disp,
+     struct rng *range,
+     cell_display_metric metric,
+     void *vdata,
+     int scalep)
 {
   /* This would be more useful if it handled scrolling. */
   int r, c;
@@ -210,30 +209,30 @@ _build_display (disp, range, metric, vdata, scalep)
 }
 
 void 
-build_display (disp, range, metric, vdata)
-     struct display *disp;
-     struct rng *range;
-     cell_display_metric metric;
-     void *vdata;
+build_display (
+     struct display *disp,
+     struct rng *range,
+     cell_display_metric metric,
+     void *vdata)
 {
   _build_display (disp, range, metric, vdata, 1);
 }
 
 void 
-build_unscaled_display (disp, range, metric, vdata)
-     struct display *disp;
-     struct rng *range;
-     cell_display_metric metric;
-     void *vdata;
+build_unscaled_display (
+     struct display *disp,
+     struct rng *range,
+     cell_display_metric metric,
+     void *vdata)
 {
   _build_display (disp, range, metric, vdata, 0);
 }
 
 void 
-display_range (rng, disp, x, y, w, h)
-     struct rng *rng;
-     struct display *disp;
-     int x, y, w, h;
+display_range (
+     struct rng *rng,
+     struct display *disp,
+     int x, int y, int w, int h)
 {
   int t;
   struct rng *winrng = &disp->range;
@@ -272,9 +271,9 @@ display_range (rng, disp, x, y, w, h)
 }
 
 extern void 
-record_display_damage (disp, x, y, w, h)
-     struct display *disp;
-     int x, y, w, h;
+record_display_damage (
+     struct display *disp,
+     int x, int y, int w, int h)
 {
   CELLREF r, c;
   struct rng rng;
@@ -286,8 +285,8 @@ record_display_damage (disp, x, y, w, h)
 
 
 void 
-layout (disp)
-     struct display *disp;
+layout (
+     struct display *disp)
 {
   int *widths = disp->widths;
   int *heights = disp->heights;

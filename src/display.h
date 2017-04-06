@@ -78,7 +78,7 @@ struct display
 			        /* following the next_damage chain. */
 };
 
-extern void free_display (struct display *);
+extern void free_display (struct display *disp);
 extern void build_display (struct display *, struct rng *,
 			   cell_display_metric, void *);
 extern void build_unscaled_display (struct display *, struct rng *,
