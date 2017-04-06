@@ -21,6 +21,13 @@
 
 /* Written by Jim Kingdon and David MacKenzie. */
 %{
+
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+
+
+
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else
@@ -52,6 +59,12 @@ time_t mktime ();
 #define yyparse posixtime_yyparse
 static int yylex ();
 static int yyerror ();
+
+//#ifdef __cplusplus
+//}
+//#endif
+
+
 %}
 
 %token DIGIT
@@ -153,8 +166,7 @@ yyerror ()
 /* Parse a POSIX-style date and return it, or (time_t)-1 for an error.  */
 
 time_t
-posixtime (s)
-     char *s;
+posixtime (char *s)
 {
   curpos = s;
   /* Let mktime decide whether it is daylight savings time.  */

@@ -81,8 +81,8 @@ n_alloc (int size, int tightness, char *fmt, ...)
 #define n_free(x)	ck_free(x)
 
 extern struct pr_node *
-byte_decompile (expr)
-     unsigned char *expr;
+byte_decompile (
+     unsigned char *expr)
 {
   unsigned char byte;
   num_t tmp_flt;
@@ -93,7 +93,7 @@ byte_decompile (expr)
   unsigned char save_val;
   unsigned jumpto;
 
-  struct pr_node *new = 0;
+  struct pr_node *newn = 0;
   int pri;
   int aso;
   char *chr;
@@ -176,16 +176,16 @@ next_byte:
       if (byte == IF || byte == IF_L)
 	{
 	  if (c_node[0]->tightness <= 1)
-	    new = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
+	    newn = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
 			   1,
 			   "(%s) ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
 	  else
-	    new = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
+	    newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
 			   1,
 			   "%s ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
 	}
       else
-	new = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
+	newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
 		       1000,
 		       F3, f->fn_str, c_node[0]->string, c_node[1]->string, c_node[2]->string);
       n_free (c_node[0]);
@@ -212,7 +212,7 @@ next_byte:
 
     case C_STR:
       tmp_str = backslash_a_string ((char *) expr + jumpto, 2);
-      new = n_alloc (strlen (tmp_str) + 1,
+      newn = n_alloc (strlen (tmp_str) + 1,
 		     1000,
 		     "%s", tmp_str);
       break;
@@ -229,7 +229,7 @@ next_byte:
 
 	if (Global->a0)
 	  {
-	    new = n_alloc (30, 1000, f->fn_str, col_to_str (col), row);
+	    newn = n_alloc (30, 1000, f->fn_str, col_to_str (col), row);
 	  }
 	else
 	  {
@@ -277,9 +277,9 @@ next_byte:
 		num1 = row;
 		num2 = col;
 	      }
-	    new = n_alloc (30, 1000, str, num1, num2);
+	    newn = n_alloc (30, 1000, str, num1, num2);
 	  }
-	new->len = strlen (new->string);
+	newn->len = strlen (newn->string);
       }
       break;
 
@@ -293,7 +293,7 @@ next_byte:
 	expr += EXP_ADD_RNG;
 
 	if (Global->a0)
-	  new = n_alloc (40, 1000, f->fn_str, col_to_str (rng.lc), rng.lr, col_to_str (rng.hc), rng.hr);
+	  newn = n_alloc (40, 1000, f->fn_str, col_to_str (rng.lc), rng.lr, col_to_str (rng.hc), rng.hr);
 	else
 	  {
 	    /* Check for special cases */
@@ -365,20 +365,20 @@ next_byte:
 	    else
 	      (void) sprintf (tmpcbuf, "c%u:%u", rng.hc, rng.lc);
 
-	    new = n_alloc (40, 1000, "%s%s", tmprbuf, tmpcbuf);
+	    newn = n_alloc (40, 1000, "%s%s", tmprbuf, tmpcbuf);
 	  }
-	new->len = strlen (new->string);
+	newn->len = strlen (newn->string);
       }
       break;
 
     case C_CONST:
-      new = n_alloc (strlen (f->fn_str) + 1, 1000, f->fn_str);
+      newn = n_alloc (strlen (f->fn_str) + 1, 1000, f->fn_str);
       break;
 
     case C_FN0:
     case C_FN0X:
     case C_FN0 | C_T:
-      new = n_alloc (strlen (f->fn_str) + 3,
+      newn = n_alloc (strlen (f->fn_str) + 3,
 		     1000,
 		     F0,
 		     f->fn_str);
@@ -386,7 +386,7 @@ next_byte:
 
     case C_FN1:
       --c_node;
-      new = n_alloc (c_node[0]->len + strlen (f->fn_str) + 3,
+      newn = n_alloc (c_node[0]->len + strlen (f->fn_str) + 3,
 		     1000,
 		     F1, f->fn_str, c_node[0]->string);
       n_free (*c_node);
@@ -396,13 +396,13 @@ next_byte:
       --c_node;
       if (c_node[0]->tightness < 9)
 	{
-	  new = n_alloc (3 + c_node[0]->len,
+	  newn = n_alloc (3 + c_node[0]->len,
 			 9,
 			 "%s(%s)", f->fn_str, c_node[0]->string);
 	}
       else
 	{
-	  new = n_alloc (1 + c_node[0]->len,
+	  newn = n_alloc (1 + c_node[0]->len,
 			 9,
 			 "%s%s", f->fn_str, c_node[0]->string);
 	}
@@ -419,20 +419,20 @@ next_byte:
       if (c_node[0]->tightness < pri || (c_node[0]->tightness == pri && aso != 1))
 	{
 	  if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
-	    new = n_alloc (7 + c_node[0]->len + c_node[1]->len,
+	    newn = n_alloc (7 + c_node[0]->len + c_node[1]->len,
 			   pri,
 		 "(%s) %s (%s)", c_node[0]->string, chr, c_node[1]->string);
 	  else
-	    new = n_alloc (5 + c_node[0]->len + c_node[1]->len,
+	    newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
 			   pri,
 		   "(%s) %s %s", c_node[0]->string, chr, c_node[1]->string);
 	}
       else if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
-	new = n_alloc (5 + c_node[0]->len + c_node[1]->len,
+	newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
 		       pri,
 		   "%s %s (%s)", c_node[0]->string, chr, c_node[1]->string);
       else
-	new = n_alloc (3 + c_node[0]->len + c_node[1]->len,
+	newn = n_alloc (3 + c_node[0]->len + c_node[1]->len,
 		       pri,
 		     "%s %s %s", c_node[0]->string, chr, c_node[1]->string);
 
@@ -443,7 +443,7 @@ next_byte:
     case C_FN2:
     do_fn2:
       c_node -= 2;
-      new = n_alloc (c_node[0]->len + c_node[1]->len + strlen (f->fn_str) + 5,
+      newn = n_alloc (c_node[0]->len + c_node[1]->len + strlen (f->fn_str) + 5,
 		     1000,
 		     F2, f->fn_str, c_node[0]->string, c_node[1]->string);
       n_free (c_node[0]);
@@ -452,7 +452,7 @@ next_byte:
 
     case C_FN3:
       c_node -= 3;
-      new = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str) + 7,
+      newn = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str) + 7,
 		     1000,
 		     F3,
 		     f->fn_str,
@@ -469,35 +469,35 @@ next_byte:
       c_node -= aso;
 
       if (aso == 1)
-	new = n_alloc (3 + c_node[0]->len + strlen (f->fn_str),
+	newn = n_alloc (3 + c_node[0]->len + strlen (f->fn_str),
 		       1000,
 		       F1, f->fn_str, c_node[0]->string);
       else
 	{
-	  new = n_alloc (2 + c_node[0]->len + strlen (f->fn_str),
+	  newn = n_alloc (2 + c_node[0]->len + strlen (f->fn_str),
 			 1000,
 			 FN1, f->fn_str, c_node[0]->string);
 	  --aso;
 	  for (pri = 1; pri < aso; pri++)
 	    {
 	      n_free (c_node[0]);
-	      c_node[0] = new;
-	      new = n_alloc (2 + new->len + c_node[pri]->len,
+	      c_node[0] = newn;
+	      newn = n_alloc (2 + newn->len + c_node[pri]->len,
 			     1000,
-			     "%s, %s", new->string, c_node[pri]->string);
+			     "%s, %s", newn->string, c_node[pri]->string);
 	    }
 	  n_free (c_node[0]);
-	  c_node[0] = new;
-	  new = n_alloc (3 + new->len + c_node[aso]->len,
+	  c_node[0] = newn;
+	  newn = n_alloc (3 + newn->len + c_node[aso]->len,
 			 1000,
-			 "%s, %s)", new->string, c_node[aso]->string);
+			 "%s, %s)", newn->string, c_node[aso]->string);
 	}
       n_free (c_node[0]);
       break;
 
     case C_FN4:
       c_node -= 4;
-      new = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + c_node[3]->len + strlen (f->fn_str) + 6,
+      newn = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + c_node[3]->len + strlen (f->fn_str) + 6,
 		     1000,
 		     F4,
 		     f->fn_str,
@@ -514,7 +514,7 @@ next_byte:
     case C_ERR:
       tmp_str = (char *) expr + jumpto;
       expr++;
-      new = n_alloc (strlen (tmp_str) + 1, 1000, "%s", tmp_str);
+      newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", tmp_str);
       /* bcopy((VOIDSTAR)expr,(VOIDSTAR)&tmp_str,sizeof(char *));
 		expr+=sizeof(char *);
 		new=n_alloc(strlen(tmp_str)+1,1000,f->fn_str,tmp_str); */
@@ -523,21 +523,21 @@ next_byte:
     case C_FLT:
       bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_flt, sizeof (num_t));
       expr += sizeof (num_t);
-      new = n_alloc (20, 1000, f->fn_str, (double) tmp_flt); 
-      new->len = strlen (new->string);
+      newn = n_alloc (20, 1000, f->fn_str, (double) tmp_flt); 
+      newn->len = strlen (newn->string);
       break;
 
     case C_INT:
       bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_lng, sizeof (long));
       expr += sizeof (long);
-      new = n_alloc (20, 1000, f->fn_str, tmp_lng);
-      new->len = strlen (new->string);
+      newn = n_alloc (20, 1000, f->fn_str, tmp_lng);
+      newn->len = strlen (newn->string);
       break;
 
     case C_VAR:
       bcopy ((VOIDSTAR) expr, (VOIDSTAR) & v, sizeof (struct var *));
       expr += sizeof (struct var *);
-      new = n_alloc (strlen (v->var_name) + 1,
+      newn = n_alloc (strlen (v->var_name) + 1,
 		     1000,
 		     f->fn_str, v->var_name);
       break;
@@ -546,7 +546,7 @@ next_byte:
     default:
       panic ("Bad decompile %d", f->fn_comptype);
     }
-  *c_node++ = new;
+  *c_node++ = newn;
   if (c_node == &the_line[line_alloc])
     {
       line_alloc *= 2;
@@ -561,9 +561,9 @@ next_byte:
 		io_error_msg("%d values on decompile stack!",c_node - the_line);
 		return the_line[0];
 	} */
-  new = *--c_node;
+  newn = *--c_node;
   /* free(the_line); */
-  return new;
+  return newn;
 }
 
 /* Actual entry points to this file */
@@ -732,8 +732,8 @@ backslash_a_string (char *string, int add_quote)
 }
 
 void
-dbg_print_formula (expr)
-     unsigned char *expr;
+dbg_print_formula (
+     unsigned char *expr)
 {
   unsigned char byte;
   struct function *f;

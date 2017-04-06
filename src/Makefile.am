@@ -33,7 +33,7 @@ AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc cells.cc cmd.cc \
-		 date.cc decompile.c display.c \
+		 date.cc decompile.cc display.c \
 		 eval.c font.c format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \

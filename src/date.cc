@@ -27,6 +27,7 @@
 #ifdef	WITH_DMALLOC
 #include <dmalloc.h>
 #endif
+#include <time.h>
 
 #include "funcdef.h"
 #include "sysdef.h"
@@ -39,6 +40,8 @@
 #include "utils.h"
 #include "posixtm.h"
 #include "get_date.h"
+
+extern "C" time_t posixtime (char *s);
 
 struct value
   {
