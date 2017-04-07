@@ -72,11 +72,11 @@ extern long random (void);
 extern int n_usr_funs;
 
 //double to_int ();
-static int deal_area ();
-static void add_int ();
-static void add_flt ();
+static int deal_area ( unsigned char cmd, unsigned char num_args, struct value *p);
+static void add_int (long value);
+static void add_flt (double value);
 #ifndef __TURBOC__
-RETSIGTYPE math_sig ();
+RETSIGTYPE math_sig ( int sig);
 #endif
 
 int fls (long);
@@ -335,8 +335,7 @@ init_eval ()
 
 /* This huge function takes a byte-compiled expression and executes it. */
 struct value *
-eval_expression (expr)
-     unsigned char *expr;
+eval_expression ( unsigned char *expr)
 {
   unsigned char byte;
   unsigned numarg;
@@ -1178,10 +1177,7 @@ static double sqr_flt_tmp;
 static unsigned char area_cmd;
 
 static int
-deal_area (cmd, num_args, p)
-     unsigned char cmd;
-     unsigned char num_args;
-     struct value *p;
+deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
 {
   double flt_cnt_flt;
   CELL *cell_ptr;
@@ -1347,8 +1343,7 @@ deal_area (cmd, num_args, p)
 }
 
 static void
-add_flt (value)
-     double value;
+add_flt (double value)
 {
   if (cnt_flt++ == 0)
     {
@@ -1388,8 +1383,7 @@ add_flt (value)
 }
 
 static void
-add_int (value)
-     long value;
+add_int (long value)
 {
   if (cnt_int++ == 0)
     {
@@ -1464,8 +1458,7 @@ matherr (exc)
 
 #ifndef __TURBOC__
 RETSIGTYPE
-math_sig (sig)
-     int sig;
+math_sig ( int sig)
 {
   stack[curstack].type = TYP_ERR;
   stack[curstack].Value = BAD_INPUT;
@@ -1477,11 +1470,11 @@ math_sig (sig)
 void
 update_cell(CELL *cell)
 {
-  struct value *new;
+  struct value *newv;
   int new_val;
 
-  new = eval_expression (cell->cell_formula);
-  if (!new)
+  newv = eval_expression (cell->cell_formula);
+  if (!newv)
     {
       push_refs (cell->cell_refs_from);
       return;
@@ -1504,50 +1497,50 @@ update_cell(CELL *cell)
 
   cell->cell_cycle = current_cycle;
 
-  if (new->type != GET_TYP (cell))
+  if (newv->type != GET_TYP (cell))
     {
       if (GET_TYP (cell) == TYP_STR)
 	free (cell->cell_str);
-      SET_TYP (cell, new->type);
+      SET_TYP (cell, newv->type);
       new_val = 1;
-      if (new->type == TYP_STR)
-	new->String = strdup (new->String);
+      if (newv->type == TYP_STR)
+	newv->String = strdup (newv->String);
     }
   else
-    switch (new->type)
+    switch (newv->type)
       {
       case 0:
 	new_val = 0;
 	break;
       case TYP_FLT:
-	new_val = new->Float != cell->cell_flt;
+	new_val = newv->Float != cell->cell_flt;
 	break;
       case TYP_INT:
-	new_val = new->Int != cell->cell_int;
+	new_val = newv->Int != cell->cell_int;
 	break;
       case TYP_STR:
-	new_val = strcmp (new->String, cell->cell_str);
+	new_val = strcmp (newv->String, cell->cell_str);
 	if (new_val)
 	  {
 	    free (cell->cell_str);
-	    new->String = strdup (new->String);
+	    newv->String = strdup (newv->String);
 	  }
 	break;
       case TYP_BOL:
-	new_val = new->Value != cell->cell_bol;
+	new_val = newv->Value != cell->cell_bol;
 	break;
       case TYP_ERR:
-	new_val = new->Value != cell->cell_err;
+	new_val = newv->Value != cell->cell_err;
 	break;
       default:
 	new_val = 0;
 #ifdef TEST
-	panic ("Unknown type %d in update_cell", new->type);
+	panic ("Unknown type %d in update_cell", newv->type);
 #endif
       }
   if (new_val)
     {
-      cell->c_z = new->x;
+      cell->c_z = newv->x;
       push_refs (cell->cell_refs_from);
     }
   (void) obstack_free (&tmp_mem, tmp_mem_start);
