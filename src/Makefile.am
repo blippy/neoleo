@@ -34,7 +34,7 @@ neoleo_LDADD = $(ASAN_FLAGSL) -lm -lreadline -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
-		 eval.cc font.c format.c forminfo.c funcs.c \
+		 eval.cc font.cc format.c forminfo.c funcs.c \
 		 graph.c gsl.c hash.c help.c \
 		 info.c init.c input.c \
 		 io-headless.cc io-curses.cc io-edit.c io-term.cc io-utils.cc \

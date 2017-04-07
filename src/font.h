@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: font.h,v 1.6 2000/08/10 21:02:50 danny Exp $
  *
@@ -18,8 +19,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef FONTH
-#define FONTH
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "global.h"
 #include "line.h"
@@ -63,4 +65,9 @@ extern void set_ps_font_cmd (char * ps_name);
 extern void set_default_font (char * name, double scale);
 extern void init_fonts (void);
 
+
+
+#ifdef __cplusplus
+}
 #endif
+
