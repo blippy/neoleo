@@ -22,7 +22,7 @@
 
 #pragma once
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 #include "global.h"
@@ -106,6 +106,6 @@ extern int pr_display_cell (struct display *, CELLREF, CELLREF, CELL *);
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
 

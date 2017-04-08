@@ -21,14 +21,22 @@
 //#ifndef IO_UTILSH
 //#define IO_UTILSH
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 #include "global.h"
 #include "cell.h"
 #include "numeric.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int get_abs_rng (char **pptr, struct rng *retp);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 extern char numb_oflo[];
 extern char *bname[];
@@ -46,7 +54,6 @@ extern int usr_set_fmts (void);
 extern void get_usr_stats (int usr_num, char **usr_buf);
 extern char * cell_name (CELLREF rr, CELLREF cc);
 extern char * range_name (struct rng *rng);
-extern int get_abs_rng (char **pptr, struct rng *retp);
 extern char * col_to_str (CELLREF col);
 extern void clear_spreadsheet (void);
 extern int words_imatch (char ** ptr, char * key);
@@ -101,7 +108,7 @@ char *flt_to_str (num_t val);
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 //#endif

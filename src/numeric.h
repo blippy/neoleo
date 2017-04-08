@@ -3,19 +3,24 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-//#include <decimal/decimal>
 //typedef std::decimal::decimal64 num_cc;
 //typedef __decfloat64 num_cc;
-#define USE_DECIMAL 0
+#define USE_DECIMAL 1
 //#include <decimal/decimal.h>
 //typedef __d64 _Decimal64;
 #else
-typedef _Decimal64 num_c;
+//#typedef _Decimal64 num_c;
 #define USE_DECIMAL 0
 #endif
 
 #if USE_DECIMAL
-	typedef _Decimal64 _num_t;
+
+	#ifdef __cplusplus
+		#include <decimal/decimal>
+		typedef std::decimal::decimal64::__decfloat64 _num_t;
+	#else
+		typedef _Decimal64 _num_t;
+	#endif
 	#define E100 1E100DD
 	#define NUM_HUNDREDTH 0.01DD
 	#define NUM_TEN 10.0DD

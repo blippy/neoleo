@@ -60,14 +60,20 @@ pmt (
   return (principal * rate) / (1 - pow (1 + rate, -(term)));
 }
 
+num_t 
+busi_pow(num_t x, num_t y)
+{
+	return (num_t) pow( (double) x, (double) y );
+}
+
 
 static int
 npv (
      struct rng *rng,
-     double rate,
-     double *putres)
+     num_t rate,
+     num_t *putres)
 {
-  double npv;
+  num_t npv;
   int i;
   //double f;
   num_t f;
@@ -148,15 +154,14 @@ do_npv ( struct value *p)
 }
 
 static void
-do_irr (
-     struct value *p)
+do_irr (struct value *p)
 {
-  double try1;
-  double res;
-  double mint, maxt;
-  double minr, maxr;
-  int i;
-  int tmp;
+  num_t try1;
+  num_t res;
+  num_t mint, maxt;
+  num_t  minr, maxr;
+  num_t i;
+  num_t tmp;
 
   minr = maxr = 0;
   mint = maxt = .1;  /* avoid divide by 0 in npv */
@@ -680,7 +685,7 @@ do_compbal (struct value *p)
   num_t rate = (p + 1)->Float;
   num_t term = (p + 2)->Float;
 
-  p->Float = principal * (num_t) pow (1 + rate, term);
+  p->Float = principal * busi_pow (1 + rate, term);
 }
 
 struct function busi_funs[] =

@@ -1,6 +1,6 @@
 #pragma once
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 /*
@@ -23,6 +23,14 @@ extern "C" {
  */
 #include "global.h"
 #include "cell.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern struct var * find_or_make_var (char *string, int len);
+#ifdef __cplusplus
+}
+#endif
 
 /* Operations that add or remove cells to the sparse array
  * may cause the (memory) addresses of other cells to change.
@@ -60,11 +68,10 @@ extern int eval_next_cell (void);
 extern char * old_new_var_value (char *v_name, int v_namelen, char *v_newval);
 extern char * new_var_value (char *v_name, int v_namelen, struct rng *tmp_rng);
 extern void for_all_vars (void (*func) (char *, struct var *));
-extern struct var * find_or_make_var (char *string, int len);
 extern struct var * find_var (char *string, int len);
 extern void add_var_ref (void * vvar);
 extern void flush_variables (void);
 
 #ifdef __cplusplus
-}
+//}
 #endif

@@ -19,7 +19,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 #include "global.h"
@@ -32,6 +32,6 @@ extern char * jst_to_str (int jst);
 extern int chr_to_jst (int chr);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 

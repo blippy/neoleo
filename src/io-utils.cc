@@ -74,6 +74,19 @@ double __plinf;
 double __neinf;
 //double __nan;
 
+num_t fabs(num_t x)
+{
+	if(x<0)
+		return -x;
+	else
+		return x;
+}
+
+
+num_t floor(num_t x)
+{
+	return (num_t) floor( (double)x);
+}
 char nname[] = "#NOT_A_NUMBER";
 char iname[] = "#INFINITY";
 char mname[] = "#MINUS_INFINITY";
