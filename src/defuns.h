@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -146,6 +146,6 @@ static char * DFfnord[] =
 struct cmd_func** get_cmd_funcs();
 
 #ifdef __cplusplus
-}
+//}
 #endif
 

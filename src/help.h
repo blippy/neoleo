@@ -23,13 +23,13 @@
 #include "info.h"
 
 extern void expand_help_msg ();
-extern void describe_function ();
-extern void brief_describe_key ();
-extern void describe_key ();
-extern void where_is ();
+extern void describe_function(char* name);
+extern void brief_describe_key (struct key_sequence * keyseq);
+extern void describe_key(struct key_sequence * keyseq);
+extern void where_is (char* name);;
 extern void help_with_command ();
-extern void builtin_help ();
+extern void builtin_help(char* name);
 extern void make_wallchart_info ();
-extern void write_info ();
+extern void write_info(char * info, FILE * fp);
 
 #endif  /* HELPH */

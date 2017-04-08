@@ -1,5 +1,5 @@
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 /*
@@ -2458,6 +2458,6 @@ DEFUN_3 ("plotutils-clear-datasets", FDplotutils_clear_datasets, graph_clear_dat
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
