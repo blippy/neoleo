@@ -1,0 +1,11 @@
+# This file was created by GNU Oleo
+# format 2.1 (requires Oleo 1.99.9 or higher)
+F;DGFL8
+O;auto;background;noa0;ticks 1
+C;c1;r1;K0.1
+C;r2;K0.2
+C;r3;Er1c1 + r2c1;K0.3
+C;r4;Er3c1 - 0.3;K0
+O;status 2
+W;N1;A4 1;C7 0 7;Ostandout
+E
