@@ -49,6 +49,7 @@
 #include "lists.h"
 #include "regions.h"
 #include "utils.h"
+#include "decompile.h"
 
 /* Shorthand */
 

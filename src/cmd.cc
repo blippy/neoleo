@@ -37,6 +37,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "oleox.hpp"
+#include "decompile.h"
+#include "lists.h"
 
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free

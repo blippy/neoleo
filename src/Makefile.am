@@ -36,14 +36,14 @@ neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc font.cc format.cc forminfo.cc funcs.cc \
-		 graph.c gsl.c hash.c help.cc \
+		 gsl.c hash.c help.cc \
 		 info.c init.c input.c \
-		 io-headless.cc io-curses.cc io-edit.c io-term.cc io-utils.cc \
+		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
 		 ir.c key.c \
-		 legend.c line.c list.c lists.c logging.cc \
-		 mdi.c oleofile.c \
-		 ref.cc regions.c \
-		 sc.c sort.c stringo.c stub.c sylk.c utils.c \
+		 legend.cc line.cc list.cc lists.cc logging.cc \
+		 mdi.c oleofile.cc \
+		 ref.cc regions.cc \
+		 sc.cc sort.cc stringo.cc stub.c sylk.cc utils.cc \
 		 window.cc \
 		 defuns.cc \
 		 get_date.h getdate.y \
@@ -59,12 +59,12 @@ neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
 
 # not present on some systems like cygwin
 # Ideally obstack would be removed as a dependency anyway
-neoleo_SOURCES += obstack.c
+neoleo_SOURCES += obstack_a.cc
 
 noinst_HEADERS = afm.h args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
-		 funcs.h global.h graph.h gsl.h hash.h help.h info.h init.h \
+		 funcs.h global.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-x11.h \
 		 ir.h key.h \
@@ -80,7 +80,7 @@ noinst_HEADERS = afm.h args.h basic.h byte-compile.h busi.h cell.h \
 		 tests.h \
 		 $(FORTH_HDRS)
 
-noinst_HEADERS += obstack.h
+noinst_HEADERS += obstack_a.h
 
 # byte-compile.o : parse.h
 ref.o : parse.h

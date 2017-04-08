@@ -169,8 +169,8 @@ backup_file_name (char *file_name)
 
 
 char *
-__fp_name (fp)
-     FILE *fp;
+__fp_name (
+     FILE *fp)
 {
   int n;
 
@@ -183,10 +183,10 @@ __fp_name (fp)
 }
 
 void
-__set_fp (fp, name, flag)
-     FILE *fp;
-     const char *name;
-     int flag;
+__set_fp (
+     FILE *fp,
+     const char *name,
+     int flag)
 {
   if (__id_s == 0)
     {
@@ -221,9 +221,9 @@ __set_fp (fp, name, flag)
 
 /* Open a file or a pipe */
 FILE *
-xopen (name, mode)
-     const char *name;
-     const char *mode;
+xopen (
+     const char *name,
+     const char *mode)
 {
   int flag = 0;
   FILE *ret;
@@ -246,9 +246,9 @@ xopen (name, mode)
 
 /* Open a file, creating a backup file if needed. . . */
 FILE *
-fopen_with_backup (name, mode)
-     char *name;
-     const char *mode;
+fopen_with_backup (
+     char *name,
+     const char *mode)
 {
   char *newname;
   struct stat stat_buf;
@@ -322,9 +322,9 @@ fopen_with_backup (name, mode)
 
 /* Open a file or a pipe, creating a backup file if it's a file */
 FILE *
-xopen_with_backup (name, mode)
-     const char *name;
-     const char *mode;
+xopen_with_backup (
+     const char *name,
+     const char *mode)
 {
   int flag;
   FILE *ret;
@@ -349,8 +349,8 @@ xopen_with_backup (name, mode)
 
 /* Close something opened with xopen. . . */
 int
-xclose (fp)
-     FILE *fp;
+xclose (
+     FILE *fp)
 {
   int ret;
   int n;
@@ -371,8 +371,8 @@ xclose (fp)
 
 /* Fclose or panic */
 void
-ck_fclose (stream)
-     FILE *stream;
+ck_fclose (
+     FILE *stream)
 {
   if (fclose (stream) == EOF)
     panic ("Couldn't close %s", __fp_name (stream));
@@ -380,8 +380,8 @@ ck_fclose (stream)
 
 /* fopen or panic */
 void *
-ck_malloc (size)
-     size_t size;
+ck_malloc( 
+     size_t size)
 {
   void *ret;
 
@@ -493,8 +493,8 @@ init_stack ()
 }
 
 void
-flush_stack (bb)
-     void *bb;
+flush_stack (
+     void *bb)
 {
   struct stack *b;
 
@@ -507,9 +507,9 @@ flush_stack (bb)
 }
 
 void
-push_stack (bb, add)
-     void *bb;
-     void *add;
+push_stack (
+     void *bb,
+     void *add)
 {
   struct stack *b;
 
@@ -523,8 +523,8 @@ push_stack (bb, add)
 }
 
 void *
-pop_stack (bb)
-     void *bb;
+pop_stack (
+     void *bb)
 {
   struct stack *b;
 
@@ -535,8 +535,8 @@ pop_stack (bb)
 }
 
 int
-size_stack (bb)
-     void *bb;
+size_stack (
+     void *bb)
 {
   struct stack *b;
 

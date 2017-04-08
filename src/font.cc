@@ -39,6 +39,7 @@
 #include "io-term.h"
 #include "io-utils.h"
 #include "utils.h"
+#include "lists.h"
 
 static char * default_oleo_name = "default";
 static char * default_x_name = "*times-medium-r-*";

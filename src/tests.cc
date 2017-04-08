@@ -30,7 +30,8 @@ extern "C" {
 #include "parse.h"
 }
 #include "byte-compile.h"
-
+#include "decompile.h"
+#include "lists.h"
 
 
 void *

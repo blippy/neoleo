@@ -21,7 +21,7 @@
 
 #pragma once
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -31,6 +31,9 @@ extern float user_height_scale;
 extern float user_width_scale;
 
 extern void flush_everything (void);
+struct cell * find_cell (CELLREF row, CELLREF col);
+struct cell *find_or_make_cell (CELLREF row, CELLREF col);
+
 extern void find_cells_in_range (struct rng *r);
 extern void make_cells_in_range (struct rng *r);
 extern struct cell * next_cell_in_range (void);
@@ -84,6 +87,5 @@ struct find
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
-

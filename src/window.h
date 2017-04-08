@@ -24,7 +24,7 @@
 
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -193,7 +193,7 @@ extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
 		 int lr, int lc) ;
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 //#endif

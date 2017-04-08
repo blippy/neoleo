@@ -43,8 +43,9 @@
 #include "parse.h"
 #include "regions.h"
 #include "cmd.h"
+#include "decompile.h"
 
-
+
 
 /* This reads/writes a subset of the SC public-domain spreadsheet's
    file-format.  Note that since SC has no way of encoding some information
@@ -53,9 +54,9 @@
  */
 
 static int
-get_range (pp,rp)
-     char ** pp;
-      struct rng * rp;
+get_range (
+     char ** pp,
+      struct rng * rp)
 {
 	int byte;
 	char *p;
@@ -78,9 +79,9 @@ get_range (pp,rp)
 }
 
 void
-sc_read_file (fp,ismerge)
-     FILE * fp;
-      int ismerge;
+sc_read_file (
+     FILE * fp,
+      int ismerge)
 {
 	char buf[2048];
 	int lineno;
@@ -174,9 +175,9 @@ sc_read_file (fp,ismerge)
 static FILE *sc_fp;
 static struct rng *sc_rng;
 static void
-sc_write_var (name,var)
-     char * name;
-      struct var * var;
+sc_write_var (
+     char * name,
+      struct var * var)
 {
 	if(var->var_flags==VAR_UNDEF && (!var->var_ref_fm || var->var_ref_fm->refs_used==0))
 		return;
@@ -202,9 +203,9 @@ sc_write_var (name,var)
 }
 	
 void
-sc_write_file (fp,rng)
-     FILE * fp;
-      struct rng * rng;
+sc_write_file (
+     FILE * fp,
+      struct rng * rng)
 {
 	unsigned short w;
 	CELLREF r,c;
@@ -248,9 +249,9 @@ sc_write_file (fp,rng)
 }
 
 int
-sc_set_options (set_opt,option)
-     int set_opt;
-      char * option;
+sc_set_options (
+     int set_opt,
+      char * option)
 {
 	return -1;
 }

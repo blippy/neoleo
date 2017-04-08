@@ -91,11 +91,7 @@ stack_node;
       stack size is needed (actually O(1) in this case)! */
 
 int
-sort (total_elems, cmp, swap, rot)
-     int total_elems;
-     int (*cmp) ();
-     void (*swap) ();
-     void (*rot) ();
+sort ( int total_elems, int (*cmp) (int, int), void (*swap) (int, int), void (*rot) (int, int))
 {
   /* Allocating SIZE bytes for a pivot buffer facilitates a better
      algorithm below since we can do comparisons directly on the pivot. */
@@ -122,7 +118,7 @@ sort (total_elems, cmp, swap, rot)
 
 	      int mid = lo + ((hi - lo) >> 1);
 
-	      if (CMP (mid, lo) < 0)
+	      if (CMP(mid, lo) < 0)
 		SWAP (mid, lo);
 	      if (CMP (hi, mid) < 0)
 		SWAP (mid, hi);

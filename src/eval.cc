@@ -61,6 +61,7 @@
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
+#include "lists.h"
 
 #if defined(HAVE_RINT)
 extern double rint (double);

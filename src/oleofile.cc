@@ -50,17 +50,19 @@
 #include "window.h"
 #include "info.h"
 #include "cmd.h"
+#include "decompile.h"
+#include "lists.h"
 
-#include "graph.h"
+//#include "graph.h"
 
 #include "oleosql.h"
 
 /* These functions read and write OLEO style files. */
 
 void
-oleo_read_file (fp, ismerge)
-     FILE *fp;
-     int ismerge;
+oleo_read_file (
+     FILE *fp,
+     int ismerge)
 {
   char *ptr;
   CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
@@ -625,6 +627,7 @@ oleo_read_file (fp, ismerge)
 #endif
 			break;
 		case 'D':	/* Database Access */
+#if 0
 			ptr++;
 			switch (*ptr) {
 				case 'u':
@@ -639,6 +642,7 @@ oleo_read_file (fp, ismerge)
 				default:
 					io_error_msg("Line %d - unknown code %s\n", lineno, cbuf);
 			}
+#endif
 			break;
 		default:
 bad_field:
@@ -730,8 +734,8 @@ oleo_fmt_to_str (int f1, int p1)
 }
 
 static char
-jst_to_chr (just)
-     int just;
+jst_to_chr (
+     int just)
 {
   switch (just)
     {
@@ -752,9 +756,9 @@ static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
 static void 
-oleo_write_var (name, var)
-     char *name;
-     struct var *var;
+oleo_write_var (
+     char *name,
+     struct var *var)
 {
   if (var->var_flags == VAR_UNDEF
 	&& (!var->var_ref_fm || var->var_ref_fm->refs_used == 0))
@@ -784,8 +788,8 @@ oleo_write_var (name, var)
 }
 
 static void
-write_mp_windows (fp)
-     FILE *fp;
+write_mp_windows (
+     FILE *fp)
 {
   struct line line;
 
@@ -797,9 +801,9 @@ write_mp_windows (fp)
 }
 
 void
-oleo_write_file (fp, rng)
-     FILE *fp;
-     struct rng *rng;
+oleo_write_file (
+     FILE *fp,
+     struct rng *rng)
 {
   CELLREF r, c;
   CELL *cp;
@@ -1012,6 +1016,7 @@ oleo_write_file (fp, rng)
   if (rng == &all_rng)
     write_mp_windows (fp);
 
+#if 0
   if(false) { // graph stuff now doesn't work
   /* Graphs */
   for (i=0; i<NUM_DATASETS; i++) {
@@ -1076,23 +1081,24 @@ oleo_write_file (fp, rng)
 	'0' + graph_get_axis_ticktype(1),
 	graph_get_axis_tickformat(1) ? graph_get_axis_tickformat(1) : "(null)");
   }
+#endif
   /* Database stuff */
+#if 0
   if (DatabaseInitialised()) {
 	fprintf(fp, "Dn%s\n", DatabaseGetName() ? DatabaseGetName() : "");
 	fprintf(fp, "Dh%s\n", DatabaseGetHost() ? DatabaseGetHost() : "");
 	fprintf(fp, "Du%s\n", DatabaseGetUser() ? DatabaseGetUser() : "");
   }
-
+#endif
   /* End of writing */
   (void) fprintf (fp, "E\n");
   Global->a0 = old_a0;
 }
 
 int
-oleo_set_options
-  (set_opt, option)
-     int set_opt;
-     char *option;
+oleo_set_options(
+     int set_opt,
+     char *option)
 {
   return -1;
 }

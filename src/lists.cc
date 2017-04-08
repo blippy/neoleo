@@ -99,7 +99,7 @@ flush (struct list *ptr)
 }
 
 static inline void
-resync (struct list *tofree, struct list *new, int ele)
+resync (struct list *tofree, struct list *newl, int ele)
 {
   struct find *findp;
 
@@ -107,16 +107,16 @@ resync (struct list *tofree, struct list *new, int ele)
       && my_cell
       && (char *) my_cell >= tofree->mem
       && (char *) my_cell <= tofree->mem + ele * (1 + tofree->hi - tofree->lo))
-    my_cell = (struct cell *) (new->mem + ele * (cur_row - new->lo));
+    my_cell = (struct cell *) (newl->mem + ele * (cur_row - newl->lo));
 
   for (findp = Global->finds; findp; findp = findp->next)
     {
       if (tofree == findp->curptr)
 	{
 	  CELLREF hi;
-	  findp->curptr = new;
-	  findp->ret = new->mem + (findp->cur - new->lo) * ele;
-	  hi = (findp->hi < new->hi ? findp->hi : new->hi);
+	  findp->curptr = newl;
+	  findp->ret = newl->mem + (findp->cur - newl->lo) * ele;
+	  hi = (findp->hi < newl->hi ? findp->hi : newl->hi);
 	  if (findp->cur < hi)
 	    findp->left = hi - findp->cur;
 	}
@@ -463,34 +463,34 @@ find_or_make_cell (CELLREF row, CELLREF col)
 void
 find_cells_in_range (struct rng *r)
 {
-  struct cf *new;
+  struct cf *newc;
   struct list **firstcol;
 
-  new = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
-  new->make = 0;
-  new->next = Global->fp;
-  Global->fp = new;
-  new->rows = find_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *));
-  firstcol = next_rng (new->rows, 0);
+  newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
+  newc->make = 0;
+  newc->next = Global->fp;
+  Global->fp = newc;
+  newc->rows = find_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *));
+  firstcol = next_rng (newc->rows, 0);
   if (firstcol)
-    new->cols = find_rng (firstcol, r->lr, r->hr, sizeof (struct cell));
+    newc->cols = find_rng (firstcol, r->lr, r->hr, sizeof (struct cell));
   else
-    new->cols = 0;
+    newc->cols = 0;
 }
 
 void
 make_cells_in_range (struct rng *r)
 {
-  struct cf *new;
+  struct cf *newc;
   struct list **firstcol;
 
-  new = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
-  new->make = 1;
-  new->next = Global->fp;
-  Global->fp = new;
-  new->rows = make_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
-  firstcol = next_rng (new->rows, 0);
-  new->cols = make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
+  newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
+  newc->make = 1;
+  newc->next = Global->fp;
+  Global->fp = newc;
+  newc->rows = make_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
+  firstcol = next_rng (newc->rows, 0);
+  newc->cols = make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
 }
 
 struct cell *

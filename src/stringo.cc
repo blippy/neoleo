@@ -41,6 +41,8 @@
 #include "eval.h"
 #include "errors.h"
 #include "stringo.h"
+#include "io-utils.h"
+#include "lists.h"
 
 struct value {
 	int	type;
@@ -63,12 +65,12 @@ struct value {
 
 extern struct obstack tmp_mem;
 
-extern char *flt_to_str();
+//extern char *flt_to_str();
 
 static void
-do_edit (numarg,p)
-     int numarg;
-      struct value * p;
+do_edit (
+     int numarg,
+      struct value * p)
 {
 	int mm;
 	int add_len;
@@ -101,8 +103,8 @@ do_edit (numarg,p)
 }
 
 static void
-do_repeat (p)
-     struct value * p;
+do_repeat (
+     struct value * p)
 {
 	char *str = (p  )->String;
 	long num  = (p+1)->Int;
@@ -125,8 +127,8 @@ do_repeat (p)
 }
 
 static void
-do_len (p)
-     struct value * p;
+do_len (
+     struct value * p)
 {
 	long ret;
 	char *ptr;
@@ -138,8 +140,8 @@ do_len (p)
 }
 
 static void
-do_up_str (p)
-     struct value * p;
+do_up_str (
+     struct value * p)
 {
 	char *s1,*s2;
 	char *strptr;
@@ -152,8 +154,8 @@ do_up_str (p)
 }
 
 static void
-do_dn_str (p)
-     struct value * p;
+do_dn_str (
+     struct value * p)
 {
 	char *s1,*s2;
 	char *strptr;
@@ -166,8 +168,8 @@ do_dn_str (p)
 }
 
 static void
-do_cp_str (p)
-     struct value * p;
+do_cp_str (
+     struct value * p)
 {
 	char *strptr;
 	char *s1,*s2;
@@ -189,8 +191,8 @@ do_cp_str (p)
 }
 
 static void
-do_trim_str (p)
-     struct value * p;
+do_trim_str (
+     struct value * p)
 {
 	char *s1,*s2;
 	int sstart=0;
@@ -215,9 +217,9 @@ do_trim_str (p)
 }
 
 static void
-do_concat ( numarg,p)
-     int  numarg;
-      struct value * p;
+do_concat (
+     int  numarg,
+      struct value * p)
 {
 	int cur_string;
 	char *s;
@@ -278,8 +280,8 @@ do_concat ( numarg,p)
 
 
 static void
-do_mid (p)
-     struct value * p;
+do_mid (
+     struct value * p)
 {
 	char *str = (p  )->String;
 	long from = (p+1)->Int-1;
@@ -304,8 +306,8 @@ do_mid (p)
 
 
 static void
-do_substr (p)
-     struct value * p;
+do_substr (
+     struct value * p)
 {
 	long off1 = (p  )->Int;
 	long off2 = (p+1)->Int;
@@ -333,8 +335,8 @@ do_substr (p)
 }
 
 static void
-do_strstr (p)
-     struct value * p;
+do_strstr (
+     struct value * p)
 {
 	char *strptr	= (p  )->String;
 	char *str1	= (p+1)->String;

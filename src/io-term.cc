@@ -89,7 +89,7 @@ void x11_graphics() {}
 #include "regions.h"
 #include "window.h"
 #include "funcs.h"
-#include "graph.h"
+//#include "graph.h"
 #include "mdi.h"
 //#include "postscript.h"
 

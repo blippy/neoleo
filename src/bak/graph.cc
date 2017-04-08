@@ -50,6 +50,7 @@
 #include "regions.h"
 #include "ref.h"
 #include "io-utils.h"
+#include "lists.h"
 
 char * graph_axis_name [graph_num_axis] =
 {

@@ -36,6 +36,7 @@
 #include <string>
 #include <vector>
 #include "utils.h"
+#include "decompile.h"
 
 using std::vector;
 

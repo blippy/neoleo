@@ -20,7 +20,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -33,6 +33,6 @@ extern char list_get_separator(void);
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
 

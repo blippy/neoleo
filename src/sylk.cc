@@ -47,6 +47,7 @@
 #include "window.h"
 #include "info.h"
 #include "cmd.h"
+#include "decompile.h"
 
 
 /* Forward declaration */
@@ -63,9 +64,9 @@ static int	nformat = 0;		/* We've already read this many formats */
  */
 
 void
-sylk_read_file (fp, ismerge)
-     FILE *fp;
-     int ismerge;
+sylk_read_file (
+     FILE *fp,
+     int ismerge)
 {
   char *ptr;
   CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
@@ -664,8 +665,8 @@ sylk_fmt_to_str (int f1, int p1)
 }
 
 static char
-jst_to_chr (just)
-     int just;
+jst_to_chr (
+     int just)
 {
   switch (just)
     {
@@ -686,9 +687,9 @@ static FILE *sylk_fp;
 static struct rng *sylk_rng;
 
 static void
-sylk_write_var (name, var)
-     char *name;
-     struct var *var;
+sylk_write_var (
+     char *name,
+     struct var *var)
 {
   if (var->var_flags == VAR_UNDEF && (!var->var_ref_fm || var->var_ref_fm->refs_used == 0))
     return;
@@ -714,8 +715,8 @@ sylk_write_var (name, var)
 }
 
 static void
-write_mp_windows (fp)
-     FILE *fp;
+write_mp_windows (
+     FILE *fp)
 {
   struct line line;
   line.alloc = 0;
@@ -726,9 +727,9 @@ write_mp_windows (fp)
 }
 
 void
-sylk_write_file (fp, rng)
-     FILE *fp;
-     struct rng *rng;
+sylk_write_file (
+     FILE *fp,
+     struct rng *rng)
 {
   CELLREF r, c;
   CELL *cp;
@@ -916,9 +917,9 @@ sylk_write_file (fp, rng)
 }
 
 int
-sylk_set_options (set_opt, option)
-     int set_opt;
-     char *option;
+sylk_set_options (
+     int set_opt,
+     char *option)
 {
   return -1;
 }

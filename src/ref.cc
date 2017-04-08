@@ -48,6 +48,7 @@
 #include "parse.h"
 #include "ref.h"
 #include "cmd.h"
+#include "lists.h"
 
 
 static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);

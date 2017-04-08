@@ -22,7 +22,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 #include "cell.h"
@@ -245,7 +245,7 @@ extern double to_int (double);
 
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 

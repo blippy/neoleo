@@ -20,7 +20,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -33,6 +33,5 @@ extern  int sc_set_options (int, char *);
 extern void sc_show_options (void);
 
 #ifdef __cplusplus
-}
+//}
 #endif
-

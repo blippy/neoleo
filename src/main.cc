@@ -16,7 +16,7 @@
 #include "io-utils.h"
 #include "mdi.h"
 #include "tests.h"
-#include "graph.h"
+//#include "graph.h"
 #include "mysql.h"
 //#include "print.h"
 #include "logging.h"
@@ -153,7 +153,7 @@ main(int argc, char **argv)
 	choose_display(force_cmd_graphics);
 	io_open_display ();
 
-	init_graphing ();
+	//init_graphing ();
 	//PrintInit();
 	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
 

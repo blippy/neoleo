@@ -37,6 +37,7 @@
 #include "errors.h"
 #include "busi.h"
 #include "utils.h"
+#include "lists.h"
 
 struct value
   {

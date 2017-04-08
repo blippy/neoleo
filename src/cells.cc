@@ -28,9 +28,11 @@
 #include <dmalloc.h>
 #endif
 
+//extern "C" {
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
+//}
 #include "funcdef.h"
 #include "sysdef.h"
 #include <string.h>
@@ -48,6 +50,7 @@
 #include "cmd.h"
 #include "ref.h"
 #include "utils.h"
+#include "decompile.h"
 
 
 struct value

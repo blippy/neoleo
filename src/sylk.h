@@ -20,7 +20,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -33,5 +33,5 @@ extern void sylk_show_options (void);
 
 
 #ifdef __cplusplus
-}
+//}
 #endif

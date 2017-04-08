@@ -42,6 +42,7 @@
 #include "cmd.h"
 #include "ref.h"
 #include "utils.h"
+#include "lists.h"
 
 /* This file reads/writes files containing values in separated lists,
    sl_sep is the separating character.  This isn't really a save-file
@@ -52,9 +53,9 @@
    including formulae, formats, column widths, etc
  */
 void
-list_read_file (fp, ismerge)
-     FILE *fp;
-     int ismerge;
+list_read_file (
+     FILE *fp,
+     int ismerge)
 {
   char cbuf[1024];
   CELLREF row, col;
@@ -160,9 +161,9 @@ list_read_file (fp, ismerge)
 }
 
 void
-list_write_file (fp, rng)
-     FILE *fp;
-     struct rng *rng;
+list_write_file (
+     FILE *fp,
+     struct rng *rng)
 {
   CELLREF row, col;
   CELLREF rMax, cMax;
@@ -227,9 +228,9 @@ list_write_file (fp, rng)
 }
 
 int
-list_set_options (set_opt, option)
-     int set_opt;
-     char *option;
+list_set_options (
+     int set_opt,
+     char *option)
 {
   if (set_opt && !strincmp (option, "list ", 5))
     {

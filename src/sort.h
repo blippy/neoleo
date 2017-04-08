@@ -22,14 +22,15 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
-extern int sort (int, int (*)(), void (*)(), void (*)());
+//extern int sort (int, int (*)(), void (*)(), void (*)());
+extern int sort ( int total_elems, int (*cmp) (int, int), void (*swap) (int, int), void (*rot) (int, int));
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 

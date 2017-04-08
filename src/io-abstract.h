@@ -1,6 +1,6 @@
 #pragma once
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 /*
  * $Id: io-abstract.h,v 1.8 2000/08/10 21:02:50 danny Exp $
@@ -112,6 +112,5 @@ EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
 EXTERN void (*io_update_width)(int col, int wid);
 
 #ifdef __cplusplus
-}
+//}
 #endif
-

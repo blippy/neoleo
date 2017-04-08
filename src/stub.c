@@ -59,8 +59,8 @@ find_args (struct command_arg ** argv_out, int argc, struct command_frame * fram
 
 #define STUB1(STR,NAME, PRE, VAL, TYPE) \
 static void \
-NAME (frame) \
-     struct command_frame * frame; \
+NAME ( \
+     struct command_frame * frame) \
 { \
   struct command_arg * argv; \
   find_args (&argv, 1, frame); \
@@ -69,8 +69,8 @@ NAME (frame) \
 
 #define STUB2(STR,NAME,PRE1,VAL1,TYPE1,PRE2,VAL2,TYPE2) \
 static void \
-NAME (frame) \
-     struct command_frame * frame; \
+NAME ( \
+     struct command_frame * frame) \
 { \
   struct command_arg * argv[2]; \
   find_args (argv, 2, frame); \
@@ -82,8 +82,8 @@ NAME (frame) \
 
 #define STUB3(STR,NAME,PRE1,VAL1,TYPE1,PRE2,VAL2,TYPE2,PRE3,VAL3,TYPE3) \
 static void \
-NAME (frame) \
-     struct command_frame * frame; \
+NAME ( \
+     struct command_frame * frame) \
 { \
   struct command_arg * argv[3]; \
   find_args (argv, 3, frame); \
@@ -95,8 +95,8 @@ NAME (frame) \
 
 #define STUB4(STR,NAME,PRE1,VAL1,TYPE1,PRE2,VAL2,TYPE2,PRE3,VAL3,TYPE3,PRE4,VAL4,TYPE4) \
 static void \
-NAME (frame) \
-     struct command_frame * frame; \
+NAME ( \
+     struct command_frame * frame) \
 { \
   struct command_arg * argv[4]; \
   find_args (argv, 4, frame); \
@@ -109,8 +109,8 @@ NAME (frame) \
 
 #define STUB5(STR,NAME,PRE1,VAL1,TYPE1,PRE2,VAL2,TYPE2,PRE3,VAL3,TYPE3,PRE4,VAL4,TYPE4,PRE5,VAL5,TYPE5) \
 static void \
-NAME (frame) \
-     struct command_frame * frame; \
+NAME ( \
+     struct command_frame * frame) \
 { \
   struct command_arg * argv[5]; \
   find_args (argv, 5, frame); \
@@ -136,8 +136,8 @@ stub_void (struct command_frame * frame)
 
 /* For define_usr_fmt */
 static void
-stub_isssssssss (frame)
-     struct command_frame * frame;
+stub_isssssssss (
+     struct command_frame * frame)
 {
   struct command_arg * argv[10];
   find_args (argv, 10, frame);
