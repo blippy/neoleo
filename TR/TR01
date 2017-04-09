@@ -1,4 +1,57 @@
 TR01: Formatting of cell values.
+===========================================================================
+2017-04-09 
+
+Many of the points made on 2016-12-24 below have been fixed by issue #6:
+
+After further thought, I have decided to keep integers/longs/decimals as 
+they are. I do not yet know if there is an important reason for the 
+distinction, or whether it is a mis-design.
+
+I have changed the way the zeros field in are decphired. The former 
+behaviour was to set the struct user_fmt.zero field to be whatever you 
+wanted it to be. Now you set it to "D" to use the default, or prefix it 
+with "S" to specify a value. So if you wanted to retain the previous way 
+that 0.0 is displayed, you would use S0 instead of the former 0. In fact, 
+the prefix S is not enforced in the case of non-ambiguity.
+
+In function pr_flt(), the line
+
+if(val ==0) return fmt->zero ? fmt->zero : "";
+
+is replaced by:
+
+  if(use_specified_zero_p(val, fmt->zero))
+          return zero_specifier(fmt->zero);
+
+which introduces two new functions as follows:
+
+/* should we use the value for zero specified by fmt zero
+ * or just use the default setting?
+ *
+ * Pertsains to issue #6/TR01
+ */
+template <typename T>
+bool use_specified_zero_p(const T val, const char* fmt)
+{
+        return val == 0 && fmt && fmt[0] != 'D';
+}
+
+/* deduce the zero specifier from the fmt */
+char* zero_specifier(char* fmt)
+{
+        if(!fmt) return "";
+        if(fmt[0] == 'S') fmt++;
+        return fmt;
+}
+
+
+
+
+
+
+===========================================================================
+2016-12-24
 
 Neoleo has some formatting oddities whereby values entered as,
 for example, 16.36, come out as 16.369999999999999 in both
@@ -36,4 +89,3 @@ In the cells themselves, pr_flt() is only called when the format is
 general.float, which is why it is best to set this as the default
 format. Users can still over-ride the default on a cell or range basis.
 
-Created: 24-Dec-2016

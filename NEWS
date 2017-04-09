@@ -1,6 +1,10 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* Improved formatting of 0.0. If you use format `fixed.2', for example,
+  then it will display as `0.00' rather than `0'. Technical documentation
+  is contained in issue #10 and TR01.
+
 * Removed support for: Motif, printing, plotting
   There is too much maintenance work in it. I'm not sure anyone even
   uses neoleo for more than 5 minutes anyway.

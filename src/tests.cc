@@ -34,12 +34,13 @@ extern "C" {
 #include "lists.h"
 
 
-void *
-main1(void *td)
+void 
+check(bool ok, std::string msg)
 {
-        //main0(0, NULL);
-        main(0, NULL);
+	std::string s = ok? "PASS" : "FAIL";
+	std::cout << s << " " << msg << std::endl;
 }
+
 
 
 char * 
@@ -96,6 +97,22 @@ void get_set(int r, int c, const string& s)
 
 
 void
+check_fmt(num_t v, const std::string& s)
+{
+	bool ok = string(pr_flt(v, &fxt, 2)) == s;
+	check(ok, "check_fmt: " + s);
+
+}
+	
+void
+test_formatting()
+{
+	check_fmt(24.6DD, "24.60");
+	check_fmt(16.36DD, "16.36"); // a source of potential rounding oddities
+	check_fmt(0.0DD,  "0.00");   // issue #10
+	check_fmt(1.0DD,  "1.00");
+}
+void
 headless_tests()
 {
 	//cmd_graphics(); // in leui of calling choose_display
@@ -105,11 +122,14 @@ headless_tests()
 	headless_graphics();
 	io_open_display();
 
+	test_formatting();
+
 	default_fmt = FMT_GEN;
 	set_cell_from_string(2, 2, "23.3");
         CELL *cp = find_cell(2, 2);
 	assert(cp);
-	cout << "23.3=" << print_cell(cp) << "=\n";
+	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
+
 
 	if(false) {
 		extern char * instr; // used for parsing

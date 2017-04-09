@@ -167,8 +167,9 @@ struct user_fmt pct =
 { "percent", 0, "-", "%", "%", "0%", 0, ".", FLOAT_PRECISION, 100};
 #endif
 
+/* issue #6/TR01: zero now uses default "D", rather than "0"*/
 struct user_fmt fxt =
-{ "fixed", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1};
+{ "fixed", 0, "-", 0, 0, "D", 0, ".", FLOAT_PRECISION, 1};
 
 
 
@@ -194,6 +195,26 @@ struct user_fmt u[NUM_USER_FMT] =
   {"user16", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
 };
 
+
+
+/* should we use the value for zero specified by fmt zero
+ * or just use the default setting?
+ *
+ * Pertsains to issue #6/TR01
+ */
+template <typename T>
+bool use_specified_zero_p(const T val, const char* fmt)
+{
+	return val == 0 && fmt && fmt[0] != 'D';
+}
+
+/* deduce the zero specifier from the fmt */
+char* zero_specifier(char* fmt)
+{
+	if(!fmt) return "";
+	if(fmt[0] == 'S') fmt++; 
+	return fmt;
+}
 
 /* Turn a floating-point number into the canonical text form.  This scribbles
    on print_buf */
@@ -621,8 +642,11 @@ pr_flt (num_t val, struct user_fmt *fmt, int prec)
   fptr = &print_buf[BIGFLT];
 
 
-  if (val == 0)
-    return fmt->zero ? fmt->zero : "";
+  // issue #6/TR01
+  if(use_specified_zero_p(val, fmt->zero)) 
+	  return zero_specifier(fmt->zero);
+  //if (val == 0)
+  //  return fmt->zero ? fmt->zero : "";
 
   if (val < 0)
     {
