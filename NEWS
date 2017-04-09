@@ -1,6 +1,10 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* 32-bit support re-instated (due to removing Forth. See next point).
+
+* Disabled Forth because it required 64-bit architecture. 
+
 * Improved formatting of 0.0. If you use format `fixed.2', for example,
   then it will display as `0.00' rather than `0'. Technical documentation
   is contained in issue #10 and TR01.
@@ -11,12 +15,7 @@ VERSION 6.0.0 IN DEVELOPMENT
 
 * X11 being deprecated. `configure --with-x' if you still want it.
 
-* Disabled Forth. I want neoleo to work on 32-bit systems, but the
-  the version installed required 64-bit. I cannot get the 32-bit
-  system to work, so I have "temporarily" disabled it.
-
-* Fixed crash with importing oleo graphs. We now just ignore them!
-  issue 8 : https://github.com/blippy/neoleo/issues/8
+* Importing oleo graphs disabled. They caused crashes (issue #8)
 
 
 ===========================================================================

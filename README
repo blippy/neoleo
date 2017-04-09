@@ -1,22 +1,22 @@
-Lightweight curses/X11 spreadsheet based on GNU oleo
+Lightweight curses spreadsheet based on GNU oleo
 
 (Ne)Oleo is a light-weight spreadsheet that will work in almost any environment.
 Oleo was an official GNU spreadsheet that had not been updated since 2000. It 
 suffered from considerable bitrot. Neoleo is an update to Oleo that fixes these 
 issues.
 
-
-
 If you are downloading the file from github, most people, especially
 distro packagers wanting to do typical configure && make && make install
 should download the file neoleo-X.Y.Z.tar.gz, rather than the
 source files.
+
 
 Quick start
 -----------
 
 Create ~/.oleorc with the following line:
 set-default-format general.float
+
 
 Documents and examples
 ----------------------
@@ -32,29 +32,11 @@ You should explore that directory to see what is available.
 
 Features
 --------
-	* ncurses interface: neoleo -x , or neoleo -nw
-	* Macro language
-	    (still a bit untidy in places, but it works)
-	* Charts generated from spreadsheet data
-	    (interface is not yet stable, but the capability is in there)
-	* Sizeable library of expressions
-	    (doesn't currently include statistical regressions)
-	* File format conversions
-	    (support of this is still pretty primitive; don't plan
-	    on importing E*cel files anytime soon)
 
-
-
-Disabled features
------------------
-
-Code still exists, but is currently not compiled for:
-	* GNU Gettext 0.10.32
-	* GNU texinfo (3.12) to build the documentation
-	* SciPlot  for charts
-	* GNU plotutils for charts
-	* XmHTML for still-incomplete online documentation
-
+* Ncurses interface
+* Macro language
+* Sizeable library of expressions (but not statistical regressions)
+* Primitive file format conversions
 
 
 Compiling from GIT
@@ -72,6 +54,7 @@ Technical Reports
 
 Technical Reports, which is mostly of interest to developers, but
 may have some bearing on users, so they may be advised to read them.
+
 
 Links
 -----
