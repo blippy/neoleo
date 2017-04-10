@@ -115,11 +115,8 @@ test_formatting()
 void
 headless_tests()
 {
-	//cmd_graphics(); // in leui of calling choose_display
 	bool force_cmd_graphics = true;
-
-	//choose_display(argc, argv, force_cmd_graphics);
-	headless_graphics();
+	//headless_graphics();
 	io_open_display();
 
 	test_formatting();

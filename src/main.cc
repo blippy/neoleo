@@ -21,6 +21,7 @@
 //#include "print.h"
 #include "logging.h"
 #include "utils.h"
+#include "io-headless.h"
 
 #include "oleox.hpp"
 
@@ -136,6 +137,7 @@ main(int argc, char **argv)
 	Global->argv = argv;
 	parse_command_line(argc, argv, &ignore_init_file);
 	init_basics();
+	headless_graphics(); // fallback position
 
 	if(get_option_tests()) {
 		headless_tests();

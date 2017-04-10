@@ -2474,13 +2474,7 @@ io_error_msg (const char *str, ...)
 	va_list foo;
 	char buf[1000];
 
-	/*
-	 * This is made robust against errors that occur before
-	 * the io hooks have been initialized.
-	 */
-	if (Global->display_opened)
-		io_bell ();
-
+	io_bell();
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
 

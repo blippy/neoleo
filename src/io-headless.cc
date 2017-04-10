@@ -10,6 +10,7 @@
 #include "io-headless.h"
 #include "cmd.h"
 #include "window.h"
+#include "oleox.hpp"
 
 
 using std::cin;
@@ -64,17 +65,11 @@ _io_repaint_win (struct window *win)
 }
 
 
-void    
-XXX_io_headless_command_loop (int a)
-{ 
-	puts("Entering _io_headless_command_loop()");
-        command_loop (a, 0);
-}
 
 static void
 _io_fix_input(void)
 {
-	puts("Entering _io_fix_input()");
+	//puts("Entering _io_fix_input()");
 }
 
 
@@ -167,10 +162,21 @@ _io_run_main_loop()
 	std::string line;
 	while(getline(std::cin, line)) {
 		if(line == "bye") return;
-		execute_command(line.c_str());
-		//std::cout << line << endl;
+		try {
+			execute_command(line.c_str());
+			std::cout << "OK" << endl;
+		} catch (const OleoJmp&) {
+			cout << "FAIL Caught OleoJmp" << endl;
+		}
+
 	}
 	
+}
+
+static void
+_io_bell()
+{
+	cout << "BELL" << endl;
 }
 
 void
@@ -201,7 +207,7 @@ headless_graphics(void)
 	io_read_kbd = _io_read_kbd;
 	//io_nodelay = _io_nodelay;
 	//io_getch = _io_getch;
-	//io_bell = _io_bell;
+	io_bell = _io_bell;
 	//io_get_chr = _io_get_chr;
 
 	io_update_status = _io_update_status;
