@@ -1277,7 +1277,7 @@ scan_cell_cursor (int magic, int count)
 
 
 void
-edit_cell (char * new_formula)
+edit_cell (const char* new_formula)
 {
   char * fail;
   fail = new_value (setrow, setcol, new_formula);
