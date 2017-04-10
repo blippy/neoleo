@@ -115,9 +115,8 @@ test_formatting()
 void
 headless_tests()
 {
-	bool force_cmd_graphics = true;
-	//headless_graphics();
-	io_open_display();
+	//bool force_cmd_graphics = true;
+	//io_open_display();
 
 	test_formatting();
 
