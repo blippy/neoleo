@@ -1,3 +1,44 @@
+Contents
+========
+
+Compiling from Git
+Trouble-shooting
+Basic Installation
+Compilers and Options
+Compiling For Multiple Architectures
+Installation Names
+Optional Features
+Specifying the System Type
+Sharing Defaults
+Operation Controls
+
+Compiling from Git
+==================
+
+1.  Run the following command:
+
+        autoreconf -iv
+
+2.  configure as normal
+
+
+Trouble-shooting
+================
+
+* warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
+
+  Manifested on Mint 18 (issue #7) on build of v5.0.0 due to ageing compiler (g++ version 5.4.0). Fix:
+	./configure "CXXFLAGS=-std=gnu++11"
+  Fixed in subsequent versions.
+
+* fatal error: readline/readline.h: No such file or directory
+
+  Readline development libraries probably not installed. On Debian-based distros:
+	sudo apt-get install libreadline-dev
+  Readline support has been removed post-v5.0.0, so this problem should not recur.
+  (qv issue #7).
+
+
 Basic Installation
 ==================
 

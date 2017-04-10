@@ -39,14 +39,15 @@ Features
 * Primitive file format conversions
 
 
-Compiling from GIT
-------------------
+Compiling/installing
+--------------------
 
-    1.  Run the following command:
+Read INSTALL, which contains general instructions, plus specific 
+instructions like compiling from git, as well as trouble-shooting. 
+Platform-specific comments are contained in INSTALL-${platform} 
+files. INSTALL-debian covers Debian-derived distros like Ubuntu
+and Mint.
 
-        autoreconf -iv
-
-    2.  configure as normal
 
 
 Technical Reports
