@@ -202,7 +202,8 @@ unsigned int saved_default_width = 8;
 unsigned int saved_default_height = 1;
 
 /* Other cell defaults: */
-int default_jst = JST_LFT;
+const int base_default_jst = JST_RGT;
+int default_jst = base_default_jst;
 int default_fmt = FMT_GEN;
 int default_prc = 0x0F;		/* FIX ME */
 int default_lock = LCK_UNL;

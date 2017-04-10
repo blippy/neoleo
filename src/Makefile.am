@@ -36,7 +36,7 @@ neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc font.cc format.cc forminfo.cc funcs.cc \
-		 gsl.c hash.c help.cc \
+		 gsl.cc hash.c help.cc \
 		 info.c init.c input.c \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
 		 ir.c key.c \

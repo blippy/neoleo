@@ -129,6 +129,7 @@ typedef struct cell CELL;
 #define JST_LFT		1
 #define JST_RGT		2
 #define JST_CNT		3
+extern const int base_default_jst;
 
 /*
  * Actually get/set both Format *and* precision

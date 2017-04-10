@@ -1246,7 +1246,7 @@ clear_spreadsheet (void)
     }
   default_width = saved_default_width;
   default_height = saved_default_height;
-  default_jst = JST_LFT;
+  default_jst = base_default_jst;
   default_fmt = FMT_GEN;
   default_lock = LCK_UNL;
 }

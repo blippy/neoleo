@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* Default alignment is now Right instead of Left. Seems more natural.
+
 * Removed readline support (issue #12), as it is redundant.
 
 * 32-bit support re-instated (due to removing Forth. See next point).
