@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* Removed readline support (issue #12), as it is redundant.
+
 * 32-bit support re-instated (due to removing Forth. See next point).
 
 * Disabled Forth because it required 64-bit architecture. 
