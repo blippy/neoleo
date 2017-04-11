@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* Page UP/Down and Home work (issue #13)
+
 * Pasting now dirties the document (issue #11)
 
 * Default alignment is now Right instead of Left. Seems more natural.

@@ -29,6 +29,7 @@
 #include <dmalloc.h>
 #endif
 
+#include <assert.h>
 #include "proto.h"
 #include "funcdef.h"
 #include <stdio.h>
@@ -668,10 +669,28 @@ _io_wait_for_input (void)
 static int 
 _io_read_kbd (char *buf, int size)
 {
-  int r = read (0, buf, size);
-  FD_CLR (0, &read_pending_fd_set);
-  FD_CLR (0, &exception_pending_fd_set);
-  return r;
+
+	if(false) log_debug("io-curses.cc:_io_read_kbd() called");
+	assert(size>0);
+
+	int r = read (0, buf, size);
+	FD_CLR (0, &read_pending_fd_set);
+	FD_CLR (0, &exception_pending_fd_set);
+
+	if(false) { // debug stuff
+		char ch = buf[0];
+		std::string msg = "io-curses.cc:_io_read_kbd(): chars: ";
+		for(int i=0; i<r; ++i)
+			msg += "<" + std::to_string(buf[i]) + ">";
+		msg += "read: " + std::to_string(r) + ", ";
+		msg += std::to_string(KEY_NPAGE);
+		log_debug(msg);
+		// apparently never called
+		if(ch == KEY_NPAGE)
+			log_debug("io-curses.cc:_io_read_kbd() encountered PageDown");
+	}
+
+	return r;
 }
 
 
@@ -695,26 +714,28 @@ _io_nodelay (int delayp)
 #endif
 
 static int 
-_io_getch (void)
+_io_getch (void) // TODO seems to never be called
 {
-  char ch;
-  return ((io_read_kbd (&ch, 1) != 1)
-	  ? EOF
-	  : ch);
+	log_debug("io-curses.cc:_io_getch() called. I thought it was never called.");
+	char ch;
+	auto v = io_read_kbd (&ch, 1);
+	int res = v == 1 ? ch : EOF;
+	return res;
 }
 
 static int 
-_io_get_chr (char *prompt)
+_io_get_chr (char *prompt) // TODO seems to never be called
 {
-  int x;
-  mvaddstr (Global->input, 0, prompt);
-  clrtoeol ();
-  Global->topclear = 2;
-  refresh ();
-  ++term_cursor_claimed;
-  x = get_chr ();
-  --term_cursor_claimed;
-  return x;
+	log_debug("io-curses.cc:_io_get_chr() called. I thought it was never called.");
+	int x;
+	mvaddstr (Global->input, 0, prompt);
+	clrtoeol ();
+	Global->topclear = 2;
+	refresh ();
+	++term_cursor_claimed;
+	x = get_chr ();
+	--term_cursor_claimed;
+	return x;
 }
 
 #define BUFFER 10

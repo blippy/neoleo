@@ -35,6 +35,12 @@ Log::Log()
 }
 
 void 
+log_debug(const std::string& s)
+{
+	m_log.debug(s);
+}
+
+void 
 log_debug(const char* s)
 {
 	m_log.debug(s);
