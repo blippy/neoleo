@@ -343,11 +343,26 @@ static char *init_cmds[] =
   "bind-key read-string trolx-read-string ^x",
   "bind-key trolx-read-string other-window o",
   "",
+  "# generic frame bindings",
+  "create-keymap generic-frame universal",
+  "bind-set generic-frame self-insert-command 0-9",
+  "bind-set generic-frame self-insert-command a-z",
+  "bind-set generic-frame self-insert-command A-Z",
+  "bind-set generic-frame self-insert-command .",
+  "bind-set generic-frame self-insert-command -",
+  "bind-set generic-frame self-insert-command _",
+  "bind-key generic-frame backward-char D", // left arrow
+  "bind-key generic-frame forward-char C", // right arrow
+  "bind-key generic-frame backward-delete-char ^?", // Backspace key
+  "bind-key generic-frame delete-char 3", // Delete key
+  "bind-key generic-frame end-of-line F", // End key
+  "bind-key generic-frame beginning-of-line H", // Home key
+  "",
   "# Reading various argument types specificly",
   "create-keymap read-symbol read-string",
   "create-keymap read-word read-string",
   "create-keymap read-range read-string",
-  "create-keymap read-filename read-string",
+  "create-keymap read-filename generic-frame",
   "create-keymap read-integer read-string",
   "create-keymap read-float read-string",
   "create-keymap read-formula read-string",

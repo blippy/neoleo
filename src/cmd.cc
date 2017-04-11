@@ -39,6 +39,7 @@
 #include "oleox.hpp"
 #include "decompile.h"
 #include "lists.h"
+#include "logging.h"
 
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free
@@ -918,6 +919,7 @@ recover_from_error (void)
 static int
 get_argument (char *prompt, struct prompt_style *style)
 {
+	//log_debug("cmd.cc:get_argment() style keymap=" + std::string(style->keymap));
 	the_cmd_arg.style = style;
 	the_cmd_arg.prompt = prompt;
 	if (!the_cmd_arg.expanded_prompt)
