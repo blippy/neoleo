@@ -171,17 +171,9 @@ extern const int base_default_jst;
  */
 
 int init_cells_function_count(void);
-//extern CELL *find_cell (CELLREF, CELLREF);
-//extern CELL *find_or_make_cell (CELLREF, CELLREF);
-//extern void find_cells_in_range (struct rng *);
-//extern void make_cells_in_range (struct rng *);
-//extern CELL *next_cell_in_range (void);
-//extern CELL *next_row_col_in_range (CELLREF *, CELLREF *);
 extern void no_more_cells (void);
-//extern char *decomp (CELLREF, CELLREF, CELL *);
-//extern char *decomp_formula (CELLREF, CELLREF, CELL *, int);
-//extern void decomp_free (void);
 
+extern void edit_cell_at(CELLREF row, CELLREF col, const char* new_formula);
 void copy_cell_formula();
 void paste_cell_formula();
 

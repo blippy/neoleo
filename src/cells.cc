@@ -683,6 +683,17 @@ int init_cells_function_count(void)
         return sizeof(cells_funs) / sizeof(struct function) - 1;
 }
 
+void
+edit_cell_at(CELLREF row, CELLREF col, const char* new_formula)
+{
+	char * fail;
+	fail = new_value (row, col, new_formula);
+	if (fail)
+		io_error_msg (fail);
+	else
+		Global->modified = 1;
+}
+
 //////////////////////////////////////////////////////////////////////
 // for copying and pasting cells
 
@@ -701,7 +712,7 @@ copy_cell_formula()
 void 
 paste_cell_formula()
 {	
-	new_value(curow, cucol, m_copied_cell_formula.c_str());
+	edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////

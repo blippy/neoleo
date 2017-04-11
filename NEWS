@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 6.0.0 IN DEVELOPMENT
 
+* Pasting now dirties the document (issue #11)
+
 * Default alignment is now Right instead of Left. Seems more natural.
 
 * Removed readline support (issue #12), as it is redundant.
@@ -9,9 +11,7 @@ VERSION 6.0.0 IN DEVELOPMENT
 
 * Disabled Forth because it required 64-bit architecture. 
 
-* Improved formatting of 0.0. If you use format `fixed.2', for example,
-  then it will display as `0.00' rather than `0'. Technical documentation
-  is contained in issue #10 and TR01.
+* Improved formatting of 0.0. (issue #10)
 
 * Removed support for: Motif, printing, plotting
   There is too much maintenance work in it. I'm not sure anyone even

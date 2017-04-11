@@ -1276,15 +1276,22 @@ scan_cell_cursor (int magic, int count)
 }
 
 
+
 void
 edit_cell (const char* new_formula)
 {
-  char * fail;
-  fail = new_value (setrow, setcol, new_formula);
-  if (fail)
-    io_error_msg (fail);
-  else
-    Global->modified = 1;
+
+	/*
+	   char * fail;
+	   fail = new_value (setrow, setcol, new_formula);
+	   if (fail)
+	   io_error_msg (fail);
+	   else
+	   Global->modified = 1;
+	  */
+
+	edit_cell_at(setrow, setcol, new_formula);
+
 }
 
 
