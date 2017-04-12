@@ -330,8 +330,8 @@ static char *init_cmds[] =
   "",
   "# Command argument editing",
   "",
-  "create-keymap read-string generic-frame",
-  "create-keymap meta-read-string generic-frame",
+  "create-keymap read-string generic-main",
+  "create-keymap meta-read-string generic-meta",
   "create-keymap trolx-read-string generic-trolx",
   "",
   "bind-key read-string exit-minibuffer \\015", // return key
@@ -339,7 +339,6 @@ static char *init_cmds[] =
   //"bind-set read-string self-insert-command ¡-ÿ",
   //"unbind-key meta-read-string A",
   //"UnBind-key meta-read-string B",
-  /*
   "bind-key read-string meta-read-string ^[",
   "bind-set read-string self-insert-command \\ -~",
   "bind-set read-string self-insert-command ¡-ÿ",
@@ -364,12 +363,11 @@ static char *init_cmds[] =
   "bind-key read-string trolx-read-string ^x",
   "bind-key trolx-read-string other-window o",
   "",
-  */
   "# Reading various argument types specificly",
   "create-keymap read-symbol read-string",
   "create-keymap read-word read-string",
   "create-keymap read-range read-string",
-  "create-keymap read-filename generic-frame",
+  "create-keymap read-filename read-string",
   "create-keymap read-integer read-string",
   "create-keymap read-float read-string",
   "create-keymap read-formula read-string",
