@@ -29,6 +29,7 @@
 #include <dmalloc.h>
 #endif
 
+#include <iostream>
 #include <assert.h>
 #include "proto.h"
 #include "funcdef.h"
@@ -39,6 +40,9 @@
 #include "utils.h"
 #include "decompile.h"
 
+using std::cout;
+using std::endl;
+using std::string;
 using std::vector;
 
 //#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
@@ -84,6 +88,7 @@ static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
+
 
 void
 show_main_menu()
@@ -1095,6 +1100,23 @@ _io_command_loop (int a)
 {
 	command_loop (a, 0);
 }
+
+
+/* try to just pain the curses screen without doing anything else
+ * Doesn't seem to work
+ */
+void 
+show_curses_view()
+{
+	_io_open_display();
+	//redraw_info();
+	      input_view.redraw_needed = FULL_REDRAW;
+     _io_redraw_input ();
+//_io_redisp();
+	sleep(2);
+	_io_close_display(0);
+}
+
 
 void
 tty_graphics (void)

@@ -1,4 +1,5 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
+#include <algorithm>
 #include <errno.h>
 #include <unistd.h>
 #include <iostream>
@@ -11,6 +12,9 @@
 #include "cmd.h"
 #include "window.h"
 #include "oleox.hpp"
+#include "io-curses.h"
+#include "io-utils.h"
+#include "lists.h"
 
 
 using std::cin;
@@ -151,6 +155,32 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
+string spaces(int n)
+{
+	//string result;
+	//if(n<0) return ;
+	n = std::max(0, n);
+	char sa[n+1];
+	std::fill(sa, sa+n, ' ');
+	sa[n] = '\0';
+	//cout << "*" << sa << "*\n";
+	return string(sa); 
+}
+static void
+show_cells()
+{
+	for(int r=1; r<10; ++r) {
+		for(int c=1; c< 10; ++c) {
+			CELL *cp = find_cell(r, c);
+			//string str = cell_value_string(r, c, 0);
+			string str = print_cell(cp);
+			str = spaces(7 - str.size()) + str;
+			cout << str << " ";
+		}
+		cout << "\n";
+	}
+}
+
 static void
 _io_run_main_loop()
 {
@@ -159,12 +189,20 @@ _io_run_main_loop()
 	return;
 #endif
 
+	cout << "+OK" << "\n";
 	std::string line;
 	while(getline(std::cin, line)) {
+		if(line == "view") {
+			//show_curses_view(); // doesn't seem to work
+			show_cells();
+			cout << "+OK" <<endl;
+			continue;
+		}
+
 		if(line == "bye") return;
 		try {
 			execute_command(line.c_str());
-			std::cout << "OK" << endl;
+			std::cout << "+OK" << endl;
 		} catch (const OleoJmp&) {
 			cout << "FAIL Caught OleoJmp" << endl;
 		}
