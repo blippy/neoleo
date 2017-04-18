@@ -1,2 +1,4 @@
 The following packages should be installed:
-- texinfo (?)
+- libncurses5-dev
+- libncurses5-dbg (optional)
+- texinfo
