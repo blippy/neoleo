@@ -66,7 +66,6 @@ local_free (p)
 #include "sort.h"
 #include "busi.h"
 #include "date.h"
-#include "hash.h"
 extern "C" {
 #include "parse.h"
 }
