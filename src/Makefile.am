@@ -40,7 +40,7 @@ neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
 		 info.c init.c input.c \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
 		 ir.c key.c \
-		 legend.cc line.cc list.cc lists.cc logging.cc \
+		 line.cc list.cc lists.cc logging.cc \
 		 mdi.c oleofile.cc \
 		 ref.cc regions.cc \
 		 sc.cc sort.cc stringo.cc stub.c sylk.cc utils.cc \
@@ -74,7 +74,7 @@ noinst_HEADERS = afm.h args.h basic.h byte-compile.h busi.h cell.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
 		 parse.h \
 		 posixtm.h proto.h ref.h \
-		 regions.h sc.h sciplot.h sciplotI.h sort.h stringo.h stub.h stubs.h \
+		 regions.h sc.h sort.h stringo.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
 		 tests.h \
