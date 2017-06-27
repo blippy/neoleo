@@ -32,7 +32,7 @@ AM_CFLAGS = $(COMMON_FLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  -lpanel  $(GUI_LINK)
 #neoleo_LDADD += -lasan
-neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
+neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc font.cc format.cc forminfo.cc funcs.cc \
@@ -61,7 +61,7 @@ neoleo_SOURCES = afm.cc args.cc basic.cc  busi.cc byte-compile.cc \
 # Ideally obstack would be removed as a dependency anyway
 neoleo_SOURCES += obstack_a.cc
 
-noinst_HEADERS = afm.h args.h basic.h byte-compile.h busi.h cell.h \
+noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h gsl.h hash.h help.h info.h init.h \
