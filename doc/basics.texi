@@ -13,9 +13,6 @@ version 1.6 which dates back to 1994.
 In 1998, development started for a @code{motif} based user interface.
 It should be more user friendly than the character based UI.
 
-Most of this manual describes the character based user interface,
-the @code{motif} user interface is treaded in (@pxref{Motif}).
-
 To start Oleo, type @code{oleo}.  If @code{filename} is the name of a
 spreadsheet that you have saved from a previous @code{oleo} session, you
 can type @code{oleo filename} to start Oleo with the spreadsheet

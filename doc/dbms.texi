@@ -1,4 +1,3 @@
-@node Database Access, , Motif, Top
 @chapter Accessing Databases
 
 @menu

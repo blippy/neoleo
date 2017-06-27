@@ -1,4 +1,3 @@
-@node Reporting Bugs, Motif, Extending Oleo, Top
 @chapter Reporting Bugs
 
 

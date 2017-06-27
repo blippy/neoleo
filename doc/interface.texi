@@ -2,8 +2,7 @@
 @c @defcodeindex cm
 @cindex Extending 
 
-@node Extending Oleo, Reporting Bugs, Functions, Top
-@chapter Extending the Oleo system
+@chapter Extending the Neoleo system
 
 
 
@@ -11,7 +10,7 @@
 * New at functions::            Adding new at Functions
 @end menu
 
-@node New at functions,  , Extending Oleo, Extending Oleo
+@node New at functions,  , Extending Neoleo, Extending Neoleo
 @section Adding new at Functions
 
 It is easy to add new @@ functions.  Suppose that I want to add 

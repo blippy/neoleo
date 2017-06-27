@@ -1,9 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@set version 1.99.13
-@set update-date 2 April 2017
-@set update-month April 2017
+@set version 6.0.0
+@set update-date 27 June 2017
+@set update-month June 2017
 
 @setfilename neoleo.info
 @settitle Neoleo @value{version}
@@ -31,9 +31,9 @@
 @finalout
 
 @ifinfo
-This file documents Oleo, the GNU spreadsheet.
+This file documents Neoleo, the GNU spreadsheet.
 
-This file is part of GNU Oleo.
+This file is part of GNU Neoleo.
 
 Copyright (C) 1993-2000 Free Software Foundation, Inc.
 
@@ -61,11 +61,11 @@ by the Free Software Foundation.
 
 @setchapternewpage odd
 @titlepage
-@title Oleo
+@title Neoleo
 @subtitle The GNU Spreadsheet:  Version @value{version}
 @subtitle Documentation: @value{update-month}
 
-@c is this the Oleo or documentation author(s)? Let's include everyone
+@c is this the Neoleo or documentation author(s)? Let's include everyone
 @author Tom Lord, Kai Getrost, Steve Fisk, Danny Backx
 @c The following two commands start the copyright page.
 @c Put it inside the titlepage to turn off headings:
@@ -94,9 +94,9 @@ by the Free Software Foundation.
 @end titlepage
 
 @node   Top, Basics, (dir), (dir)
-@top Oleo
+@top Neoleo
 
-Oleo is the GNU spreadsheet program.  This documentation is of Oleo
+Neoleo is the GNU spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
@@ -113,14 +113,11 @@ means complete, nor necessarily accurate for that matter.
 * Programs::                    
 * Keymaps::                     
 * Functions::                   
-* Forth Interpreter::
-* Extending Oleo::
+* Extending Neoleo::
 * Reporting Bugs::
-* Motif::
 * Database Access::
 * Key Index::
 * Command Index::
-* Forth Word Index::
 * Function Index::
 * Options Index::
 * Concept Index::
@@ -138,11 +135,13 @@ means complete, nor necessarily accurate for that matter.
 @include macros.texi
 @include programs.texi
 @include keymaps.texi
+@node   Functions, Extending Neoleo, Keymaps, Top
 @include functions.texi
-@include forth.texi
+@node Extending Neoleo, Reporting Bugs, Functions, Top
 @include interface.texi
+@node Reporting Bugs, Database Access, Extending Neoleo, Top
 @include bugs.texi
-@include motif.texi
+@node Database Access, , Reporting Bugs, Top
 @include dbms.texi
 
 @page
@@ -150,15 +149,11 @@ means complete, nor necessarily accurate for that matter.
 @unnumbered Key Index
 @printindex ky
 
-@node   Command Index, Forth Word Index, Key Index, Top
+@node   Command Index, Function Index, Key Index, Top
 @unnumbered Command Index
 @printindex cm
 
-@node   Forth Word Index, Function Index, Command Index, Top
-@unnumbered Forth Word Index
-@printindex fs
-
-@node   Function Index, Options Index, Forth Word Index, Top
+@node   Function Index, Options Index, Command Index, Top
 @unnumbered Function Index
 @printindex fn
 

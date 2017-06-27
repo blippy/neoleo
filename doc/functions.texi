@@ -1,6 +1,5 @@
 @c Oleo cell functions, included into oleo.texi    -*- texinfo -*-
  
-@node   Functions, Forth Interpreter, Keymaps, Top
 @chapter Functions
 @cindex Functions
 
