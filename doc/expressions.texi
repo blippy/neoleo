@@ -2,9 +2,6 @@
 @section Expressions
 @cindex Expressions
 
-@ifhtml
-<A NAME="HelpExpressions">
-@end ifhtml
   A cell entry is a value or an expression of values 
 (@pxref{Neoleo values}).
 
@@ -115,10 +112,6 @@ Here are some computations in  @code{a0} mode.
 @node   Error values,  , Examples, Expressions
 @subsection Error Values
 @cindex Error values
-
-@ifhtml
-<A NAME="HelpErrorValues">
-@end ifhtml
 
   Error values are returned by the parser under various error
 conditions, such as invalid parameters to functions, badly formatted

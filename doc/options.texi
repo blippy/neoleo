@@ -2,10 +2,6 @@
 @chapter Options
 @cindex Options
 
-@ifhtml
-<A NAME="HelpOptions">
-@end ifhtml
-
 Neoleo has various options.  They can be set as a default in the
 @file{.oleorc} file, or using the command @code{M-x set-option}.
 To see all the current options, type @code{C-h o}.
