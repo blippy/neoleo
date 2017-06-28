@@ -1,4 +1,4 @@
-@c Oleo cell functions, included into oleo.texi    -*- texinfo -*-
+@c Neoleo cell functions, included into neoleo.texi    -*- texinfo -*-
  
 @chapter Functions
 @cindex Functions
@@ -403,7 +403,7 @@ use @code{@@std(...)^2}.
 than 1 or greater than the length of the corresponding string will
 generate an @code{#OUT_OF_RANGE} error return, unless otherwise noted.
 
-  These functions are in the `string' package.  If Oleo is compiled with
+  These functions are in the `string' package.  If Neoleo is compiled with
 @samp{-DUSE_DLD}, the string package must be loaded before these
 functions can be used.  If a spreadsheet that uses these functions is
 loaded before the string package is loaded, things will fail
@@ -472,7 +472,7 @@ range, in which case the cell values in the range are concatenated.
 @end ifhtml
 
   These functions return information about a cell or range of cells.
-Some of them are in the `cells' package; if Oleo is compiled with
+Some of them are in the `cells' package; if Neoleo is compiled with
 @samp{-DUSE_DLD}, the cells package must be loaded first.
 
 @table @code
@@ -838,7 +838,7 @@ for @code{get_date()}, and as per the Posix standard for
 returned by @code{now()}).  This function is implemented by the C
 library function @code{strftime()}.  The following documentation
 describes the GNU implementation of @code{strftime()}.  Your version of
-Oleo may have been built with a different version, in which case, you
+Neoleo may have been built with a different version, in which case, you
 can find documentation in the @code{strftime()} man page.  (In the
 future this anomaly will be removed).
 
@@ -959,7 +959,7 @@ allowing wrappers to be written for very high level languages.
 More information about GSL is available from @url{http://sources.redhat.com/gsl/}
 
 Currently only a small subset of the GSL functions (as they are in GSL 0.6) are
-made available in Oleo. They're most of the statistical functions :
+made available in Neoleo. They're most of the statistical functions :
 @table @samp
 @item gsl_stats_mean
 @item gsl_stats_variance
@@ -979,10 +979,10 @@ made available in Oleo. They're most of the statistical functions :
 @item gsl_stats_kurtosis_m_sd
 @end table
 
-The API made available in Oleo for these functions differs slightly from
+The API made available in Neoleo for these functions differs slightly from
 the native C API of GSL. The C API provides for a @code{stride} and a @code{number}
-parameter when passing a data array. In Oleo, both of these are not explicitly passed.
+parameter when passing a data array. In Neoleo, both of these are not explicitly passed.
 
-For example, the @code{gsl_stats_mean} function has just one parameter in Oleo,
+For example, the @code{gsl_stats_mean} function has just one parameter in Neoleo,
 which is a range of cells from which it calculates the mean. @code{oleo_gsl_stats_kurtosis_m_sd}
 has three parameters : a range of cells, and two numbers.

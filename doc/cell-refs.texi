@@ -21,7 +21,7 @@ reference, however, is measured as an offset from the cell it is in, and
 when moved points to the cell at the same offset relative to the new
 location.
 
-  There are two ways of addressing cells in Oleo, called @code{a0} and
+  There are two ways of addressing cells in Neoleo, called @code{a0} and
 @code{noa0}.  To switch between the modes, use the @code{set-option}
 command:
 @cmindex set-option

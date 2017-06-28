@@ -2,28 +2,28 @@
 @chapter Basics
  
 
-@code{Oleo} is the GNU spreadsheet @footnote{better than the high priced
+@code{Neoleo} is the GNU spreadsheet @footnote{better than the high priced
 spread}. 
 
-@code{Oleo} has more than one user interface.
-The traditional @code{oleo} environment shows a curses based (character mode)
+@code{Neoleo} has more than one user interface.
+The traditional @code{neoleo} environment shows a curses based (character mode)
 user interface.
 A bare bones user interface based on the X Window System exists as of
 version 1.6 which dates back to 1994.
 In 1998, development started for a @code{motif} based user interface.
 It should be more user friendly than the character based UI.
 
-To start Oleo, type @code{oleo}.  If @code{filename} is the name of a
-spreadsheet that you have saved from a previous @code{oleo} session, you
-can type @code{oleo filename} to start Oleo with the spreadsheet
+To start Neoleo, type @code{neoleo}.  If @code{filename} is the name of a
+spreadsheet that you have saved from a previous @code{neoleo} session, you
+can type @code{neoleo filename} to start Neoleo with the spreadsheet
 loaded. 
 
-To stop Oleo, type @code{C-x C-c}.  This will prompt you for the name of
+To stop Neoleo, type @code{C-x C-c}.  This will prompt you for the name of
 a file in which to save the current spreadsheet.  If you do not want to save
 it, type @key{RET}, otherwise type the name of the filename that you
 wish to save it in, and then press @key{RET}.
 
-Type @kbd{C-z} to suspend @code{oleo}.  This does not do anything if 
+Type @kbd{C-z} to suspend @code{neoleo}.  This does not do anything if 
 you are running under X-windows. 
 @cmindex suspend-oleo
 
@@ -211,7 +211,7 @@ opposite corner of the region. (@code{goto-region})
 @node Recalculation, Movement, Cursor and Mark, Basics
 @section How updating works
 
-Oleo periodically recalculates the values of the spreadsheet 
+Neoleo periodically recalculates the values of the spreadsheet 
 that can change.  This calculation can be done between keystrokes, and
 usually stops when a key is pressed.  This behavior can be changed with
 the options @code{background} and @code{nobackground}.  The time between
@@ -526,11 +526,11 @@ If the variable has not been defined you get an error. If you mistype
 @item C-h
 @kindex  C-h
         Enter into the help system.  The commands below give various
-bits of information about Oleo.
+bits of information about Neoleo.
 
 @item C-h C
 @kindex  C-h C
-When a complex command is being invoked (i.e., when Oleo is prompting
+When a complex command is being invoked (i.e., when Neoleo is prompting
 you for arguments), @kbd{C-x C} displays documentation for the
 command being invoked.  This can often be used to get more information
 about what is being prompted for.
@@ -603,7 +603,7 @@ example, to find which keys @samp{scan-up} is bound to, type
 @node Saving and reading, Command Line Options, Getting Help, Basics
 @section Saving and Reading Spreadsheets
 
-@code{Oleo} can save a spreadsheet, visit a saved one, or merge with a
+@code{Neoleo} can save a spreadsheet, visit a saved one, or merge with a
 previously saved one.
 
 @table @kbd
@@ -649,10 +649,10 @@ argument, turns them off.  With no argument, acts as a toggle.
 @comment  node-name,  next,  previous,  up
 @cindex Command Line Options
 
-At the command line, Oleo has several options
+At the command line, Neoleo has several options
 
 @example
-        oleo [options] [file]
+        neoleo [options] [file]
 @end example
 
 where @code{file} is an optional spreadsheet to open.  The remaining
@@ -695,7 +695,7 @@ set separator for 'list' file type to a space
 @comment  node-name,  next,  previous,  up
 
 If there is a file @file{.oleorc} located in the home directory, it is
-read when Oleo starts up.  For example, if you always want to use the
+read when Neoleo starts up.  For example, if you always want to use the
 @code{a0} reference system, and wish to have the status line  on the bottom
 line, rather than on the second line from the top, your @file{.oleorc}
 file could be @footnote{what else can go here? can I set the default

@@ -6,30 +6,30 @@
 <A NAME="HelpOptions">
 @end ifhtml
 
-Oleo has various options.  They can be set as a default in the
+Neoleo has various options.  They can be set as a default in the
 @file{.oleorc} file, or using the command @code{M-x set-option}.
 To see all the current options, type @code{C-h o}.
 
 
 
 @menu
-* Appearance::                  Changing Oleo's appearance
+* Appearance::                  Changing Neoleo's appearance
 * Window Options::              Options for the active window
 * Other Options::               Other Options
 @end menu
 
 @node Appearance, Window Options, Options, Options
-@section Changing Oleo's appearance
+@section Changing Neoleo's appearance
 
 @table @code
 @item a0
 @vindex  a0
-In a0 mode, Oleo uses @{letters@}@{digits@} style cell-references,
+In a0 mode, Neoleo uses @{letters@}@{digits@} style cell-references,
 like some popular spreadsheets.
 
 @item noa0
 @vindex  noa0
-In noa0 mode, Oleo uses R@{digits@}C@{digits@} style references,
+In noa0 mode, Neoleo uses R@{digits@}C@{digits@} style references,
 like some other popular spreadsheets.  (@code{Default})
 
 @item status
@@ -50,7 +50,7 @@ bottom), but not zero.
 
 @item edges	
 @vindex  edges	
-In edges mode Oleo displays row and column numbers at the top
+In edges mode Neoleo displays row and column numbers at the top
 and left edges of the window. (@code{Default})
 
 @item noedges 
@@ -174,7 +174,7 @@ the key is being handled).  (@code{Default})
 @vindex  nobkgrnd
 @itemx nobackground
 @vindex nobackground
-In nobackground mode, Oleo
+In nobackground mode, Neoleo
 performs all its recalculation before listening for
 keystrokes. 
 
@@ -215,15 +215,15 @@ initial value is the width of the screen.
 @footnote{I don't understand this}
 If -DUSE_DLD was defined, format-name may be any .o file
 that contains definitions for the appropriate functions, or
-'panic', which is the only file format that Oleo will have
+'panic', which is the only file format that Neoleo will have
 compiled into it.  If -DUSE_DLD was not defined, format-name
-must be one of sylk, sc, panic, or list, and Oleo will have
+must be one of sylk, sc, panic, or list, and Neoleo will have
 to be re-compiled before any other formats may be used.
 
 @item load (file-name) 
 @vindex  load (file-name) 
 @footnote{nor do I understand this one}This option is only avaliable if
-Oleo was compiled with
+Neoleo was compiled with
 -DUSE_DLD.  This option loads in a .o file of spreadsheet
 functions, keyboard commands, and/or keymaps.  Spreadsheet
 functions and keyboard commands must be loaded in before they

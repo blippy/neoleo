@@ -31,10 +31,10 @@ Execute the most recent keyboard macro (@code{call-last-kbd-macro}).
 Store the most recent keyboard macro (@code{store-last-kbd-macro}).
 @end table
 
-  Keyboard macros differ from ordinary Oleo commands in that they are
+  Keyboard macros differ from ordinary Neoleo commands in that they are
 simply records of keystrokes.  This makes it
 easier for the novice to write them, and makes them more convenient as
-temporary hacks.  However, the Oleo command language is not powerful
+temporary hacks.  However, the Neoleo command language is not powerful
 enough as a programming language to be useful for writing anything
 intelligent or general.  For such things, functions and programs must be used.
 

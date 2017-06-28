@@ -51,7 +51,7 @@ Change the default alignment.  The options are
 
 @node Formats for numbers
 @section Formats for numbers
-Oleo can display numbers in a variety of formats.  In addition to
+Neoleo can display numbers in a variety of formats.  In addition to
 sixteen user-defined formats, you can choose from a variety of simple
 formats.  You can set the format for a cell, for a region, and change
 the default format.
@@ -112,7 +112,7 @@ fixed?}, then a string of 35 #'s is displayed.
 The following formats require a precision.  The precision may be a number
 from zero to 14, in which case that number of digits will always be displayed
 after the decimal point (zero-padding or rounding the number as needed), or
-the precision may be 'float', in which case Oleo will use as many digits as
+the precision may be 'float', in which case Neoleo will use as many digits as
 necessary.  
 
 @table @code

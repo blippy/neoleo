@@ -1,22 +1,22 @@
 @node Multiple Windows, Options, Style, Top
 @chapter Multiple Windows
-@cindex Windows in Oleo
-@cindex Multiple windows in Oleo
+@cindex Windows in Neolo
+@cindex Multiple windows in Neolo
 
-  Oleo can split a spreadsheet into two or more windows.  
+  Neolo can split a spreadsheet into two or more windows.  
  The windows showing the spreadsheet can
 show different parts of it.
 Only one spreadsheet can be displayed at a time.
 
 @menu
-* Windows::                Introduction to Oleo windows.
+* Windows::                Introduction to Neolo windows.
 * Split Window::                New windows are made by splitting existing windows.
 * Other Window::                Moving to another window or doing something to it.
 * Change Window::               Deleting windows and changing their sizes.
 @end menu
 
 @node  Windows, Split Window, Multiple Windows, Multiple Windows
-@section Concepts of Oleo Windows
+@section Concepts of Neolo Windows
 
 
 @cindex Selected window
@@ -26,8 +26,8 @@ location of point as well, but since the terminal has only one cell
 cursor there is no way to show where those locations are.
 
   Commands to move the cell cursor affect the cell cursor for the
-selected Oleo window only.  They do not change the value of the cell
-cursor in any other Oleo window.
+selected Neolo window only.  They do not change the value of the cell
+cursor in any other Neolo window.
 
   When there are multiple windows,  they can have different
 regions, because they can have different values of the cell cursor.

@@ -70,7 +70,7 @@ region @code{A1.A3} is named @code{test1}.  Typing
 
 @footnote{yes it's trivial - how about something complex!}
 
-If @file{filename} contains a list of @code{Oleo} commands (like the
+If @file{filename} contains a list of @code{Neoleo} commands (like the
 @file{.oleorc} file), the commands in this file can be executed:
 
 @table @kbd

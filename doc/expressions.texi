@@ -6,7 +6,7 @@
 <A NAME="HelpExpressions">
 @end ifhtml
   A cell entry is a value or an expression of values 
-(@pxref{Oleo values}).
+(@pxref{Neoleo values}).
 
 @menu
 * Infix expressions::           Infix Expressions
@@ -63,7 +63,7 @@ evaluated; if @var{bool} is @code{#FALSE}, @var{val2} is evaluated;
 otherwise an error is returned.
 @item (@var{expr})
   Overrides default precedence of expression @var{expr}.  Note that
-since Oleo stores expressions in a byte-compiled form, unneeded
+since Neoleo stores expressions in a byte-compiled form, unneeded
 parentheses will mysteriously vanish.
 @end table
 

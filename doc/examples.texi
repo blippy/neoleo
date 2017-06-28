@@ -4,17 +4,17 @@
 @cindex Utilities
 
 Examples and utilities are installed into the directory
-@code{share/oleo/examples}, somewhere on the hard drive. To determine
+@code{share/neoleo/examples}, somewhere on the hard drive. To determine
 the exact location, type `@code{neoleo --version}', and look at
 the line beginning `@code{Datadir:}'.
 
 @section oleo.pm6
 @cindex oleo.pm6
 
-@code{oleo.pm6} is a perl6 script that converts @code{oleo} format 
+@code{oleo.pm6} is a perl6 script that converts @code{neoleo} format 
 from stdin to CSV on stdout. For example:
 @example
-./oleo.pm6 <foo.oleo >foo.csv
+./neoleo.pm6 <foo.oleo >foo.csv
 @end example
 
 BUG: omits cells that have formulae in them.

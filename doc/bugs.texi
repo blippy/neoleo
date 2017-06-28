@@ -2,7 +2,7 @@
 
 
 
-   If you have problems with Oleo or think that you have found a bug,
+   If you have problems with Neoleo or think that you have found a bug,
 please report it; we cannot promise to do anything but we
 might well want to fix it.
 
@@ -12,9 +12,9 @@ you're trying to do.  If it's not clear whether you should be able to do
 something or not, report that too; it's a bug in the documentation!
 
    Before reporting a bug or trying to fix it yourself, try to isolate it to
-the smallest possible Oleo program and input data file that reproduces the
+the smallest possible Neoleo program and input data file that reproduces the
 problem.  Then send us the program and data file, some idea of what kind of
-Unix system you're using, and the exact results Oleo gave you.  Also say
+Unix system you're using, and the exact results Neoleo gave you.  Also say
 what you expected to occur; this will help us decide whether the problem was
 really in the documentation.
 

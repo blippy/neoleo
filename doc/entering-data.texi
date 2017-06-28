@@ -7,14 +7,14 @@
 
 
 @menu
-* Oleo values::                 
+* Neoleo values::                 
 * Entering::                    Entering values in a cell
 * Input Editing::               Editing in the input line
 * Cell Motion::                 Moving to the next input cell while editing
 @end menu
 
-@node Oleo values, Entering, How to enter data, How to enter data
-@section The different values in Oleo
+@node Neoleo values, Entering, How to enter data, How to enter data
+@section The different values in Neoleo
 
 A value can be a literal (an immediate value, like @code{"foo"},
 @code{16}, or @code{#TRUE}), a function call, or another expression.
@@ -43,7 +43,7 @@ sign.
 
 
 
-@node Entering, Input Editing, Oleo values, How to enter data
+@node Entering, Input Editing, Neoleo values, How to enter data
 @section Entering values in a cell
 To enter values into an empty cell, simply start typing.  
 To replace the contents of a cell or of all cells in a region, use

@@ -33,7 +33,7 @@ int gcd(i,k)
 
 
 
-In Oleo, I would like to enter @code{@@gcd(6,20)}, and have the result
+In Neoleo, I would like to enter @code{@@gcd(6,20)}, and have the result
 @code{2} displayed.  The following files need to be changed or created:
 
 @table @file
@@ -42,7 +42,7 @@ In Oleo, I would like to enter @code{@@gcd(6,20)}, and have the result
 We will create a new class of functions called @var{int_funs}.  For
 simplicity, there is only one function, @code{gcd}, in this class, but
 there could be many more. In addition to the code given above for @var{gcd}, 
-we need an interface between Oleo and @var{gcd}.  
+we need an interface between Neoleo and @var{gcd}.  
 @example
 static void
 do_gcd (p)
@@ -67,12 +67,12 @@ struct function int_funs[] =
 @};
 @end example
 
-Oleo also (as of release 1.99.6) requires a function in each file to figure
+Neoleo also (as of release 1.99.6) requires a function in each file to figure
 out how many new user accessible functions it contains.
 Look in busi.c for a simple example (init_busi_function_count) which will
 probably work for your new functions as well.
 As you can see the function simply takes information from the above array
-and offers it to another Oleo module.
+and offers it to another Neoleo module.
 
 Finally, we need some standard headers and defines.  These are probably
 not all necessary.
@@ -147,10 +147,10 @@ static init_function_count init_function_counts[] = @{
 
 The file @file{my-new-functions.c} needs to be added to the list of
 source files. Editing the file src/Makefile.am and adding to the
-list of files named oleo_SOURCES will do :
+list of files named neoleo_SOURCES will do :
 
 @example
-oleo_SOURCES = parse.y byte-compile.c eval.c ref.c \
+neoleo_SOURCES = parse.y byte-compile.c eval.c ref.c \
  decompile.c sort.c regions.c utils.c lists.c\
  io-term.c io-utils.c io-x11.c window.c io-edit.c\
  line.c key.c format.c funcs.c \

@@ -150,8 +150,8 @@ widths and heights are given in "points", of which there are
 Note: this chapter is only partially updated, however functionality
 has changed drastically !!
 
-Plotting in Oleo is done using GNU Plotutils. (Versions prior to
-Oleo 1.99.12 used gnuplot.) Currently these types of graphs are
+Plotting in Neoleo is done using GNU Plotutils. (Versions prior to
+Neoleo 1.99.12 used gnuplot.) Currently these types of graphs are
 supported :
 @itemize @bullet
 @item XY
@@ -159,14 +159,14 @@ supported :
 @item pie
 @end itemize
 
-There are two modes in which Oleo can produce plots on the fly :
+There are two modes in which Neoleo can produce plots on the fly :
 @itemize @bullet
 @item in a Motif window
 @item in Xterm using its Tektronix emulation
 @end itemize
 
 The former is the default behaviour of you use the Motif interface
-of Oleo, the latter can be initialised by this sequence :
+of Neoleo, the latter can be initialised by this sequence :
 @example
         @kbd{M-g}  o  t  f - @key{RET}
 @end example
@@ -179,7 +179,7 @@ shows the plot.
 The file examples/xy.oleo can be used to show a simple XY plot in
 this way.
 
-Oleo can print up to 10 different data sets at once.  The
+Neoleo can print up to 10 different data sets at once.  The
 data sets are numbered 0,1,@dots{},9.  
 
 When the plot command (@kbd{p}) is chosen, all the currently defined
