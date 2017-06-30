@@ -184,10 +184,13 @@ show_cells()
 static void
 _io_run_main_loop()
 {
+	cout << "To exit type 'bye'\n";
+
 #ifdef HAVE_FORTH	
 	forth_repl();
 	return;
 #endif
+
 
 	cout << "+OK" << "\n";
 	std::string line;
