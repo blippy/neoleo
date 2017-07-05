@@ -169,13 +169,15 @@ string spaces(int n)
 static void
 show_cells()
 {
+	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
 		for(int c=1; c< 10; ++c) {
 			CELL *cp = find_cell(r, c);
-			//string str = cell_value_string(r, c, 0);
 			string str = print_cell(cp);
-			str = spaces(7 - str.size()) + str;
+			int w = get_width(c);
+			str = spaces(w - str.size()) + str;
 			cout << str << " ";
+			//printf(print_buf);
 		}
 		cout << "\n";
 	}
