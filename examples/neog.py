@@ -30,8 +30,9 @@ def writecli(cli, text):
     cli.stdin.write(text1)
     cli.stdin.flush()
 
-print(cli.stdout.readline())
-print(cli.stdout.readline())
+#print(cli.stdout.readline())
+#print(cli.stdout.readline())
+print(readcli(cli))
 
 inp = """
 edit-cell 12
