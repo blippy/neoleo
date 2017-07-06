@@ -186,7 +186,7 @@ show_cells()
 static void
 _io_run_main_loop()
 {
-	cout << "To exit type 'bye'\n";
+	cout << "100 OK Type 'bye' to exit" << endl;
 
 #ifdef HAVE_FORTH	
 	forth_repl();
@@ -194,22 +194,27 @@ _io_run_main_loop()
 #endif
 
 
-	cout << "+OK" << "\n";
+	//cout << "100 OK" << "\n";
 	std::string line;
 	while(getline(std::cin, line)) {
 		if(line == "view") {
 			//show_curses_view(); // doesn't seem to work
+			cout << "101 OK Terminated by dot" << endl;
 			show_cells();
-			cout << "+OK" <<endl;
+			cout << "." <<endl;
 			continue;
 		}
 
-		if(line == "bye") return;
+		if(line == "bye") {
+			cout << "300 OK bye" << endl;
+			return;
+		}
+
 		try {
 			execute_command(line.c_str());
-			std::cout << "+OK" << endl;
+			std::cout << "100 OK" << endl;
 		} catch (const OleoJmp&) {
-			cout << "FAIL Caught OleoJmp" << endl;
+			cout << "200 FAIL Caught OleoJmp" << endl;
 		}
 
 	}
@@ -219,7 +224,7 @@ _io_run_main_loop()
 static void
 _io_bell()
 {
-	cout << "BELL" << endl;
+	//cout << "BELL" << endl;
 }
 
 void
