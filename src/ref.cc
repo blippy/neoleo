@@ -218,44 +218,36 @@ set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
     }
   else
     {
-      cp = find_or_make_cell (row, col);
-      if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-	return (char *) "cell is locked";
-      my_cell = cp;
-      flush_old_value ();
-      SET_TYP (cp, type);
-      /* cp->c_z= *value; */
-      switch (type)
-	{
-	case TYP_FLT:
-	  cp->cell_flt = value->c_n;
-	  cp->cell_formula = 0;
-	  break;
-
-	case TYP_INT:
-	  cp->cell_int = value->c_l;
-	  cp->cell_formula = 0;
-	  break;
-
-	case TYP_STR:
-	  cp->cell_str = strdup (value->c_s);
-	  cp->cell_formula = 0;
-	  break;
-
-	case TYP_BOL:
-	  cp->cell_bol = value->c_i;
-	  cp->cell_formula = 0;
-	  break;
-
-	case TYP_ERR:
-	  cp->cell_err = value->c_i;
-	  cp->cell_formula = 0;
-	  break;
-#ifdef TEST
-	default:
-	  panic ("Unknown type %d in set_new_value", GET_TYP (cp));
-#endif
-	}
+	    cp = find_or_make_cell (row, col);
+	    if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
+		    return (char *) "cell is locked";
+	    my_cell = cp;
+	    flush_old_value ();
+	    SET_TYP (cp, type);
+	    /* cp->c_z= *value; */
+	    switch (type)
+	    {
+		    case TYP_FLT:
+			    cp->cell_flt = value->c_n;
+			    break;
+		    case TYP_INT:
+			    cp->cell_int = value->c_l;
+			    break;
+		    case TYP_STR:
+			    cp->cell_str = strdup (value->c_s);
+			    break;
+		    case TYP_BOL:
+			    cp->cell_bol = value->c_i;
+			    break;
+		    case TYP_ERR:
+			    cp->cell_err = value->c_i;
+			    break;
+//#ifdef TEST
+		    default:
+			    panic ("Unknown type %d in set_new_value", GET_TYP (cp));
+//#endif
+	    }
+	    cp->cell_formula = 0;
     }
   push_refs (cp->cell_refs_from);
   io_pr_cell (row, col, cp);
