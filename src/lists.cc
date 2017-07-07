@@ -439,7 +439,7 @@ flush_everything (void)
   Global->wids = 0;
   flush (Global->hgts);
   Global->hgts = 0;
-  flush_fonts ();
+  //flush_fonts ();
 }
 
 struct cell *

@@ -48,7 +48,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include "cell.h"
 #include "cmd.h"
 #include "format.h"
-#include "font.h"
+//#include "font.h"
 #include "getopt.h"
 #include "init.h"
 #define DEFINE_IO_VARS 1
@@ -1143,7 +1143,7 @@ init_basics()
 	init_eval ();
 	init_refs ();
 	init_cells ();
-	init_fonts ();
+	//init_fonts ();
 	init_info ();
 }
 

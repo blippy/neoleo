@@ -18,12 +18,12 @@ COMMON_FLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CFLAGS = $(COMMON_FLAGS)
 # permissive flag is set due to pesky obstack
 AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses  -lpanel  $(GUI_LINK)
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
-		 eval.cc font.cc format.cc forminfo.cc funcs.cc \
+		 eval.cc format.cc forminfo.cc funcs.cc \
 		 gsl.cc hash.c help.cc \
 		 info.c init.c input.c \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
@@ -48,7 +48,7 @@ neoleo_SOURCES += obstack_a.cc
 
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
-		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
+		 errors.h eval.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h \

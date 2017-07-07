@@ -26,7 +26,7 @@
 #endif
 
 #include "global.h"
-#include "font.h"
+//#include "font.h"
 #include "cell.h"
 #include "ir.h"
 

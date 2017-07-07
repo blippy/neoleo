@@ -109,7 +109,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
 	{
 	  new_type = GET_TYP (cp);
 	  new_jst = GET_JST (cp);
-	  new_font = cp->cell_font;
+	  //new_font = cp->cell_font;
 	  if (new_jst == JST_DEF)
 	    new_jst = default_jst;
 	}

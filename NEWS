@@ -3,6 +3,8 @@ VERSION 7.0.0 IN DEVELOPMENT
 
 * Removed X11 support
 
+* Removed font support
+
 ===========================================================================
 VERSION 6.0.0 RELEASED 07-JUL-2017
 

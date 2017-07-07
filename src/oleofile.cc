@@ -39,7 +39,7 @@
 #include "io-abstract.h"
 #include "io-utils.h"
 #include "io-term.h"
-#include "font.h"
+//#include "font.h"
 #include "global.h"
 #include "cell.h"
 #include "line.h"
@@ -123,7 +123,7 @@ oleo_read_file (
 							 ck_remalloc
 							 (fnt_map, fnt_map_alloc * sizeof (struct font_memo *)));
 					}
-					fnt_map[fnt_map_size++] = parsed_matching_font (ptr + 1);
+					//fnt_map[fnt_map_size++] = parsed_matching_font (ptr + 1);
 					break;
 				case 'f':		/* %f range font-name */
 					{
@@ -141,8 +141,10 @@ oleo_read_file (
 						while (isspace (*ptr))
 							++ptr;
 						{
+#if 0
 							struct font_memo * fm = parsed_matching_font (ptr);
 							set_region_font (&rng, fm->names->oleo_name, fm->scale);
+#endif
 						}
 						break;
 					}
@@ -353,8 +355,7 @@ oleo_read_file (
 					SET_FORMAT (cp, fmt);
 					SET_PRECISION(cp, prc);
 					SET_JST (cp, jst);
-					if (font_spec_in_format)
-						cp->cell_font = fnt;
+					//if (font_spec_in_format) cp->cell_font = fnt;
 					break;
 				case 2:
 					rng.lr = MIN_ROW;
@@ -367,8 +368,7 @@ oleo_read_file (
 						SET_FORMAT (cp, fmt);
 						SET_PRECISION(cp, prc);
 						SET_JST (cp, jst);
-						if (font_spec_in_format)
-							cp->cell_font = fnt;
+						//if (font_spec_in_format) cp->cell_font = fnt;
 					}
 					break;
 				case 4:
@@ -381,8 +381,7 @@ oleo_read_file (
 					{
 						SET_FORMAT (cp, fmt);
 						SET_JST (cp, jst);
-						if (font_spec_in_format)
-							cp->cell_font = fnt;
+						// if (font_spec_in_format) cp->cell_font = fnt;
 					}
 					break;
 				default:
@@ -900,11 +899,13 @@ oleo_write_file (
   for_all_vars (oleo_write_var);
   find_cells_in_range (rng);
 
+#if 0
   {
     struct font_memo * fm;
     for (fm = font_list; fm; fm = fm->next)
       fm->id_memo = -1;
   }
+#endif
   while ((cp = next_row_col_in_range (&r, &c)))
     {
       char *ptr;
@@ -913,8 +914,10 @@ oleo_write_file (
 
       f1 = GET_FORMAT (cp);
       j1 = GET_JST (cp);
-      if (f1 != FMT_DEF || j1 != JST_DEF || cp->cell_font)
+      //if (f1 != FMT_DEF || j1 != JST_DEF || cp->cell_font)
+      if (f1 != FMT_DEF || j1 != JST_DEF )
 	{
+		/*
 	  if (cp->cell_font)
 	    {
 	      if (cp->cell_font->id_memo < 0)
@@ -932,6 +935,7 @@ oleo_write_file (
 			   1.0);
 		}
 	    }
+	    */
 	  (void) fprintf (fp, "F;");
 	  if (c != ccol)
 	    {
@@ -943,8 +947,7 @@ oleo_write_file (
 	      (void) fprintf (fp, "r%u;", r);
 	      crow = r;
 	    }
-	  if (cp->cell_font)
-	    (void) fprintf (fp, "f%d;", cp->cell_font->id_memo);
+	  //if (cp->cell_font) (void) fprintf (fp, "f%d;", cp->cell_font->id_memo);
 	    (void) fprintf (fp, "F%s%c\n",
 			  oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
 	}

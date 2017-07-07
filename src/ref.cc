@@ -399,7 +399,9 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		&& (non_cell.cell_flags.cell_justify == 0)
 		&& (non_cell.cell_flags.cell_type == 0))
 		&& (non_cell.cell_flags.cell_lock == 0)
-		&& !non_cell.cell_formula && !non_cell.cell_font)
+		&& !non_cell.cell_formula 
+		//&& !non_cell.cell_font
+		)
 	return;
       else
 	my_cell = find_or_make_cell (cur_row, cur_col);
@@ -408,7 +410,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       my_cell->cell_refs_to = non_cell.cell_refs_to;
       my_cell->cell_formula = non_cell.cell_formula;
       my_cell->cell_cycle = non_cell.cell_cycle;
-      my_cell->cell_font = non_cell.cell_font;
+      //my_cell->cell_font = non_cell.cell_font;
       my_cell->c_z = non_cell.c_z;
       push_refs (my_cell->cell_refs_from);
       if (my_cell->cell_refs_to)
@@ -431,13 +433,13 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	  non_cell.cell_refs_to = cpf->cell_refs_to;
 	  non_cell.cell_formula = cpf->cell_formula;
 	  non_cell.cell_cycle = cpf->cell_cycle;
-	  non_cell.cell_font = cpf->cell_font;
+	  //non_cell.cell_font = cpf->cell_font;
 	  non_cell.c_z = cpf->c_z;
 	bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
 	  cpf->cell_refs_to = 0;
 	  cpf->cell_formula = 0;
 	  cpf->cell_cycle = 0;
-	  cpf->cell_font = 0;
+	  //cpf->cell_font = 0;
 	}
       return;
     }
@@ -451,7 +453,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		&& (non_cell.cell_flags.cell_justify == 0)
 		&& (non_cell.cell_flags.cell_type == 0))
 		&& (non_cell.cell_flags.cell_lock == 0)
-	&& !cpf->cell_formula && !cpf->cell_font))
+	//&& !cpf->cell_formula && !cpf->cell_font))
+	))
       && !my_cell)
     return;
   if (!my_cell)
@@ -469,14 +472,14 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
   my_cell->cell_refs_to = cpf->cell_refs_to;
   my_cell->cell_formula = cpf->cell_formula;
   my_cell->cell_cycle = cpf->cell_cycle;
-  my_cell->cell_font = cpf->cell_font;
+  //my_cell->cell_font = cpf->cell_font;
   my_cell->c_z = cpf->c_z;
 
   bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
   cpf->cell_refs_to = 0;
   cpf->cell_formula = 0;
   cpf->cell_cycle = 0;
-  cpf->cell_font = 0;
+  //cpf->cell_font = 0;
 
   push_refs (my_cell->cell_refs_from);
   if (my_cell->cell_refs_to)
@@ -500,7 +503,8 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		&& (cpf->cell_flags.cell_justify == 0)
 		&& (cpf->cell_flags.cell_type == 0))
 		&& (cpf->cell_flags.cell_lock == 0)
-	&& !cpf->cell_formula && !cpf->cell_font)) && !my_cell)
+	//&& !cpf->cell_formula && !cpf->cell_font)) && !my_cell)
+	&& !cpf->cell_formula )) && !my_cell)
     return;
   if (!my_cell)
     {
@@ -515,7 +519,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
   my_cell->cell_flags = cpf->cell_flags;
   my_cell->cell_cycle = cpf->cell_cycle;
-  my_cell->cell_font = cpf->cell_font;
+  //my_cell->cell_font = cpf->cell_font;
   my_cell->cell_refs_to = cpf->cell_refs_to;
 
   if (my_cell->cell_refs_to)

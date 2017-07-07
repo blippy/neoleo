@@ -1146,6 +1146,7 @@ DEFUN ("set-default-format",
 "See set-region-format for an explanation of formats.",
 #endif
 
+#if 0
 DEFUN ("set-default-font",
        FDset_default_font, FAset_default_font, set_default_font)
 #ifdef FUNC_ARG_STRINGS
@@ -1163,6 +1164,7 @@ DEFUN ("set-default-font",
 "Under X, this scaling behavior depends on having a wide variety of fonts",
 "installed, and wildcarding point-sizes in x11 font names passed to ",
 "define-font.",
+#endif
 #endif
 
 /* Commands for Inserting Cell Details Into Input Area  */
@@ -1528,6 +1530,7 @@ DEFUN ("write-region-to-file",
 
 /* Setting Font Names for PostScript Printing and X11 */
 
+#if 0
 DEFUN ("define-font", FDdefine_font, FAdefine_font, define_font)
 #ifdef FUNC_ARG_STRINGS
 "wDefine font name? ",
@@ -1552,6 +1555,7 @@ DEFUN ("define-font", FDdefine_font, FAdefine_font, define_font)
 "",
 "		Times-Roman",
 "",
+#endif
 #endif
 
 /* Printing Commands */
@@ -1656,6 +1660,7 @@ DEFUN ("set-x-default-font",
 #endif
 #endif
 
+#if 0
 DEFUN_5 ("set-cell-font", FDset_cell_font, FAset_cell_font,
 	 DFset_cell_font, set_region_font)
 #ifdef FUNC_ARG_STRINGS
@@ -1704,6 +1709,7 @@ DEFUN_5 ("set-region-font", FDset_region_font, FAset_region_font,
 "Under X, this scaling behavior depends on having a wide variety of fonts",
 "installed, and wildcarding point-sizes in x11 font names passed to ",
 "define-font.",
+#endif
 #endif
 
 /* Commands that Trigger Calculation */

@@ -95,7 +95,7 @@ delete_region (struct rng *where)
       if (!pp->cell_formula && !GET_TYP (pp))
 	{
 	  bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-	  pp->cell_font = 0;
+	  //pp->cell_font = 0;
 	  continue;
 	}
       cur_row = rr;
@@ -104,7 +104,7 @@ delete_region (struct rng *where)
       flush_old_value ();
       pp->cell_formula = 0;
       bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-      pp->cell_font = 0;
+      //pp->cell_font = 0;
       push_refs (pp->cell_refs_from);
       io_pr_cell (rr, cc, pp);
     }
@@ -614,7 +614,8 @@ move_region (struct rng *fm, struct rng *to)
 	  cur_row = rt;
 	  cur_col = ct;
 	  my_cell = find_cell (cur_row, cur_col);
-	  if ((!cpf || (!cpf->cell_font &&
+	  if ((!cpf || (
+					  //!cpf->cell_font &&
 		((cpf->cell_flags.cell_format == 0)
 		&& (cpf->cell_flags.cell_precision == 0)
 		&& (cpf->cell_flags.cell_justify == 0)
@@ -627,7 +628,7 @@ move_region (struct rng *fm, struct rng *to)
 	  if (!cpf)
 	    {
 	      bzero(&(my_cell->cell_flags), sizeof(my_cell->cell_flags));
-	      my_cell->cell_font = 0;
+	      //my_cell->cell_font = 0;
 	      my_cell->cell_refs_to = 0;
 	      my_cell->cell_formula = 0;
 	      my_cell->cell_cycle = 0;
@@ -643,14 +644,14 @@ move_region (struct rng *fm, struct rng *to)
 	    flush_old_value ();
 
 	  my_cell->cell_flags = cpf->cell_flags;
-	  my_cell->cell_font = cpf->cell_font;
+	  //my_cell->cell_font = cpf->cell_font;
 	  my_cell->cell_refs_to = cpf->cell_refs_to;
 	  my_cell->cell_formula = cpf->cell_formula;
 	  my_cell->cell_cycle = cpf->cell_cycle;
 	  my_cell->c_z = cpf->c_z;
 
 	  bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
-	  cpf->cell_font = 0;
+	  //cpf->cell_font = 0;
 	  cpf->cell_refs_to = 0;
 	  cpf->cell_formula = 0;
 	  cpf->cell_cycle = 0;

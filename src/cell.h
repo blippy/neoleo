@@ -33,7 +33,7 @@
 
 #include "global.h"
 #include "numeric.h"
-#include "font.h"
+//#include "font.h"
 
 union vals
   {
@@ -61,7 +61,7 @@ struct cell
     /* char *cell_string; */
     struct cell_flags_s cell_flags;
     unsigned short cell_cycle;
-    struct font_memo *cell_font;
+    //struct font_memo *cell_font;
     struct ref_fm *cell_refs_from;
     struct ref_to *cell_refs_to;
     unsigned char *cell_formula;
