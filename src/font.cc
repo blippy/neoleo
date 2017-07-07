@@ -35,7 +35,7 @@
 #include "window.h"
 #include "io-abstract.h"
 #include "cmd.h"
-#include "io-x11.h"
+//#include "io-x11.h"
 #include "io-term.h"
 #include "io-utils.h"
 #include "utils.h"

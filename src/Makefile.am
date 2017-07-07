@@ -1,16 +1,4 @@
 
-GUI_SRCS = 
-GUI_LINK =
-if UseX
-#GUI_DEFINES = -DX_DISPLAY_MISSING
-GUI_DEFINES = -DHAVE_X 
-GUI_SRCS += io-x11.cc 
-GUI_LINK += -lX11
-endif
-
-# Oops. Forth assume 64-bit. cygwin is 32-bit
-#FORTH_HDRS = atlast.h atldef.h
-#FORTH_SRCS = atlast.c atoleo.cc
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
@@ -51,9 +39,7 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 posixtm.y \
 		 main.cc \
 		 shell.cc \
-		 tests.cc \
-		 $(GUI_SRCS) \
-		 $(FORTH_SRCS)
+		 tests.cc 
 	
 
 # not present on some systems like cygwin
@@ -65,7 +51,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 errors.h eval.h font.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
-		 io-generic.h io-term.h io-utils.h io-x11.h \
+		 io-generic.h io-term.h io-utils.h \
 		 ir.h key.h \
 		 line.h list.h lists.h logging.h \
 		 mdi.h \
