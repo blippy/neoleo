@@ -4,7 +4,7 @@ GUI_LINK =
 if UseX
 #GUI_DEFINES = -DX_DISPLAY_MISSING
 GUI_DEFINES = -DHAVE_X 
-GUI_SRCS += io-x11.cc plot.c xrdb.c
+GUI_SRCS += io-x11.cc 
 GUI_LINK += -lX11
 endif
 

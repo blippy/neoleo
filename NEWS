@@ -1,5 +1,7 @@
 ===========================================================================
-VERSION 6.0.0 IN DEVELOPMENT
+VERSION 6.0.0 RELEASED 07-JUL-2017
+
+* Removed mysql functionality
 
 * Page UP/Down and Home work (issue #13)
 
