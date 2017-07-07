@@ -18,7 +18,7 @@ COMMON_FLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
 AM_CFLAGS = $(COMMON_FLAGS)
 # permissive flag is set due to pesky obstack
 AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses
+neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
