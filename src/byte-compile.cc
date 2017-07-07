@@ -71,7 +71,7 @@ extern "C" {
 }
 #include "stringo.h"
 #include "cell.h"
-#include "mysql.h"
+//#include "mysql.h"
 #include "gsl.h"
 #include "byte-compile.h"
 #include "utils.h"
@@ -87,7 +87,7 @@ extern struct function busi_funs[];
 #endif
 extern struct function string_funs[];
 extern struct function cells_funs[];
-extern struct function mysql_functions[];
+//extern struct function mysql_functions[];
 extern struct function gsl_functions[];
 
 extern char *instr;
@@ -267,7 +267,7 @@ static struct function *__usr_funs[] =
 #endif
 	string_funs,
 	cells_funs,
-	mysql_functions,
+	//mysql_functions,
 	gsl_functions,
 	/* Add something here */
 };
@@ -282,7 +282,7 @@ extern int init_busi_function_count(void);
 #endif
 extern int init_string_function_count(void);
 extern int init_cells_function_count(void);
-extern int init_mysql_function_count(void);
+//extern int init_mysql_function_count(void);
 extern int init_gsl_function_count(void);
 /* Add something here */
 
@@ -295,7 +295,7 @@ static init_function_count init_function_counts[] = {
 #endif
 	&init_string_function_count,
 	&init_cells_function_count,
-	&init_mysql_function_count,
+	//&init_mysql_function_count,
 	&init_gsl_function_count
 	/* Add something here */
 };

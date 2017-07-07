@@ -17,7 +17,7 @@
 #include "mdi.h"
 #include "tests.h"
 //#include "graph.h"
-#include "mysql.h"
+//#include "mysql.h"
 //#include "print.h"
 #include "logging.h"
 #include "utils.h"
@@ -131,7 +131,7 @@ main(int argc, char **argv)
 	init_native_language_support();
 	MdiInitialize();	/* Create initial Global structure */
 	//PlotInit();
-	AllocateDatabaseGlobal();
+	//AllocateDatabaseGlobal();
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;

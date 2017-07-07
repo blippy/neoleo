@@ -94,7 +94,7 @@ void x11_graphics() {}
 //#include "postscript.h"
 
 #include "userpref.h"
-#include "mysql.h"
+//#include "mysql.h"
 
 
 #include "list.h"

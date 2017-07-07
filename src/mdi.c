@@ -37,7 +37,7 @@ static char rcsid[] = "$Id: mdi.c,v 1.10 2001/02/13 23:38:06 danny Exp $";
 
 #include "io-abstract.h"
 #include "io-term.h"
-#include "mysql.h"
+//#include "mysql.h"
 #include "global.h"
 
 //#ifdef	HAVE_MOTIF

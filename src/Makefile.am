@@ -49,7 +49,6 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 get_date.h getdate.y \
 		 parse.y \
 		 posixtm.y \
-		 mysql.c   \
 		 main.cc \
 		 shell.cc \
 		 tests.cc \
@@ -69,7 +68,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 io-generic.h io-term.h io-utils.h io-x11.h \
 		 ir.h key.h \
 		 line.h list.h lists.h logging.h \
-		 mdi.h mysql.h \
+		 mdi.h \
 		 node.h  numeric.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
 		 parse.h \
