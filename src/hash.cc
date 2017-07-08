@@ -137,10 +137,12 @@ of char[size].  Free(address) frees same.  */
 #undef FALSE
 #define FALSE          (0)
 #include <ctype.h>
-#define min(a, b)	((a) < (b) ? (a) : (b))
+//#define min(a, b)	((a) < (b) ? (a) : (b))
 
-#include "sysdef.h"		/* For Oleo, specificly. define bzero etc. */
+#include <algorithm>
 #include "hash.h"
+#include "sysdef.h"		/* For Oleo, specificly. define bzero etc. */
+#include "logging.h"
 
 #define DELETED     ((char *)1)	/* guarenteed invalid address */
 #define START_POWER    (11)	/* power of two: size of new hash table */	/* JF was 6 */
@@ -249,8 +251,9 @@ static char hash_found;		/* returned by hash_ask() to stop
 /* FALSE: we inserted a value */
 
 static struct hash_entry *hash_ask ();
-static int hash_code ();
-static char *hash_grow ();
+static int hash_code ( struct hash_control *handle, register char *string);
+static char *hash_grow (struct hash_control *handle);
+static struct hash_entry * hash_ask(struct hash_control *handle, char *string, int access);
 
 
 /*
@@ -317,16 +320,16 @@ hash_die (struct hash_control *handle)
  * buffer or hash_stat[] is exausted.
  */
 void
-hash_say (handle, buffer, bufsiz)
-     register struct hash_control *handle;
-     register int buffer[ /* bufsiz */ ];
-     register int bufsiz;
+hash_say (
+     register struct hash_control *handle,
+     register int buffer[ /* bufsiz */ ],
+     register int bufsiz)
 {
   register int *nd;		/* limit of statistics block */
   register int *ip;		/* scan statistics */
 
   ip = handle->hash_stat;
-  nd = ip + min (bufsiz - 1, STATLENGTH);
+  nd = ip + std::min (bufsiz - 1, STATLENGTH);
   if (bufsiz > 0)
     {				/* trust nothing! bufsiz<=0 is dangerous */
       *buffer++ = STATLENGTH;
@@ -348,9 +351,9 @@ hash_say (handle, buffer, bufsiz)
  */
 char *				/* NULL if string not in table, else */
 /* returns value of deleted symbol */
-hash_delete (handle, string)
-     register struct hash_control *handle;
-     register char *string;
+hash_delete (
+     register struct hash_control *handle,
+     register char *string)
 {
   register char *retval;	/* NULL if string not in table */
   register struct hash_entry *entry;	/* NULL or entry of this
@@ -385,10 +388,10 @@ hash_delete (handle, string)
  * already in the table.
  */
 char *
-hash_replace (handle, string, value)
-     register struct hash_control *handle;
-     register char *string;
-     register char *value;
+hash_replace (
+     register struct hash_control *handle,
+     register char *string,
+     register char *value)
 {
   register struct hash_entry *entry;
   register char *retval;
@@ -418,25 +421,27 @@ hash_replace (handle, string, value)
 char *				/* return error string */
 hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value)
 {
-  register struct hash_entry *entry;
-  register char *retval;
 
-  retval = NULL;
-  if (handle->hash_stat[STAT_USED] > handle->hash_full)
-    retval = hash_grow (handle);
-  if (!retval)
-    {
-      entry = hash_ask (handle, string, STAT__WRITE);
-      if (hash_found)
-	retval = "exists";
-      else
+	log_debug("hash.cc:hash_insert()");
+	register struct hash_entry *entry;
+	register char *retval;
+
+	retval = NULL;
+	if (handle->hash_stat[STAT_USED] > handle->hash_full)
+		retval = hash_grow (handle);
+	if (!retval)
 	{
-	  entry->hash_value = value;
-	  entry->hash_string = string;
-	  handle->hash_stat[STAT_USED] += 1;
+		entry = hash_ask (handle, string, STAT__WRITE);
+		if (hash_found)
+			retval = "exists";
+		else
+		{
+			entry->hash_value = value;
+			entry->hash_string = string;
+			handle->hash_stat[STAT_USED] += 1;
+		}
 	}
-    }
-  return (retval);
+	return (retval);
 }
 
 
@@ -454,10 +459,10 @@ hash_insert (register struct hash_control *handle, register char *string, regist
  * we inserted.
  */
 char *
-hash_jam (handle, string, value)
-     register struct hash_control *handle;
-     register char *string;
-     register char *value;
+hash_jam (
+     register struct hash_control *handle,
+     register char *string,
+     register char *value)
 {
   register char *retval;
   register struct hash_entry *entry;
@@ -488,8 +493,7 @@ hash_jam (handle, string, value)
  * conditionally calls us, but we ALWAYS call hash_jam()! Internal.
  */
 static char *
-hash_grow (handle)		/* make a hash table grow */
-     struct hash_control *handle;
+hash_grow (struct hash_control *handle)
 {
   register struct hash_entry *newwall;
   register struct hash_entry *newwhere;
@@ -614,7 +618,7 @@ hash_grow (handle)		/* make a hash table grow */
  * yet. (The function has no graceful failures.)
  */
 char *
-hash_apply (struct hash_control *handle, char *(*function) ())
+hash_apply (struct hash_control *handle, char *(*function) (char *, char *))
 {
   register struct hash_entry *entry;
   register struct hash_entry *wall;
@@ -653,10 +657,7 @@ hash_find(struct hash_control *handle, char *string)
  * Access argument is to help keep statistics in control block. Internal.
  */
 static struct hash_entry *	/* string slot, may be empty or deleted */
-hash_ask (handle, string, access)
-     struct hash_control *handle;
-     char *string;
-     int access;		/* access type */
+hash_ask(struct hash_control *handle, char *string, int access)
 {
   register char *string1;	/* JF avoid strcmp calls */
   register char *s;
@@ -734,9 +735,7 @@ hash_ask (handle, string, access)
  * Does hashing of symbol string to hash number. Internal.
  */
 static int
-hash_code (handle, string)
-     struct hash_control *handle;
-     register char *string;
+hash_code ( struct hash_control *handle, register char *string)
 {
   register long int h;		/* hash code built here */
   register long int c;		/* each character lands here */
@@ -776,6 +775,7 @@ char command;
 int number;			/* number 0:TABLES-1 of current hashed */
 /* symbol table */
 
+#if 0
 int
 main ()
 {
@@ -877,6 +877,7 @@ main ()
 	}
     }
 }
+#endif
 
 char *
 what (description)

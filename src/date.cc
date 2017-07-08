@@ -38,10 +38,11 @@
 #include "errors.h"
 #include "date.h"
 #include "utils.h"
-#include "posixtm.h"
+#include "posixtm.hh"
 #include "get_date.h"
 
-extern "C" time_t posixtime (char *s);
+//extern "C" time_t posixtime (char *s);
+time_t posixtime (char *s);
 
 struct value
   {

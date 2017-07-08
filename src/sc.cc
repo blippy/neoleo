@@ -40,7 +40,7 @@
 #include "io-utils.h"
 #include "lists.h"
 #include "ref.h"
-#include "parse.h"
+#include "parse.hh"
 #include "regions.h"
 #include "cmd.h"
 #include "decompile.h"

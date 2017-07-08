@@ -6,7 +6,7 @@ YFLAGS = -d
 bin_PROGRAMS = neoleo 
 
 
-BUILT_SOURCES = getdate.c parse.c parse.h posixtm.c posixtm.h 
+BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh 
 CLEANFILES = $(BUILT_SOURCES)
 
 if  UseAsan
@@ -24,8 +24,8 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc forminfo.cc funcs.cc \
-		 gsl.cc hash.c help.cc \
-		 info.c init.c input.c \
+		 gsl.cc hash.cc help.cc \
+		 info.cc init.c input.c \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
 		 ir.c key.c \
 		 line.cc list.cc lists.cc logging.cc \
@@ -34,9 +34,9 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 sc.cc sort.cc stringo.cc stub.c sylk.cc utils.cc \
 		 window.cc \
 		 defuns.cc \
-		 get_date.h getdate.y \
-		 parse.y \
-		 posixtm.y \
+		 get_date.h getdate.yy \
+		 parse.yy \
+		 posixtm.yy \
 		 main.cc \
 		 shell.cc \
 		 tests.cc 
@@ -57,8 +57,8 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 mdi.h \
 		 node.h  numeric.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
-		 parse.h \
-		 posixtm.h proto.h ref.h \
+		 parse.hh \
+		 posixtm.hh proto.h ref.h \
 		 regions.h sc.h sort.h stringo.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
@@ -68,4 +68,12 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 noinst_HEADERS += obstack_a.h
 
 # byte-compile.o : parse.h
-ref.o : parse.h
+ref.o : parse.hh
+
+#parse.cc parse.hh : parse.y
+#	bison  -d parse.y -o parse.cc
+#	rm -f parse.c
+
+#posixtm.cc posixxtm.hh : posixtm.y
+#	bison -d posixtm.y -o posixtm.cc
+#	rm -f posixtm.c

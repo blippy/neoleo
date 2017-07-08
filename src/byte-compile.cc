@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hash.h"
 #include "sysdef.h"
 
 #ifdef	HAVE_MALLOC_H
@@ -61,14 +62,13 @@ local_free (p)
 #include "global.h"
 #include "node.h"
 #include "eval.h"
-#include "hash.h"
 #include "ref.h"
 #include "sort.h"
 #include "busi.h"
 #include "date.h"
-extern "C" {
-#include "parse.h"
-}
+//extern "C" {
+#include "parse.hh"
+//}
 #include "stringo.h"
 #include "cell.h"
 //#include "mysql.h"

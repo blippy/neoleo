@@ -56,9 +56,9 @@ static struct tm t;
 
 time_t mktime ();
 
-#define yyparse posixtime_yyparse
+//#define yyparse posixtime_yyparse
 static int yylex ();
-static int yyerror ();
+static int yyerror (char * s);
 
 //#ifdef __cplusplus
 //}
@@ -67,6 +67,7 @@ static int yyerror ();
 
 %}
 
+%define api.prefix {yytm}
 %token DIGIT
 
 %%
@@ -158,7 +159,7 @@ yylex ()
 }
 
 static int
-yyerror ()
+yyerror( char * s)
 {
   return 0;
 }
@@ -180,8 +181,7 @@ posixtime (char *s)
 /* Parse a POSIX-style date and return it, or NULL for an error.  */
 
 struct tm *
-posixtm (s)
-     char *s;
+posixtm ( char *s)
 {
   if (posixtime (s) == -1)
     return NULL;

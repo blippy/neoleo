@@ -23,6 +23,8 @@
 
 %}
 
+/* %output="parse.cc" */
+
 %right '?' ':'
 /* %left '|' */
 %left '&'
@@ -57,11 +59,12 @@
 #include "node.h"
 #include "eval.h"
 #include "ref.h"
+#include "hash.h"
 
 int yylex ();
 void yyerror (char *);
 VOIDSTAR parse_hash;
-extern VOIDSTAR hash_find();
+//extern VOIDSTAR hash_find();
 
 /* This table contains a list of the infix single-char functions */
 unsigned char fnin[] = {
@@ -326,7 +329,7 @@ int
 yylex ()
 {
 	int ch;
-	struct node *new;
+	struct node *a_new;
 	int isflt;
 	char *begin;
 	char *tmp_str;
@@ -348,9 +351,9 @@ yylex ()
 	if(ch=='(' || ch==',' || ch==')')
 		return ch;
 
-	new=(struct node *)obstack_alloc(&tmp_mem,sizeof(struct node));
-	new->add_byte=0;
-	new->sub_value=0;
+	a_new=(struct node *)obstack_alloc(&tmp_mem,sizeof(struct node));
+	a_new->add_byte=0;
+	a_new->sub_value=0;
 	switch(ch) {
 	case 0:
 		return 0;
@@ -373,13 +376,13 @@ yylex ()
 				tmp_str++;
 		}
 		if(isflt) {
-			new->n_x.v_float=astof((char **)(&begin));
+			a_new->n_x.v_float=astof((char **)(&begin));
 			byte_value=CONST_FLT;
 		} else {
-			new->n_x.v_int=astol((char **)(&begin));
+			a_new->n_x.v_int=astol((char **)(&begin));
 			if(begin!=tmp_str) {
 				begin=instr-1;
-				new->n_x.v_float=astof((char **)(&begin));
+				a_new->n_x.v_float=astof((char **)(&begin));
 				byte_value=CONST_FLT;
 			} else
 				byte_value=CONST_INT;
@@ -399,7 +402,7 @@ yylex ()
 			parse_error=NO_QUOTE;
 			return ERROR;
 		}
-		tmp_str=new->n_x.v_string=(char *)ck_malloc(1+instr-begin);
+		tmp_str=a_new->n_x.v_string=(char *)ck_malloc(1+instr-begin);
 		while(begin!=instr) {
 			unsigned char n;
 
@@ -503,7 +506,7 @@ yylex ()
 					break;
 			if(n>ERR_MAX)
 				n=BAD_CHAR;
-			new->n_x.v_int=n;
+			a_new->n_x.v_int=n;
 			byte_value=CONST_ERR;
 		}
 		*instr=ch;
@@ -521,7 +524,7 @@ yylex ()
 			n=instr-begin;
 		} else {
 			begin=instr-1;
-			byte_value=parse_cell_or_range(&begin,&(new->n_x.v_rng));
+			byte_value=parse_cell_or_range(&begin,&(a_new->n_x.v_rng));
 			if(byte_value) {
 				if((byte_value& ~0x3)==R_CELL)
 					ch=L_CELL;
@@ -541,7 +544,7 @@ yylex ()
 			if(*instr!='(') {
 				ch=L_VAR;
 				byte_value=VAR;
-				new->n_x.v_var=find_or_make_var(begin,n);
+				a_new->n_x.v_var=find_or_make_var(begin,n);
 				break;
 			}
 		}
@@ -561,7 +564,7 @@ yylex ()
 			for(nn=0;nn<n_usr_funs;nn++) {
 				if(fp>=&usr_funs[nn][0] && fp<=&usr_funs[nn][usr_n_funs[nn]]) {
 					byte_value=USR1+nn;
-					new->sub_value=fp-&usr_funs[nn][0];
+					a_new->sub_value=fp-&usr_funs[nn][0];
 					break;
 				}
 			}
@@ -584,8 +587,8 @@ yylex ()
 		break;
 	}
 	/* new->node_type=ch; */
-	new->comp_value=byte_value;
-	yylval=new;
+	a_new->comp_value=byte_value;
+	yylval=a_new;
 	return ch;
 }
 

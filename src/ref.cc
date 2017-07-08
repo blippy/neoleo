@@ -45,7 +45,7 @@
 #include "io-generic.h"
 #include "hash.h"
 #include "byte-compile.h"
-#include "parse.h"
+#include "parse.hh"
 #include "ref.h"
 #include "cmd.h"
 #include "lists.h"

@@ -27,7 +27,7 @@ using std::vector;
 //#include "mysql.h"
 #include "ref.h"
 extern "C" {
-#include "parse.h"
+#include "parse.hh"
 }
 #include "byte-compile.h"
 #include "decompile.h"
