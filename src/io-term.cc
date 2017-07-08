@@ -90,7 +90,6 @@ void x11_graphics() {}
 #include "window.h"
 #include "funcs.h"
 //#include "graph.h"
-#include "mdi.h"
 //#include "postscript.h"
 
 #include "userpref.h"
