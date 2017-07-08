@@ -30,8 +30,6 @@ extern "C" {
 void	MdiOpen();
 void	MdiClose();
 void	MdiInitialize(void);
-void	MdiSelectGlobal(int offset1, int offset2, void *ptr);
-int	MdiHasFile(void);
 
 #ifdef __cplusplus
 }

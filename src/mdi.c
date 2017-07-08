@@ -56,33 +56,7 @@ static struct OleoGlobal	*globals = 0;
 
 #define	NGLOBALS_INC	10
 
-/*
- * Hack.
- * This file only works well with Motif/LessTif anyway
-/
-#ifndef	HAVE_MOTIF
-void MotifGlobalInitialize()
-{
-}
 
-void MessageAppend()
-{
-}
-#endif
-*/
-
-void MdiError(int offset1, int offset2, void *ptr)
-{
-#if 0
-	fprintf(stderr,
-		"MdiSelectGlobal: no match for offset %d,%d ptr %p\n",
-		offset1, offset2, ptr);
-#endif
-	// MessageAppend becomes io_append_message 
-	io_append_message(True,
-		"MdiSelectGlobal: no match for offset %d,%d ptr %p\n",
-		offset1, offset2, ptr);
-}
 
 static void AllocateSubStructures(void)
 {
@@ -175,31 +149,3 @@ MdiClose()
 	}
 }
 
-void
-MdiSelectGlobal(int offset1, int offset2, void *ptr)
-{
-	int	i;
-	char	**p, **q;
-
-	for (i=0; i < maxglobals; i++)
-		if (globals[i].valid) {
-			p = (char **) (((char *)&globals[i]) + offset1);
-			q = (char **) (*p + offset2);
-			if (*q == ptr) {
-				Global = &globals[i];
-#if 0
-				fprintf(stderr, "MdiSelectGlobal: match for %d,%d,%p -> %p\n",
-					offset1, offset2, ptr, Global);
-#endif
-				return;
-			}
-		}
-
-	MdiError(offset1, offset2, ptr);
-}
-
-int
-MdiHasFile(void)
-{
-	return	Global->FileName != NULL;
-}
