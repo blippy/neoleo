@@ -27,19 +27,12 @@ extern "C" {
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#ifndef	_MDI_H_
-//#define	_MDI_H_
-
 void	MdiOpen();
 void	MdiClose();
 void	MdiInitialize(void);
 void	MdiSelectGlobal(int offset1, int offset2, void *ptr);
 int	MdiHasFile(void);
-void	MdiQuit(void);
 
 #ifdef __cplusplus
 }
 #endif
-
-
-//#endif //	_MDI_H_

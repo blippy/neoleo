@@ -203,8 +203,3 @@ MdiHasFile(void)
 {
 	return	Global->FileName != NULL;
 }
-
-void
-MdiQuit(void)
-{
-}
