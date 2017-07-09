@@ -1,6 +1,6 @@
 #pragma once
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -32,5 +32,5 @@ void	MdiClose();
 void	MdiInitialize(void);
 
 #ifdef __cplusplus
-}
+//}
 #endif
