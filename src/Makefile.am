@@ -31,7 +31,7 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 line.cc list.cc lists.cc logging.cc \
 		 mdi.cc oleofile.cc \
 		 ref.cc regions.cc \
-		 sc.cc sort.cc stringo.cc stub.c sylk.cc utils.cc \
+		 sc.cc sort.cc stringo.cc stub.cc sylk.cc utils.cc \
 		 window.cc \
 		 defuns.cc \
 		 get_date.h getdate.yy \

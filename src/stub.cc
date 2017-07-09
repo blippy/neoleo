@@ -87,7 +87,7 @@ NAME ( \
 { \
   struct command_arg * argv[3]; \
   find_args (argv, 3, frame); \
-  frame->cmd->func_func \
+  ((void (*) (TYPE1, TYPE2, TYPE3)) frame->cmd->func_func) \
     (PRE1 argv[0]->val.VAL1, \
      PRE2 argv[1]->val.VAL2, \
      PRE3 argv[2]->val.VAL3); \
@@ -100,7 +100,7 @@ NAME ( \
 { \
   struct command_arg * argv[4]; \
   find_args (argv, 4, frame); \
-  frame->cmd->func_func \
+  ((void (*) (TYPE1, TYPE2, TYPE3, TYPE4)) frame->cmd->func_func) \
     (PRE1 argv[0]->val.VAL1, \
      PRE2 argv[1]->val.VAL2, \
      PRE3 argv[2]->val.VAL3, \
@@ -114,7 +114,7 @@ NAME ( \
 { \
   struct command_arg * argv[5]; \
   find_args (argv, 5, frame); \
-  frame->cmd->func_func \
+  ((void (*) (TYPE1, TYPE2, TYPE3, TYPE4, TYPE5)) frame->cmd->func_func) \
     (PRE1 argv[0]->val.VAL1, \
      PRE2 argv[1]->val.VAL2, \
      PRE3 argv[2]->val.VAL3, \
@@ -141,16 +141,17 @@ stub_isssssssss (
 {
   struct command_arg * argv[10];
   find_args (argv, 10, frame);
-  frame->cmd->func_func (argv[0]->val.integer,
-			 argv[1]->val.string,
-			 argv[2]->val.string,
-			 argv[3]->val.string,
-			 argv[4]->val.string,
-			 argv[5]->val.string,
-			 argv[6]->val.string,
-			 argv[7]->val.string,
-			 argv[8]->val.string,
-			 argv[9]->val.string);
+  ((void (*) (int, char *, char *, char *, char *, char *, char *, char *, char *, char *)) frame->cmd->func_func) 
+	  ((int) argv[0]->val.integer,
+			 (char *) argv[1]->val.string,
+			 (char *)argv[2]->val.string,
+			 (char *) argv[3]->val.string,
+			 (char *) argv[4]->val.string,
+			 (char *) argv[5]->val.string,
+			 (char *) argv[6]->val.string,
+			 (char *) argv[7]->val.string,
+			 (char *) argv[8]->val.string,
+			 (char *) argv[9]->val.string);
 }
 
 /* Single character type-codes denote the types of arguments.  A string

@@ -38,7 +38,7 @@
 #include "info.h"
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 typedef void (*alarm_fn)(void);
 
@@ -369,7 +369,7 @@ void set_curow(int nrow);
 void set_cucol(int nrow);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 

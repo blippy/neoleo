@@ -22,7 +22,7 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 #include "global.h"
@@ -132,7 +132,7 @@ extern void init_named_macro_strings (void);
 extern void name_macro_string (char * name, char * str);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 

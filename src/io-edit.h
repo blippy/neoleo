@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 
@@ -64,7 +64,7 @@ extern void exit_self_inserting (int c);
 extern void insert_context_word (void);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 
