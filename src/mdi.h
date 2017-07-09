@@ -1,9 +1,4 @@
 #pragma once
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
-
 /*
  *  $Id: mdi.h,v 1.4 2000/08/10 21:02:51 danny Exp $
  *
@@ -27,10 +22,5 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-void	MdiOpen();
-void	MdiClose();
 void	MdiInitialize(void);
 
-#ifdef __cplusplus
-//}
-#endif
