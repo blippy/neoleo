@@ -25,9 +25,9 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc forminfo.cc funcs.cc \
 		 gsl.cc hash.cc help.cc \
-		 info.cc init.c input.c \
+		 info.cc init.cc input.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
-		 ir.c key.c \
+		 ir.cc key.cc \
 		 line.cc list.cc lists.cc logging.cc \
 		 mdi.cc oleofile.cc \
 		 ref.cc regions.cc \
