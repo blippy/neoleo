@@ -65,17 +65,6 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 using std::cerr;
 using std::endl;
 
-#ifdef HAVE_X
-//#pragma message "HAVE_X is defined"
-#include "io-x11.h"
-bool have_x = true;
-#else
-#pragma message "HAVE_X is undefined"
-bool have_x = false;
-void get_x11_args() {}
-void x11_graphics() {}
-#endif
-
 
 #include "key.h"
 #include "line.h"
@@ -1155,16 +1144,6 @@ choose_display(bool force_cmd_graphics)
 
 	if(force_cmd_graphics || user_wants_headless) {
 		headless_graphics();
-		return;
-	}
-
-#ifndef HAVE_X
-	have_x = false;
-#endif
-	bool no_display = NULL == getenv("DISPLAY");
-	if(have_x && ! no_display) {
-		x11_graphics();
-		using_x = true;
 		return;
 	}
 
