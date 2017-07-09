@@ -1460,45 +1460,6 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 	return 0;
 }
 
-static struct file_formats_s {
-	char	*name;
-	char	*format;
-} file_formats[] = {
-	{ "oleo",	"oleo" },
-	{ "sylk",	"[sS]*[lL][kK]" },
-	{ "sc",		"sc" },
-	{ "list",	"list" },
-	{ "csv",	"[cC][sS][vV]" },
-	{ "dbf",	"[dD][bB][fF]" },
-#ifdef	HAVE_PANIC_SAVE
-	{ "panic",	"panic" },
-#endif
-	{ "sylk-noa0",	"sylk" },
-	{ NULL,	NULL }
-};
-
-char *
-file_get_format(int i)
-{
-	int	m = sizeof(file_formats) / sizeof(struct file_formats_s) - 1;
-
-	if (i > m || i <= 0)
-		return NULL;
-
-	return file_formats[i-1].name;
-}
-
-char *
-file_get_pattern(char *fmt)
-{
-	int	i, m = sizeof(file_formats) / sizeof(struct file_formats_s) - 1;
-
-	for (i=0; i<m; i++) {
-		if (strcmp(fmt, file_formats[i].name) == 0)
-			return file_formats[i].format;
-	}
-	return NULL;
-}
 
 void
 read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
