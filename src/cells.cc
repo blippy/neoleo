@@ -74,133 +74,139 @@ struct value
 
 
 static int
-cell_mc (
-     long row,
-     long col,
-     char *dowhat,
-     struct value *p)
+cell_mc ( long row, long col, char *dowhat, struct value *p)
 {
-  struct func
-    {
-      char *name;
-      int typ;
-    };
-
-  static struct func cell_funs[] =
-  {
-    {"row", TYP_INT},		/* 1 */
-    {"column", TYP_INT},	/* 2 */
-    {"width", TYP_INT},		/* 3 */
-    {"lock", TYP_STR},		/* 4 */
-    {"protection", TYP_STR},	/* 5 */
-    {"justify", TYP_STR},	/* 6 */
-    {"alignment", TYP_STR},	/* 7 */
-    {"fmt", TYP_STR},		/* 8 */
-    {"format", TYP_STR},	/* 9 */
-    {"type", TYP_STR},		/* 10 */
-    {"formula", TYP_STR},	/* 11 */
-    {"value", 0},		/* 12 */
-    {0, 0}
-  };
-
-  CELL *cell_ptr;
-  char *strptr;
-  struct func *func;
-  struct func *f1;
-  int n;
-
-  n = strlen (dowhat) - 1;
-  f1 = 0;
-  for (func = cell_funs; func->name; func++)
-    if (func->name[0] == dowhat[0]
-	&& (n == 0 || !strincmp (&(func->name[1]), &dowhat[1], n)))
-      {
-	if (f1)
-	  return BAD_INPUT;
-	f1 = func;
-      }
-  if (!f1)
-    return BAD_INPUT;
-  p->type = f1->typ;
-  switch (f1 - cell_funs)
-    {
-    case 0:
-      p->Int = row;
-      break;
-    case 1:
-      p->Int = col;
-      break;
-    case 2:
-      p->Int = get_width (col);
-      break;
-    case 3:
-    case 4:
-      cell_ptr = find_cell (row, col);
-      p->String = ( (cell_ptr ? GET_LCK (cell_ptr) : default_lock)
-		   ? "locked"
-		   : "unlocked");
-      break;
-    case 5:
-    case 6:
-      cell_ptr = find_cell (row, col);
-      p->String = jst_to_str (cell_ptr ?  GET_JST (cell_ptr) : default_jst); 
-      break;
-    case 7:
-    case 8:
-      p->String = cell_format_string(find_cell(row, col));
-      break;
-    case 9:
-      cell_ptr = find_cell (row, col);
-      if (cell_ptr)
-	switch (GET_TYP (cell_ptr))
-	  {
-	  case TYP_FLT:
-	    p->String = "float";
-	    break;
-	  case TYP_INT:
-	    p->String = "integer";
-	    break;
-	  case TYP_STR:
-	    p->String = "string";
-	    break;
-	  case TYP_BOL:
-	    p->String = "boolean";
-	    break;
-	  case TYP_ERR:
-	    p->String = "error";
-	    break;
-	  default:
-	    p->String = "unknown";
-	  }
-      else
-	p->String = "null";
-      break;
-    case 10:
-      cell_ptr = find_cell (row, col);
-      if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->cell_formula))
+	struct func
 	{
-	  strptr = decomp (row, col, cell_ptr);
-	  p->String = obstack_alloc (&tmp_mem, strlen (strptr) + 1);
-	  strcpy (p->String, strptr);
-	  decomp_free ();
-	}
-      else
-	p->String = "";
-      break;
-    case 11:
-      cell_ptr = find_cell (row, col);
-      if (cell_ptr)
+		char *name;
+		int typ;
+	};
+
+	static struct func cell_funs[] =
 	{
-	  p->type = GET_TYP (cell_ptr);
-	  p->x = cell_ptr->c_z;
+		{"row", TYP_INT},		// 0
+		{"column", TYP_INT},	// 1 
+		{"width", TYP_INT},		// 2 
+		{"lock", TYP_STR},		// 3 
+		{"protection", TYP_STR},	// 4 
+		{"justify", TYP_STR},	// 5 
+		{"alignment", TYP_STR},	// 6 
+		{"fmt", TYP_STR},		// 7 
+		{"format", TYP_STR},	// 8 
+		{"type", TYP_STR},		// 9
+		{"formula", TYP_STR},	// 10
+		{"value", 0},		// 11
+		{0, 0}
+	};
+
+	//CELL *cell_ptr;
+	//char *strptr;
+	struct func *func;
+	struct func *f1;
+	int n;
+
+	n = strlen (dowhat) - 1;
+	f1 = 0;
+	for (func = cell_funs; func->name; func++)
+		if (func->name[0] == dowhat[0]
+				&& (n == 0 || !strincmp (&(func->name[1]), &dowhat[1], n)))
+		{
+			if (f1)
+				return BAD_INPUT;
+			f1 = func;
+		}
+	if (!f1)
+		return BAD_INPUT;
+	p->type = f1->typ;
+	switch (f1 - cell_funs)
+	{
+		case 0:
+			p->Int = row;
+			break;
+		case 1:
+			p->Int = col;
+			break;
+		case 2:
+			p->Int = get_width (col);
+			break;
+		case 3:
+		case 4:
+			{
+				CELL* cell_ptr = find_cell (row, col);
+				p->String = ( (cell_ptr ? GET_LCK (cell_ptr) : default_lock)
+						? "locked"
+						: "unlocked");
+			}
+			break;
+		case 5:
+		case 6:
+			{
+				CELL* cell_ptr = find_cell (row, col);
+				p->String = jst_to_str (cell_ptr ?  GET_JST (cell_ptr) : default_jst); 
+			}
+			break;
+		case 7:
+		case 8:
+			p->String = cell_format_string(find_cell(row, col));
+			break;      
+		case 9:
+			{
+				CELL* cell_ptr = find_cell (row, col);
+				if (cell_ptr)
+					switch (GET_TYP (cell_ptr))
+					{
+						case TYP_FLT:
+							p->String = "float";
+							break;
+						case TYP_INT:
+							p->String = "integer";
+							break;
+						case TYP_STR:
+							p->String = "string";
+							break;
+						case TYP_BOL:
+							p->String = "boolean";
+							break;
+						case TYP_ERR:
+							p->String = "error";
+							break;
+						default:
+							p->String = "unknown";
+					}
+				else
+					p->String = "null";
+			}
+			break;
+		case 10:
+			{
+				CELL* cell_ptr = find_cell (row, col);
+				if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->cell_formula))
+				{
+					char* strptr = decomp (row, col, cell_ptr);
+					p->String = obstack_alloc (&tmp_mem, strlen (strptr) + 1);
+					strcpy (p->String, strptr);
+					decomp_free ();
+				}
+				else
+					p->String = "";
+				break;
+			}
+		case 11:
+			{
+				CELL* cell_ptr = find_cell (row, col);
+				if (cell_ptr)
+				{
+					p->type = GET_TYP (cell_ptr);
+					p->x = cell_ptr->c_z;
+				}
+				else
+					p->type = 0;
+			}
+			break;
+		default:
+			return BAD_INPUT;
 	}
-      else
-	p->type = 0;
-      break;
-    default:
-      return BAD_INPUT;
-    }
-  return 0;
+	return 0;
 }
 
 
