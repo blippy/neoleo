@@ -12,7 +12,8 @@ AC_ARG_WITH([gprof],
 AM_CONDITIONAL([WITH_GPROF], [test "x$with_gprof" = "xyes"])
 
 AS_IF([test "x$with_gprof" = "xyes"], [
-  AC_SUBST([GPROF_CXXFLAGS], [-pg])
+  dnl AC_SUBST([GPROF_CXXFLAGS], [-pg])
+  AC_SUBST([CXXFLAGS], ["$CXXFLAGS -pg"])
 ])
 
 AC_MSG_NOTICE([checking if gprof profiling required ... $with_gprof])

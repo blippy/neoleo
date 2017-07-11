@@ -28,4 +28,4 @@ config.status
 neoleo
 ylwrap
 *.old
-stamp-h1
+stamp-h*
