@@ -124,14 +124,9 @@ main(int argc, char **argv)
 	int command_line_file = 0;	/* was there one? */
 
 
-#ifdef HAVE_FORTH
-	init_atoleo();
-#endif
 
 	init_native_language_support();
 	MdiInitialize();	/* Create initial Global structure */
-	//PlotInit();
-	//AllocateDatabaseGlobal();
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;
@@ -155,8 +150,6 @@ main(int argc, char **argv)
 	choose_display(force_cmd_graphics);
 	io_open_display ();
 
-	//init_graphing ();
-	//PrintInit();
 	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
 
 	init_maps_and_macros();
@@ -164,10 +157,6 @@ main(int argc, char **argv)
 	oleo_catch_signals(&got_sig);
 
 	if(!ignore_init_file) read_init_files();
-
-#ifdef HAVE_FORTH
-	try_reading_forth_file(command_line_forth_file);
-#endif
 
 	if (option_filter) {
 		read_file_and_run_hooks(stdin, 0, "stdin");
