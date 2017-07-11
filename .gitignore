@@ -1,5 +1,7 @@
 neoleo-4.0.1/
 neoleo-4.0.1X/
+config.h
+config.h.in
 config.guess
 config.sub
 .libs
@@ -26,3 +28,4 @@ config.status
 neoleo
 ylwrap
 *.old
+stamp-h1

@@ -3,15 +3,13 @@
 # mcarter 22-Dec-2016 my own configuration experiments.
 # Everyone else should ignore this file
 
-#./configure 'CFLAGS=-O0 -g' --prefix=$HOME/.local
-
-
-#MX=--with-motif # default: commented
-#SAN=-fsanitize=address
+DBG=--with-debug
+#GPROF=--with-gprof
 #SAN=--with-asan
+OPTS="$DBG $GPROF $SAN"
 
-#./configure $MX $SAN "CFLAGS= -Werror  -O0 -g " "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-./configure $MX $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
+#./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
+./configure $OPTS --prefix=$HOME/.local
 
 
 

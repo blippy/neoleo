@@ -14,10 +14,10 @@ ASAN_FLAGSC = -fsanitize=address
 ASAN_FLAGSL = -lasan
 endif
 
-COMMON_FLAGS = $(ASAN_FLAGSC) $(GUI_DEFINES)  -DDATADIR="\"$(datadir)\""
-AM_CFLAGS = $(COMMON_FLAGS)
+COMMON_FLAGS = $(ASAN_FLAGSC) -DDATADIR="\"$(datadir)\""
+#AM_CFLAGS = $(COMMON_FLAGS)
 # permissive flag is set due to pesky obstack
-AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings
+AM_CXXFLAGS = -std=gnu++11 $(COMMON_FLAGS) -fpermissive -Wno-write-strings $(GPROF_CXXFLAGS)
 neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
 #neoleo_LDADD += -lasan
 neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
@@ -67,8 +67,9 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 
 noinst_HEADERS += obstack_a.h
 
-# byte-compile.o : parse.h
+byte-compile.o : parse.hh
 ref.o : parse.hh
+sc.o : parse.hh	
 
 #parse.cc parse.hh : parse.y
 #	bison  -d parse.y -o parse.cc
