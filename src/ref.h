@@ -25,11 +25,11 @@
 #include "cell.h"
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 extern struct var * find_or_make_var (char *string, int len);
 #ifdef __cplusplus
-}
+//}
 #endif
 
 /* Operations that add or remove cells to the sparse array
@@ -45,7 +45,7 @@ extern struct cell * my_cell;
 
 extern void set_cell (CELLREF row, CELLREF col, const char *string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
-extern char * quote_new_value (CELLREF row, CELLREF col, char *string);
+//extern char * quote_new_value (CELLREF row, CELLREF col, char *string);
 extern char * set_new_value (CELLREF row, CELLREF col, int type, union vals *value);
 extern char * read_new_value (CELLREF row, CELLREF col, char *form, char *val);
 extern void move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);

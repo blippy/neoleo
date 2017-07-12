@@ -171,26 +171,6 @@ new_value (CELLREF row, CELLREF col, const char *string)
   return 0;
 }
 
-char *
-quote_new_value(CELLREF row, CELLREF col, char *string)
-{
-	int	l;
-	char	*r, *s;
-
-	l = strlen(string);
-
-	s = (char *)malloc(l+3);
-	s[0] = '"';
-	s[1] = '\0';
-	strcat(s, string);
-	strcat(s, "\"");
-
-	r = new_value(row, col, s);
-	free(s);
-
-	return r;
-}
-
 /* This sets the cell to a constant, stored in VALUE, whose type is in TYPE */
 char *
 set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
