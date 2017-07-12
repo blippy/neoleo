@@ -1,6 +1,8 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
 #include <algorithm>
 #include <errno.h>
+#include <functional>
+#include <map>
 #include <unistd.h>
 #include <iostream>
 #include <string>
@@ -20,6 +22,8 @@
 using std::cin;
 using std::cout;
 using std::endl;
+using std::function;
+using std::map;
 
 static void 
 do_nothing(void)
@@ -169,6 +173,7 @@ string spaces(int n)
 static void
 show_cells()
 {
+	cout << "102 OK Terminated by dot" << endl;
 	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
 		for(int c=1; c< 10; ++c) {
@@ -181,29 +186,37 @@ show_cells()
 		}
 		cout << "\n";
 	}
+	cout << "." <<endl;
 }
+
+static void type_cell()
+{
+	cout << "101 OK value appears on next line\n" 
+		<< print_cell(find_cell(curow, cucol))
+		<< endl;
+}
+static map<string, function<void()> > func_map = {
+	{"type-cell", type_cell},
+	{"view", show_cells}
+};
 
 static void
 _io_run_main_loop()
 {
 	cout << "100 OK Type 'bye' to exit" << endl;
 
-#ifdef HAVE_FORTH	
-	forth_repl();
-	return;
-#endif
-
 
 	//cout << "100 OK" << "\n";
 	std::string line;
 	while(getline(std::cin, line)) {
-		if(line == "view") {
-			//show_curses_view(); // doesn't seem to work
-			cout << "101 OK Terminated by dot" << endl;
-			show_cells();
-			cout << "." <<endl;
+
+		// try to find a canned function and execute it
+		auto it = func_map.find(line);
+		if(it != func_map.end()) {
+			(it->second)();
 			continue;
 		}
+
 
 		if(line == "bye") {
 			cout << "300 OK bye" << endl;
