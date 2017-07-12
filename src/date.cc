@@ -41,7 +41,6 @@
 #include "posixtm.hh"
 #include "get_date.h"
 
-//extern "C" time_t posixtime (char *s);
 time_t posixtime (char *s);
 
 struct value
@@ -55,11 +54,6 @@ struct value
 #define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
-
-
-//struct timeb;
-//extern time_t get_date (char *, struct timeb *);
-//extern time_t posixtime (char *);
 
 
 
