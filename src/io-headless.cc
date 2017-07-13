@@ -173,7 +173,7 @@ string spaces(int n)
 static void
 show_cells()
 {
-	cout << "102 OK Terminated by dot" << endl;
+	//cout << "102 OK Terminated by dot" << endl;
 	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
 		for(int c=1; c< 10; ++c) {
@@ -186,14 +186,14 @@ show_cells()
 		}
 		cout << "\n";
 	}
-	cout << "." <<endl;
+	//cout << "." <<endl;
 }
 
 static void type_cell()
 {
-	cout << "101 OK value appears on next line\n" 
-		<< print_cell(find_cell(curow, cucol))
-		<< endl;
+	//cout << "101 OK value appears on next line\n" 
+	cout	<< print_cell(find_cell(curow, cucol))
+		<< "\n";
 }
 static map<string, function<void()> > func_map = {
 	{"type-cell", type_cell},
@@ -203,7 +203,7 @@ static map<string, function<void()> > func_map = {
 static void
 _io_run_main_loop()
 {
-	cout << "100 OK Type 'bye' to exit" << endl;
+	//cout << "100 OK Type 'bye' to exit" << endl;
 
 
 	//cout << "100 OK" << "\n";
@@ -214,21 +214,27 @@ _io_run_main_loop()
 		auto it = func_map.find(line);
 		if(it != func_map.end()) {
 			(it->second)();
+			cout << std::flush;
 			continue;
 		}
 
 
-		if(line == "bye") {
+		/*if(line == "bye") {
 			cout << "300 OK bye" << endl;
 			return;
 		}
+		*/
+		if(line == "q") return;
 
 		try {
 			execute_command(line.c_str());
-			std::cout << "100 OK" << endl;
+			//std::cout << "100 OK" << endl;
 		} catch (const OleoJmp&) {
-			cout << "200 FAIL Caught OleoJmp" << endl;
+			//cout << "200 FAIL Caught OleoJmp" << endl;
+			cout << "?\n";
 		}
+
+		cout << std::flush;
 
 	}
 	
