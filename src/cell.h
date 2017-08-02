@@ -55,9 +55,10 @@ union vals {
 
 enum ValType { TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
-struct value {
-	ValType type;
-	union vals x;
+class value {
+	public:
+		ValType type;
+		union vals x;
 };
 
 /* An actual cell structure.  These cannot be variable-length, since they are
