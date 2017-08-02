@@ -3,10 +3,14 @@
 # mcarter 22-Dec-2016 my own configuration experiments.
 # Everyone else should ignore this file
 
+if [ ! -f configure ]; then
+	autoreconf -iv
+fi
+
 DBG=--with-debug
 #GPROF=--with-gprof
 #SAN=--with-asan
-OPTS="$DBG $GPROF $SAN"
+OPTS="$DBG $GPROF $SAN "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
 ./configure $OPTS --prefix=$HOME/.local

@@ -1,4 +1,10 @@
-AM_CXXFLAGS = -std=gnu++11 -fpermissive -Wno-write-strings -DDATADIR="\"$(datadir)\""
+if  WITH_ASAN
+ASAN_FLAGSC = -fsanitize=address -fno-omit-frame-pointer
+ASAN_FLAGSL = -lasan
+endif
+
+# permissive flag is set due to pesky obstack
+AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings -DDATADIR="\"$(datadir)\""
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
@@ -9,14 +15,14 @@ bin_PROGRAMS = neoleo
 BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh 
 CLEANFILES = $(BUILT_SOURCES)
 
-if  UseAsan
-ASAN_FLAGSC = -fsanitize=address
-ASAN_FLAGSL = -lasan
-endif
-
-# permissive flag is set due to pesky obstack
-neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
+#neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
+neoleo_LDADD = -lm -lncurses -lpanel $(ASAN_FLAGSL)  
+#neoleo_LDADD = -lm -lncurses -lpanel
+#if WITH_ASAN
+#AM_CXXFLAGS += -fsanitize=address
 #neoleo_LDADD += -lasan
+#endif
+
 neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \

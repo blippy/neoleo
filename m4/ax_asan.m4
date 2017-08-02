@@ -1,13 +1,10 @@
 AC_DEFUN([AX_ASAN], [
-AC_ARG_WITH(asan,
-     [  --with-asan       Compile using sanitiser],
-     [               case "${withval}" in
-         y | ye | yes )      useasan=yes ;;
-         n | no )            useasan=no ;;
-         * )                 useasan=no ;;
-         esac],
-     [               useasan=no])
 
-AM_CONDITIONAL(UseAsan, test x$useasan = xyes)
+AC_ARG_WITH([asan],
+  [AS_HELP_STRING([--with-asan], [Enable address sanitizer (default is no)])],
+  [with_asan=$withval],
+  [with_asan=no])
+
+AM_CONDITIONAL([WITH_ASAN], test "x$with_asan" = "xyes")
 
 ])dnl AX_ASAN
