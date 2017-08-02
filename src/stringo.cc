@@ -44,10 +44,12 @@
 #include "io-utils.h"
 #include "lists.h"
 
+/*
 struct value {
 	int	type;
 	union vals x;
 };
+*/
 
 #define Float	x.c_n
 #define String	x.c_s

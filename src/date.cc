@@ -43,11 +43,13 @@
 
 time_t posixtime (char *s);
 
+/*
 struct value
   {
     int type;
     union vals x;
   };
+*/
 
 #define Float	x.c_d
 #define String	x.c_s

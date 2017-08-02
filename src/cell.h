@@ -45,6 +45,12 @@ union vals
 	  struct rng c_r;
   };
 
+struct value
+  {
+	  int type;
+	  union vals x;
+  };
+
 /* An actual cell structure.  These cannot be variable-length, since they are
    allocated as a variable-length array on a col structure. */
 
