@@ -35,21 +35,30 @@
 #include "numeric.h"
 //#include "font.h"
 
-union vals
-  {
-	  num_t c_n;
-	  //double c_d;
-	  char *c_s;
-	  long c_l;
-	  int c_i;
-	  struct rng c_r;
-  };
+union vals {
+	num_t c_n;
+	//double c_d;
+	char *c_s;
+	long c_l;
+	int c_i;
+	struct rng c_r;
+};
 
-struct value
-  {
-	  int type;
-	  union vals x;
-  };
+/*
+#define TYP_FLT		1	// Float 
+#define TYP_INT		2	// Integer 
+#define TYP_STR		3	// String 
+#define TYP_BOL		4	// Boolean 
+#define TYP_ERR		5	// Error 
+#define TYP_RNG		7	// This for the expression evaluator: NO cell should be this type 
+*/
+
+enum ValType { TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
+
+struct value {
+	ValType type;
+	union vals x;
+};
 
 /* An actual cell structure.  These cannot be variable-length, since they are
    allocated as a variable-length array on a col structure. */
@@ -119,15 +128,6 @@ typedef struct cell CELL;
 /* The type of a cell, or of a eval_expression() value */
 #define GET_TYP(p)	((p)->cell_flags.cell_type)
 #define SET_TYP(p,x)	((p)->cell_flags.cell_type = (x))
-
-#define TYP_FLT		1	/* Float */
-#define TYP_INT		2	/* Integer */
-#define TYP_STR		3	/* String */
-#define TYP_BOL		4	/* Boolean */
-#define TYP_ERR		5	/* Error */
-
-#define TYP_RNG		7	/* This for the expression evaluator:
-				   NO cell should be this type */
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
