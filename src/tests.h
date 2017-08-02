@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-extern "C" {
+//extern "C" {
 #endif
 
 //void *main1(void *td);
@@ -9,7 +9,7 @@ extern "C" {
 int swig_read_file_and_run_hooks(char *name, int ismerge);
 
 int neot_test0(int argc, char ** argv);
-void headless_tests();
+bool headless_tests();
 #ifdef __cplusplus
-}
+//}
 #endif

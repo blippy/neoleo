@@ -135,8 +135,10 @@ main(int argc, char **argv)
 	headless_graphics(); // fallback position
 
 	if(get_option_tests()) {
-		headless_tests();
-		exit(EXIT_SUCCESS);
+		bool all_pass = headless_tests();
+		int ret = all_pass ? EXIT_SUCCESS : EXIT_FAILURE;
+		//ret = EXIT_FAILURE;
+		exit(ret);
 	}
 
 

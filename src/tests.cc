@@ -33,12 +33,15 @@ extern "C" {
 #include "decompile.h"
 #include "lists.h"
 
+static bool all_pass = true; // all the checks have passed so far
 
 void 
 check(bool ok, std::string msg)
 {
+	if(!ok) all_pass = false;
 	std::string s = ok? "PASS" : "FAIL";
 	std::cout << s << " " << msg << std::endl;
+
 }
 
 
@@ -112,7 +115,7 @@ test_formatting()
 	check_fmt(0.0DD,  "0.00");   // issue #10
 	check_fmt(1.0DD,  "1.00");
 }
-void
+bool
 headless_tests()
 {
 	//bool force_cmd_graphics = true;
@@ -188,5 +191,6 @@ headless_tests()
         puts("finished test");
 
 	//__lsan_do_leak_check();
+	return all_pass;
 }
 
