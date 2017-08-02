@@ -9,6 +9,7 @@
 //#include <obstack.h>
 using std::string;
 using std::cout;
+using std::endl;
 using std::vector;
 
 // check for leaks, as suggested at 
@@ -26,9 +27,9 @@ using std::vector;
 #include "mdi.h"
 //#include "mysql.h"
 #include "ref.h"
-extern "C" {
+//extern "C" {
 #include "parse.hh"
-}
+//}
 #include "byte-compile.h"
 #include "decompile.h"
 #include "lists.h"
@@ -130,10 +131,23 @@ headless_tests()
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
 
-	if(false) {
+	if(true) {
+		cout << "Testing yyparse()\n";
 		extern char * instr; // used for parsing
 		instr = (char *) "\"foo\"";
 		yyparse();
+	}
+
+	// parse something bad. Causes segfault
+	if(false) {
+		/* unfortunately there doesn't seem to be a good way of 
+		 * making yyparse() static, thereby encapusalating it better
+		 */
+		cout << "Bad parsing ..." << endl;
+		extern char *instr;
+		instr = (char *) "1+ 8.X";
+		yyparse();
+		cout << "...done" << endl;
 	}
 
 	if(true) {
