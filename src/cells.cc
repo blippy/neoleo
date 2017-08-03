@@ -684,6 +684,11 @@ int init_cells_function_count(void)
 }
 
 void
+edit_cell_at(CELLREF row, CELLREF col, std::string new_formula)
+{
+	edit_cell_at(row, col, new_formula.c_str());
+}
+void
 edit_cell_at(CELLREF row, CELLREF col, const char* new_formula)
 {
 	char * fail;

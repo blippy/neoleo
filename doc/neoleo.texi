@@ -1,9 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@set version 6.0.0
-@set update-date 27 June 2017
-@set update-month June 2017
+@set version 7.0.0
+@set update-date  3 August 2017
+@set update-month August 2017
 
 @setfilename neoleo.info
 @settitle Neoleo @value{version}
@@ -108,6 +108,7 @@ means complete, nor necessarily accurate for that matter.
 * Multiple Windows::            
 * Options::                     
 * Printing and Plotting::       
+* Headless Mode::
 * Examples and Utilities::
 * Macros::                      
 * Programs::                    
@@ -131,16 +132,24 @@ means complete, nor necessarily accurate for that matter.
 @include windows.texi
 @include options.texi
 @include print-plot.texi
+
+@node Headless Mode, Examples and Utilities, Printing and Plotting, Top
+@include headless.texi
+
 @include examples.texi
 @include macros.texi
 @include programs.texi
 @include keymaps.texi
+
 @node   Functions, Extending Neoleo, Keymaps, Top
 @include functions.texi
+
 @node Extending Neoleo, Reporting Bugs, Functions, Top
 @include interface.texi
+
 @node Reporting Bugs, Database Access, Extending Neoleo, Top
 @include bugs.texi
+
 @node Database Access, , Reporting Bugs, Top
 @include dbms.texi
 

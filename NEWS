@@ -1,6 +1,11 @@
 ===========================================================================
 VERSION 7.0.0 IN DEVELOPMENT
 
+* Headless words added: 
+	i (insert columnar data)
+	q (quit)
+	w (write to file)
+
 * Removed X11 support
 
 * Removed font support

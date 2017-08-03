@@ -27,9 +27,7 @@
    (or a location to evaluate to:  This includes c_r, which
    a VAR, etc may evaluate to, but which no cell can ever contain */
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
+#include <string>
 
 #include "global.h"
 #include "numeric.h"
@@ -180,10 +178,8 @@ extern const int base_default_jst;
 int init_cells_function_count(void);
 extern void no_more_cells (void);
 
+void edit_cell_at(CELLREF row, CELLREF col, std::string new_formula);
 extern void edit_cell_at(CELLREF row, CELLREF col, const char* new_formula);
 void copy_cell_formula();
 void paste_cell_formula();
 
-#ifdef __cplusplus
-//}
-#endif

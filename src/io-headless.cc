@@ -1,4 +1,5 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
+#include <assert.h>
 #include <algorithm>
 #include <errno.h>
 #include <functional>
@@ -8,7 +9,8 @@
 #include <string>
 
 
-//#include "atoleo.h"
+#include "basic.h"
+#include "cell.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "cmd.h"
@@ -159,6 +161,25 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
+static void
+insert_columnwise()
+{
+	for(std::string line; std::getline(std::cin, line);){
+		if(line == ".") break;
+		if(line == ";") {
+			curow = 1;
+			cucol++;
+			continue;
+		}
+
+		edit_cell_at(curow, cucol, line);
+		curow++;
+		
+		//cout << "You said " << line <<  (line != "." ) << endl;
+	}
+}
+
+
 string spaces(int n)
 {
 	//string result;
@@ -176,7 +197,7 @@ show_cells()
 	//cout << "102 OK Terminated by dot" << endl;
 	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
-		for(int c=1; c< 10; ++c) {
+		for(int c=1; c< 5; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
 			int w = get_width(c);
@@ -195,9 +216,21 @@ static void type_cell()
 	cout	<< print_cell(find_cell(curow, cucol))
 		<< "\n";
 }
+
+static void write_file()
+{
+	char *name = FileGetCurrentFileName();
+	FILE *fp = fopen(name, "w");
+	assert(fp);
+	write_cmd(fp, name);
+	fclose(fp);
+
+}
 static map<string, function<void()> > func_map = {
+	{"i", insert_columnwise},
 	{"type-cell", type_cell},
-	{"view", show_cells}
+	{"view", show_cells},
+	{"w", write_file}
 };
 
 static void

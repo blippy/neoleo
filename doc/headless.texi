@@ -1,0 +1,76 @@
+@chapter Headless Mode
+@cindex Headless
+
+Headless mode provides interaction with @code{neoleo} via @code{stdin} and 
+@code{stdout}. It is loosely modelled on `@code{ed}', and gives terse 
+output.  It can be used in the UNIX pipeline.
+
+@code{neoleo} recognises two sort of commands:
+@itemize @bullet
+@item headless-specific commands, which apply only to headless mode
+@item macro commands, which apply to the whole of @code{neoleo}
+@end itemize
+
+@section Example Session
+
+Start @code{neoleo} in headless mode:
+@example
+neoleo -H myfile.oleo
+@end example
+This puts @code{neoleo} in command mode. Let's enter some values in
+a columnwise fashion. Type:
+@example
+i
+12
+13
+;
+14
+15
+.
+@end example
+`@code{i}' stands for `@code{insert}', so that we can start entering
+values. The number `12' will be inserted into R1C1 (row 1, column 1),
+13 into R2C1, 14 into R2C1 and 15 into R2C2. The `;' tells @code{neoleo}
+to start entering values into a new column, and the `.' stops
+input and returns to command mode.
+
+We can see the result of our handiwork by typing `@code{view}':
+@example
+Row: 3 Col: 2
+      12       14
+      13       15
+
+@end example
+
+Let's move out cursor to R4C1, and find out the sum of the previous two
+rows in the column:
+@example
+goto-cell r4c1
+edit-cell r1c1 + r2c1
+view
+@end example
+yielding:
+@example
+Row: 4 Col: 1
+      12       14
+      13       15
+      25
+@end example
+
+
+@section Headless mode commands
+
+@table @kbd
+@item i
+Insert data into the spreadsheet columnwise. `;' starts the column
+to the right, and `.' terminated input, and returns to command mode.
+@item type-cell
+Print the contents of the current cell
+@item q
+Quit without saving.
+@item view
+Show a grid of the first few items in the spreadsheet. Admittedly,
+this could do with a lot of improvement.
+@item w
+Write the data to the file. 
+@end table
