@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+#setup for when I want to experiment with electric fence
+
+# mcarter 22-Dec-2016 my own configuration experiments.
+# Everyone else should ignore this file
+
+if [ ! -f configure ]; then
+	autoreconf -iv
+fi
+
+DBG=--with-debug
+#GPROF=--with-gprof
+#SAN=--with-asan
+OPTS="$DBG $GPROF $SAN "
+
+./configure $OPTS  LDFLAGS=-lefence  --prefix=$HOME/.local
+
+
+
