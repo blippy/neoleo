@@ -171,6 +171,8 @@ insert_columnwise()
 			cucol++;
 			continue;
 		}
+		if(line.size() ==0) continue;
+		if(line[0] == '#') continue;
 
 		edit_cell_at(curow, cucol, line);
 		curow++;
