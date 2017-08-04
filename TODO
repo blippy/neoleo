@@ -1,10 +1,3 @@
-$Id: TODO,v 1.37 2000/07/25 12:56:32 danny Exp $
-
-
-* Internationalisation
-	(busy) get i18n for X11 input (src/io-x11.c) to work.
-	(????) Get i18n for labels etc in Motif to work right.
-
 * Multiple Document Interface
 	(done) implement framework for putting global variables into so they're
 		no longer global and we can allocate them on a per-window or
@@ -13,32 +6,11 @@ $Id: TODO,v 1.37 2000/07/25 12:56:32 danny Exp $
 	(todo) hook this in to Motif interface
 	(todo) hook this to curses based interface
 
-* Graphs
-	(TODO) documentation !!
-	(done) connect the plot.c functionality (GNU Plotutils) to graph.c
-	(todo) make sure all the variables can get saved
-	(todo) make sure all flags can be controlled through GUI
-	(done) put Plotutils graph in Motif XmScrolledWindow
-
 * Sorting
 	(todo) implement an interface that'll allow us to call external
 		sorting and such
 	(todo) replace our own sorting function by the standard one using
 		the interface described above
-
-* Databases
-	(done) Simplistic interface to Xbase
-	(done) Simplistic interface to MySQL
-	(todo) Design higher level interface to DBMS API's
-	(todo) Hook up Xbase and MySQL to higher level interface.
-
-* Motif
-	(done) Handle interaction between formula editor and Xbae better.
-	(todo) User preferences (color, font, ..)
-	(done) Where does the beep come from ? (enter 1.123 in a cell)
-		Column MaxLengths weren't set (correctly), therefore an XbaeMatrix
-		column would get the width assigned to it and apply that to the
-		editable text in there as well.
 
 * Regions
 	(todo) Use Mark and Current Cell to define a region and
@@ -49,22 +21,6 @@ $Id: TODO,v 1.37 2000/07/25 12:56:32 danny Exp $
 		in formulas. For move operations this should probably
 		not happen.
 
-* Configuration
- 	(done) fail on funky options --with-motif --without-Xbae
-	(done) make sure C++ stuff doesn't break non-Xbase compiles
-		Unfortunately: can't get this to work. Hence :
-	(done) Once automake supports it, use Xbase by default.
-
-* Printing
-	(todo) parameterize printing
-	(busy) make printing more intelligent
-	(busy) implement PCL printing (see www.wotsit.org)
-	(busy) improve appearance of PostScript prints
-	(done) fix precision handling in prints
-	(done) Make Iso Latin 1 be user definable in PostScript.
-
-* Get our stuff together for an upcoming 2.0 release of Oleo.
-
 * Add "date" and "time" formats, allow them to be input and allow
   for arithmetic with them.
 	(done) Clean up cell.h's junk.
@@ -72,32 +28,6 @@ $Id: TODO,v 1.37 2000/07/25 12:56:32 danny Exp $
 	(done) check file I/O stuff against new date format
 	(todo) document FMT_DATE, the various date representations
 	(todo) allow for date input
-
-* Increase "X" friendliness.
- - Make a LessTif/Motif interface
-	(busy) printing
-	(busy) GNU Plotutils dialogs
-	(todo) print dialog
-	 ****  which range is the complete spreadsheet
-		-> (io-motif.c ReallyPrintCB)
-	(done) allow selecting what format to print (not only PostScript ?)
-	(done) make selecting cells and ranges more user friendly
-
-* Include texi2html in the oleo source, and enhance it so it can
-  process all the texinfo commands used in the documentation.
-  Currently @findex isn't supported, and @html is poorly supported.
-
-* Use GNU PlotUtils instead of GnuPlot.
-  This is being worked on : simple bar, pie, and XY charts are available.
-  In the process, make the plotting user interface more transparent.
-	(done) allow an empty range to be input without warnings
-	(todo) port the plotutils user interface to curses (long term ?)
-	(todo) Allow manual setting of axis ranges in various plots.
-	(todo) 3D pie
-	(todo) exploding pie
-	(done) implement plotutils in XmScrolledWindow
-	(todo) ticks on axes in several plot types
-	(todo) figure out how to print on monochrome printers
 
 * Integrate GSL (Gnu Scientific Library).
 	(todo) integrate it
@@ -119,12 +49,7 @@ $Id: TODO,v 1.37 2000/07/25 12:56:32 danny Exp $
 
  - CSV would be nice (DB 17/3/1999: LIST format can do this,
 	now also recognizes CSV file name suffix)
- - DBII or DBIII is useful.
-	(db 19/3/1999: XBASE library can do this. Somewhat implemented.)
  - Fixed width.
-
-* Make io_error_msg work right in Motif.
-	(done)
 
 * Figure out why having kinput2 present kills oleo.
 
