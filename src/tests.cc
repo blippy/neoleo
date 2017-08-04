@@ -145,7 +145,8 @@ headless_tests()
 		 */
 		cout << "Bad parsing ..." << endl;
 		extern char *instr;
-		instr = (char *) "1+ 8.X";
+		//instr = (char *) "1+ 8.X";
+		instr = (char *) "1 + X";
 		yyparse();
 		cout << "...done" << endl;
 	}
