@@ -7,6 +7,7 @@
 * Moving::              Moving Cells and regions
 * Deleting::            Deleting cells and regions        
 * Insertion::           Inserting a new row or column
+* Sort::                Sorting regions
 @end menu
 
 @node Copying, Moving, Making changes, Making changes
@@ -162,7 +163,7 @@ and reset all the heights and widths.
 @kindex  C-k
 @cmindex clear-spreadsheet
 
-@node Insertion,  , Deleting, Making changes
+@node Insertion,  Sort, Deleting, Making changes
 @section Inserting Rows and Columns
 
 These commands insert blank rows and columns.
@@ -182,3 +183,12 @@ to add 4 rows to the left of  the cell cursor, type @code{C-u 4 M-o}.
 @end table
 @kindex  M-o
 @kindex  C-o
+
+@node Sort, , Insertion, Making changes
+@section Sorting regions
+
+@table @kbd
+@cmindex sort-region
+@item M-x sort-region
+	Sort a region
+@end table
