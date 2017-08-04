@@ -61,6 +61,8 @@ Row: 4 Col: 1
 @section Headless mode commands
 
 @table @kbd
+@item @hashchar{} ...
+Insert comment into input stream. No operation is actually performed.
 @item i
 Insert data into the spreadsheet columnwise. `;' starts the column
 to the right, and `.' terminated input, and returns to command mode.
