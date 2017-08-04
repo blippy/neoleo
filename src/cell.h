@@ -55,6 +55,8 @@ enum ValType { TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 
 
 class value {
 	public:
+		value();
+		~value();
 		ValType type;
 		union vals x;
 };
@@ -70,17 +72,20 @@ class value {
 	unsigned int	cell_format:	4;	/* Was 3 */
 	unsigned int	cell_precision:	4;
     }; 
-struct cell
-  {
-    /* char *cell_string; */
-    struct cell_flags_s cell_flags;
-    unsigned short cell_cycle;
-    //struct font_memo *cell_font;
-    struct ref_fm *cell_refs_from;
-    struct ref_to *cell_refs_to;
-    unsigned char *cell_formula;
-    union vals c_z;
-  };
+class cell
+{
+	public:
+		cell();
+		~cell();
+		/* char *cell_string; */
+		struct cell_flags_s cell_flags;
+		unsigned short cell_cycle;
+		//struct font_memo *cell_font;
+		struct ref_fm *cell_refs_from;
+		struct ref_to *cell_refs_to;
+		unsigned char *cell_formula;
+		union vals c_z;
+};
 
 struct var
   {
@@ -99,7 +104,8 @@ struct var
     char var_name[1];
   };
 
-typedef struct cell CELL;
+//typedef struct cell CELL;
+typedef cell CELL;
 
 #define VAR_UNDEF 1
 #define VAR_CELL 2
@@ -110,7 +116,6 @@ typedef struct cell CELL;
 #define VAR_DANGLING_RANGE 4
 
 /* Shorthand for the cell union */
-//#define cell_flt	c_z.c_d
 #define cell_flt	c_z.c_n
 #define cell_str	c_z.c_s
 #define cell_int	c_z.c_l

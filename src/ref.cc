@@ -367,7 +367,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
   CELL *cpf;
 
   static CELLREF non_rf, non_cf;
-  static struct cell non_cell;
+  //static struct cell non_cell;
+  static cell non_cell;
 
   if (rf == NON_ROW)
     {

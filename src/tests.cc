@@ -200,10 +200,11 @@ headless_tests()
 	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
+	{ cell foo; }
 
 	FreeGlobals();
 
-        puts("finished test");
+        cout << "Finished test\n";
 
 	//__lsan_do_leak_check();
 	return all_pass;

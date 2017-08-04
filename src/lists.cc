@@ -21,6 +21,9 @@
  */
 
 #include <stdlib.h>
+#include <iostream>
+
+using std::cout;
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -141,6 +144,7 @@ find (CELLREF pos, struct list *ptr, int ele)
 static inline void *
 make (CELLREF pos, struct list **prevp, int ele, int buf)
 {
+	//cout << "M" ;
   CELLREF lo, hi;
   size_t size;
   struct list *ptr;

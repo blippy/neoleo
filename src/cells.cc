@@ -35,6 +35,7 @@
 //}
 #include "funcdef.h"
 #include "sysdef.h"
+#include <iostream>
 #include <string.h>
 #include <string>
 
@@ -52,6 +53,7 @@
 #include "utils.h"
 #include "decompile.h"
 
+using std::cout;
 
 #define Float	x.c_n
 #define String	x.c_s
@@ -66,6 +68,26 @@
 	return;		\
  }
 
+
+value::value(void)
+{
+//	cout << "X";
+}
+
+value::~value(void)
+{
+//	cout << "Y";
+}
+
+cell::cell(void)
+{
+//	cout << "X";
+}
+
+cell::~cell(void)
+{
+//	cout <<"Y";
+}
 
 static int
 cell_mc ( long row, long col, char *dowhat, struct value *p)
