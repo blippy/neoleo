@@ -90,13 +90,6 @@ int __to_bol (struct value *);
 int __to_rng (struct value *);
 #endif
 
-/*
-struct value
-  {
-    int type;
-    union vals x;
-  };
-*/
 
 #define Float	x.c_n
 #define String	x.c_s

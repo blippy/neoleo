@@ -44,20 +44,12 @@
 time_t posixtime (char *s);
 
 /*
-struct value
-  {
-    int type;
-    union vals x;
-  };
-*/
-
 #define Float	x.c_d
-#define String	x.c_s
-#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
-
-
+*/
+#define String	x.c_s
+#define Int	x.c_l
 
 /* These functions simply provide convenient syntax for expressing intervals 
  * of time.

@@ -39,14 +39,6 @@
 #include "utils.h"
 #include "lists.h"
 
-/*
-struct value
-  {
-    int type;
-    union vals x;
-  };
-*/
-
 #define Float	x.c_n
 #define String	x.c_s
 #define Int	x.c_l

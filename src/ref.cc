@@ -83,13 +83,6 @@ extern int debug;
 /* Functions for dealing exclusively with variables */
 struct hash_control *the_vars;
 
-/*
-struct value
-  {
-    int type;
-    union vals c_z;
-  };
-*/
 
 /* For the fifo-buffer */
 struct pos

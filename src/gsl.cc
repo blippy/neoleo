@@ -47,18 +47,14 @@ static char rcsid[] = "$Id: gsl.c,v 1.1 2000/07/08 15:21:24 danny Exp $";
 /*
  * Declarations necessary for defining an Oleo function
  */
+
 /*
-struct value
-  {
-    int type;
-    union vals x;
-  };
-*/
 #define Float   x.c_d
 #define String  x.c_s
 #define Int     x.c_l
 #define Value   x.c_i
 #define Rng     x.c_r
+*/
 
 #ifdef	HAVE_GSL
 #include <gsl/gsl_math.h>
