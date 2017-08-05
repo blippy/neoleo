@@ -1,0 +1,13 @@
+# test string functions in stringo.cc
+# see issue #15, though.
+i
+len("how big")
+strupr("fooD")
+strcap("making headlines")
+trim("  trimming ")
+mid("what say you", 2, 3)
+edit("hello", 4, 5)
+repeat("W", 5)
+.
+w
+q

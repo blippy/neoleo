@@ -1,0 +1,14 @@
+# This file was created by GNU Oleo
+# format 2.1 (requires Oleo 1.99.9 or higher)
+F;DGFR8
+O;auto;background;noa0;ticks 1
+C;c1;r1;Elen("how big");K7
+C;r2;Estrupr("fooD");K"FOOD"
+C;r3;Estrcap("making headlines");K"Making Headlines"
+C;r4;Etrim("  trimming ");K"trimming "
+C;r5;Emid("what say you", 2, 3);K"hat"
+C;r6;Eedit("hello", 4, 5);K"hel"
+C;r7;Erepeat("W", 5);K"WWWWW"
+O;status 2
+W;N1;A8 1;C7 0 7;Ostandout
+E
