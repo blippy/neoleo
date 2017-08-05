@@ -51,8 +51,10 @@ class value {
 		ValType type = TYP_NUL;
 		union vals x;
 		long gLong() { assert(type == TYP_INT); return x.c_l; };
+		char *gString() { assert(type == TYP_STR); return x.c_s; };
 		void sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 		void sLong(long newval) { type = TYP_INT; x.c_l = newval; };
+		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
 };
 
 /* An actual cell structure.  These cannot be variable-length, since they are

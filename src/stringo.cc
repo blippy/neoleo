@@ -46,7 +46,7 @@
 
 
 #define Float	x.c_n
-#define String	x.c_s
+//#define String	x.c_s
 //#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
@@ -75,24 +75,24 @@ do_edit ( int numarg, struct value * p)
 	if(numarg<3)
 		ERROR(BAD_INPUT);
 	for(mm=3,add_len=0;mm<numarg;mm++)
-		add_len+=strlen((p+mm)->String);
-	tmp_len=strlen(p->String);
+		add_len+=strlen((p+mm)->gString());
+	tmp_len=strlen(p->gString());
 	off1=(p+1)->gLong();
 	off2=(p+2)->gLong();
 	if(off1==0 || tmp_len < ((off1<0) ? -off1 : off1) ||
 	   off2==0 || tmp_len < ((off2<0) ? -off2 : off2))
 		ERROR(OUT_OF_RANGE);
-	ptr1=p->String + (off1>0 ? off1-1 : tmp_len+off1);
-	ptr2=p->String + 1 + (off2>0 ? off2-1 : tmp_len+off2);
+	ptr1=p->gString() + (off1>0 ? off1-1 : tmp_len+off1);
+	ptr2=p->gString() + 1 + (off2>0 ? off2-1 : tmp_len+off2);
 	if(ptr1>ptr2)
 		ERROR(OUT_OF_RANGE);
 	retp=obstack_alloc(&tmp_mem,add_len+tmp_len-(ptr2-ptr1));
-	strncpy(retp,p->String,ptr1-p->String);
-	retp[ptr1-p->String]='\0';
+	strncpy(retp,p->gString(),ptr1-p->gString());
+	retp[ptr1-p->gString()]='\0';
 	for(mm=3;mm<numarg;mm++)
-		strcat(retp,(p+mm)->String);
+		strcat(retp,(p+mm)->gString());
 	strcat(retp,ptr2);
-	p->String=retp;
+	p->sString(retp);
 	p->type=TYP_STR;
 }
 
@@ -100,7 +100,7 @@ static void
 do_repeat (
      struct value * p)
 {
-	char *str = (p  )->String;
+	char *str = p->gString();
 	long num  = (p+1)->gLong();
 
 	char *ret;
@@ -117,7 +117,7 @@ do_repeat (
 		strptr+=len;
 	}
 	*strptr=0;
-	p->String=ret;
+	p->sString(ret);
 }
 
 static void
@@ -127,7 +127,7 @@ do_len (
 	long ret;
 	char *ptr;
 
-	for(ret=0,ptr=p->String;*ptr;ret++,ptr++)
+	for(ret=0,ptr=p->gString();*ptr;ret++,ptr++)
 		;
 	p->sLong(ret);
 	//p->type=TYP_INT;
@@ -140,11 +140,11 @@ do_up_str (
 	char *s1,*s2;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->String)+1);
-	for(s1=strptr,s2=p->String;*s2;s2++)
+	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (islower(*s2) ? toupper(*s2) : *s2);
 	*s1=0;
-	p->String=strptr;
+	p->sString(strptr);
 }
 
 static void
@@ -154,11 +154,11 @@ do_dn_str (
 	char *s1,*s2;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->String)+1);
-	for(s1=strptr,s2=p->String;*s2;s2++)
+	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
 	*s1=0;
-	p->String=strptr;
+	p->sString(strptr);
 }
 
 static void
@@ -169,8 +169,8 @@ do_cp_str (
 	char *s1,*s2;
 	int wstart=1;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->String)+1);
-	for(s1=strptr,s2=p->String;*s2;s2++) {
+	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isalpha(*s2)) {
 			wstart=1;
 			*s1++= *s2;
@@ -181,7 +181,7 @@ do_cp_str (
 			*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
 	}
 	*s1=0;
-	p->String=strptr;
+	p->sString(strptr);
 }
 
 static void
@@ -192,8 +192,8 @@ do_trim_str (
 	int sstart=0;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->String)+1);
-	for(s1=strptr,s2=p->String;*s2;s2++) {
+	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isascii(*s2) || !isprint(*s2))
 			continue;
 		if(*s2==' ') {
@@ -207,7 +207,7 @@ do_trim_str (
 		}
 	}
 	*s1=0;
-	p->String=strptr;
+	p->sString(strptr);
 }
 
 static void
@@ -251,7 +251,7 @@ do_concat (
 			}
 			break;
 		case TYP_STR:
-			s=p[cur_string].String;
+			s=p[cur_string].gString();
 			(void)obstack_grow(&tmp_mem,s,strlen(s));
 			break;
 		case TYP_INT:
@@ -269,7 +269,7 @@ do_concat (
 	}
 	(void)obstack_1grow(&tmp_mem,0);
 	p->type=TYP_STR;
-	p->String=(char *)obstack_finish(&tmp_mem);
+	p->sString((char *)obstack_finish(&tmp_mem));
 }
 
 
@@ -277,7 +277,7 @@ static void
 do_mid (
      struct value * p)
 {
-	char *str = (p  )->String;
+	char *str = p->gString();
 	long from = (p+1)->gLong()-1;
 	long len =  (p+2)->gLong();
 
@@ -295,7 +295,7 @@ do_mid (
 		strncpy(ptr1,str+from,len);
 		ptr1[len]='\0';
 	}
-	p->String=ptr1;
+	p->sString(ptr1);
 }
 
 
@@ -305,7 +305,7 @@ do_substr (
 {
 	long off1 = (p  )->gLong();
 	long off2 = (p+1)->gLong();
-	char *str = (p+2)->String;
+	char *str = (p+2)->gString();
 
 	char	*ptr1,	*ptr2;
 	int tmp;
@@ -324,16 +324,16 @@ do_substr (
 	ret=(char *)obstack_alloc(&tmp_mem,tmp+1);
 	strncpy(ret,ptr1,tmp);
 	ret[tmp]=0;
-	p->String=ret;
-	p->type=TYP_STR;
+	p->sString(ret);
+	//p->type=TYP_STR;
 }
 
 static void
 do_strstr (
      struct value * p)
 {
-	char *strptr	= (p  )->String;
-	char *str1	= (p+1)->String;
+	char *strptr	= p->gString();
+	char *str1	= (p+1)->gString();
 	long off	= (p+2)->gLong();
 	char *ret;
 
