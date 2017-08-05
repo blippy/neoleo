@@ -131,7 +131,7 @@ set_cell (CELLREF row, CELLREF col, const char *string)
   my_cell = find_or_make_cell (cur_row, cur_col);
   flush_old_value ();
 
-  ret = parse_and_compile (string);
+  ret = (unsigned char*) parse_and_compile (string);
   my_cell->cell_formula = ret;
 }
 
@@ -168,16 +168,16 @@ new_value (CELLREF row, CELLREF col, const char *string)
 
 /* This sets the cell to a constant, stored in VALUE, whose type is in TYPE */
 char *
-set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
+set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 {
   CELL *cp;
   extern int default_lock;
 
   if (type == TYP_ERR)
-    type = 0;
+    type = TYP_NUL;
   cur_row = row;
   cur_col = col;
-  if (type == 0)
+  if (type == TYP_NUL)
     {
       cp = find_cell (row, col);
       if (cp && GET_TYP (cp))
@@ -186,7 +186,7 @@ set_new_value (CELLREF row, CELLREF col, int type, union vals *value)
 	    return (char *) "cell is locked";
 	  my_cell = cp;
 	  flush_old_value ();
-	  SET_TYP (cp, 0);
+	  SET_TYP (cp, TYP_NUL);
 	}
       my_cell = 0;
       return 0;
@@ -243,11 +243,11 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
   cur_col = col;
   my_cell = find_or_make_cell (cur_row, cur_col);
   flush_old_value ();
-  SET_TYP (my_cell, 0);
+  SET_TYP (my_cell, TYP_NUL);
 
   if (form)
     {
-      new_bytes = parse_and_compile (form);
+      new_bytes = (unsigned char*) parse_and_compile (form);
       my_cell->cell_formula = new_bytes;
     }
 
@@ -825,7 +825,7 @@ flush_old_value (void)
     }
   if (GET_TYP (my_cell) == TYP_STR)
     free (my_cell->cell_str);
-  SET_TYP (my_cell, 0);
+  SET_TYP (my_cell, TYP_NUL);
 }
 
 /* --------- Routines for dealing with cell references to other cells ------ */
@@ -2531,7 +2531,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 void
 for_all_vars (void (*func) (char *, struct var *))
 {
-  hash_apply (the_vars, (char* (*)()) func);
+  hash_apply (the_vars, (char* (*)(char*, char*)) func);
 }
 
 /* Find a variable in the list of variables, or create it if it doesn't

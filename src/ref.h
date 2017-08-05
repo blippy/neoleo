@@ -46,7 +46,7 @@ extern struct cell * my_cell;
 extern void set_cell (CELLREF row, CELLREF col, const char *string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
 //extern char * quote_new_value (CELLREF row, CELLREF col, char *string);
-extern char * set_new_value (CELLREF row, CELLREF col, int type, union vals *value);
+extern char * set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value);
 extern char * read_new_value (CELLREF row, CELLREF col, char *form, char *val);
 extern void move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
