@@ -550,7 +550,7 @@ yylex ()
 		}
 		tmp_ch=begin[n];
 		begin[n]='\0';
-		fp=hash_find(parse_hash,begin);
+		fp=(function *) hash_find( (hash_control*) parse_hash,begin);
 		begin[n]=tmp_ch;
 		byte_value= ERROR;
 		if(!fp) {
