@@ -310,7 +310,7 @@ int overflow;
 
 #define PUSH_ANY(cp)				\
 	if(!cp || !GET_TYP(cp)) {		\
-		p->type=0;			\
+		p->type=TYP_NUL;			\
 		p->Int=0;			\
 	} else {				\
 		p->type=GET_TYP(cp);		\
@@ -667,7 +667,8 @@ eval_expression ( unsigned char *expr)
 
 		case F_NOW:
 			p->type = TYP_INT;
-			p->Int = time ((VOIDSTAR) 0);
+			//p->Int = time ((VOIDSTAR) 0);
+			p->Int = time (nullptr);
 			break;
 
 			/* Single operand instrs */
