@@ -32,6 +32,7 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "funcs.h"
 #include "key.h"
 #include "cmd.h"
 #include "io-abstract.h"
@@ -39,6 +40,8 @@
 #include "io-utils.h"
 #include "io-term.h"
 #include "utils.h"
+
+using RPTR = rng*;
 
 struct keymap **the_maps;
 char **map_names;
@@ -145,7 +148,7 @@ bind_key (char * keymap, char * function, int ch)
   function = range_name (&rng);
   if (!bound_macro_vec)
     {
-      bound_macros = ck_malloc (sizeof (struct rng));
+      bound_macros = (RPTR) ck_malloc (sizeof (struct rng));
       n_bound_macros = 1;
       tmpfunc = (struct cmd_func *)ck_malloc (2 * sizeof (struct cmd_func));
       bzero (tmpfunc + 1, sizeof (*tmpfunc));
@@ -154,10 +157,10 @@ bind_key (char * keymap, char * function, int ch)
   else
     {
       n_bound_macros++;
-      bound_macros = ck_realloc (bound_macros,
+      bound_macros = (RPTR) ck_realloc (bound_macros,
 				 n_bound_macros * sizeof (struct rng));
       the_funcs[bound_macro_vec]
-	= ck_realloc (the_funcs[bound_macro_vec],
+	= (cmd_func*)ck_realloc (the_funcs[bound_macro_vec],
 		      (1 + n_bound_macros) * sizeof (struct cmd_func));
       tmpfunc = &the_funcs[bound_macro_vec][n_bound_macros - 1];
       bzero (tmpfunc + 1, sizeof (*tmpfunc));
@@ -170,7 +173,7 @@ bind_key (char * keymap, char * function, int ch)
   tmpfunc->init_code = 0;
   tmpfunc->func_doc = 0;
   tmpfunc->func_name = ck_savestr (function);
-  tmpfunc->func_func = bound_macro;
+  tmpfunc->func_func = to_vptr(bound_macro);
 fini:
   do_bind_key (the_maps[map], ch, vec, code);
 }
@@ -279,7 +282,7 @@ bind_all_keys (char * keymap, char * function)
   function = range_name (&rng);
   if (!bound_macro_vec)
     {
-      bound_macros = ck_malloc (sizeof (struct rng));
+      bound_macros = (RPTR) ck_malloc (sizeof (struct rng));
       n_bound_macros = 1;
       tmpfunc = (struct cmd_func *)ck_malloc (2 * sizeof (struct cmd_func));
       bzero (tmpfunc + 1, sizeof (*tmpfunc));
@@ -288,10 +291,10 @@ bind_all_keys (char * keymap, char * function)
   else
     {
       n_bound_macros++;
-      bound_macros = ck_realloc (bound_macros,
+      bound_macros = (RPTR) ck_realloc (bound_macros,
 				 n_bound_macros * sizeof (struct rng));
       the_funcs[bound_macro_vec]
-	= ck_realloc (the_funcs[bound_macro_vec],
+	= (cmd_func*) ck_realloc (the_funcs[bound_macro_vec],
 		      (1 + n_bound_macros) * sizeof (struct cmd_func));
       tmpfunc = &the_funcs[bound_macro_vec][n_bound_macros - 1];
       bzero (tmpfunc + 1, sizeof (*tmpfunc));
@@ -302,7 +305,7 @@ bind_all_keys (char * keymap, char * function)
   tmpfunc->func_args[1] = 0;
   tmpfunc->func_doc = 0;
   tmpfunc->func_name = ck_savestr (function);
-  tmpfunc->func_func = bound_macro;
+  tmpfunc->func_func = to_vptr(bound_macro);
 fini:
   {
     int ch;
@@ -406,8 +409,8 @@ create_keymap (const char * mapname, char * parentname)
       io_error_msg ("Map %s does not exist.", parentname);
       return;
     }
-  the_maps = ck_realloc (the_maps, (num_maps + 1) * sizeof (struct keymap *));
-  the_maps[num_maps] = ck_malloc (sizeof (struct keymap));
+  the_maps = (keymap**)ck_realloc (the_maps, (num_maps + 1) * sizeof (struct keymap *));
+  the_maps[num_maps] = (keymap*) ck_malloc (sizeof (struct keymap));
   the_maps[num_maps]->id = num_maps;
   the_maps[num_maps]->map_next = ((parent >= 0)
 				  ? the_maps[parent]
@@ -420,8 +423,8 @@ create_keymap (const char * mapname, char * parentname)
 	the_maps[num_maps]->keys[c].code = -1;
       }
   }
-  map_names = ck_realloc (map_names, (num_maps + 1) * sizeof (char *));
-  map_prompts = ck_realloc (map_prompts, (num_maps + 1) * sizeof (char *));
+  map_names = (char**) ck_realloc (map_names, (num_maps + 1) * sizeof (char *));
+  map_prompts = (char**) ck_realloc (map_prompts, (num_maps + 1) * sizeof (char *));
   map_names[num_maps] = ck_savestr (mapname);
   map_prompts[num_maps] = 0;
   num_maps++;
