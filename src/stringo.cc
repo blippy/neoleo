@@ -47,7 +47,7 @@
 
 #define Float	x.c_n
 #define String	x.c_s
-#define Int	x.c_l
+//#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
 
@@ -64,9 +64,7 @@ extern struct obstack tmp_mem;
 //extern char *flt_to_str();
 
 static void
-do_edit (
-     int numarg,
-      struct value * p)
+do_edit ( int numarg, struct value * p)
 {
 	int mm;
 	int add_len;
@@ -79,8 +77,8 @@ do_edit (
 	for(mm=3,add_len=0;mm<numarg;mm++)
 		add_len+=strlen((p+mm)->String);
 	tmp_len=strlen(p->String);
-	off1=(p+1)->Int;
-	off2=(p+2)->Int;
+	off1=(p+1)->gLong();
+	off2=(p+2)->gLong();
 	if(off1==0 || tmp_len < ((off1<0) ? -off1 : off1) ||
 	   off2==0 || tmp_len < ((off2<0) ? -off2 : off2))
 		ERROR(OUT_OF_RANGE);
@@ -103,7 +101,7 @@ do_repeat (
      struct value * p)
 {
 	char *str = (p  )->String;
-	long num  = (p+1)->Int;
+	long num  = (p+1)->gLong();
 
 	char *ret;
 	char *strptr;
@@ -257,7 +255,7 @@ do_concat (
 			(void)obstack_grow(&tmp_mem,s,strlen(s));
 			break;
 		case TYP_INT:
-			sprintf(buf,"%ld",p[cur_string].Int);
+			sprintf(buf,"%ld",p[cur_string].gLong());
 			(void)obstack_grow(&tmp_mem,buf,strlen(buf));
 			break;
 		case TYP_FLT:
@@ -280,8 +278,8 @@ do_mid (
      struct value * p)
 {
 	char *str = (p  )->String;
-	long from = (p+1)->Int-1;
-	long len =  (p+2)->Int;
+	long from = (p+1)->gLong()-1;
+	long len =  (p+2)->gLong();
 
 	char	*ptr1;
 	int tmp;
@@ -305,8 +303,8 @@ static void
 do_substr (
      struct value * p)
 {
-	long off1 = (p  )->Int;
-	long off2 = (p+1)->Int;
+	long off1 = (p  )->gLong();
+	long off2 = (p+1)->gLong();
 	char *str = (p+2)->String;
 
 	char	*ptr1,	*ptr2;
@@ -336,7 +334,7 @@ do_strstr (
 {
 	char *strptr	= (p  )->String;
 	char *str1	= (p+1)->String;
-	long off	= (p+2)->Int;
+	long off	= (p+2)->gLong();
 	char *ret;
 
 	if(off<1 || strlen(strptr)<=off-1)

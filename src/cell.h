@@ -27,6 +27,7 @@
    (or a location to evaluate to:  This includes c_r, which
    a VAR, etc may evaluate to, but which no cell can ever contain */
 
+#include <assert.h>
 #include <string>
 
 #include "global.h"
@@ -49,6 +50,7 @@ class value {
 		~value();
 		ValType type = TYP_NUL;
 		union vals x;
+		long gLong() { assert(type == TYP_INT); return x.c_l; };
 		void sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 		void sLong(long newval) { type = TYP_INT; x.c_l = newval; };
 };
