@@ -37,6 +37,8 @@
 #include <stdarg.h>
 #include "utils.h"
 
+using CPTR = char *;
+
 void
 set_line (struct line *line, const char *string)
 {
@@ -51,9 +53,9 @@ set_line (struct line *line, const char *string)
 	len++;
       line->alloc = len + 1;
       if (line->buf)
-	line->buf = ck_realloc (line->buf, line->alloc);
+	line->buf = (CPTR) ck_realloc (line->buf, line->alloc);
       else
-	line->buf = ck_malloc (line->alloc);
+	line->buf = (CPTR) ck_malloc (line->alloc);
     }
   strcpy (line->buf, string);
 }
@@ -69,7 +71,7 @@ setn_line (struct line *line, const char *string, int n)
       else
 	len++;
       line->alloc = len;
-      line->buf = ck_remalloc (line->buf, line->alloc);
+      line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
     }
   bcopy (string, line->buf, n);
   line->buf[n] = 0;
@@ -84,7 +86,7 @@ catn_line (struct line *line, const char *string, int n)
   if (line->alloc <= len + n + 1)
     {
       line->alloc = Max (len + n + 1, LINE_MIN);
-      line->buf = ck_remalloc (line->buf, line->alloc);
+      line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
     }
   if (n)
     bcopy (string, line->buf + len, n);
@@ -101,12 +103,12 @@ sprint_line (struct line *line, const char * fmt, ...)
   len = strlen (fmt) + 200;
   if (!line->alloc)
     {
-      line->buf = ck_malloc (len);
+      line->buf = (CPTR) ck_malloc (len);
       line->alloc = len;
     }
   else if (line->alloc < len)
     {
-      line->buf = ck_realloc (line->buf, len);
+      line->buf = (CPTR) ck_realloc (line->buf, len);
       line->alloc = len;
     }
   va_start (iggy, fmt);
@@ -122,7 +124,7 @@ splicen_line (struct line * line, char * str, int n, int pos)
   if (line->alloc <= len)
     {
       line->alloc = len;
-      line->buf = ck_remalloc (line->buf, len + 1);
+      line->buf = (CPTR) ck_remalloc (line->buf, len + 1);
     }
   line->buf[len--] = '\0';
   --old_len;
@@ -173,7 +175,7 @@ read_line (struct line * line, FILE * fp, int * linec)
       if (pos + 2 >= line->alloc)
 	{
 	  line->alloc = (line->alloc ? line->alloc * 2 : 1);
-	  line->buf = ck_remalloc (line->buf, line->alloc);
+	  line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
 	}
       if (c != '\\')
 	line->buf[pos++] = c;
@@ -194,7 +196,7 @@ read_line (struct line * line, FILE * fp, int * linec)
   if (pos + 1 > line->alloc)
     {
       ++line->alloc;
-      line->buf = ck_remalloc (line->buf, line->alloc);
+      line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
     }
   line->buf[pos] = 0;
   if (line->buf[0] || (c != EOF))

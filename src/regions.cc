@@ -736,7 +736,8 @@ copy_values_region (struct rng *fm, struct rng *to)
       for (cf = fm->lc, ct = to->lc; ct <= to->hc; ct++, cf++)
 	{
 	  cpf = find_cell (rf, cf);
-	  set_new_value (rt, ct, cpf ? GET_TYP (cpf) : 0, cpf ? &(cpf->c_z) : &dummy);
+	  ValType new_type = cpf ?  GET_TYP (cpf) : TYP_NUL;
+	  set_new_value (rt, ct, new_type, cpf ? &(cpf->c_z) : &dummy);
 
 	  if (cf == fm->hc)
 	    cf = fm->lc - 1;
