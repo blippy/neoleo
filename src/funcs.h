@@ -114,6 +114,14 @@ struct cmd_func
   interactive_function func_func;
 };
 
+// cast it into the void for table look-up purposes
+// Taken from:
+// https://stackoverflow.com/questions/45009306/combining-using-and-reinterpret-cast
+using vptr = void (*) ();
+template <typename Func>
+constexpr vptr to_vptr(Func && func)
+{ return reinterpret_cast<vptr>(func); }
+
 /*
  * There is a 2d (argv style) array of command functions.  Each 0 dimension
  * slice is called a `vector'.  The first vector contains the oleo built-ins.

@@ -36,6 +36,7 @@
 #include "obstack.h"
 #include "sysdef.h"
 
+#include "funcs.h"
 #include "global.h"
 #include "cell.h"
 #include "eval.h"

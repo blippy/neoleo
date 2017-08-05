@@ -144,18 +144,18 @@ static char * DFfnord[] =
 #undef FUNC_INIT_CODE
 
 #define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
-	{ Sname, FDname, FAname, DFname, Cname },
+	{ Sname, FDname, FAname, DFname, to_vptr(Cname) },
 
 #define DEFUN(Sname, FDname, FAname, Cname) \
-	DEFUN_5(Sname, FDname, FAname, 0, Cname)
+	DEFUN_5(Sname, FDname, FAname, 0, to_vptr(Cname))
 #define DEFUN_3(Sname, FDname, Cname) \
-	DEFUN_5(Sname, FDname, 0, 0, Cname)
+	DEFUN_5(Sname, FDname, 0, 0, to_vptr(Cname))
 
 struct cmd_func cmd_funcs[] =
 {
-  { "fnord", FDfnord, FAfnord, DFfnord, fnord },
+  { "fnord", FDfnord, FAfnord, DFfnord, to_vptr(fnord) },
 #include "defun.h"
-  { 0, 0, 0, 0, 0 }
+  { 0, 0, 0, 0, to_vptr(0) }
 };
 
 

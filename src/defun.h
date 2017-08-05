@@ -27,11 +27,15 @@
  * crazy things.
  *
  * Lousy design :-(
+ *
+ * There is no need to wrap the function in `to_vptr()', as this
+ * is actually taken care of in the macro definitions in defuns.cc
+ * now.
  */
 
 /* Commands to Stop and to Suspend the Beast */
 
-DEFUN ("kill-oleo", FDkill_oleo, FAkill_oleo, kill_oleo)
+DEFUN ("kill-oleo", FDkill_oleo, FAkill_oleo, to_vptr(kill_oleo))
 #ifdef FUNC_ARG_STRINGS
 "MSpreadsheet modified.  Quit without saving? (yes or no) ",
 #endif
@@ -39,12 +43,12 @@ DEFUN ("kill-oleo", FDkill_oleo, FAkill_oleo, kill_oleo)
 "Kill this Oleo.  This does NOT save any files.",
 #endif
 
-DEFUN_3 ("suspend-oleo", FDsuspend_oleo, suspend_oleo)
+DEFUN_3 ("suspend-oleo", FDsuspend_oleo, to_vptr(suspend_oleo))
 #ifdef DOC_STRINGS
 "Stop Oleo and return to its superior process.  Oleo may be resumed.",
 #endif
 
-DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, show_main_menu)
+DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, to_vptr(show_main_menu))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
@@ -60,7 +64,7 @@ DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, show_main_menu)
    * 0 == up, 1 == down, etc.
    */
 
-DEFUN ("up-cell", FDup_cell, FAup_cell, shift_cell_cursor)
+DEFUN ("up-cell", FDup_cell, FAup_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
@@ -69,7 +73,7 @@ DEFUN ("up-cell", FDup_cell, FAup_cell, shift_cell_cursor)
 "Move cursor up ARG rows.",
 #endif
 
-DEFUN ("down-cell", FDdown_cell, FAdown_cell, shift_cell_cursor)
+DEFUN ("down-cell", FDdown_cell, FAdown_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#1",
 "p",
@@ -78,7 +82,7 @@ DEFUN ("down-cell", FDdown_cell, FAdown_cell, shift_cell_cursor)
 "Move cursor down ARG rows.",
 #endif
 
-DEFUN ("right-cell", FDright_cell, FAright_cell, shift_cell_cursor)
+DEFUN ("right-cell", FDright_cell, FAright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#2",
 "p",
@@ -87,7 +91,7 @@ DEFUN ("right-cell", FDright_cell, FAright_cell, shift_cell_cursor)
 "Move cursor right ARG cols.",
 #endif
 
-DEFUN ("left-cell", FDleft_cell, FAleft_cell, shift_cell_cursor)
+DEFUN ("left-cell", FDleft_cell, FAleft_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#3",
 "p",
@@ -99,7 +103,7 @@ DEFUN ("left-cell", FDleft_cell, FAleft_cell, shift_cell_cursor)
 "Move cursor left ARG cols.",
 #endif
 
-DEFUN ("upright-cell", FDupright_cell, FAupright_cell, shift_cell_cursor)
+DEFUN ("upright-cell", FDupright_cell, FAupright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#4",
 "p",
@@ -108,7 +112,7 @@ DEFUN ("upright-cell", FDupright_cell, FAupright_cell, shift_cell_cursor)
 "Move cursor upright ARG rows and cols.",
 #endif
 
-DEFUN ("upleft-cell", FDupleft_cell, FAupleft_cell, shift_cell_cursor)
+DEFUN ("upleft-cell", FDupleft_cell, FAupleft_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#5",
 "p",
@@ -117,7 +121,7 @@ DEFUN ("upleft-cell", FDupleft_cell, FAupleft_cell, shift_cell_cursor)
 "Move cursor upleft ARG rows and cols.",
 #endif
 
-DEFUN ("downright-cell", FDdownright_cell, FAdownright_cell, shift_cell_cursor)
+DEFUN ("downright-cell", FDdownright_cell, FAdownright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#6",
 "p",
@@ -126,7 +130,7 @@ DEFUN ("downright-cell", FDdownright_cell, FAdownright_cell, shift_cell_cursor)
 "Move cursor downright ARG rows and cols.",
 #endif
 
-DEFUN ("downleft-cell", FDdownleft_cell, FAdownleft_cell, shift_cell_cursor)
+DEFUN ("downleft-cell", FDdownleft_cell, FAdownleft_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#7",
 "p",
@@ -135,7 +139,7 @@ DEFUN ("downleft-cell", FDdownleft_cell, FAdownleft_cell, shift_cell_cursor)
 "Move cursor downleft ARG rows and cols.",
 #endif
 
-DEFUN ("goto-cell", FDgoto_cell, FAgoto_cell, goto_cell)
+DEFUN ("goto-cell", FDgoto_cell, FAgoto_cell, to_vptr(goto_cell))
 #ifdef FUNC_ARG_STRINGS
 "RGoto cell? ",
 #endif
@@ -143,7 +147,7 @@ DEFUN ("goto-cell", FDgoto_cell, FAgoto_cell, goto_cell)
 "Goto CELL by name.  If a region is given, the upper-left corner is used.",
 #endif
 
-DEFUN ("goto-region", FDgoto_region, FAgoto_region, goto_region)
+DEFUN ("goto-region", FDgoto_region, FAgoto_region, to_vptr(goto_region))
 #ifdef FUNC_ARG_STRINGS
 "RGoto region? ",
 #endif
@@ -153,28 +157,28 @@ DEFUN ("goto-region", FDgoto_region, FAgoto_region, goto_region)
 "at the lower right.",
 #endif
 
-DEFUN_3 ("upper-left", FDupper_left, upper_left)
+DEFUN_3 ("upper-left", FDupper_left, to_vptr(upper_left))
 #ifdef DOC_STRINGS
 "Move the cell cursor to the first row and column.",
 #endif
 
-DEFUN_3 ("lower-left", FDlower_left, lower_left)
+DEFUN_3 ("lower-left", FDlower_left, to_vptr(lower_left))
 #ifdef DOC_STRINGS
 "Move the cell cursor to the last filled row and first column.",
 #endif
 
-DEFUN_3 ("upper-right", FDupper_right, upper_right)
+DEFUN_3 ("upper-right", FDupper_right, to_vptr(upper_right))
 #ifdef DOC_STRINGS
 "Move the cell cursor to the first row and rightmost filled column.",
 #endif
 
-DEFUN_3 ("lower-right", FDlower_right, lower_right)
+DEFUN_3 ("lower-right", FDlower_right, to_vptr(lower_right))
 #ifdef DOC_STRINGS
 "Move the cell cursor to the last filled row and column.",
 #endif
 
 DEFUN ("exchange-point-and-mark", FDexchange_point_and_mark,
-       FAexchange_point_and_mark, exchange_point_and_mark)
+       FAexchange_point_and_mark, to_vptr(exchange_point_and_mark))
 #ifdef FUNC_ARG_STRINGS
 "p?",
 #endif
@@ -184,7 +188,7 @@ DEFUN ("exchange-point-and-mark", FDexchange_point_and_mark,
 "it is.",
 #endif
 
-DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, mark_cell_cmd)
+DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, to_vptr(mark_cell_cmd))
 #ifdef FUNC_ARG_STRINGS
 "p?",
 #endif
@@ -199,7 +203,7 @@ DEFUN_3 ("clear-mark", FDclear_mark, unmark_cmd)
 
 DEFUN ("save-mark-to-cell", FDsave_mark_to_cell,
 	FAsave_mark_to_cell, 
-	save_mark_to_cell)
+	to_vptr(save_mark_to_cell))
 #ifdef FUNC_ARG_STRINGS
 "RSave mark to cell? ",
 #endif
@@ -210,7 +214,7 @@ DEFUN ("save-mark-to-cell", FDsave_mark_to_cell,
 
 DEFUN ("save-point-to-cell", FDsave_point_to_cell,
 	FAsave_point_to_cell, 
-	save_point_to_cell)
+	to_vptr(save_point_to_cell))
 #ifdef FUNC_ARG_STRINGS
 "RSave point to cell? ",
 #endif
@@ -218,7 +222,7 @@ DEFUN ("save-point-to-cell", FDsave_point_to_cell,
 "Save the current cursor point to a cell for future reference.",
 #endif
 
-DEFUN ("scroll-up", FDscroll_up, FAscroll_up, scroll_cell_cursor)
+DEFUN ("scroll-up", FDscroll_up, FAscroll_up, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
@@ -227,7 +231,7 @@ DEFUN ("scroll-up", FDscroll_up, FAscroll_up, scroll_cell_cursor)
 "Scroll the current window up ARG rows; or near full screen if no ARG.",
 #endif
 
-DEFUN ("scroll-down", FDscroll_down, FAscroll_down, scroll_cell_cursor)
+DEFUN ("scroll-down", FDscroll_down, FAscroll_down, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#1",
 "p",
@@ -236,7 +240,7 @@ DEFUN ("scroll-down", FDscroll_down, FAscroll_down, scroll_cell_cursor)
 "Scroll the current window down ARG rows; or near full screen if no ARG.",
 #endif
 
-DEFUN ("scroll-right", FDscroll_right, FAscroll_right, scroll_cell_cursor)
+DEFUN ("scroll-right", FDscroll_right, FAscroll_right, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#2",
 "p",
@@ -245,7 +249,7 @@ DEFUN ("scroll-right", FDscroll_right, FAscroll_right, scroll_cell_cursor)
 "Scroll the current window right ARG cols; or near full screen if no ARG.",
 #endif
 
-DEFUN ("scroll-left", FDscroll_left, FAscroll_left, scroll_cell_cursor)
+DEFUN ("scroll-left", FDscroll_left, FAscroll_left, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#3",
 "p",
@@ -255,7 +259,7 @@ DEFUN ("scroll-left", FDscroll_left, FAscroll_left, scroll_cell_cursor)
 #endif
 
 DEFUN ("scroll-upright", FDscroll_upright, FAscroll_upright,
-       scroll_cell_cursor)
+       to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#4",
 "p",
@@ -264,7 +268,7 @@ DEFUN ("scroll-upright", FDscroll_upright, FAscroll_upright,
 "Scroll the current window upright ARG row/cols; or a full screen if no ARG.",
 #endif
 
-DEFUN ("scroll-upleft", FDscroll_upleft, FAscroll_upleft, scroll_cell_cursor)
+DEFUN ("scroll-upleft", FDscroll_upleft, FAscroll_upleft, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#5",
 "p",
@@ -274,7 +278,7 @@ DEFUN ("scroll-upleft", FDscroll_upleft, FAscroll_upleft, scroll_cell_cursor)
 #endif
 
 DEFUN ("scroll-downright", FDscroll_downright, FAscroll_downright,
-       scroll_cell_cursor) 
+       to_vptr(scroll_cell_cursor)) 
 #ifdef FUNC_ARG_STRINGS
 "+#6",
 "p",
@@ -284,7 +288,7 @@ DEFUN ("scroll-downright", FDscroll_downright, FAscroll_downright,
 #endif
 
 DEFUN ("scroll-downleft", FDscroll_downleft, FAscroll_downleft,
-       scroll_cell_cursor) 
+       to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#7",
 "p",
@@ -293,7 +297,7 @@ DEFUN ("scroll-downleft", FDscroll_downleft, FAscroll_downleft,
 "Scroll the current window downleft ARG row/cols; or a full screen if no ARG.",
 #endif
 
-DEFUN ("scan-up", FDscan_up, FAscan_up, scan_cell_cursor)
+DEFUN ("scan-up", FDscan_up, FAscan_up, to_vptr(scan_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
@@ -303,7 +307,7 @@ DEFUN ("scan-up", FDscan_up, FAscan_up, scan_cell_cursor)
 "With an argument, moves to the Nth border.",
 #endif
 
-DEFUN ("scan-down", FDscan_down, FAscan_down, scan_cell_cursor)
+DEFUN ("scan-down", FDscan_down, FAscan_down, to_vptr(scan_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#1",
 "p",
@@ -313,7 +317,7 @@ DEFUN ("scan-down", FDscan_down, FAscan_down, scan_cell_cursor)
 "With an argument, moves to the Nth border.",
 #endif
 
-DEFUN ("scan-right", FDscan_right, FAscan_right, scan_cell_cursor)
+DEFUN ("scan-right", FDscan_right, FAscan_right, to_vptr(scan_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#2",
 "p",
@@ -323,7 +327,7 @@ DEFUN ("scan-right", FDscan_right, FAscan_right, scan_cell_cursor)
 "With an argument, moves to the Nth border.",
 #endif
 
-DEFUN ("scan-left", FDscan_left, FAscan_left, scan_cell_cursor)
+DEFUN ("scan-left", FDscan_left, FAscan_left, to_vptr(scan_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#3",
 "p",
@@ -334,7 +338,7 @@ DEFUN ("scan-left", FDscan_left, FAscan_left, scan_cell_cursor)
 #endif
 
 DEFUN ("beginning-of-row",
-       FDbeginning_of_row, FAbeginning_of_row, beginning_of_row)
+       FDbeginning_of_row, FAbeginning_of_row, to_vptr(beginning_of_row))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -344,7 +348,7 @@ DEFUN ("beginning-of-row",
 #endif
 
 DEFUN ("beginning-of-col",
-       FDbeginning_of_col, FAbeginning_of_col, beginning_of_col)
+       FDbeginning_of_col, FAbeginning_of_col, to_vptr(beginning_of_col))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -353,7 +357,7 @@ DEFUN ("beginning-of-col",
 "With a prefix argument, move forward ARG - 1 cols first.",
 #endif
 
-DEFUN ("end-of-row", FDend_of_row, FAend_of_row, end_of_row)
+DEFUN ("end-of-row", FDend_of_row, FAend_of_row, to_vptr(end_of_row))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -362,7 +366,7 @@ DEFUN ("end-of-row", FDend_of_row, FAend_of_row, end_of_row)
 "With a prefix argument, move forward ARG - 1 rows first.",
 #endif
 
-DEFUN ("end-of-col", FDend_of_col, FAend_of_col, end_of_col)
+DEFUN ("end-of-col", FDend_of_col, FAend_of_col, to_vptr(end_of_col))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -371,19 +375,19 @@ DEFUN ("end-of-col", FDend_of_col, FAend_of_col, end_of_col)
 "With a prefix argument, move forward ARG - 1 cols first.",
 #endif
 
-DEFUN_3 ("recenter-window", FDrecenter_window, recenter_window)
+DEFUN_3 ("recenter-window", FDrecenter_window, to_vptr(recenter_window))
 #ifdef DOC_STRINGS
 "Center the cell cursor in the current window.",
 #endif
 
-DEFUN_3 ("redraw-screen", FDredraw_screen, redraw_screen)
+DEFUN_3 ("redraw-screen", FDredraw_screen, to_vptr(redraw_screen))
 #ifdef DOC_STRINGS
 "Center the cell cursor in the current window and redisplay the screen.",
 #endif
 
 /* Commands for Editing from the Sheet */
 
-DEFUN ("edit-cell", FDedit_cell, FAedit_cell, edit_cell)
+DEFUN ("edit-cell", FDedit_cell, FAedit_cell, to_vptr(edit_cell))
 #ifdef FUNC_ARG_STRINGS
 "$Set %c to? ", 
 #endif
@@ -391,7 +395,7 @@ DEFUN ("edit-cell", FDedit_cell, FAedit_cell, edit_cell)
 "Assign FORMULA to the current cell.",
 #endif
 
-DEFUN ("set-cell", FDset_cell, FAset_cell, edit_cell)
+DEFUN ("set-cell", FDset_cell, FAset_cell, to_vptr(edit_cell))
 #ifdef FUNC_ARG_STRINGS
 "$'Set %c to? ", 
 #endif
@@ -400,7 +404,7 @@ DEFUN ("set-cell", FDset_cell, FAset_cell, edit_cell)
 #endif
 
 DEFUN ("goto-edit-cell",
-       FDgoto_edit_cell, FAgoto_edit_cell, goto_edit_cell)
+       FDgoto_edit_cell, FAgoto_edit_cell, to_vptr(goto_edit_cell))
 #ifdef FUNC_ARG_STRINGS
 "l",
 #endif
@@ -411,7 +415,7 @@ DEFUN ("goto-edit-cell",
 #endif
 
 DEFUN ("goto-set-cell",
-       FDgoto_set_cell, FAgoto_set_cell, goto_set_cell)
+       FDgoto_set_cell, FAgoto_set_cell, to_vptr(goto_set_cell))
 #ifdef FUNC_ARG_STRINGS
 "l",
 #endif
@@ -422,7 +426,7 @@ DEFUN ("goto-set-cell",
 #endif
 
 DEFUN ("set-region-formula",
-       FDset_region_formula, FAset_region_formula, set_region_formula)
+       FDset_region_formula, FAset_region_formula, to_vptr(set_region_formula))
 #ifdef FUNC_ARG_STRINGS
 "rSet region? ",
 "$'Set region %0 to? ",
@@ -433,7 +437,7 @@ DEFUN ("set-region-formula",
 
 /* Commands for Moving Cursor and Editing in Input Area */
 
-DEFUN ("toggle-overwrite", FDtoggle_overwrite, FAtoggle_overwrite, toggle_overwrite)
+DEFUN ("toggle-overwrite", FDtoggle_overwrite, FAtoggle_overwrite, to_vptr(toggle_overwrite))
 #ifdef FUNC_ARG_STRINGS
 "p?",
 "p",
@@ -447,17 +451,17 @@ DEFUN ("toggle-overwrite", FDtoggle_overwrite, FAtoggle_overwrite, toggle_overwr
 "With no prefix argument, toggle overwrite mode.",
 #endif
 
-DEFUN_3 ("beginning-of-line", FDbeginning_of_line, beginning_of_line)
+DEFUN_3 ("beginning-of-line", FDbeginning_of_line, to_vptr(beginning_of_line))
 #ifdef DOC_STRINGS
 "Move point to beginning of input line.",
 #endif
 
-DEFUN_3 ("end-of-line", FDend_of_line, end_of_line)
+DEFUN_3 ("end-of-line", FDend_of_line, to_vptr(end_of_line))
 #ifdef DOC_STRINGS
 "Move point to end of input line.",
 #endif
 
-DEFUN ("backward-char", FDbackward_char, FAbackward_char, backward_char)
+DEFUN ("backward-char", FDbackward_char, FAbackward_char, to_vptr(backward_char))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -466,7 +470,7 @@ DEFUN ("backward-char", FDbackward_char, FAbackward_char, backward_char)
 "On attempt to pass beginning or end of buffer, report an error.",
 #endif
 
-DEFUN ("backward-word", FDbackward_word, FAbackward_word, backward_word)
+DEFUN ("backward-word", FDbackward_word, FAbackward_word, to_vptr(backward_word))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -476,7 +480,7 @@ DEFUN ("backward-word", FDbackward_word, FAbackward_word, backward_word)
 #endif
 
 
-DEFUN ("backward-delete-char", FDbackward_delete_char, FAbackward_delete_char, backward_delete_char)
+DEFUN ("backward-delete-char", FDbackward_delete_char, FAbackward_delete_char, to_vptr(backward_delete_char))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -484,7 +488,7 @@ DEFUN ("backward-delete-char", FDbackward_delete_char, FAbackward_delete_char, b
 "Delete ARG characters backward.",
 #endif
 
-DEFUN ("backward-delete-word", FDbackward_delete_word, FAbackward_delete_word, backward_delete_word)
+DEFUN ("backward-delete-word", FDbackward_delete_word, FAbackward_delete_word, to_vptr(backward_delete_word))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -493,12 +497,12 @@ DEFUN ("backward-delete-word", FDbackward_delete_word, FAbackward_delete_word, b
 "With prefix argument, do this that many times.",
 #endif
 
-DEFUN_3 ("delete-to-start", FDdelete_to_start, delete_to_start)
+DEFUN_3 ("delete-to-start", FDdelete_to_start, to_vptr(delete_to_start))
 #ifdef DOC_STRINGS
 "Delete the input line, upto the cursor position.",
 #endif
 
-DEFUN ("forward-char", FDforward_char, FAforward_char, forward_char)
+DEFUN ("forward-char", FDforward_char, FAforward_char, to_vptr(forward_char))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -507,7 +511,7 @@ DEFUN ("forward-char", FDforward_char, FAforward_char, forward_char)
 "On reaching end of buffer, report an error.",
 #endif
 
-DEFUN ("forward-word", FDforward_word, FAforward_word, forward_word)
+DEFUN ("forward-word", FDforward_word, FAforward_word, to_vptr(forward_word))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -515,7 +519,7 @@ DEFUN ("forward-word", FDforward_word, FAforward_word, forward_word)
 "Move the input area cursor forward ARG words (backward if ARG is negative).",
 #endif
 
-DEFUN ("delete-char", FDdelete_char, FAdelete_char, delete_char)
+DEFUN ("delete-char", FDdelete_char, FAdelete_char, to_vptr(delete_char))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -524,7 +528,7 @@ DEFUN ("delete-char", FDdelete_char, FAdelete_char, delete_char)
 "Deletes backwards with negative arg.",
 #endif
 
-DEFUN ("delete-word", FDdelete_word, FAdelete_word, delete_word)
+DEFUN ("delete-word", FDdelete_word, FAdelete_word, to_vptr(delete_word))
 #ifdef FUNC_ARG_STRINGS
 "p",
 #endif
@@ -533,7 +537,7 @@ DEFUN ("delete-word", FDdelete_word, FAdelete_word, delete_word)
 "With argument, do this that many times.",
 #endif
 
-DEFUN_3 ("kill-line", FDkill_line, kill_line)
+DEFUN_3 ("kill-line", FDkill_line, to_vptr(kill_line))
 #ifdef DOC_STRINGS
 "Delete the rest of the input line, beginning at the cursor position.",
 #endif
@@ -550,8 +554,7 @@ DEFUN ("auto-move-up", FDauto_move_up, FAauto_move_up,
 "This is the direction that will be used by the next-edit command.",
 #endif
 
-DEFUN ("auto-move-down", FDauto_move_down, FAauto_move_down,
-       set_auto_direction)
+DEFUN ("auto-move-down", FDauto_move_down, FAauto_move_down, to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#1",
 #endif
@@ -561,7 +564,7 @@ DEFUN ("auto-move-down", FDauto_move_down, FAauto_move_down,
 #endif
 
 DEFUN ("auto-move-left", FDauto_move_left, FAauto_move_left,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#3",
 #endif
@@ -572,7 +575,7 @@ DEFUN ("auto-move-left", FDauto_move_left, FAauto_move_left,
 
 
 DEFUN ("auto-move-right", FDauto_move_right, FAauto_move_right,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#2",
 #endif
@@ -582,7 +585,7 @@ DEFUN ("auto-move-right", FDauto_move_right, FAauto_move_right,
 #endif
 
 DEFUN ("auto-move-up-left", FDauto_move_up_left, FAauto_move_up_left,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#5",
 #endif
@@ -592,7 +595,7 @@ DEFUN ("auto-move-up-left", FDauto_move_up_left, FAauto_move_up_left,
 #endif
 
 DEFUN ("auto-move-up-right", FDauto_move_up_right, FAauto_move_up_right,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#4",
 #endif
@@ -602,7 +605,7 @@ DEFUN ("auto-move-up-right", FDauto_move_up_right, FAauto_move_up_right,
 #endif
 
 DEFUN ("auto-move-down-left", FDauto_move_down_left, FAauto_move_down_left,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#7",
 #endif
@@ -612,7 +615,7 @@ DEFUN ("auto-move-down-left", FDauto_move_down_left, FAauto_move_down_left,
 #endif
 
 DEFUN ("auto-move-down-right", FDauto_move_down_right, FAauto_move_down_right,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#6",
 #endif
@@ -622,7 +625,7 @@ DEFUN ("auto-move-down-right", FDauto_move_down_right, FAauto_move_down_right,
 #endif
 
 DEFUN ("auto-move-no-motion", FDauto_move_no_motion, FAauto_move_no_motion,
-       set_auto_direction)
+       to_vptr(set_auto_direction))
 #ifdef FUNC_ARG_STRINGS
 "#8",
 #endif
@@ -631,7 +634,7 @@ DEFUN ("auto-move-no-motion", FDauto_move_no_motion, FAauto_move_no_motion,
 "This is the direction that will be used by the next-edit command.",
 #endif
 
-DEFUN_3 ("auto-move", FDauto_move, auto_move)
+DEFUN_3 ("auto-move", FDauto_move, to_vptr(auto_move))
 #ifdef DOC_STRINGS
 "Move one cell in the automatic motion direction.",
 "The automatic motion direction is set using one of the commands: ",
@@ -645,14 +648,14 @@ DEFUN_3 ("auto-move", FDauto_move, auto_move)
 "	[auto-move-down-right]  auto-move-down-right",
 #endif
 
-DEFUN_3 ("auto-next-set", FDauto_next_set, auto_next_set)
+DEFUN_3 ("auto-next-set", FDauto_next_set, to_vptr(auto_next_set))
 #ifdef DOC_STRINGS
 "Scan in the opposite direction of automatic motion, then move one cell.",
 "The direction of the one-cell motion is down for left or right",
 "automatic motion, and to the right otherwise.  See also, `auto-move'.",
 #endif
 
-DEFUN ("next-edit", FDnext_edit, FAnext_edit, run_string_as_macro)
+DEFUN ("next-edit", FDnext_edit, FAnext_edit, to_vptr(run_string_as_macro))
 #ifdef FUNC_ARG_STRINGS
 "={exit-minibuffer}{auto-move}{edit-cell}",
 #endif
@@ -662,7 +665,7 @@ DEFUN ("next-edit", FDnext_edit, FAnext_edit, run_string_as_macro)
 "cell, and begin a second edit-cell command.  See also `auto-move'.",
 #endif
 
-DEFUN ("next-edit-set", FDnext_edit_set, FAnext_edit_set, run_string_as_macro)
+DEFUN ("next-edit-set", FDnext_edit_set, FAnext_edit_set, to_vptr(run_string_as_macro))
 #ifdef FUNC_ARG_STRINGS
 "={exit-minibuffer}{auto-next-set}{edit-cell}",
 #endif
@@ -674,7 +677,7 @@ DEFUN ("next-edit-set", FDnext_edit_set, FAnext_edit_set, run_string_as_macro)
 
 /* Moving, Copying and Deleting Cells */
 
-DEFUN ("copy-region", FDcopy_region, FAcopy_region, copy_region)
+DEFUN ("copy-region", FDcopy_region, FAcopy_region, to_vptr(copy_region))
 #ifdef FUNC_ARG_STRINGS
 "rCopy region? ",
 "RCopy %0 to? ",
@@ -687,7 +690,7 @@ DEFUN ("copy-region", FDcopy_region, FAcopy_region, copy_region)
 #endif
     
 DEFUN ("copy-values-in-region",
-       FDcopy_values_region, FAcopy_values_region, copy_values_region)
+       FDcopy_values_region, FAcopy_values_region, to_vptr(copy_values_region))
 #ifdef FUNC_ARG_STRINGS
 "rCopy values in region? ",
 "RCopy values in %0 to:",
@@ -700,7 +703,7 @@ DEFUN ("copy-values-in-region",
 #endif
     
 DEFUN ("move-region",
-       FDmove_region, FAmove_region, move_region)
+       FDmove_region, FAmove_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
 "rMove region? ",
 "RMove region %0 to? ",
@@ -716,7 +719,7 @@ DEFUN ("move-region",
 #endif
     
 DEFUN ("move-marked-region",
-       FDmove_marked_region, FAmove_marked_region, move_region)
+       FDmove_marked_region, FAmove_marked_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
 "@Move region? ",
 "RMove region %0 to? ",
@@ -734,7 +737,7 @@ DEFUN ("move-marked-region",
 "been set.",
 #endif
     
-DEFUN ("insert-row", FDinsert_row, FAinsert_row, insert_row)
+DEFUN ("insert-row", FDinsert_row, FAinsert_row, to_vptr(insert_row))
 #ifdef FUNC_ARG_STRINGS
 "+p",
 #endif
@@ -742,7 +745,7 @@ DEFUN ("insert-row", FDinsert_row, FAinsert_row, insert_row)
 "Insert ARG empty rows.",
 #endif
 
-DEFUN ("insert-col", FDinsert_col, FAinsert_col, insert_col)
+DEFUN ("insert-col", FDinsert_col, FAinsert_col, to_vptr(insert_col))
 #ifdef FUNC_ARG_STRINGS
 "+p",
 #endif
@@ -772,7 +775,7 @@ DEFUN ("insert-copy-col", FDinsert_copy_col, FAinsert_copy_col,
 #endif
 #endif /* 0 */
 
-DEFUN ("delete-row", FDdelete_row, FAdelete_row, delete_row)
+DEFUN ("delete-row", FDdelete_row, FAdelete_row, to_vptr(delete_row))
 #ifdef FUNC_ARG_STRINGS
 "+p",
 #endif
@@ -780,7 +783,7 @@ DEFUN ("delete-row", FDdelete_row, FAdelete_row, delete_row)
 "Delete ARG rows.",
 #endif
 
-DEFUN ("delete-col", FDdelete_col, FAdelete_col, delete_col)
+DEFUN ("delete-col", FDdelete_col, FAdelete_col, to_vptr(delete_col))
 #ifdef FUNC_ARG_STRINGS
 "+p",
 #endif
@@ -788,12 +791,12 @@ DEFUN ("delete-col", FDdelete_col, FAdelete_col, delete_col)
 "Delete ARG cols.",
 #endif
 
-DEFUN_3 ("delete-cell", FDdelete_cell, kill_cell_cmd)
+DEFUN_3 ("delete-cell", FDdelete_cell, to_vptr(kill_cell_cmd))
 #ifdef DOC_STRINGS
 "Erase the formula, font and format of the current cell.",
 #endif
 
-DEFUN ("delete-region", FDdelete_region, FAdelete_region, delete_region)
+DEFUN ("delete-region", FDdelete_region, FAdelete_region, to_vptr(delete_region))
 #ifdef FUNC_ARG_STRINGS
 "rDelete region? ",
 #endif
@@ -802,7 +805,7 @@ DEFUN ("delete-region", FDdelete_region, FAdelete_region, delete_region)
 #endif
 
 DEFUN ("clear-spreadsheet",
-       FDclear_spreadsheet, FAclear_spreadsheet, kill_all_cmd) 
+       FDclear_spreadsheet, FAclear_spreadsheet, to_vptr(kill_all_cmd))
 #ifdef FUNC_ARG_STRINGS
 "MSpreadsheet modified;  clear anyway? (yes or no) ",
 #endif
@@ -813,7 +816,7 @@ DEFUN ("clear-spreadsheet",
 /* Sorting Commands */
 
 DEFUN ("sort-region", FDsort_region_cmd, FAsort_region_cmd,
-        sort_region_cmd)
+        to_vptr(sort_region_cmd))
 #ifdef FUNC_ARG_STRINGS
 "SSort region? ",
 #endif
@@ -824,7 +827,7 @@ DEFUN ("sort-region", FDsort_region_cmd, FAsort_region_cmd,
 /* Commands For Setting Cell Attributes. */
 
 DEFUN_5 ("set-region-height", FDset_region_height, FAset_region_height,
-	 DFset_region_height, set_region_height)
+	 DFset_region_height, to_vptr(set_region_height))
 #ifdef FUNC_ARG_STRINGS
 "rSet height for region? ",
 "sSet height for %0 to? ",
@@ -843,7 +846,7 @@ DEFUN_5 ("set-region-height", FDset_region_height, FAset_region_height,
 #endif
 
 DEFUN_5 ("set-region-width", FDset_region_width, FAset_region_width,
-	 DFset_region_width, set_region_width)
+	 DFset_region_width, to_vptr(set_region_width))
 #ifdef FUNC_ARG_STRINGS
 "rSet width for region? ",
 "sSet width for %0 to? ",
@@ -862,7 +865,7 @@ DEFUN_5 ("set-region-width", FDset_region_width, FAset_region_width,
 #endif
 
 DEFUN ("set-region-protection", FDset_region_protection,
-       FAset_region_protection, set_region_protection)
+       FAset_region_protection, to_vptr(set_region_protection))
 #ifdef FUNC_ARG_STRINGS
 "rSet protection for region? ",
 "[dpu][D]efault  [P]rotect  [U]nprotect? ",
@@ -873,7 +876,7 @@ DEFUN ("set-region-protection", FDset_region_protection,
 #endif
 
 DEFUN ("set-region-alignment", FDset_region_alignment,
-       FAset_region_alignment, set_region_alignment)
+       FAset_region_alignment, to_vptr(set_region_alignment))
 #ifdef FUNC_ARG_STRINGS
 "rSet alignment for region? ",
 "[dlcr][D]efault  [L]eft  [C]enter  [R]ight? ",
@@ -884,7 +887,7 @@ DEFUN ("set-region-alignment", FDset_region_alignment,
 #endif
 
 DEFUN_5 ("set-region-format", FDset_region_format, FAset_region_format,
-	 DFset_region_format, set_region_format)
+	 DFset_region_format, to_vptr(set_region_format))
 #ifdef FUNC_ARG_STRINGS
 "rSet format for region? ",
 "FSet format of %0 to? ",
@@ -947,7 +950,7 @@ DEFUN_5 ("set-region-format", FDset_region_format, FAset_region_format,
 #endif
 
 DEFUN_5 ("set-cell-height", FDset_cell_height, FAset_cell_height,
-	 DFset_cell_height, set_region_height)
+	 DFset_cell_height, to_vptr(set_region_height))
 #ifdef FUNC_ARG_STRINGS
 ".'",
 "sSet height for %0 to? ",
@@ -966,7 +969,7 @@ DEFUN_5 ("set-cell-height", FDset_cell_height, FAset_cell_height,
 #endif
 
 DEFUN_5 ("set-cell-width", FDset_cell_width, FAset_cell_width,
-	 DFset_cell_width, set_region_width)
+	 DFset_cell_width, to_vptr(set_region_width))
 #ifdef FUNC_ARG_STRINGS
 ".'",
 "sSet width for %0 to? ",
@@ -985,7 +988,7 @@ DEFUN_5 ("set-cell-width", FDset_cell_width, FAset_cell_width,
 #endif
 
 DEFUN ("set-cell-protection",
-       FDset_cell_protection, FAset_cell_protection, set_region_protection)
+       FDset_cell_protection, FAset_cell_protection, to_vptr(set_region_protection))
 #ifdef FUNC_ARG_STRINGS
 ".'",
 "[dpu][D]efault  [P]rotect  [U]nprotect? ",
@@ -996,7 +999,7 @@ DEFUN ("set-cell-protection",
 #endif
 
 DEFUN ("set-cell-alignment",
-       FDset_cell_alignment, FAset_cell_alignment, set_region_alignment)
+       FDset_cell_alignment, FAset_cell_alignment, to_vptr(set_region_alignment))
 #ifdef FUNC_ARG_STRINGS
 ".'",
 "[dlcr][D]efault  [L]eft  [C]enter  [R]ight? ",
@@ -1007,7 +1010,7 @@ DEFUN ("set-cell-alignment",
 #endif
 
 DEFUN_5 ("set-cell-format", FDset_cell_format, FAset_cell_format,
-	 DFset_cell_format, set_region_format)
+	 DFset_cell_format, to_vptr(set_region_format))
 #ifdef FUNC_ARG_STRINGS
 ".'",
 "FSet format of %0 to? ",
@@ -1022,7 +1025,7 @@ DEFUN_5 ("set-cell-format", FDset_cell_format, FAset_cell_format,
 #endif
 
 DEFUN_5 ("define-user-format",
-	 FDdefine_usr_fmt, FAdefine_usr_fmt, DFdefine_usr_fmt, define_usr_fmt)
+	 FDdefine_usr_fmt, FAdefine_usr_fmt, DFdefine_usr_fmt, to_vptr(define_usr_fmt))
 #ifdef FUNC_ARG_STRINGS
 "N[1,16]Define format [1-16]? ",
 "wPositive header? ",
@@ -1086,7 +1089,7 @@ DEFUN_5 ("define-user-format",
 /* Commands For Setting Cell Defaults */
 
 DEFUN ("set-default-height",
-       FDset_def_height, FAset_def_height, set_def_height)
+       FDset_def_height, FAset_def_height, to_vptr(set_def_height))
 #ifdef FUNC_ARG_STRINGS
 "sDefault height? ",
 #endif
@@ -1096,7 +1099,7 @@ DEFUN ("set-default-height",
 #endif
 
 DEFUN ("set-default-width",
-       FDset_def_width, FAset_def_width, set_def_width)
+       FDset_def_width, FAset_def_width, to_vptr(set_def_width))
 #ifdef FUNC_ARG_STRINGS
 "sDefault width? ",
 #endif
@@ -1106,7 +1109,7 @@ DEFUN ("set-default-width",
 #endif
 
 DEFUN ("set-user-scales",
-       FDset_user_scales, FAset_user_scales, set_user_scales) 
+       FDset_user_scales, FAset_user_scales, to_vptr(set_user_scales))
 #ifdef FUNC_ARG_STRINGS
 "dScale row heights by? ",
 "dScale column widths by? ",
@@ -1116,7 +1119,7 @@ DEFUN ("set-user-scales",
 #endif
 
 DEFUN ("set-default-protection", FDset_def_protection,
-       FAset_def_protection, set_def_protection)
+       FAset_def_protection, to_vptr(set_def_protection))
 #ifdef FUNC_ARG_STRINGS
 "[pu][U]nprotected  or  [P]rotected",
 #endif
@@ -1126,7 +1129,7 @@ DEFUN ("set-default-protection", FDset_def_protection,
 #endif
 
 DEFUN ("set-default-alignment",
-       FDset_def_alignment, FAset_def_alignment, set_def_alignment)
+       FDset_def_alignment, FAset_def_alignment, to_vptr(set_def_alignment))
 #ifdef FUNC_ARG_STRINGS
 "[dlcrDLCR][L]eft  [C]enter  [R]ight  [D]efault",
 #endif
@@ -1137,7 +1140,7 @@ DEFUN ("set-default-alignment",
 #endif
 
 DEFUN ("set-default-format",
-       FDset_def_format, FAset_def_format, set_def_format)
+       FDset_def_format, FAset_def_format, to_vptr(set_def_format))
 #ifdef FUNC_ARG_STRINGS
 "FDefault format? ",
 #endif
@@ -1170,14 +1173,14 @@ DEFUN ("set-default-font",
 /* Commands for Inserting Cell Details Into Input Area  */
 
 DEFUN_3 ("insert-cell-expression",
-         FDinsert_cell_expression, insert_cell_expression)
+         FDinsert_cell_expression, to_vptr(insert_cell_expression))
 #ifdef DOC_STRINGS
 "Insert the current cell's formula in the input area.",
 #endif
 
 DEFUN ("insert-other-cell-expression",
          FDinsert_other_cell_expression, FAinsert_other_cell_expression,
-         insert_other_cell_expression)
+         to_vptr(insert_other_cell_expression))
 #ifdef FUNC_ARG_STRINGS
 "RInsert expression from? ",
 #endif
@@ -1186,14 +1189,14 @@ DEFUN ("insert-other-cell-expression",
 "is a range, the value in the top left cell, the NW corner is used.",
 #endif
 
-DEFUN_3 ("insert-cell-value", FDinsert_cell_value, insert_cell_value)
+DEFUN_3 ("insert-cell-value", FDinsert_cell_value, to_vptr(insert_cell_value))
 #ifdef DOC_STRINGS
 "Insert the current cell's value (not its formula) in the input area.",
 #endif
 
 DEFUN ("insert-other-cell-value",
        FDinsert_other_cell_value, FAinsert_other_cell_value,
-       insert_other_cell_value)
+       to_vptr(insert_other_cell_value))
 #ifdef FUNC_ARG_STRINGS
 "RInsert value from? ",
 #endif
