@@ -60,7 +60,7 @@ extern char *mk_sprintf (const char *, ...);
 extern void get_usr_stats (int, char **);
 extern void set_usr_stats (int, char **);
 
-extern FILE *xopen_with_backup (const char *,const char *);
+extern FILE *xopen_with_backup (char *,const char *);
 extern int xclose (FILE *);
 extern char *err_msg (void);
 

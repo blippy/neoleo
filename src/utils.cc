@@ -190,7 +190,7 @@ __set_fp (
 {
   if (__id_s == 0)
     {
-      __id_s = ck_malloc (20 * sizeof (struct id));
+      __id_s = (id*) ck_malloc (20 * sizeof (struct id));
       __id_n = 0;
       __id_f = 20;
     }
@@ -210,7 +210,7 @@ __set_fp (
   if (__id_f == 0)
     {
       __id_f = 20;
-      __id_s = ck_realloc (__id_s, (__id_f + __id_n) * sizeof (struct id));
+      __id_s = (id*) ck_realloc (__id_s, (__id_f + __id_n) * sizeof (struct id));
     }
   __id_s[__id_n].flag = flag;
   __id_s[__id_n].name = strdup (name);
@@ -246,9 +246,7 @@ xopen (
 
 /* Open a file, creating a backup file if needed. . . */
 FILE *
-fopen_with_backup (
-     char *name,
-     const char *mode)
+fopen_with_backup (char *name, const char *mode)
 {
   char *newname;
   struct stat stat_buf;
@@ -322,9 +320,7 @@ fopen_with_backup (
 
 /* Open a file or a pipe, creating a backup file if it's a file */
 FILE *
-xopen_with_backup (
-     const char *name,
-     const char *mode)
+xopen_with_backup (char *name, const char *mode)
 {
   int flag;
   FILE *ret;
