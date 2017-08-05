@@ -107,7 +107,7 @@ name_macro_string (char * name, char * str)
   {
     struct cmd_func * cf = &named_macro_strings [i];
     cf->func_name = ck_savestr (name);
-    cf->func_func = run_string_as_macro;
+    cf->func_func = to_vptr(run_string_as_macro);
     cf->init_code = 0;
     {
       struct info_buffer * ib = find_or_make_info (name);
