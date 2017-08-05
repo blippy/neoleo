@@ -1,10 +1,10 @@
 # To run the tests: `make check'
-EXTRA_DIST = test-suite.sh
+EXTRA_DIST = ref.sh
 #bin_SCRIPTS = . tests/test-suite.sh
 #AM_TESTS_ENVIRONMENT = . ./.test-suite.sh
 #AM_TESTS_FD_REDIRECT = 9>&2
 
-TESTS = inbuilt-tests.sh test-suite.sh nohead-01.scr nohead-02.scr stringo.scr
+TESTS = inbuilt-tests.sh ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = script.sh
 
