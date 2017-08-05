@@ -63,7 +63,8 @@ class value {
     struct cell_flags_s {
 	unsigned int	cell_unused:	1;	/* Was 2 */
 	unsigned int	cell_lock:	2;
-	unsigned int	cell_type:	3;
+	//unsigned int	cell_type:	3;
+	ValType		cell_type:	TYP_STR;
 	unsigned int	cell_justify:	2;
 	unsigned int	cell_format:	4;	/* Was 3 */
 	unsigned int	cell_precision:	4;

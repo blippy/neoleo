@@ -102,7 +102,8 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 	struct func
 	{
 		char *name;
-		int typ;
+		//int typ;
+		ValType typ;
 	};
 
 	static struct func cell_funs[] =
@@ -118,8 +119,8 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		{"format", TYP_STR},	// 8 
 		{"type", TYP_STR},		// 9
 		{"formula", TYP_STR},	// 10
-		{"value", 0},		// 11
-		{0, 0}
+		{"value", TYP_NUL},		// 11 - TODO are we sure TYP_NUL is the correct type?
+		{0, TYP_NUL}
 	};
 
 	//CELL *cell_ptr;
@@ -155,10 +156,12 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		case 3:
 		case 4:
 			{
+				static char slock[] = "locked";
+				static char sulock[] = "unlocked";
 				CELL* cell_ptr = find_cell (row, col);
 				p->String = ( (cell_ptr ? GET_LCK (cell_ptr) : default_lock)
-						? "locked"
-						: "unlocked");
+						? slock
+						: sulock);
 			}
 			break;
 		case 5:
@@ -223,7 +226,7 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 					p->x = cell_ptr->c_z;
 				}
 				else
-					p->type = 0;
+					p->type = TYP_NUL;
 			}
 			break;
 		default:
@@ -473,7 +476,7 @@ out:
   cell_ptr = find_cell (row, col);
   if (!cell_ptr)
     {
-      p->type = 0;
+      p->type = TYP_NUL;
       p->Int = 0;
     }
   else
@@ -539,7 +542,7 @@ out:
   cell_ptr = find_cell (row, col);
   if (!cell_ptr)
     {
-      p->type = 0;
+      p->type = TYP_NUL;
       p->Int = 0;
     }
   else
@@ -592,7 +595,7 @@ out:
   cell_ptr = find_cell (row, col);
   if (!cell_ptr)
     {
-      p->type = 0;
+      p->type = TYP_NUL;
       p->Int = 0;
     }
   else
