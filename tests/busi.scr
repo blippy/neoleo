@@ -1,0 +1,10 @@
+# test string functions in busi.cc
+# Only fledgling at the moment, obviously
+
+# expect 10%
+i
+rate(1.21, 1.0, 2.0)
+.
+
+w
+q

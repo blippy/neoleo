@@ -344,15 +344,6 @@ do_strstr (
 	p->type=TYP_INT;
 }
 
-// cast it into the void for table look-up purposes
-// TODO make available generally
-// Taken from:
-// https://stackoverflow.com/questions/45009306/combining-using-and-reinterpret-cast
-using vptr = void (*) ();
-template <typename Func>
-constexpr vptr to_vptr(Func && func)
-{ return reinterpret_cast<vptr>(func); }
-
 struct function string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" },	// 1 
 { C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" },	// 2 

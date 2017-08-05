@@ -186,3 +186,12 @@ extern void edit_cell_at(CELLREF row, CELLREF col, const char* new_formula);
 void copy_cell_formula();
 void paste_cell_formula();
 
+
+// cast it into the void for table look-up purposes
+// Taken from:
+// https://stackoverflow.com/questions/45009306/combining-using-and-reinterpret-cast
+using vptr = void (*) ();
+template <typename Func>
+constexpr vptr to_vptr(Func && func)
+{ return reinterpret_cast<vptr>(func); }
+
