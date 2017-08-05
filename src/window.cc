@@ -52,120 +52,118 @@
 #define MIN_CWIN_WIDTH  MIN_WIN_WIDTH(cwin)
 
 
+struct tmp_s { int l, r, u, b; };
+
 static void 
 do_close_window (int num)
 {
-  int n;
-  struct window *win, *kwin;
-  int nlf, nrt, nup, nbl;
-  int klo, kho, kld, khd;
-  int lo, ho, ld, hd;
-  struct tmp
-    {
-      int l, r, u, b;
-    }
-   *tmpptr;
+	int n;
+	struct window *win, *kwin;
+	int nlf, nrt, nup, nbl;
+	int klo, kho, kld, khd;
+	int lo, ho, ld, hd;
+	static tmp_s *tmpptr;
 
-  if (nwin == 1)
-    {
-      io_error_msg ("Attempt to delete sole ordinary window.");
-      return;
-    }
-  tmpptr = ck_malloc (sizeof (struct tmp) * nwin);
-
-  kwin = &wins[num];
-  nlf = nrt = nup = nbl = 0;
-  klo = kwin->win_over - kwin->lh_wid;
-  kho = kwin->win_over + kwin->numc + kwin->right_edge_c - 1;
-  kld = kwin->win_down - (kwin->lh_wid ? label_rows : 0);
-  khd = kwin->win_down + kwin->numr + kwin->bottom_edge_r - 1;
-
-  for (win = wins; win < &wins[nwin]; win++)
-    {
-      lo = win->win_over - win->lh_wid;
-      ho = win->win_over + win->numc + win->right_edge_c - 1;
-      ld = win->win_down - (win->lh_wid ? label_rows : 0);
-      hd = win->win_down + win->numr + win->bottom_edge_r - 1;
-
-      /* Match to the left ? */
-      if (lo == kho + 1)
+	if (nwin == 1)
 	{
-	  if (ld >= kld && hd <= khd)
-	    tmpptr[nrt++].r = win - wins;
-	  else if (hd >= kld && ld <= khd)
-	    nrt = nwin;
+		io_error_msg ("Attempt to delete sole ordinary window.");
+		return;
 	}
-      else if (ho == klo - 1)
-	{
-	  if (ld >= kld && hd <= khd)
-	    tmpptr[nlf++].l = win - wins;
-	  else if (hd >= kld && ld <= khd)
-	    nlf = nwin;
-	}
-      else if (ld == khd + 1)
-	{
-	  if (lo >= klo && ho <= kho)
-	    tmpptr[nbl++].b = win - wins;
-	  else if (ho >= kho && lo <= kho)
-	    nbl = nwin;
-	}
-      else if (hd == kld - 1)
-	{
-	  if (lo >= klo && ho <= kho)
-	    tmpptr[nup++].u = win - wins;
-	  else if (ho >= kho && lo <= kho)
-	    nup = nwin;
-	}
+	tmpptr =  (struct tmp_s*) ck_malloc (sizeof (struct tmp_s) * nwin);
 
-    }
-  if (nrt == 0)
-    nrt = nwin;
-  if (nlf == 0)
-    nlf = nwin;
-  if (nbl == 0)
-    nbl = nwin;
-  if (nup == 0)
-    nup = nwin;
-  if (nrt <= nlf && nrt <= nbl && nrt <= nup)
-    for (n = 0; n < nrt; n++)
-      {
-	wins[tmpptr[n].r].numc
-	  += kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-	wins[tmpptr[n].r].win_over
-	  -= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-      }
-  else if (nlf <= nbl && nlf <= nup)
-    for (n = 0; n < nlf; n++)
-      wins[tmpptr[n].l].numc
-	+= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-  else if (nbl <= nup)
-    for (n = 0; n < nbl; n++)
-      {
-	wins[tmpptr[n].b].numr
-	  += kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
-	  + kwin->bottom_edge_r;
+	kwin = &wins[num];
+	nlf = nrt = nup = nbl = 0;
+	klo = kwin->win_over - kwin->lh_wid;
+	kho = kwin->win_over + kwin->numc + kwin->right_edge_c - 1;
+	kld = kwin->win_down - (kwin->lh_wid ? label_rows : 0);
+	khd = kwin->win_down + kwin->numr + kwin->bottom_edge_r - 1;
 
-	wins[tmpptr[n].b].win_down
-	  -= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
-	  + kwin->bottom_edge_r;
-      }
-  else
-    for (n = 0; n < nup; n++)
-      wins[tmpptr[n].u].numr
-	+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows;
+	for (win = wins; win < &wins[nwin]; win++)
+	{
+		lo = win->win_over - win->lh_wid;
+		ho = win->win_over + win->numc + win->right_edge_c - 1;
+		ld = win->win_down - (win->lh_wid ? label_rows : 0);
+		hd = win->win_down + win->numr + win->bottom_edge_r - 1;
 
-  if (kwin == cwin && kwin != wins)
-    --cwin;
-  if (cwin == &wins[nwin - 1])
-    --cwin;
-  while (kwin < &wins[nwin])
-    {
-      *kwin = kwin[1];
-      kwin++;
-    }
-  --nwin;
-  io_recenter_all_win ();
-  return;
+		/* Match to the left ? */
+		if (lo == kho + 1)
+		{
+			if (ld >= kld && hd <= khd)
+				tmpptr[nrt++].r = win - wins;
+			else if (hd >= kld && ld <= khd)
+				nrt = nwin;
+		}
+		else if (ho == klo - 1)
+		{
+			if (ld >= kld && hd <= khd)
+				tmpptr[nlf++].l = win - wins;
+			else if (hd >= kld && ld <= khd)
+				nlf = nwin;
+		}
+		else if (ld == khd + 1)
+		{
+			if (lo >= klo && ho <= kho)
+				tmpptr[nbl++].b = win - wins;
+			else if (ho >= kho && lo <= kho)
+				nbl = nwin;
+		}
+		else if (hd == kld - 1)
+		{
+			if (lo >= klo && ho <= kho)
+				tmpptr[nup++].u = win - wins;
+			else if (ho >= kho && lo <= kho)
+				nup = nwin;
+		}
+
+	}
+	if (nrt == 0)
+		nrt = nwin;
+	if (nlf == 0)
+		nlf = nwin;
+	if (nbl == 0)
+		nbl = nwin;
+	if (nup == 0)
+		nup = nwin;
+	if (nrt <= nlf && nrt <= nbl && nrt <= nup)
+		for (n = 0; n < nrt; n++)
+		{
+			wins[tmpptr[n].r].numc
+				+= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
+			wins[tmpptr[n].r].win_over
+				-= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
+		}
+	else if (nlf <= nbl && nlf <= nup)
+		for (n = 0; n < nlf; n++)
+			wins[tmpptr[n].l].numc
+				+= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
+	else if (nbl <= nup)
+		for (n = 0; n < nbl; n++)
+		{
+			wins[tmpptr[n].b].numr
+				+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
+				+ kwin->bottom_edge_r;
+
+			wins[tmpptr[n].b].win_down
+				-= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
+				+ kwin->bottom_edge_r;
+		}
+	else
+		for (n = 0; n < nup; n++)
+			wins[tmpptr[n].u].numr
+				+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows;
+
+	if (kwin == cwin && kwin != wins)
+		--cwin;
+	if (cwin == &wins[nwin - 1])
+		--cwin;
+	while (kwin < &wins[nwin])
+	{
+		*kwin = kwin[1];
+		kwin++;
+	}
+	--nwin;
+	io_recenter_all_win ();
+	return;
 }
 
 int
@@ -800,7 +798,7 @@ io_win_open (int hv, int where)
 
   nwin++;
   tmp = cwin - wins;
-  wins = ck_realloc (wins, nwin * sizeof (struct window));
+  wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));
   win = &wins[nwin - 1];
   cwin = &wins[tmp];
   win->id = win_id++;
@@ -1207,7 +1205,7 @@ io_read_window_config (char * line)
 	io_error_msg ("Can't split window: screen too small");
 
       nwin++;
-      wins = ck_realloc (wins, nwin * sizeof (struct window));
+      wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));
       cwin = wins;
       win = &wins[wnum];
       neww = &wins[nwin - 1];
@@ -1314,7 +1312,7 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
   label_emcols = lc;
   io_set_input_status (ui, us, 0);
   nwin = 1;
-  wins = cwin = ck_malloc (sizeof (struct window));
+  wins = cwin = (window *) ck_malloc (sizeof (struct window));
   wins->id = win_id++;
   wins->win_over = 0;		/* This will be fixed by a future set_numcols */
   wins->win_down = (label_rows
