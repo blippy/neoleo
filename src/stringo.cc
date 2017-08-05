@@ -131,8 +131,8 @@ do_len (
 
 	for(ret=0,ptr=p->String;*ptr;ret++,ptr++)
 		;
-	p->Int=ret;
-	p->type=TYP_INT;
+	p->sLong(ret);
+	//p->type=TYP_INT;
 }
 
 static void

@@ -89,6 +89,13 @@ cell::~cell(void)
 //	cout <<"Y";
 }
 
+void 
+cell::sInt(int newval)
+{
+	c_z.c_i = newval;
+	cell_flags.cell_type = TYP_INT;
+}
+
 static int
 cell_mc ( long row, long col, char *dowhat, struct value *p)
 {
