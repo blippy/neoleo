@@ -729,7 +729,7 @@ run_init_cmds (void)
 		{
 			cmd [len - 1] = '\0';
 			len += strlen (*p);
-			cmd = ck_realloc (cmd, len + 1);
+			cmd = (char*) ck_realloc (cmd, len + 1);
 			strcat (cmd, *p);
 			++p;
 		}

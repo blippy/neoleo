@@ -262,7 +262,7 @@ _io_run_main_loop()
 		if(line == "q") return;
 
 		try {
-			execute_command(line.c_str());
+			execute_command((char*) line.c_str());
 			//std::cout << "100 OK" << endl;
 		} catch (const OleoJmp&) {
 			//cout << "200 FAIL Caught OleoJmp" << endl;
