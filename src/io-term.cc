@@ -506,7 +506,7 @@ read_mp_usr_fmt (char *ptr)
   int i;
 
   for (i = 0; i < 9; i++)
-	  buf[i] = '\0'; // TODO Audit this for correctness.
+	  buf[i] = 0; // TODO Audit this for correctness.
     //buf[i] = "";
   p = ptr;
   while (*p == ';')

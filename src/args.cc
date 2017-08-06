@@ -229,9 +229,8 @@ keymap_verify (char ** end, struct command_arg * arg)
   if (error)
     return error;
   id = map_idn (start, *end - start);
-  return (id >= 0
-	  ? (char *) 0
-	  : "No such keymap.");
+  static char nsk[] = "No such keymap.";
+  return (id >= 0 ? (char *) 0 : nsk);
 }
 
 

@@ -542,7 +542,7 @@ pr_int (
 
   n = fmt->scale * ((val < 0) ? -val : val);
   if (n == 0)
-    return fmt->zero ? fmt->zero : "";
+    return fmt->zero ? fmt->zero : (char*) "";
 
   pf = pff = (val < 0) ? fmt->n_trl : fmt->p_trl;
   if (pf && *pf)
@@ -925,7 +925,7 @@ set_usr_stats (int usr_n, char **usr_buf)
   len = 0;
   for (i = 0; i < 7; i++)
     len += strlen (usr_buf[i]);
-  u[usr_n].p_hdr = ck_malloc (len + 7);
+  u[usr_n].p_hdr = (char*) ck_malloc (len + 7);
   p_out = u[usr_n].p_hdr;
   if (usr_buf[0][0])
     {

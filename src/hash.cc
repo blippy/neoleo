@@ -436,7 +436,7 @@ hash_insert (register struct hash_control *handle, register char *string, regist
 			retval = "exists";
 		else
 		{
-			entry->hash_value = value;
+			entry->hash_value = (char*)value;
 			entry->hash_string = string;
 			handle->hash_stat[STAT_USED] += 1;
 		}
