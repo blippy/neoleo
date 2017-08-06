@@ -39,6 +39,8 @@
 #include "cmd.h"
 #include "utils.h"
 
+using CPTR = char*;
+
 struct pr_node
   {
     int tightness;
@@ -54,12 +56,12 @@ static CELLREF decomp_col;
 /* These #defines are so that we don't have to duplicate code below */
 /* JF: now obsolete, and should be trashed. */
 
-#define F0	Global->a0?"@%s()":"%s()"
-#define F1	Global->a0?"@%s(%s)":"%s(%s)"
-#define F2	Global->a0?"@%s(%s, %s)":"%s(%s, %s)"
-#define F3	Global->a0?"@%s(%s, %s, %s)":"%s(%s, %s, %s)"
-#define F4	Global->a0?"@%s(%s, %s, %s, %s)":"%s(%s, %s, %s, %s)"
-#define FN1	Global->a0?"@%s(%s":"%s(%s"
+#define F0	Global->a0?(CPTR)"@%s()":(CPTR)"%s()"
+#define F1	Global->a0?(CPTR)"@%s(%s)":(CPTR)"%s(%s)"
+#define F2	Global->a0?(CPTR)"@%s(%s, %s)":(CPTR)"%s(%s, %s)"
+#define F3	Global->a0?(CPTR)"@%s(%s, %s, %s)":(CPTR)"%s(%s, %s, %s)"
+#define F4	Global->a0?(CPTR)"@%s(%s, %s, %s, %s)":(CPTR)"%s(%s, %s, %s, %s)"
+#define FN1	Global->a0?(CPTR)"@%s(%s":(CPTR)"%s(%s"
 
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
@@ -69,7 +71,7 @@ n_alloc (int size, int tightness, char *fmt, ...)
   struct pr_node *ret;
   va_list args;
 
-  ret = ck_malloc (sizeof (struct pr_node) + size + 1);
+  ret = (pr_node*) ck_malloc (sizeof (struct pr_node) + size + 1);
   ret->len = size;
   ret->tightness = tightness;
   va_start (args, fmt);
@@ -550,7 +552,7 @@ next_byte:
   if (c_node == &the_line[line_alloc])
     {
       line_alloc *= 2;
-      the_line = ck_realloc (the_line, line_alloc * sizeof (struct pr_node *));
+      the_line = (pr_node**) ck_realloc (the_line, line_alloc * sizeof (struct pr_node *));
       c_node = &the_line[line_alloc / 2];
     }
 
@@ -592,7 +594,7 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
 
   if (!cell)
     {
-      str = ck_malloc (1);
+      str = (CPTR) ck_malloc (1);
       str[0] = '\0';
       save_decomp = (VOIDSTAR) str;
       return str;
@@ -604,7 +606,7 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
       switch (GET_TYP (cell))
 	{
 	case 0:
-	  str = ck_malloc (1);
+	  str = (CPTR) ck_malloc (1);
 	  str[0] = '\0';
 	  break;
 	case TYP_FLT:
@@ -618,7 +620,7 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
             }
 	  break;
 	case TYP_INT:
-	  str = ck_malloc (20);
+	  str = (CPTR) ck_malloc (20);
 	  sprintf (str, "%ld", cell->cell_int);
 	  break;
 	case TYP_STR:
@@ -680,7 +682,7 @@ backslash_a_string (char *string, int add_quote)
 	size=pf-string;				\
 	if(s_cbuf<3+size+4*len) {		\
 	s_cbuf=3+size+4*len;		\
-	cbuf= (cbuf) ? ck_realloc(cbuf,s_cbuf) : ck_malloc(s_cbuf); \
+	cbuf= (cbuf) ? (CPTR) ck_realloc(cbuf,s_cbuf) : (CPTR) ck_malloc(s_cbuf); \
 	}					\
 	if(size)				\
 	bcopy(string,cbuf,size);	\

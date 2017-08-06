@@ -81,6 +81,9 @@ local_free (p)
 //extern int yyparse(void);
 //}
 
+using IFPTR = int (*)(int, int);
+using VIFPTR = void (*)(int, int);
+
 extern struct function date_funs[];
 #ifdef BUSI
 extern struct function busi_funs[];
@@ -790,7 +793,7 @@ loop:
       int start;
 
       /* ... Sort the patches list ... */
-      sort ((int) patches_used, (int (*)()) cmp_patch, (void (*)()) swp_patch, (void (*)())rot_patch);
+      sort ((int) patches_used, (IFPTR) cmp_patch, (VIFPTR) swp_patch, (VIFPTR)rot_patch);
 
       while (need_relax)
 	{
