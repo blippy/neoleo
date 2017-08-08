@@ -4,7 +4,9 @@ ASAN_FLAGSL = -lasan
 endif
 
 # permissive flag is set due to pesky obstack
-AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings -DDATADIR="\"$(datadir)\""
+AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings 
+AM_CXXFLAGS += -Wformat -Wformat-security
+AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i

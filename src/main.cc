@@ -96,7 +96,7 @@ read_init_files()
 				+ std::to_string(Global->sneaky_linec)
 				+ "\n";
 			const char *m = _(msg.c_str());
-			fprintf(stderr, m);
+			fprintf(stderr, "%s", m);
 			io_info_msg(m);
 		}
 

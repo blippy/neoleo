@@ -231,7 +231,7 @@ flt_to_str (num_t val)
   f = fabs (val);
   if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
     {
-      sprintf (print_buf, "%e", val);
+      sprintf (print_buf, "%e", (double) val);
       return print_buf;
     }
   return pr_flt (val, &fxt, FLOAT_PRECISION);
@@ -266,7 +266,7 @@ flt_to_str_fmt (CELL *cp)
 		f = fabs ( (double) cp->cell_flt());
 		if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
 		{
-			sprintf (print_buf, "%e", cp->cell_flt());
+			sprintf (print_buf, "%e", (double) cp->cell_flt());
 			return print_buf;
 		}
 	}
@@ -393,9 +393,9 @@ print_cell (CELL * cp)
 	  if ((double) cp->cell_flt() == __neinf)
 	    return mname;
 	  if (p == FLOAT_PRECISION)
-	    sprintf (print_buf, "%e", cp->cell_flt());
+	    sprintf (print_buf, "%e", (double) cp->cell_flt());
 	  else
-	    sprintf (print_buf, "%.*e", p, cp->cell_flt());
+	    sprintf (print_buf, "%.*e", p, (double) cp->cell_flt());
 	  return print_buf;
 #ifdef TEST
 	default:
@@ -873,7 +873,7 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 	  --len;
 	if (len > 0)
 	  {
-	    sprintf (oldp, "%.*e", len, cp->cell_flt());
+	    sprintf (oldp, "%.*e", len, (double) cp->cell_flt());
 	    len = strlen (oldp);
 	    if (len <= width)
 	      {
