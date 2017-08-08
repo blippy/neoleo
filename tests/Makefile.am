@@ -6,7 +6,7 @@ EXTRA_DIST = ref.sh
 
 TESTS = busi.scr inbuilt-tests.sh ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
-SCR_LOG_COMPILER = script.sh
+SCR_LOG_COMPILER = ./script.sh
 
 # as suggested at:
 # https://www.gnu.org/software/automake/manual/html_node/Clean.html
