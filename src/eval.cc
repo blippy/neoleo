@@ -314,7 +314,7 @@ int overflow;
 		p->Int=0;			\
 	} else {				\
 		p->type=GET_TYP(cp);		\
-		p->x=cp->c_z;			\
+		p->x=cp->get_c_z();			\
 	}
 
 void
@@ -1208,12 +1208,12 @@ deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
 	  while ((cell_ptr = next_cell_in_range ()))
 	    {
 	      if (GET_TYP (cell_ptr) == TYP_FLT)
-		add_flt (cell_ptr->cell_flt);
+		add_flt (cell_ptr->cell_flt());
 	      else if (GET_TYP (cell_ptr) == TYP_INT)
-		add_int (cell_ptr->cell_int);
+		add_int (cell_ptr->cell_int());
 	      else if (GET_TYP (cell_ptr) == TYP_STR)
 		{
-		  strptr = cell_ptr->cell_str;
+		  strptr = cell_ptr->cell_str();
 		  flt_cnt_flt = astof (&strptr);
 		  if (!*strptr)
 		    add_flt (flt_cnt_flt);
@@ -1497,7 +1497,7 @@ update_cell(CELL *cell)
   if (newv->type != GET_TYP (cell))
     {
       if (GET_TYP (cell) == TYP_STR)
-	free (cell->cell_str);
+	free (cell->cell_str());
       SET_TYP (cell, newv->type);
       new_val = 1;
       if (newv->type == TYP_STR)
@@ -1510,24 +1510,24 @@ update_cell(CELL *cell)
 	new_val = 0;
 	break;
       case TYP_FLT:
-	new_val = newv->Float != cell->cell_flt;
+	new_val = newv->Float != cell->cell_flt();
 	break;
       case TYP_INT:
-	new_val = newv->Int != cell->cell_int;
+	new_val = newv->Int != cell->cell_int();
 	break;
       case TYP_STR:
-	new_val = strcmp (newv->String, cell->cell_str);
+	new_val = strcmp (newv->String, cell->cell_str());
 	if (new_val)
 	  {
-	    free (cell->cell_str);
+	    free (cell->cell_str());
 	    newv->String = strdup (newv->String);
 	  }
 	break;
       case TYP_BOL:
-	new_val = newv->Value != cell->cell_bol;
+	new_val = newv->Value != cell->cell_bol();
 	break;
       case TYP_ERR:
-	new_val = newv->Value != cell->cell_err;
+	new_val = newv->Value != cell->cell_err();
 	break;
       default:
 	new_val = 0;
@@ -1537,7 +1537,7 @@ update_cell(CELL *cell)
       }
   if (new_val)
     {
-      cell->c_z = newv->x;
+      cell->set_c_z(newv->x);
       push_refs (cell->cell_refs_from);
     }
   (void) obstack_free (&tmp_mem, tmp_mem_start);

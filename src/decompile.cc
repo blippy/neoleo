@@ -616,21 +616,21 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
             }
           else
             {
-              str = strdup (flt_to_str (cell->cell_flt));
+              str = strdup (flt_to_str (cell->cell_flt()));
             }
 	  break;
 	case TYP_INT:
 	  str = (CPTR) ck_malloc (20);
-	  sprintf (str, "%ld", cell->cell_int);
+	  sprintf (str, "%ld", cell->cell_int());
 	  break;
 	case TYP_STR:
-	  str = strdup (backslash_a_string (cell->cell_str, 1));
+	  str = strdup (backslash_a_string (cell->cell_str(), 1));
 	  break;
 	case TYP_BOL:
-	  str = strdup (bname[cell->cell_bol]);
+	  str = strdup (bname[cell->cell_bol()]);
 	  break;
 	case TYP_ERR:
-	  str = strdup (ename[cell->cell_bol]);
+	  str = strdup (ename[cell->cell_bol()]);
 	  break;
 	default:
 	  str = 0;

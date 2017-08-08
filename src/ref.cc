@@ -203,19 +203,19 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 	    switch (type)
 	    {
 		    case TYP_FLT:
-			    cp->cell_flt = value->c_n;
+			    cp->set_cell_flt( value->c_n);
 			    break;
 		    case TYP_INT:
-			    cp->cell_int = value->c_l;
+			    cp->set_cell_int(value->c_l);
 			    break;
 		    case TYP_STR:
-			    cp->cell_str = strdup (value->c_s);
+			    cp->set_cell_str(strdup (value->c_s));
 			    break;
 		    case TYP_BOL:
-			    cp->cell_bol = value->c_i;
+			    cp->set_cell_bol(value->c_i);
 			    break;
 		    case TYP_ERR:
-			    cp->cell_err = value->c_i;
+			    cp->set_cell_err(value->c_i);
 			    break;
 //#ifdef TEST
 		    default:
@@ -255,24 +255,25 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
     {
       if (val[0] == '"')
 	{
-	  char *sp, *nsp;
+		char *sp, *nsp;
 
-	  sp = val + 1;
-	  SET_TYP (my_cell, TYP_STR);
-	  while (*sp)
-	    sp++;
-	  if (*--sp != '"')
-	    {
-	      if (*sp == '\r' && sp[-1] == '"')
-		--sp;
-	      else
-		panic ("Can't find \" in read_new value");
-	    }
-	  *sp = '\0';
-	  nsp = my_cell->cell_str = (char *) ck_malloc (sp - val);
-	  for (sp = val + 1; *sp;)
-	    *nsp++ = *sp++;
-	  *nsp++ = '\0';
+		sp = val + 1;
+		SET_TYP (my_cell, TYP_STR);
+		while (*sp)
+			sp++;
+		if (*--sp != '"')
+		{
+			if (*sp == '\r' && sp[-1] == '"')
+				--sp;
+			else
+				panic ("Can't find \" in read_new value");
+		}
+		*sp = '\0';
+		my_cell->set_cell_str((char *) ck_malloc (sp - val));
+		nsp = my_cell->get_cell_str();
+		for (sp = val + 1; *sp;)
+			*nsp++ = *sp++;
+		*nsp++ = '\0';
 	}
       else if (isdigit (val[0]) || val[0] == '.' || val[0] == '-' || val[0] == '+')
 	{
@@ -280,12 +281,12 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 	  v = val;
 	  SET_TYP (my_cell, TYP_INT);
-	  my_cell->cell_int = astol (&v);
+	  my_cell->set_cell_int(astol (&v));
 	  if (*v)
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
 	      v = val;
-	      my_cell->cell_flt = astof (&v);
+	      my_cell->set_cell_flt(astof (&v));
 	      if (*v)
 		return (char *) "unknown number";
 	    }
@@ -297,32 +298,32 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	  if (!stricmp (tname, val))
 	    {
 	      SET_TYP (my_cell, TYP_BOL);
-	      my_cell->cell_bol = 1;
+	      my_cell->set_cell_bol(1);
 	    }
 	  else if (!stricmp (fname, val))
 	    {
 	      SET_TYP (my_cell, TYP_BOL);
-	      my_cell->cell_bol = 0;
+	      my_cell->set_cell_bol(0);
 	    }
 	  else if (!stricmp (iname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = __plinf;
+	      my_cell->set_cell_flt( __plinf);
 	    }
 	  else if (!stricmp (iname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = __plinf;
+	      my_cell->set_cell_flt(__plinf);
 	    }
 	  else if (!stricmp (mname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = __neinf;
+	      my_cell->set_cell_flt(__neinf);
 	    }
 	  else if (!stricmp (nname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = NAN; // mcarter __nan;
+	      my_cell->set_cell_flt(NAN); // mcarter __nan;
 	    }
 	  else
 	    {
@@ -331,9 +332,9 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 		if (!stricmp (*en, val))
 		  break;
 	      if (*en)
-		my_cell->cell_err = en - &ename[0];
+		my_cell->set_cell_err(en - &ename[0]);
 	      else
-		my_cell->cell_err = 1;
+		my_cell->set_cell_err(1);
 	    }
 	}
       else
@@ -387,7 +388,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       my_cell->cell_formula = non_cell.cell_formula;
       my_cell->cell_cycle = non_cell.cell_cycle;
       //my_cell->cell_font = non_cell.cell_font;
-      my_cell->c_z = non_cell.c_z;
+      my_cell->set_c_z(non_cell.get_c_z());
       push_refs (my_cell->cell_refs_from);
       if (my_cell->cell_refs_to)
 	shift_formula (cur_row, cur_col, rt - non_rf, ct - non_cf);
@@ -410,7 +411,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	  non_cell.cell_formula = cpf->cell_formula;
 	  non_cell.cell_cycle = cpf->cell_cycle;
 	  //non_cell.cell_font = cpf->cell_font;
-	  non_cell.c_z = cpf->c_z;
+	  non_cell.set_c_z(cpf->get_c_z());
 	bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
 	  cpf->cell_refs_to = 0;
 	  cpf->cell_formula = 0;
@@ -449,7 +450,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
   my_cell->cell_formula = cpf->cell_formula;
   my_cell->cell_cycle = cpf->cell_cycle;
   //my_cell->cell_font = cpf->cell_font;
-  my_cell->c_z = cpf->c_z;
+  my_cell->set_c_z(cpf->get_c_z());
 
   bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
   cpf->cell_refs_to = 0;
@@ -502,9 +503,9 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
     my_cell->cell_refs_to->refs_refcnt++;
 
   if (GET_TYP (my_cell) == TYP_STR)
-    my_cell->cell_str = strdup (cpf->cell_str);
+    my_cell->set_cell_str(strdup (cpf->cell_str()));
   else
-    my_cell->c_z = cpf->c_z;
+    my_cell->set_c_z(cpf->get_c_z());
 
   if (cpf->cell_formula)
     {
@@ -824,7 +825,7 @@ flush_old_value (void)
       my_cell->cell_formula = 0;
     }
   if (GET_TYP (my_cell) == TYP_STR)
-    free (my_cell->cell_str);
+    free (my_cell->get_cell_str());
   SET_TYP (my_cell, TYP_NUL);
 }
 

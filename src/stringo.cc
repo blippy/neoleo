@@ -235,14 +235,14 @@ do_concat (
 					case 0:
 						break;
 					case TYP_STR:
-						(void)obstack_grow(&tmp_mem,cell_ptr->cell_str,strlen(cell_ptr->cell_str));
+						(void)obstack_grow(&tmp_mem,cell_ptr->cell_str(),strlen(cell_ptr->cell_str()));
 						break;
 					case TYP_INT:
-						sprintf(buf,"%ld",cell_ptr->cell_int);
+						sprintf(buf,"%ld",cell_ptr->get_cell_int());
 						(void)obstack_grow(&tmp_mem,buf,strlen(buf));
 						break;
 					case TYP_FLT:
-						s=flt_to_str(cell_ptr->cell_flt);
+						s=flt_to_str(cell_ptr->get_cell_flt());
 						(void)obstack_grow(&tmp_mem,s,strlen(s));
 						break;
 					default:

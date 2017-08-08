@@ -195,19 +195,19 @@ list_write_file (
 	      switch (GET_TYP (cp))
 		{
 		case TYP_FLT:
-		  fputs (flt_to_str (cp->cell_flt), fp);
+		  fputs (flt_to_str (cp->cell_flt()), fp);
 		  break;
 		case TYP_INT:
-		  fprintf (fp, "%ld", cp->cell_int);
+		  fprintf (fp, "%ld", cp->cell_int());
 		  break;
 		case TYP_STR:
-		  fputs (cp->cell_str, fp);
+		  fputs (cp->cell_str(), fp);
 		  break;
 		case TYP_BOL:
-		  fputs (bname[cp->cell_bol], fp);
+		  fputs (bname[cp->cell_bol()], fp);
 		  break;
 		case TYP_ERR:
-		  fputs (ename[cp->cell_err], fp);
+		  fputs (ename[cp->cell_err()], fp);
 		  break;
 #ifdef TEST
 		default:

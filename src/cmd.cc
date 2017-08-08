@@ -242,7 +242,7 @@ bound_macro (int num)
 	CELL *cp;
 
 	cp = find_cell (bound_macros[num].lr, bound_macros[num].lc);
-	if (!cp || GET_TYP (cp) != TYP_STR || cp->cell_str[0] == '\0')
+	if (!cp || GET_TYP (cp) != TYP_STR || cp->cell_str()[0] == '\0')
 		return;
 	old = rmac;
 	rmac = (struct macro *) obstack_alloc (&macro_stack,
@@ -251,7 +251,7 @@ bound_macro (int num)
 	rmac->mac_rng = bound_macros[num];
 	rmac->mac_row = bound_macros[num].lr;
 	rmac->mac_col = bound_macros[num].lc;
-	obstack_grow (&macro_stack, cp->cell_str, 1 + strlen (cp->cell_str));
+	obstack_grow (&macro_stack, cp->cell_str(), 1 + strlen (cp->cell_str()));
 	rmac->mac_start = rmac->mac_exe =
 		(unsigned char *) obstack_finish (&macro_stack);
 }
@@ -317,7 +317,7 @@ end_macro (void)
 		  cp = find_cell (rmac->mac_row, rmac->mac_col);
 
 		  if (!cp || GET_TYP (cp) != TYP_STR
-		      || cp->cell_str[0] == '\0')
+		      || cp->cell_str()[0] == '\0')
 		    {
 			    old = rmac->mac_prev;
 			    obstack_free (&macro_stack, rmac);
@@ -325,8 +325,8 @@ end_macro (void)
 		    }
 		  else
 		    {
-			    obstack_grow (&macro_stack, cp->cell_str,
-					  1 + strlen (cp->cell_str));
+			    obstack_grow (&macro_stack, cp->cell_str(),
+					  1 + strlen (cp->cell_str()));
 			    rmac->mac_exe =
 				    (unsigned char *)
 				    obstack_finish (&macro_stack);
@@ -2390,14 +2390,14 @@ execute_command (char *str)
 		  }
 
 		cp = find_cell (rng.lr, rng.lc);
-		if (!cp || GET_TYP (cp) != TYP_STR || cp->cell_str[0] == '\0')
+		if (!cp || GET_TYP (cp) != TYP_STR || cp->cell_str()[0] == '\0')
 		  {
 			  io_error_msg ("No macro found at %s.",
 					range_name (&rng));
 			  return;
 		  }
 
-		run = cp->cell_str;
+		run = cp->cell_str();
 		/* Reset the keystate. */
 		cur_keymap = the_cmd_frame->top_keymap;
 		count = how_many;

@@ -85,15 +85,15 @@ npv (
 	  goto know_f;
 
 	case TYP_INT:
-	  f = (double) (cell_ptr->cell_int);
+	  f = (double) (cell_ptr->cell_int());
 	  goto know_f;
 
 	case TYP_FLT:
-	  f = cell_ptr->cell_flt;
+	  f = cell_ptr->cell_flt();
 	  goto know_f;
 
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str;
+	  strptr = cell_ptr->cell_str();
 	  f = astof (&strptr);
 	  if (*strptr)
 	    return NON_NUMBER;
@@ -102,7 +102,7 @@ npv (
 	  break;
 
 	case TYP_ERR:
-	  return cell_ptr->cell_err;
+	  return cell_ptr->cell_err();
 
 	default:
 	  return NON_NUMBER;
@@ -279,13 +279,13 @@ do_fmrr(struct value *p)
 	  v[num] = 0.;
 	  break;
 	case TYP_FLT:
-	  v[num] = cell->cell_flt;
+	  v[num] = cell->cell_flt();
 	  break;
 	case TYP_INT:
-	  v[num] = (double) cell->cell_int;
+	  v[num] = (double) cell->cell_int();
 	  break;
 	case TYP_STR: {
-	  char *cp = cell->cell_str;
+	  char *cp = cell->cell_str();
 	  v[num] = astof(&cp);
 	  if (!*cp)
 	    break;
@@ -298,7 +298,7 @@ do_fmrr(struct value *p)
 	  goto out;
 	case TYP_ERR:
 	  p->type = TYP_ERR;
-	  p->Value = cell->cell_err;
+	  p->Value = cell->cell_err();
 	  goto out;
       }
     }

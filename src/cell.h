@@ -33,6 +33,7 @@
 #include "global.h"
 #include "numeric.h"
 
+
 union vals {
 	num_t c_n;
 	char *c_s;
@@ -71,6 +72,8 @@ class value {
     }; 
 class cell
 {
+	private:
+		union vals c_z;
 	public:
 		cell();
 		~cell();
@@ -81,9 +84,25 @@ class cell
 		struct ref_fm *cell_refs_from;
 		struct ref_to *cell_refs_to;
 		unsigned char *cell_formula;
-		union vals c_z;
 		void sInt(int newval); // set integer value
+		char * cell_str() { assert(cell_flags.cell_type == TYP_STR); return c_z.c_s ;};
+		char * get_cell_str() { return cell_str();};
+		void set_cell_str(char* newval) { c_z.c_s = newval;};
+		long cell_int() { assert(cell_flags.cell_type == TYP_INT); return c_z.c_l ;};
+		long get_cell_int() { return cell_int();};
+		void set_cell_int(long newval) { c_z.c_l = newval; } ; 
+		int cell_err() { return c_z.c_i ;};
+		void set_cell_err(int newval) { c_z.c_i = newval ;};
+		num_t cell_flt() { return c_z.c_n ;};
+		num_t get_cell_flt() { return c_z.c_n ;};
+		void set_cell_flt(num_t newval) { c_z.c_n = newval; };
+		int cell_bol() { return c_z.c_i ;};
+		void set_cell_bol(int newval) { c_z.c_i = newval; };
+		//void set_cell_bol(int newval) { c_z.c_i = newval;};
+		vals get_c_z() { return c_z; }; // ugly compilation hack. TODO eliminate
+		void set_c_z(vals newval) { c_z = newval; } ; // TODO more ugly hackery
 };
+
 
 struct var
   {
@@ -114,11 +133,11 @@ typedef cell CELL;
 #define VAR_DANGLING_RANGE 4
 
 /* Shorthand for the cell union */
-#define cell_flt	c_z.c_n
-#define cell_str	c_z.c_s
-#define cell_int	c_z.c_l
-#define cell_bol	c_z.c_i
-#define cell_err	c_z.c_i
+//#define cell_flt	c_z.c_n
+//#define cell_str	c_z.c_s
+//#define cell_int	c_z.c_l
+//#define cell_bol	c_z.c_i
+//#define cell_err	c_z.c_i
 
 #define	GET_LCK(p)	((p)->cell_flags.cell_lock)
 #define SET_LCK(p,x)	((p)->cell_flags.cell_lock = (x))

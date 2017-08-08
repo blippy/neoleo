@@ -223,7 +223,7 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 				if (cell_ptr)
 				{
 					p->type = GET_TYP (cell_ptr);
-					p->x = cell_ptr->c_z;
+					p->x = cell_ptr->get_c_z();
 				}
 				else
 					p->type = TYP_NUL;
@@ -278,19 +278,19 @@ do_member (struct value *p)
 	  foundit = 1;
 	  break;
 	case TYP_FLT:
-	  foundit = cell_ptr->cell_flt == (p + 1)->Float;
+	  foundit = cell_ptr->cell_flt() == (p + 1)->Float;
 	  break;
 	case TYP_INT:
-	  foundit = cell_ptr->cell_int == (p + 1)->Int;
+	  foundit = cell_ptr->cell_int() == (p + 1)->Int;
 	  break;
 	case TYP_STR:
-	  foundit = !strcmp (cell_ptr->cell_str, (p + 1)->String);
+	  foundit = !strcmp (cell_ptr->cell_str(), (p + 1)->String);
 	  break;
 	case TYP_BOL:
-	  foundit = cell_ptr->cell_bol == (p + 1)->Value;
+	  foundit = cell_ptr->cell_bol() == (p + 1)->Value;
 	  break;
 	case TYP_ERR:
-	  foundit = cell_ptr->cell_err == (p + 1)->Value;
+	  foundit = cell_ptr->cell_err() == (p + 1)->Value;
 	  break;
 	default:
 	  foundit = 0;
@@ -325,7 +325,7 @@ do_smember (
     {
       if (((GET_TYP (cell_ptr) == 0) && (string[0] == '\0'))
 	  || (cell_ptr && (GET_TYP (cell_ptr) == TYP_STR)
-	      && strstr (string, cell_ptr->cell_str)))
+	      && strstr (string, cell_ptr->cell_str())))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -353,7 +353,7 @@ do_members (
     {
       if (GET_TYP (cell_ptr) != TYP_STR)
 	continue;
-      if (strstr (cell_ptr->cell_str, string))
+      if (strstr (cell_ptr->cell_str(), string))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -380,7 +380,8 @@ do_pmember (
   while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
     {
       if ((GET_TYP (cell_ptr) == 0 && string[0] == '\0')
-	  || (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && !strncmp (string, cell_ptr->cell_str, strlen (cell_ptr->cell_str))))
+	  || (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && 
+		  !strncmp (string, cell_ptr->cell_str(), strlen (cell_ptr->cell_str()))))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -410,7 +411,7 @@ do_memberp (
     {
       if (GET_TYP (cell_ptr) != TYP_STR)
 	continue;
-      if (!strncmp (cell_ptr->cell_str, string, tmp))
+      if (!strncmp (cell_ptr->cell_str(), string, tmp))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -445,15 +446,15 @@ do_hlookup (struct value *p)
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_FLT:
-	  if (fltval < cell_ptr->cell_flt)
+	  if (fltval < cell_ptr->cell_flt())
 	    goto out;
 	  break;
 	case TYP_INT:
-	  if (fltval < cell_ptr->cell_int)
+	  if (fltval < cell_ptr->cell_int())
 	    goto out;
 	  break;
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str;
+	  strptr = cell_ptr->cell_str();
 	  f = astof (&strptr);
 	  if (!*strptr && fltval > f)
 	    goto out;
@@ -482,7 +483,7 @@ out:
   else
     {
       p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->c_z;
+      p->x = cell_ptr->get_c_z();
     }
 }
 
@@ -510,15 +511,15 @@ do_vlookup (
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_FLT:
-	  if (fltval < cell_ptr->cell_flt)
+	  if (fltval < cell_ptr->cell_flt())
 	    goto out;
 	  break;
 	case TYP_INT:
-	  if (fltval < cell_ptr->cell_int)
+	  if (fltval < cell_ptr->cell_int())
 	    goto out;
 	  break;
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str;
+	  strptr = cell_ptr->cell_str();
 	  f = astof (&strptr);
 	  if (!*strptr && fltval > f)
 	    goto out;
@@ -548,7 +549,7 @@ out:
   else
     {
       p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->c_z;
+      p->x = cell_ptr->get_c_z();
     }
 }
 
@@ -573,7 +574,7 @@ do_vlookup_str (
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_STR:
-	  if (!strcmp (key, cell_ptr->cell_str))
+	  if (!strcmp (key, cell_ptr->cell_str()))
 	    goto out;
 	  break;
 	case 0:
@@ -601,7 +602,7 @@ out:
   else
     {
       p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->c_z;
+      p->x = cell_ptr->get_c_z();
     }
 }
 

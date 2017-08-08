@@ -875,20 +875,20 @@ sylk_write_file (
 	  ptr = 0;
 	  if (cp->cell_formula)
 	    putc (';', fp);
-	  (void) fprintf (fp, "K\"%s\"", cp->cell_str);
+	  (void) fprintf (fp, "K\"%s\"", cp->cell_str());
 	  break;
 	case TYP_FLT:
-	  ptr = flt_to_str (cp->cell_flt);
+	  ptr = flt_to_str (cp->cell_flt());
 	  break;
 	case TYP_INT:
-	  sprintf (p_buf, "%ld", cp->cell_int);
+	  sprintf (p_buf, "%ld", cp->cell_int());
 	  ptr = p_buf;
 	  break;
 	case TYP_BOL:
-	  ptr = bname[cp->cell_bol];
+	  ptr = bname[cp->cell_bol()];
 	  break;
 	case TYP_ERR:
-	  ptr = ename[cp->cell_err];
+	  ptr = ename[cp->cell_err()];
 	  break;
 	default:
 	  ptr = 0;

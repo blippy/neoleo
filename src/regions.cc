@@ -648,7 +648,7 @@ move_region (struct rng *fm, struct rng *to)
 	  my_cell->cell_refs_to = cpf->cell_refs_to;
 	  my_cell->cell_formula = cpf->cell_formula;
 	  my_cell->cell_cycle = cpf->cell_cycle;
-	  my_cell->c_z = cpf->c_z;
+	  my_cell->set_c_z(cpf->get_c_z());
 
 	  bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
 	  //cpf->cell_font = 0;
@@ -737,7 +737,7 @@ copy_values_region (struct rng *fm, struct rng *to)
 	{
 	  cpf = find_cell (rf, cf);
 	  ValType new_type = cpf ?  GET_TYP (cpf) : TYP_NUL;
-	  set_new_value (rt, ct, new_type, cpf ? &(cpf->c_z) : &dummy);
+	  set_new_value (rt, ct, new_type, cpf ? &(cpf->get_c_z()) : &dummy);
 
 	  if (cf == fm->hc)
 	    cf = fm->lc - 1;
@@ -827,14 +827,14 @@ cmp_cells (int n1, int n2)
       if (c1)
 	{
 	  t1 = GET_TYP (c1);
-	  v1 = c1->c_z;
+	  v1 = c1->get_c_z();
 	}
       else
 	t1 = 0;
       if (c2)
 	{
 	  t2 = GET_TYP (c2);
-	  v2 = c2->c_z;
+	  v2 = c2->get_c_z();
 	}
       else
 	t2 = 0;
