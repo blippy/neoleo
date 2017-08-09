@@ -1,0 +1,12 @@
+# copy region test
+
+i
+1
+;
+r1c1 + 1
+.
+
+copy-region r1c1:r1c2 r2c1:r2c2
+
+w
+q
