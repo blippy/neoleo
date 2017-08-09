@@ -1470,7 +1470,7 @@ update_cell(CELL *cell)
   struct value *newv;
   int new_val;
 
-  newv = eval_expression (cell->cell_formula);
+  newv = eval_expression (cell->get_cell_formula());
   if (!newv)
     {
       push_refs (cell->cell_refs_from);

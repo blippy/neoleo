@@ -75,6 +75,8 @@ class cell
 	private:
 		union vals c_z;
 	public:
+		unsigned char *cell_formula; // TODO HIGH make private
+	public:
 		cell();
 		~cell();
 		/* char *cell_string; */
@@ -83,7 +85,11 @@ class cell
 		//struct font_memo *cell_font;
 		struct ref_fm *cell_refs_from;
 		struct ref_to *cell_refs_to;
-		unsigned char *cell_formula;
+
+		unsigned char * get_cell_formula() { return cell_formula; } ; 
+		unsigned char * set_cell_formula( unsigned char * newval) { cell_formula = newval ;  return cell_formula; } ; 
+
+
 		void sInt(int newval); // set integer value
 		char * cell_str() { assert(cell_flags.cell_type == TYP_STR); return c_z.c_s ;};
 		char * get_cell_str() { return cell_str();};

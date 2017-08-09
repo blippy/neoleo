@@ -845,7 +845,7 @@ sylk_write_file (
 	  (void) fprintf (fp, "F%s%c\n", sylk_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
 	}
 
-      if (!GET_TYP (cp) && !cp->cell_formula)
+      if (!GET_TYP (cp) && !cp->get_cell_formula())
 	continue;
 
       (void) fprintf (fp, "C;");
@@ -860,7 +860,7 @@ sylk_write_file (
 	  crow = r;
 	}
 
-      if (cp->cell_formula)
+      if (cp->get_cell_formula())
 	{
 	  (void) fprintf (fp, "E%s", decomp (r, c, cp));
 	  decomp_free ();
@@ -873,7 +873,7 @@ sylk_write_file (
 	  break;
 	case TYP_STR:
 	  ptr = 0;
-	  if (cp->cell_formula)
+	  if (cp->get_cell_formula())
 	    putc (';', fp);
 	  (void) fprintf (fp, "K\"%s\"", cp->cell_str());
 	  break;
@@ -899,7 +899,7 @@ sylk_write_file (
 
       if (ptr)
 	{
-	  if (cp->cell_formula)
+	  if (cp->get_cell_formula())
 	    putc (';', fp);
 	  (void) fprintf (fp, "K%s", ptr);
 	}

@@ -132,7 +132,7 @@ set_cell (CELLREF row, CELLREF col, const char *string)
   flush_old_value ();
 
   ret = (unsigned char*) parse_and_compile (string);
-  my_cell->cell_formula = ret;
+  my_cell->set_cell_formula(ret);
 }
 
 extern int default_lock;
@@ -155,10 +155,10 @@ new_value (CELLREF row, CELLREF col, const char *string)
   if (my_cell)
     {
       update_cell (my_cell);
-      if (is_constant (my_cell->cell_formula))
+      if (is_constant (my_cell->get_cell_formula()))
 	{
-	  byte_free (my_cell->cell_formula);
-	  my_cell->cell_formula = 0;
+	  byte_free (my_cell->get_cell_formula());
+	  my_cell->set_cell_formula(0);
 	}
       io_pr_cell (row, col, my_cell);
       my_cell = 0;
@@ -222,7 +222,7 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 			    panic ("Unknown type %d in set_new_value", GET_TYP (cp));
 //#endif
 	    }
-	    cp->cell_formula = 0;
+	    cp->set_cell_formula(0);
     }
   push_refs (cp->cell_refs_from);
   io_pr_cell (row, col, cp);
@@ -248,7 +248,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
   if (form)
     {
       new_bytes = (unsigned char*) parse_and_compile (form);
-      my_cell->cell_formula = new_bytes;
+      my_cell->set_cell_formula(new_bytes);
     }
 
   if (val)
@@ -376,7 +376,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		&& (non_cell.cell_flags.cell_justify == 0)
 		&& (non_cell.cell_flags.cell_type == 0))
 		&& (non_cell.cell_flags.cell_lock == 0)
-		&& !non_cell.cell_formula 
+		&& !non_cell.get_cell_formula() 
 		//&& !non_cell.cell_font
 		)
 	return;
@@ -385,7 +385,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
       my_cell->cell_flags = non_cell.cell_flags;
       my_cell->cell_refs_to = non_cell.cell_refs_to;
-      my_cell->cell_formula = non_cell.cell_formula;
+      my_cell->set_cell_formula(non_cell.get_cell_formula());
       my_cell->cell_cycle = non_cell.cell_cycle;
       //my_cell->cell_font = non_cell.cell_font;
       my_cell->set_c_z(non_cell.get_c_z());
@@ -408,13 +408,13 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	{
 	  non_cell.cell_flags = cpf->cell_flags;
 	  non_cell.cell_refs_to = cpf->cell_refs_to;
-	  non_cell.cell_formula = cpf->cell_formula;
+	  non_cell.set_cell_formula(cpf->get_cell_formula());
 	  non_cell.cell_cycle = cpf->cell_cycle;
 	  //non_cell.cell_font = cpf->cell_font;
 	  non_cell.set_c_z(cpf->get_c_z());
 	bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
 	  cpf->cell_refs_to = 0;
-	  cpf->cell_formula = 0;
+	  cpf->set_cell_formula(0);
 	  cpf->cell_cycle = 0;
 	  //cpf->cell_font = 0;
 	}
@@ -447,14 +447,14 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
   my_cell->cell_flags = cpf->cell_flags;
   my_cell->cell_refs_to = cpf->cell_refs_to;
-  my_cell->cell_formula = cpf->cell_formula;
+  my_cell->set_cell_formula(cpf->get_cell_formula());
   my_cell->cell_cycle = cpf->cell_cycle;
   //my_cell->cell_font = cpf->cell_font;
   my_cell->set_c_z(cpf->get_c_z());
 
   bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
   cpf->cell_refs_to = 0;
-  cpf->cell_formula = 0;
+  cpf->set_cell_formula(0);
   cpf->cell_cycle = 0;
   //cpf->cell_font = 0;
 
@@ -481,7 +481,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		&& (cpf->cell_flags.cell_type == 0))
 		&& (cpf->cell_flags.cell_lock == 0)
 	//&& !cpf->cell_formula && !cpf->cell_font)) && !my_cell)
-	&& !cpf->cell_formula )) && !my_cell)
+	&& !cpf->get_cell_formula() )) && !my_cell)
     return;
   if (!my_cell)
     {
@@ -507,7 +507,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
   else
     my_cell->set_c_z(cpf->get_c_z());
 
-  if (cpf->cell_formula)
+  if (cpf->get_cell_formula())
     {
       unsigned char *fp;
       unsigned char *hi;
@@ -519,7 +519,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       struct var *v;
       CELL *tcp;
 
-      fp = cpf->cell_formula;
+      fp = cpf->get_cell_formula();
       hi = 0;
       if (!moving)
 	moving = (char*)init_stack ();
@@ -648,11 +648,11 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       else
 	hi += strlen ((char *) hi);
       hi++;
-      len = hi - cpf->cell_formula;
-      my_cell->cell_formula = cpf->cell_formula;
-      cpf->cell_formula = (unsigned char *) ck_malloc (hi - cpf->cell_formula);
+      len = hi - cpf->get_cell_formula();
+      my_cell->set_cell_formula(cpf->get_cell_formula());
+      cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
       if (len)
-	bcopy (my_cell->cell_formula, cpf->cell_formula, len);
+	bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
       while ((fp = (unsigned char*) pop_stack (moving)))
 	{
 	  byte = fp[-1];
@@ -700,7 +700,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
     }
   else
     {
-      my_cell->cell_formula = 0;
+      my_cell->set_cell_formula(0);
     }
   io_pr_cell (cur_row, cur_col, my_cell);
 
@@ -819,10 +819,10 @@ flush_old_value (void)
 	}
       flush_ref_to (&(my_cell->cell_refs_to));
     }
-  if (my_cell->cell_formula)
+  if (my_cell->get_cell_formula())
     {
-      byte_free (my_cell->cell_formula);
-      my_cell->cell_formula = 0;
+      byte_free (my_cell->get_cell_formula());
+      my_cell->set_cell_formula(0);
     }
   if (GET_TYP (my_cell) == TYP_STR)
     free (my_cell->get_cell_str());

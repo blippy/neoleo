@@ -880,10 +880,10 @@ dbg_print_cell (cp)
     }
   io_text_line ("    Cell %p:  flg %#lx  fm %p  to %p  fa %p  cy %d  val %s%s",
 		cp, cp->cell_flags, cp->cell_refs_from, cp->cell_refs_to,
-		cp->cell_formula, cp->cell_cycle, ptr1, ptr2);
+		cp->get_cell_formula(), cp->cell_cycle, ptr1, ptr2);
   dbg_print_ref_fm (cp->cell_refs_from);
   dbg_print_ref_to (cp->cell_refs_to);
-  dbg_print_formula (cp->cell_formula);
+  dbg_print_formula (cp->get_cell_formula());
 }
 
 

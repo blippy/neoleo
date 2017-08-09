@@ -618,7 +618,7 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
     }
   decomp_row = r;
   decomp_col = c;
-  if (cell->cell_formula == 0)
+  if (cell->get_cell_formula() == 0)
     {
       switch (GET_TYP (cell))
 	{
@@ -659,7 +659,7 @@ decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog)
       return str;
     }
   else
-    ret = byte_decompile (cell->cell_formula);
+    ret = byte_decompile (cell->get_cell_formula());
   save_decomp = (VOIDSTAR) ret;
   return &(ret->string[0]);
 }

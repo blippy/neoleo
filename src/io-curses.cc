@@ -827,7 +827,7 @@ _io_update_status (void)
       wid -= strlen (hmbuf);
     }
   
-  if ((cp = find_cell (curow, cucol)) && cp->cell_formula)
+  if ((cp = find_cell (curow, cucol)) && cp->get_cell_formula())
     {
       dec = decomp (curow, cucol, cp);
       dlen = strlen (dec);

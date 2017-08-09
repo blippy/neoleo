@@ -206,7 +206,7 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		case 10:
 			{
 				CELL* cell_ptr = find_cell (row, col);
-				if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->cell_formula))
+				if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->get_cell_formula()))
 				{
 					char* strptr = decomp (row, col, cell_ptr);
 					p->String = obstack_alloc (&tmp_mem, strlen (strptr) + 1);

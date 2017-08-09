@@ -1850,10 +1850,10 @@ recompile_spreadsheet (void)
       if (my_cell)
 	{
 	  update_cell (my_cell);
-	  if (is_constant (my_cell->cell_formula))
+	  if (is_constant (my_cell->get_cell_formula()))
 	    {
-	      byte_free (my_cell->cell_formula);
-	      my_cell->cell_formula = 0;
+	      byte_free (my_cell->get_cell_formula());
+	      my_cell->set_cell_formula(0);
 	    }
 	  io_pr_cell (r, c, my_cell);
 	  my_cell = 0;
