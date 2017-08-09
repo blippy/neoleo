@@ -74,8 +74,8 @@ class cell
 {
 	private:
 		union vals c_z;
-	public:
-		unsigned char *cell_formula; // TODO HIGH make private
+		unsigned char *cell_formula; 
+
 	public:
 		cell();
 		~cell();

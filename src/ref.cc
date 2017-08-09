@@ -727,7 +727,7 @@ flush_old_value (void)
       for (n = 0; n < ref->refs_used; n++)
 	{
 	  /* Switch on formula[ref->to_refs[n]] */
-	  refloc = &(my_cell->cell_formula[ref->to_refs[n]]);
+	  refloc = &(my_cell->get_cell_formula()[ref->to_refs[n]]);
 	  byte = refloc[0];
 	  switch (byte)
 	    {
@@ -1603,7 +1603,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 	{
 	  for (n = 0; n < cp->cell_refs_to->refs_used; n++)
 	    {
-	      fp = &(cp->cell_formula[cp->cell_refs_to->to_refs[n]]);
+	      fp = &(cp->get_cell_formula()[cp->cell_refs_to->to_refs[n]]);
 	      switch (*fp)
 		{
 		case R_CELL:
@@ -1809,7 +1809,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 	  for (fn = 0; fcp->cell_refs_to && fn < fcp->cell_refs_to->refs_used; fn++)
 	    {
 
-	      ffp = &(fcp->cell_formula[fcp->cell_refs_to->to_refs[fn]]);
+	      ffp = &(fcp->get_cell_formula()[fcp->cell_refs_to->to_refs[fn]]);
 	      switch (*ffp)
 		{
 		case R_CELL:
@@ -1987,7 +1987,7 @@ shift_formula (int r, int c, int dn, int ov)
 
   for (n = 0; n < my_cell->cell_refs_to->refs_used; n++)
     {
-      fp = &(my_cell->cell_formula[my_cell->cell_refs_to->to_refs[n]]);
+      fp = &(my_cell->get_cell_formula()[my_cell->cell_refs_to->to_refs[n]]);
       switch (*fp)
 	{
 	case F_ROW:
