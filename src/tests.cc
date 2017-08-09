@@ -116,6 +116,21 @@ test_formatting()
 	check_fmt(0.0DD,  "0.00");   // issue #10
 	check_fmt(1.0DD,  "1.00");
 }
+
+void
+run_cell_formula_tests()
+{
+	CELL c1, c2;
+	//c2.
+	c1 = c2;
+	// TODO much expansion required
+
+	string s1 = "r4c4 + 1";
+	set_cell_from_string(5, 6, "r4c4 + 1");
+	check(decomp(5, 6) == s1, "cellfrm-01");
+
+}
+
 bool
 headless_tests()
 {
@@ -123,6 +138,7 @@ headless_tests()
 	//io_open_display();
 
 	test_formatting();
+	run_cell_formula_tests();
 
 	default_fmt = FMT_GEN;
 	set_cell_from_string(2, 2, "23.3");
@@ -200,7 +216,6 @@ headless_tests()
 	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
-	{ cell foo; }
 
 	FreeGlobals();
 

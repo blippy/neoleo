@@ -19,18 +19,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "cell.h"
+#include <string>
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
+#include "cell.h"
 
 extern void decomp_free ();
 extern char * backslash_a_string (char *string, int add_quote);
+std::string decomp(CELLREF r, CELLREF c);
 char * decomp (CELLREF r, CELLREF c, CELL *cell);
 char * decomp_formula (CELLREF r, CELLREF c, CELL *cell, int tog);
-
-#ifdef __cplusplus
-//}
-#endif
 

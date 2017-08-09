@@ -37,6 +37,7 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "cmd.h"
+#include "lists.h"
 #include "utils.h"
 
 using CPTR = char*;
@@ -576,6 +577,22 @@ next_byte:
  * in the comment aboce.  the new int tog argument, if true, can be
  * used to turn on formatted editing.
  */
+
+std::string
+decomp(CELLREF r, CELLREF c)
+{
+
+	std::string res;
+	CELL *cp = find_cell(r, c);
+	if(cp == nullptr) return res;
+	char *tmp = decomp(r, c, cp);
+	if(tmp) res = std::string(tmp);
+	//decomp_free();
+	//if(tmp == nullptr) return res;
+       	//res = std::string(tmp);
+	return res;
+}
+
 char *
 decomp (CELLREF r, CELLREF c, CELL *cell)
 {
