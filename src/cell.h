@@ -74,7 +74,7 @@ class cell
 {
 	private:
 		union vals c_z;
-		unsigned char *cell_formula; 
+		unsigned char *cell_formula = nullptr; 
 
 	public:
 		cell();
@@ -83,8 +83,8 @@ class cell
 		struct cell_flags_s cell_flags;
 		unsigned short cell_cycle;
 		//struct font_memo *cell_font;
-		struct ref_fm *cell_refs_from;
-		struct ref_to *cell_refs_to;
+		struct ref_fm *cell_refs_from = nullptr;
+		struct ref_to *cell_refs_to = nullptr;
 
 		unsigned char * get_cell_formula() { return cell_formula; } ; 
 		unsigned char * set_cell_formula( unsigned char * newval) { cell_formula = newval ;  return cell_formula; } ; 
