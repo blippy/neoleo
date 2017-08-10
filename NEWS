@@ -7,6 +7,8 @@ VERSION 7.0.0 IN DEVELOPMENT
 	q (quit)
 	w (write to file)
 
+* Added macros: copy-row
+
 * Removed X11 support
 
 * Removed font support
