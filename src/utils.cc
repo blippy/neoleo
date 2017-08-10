@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <unistd.h>
 
 #ifdef HAVE_CONFIG_H
@@ -1099,6 +1100,16 @@ astof (char **sp)
   return (res);
 }
 
+
+std::string
+pad_right(const std::string& s, int width)
+{
+	std::string res = s;
+	int times = width - s.size();
+	for(int i = 0; i < times; i++)
+		res += " ";
+	return res;
+}
 
 #ifdef TEST_ASTOF
 main_utils ()

@@ -19,10 +19,8 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifdef __cplusplus
-//extern "C" {
-#endif
 
+#include <string>
 #include <stdio.h>
 #include "funcdef.h"
 #include "global.h"
@@ -32,9 +30,6 @@ extern char *argv_name;
 extern int __make_backups;
 extern int __backup_by_copying;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 extern VOIDSTAR ck_malloc (size_t);
 extern VOIDSTAR ck_calloc (size_t);
 extern VOIDSTAR ck_realloc (void *,size_t);
@@ -50,11 +45,6 @@ extern int string_to_char (char **);
 extern int strincmp (const char *, const char *, size_t);
 
 extern char *mk_sprintf (const char *, ...);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 
 extern void get_usr_stats (int, char **);
@@ -73,7 +63,4 @@ extern VOIDSTAR init_stack (void);
 extern VOIDSTAR pop_stack (VOIDSTAR);
 extern void push_stack (VOIDSTAR, VOIDSTAR);
 extern void flush_stack (VOIDSTAR);
-#ifdef __cplusplus
-//}
-#endif
-//#endif
+std::string pad_right(const std::string& s, int width);

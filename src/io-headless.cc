@@ -19,6 +19,7 @@
 #include "io-curses.h"
 #include "io-utils.h"
 #include "lists.h"
+#include "utils.h"
 
 
 using std::cin;
@@ -199,6 +200,7 @@ show_cells()
 	//cout << "102 OK Terminated by dot" << endl;
 	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
+		cout << "R" << pad_right(std::to_string(r), 3)  << " ";
 		for(int c=1; c< 5; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
