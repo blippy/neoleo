@@ -515,7 +515,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
       CELLREF trr, tcc;
       struct rng trng;
       struct function *f;
-      size_t len;
+      //size_t len;
       struct var *v;
       CELL *tcp;
 
@@ -647,12 +647,28 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	hi = fp;
       else
 	hi += strlen ((char *) hi);
+
       hi++;
-      len = hi - cpf->get_cell_formula();
-      my_cell->set_cell_formula(cpf->get_cell_formula());
-      cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
-      if (len)
-	bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
+      { // attempt to refactor for issue#17
+	      size_t len = hi - cpf->get_cell_formula();
+	      assert(len >=0);
+	      my_cell->set_cell_formula(cpf->get_cell_formula());
+	      //cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
+	      if (len > 0) {
+		      unsigned char* formula = (unsigned char*) ck_malloc (len);
+		      //bcopy (my_cell->get_cell_formula(), formula, len);
+		      for(size_t i =0; i < len; ++i){
+			      /* next line can cause read access violation. Fix TBD */
+			      unsigned char c = my_cell->get_cell_formula()[i];
+			      formula[i] = c;
+		      }
+		      //bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
+		      //cpf->set_cell_formula( (unsigned char *) ck_malloc (len));
+		      cpf->set_cell_formula((unsigned char*) formula);
+	      } else {
+		      cpf->set_cell_formula(nullptr); 
+	      }
+      }
       while ((fp = (unsigned char*) pop_stack (moving)))
 	{
 	  byte = fp[-1];

@@ -4,7 +4,8 @@ EXTRA_DIST = ref.sh
 #AM_TESTS_ENVIRONMENT = . ./.test-suite.sh
 #AM_TESTS_FD_REDIRECT = 9>&2
 
-TESTS = busi.scr inbuilt-tests.sh ref.sh nohead-01.scr nohead-02.scr stringo.scr
+# NB Supressing cpreg-01.src for now due to issue#17
+TESTS = busi.scr cpreg-02.scr inbuilt-tests.sh ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = ./script.sh
 
