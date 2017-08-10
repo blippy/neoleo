@@ -688,7 +688,15 @@ DEFUN ("copy-region", FDcopy_region, FAcopy_region, to_vptr(copy_region))
 "destination), or a range containing the same number of cells as the",
 "source range.",
 #endif
-    
+   
+DEFUN ("copy-row", FDcopy_row, FAcopy_row, copy_row)
+#ifdef FUNC_ARG_STRINGS
+"nSource row? ",
+#endif
+#ifdef DOC_STRINGS
+"Copy the contents of SOURCE-ROW to current row.",
+#endif
+	
 DEFUN ("copy-values-in-region",
        FDcopy_values_region, FAcopy_values_region, to_vptr(copy_values_region))
 #ifdef FUNC_ARG_STRINGS

@@ -23,9 +23,12 @@ A (very) incomplete list of type specs is:
 $  edit cell formala (?)
 fr file read, e.f. read_cmd()
 fw file write, e.g. write_cmd()
+n  integer, e.g. copy-row in defun.h
 s  string style e.g. shell()
 R  range
 S  symbol
+
+SEE ALSO: funcs.h - which is definitive
 
 You can, of course, obtain clues as the type to use by inspecting other
 functions in defun.h. The actual parsing seems to be done in

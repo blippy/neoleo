@@ -21,6 +21,8 @@
  */
 
 
+#include <iostream>
+#include <string>
 #include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
@@ -48,6 +50,9 @@
 #include "cmd.h"
 #include "sort.h"
 #include "basic.h"
+
+using std::cout;
+using std::endl;
 
 /* Apparently "all_rng" is read-only, therefore need not be put in Global. */
 struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
@@ -745,6 +750,15 @@ copy_values_region (struct rng *fm, struct rng *to)
       if (rf == fm->hr)
 	rf = fm->lr - 1;
     }
+}
+
+void
+copy_row(int rf)
+{
+	if(rf == curow) return;
+	struct rng rngf{ .lr= (CELLREF) rf, .lc=(CELLREF) 1, .hr = (CELLREF) rf, .hc = (CELLREF) MAX_COL};
+	struct rng rngt{ .lr= (CELLREF) curow, .lc=(CELLREF) 1, .hr = (CELLREF) curow, .hc = (CELLREF) MAX_COL};
+	copy_region(&rngf, &rngt);
 }
 
 struct rng sort_rng;

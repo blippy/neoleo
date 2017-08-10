@@ -52,6 +52,7 @@ extern void txt_print_region (struct rng *print, FILE *fp);
 extern void move_region (struct rng *fm, struct rng *to);
 extern void copy_region (struct rng *fm, struct rng *to);
 extern void copy_values_region (struct rng *fm, struct rng *to);
+extern void copy_row (int rf);
 extern void sort_region (void);
 extern int cmp_cells (int n1, int n2);
 extern void swp_cells (int n1, int n2);

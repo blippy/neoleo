@@ -29,6 +29,13 @@ multiple times.  If the destination range is given as a cell, that
 cell is the location of the top-left corner of the destination range.
 (@code{copy-region})
 @cmindex copy-region
+
+@item @code{copy-row}
+@cmindex copy-row
+Copy row NUM to current row, e.g. `@code{copy-row 42}' will copy
+the contents of row 42 to the current row.
+
+
 @item M-C-c
 Copy just the values of one region to another.
 (@code{copy-values-in-region})
