@@ -20,7 +20,8 @@ init_pair(mbar_color_pair, COLOR_WHITE, COLOR_BLUE)
 #curses.echo()
 
 
-mbar = stdscr.subwin(1, 20, 0, 0)
+LINES, COLS = stdscr.getmaxyx()
+mbar = stdscr.subwin(1, COLS, 0, 0)
 #wbkgd(mbar, mbar_color_pair)
 mbar.bkgd(' ',  color_pair(mbar_color_pair))
 mbar.addstr("File Edit", color_pair(mbar_color_pair))
@@ -51,13 +52,15 @@ def a_menu():
     while True:
         event = stdscr.getch()
         if event == ord("q"): break
-        if event == curses.KEY_MOUSE:
+        elif event == curses.KEY_MOUSE:
             _, mx, my, _, _ = getmouse()
             y, x = stdscr.getyx()
             #y, x = win1.getyx()
             #stdscr.addstr(y, x, stdscr.instr(my, mx, 5))
             win1.addstr(4,4, str(my), 2)
             win1.refresh()
+        elif event == KEY_HOME:
+            flash()
 
     pane1.hide()
 
