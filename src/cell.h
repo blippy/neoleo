@@ -29,6 +29,7 @@
 
 #include <assert.h>
 #include <string>
+#include <cstdint>
 
 #include "global.h"
 #include "numeric.h"
@@ -74,14 +75,15 @@ class cell
 {
 	private:
 		union vals c_z;
-		unsigned char *cell_formula = nullptr; 
+		unsigned char *cell_formula = nullptr;
+		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 
 	public:
 		cell();
 		~cell();
 		/* char *cell_string; */
 		struct cell_flags_s cell_flags;
-		unsigned short cell_cycle;
+		unsigned short cell_cycle = 0;
 		//struct font_memo *cell_font;
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
@@ -91,11 +93,18 @@ class cell
 
 
 		void sInt(int newval); // set integer value
-		char * cell_str() { assert(cell_flags.cell_type == TYP_STR); return c_z.c_s ;};
-		char * get_cell_str() { return cell_str();};
+		char * cell_str() { 
+			//assert(magic == 0x000FF1CE);
+			assert(cell_flags.cell_type == TYP_STR); return c_z.c_s ;};
+		char * get_cell_str() { 
+			//assert(magic == 0x000FF1CE);
+			return cell_str();};
 		void set_cell_str(char* newval) { c_z.c_s = newval;};
 		long cell_int() { assert(cell_flags.cell_type == TYP_INT); return c_z.c_l ;};
-		long get_cell_int() { return cell_int();};
+		long get_cell_int() { 
+			//assert(magic == 0x000FF1CE);
+			return cell_int();
+		};
 		void set_cell_int(long newval) { c_z.c_l = newval; } ; 
 		int cell_err() { return c_z.c_i ;};
 		void set_cell_err(int newval) { c_z.c_i = newval ;};

@@ -81,12 +81,16 @@ value::~value(void)
 
 cell::cell(void)
 {
-//	cout << "X";
+	//constexpr c_z_size = max(sizeof(size_t), sizeof(long), sizeof(struct rng));
+	//memset(*c_z, 0, c_z_size);
+	memset(&c_z, 0, sizeof(vals));
+	cout << "X";
 }
 
 cell::~cell(void)
 {
-//	cout <<"Y";
+	magic = 0x0DEFACED; // see TR06
+	cout <<"Y";
 }
 
 void 

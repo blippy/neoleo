@@ -1,0 +1,12 @@
+TR06: Magic numbers
+===========================================================================
+2017-08-12
+
+The purpose of the magic numbers is to emplace mechanisms so that
+we can check that cells have been properly created and destroyed.
+Currently, they are not. lists.cc mallocs space for a cell, but
+it does not call new(). So it's just random memory.
+
+The proposition is to use magic in a cell. At the constructor, set
+magic = 0xOOOFF1CE to denote proper construction
+magic = 0x0DEFACED to denote proper destruction
