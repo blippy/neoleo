@@ -464,6 +464,219 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	my_cell = 0;
 }
 
+
+/* this function is only called by copy_cell()
+ * but it is worth refactoring out because herein lies bug 17
+ */
+
+void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELLREF &ct)
+{
+	unsigned char *fp;
+	unsigned char *hi;
+	unsigned char byte;
+	CELLREF trr, tcc;
+	struct rng trng;
+	struct function *f;
+	//size_t len;
+	struct var *v;
+	CELL *tcp;
+
+	fp = cpf->get_cell_formula();
+	hi = 0;
+	if (!moving)
+		moving = (char*)init_stack ();
+	while ((byte = *fp++) != ENDCOMP)
+	{
+		unsigned char * refloc = fp - 1;
+		if (byte < USR1)
+			f = &the_funs[byte];
+		else if (byte < SKIP)
+		{
+			int tmp;
+#ifdef TEST
+			if (byte - USR1 >= n_usr_funs)
+				panic ("Only have %d usr-function slots, but found byte for slot %d", n_usr_funs, 1 + byte - USR1);
+#endif
+			tmp = *fp++;
+			f = &usr_funs[byte - USR1][tmp];
+		}
+		else
+			f = &skip_funs[byte - SKIP];
+
+		if (f->fn_argn & X_J)
+			fp++;
+		else if (f->fn_argn & X_JL)
+			fp += 2;
+
+		if ((f->fn_argn & X_ARGS) == X_AN)
+			fp++;
+
+		switch (byte)
+		{
+			case CONST_FLT:
+				fp += sizeof (double);
+				break;
+
+			case CONST_INT:
+				fp += sizeof (long);
+				break;
+
+			case CONST_STR:
+				if (!hi)
+					hi = fp + fp[-1];
+				break;
+
+			case CONST_STR_L:
+				if (!hi)
+					hi = fp + fp[-2] + ((unsigned) (fp[-1]) << 8);
+				break;
+
+			case CONST_ERR:
+				fp += 1 /* +sizeof(char *) */ ;
+				break;
+
+			case VAR:
+				bcopy (fp, &v, sizeof (struct var *));
+				fp += sizeof (struct var *);
+				add_ref_fm (&(v->var_ref_fm), cur_row, cur_col);
+				switch (v->var_flags)
+				{
+					case VAR_UNDEF:
+						break;
+					case VAR_CELL:
+						tcp = find_cell (v->v_rng.lr, v->v_rng.lc);
+						add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
+						break;
+					case VAR_RANGE:
+						add_range_ref (&(v->v_rng));
+						/* sparse array bug fixed here */
+						my_cell = find_cell (cur_row, cur_col);
+						cpf = find_cell (rf, cf);
+						break;
+				}
+				break;
+
+			case R_CELL:
+			case R_CELL | COLREL:
+			case R_CELL | ROWREL:
+			case R_CELL | ROWREL | COLREL:
+				push_stack (moving, fp);
+				fp += EXP_ADD;
+				break;
+
+			case RANGE:
+			case RANGE | LRREL:
+			case RANGE | LRREL | LCREL:
+			case RANGE | LRREL | LCREL | HCREL:
+			case RANGE | LRREL | HCREL:
+			case RANGE | LRREL | HRREL:
+			case RANGE | LRREL | HRREL | LCREL:
+			case RANGE | LRREL | HRREL | LCREL | HCREL:
+			case RANGE | LRREL | HRREL | HCREL:
+			case RANGE | HRREL:
+			case RANGE | HRREL | LCREL:
+			case RANGE | HRREL | LCREL | HCREL:
+			case RANGE | HRREL | HCREL:
+			case RANGE | LCREL:
+			case RANGE | LCREL | HCREL:
+			case RANGE | HCREL:
+				push_stack (moving, fp);
+				fp += EXP_ADD_RNG;
+				break;
+
+			default:
+				{
+					struct function *fun;
+
+					if (byte >= SKIP)
+						break;
+
+					if (byte < USR1)
+						fun = &the_funs[byte];
+					else
+						fun = &usr_funs[byte - USR1][refloc[1]];
+
+					if (fun->fn_comptype & C_T)
+					{
+						add_ref_fm (&timer_cells, rt, ct);
+						++timer_active;
+					}
+					break;
+				}
+		}
+	}
+	if (!hi)
+		hi = fp;
+	else
+		hi += strlen ((char *) hi);
+
+	hi++;
+	{ // attempt to refactor for issue#17
+		size_t len = hi - cpf->get_cell_formula();
+		assert(len >=0);
+		my_cell->set_cell_formula(cpf->get_cell_formula());
+		//cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
+		if (len > 0) {
+			unsigned char* formula = (unsigned char*) ck_malloc (len);
+			//bcopy (my_cell->get_cell_formula(), formula, len);
+			for(size_t i =0; i < len; ++i){
+				/* next line can cause read access violation. Fix TBD */
+				unsigned char c = my_cell->get_cell_formula()[i];
+				formula[i] = c;
+			}
+			//bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
+			//cpf->set_cell_formula( (unsigned char *) ck_malloc (len));
+			cpf->set_cell_formula((unsigned char*) formula);
+		} else {
+			cpf->set_cell_formula(nullptr); 
+		}
+	}
+	while ((fp = (unsigned char*) pop_stack (moving)))
+	{
+		byte = fp[-1];
+		if ((byte | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL))
+		{
+			trr = GET_ROW (fp);
+			tcc = GET_COL (fp);
+			if (byte & ROWREL)
+			{
+				trr += rt - rf;
+				PUT_ROW (fp, trr);
+			}
+			if (byte & COLREL)
+			{
+				tcc += ct - cf;
+				PUT_COL (fp, tcc);
+			}
+			tcp = find_or_make_cell (trr, tcc);
+			add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
+		}
+#ifdef TEST
+		else if ((byte | LRREL | HRREL | LCREL | HCREL) !=
+				(RANGE | LRREL | HRREL | LCREL | HCREL))
+			panic ("Unknown byte %x in copy_cell", byte);
+#endif
+		else
+		{
+			GET_RNG (fp, &trng);
+			if (byte & LRREL)
+				trng.lr += rt - rf;
+			if (byte & HRREL)
+				trng.hr += rt - rf;
+			if (byte & LCREL)
+				trng.lc += ct - cf;
+			if (byte & HCREL)
+				trng.hc += ct - cf;
+			PUT_RNG (fp, &trng);
+			add_range_ref (&trng);
+			/* sparse array bug fixed here */
+			my_cell = find_cell (cur_row, cur_col);
+			cpf = find_cell (rf, cf);
+		}
+	}
+	update_cell (my_cell);
+}
+
 /* Used only in regions.c for copy_region. */
 void
 copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
@@ -508,216 +721,10 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell->set_c_z(cpf->get_c_z());
 
 	if (cpf->get_cell_formula())
-	{
-		unsigned char *fp;
-		unsigned char *hi;
-		unsigned char byte;
-		CELLREF trr, tcc;
-		struct rng trng;
-		struct function *f;
-		//size_t len;
-		struct var *v;
-		CELL *tcp;
-
-		fp = cpf->get_cell_formula();
-		hi = 0;
-		if (!moving)
-			moving = (char*)init_stack ();
-		while ((byte = *fp++) != ENDCOMP)
-		{
-			unsigned char * refloc = fp - 1;
-			if (byte < USR1)
-				f = &the_funs[byte];
-			else if (byte < SKIP)
-			{
-				int tmp;
-#ifdef TEST
-				if (byte - USR1 >= n_usr_funs)
-					panic ("Only have %d usr-function slots, but found byte for slot %d", n_usr_funs, 1 + byte - USR1);
-#endif
-				tmp = *fp++;
-				f = &usr_funs[byte - USR1][tmp];
-			}
-			else
-				f = &skip_funs[byte - SKIP];
-
-			if (f->fn_argn & X_J)
-				fp++;
-			else if (f->fn_argn & X_JL)
-				fp += 2;
-
-			if ((f->fn_argn & X_ARGS) == X_AN)
-				fp++;
-
-			switch (byte)
-			{
-				case CONST_FLT:
-					fp += sizeof (double);
-					break;
-
-				case CONST_INT:
-					fp += sizeof (long);
-					break;
-
-				case CONST_STR:
-					if (!hi)
-						hi = fp + fp[-1];
-					break;
-
-				case CONST_STR_L:
-					if (!hi)
-						hi = fp + fp[-2] + ((unsigned) (fp[-1]) << 8);
-					break;
-
-				case CONST_ERR:
-					fp += 1 /* +sizeof(char *) */ ;
-					break;
-
-				case VAR:
-					bcopy (fp, &v, sizeof (struct var *));
-					fp += sizeof (struct var *);
-					add_ref_fm (&(v->var_ref_fm), cur_row, cur_col);
-					switch (v->var_flags)
-					{
-						case VAR_UNDEF:
-							break;
-						case VAR_CELL:
-							tcp = find_cell (v->v_rng.lr, v->v_rng.lc);
-							add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
-							break;
-						case VAR_RANGE:
-							add_range_ref (&(v->v_rng));
-							/* sparse array bug fixed here */
-							my_cell = find_cell (cur_row, cur_col);
-							cpf = find_cell (rf, cf);
-							break;
-					}
-					break;
-
-				case R_CELL:
-				case R_CELL | COLREL:
-				case R_CELL | ROWREL:
-				case R_CELL | ROWREL | COLREL:
-					push_stack (moving, fp);
-					fp += EXP_ADD;
-					break;
-
-				case RANGE:
-				case RANGE | LRREL:
-				case RANGE | LRREL | LCREL:
-				case RANGE | LRREL | LCREL | HCREL:
-				case RANGE | LRREL | HCREL:
-				case RANGE | LRREL | HRREL:
-				case RANGE | LRREL | HRREL | LCREL:
-				case RANGE | LRREL | HRREL | LCREL | HCREL:
-				case RANGE | LRREL | HRREL | HCREL:
-				case RANGE | HRREL:
-				case RANGE | HRREL | LCREL:
-				case RANGE | HRREL | LCREL | HCREL:
-				case RANGE | HRREL | HCREL:
-				case RANGE | LCREL:
-				case RANGE | LCREL | HCREL:
-				case RANGE | HCREL:
-					push_stack (moving, fp);
-					fp += EXP_ADD_RNG;
-					break;
-
-				default:
-					{
-						struct function *fun;
-
-						if (byte >= SKIP)
-							break;
-
-						if (byte < USR1)
-							fun = &the_funs[byte];
-						else
-							fun = &usr_funs[byte - USR1][refloc[1]];
-
-						if (fun->fn_comptype & C_T)
-						{
-							add_ref_fm (&timer_cells, rt, ct);
-							++timer_active;
-						}
-						break;
-					}
-			}
-		}
-		if (!hi)
-			hi = fp;
-		else
-			hi += strlen ((char *) hi);
-
-		hi++;
-		{ // attempt to refactor for issue#17
-			size_t len = hi - cpf->get_cell_formula();
-			assert(len >=0);
-			my_cell->set_cell_formula(cpf->get_cell_formula());
-			//cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
-			if (len > 0) {
-				unsigned char* formula = (unsigned char*) ck_malloc (len);
-				//bcopy (my_cell->get_cell_formula(), formula, len);
-				for(size_t i =0; i < len; ++i){
-					/* next line can cause read access violation. Fix TBD */
-					unsigned char c = my_cell->get_cell_formula()[i];
-					formula[i] = c;
-				}
-				//bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
-				//cpf->set_cell_formula( (unsigned char *) ck_malloc (len));
-				cpf->set_cell_formula((unsigned char*) formula);
-			} else {
-				cpf->set_cell_formula(nullptr); 
-			}
-		}
-		while ((fp = (unsigned char*) pop_stack (moving)))
-		{
-			byte = fp[-1];
-			if ((byte | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL))
-			{
-				trr = GET_ROW (fp);
-				tcc = GET_COL (fp);
-				if (byte & ROWREL)
-				{
-					trr += rt - rf;
-					PUT_ROW (fp, trr);
-				}
-				if (byte & COLREL)
-				{
-					tcc += ct - cf;
-					PUT_COL (fp, tcc);
-				}
-				tcp = find_or_make_cell (trr, tcc);
-				add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
-			}
-#ifdef TEST
-			else if ((byte | LRREL | HRREL | LCREL | HCREL) !=
-					(RANGE | LRREL | HRREL | LCREL | HCREL))
-				panic ("Unknown byte %x in copy_cell", byte);
-#endif
-			else
-			{
-				GET_RNG (fp, &trng);
-				if (byte & LRREL)
-					trng.lr += rt - rf;
-				if (byte & HRREL)
-					trng.hr += rt - rf;
-				if (byte & LCREL)
-					trng.lc += ct - cf;
-				if (byte & HCREL)
-					trng.hc += ct - cf;
-				PUT_RNG (fp, &trng);
-				add_range_ref (&trng);
-				/* sparse array bug fixed here */
-				my_cell = find_cell (cur_row, cur_col);
-				cpf = find_cell (rf, cf);
-			}
-		}
-		update_cell (my_cell);
-	}
+		copy_cell_formula(cpf, rf, cf, rt, ct);
 	else
-	{
 		my_cell->set_cell_formula(0);
-	}
+
 	io_pr_cell (cur_row, cur_col, my_cell);
 
 	push_refs (my_cell->cell_refs_from);
