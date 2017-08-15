@@ -325,6 +325,8 @@ extern struct node *yylval;
 unsigned char parse_cell_or_range (char **,struct rng *);
 int str_to_col (char ** str);
 
+static void noa0_number(char **ptr, int *r, int current);
+
 int
 yylex ()
 {
@@ -696,20 +698,13 @@ noa0_numeric_range(char **ptr, int *r1, int *r2, int current)
 {
 	int	negative = 0, num = 0;
 	char	*p;
+	p = *ptr;
 
-	for (p=*ptr; *p && (isdigit(*p) || *p == '-' || *p == '+'); p++)
-		if (*p == '-')
-			negative = 1;
-		else if (*p != '+')	/* A digit */
-			num = (num * 10) + *p - '0';	/* FIX ME relies on ASCII */
-
-	if (negative)
-		*r1 = current - num;
-	else
-		*r1 = current + num;
+	noa0_number(&p, r1, current);
 
 	num = 0; negative = 0;
 	if (*p == ':' || *p == '.') {	/* it's a range */
+		// TODO This looks like a repeat of noa0_number()
 		p++;			/* skip colon or dot */
 		for (; *p && (isdigit(*p) || *p == '-' || *p == '+'); p++)
 			if (*p == '-')
@@ -733,20 +728,25 @@ noa0_numeric_range(char **ptr, int *r1, int *r2, int current)
 static void
 noa0_number(char **ptr, int *r, int current)
 {
-	int	negative = 0, num = 0;
-	char	*p;
+	int sgn=1 ;
+	int  num = 0;
+	char *p;
+	p = *ptr;
 
-	for (p=*ptr; *p && (isdigit(*p) || *p == '-' || *p == '+'); p++)
-		if (*p == '-')
-			negative = 1;
-		else if (*p != '+')	/* A digit */
-			num = (num * 10) + *p - '0';	/* FIX ME relies on ASCII */
+	if(*p && *p == '+') {
+		p++;
+	} else if (*p && *p == '-') {
+		sgn = -1;
+		p++;
+	} 
 
-	if (negative)
-		*r = current - num;
-	else
-		*r = current + num;
+	//for (; *p && isdigit(*p); p++)
+	while(*p && isdigit(*p)) {
+		num = (num * 10) + *p - '0';
+		p++;
+	}
 
+	*r = current + sgn*num;
 	*ptr = p;
 }
 

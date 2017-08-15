@@ -1,0 +1,8 @@
+# test of issue 18
+# cell referencing parsing bug
+i
+10
+r1c1+1
+.
+w
+q
