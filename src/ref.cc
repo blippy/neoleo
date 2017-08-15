@@ -30,6 +30,7 @@
 #include <dmalloc.h>
 #endif
 
+#include <iostream>
 #include <string.h>
 
 #include "global.h"
@@ -50,6 +51,8 @@
 #include "cmd.h"
 #include "lists.h"
 
+using std::cout;
+using std::endl;
 
 static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);
 static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
@@ -472,7 +475,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELLREF &ct)
 {
 	unsigned char *fp;
-	unsigned char *hi;
+	unsigned char *hi = 0;
 	unsigned char byte;
 	CELLREF trr, tcc;
 	struct rng trng;
@@ -482,7 +485,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 	CELL *tcp;
 
 	fp = cpf->get_cell_formula();
-	hi = 0;
+	//hi = 0;
 	if (!moving)
 		moving = (char*)init_stack ();
 	while ((byte = *fp++) != ENDCOMP)
@@ -522,13 +525,10 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 				break;
 
 			case CONST_STR:
-				if (!hi)
-					hi = fp + fp[-1];
+				if (!hi) hi = fp + fp[-1];
 				break;
-
 			case CONST_STR_L:
-				if (!hi)
-					hi = fp + fp[-2] + ((unsigned) (fp[-1]) << 8);
+				if (!hi) hi = fp + fp[-2] + ((unsigned) (fp[-1]) << 8);
 				break;
 
 			case CONST_ERR:
@@ -605,25 +605,29 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 				}
 		}
 	}
-	if (!hi)
-		hi = fp;
-	else
-		hi += strlen ((char *) hi);
 
-	hi++;
+	if (hi) {
+		hi += strlen ((char *) hi);
+		hi++;
+	} else
+		hi = fp;
+
 	{ // attempt to refactor for issue#17
 		size_t len = hi - cpf->get_cell_formula();
+		//cout << "len = " << len << endl;
 		assert(len >=0);
 		my_cell->set_cell_formula(cpf->get_cell_formula());
 		//cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
 		if (len > 0) {
 			unsigned char* formula = (unsigned char*) ck_malloc (len);
-			//bcopy (my_cell->get_cell_formula(), formula, len);
+			bcopy (my_cell->get_cell_formula(), formula, len);
+			/*
 			for(size_t i =0; i < len; ++i){
-				/* next line can cause read access violation. Fix TBD */
+				// next line can cause read access violation. Fix TBD 
 				unsigned char c = my_cell->get_cell_formula()[i];
 				formula[i] = c;
 			}
+			*/
 			//bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
 			//cpf->set_cell_formula( (unsigned char *) ck_malloc (len));
 			cpf->set_cell_formula((unsigned char*) formula);

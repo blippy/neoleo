@@ -6,7 +6,8 @@ EXTRA_DIST = ref.sh
 
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = busi.scr cpreg-02.scr cpreg-03.scr inbuilt-tests.sh \
-	issue18.scr ref.sh nohead-01.scr nohead-02.scr stringo.scr
+	issue17.scr issue18.scr \
+	ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = ./script.sh
 
