@@ -753,7 +753,10 @@ noa0_number(char **ptr, int *r, int current)
 static char *
 noa0_find_end(char *p)
 {
-	while (*p && (isdigit(*p) || *p == '+' || *p == '-'))
+	// TODO this function is similar to noa0_number()
+	if(*p && (*p == '+' || *p == '-')) p++;
+	//while (*p && (isdigit(*p) || *p == '+' || *p == '-'))
+	while (*p && isdigit(*p))
 		p++;
 	return p;
 }
