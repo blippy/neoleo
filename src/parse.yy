@@ -733,12 +733,19 @@ noa0_number(char **ptr, int *r, int current)
 	char *p;
 	p = *ptr;
 
+	/*
 	if(*p && *p == '+') {
 		p++;
 	} else if (*p && *p == '-') {
 		sgn = -1;
 		p++;
 	} 
+	*/
+	switch(*p) {
+		case '\0': break;
+		case '-' : sgn = -1; //fallthrough
+		case '+' : p++;
+	}
 
 	//for (; *p && isdigit(*p); p++)
 	while(*p && isdigit(*p)) {
