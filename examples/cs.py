@@ -6,6 +6,8 @@ from curses import *
 import curses.textpad
 import time
 
+def CTRL(k): return ord(k) & 0x1f
+
 stdscr = curses.initscr()
 stdscr.immedok(True) # automatically refresh window
 curs_set(0)
@@ -59,6 +61,8 @@ def a_menu():
             #stdscr.addstr(y, x, stdscr.instr(my, mx, 5))
             win1.addstr(4,4, str(my), 2)
             win1.refresh()
+        elif event == CTRL("m"):
+            flash()
         elif event == KEY_HOME:
             flash()
 
