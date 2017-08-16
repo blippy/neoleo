@@ -64,6 +64,7 @@ static CELLREF decomp_col;
 #define F4	Global->a0?(CPTR)"@%s(%s, %s, %s, %s)":(CPTR)"%s(%s, %s, %s, %s)"
 #define FN1	Global->a0?(CPTR)"@%s(%s":(CPTR)"%s(%s"
 
+
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
 static struct pr_node *
@@ -83,64 +84,19 @@ n_alloc (int size, int tightness, char *fmt, ...)
 
 #define n_free(x)	ck_free(x)
 
-extern struct pr_node *
-byte_decompile ( unsigned char *expr)
+extern struct pr_node * byte_decompile ( unsigned char *expr);
+
+/* This function is only called by byte_decompile, but I refactored it out
+ * Everything is still monstrous, mind.
+ * Note that this function call byte_decompile() - so there is recursion
+ */
+void decompile_comp(struct function*& f, struct pr_node*& newn, struct var*&v, 
+		unsigned char* &expr, char*&tmp_str, long&tmp_lng, num_t&tmp_flt, 
+		unsigned &jumpto, int& pri, char*& chr, int &aso, unsigned char &byte, 
+		unsigned char&save_val, unsigned &long_skp,
+		struct pr_node **&c_node)
 {
-	unsigned char byte;
-	num_t tmp_flt;
-	long tmp_lng;
-	char *tmp_str;
-	struct var *v;
-	unsigned long_skp;
-	unsigned char save_val;
-	unsigned jumpto;
-
-	struct pr_node *newn = 0;
-	int pri;
-	int aso;
-	char *chr;
-
-	static struct pr_node **the_line;
-	static int line_alloc;
-
-	static struct pr_node **c_node;
-	struct function *f;
-
-	if (!the_line)
-	{
-		the_line = (struct pr_node **) ck_malloc (20 * sizeof (struct pr_node *));
-		line_alloc = 20;
-		c_node = the_line;
-	}
-
-#ifdef TEST
-	if (!expr)
-		panic ("No expression to decompile");
-#endif
-next_byte:
-	byte = *expr++;
-	if (byte < USR1)
-		f = &the_funs[byte];
-	else if (byte < SKIP)
-	{
-		tmp_lng = *expr++;
-		f = &usr_funs[byte - USR1][tmp_lng];
-	}
-	else
-		f = &skip_funs[byte - SKIP];
-
-	if (f->fn_argn & X_J)
-		jumpto = *expr++;
-	else if (f->fn_argn & X_JL)
-	{
-		jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
-		expr += 2;
-	}
-	else
-		jumpto = 0;
-
-	switch (GET_COMP (f->fn_comptype))
-	{
+	switch (GET_COMP (f->fn_comptype)) {
 		case C_IF:
 			if (expr[jumpto - 2] != SKIP)
 			{
@@ -548,6 +504,66 @@ do_fn2:
 		default:
 			panic ("Bad decompile %d", f->fn_comptype);
 	}
+}
+extern struct pr_node *
+byte_decompile ( unsigned char *expr)
+{
+	unsigned char byte;
+	num_t tmp_flt;
+	long tmp_lng;
+	char *tmp_str;
+	struct var *v;
+	unsigned long_skp;
+	unsigned char save_val;
+	unsigned jumpto;
+
+	struct pr_node *newn = 0;
+	int pri;
+	int aso;
+	char *chr;
+
+	static struct pr_node **the_line;
+	static int line_alloc;
+
+	static struct pr_node **c_node;
+	struct function *f;
+
+	if (!the_line)
+	{
+		the_line = (struct pr_node **) ck_malloc (20 * sizeof (struct pr_node *));
+		line_alloc = 20;
+		c_node = the_line;
+	}
+
+#ifdef TEST
+	if (!expr)
+		panic ("No expression to decompile");
+#endif
+next_byte:
+	byte = *expr++;
+	if (byte < USR1)
+		f = &the_funs[byte];
+	else if (byte < SKIP)
+	{
+		tmp_lng = *expr++;
+		f = &usr_funs[byte - USR1][tmp_lng];
+	}
+	else
+		f = &skip_funs[byte - SKIP];
+
+	if (f->fn_argn & X_J)
+		jumpto = *expr++;
+	else if (f->fn_argn & X_JL)
+	{
+		jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
+		expr += 2;
+	}
+	else
+		jumpto = 0;
+
+	decompile_comp(f, newn, v, expr, tmp_str, tmp_lng, tmp_flt, jumpto, 
+			pri, chr, aso, byte, save_val, long_skp, c_node);
+
 	*c_node++ = newn;
 	if (c_node == &the_line[line_alloc])
 	{
