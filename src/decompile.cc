@@ -98,7 +98,6 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 	num_t tmp_flt;
 	char *tmp_str;
 	struct var *v;
-	unsigned long_skp;
 	unsigned char save_val;
 
 	int pri;
@@ -106,57 +105,60 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 	char *chr;
 	switch (GET_COMP (f->fn_comptype)) {
 		case C_IF:
-			if (expr[jumpto - 2] != SKIP)
 			{
-				long_skp = 1;
-				save_val = expr[jumpto - 3];
-				expr[jumpto - 3] = 0;
-			}
-			else
-			{
-				long_skp = 0;
-				save_val = expr[jumpto - 2];
-				expr[jumpto - 2] = 0;
-			}
-			c_node[0] = byte_decompile (expr);
-			c_node++;
-
-			if (long_skp)
-			{
-				expr[jumpto - 3] = save_val;
-				expr += jumpto;
-				jumpto = expr[-2] + ((unsigned) (expr[-1]) << 8);
-			}
-			else
-			{
-				expr[jumpto - 2] = save_val;
-				expr += jumpto;
-				jumpto = expr[-1];
-			}
-			save_val = expr[jumpto];
-			expr[jumpto] = 0;
-			c_node[0] = byte_decompile (expr);
-			c_node -= 2;
-			expr[jumpto] = save_val;
-			expr += jumpto;
-			if (byte == IF || byte == IF_L)
-			{
-				if (c_node[0]->tightness <= 1)
-					newn = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
-							1,
-							"(%s) ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+				unsigned long_skp;
+				if (expr[jumpto - 2] != SKIP)
+				{
+					long_skp = 1;
+					save_val = expr[jumpto - 3];
+					expr[jumpto - 3] = 0;
+				}
 				else
-					newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
-							1,
-							"%s ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+				{
+					long_skp = 0;
+					save_val = expr[jumpto - 2];
+					expr[jumpto - 2] = 0;
+				}
+				c_node[0] = byte_decompile (expr);
+				c_node++;
+
+				if (long_skp)
+				{
+					expr[jumpto - 3] = save_val;
+					expr += jumpto;
+					jumpto = expr[-2] + ((unsigned) (expr[-1]) << 8);
+				}
+				else
+				{
+					expr[jumpto - 2] = save_val;
+					expr += jumpto;
+					jumpto = expr[-1];
+				}
+				save_val = expr[jumpto];
+				expr[jumpto] = 0;
+				c_node[0] = byte_decompile (expr);
+				c_node -= 2;
+				expr[jumpto] = save_val;
+				expr += jumpto;
+				if (byte == IF || byte == IF_L)
+				{
+					if (c_node[0]->tightness <= 1)
+						newn = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
+								1,
+								"(%s) ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+					else
+						newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
+								1,
+								"%s ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+				}
+				else
+					newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
+							1000,
+							F3, f->fn_str, c_node[0]->string, c_node[1]->string, c_node[2]->string);
+				n_free (c_node[0]);
+				n_free (c_node[1]);
+				n_free (c_node[2]);
 			}
-			else
-				newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
-						1000,
-						F3, f->fn_str, c_node[0]->string, c_node[1]->string, c_node[2]->string);
-			n_free (c_node[0]);
-			n_free (c_node[1]);
-			n_free (c_node[2]);
 			break;
 
 		case C_ANDOR:
@@ -621,7 +623,6 @@ decomp (const CELLREF r, const CELLREF c, CELL *cell)
 char *
 decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
-	struct pr_node *ret;
 	char *str;
 	extern char *bname[];
 
@@ -673,11 +674,11 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 		}
 		save_decomp = (VOIDSTAR) str;
 		return str;
+	} else {
+		struct pr_node *ret = byte_decompile (cell->get_cell_formula());
+		save_decomp = (VOIDSTAR) ret;
+		return &(ret->string[0]);
 	}
-	else
-		ret = byte_decompile (cell->get_cell_formula());
-	save_decomp = (VOIDSTAR) ret;
-	return &(ret->string[0]);
 }
 
 void

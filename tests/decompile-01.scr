@@ -1,0 +1,10 @@
+# test decompile
+
+i
+"expect hello:"
+if(#TRUE, "hello", -3)
+"---"
+.
+
+w
+q
