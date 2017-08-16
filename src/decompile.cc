@@ -92,7 +92,7 @@ extern struct pr_node * byte_decompile ( unsigned char *expr);
  */
 void decompile_comp(struct function*& f, struct pr_node*& newn,  
 		unsigned char* &expr,  long&tmp_lng,  
-		unsigned &jumpto, unsigned char &byte, 
+		unsigned jumpto, unsigned char &byte, 
 		struct pr_node **&c_node)
 {
 	num_t tmp_flt;
@@ -106,7 +106,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 	switch (GET_COMP (f->fn_comptype)) {
 		case C_IF:
 			{
-				unsigned long_skp;
+				unsigned long_skp = 0;
 				if (expr[jumpto - 2] != SKIP)
 				{
 					long_skp = 1;
@@ -553,19 +553,21 @@ byte_decompile ( unsigned char *expr)
 		else
 			f = &skip_funs[byte - SKIP];
 
-		unsigned jumpto;
-		if (f->fn_argn & X_J)
-			jumpto = *expr++;
-		else if (f->fn_argn & X_JL)
 		{
-			jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
-			expr += 2;
+			unsigned jumpto = 0;
+			if (f->fn_argn & X_J)
+				jumpto = *expr++;
+			else if (f->fn_argn & X_JL)
+			{
+				jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
+				expr += 2;
+			}
+			else
+				jumpto = 0;
+
+
+			decompile_comp(f, newn, expr, tmp_lng, jumpto, byte, c_node);
 		}
-		else
-			jumpto = 0;
-
-
-		decompile_comp(f, newn, expr, tmp_lng, jumpto, byte, c_node);
 
 
 		*c_node++ = newn;
