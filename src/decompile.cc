@@ -90,12 +90,20 @@ extern struct pr_node * byte_decompile ( unsigned char *expr);
  * Everything is still monstrous, mind.
  * Note that this function call byte_decompile() - so there is recursion
  */
-void decompile_comp(struct function*& f, struct pr_node*& newn, struct var*&v, 
-		unsigned char* &expr, char*&tmp_str, long&tmp_lng, num_t&tmp_flt, 
-		unsigned &jumpto, int& pri, char*& chr, int &aso, unsigned char &byte, 
-		unsigned char&save_val, unsigned &long_skp,
+void decompile_comp(struct function*& f, struct pr_node*& newn,  
+		unsigned char* &expr,  long&tmp_lng,  
+		unsigned &jumpto, unsigned char &byte, 
 		struct pr_node **&c_node)
 {
+	num_t tmp_flt;
+	char *tmp_str;
+	struct var *v;
+	unsigned long_skp;
+	unsigned char save_val;
+
+	int pri;
+	int aso;
+	char *chr;
 	switch (GET_COMP (f->fn_comptype)) {
 		case C_IF:
 			if (expr[jumpto - 2] != SKIP)
@@ -520,64 +528,56 @@ byte_decompile ( unsigned char *expr)
 
 	struct pr_node *newn = 0;
 
-	{
-		unsigned char byte;
-		num_t tmp_flt;
-		long tmp_lng;
-		char *tmp_str;
-		struct var *v;
-		unsigned long_skp;
-		unsigned char save_val;
-		unsigned jumpto;
 
-		int pri;
-		int aso;
-		char *chr;
-		struct function *f;
+	//unsigned char byte;
 
 
 #ifdef TEST
-		if (!expr)
-			panic ("No expression to decompile");
+	if (!expr)
+		panic ("No expression to decompile");
 #endif
-		while(*expr) {
-			//next_byte:
-			byte = *expr++;
-			if (byte < USR1)
-				f = &the_funs[byte];
-			else if (byte < SKIP)
-			{
-				tmp_lng = *expr++;
-				f = &usr_funs[byte - USR1][tmp_lng];
-			}
-			else
-				f = &skip_funs[byte - SKIP];
-
-			if (f->fn_argn & X_J)
-				jumpto = *expr++;
-			else if (f->fn_argn & X_JL)
-			{
-				jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
-				expr += 2;
-			}
-			else
-				jumpto = 0;
-
-			decompile_comp(f, newn, v, expr, tmp_str, tmp_lng, tmp_flt, jumpto, 
-					pri, chr, aso, byte, save_val, long_skp, c_node);
-
-			*c_node++ = newn;
-			if (c_node == &the_line[line_alloc])
-			{
-				line_alloc *= 2;
-				the_line = (pr_node**) ck_realloc (the_line, line_alloc * sizeof (struct pr_node *));
-				c_node = &the_line[line_alloc / 2];
-			}
-
-			//if (*expr)
-			//	goto next_byte;
+	while(*expr) {
+		//next_byte:
+		unsigned char byte = *expr++;
+		struct function *f;
+		long tmp_lng;
+		if (byte < USR1)
+			f = &the_funs[byte];
+		else if (byte < SKIP)
+		{
+			tmp_lng = *expr++;
+			f = &usr_funs[byte - USR1][tmp_lng];
 		}
+		else
+			f = &skip_funs[byte - SKIP];
+
+		unsigned jumpto;
+		if (f->fn_argn & X_J)
+			jumpto = *expr++;
+		else if (f->fn_argn & X_JL)
+		{
+			jumpto = expr[0] + ((unsigned) (expr[1]) << 8);
+			expr += 2;
+		}
+		else
+			jumpto = 0;
+
+
+		decompile_comp(f, newn, expr, tmp_lng, jumpto, byte, c_node);
+
+
+		*c_node++ = newn;
+		if (c_node == &the_line[line_alloc])
+		{
+			line_alloc *= 2;
+			the_line = (pr_node**) ck_realloc (the_line, line_alloc * sizeof (struct pr_node *));
+			c_node = &the_line[line_alloc / 2];
+		}
+
+		//if (*expr)
+		//	goto next_byte;
 	}
+
 
 	/* if(c_node != &the_line[1]) {
 	   io_error_msg("%d values on decompile stack!",c_node - the_line);
