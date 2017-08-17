@@ -185,17 +185,19 @@ info()
 {
 	// print diagnostic information
 	
-	typedef struct info_t { string str; int num;} info_t;
+	typedef struct info_t { string str; int num; string desc; } info_t;
 	auto infos = vector<info_t> {
-		{"KEY_END",	KEY_END},
-		{"KEY_HOME",	KEY_HOME},
+		{"KEY_END",	KEY_END,	"End key"},
+		{"KEY_HOME",	KEY_HOME,	"Home key"},
+		{"KEY_LEFT", 	KEY_LEFT, 	"Arrow left"},
 		{"KEY_NPAGE",	KEY_NPAGE}
 	};
 
 	for(const auto& i:infos)
 		cout << "curses." << pad_right(i.str,11)  << pad_left(to_oct(i.num),6) 
 			<< pad_left(to_hex(i.num), 7)  
-			<< pad_left(std::to_string(int(i.num)), 5) << "\n";
+			<< pad_left(std::to_string(int(i.num)), 5) 
+			<< "     # " << i.desc << "\n";
 }
 
 static void
