@@ -1101,6 +1101,16 @@ astof (char **sp)
 }
 
 
+std::string 
+pad_left(const std::string& s, int width)
+{
+	std::string res = s;
+	int times = width - res.size();
+	for(int i = 0; i < times; i++)
+		res = " " + res;
+	return res;
+}
+
 std::string
 pad_right(const std::string& s, int width)
 {

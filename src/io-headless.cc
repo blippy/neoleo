@@ -4,9 +4,12 @@
 #include <errno.h>
 #include <functional>
 #include <map>
+#include <ncurses.h>
 #include <unistd.h>
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
 
 
 #include "basic.h"
@@ -27,6 +30,21 @@ using std::cout;
 using std::endl;
 using std::function;
 using std::map;
+using std::vector;
+
+string to_hex(long n)
+{
+	std::stringstream ss;
+	ss << std::hex << n << "h";
+	return ss.str();
+}
+
+string to_oct(long n)
+{
+	std::stringstream ss;
+	ss << "0o" << std::oct << n;
+	return ss.str();
+}
 
 static void 
 do_nothing(void)
@@ -162,6 +180,24 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
+static void 
+info()
+{
+	// print diagnostic information
+	
+	typedef struct info_t { string str; int num;} info_t;
+	auto infos = vector<info_t> {
+		{"KEY_END",	KEY_END},
+		{"KEY_HOME",	KEY_HOME},
+		{"KEY_NPAGE",	KEY_NPAGE}
+	};
+
+	for(const auto& i:infos)
+		cout << "curses." << pad_right(i.str,11)  << pad_left(to_oct(i.num),6) 
+			<< pad_left(to_hex(i.num), 7)  
+			<< pad_left(std::to_string(int(i.num)), 5) << "\n";
+}
+
 static void
 insert_columnwise()
 {
@@ -232,6 +268,7 @@ static void write_file()
 }
 static map<string, function<void()> > func_map = {
 	{"i", insert_columnwise},
+	{"info", info},
 	{"type-cell", type_cell},
 	{"view", show_cells},
 	{"w", write_file}

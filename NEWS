@@ -4,6 +4,7 @@ VERSION 7.0.0 IN DEVELOPMENT
 * Headless words added: 
 	# comment line
 	i (insert columnar data)
+	info
 	q (quit)
 	w (write to file)
 

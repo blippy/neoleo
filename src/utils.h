@@ -64,3 +64,5 @@ extern VOIDSTAR pop_stack (VOIDSTAR);
 extern void push_stack (VOIDSTAR, VOIDSTAR);
 extern void flush_stack (VOIDSTAR);
 std::string pad_right(const std::string& s, int width);
+std::string pad_left(const std::string& n, int width);
+
