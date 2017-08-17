@@ -743,7 +743,7 @@ edit_cell_at(CELLREF row, CELLREF col, const char* new_formula)
 static std::string m_copied_cell_formula = "";
 
 void
-copy_cell_formula()
+copy_this_cell_formula()
 {
 	CELL *cp = find_cell(curow, cucol);
 	char *dec = decomp(curow, cucol, cp);
@@ -752,7 +752,7 @@ copy_cell_formula()
 }
 
 void 
-paste_cell_formula()
+paste_this_cell_formula()
 {	
 	edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
 }

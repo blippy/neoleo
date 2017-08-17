@@ -101,6 +101,7 @@ version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
 @menu
+* Quickstart::
 * Basics::                      
 * How to enter data::           
 * Making changes::              
@@ -125,7 +126,13 @@ means complete, nor necessarily accurate for that matter.
 @end menu
 
 @c @include running.texi
+
+@node Quickstart, Basics, Top, Top
+@include quickstart.texi
+
+@node Basics, How to enter data,Quickstart, Top
 @include basics.texi
+
 @include entering-data.texi
 @include making-changes.texi
 @include style.texi

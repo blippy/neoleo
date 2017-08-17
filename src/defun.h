@@ -688,7 +688,18 @@ DEFUN ("copy-region", FDcopy_region, FAcopy_region, to_vptr(copy_region))
 "destination), or a range containing the same number of cells as the",
 "source range.",
 #endif
-   
+  
+DEFUN("copy-this-cell-formula", FDcopy_this_cell_formula, FAcopy_this_cell_formula, copy_this_cell_formula)
+#ifdef DOC_STRINGS
+"Copy the formula in the current row to the yank buffer",
+#endif
+
+DEFUN("paste-this-cell-formula", FDpaste_this_cell_formula, FApaste_this_cell_formula, paste_this_cell_formula)
+#ifdef DOC_STRINGS
+"Paste the formula in the current row to the yank buffer",
+#endif
+
+
 DEFUN ("copy-row", FDcopy_row, FAcopy_row, copy_row)
 #ifdef FUNC_ARG_STRINGS
 "nSource row? ",

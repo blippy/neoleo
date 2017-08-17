@@ -117,6 +117,22 @@ static char *init_cmds[] =
   "bind-key main  left-cell  ^b",
   "bind-key main  down-cell  ^n",
   "",
+
+  "# Clipbard functions", // mcarter 17-Aug-2017 issue#19
+  "",
+  "bind-key main copy-this-cell-formula ^c",
+  "bind-key main paste-this-cell-formula ^v",
+  "",
+  "# Alignment",
+  "",
+  "name-macro-string set-cell-alignment-left \\",
+  "{set-cell-alignment l}",
+  "bind-key main set-cell-alignment-left ^l",
+  "name-macro-string set-cell-alignment-right \\",
+  "{set-cell-alignment r}",
+  "bind-key main set-cell-alignment-right ^r",
+  "",
+
   "# Ansi motion.",
   "bind-key generic-ansi scroll-up 5",
   "bind-key generic-ansi scroll-down 6",
@@ -162,7 +178,7 @@ static char *init_cmds[] =
   "",
   "# Scrolling commands.",
   "bind-key meta scroll-up v",
-  "bind-key main scroll-down ^V",
+  //"bind-key main scroll-down ^V", // mcarter issue19 remove this as a default binding
   "bind-key trolx scroll-right >",
   "bind-key trolx scroll-left <",
   "",

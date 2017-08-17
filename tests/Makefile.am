@@ -8,7 +8,7 @@ EXTRA_DIST = ref.sh
 TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	decompile-01.scr \
 	inbuilt-tests.sh \
-	issue17.scr issue18.scr \
+	issue17.scr issue18.scr issue19.scr \
 	ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = ./script.sh

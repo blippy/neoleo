@@ -1,4 +1,3 @@
-@node Basics, How to enter data, Top, Top
 @chapter Basics
  
 
@@ -705,6 +704,9 @@ font here?}
         set-option a0
         set-option status -1
 @end example
+
+Comments in @file{.oleorc} can be added. The line should start 
+with the `@code{#}' character.
 
 @include expressions.texi
 

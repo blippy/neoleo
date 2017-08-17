@@ -35,6 +35,14 @@ cell is the location of the top-left corner of the destination range.
 Copy row NUM to current row, e.g. `@code{copy-row 42}' will copy
 the contents of row 42 to the current row.
 
+@item @code{copy-this-cell-formula}
+@cmindex copy-this-cell-formula
+Copy the formula in the current cell into the internal clipboard.
+
+The converse action is
+@cmindex paste-this-cell-formula
+@code{paste-this-cell-formula}
+which will paste from the internal clipboard to the current cell.
 
 @item M-C-c
 Copy just the values of one region to another.

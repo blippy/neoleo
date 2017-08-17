@@ -3,14 +3,23 @@ VERSION 7.0.0 IN DEVELOPMENT
 
 * Headless words added: 
 	# comment line
+	copy-this-cell-formula
 	i (insert columnar data)
-	info
+	info (mostly for debugging purposes)
+	paste-this-cell-formula
 	q (quit)
 	w (write to file)
 
-* Fixed issue#17 Copy region
+* Enhancement issue#19: copying and pasting of current cell. Bindings are
+now:
+	C-c copy-this-cell-formula
+	C-l set-cell-alignment-left
+	C-r set-cell-alignment-right
+	C-v paste-this-cell-formula
 
-* Fixed issue#18 Cell reference parsing
+* Fixed issue#18: Cell reference parsing
+
+* Fixed issue#17: Copy region
 
 * Added macros: copy-row
 

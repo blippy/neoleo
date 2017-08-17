@@ -132,10 +132,10 @@ show_main_menu()
 	// now actually do something
 	switch(sel) {
 		case 'c': // copy
-			copy_cell_formula();
+			copy_this_cell_formula();
 			break;
 		case 'v': // paste
-			paste_cell_formula();
+			paste_this_cell_formula();
 			break;
 		case '0': // just close the window. No action required
 		default:

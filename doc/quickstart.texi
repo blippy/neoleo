@@ -1,0 +1,15 @@
+@chapter Quickstart
+
+Most important keys:
+@table @kbd
+@item C-c
+	Copy cell formula to clipboard
+@item C-l
+	Set alignment of current cell left
+@item C-r
+	Set alignment of current cell right
+@item C-v
+	Paste formula in current clipboard to current cell
+@item C-x C-c
+	Save(as) file
+@end table
