@@ -103,6 +103,23 @@ the missing information.
 
 
 
+@section Editing cells
+
+When you edit the contents of a cell, @code{neoleo} activates the
+@code{edit-ansi} key bindings.  Prior to 18-Aug-2017, the HOME and
+END keys did not work unless you added to the following to 
+@code{~/.oleorc}:
+
+@example
+bind-key edit-ansi end-of-line F
+bind-key edit-ansi beginning-of-line H
+@end example
+
+Here, F is the END key, and H is the HOME key. These values have
+been added to @code{init.cc} as part of the commit to issue#21,
+so the HOME and END keys should now work seamlessly when editing
+cells.
+
 
 
 

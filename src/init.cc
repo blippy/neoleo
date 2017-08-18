@@ -157,6 +157,8 @@ static char *init_cmds[] =
   "bind-key edit-ansi down-cell-and-edit B",
   "bind-key edit-ansi forward-char C",
   "bind-key edit-ansi backward-char D",
+  "bind-key edit-ansi end-of-line F",
+  "bind-key edit-ansi beginning-of-line H",
   "",
   "create-keymap meta-edit-ansi universal",
   "bind-key edit-ansi meta-edit-ansi ^[",
