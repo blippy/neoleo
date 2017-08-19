@@ -682,6 +682,17 @@ _io_read_kbd (char *buf, int size)
 	FD_CLR (0, &read_pending_fd_set);
 	FD_CLR (0, &exception_pending_fd_set);
 
+	if(r == 4 && buf[0] == '\033' && buf[3] == '~') {
+		if(buf[2] == '1') {
+			buf[2] = 'H';
+			r = 3;
+		}else if(buf[2] == '4') {
+			buf[2] = 'F';
+			r = 3;
+		}
+
+	}
+
 	if(false) { // debug stuff
 		char ch = buf[0];
 		std::string msg = "io-curses.cc:_io_read_kbd(): chars: ";
