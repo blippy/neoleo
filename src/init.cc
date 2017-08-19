@@ -153,6 +153,7 @@ static char *init_cmds[] =
   "{exit-minibuffer}{right-cell}{edit-cell}",
   "",
   "create-keymap edit-ansi generic-ansi",
+  "bind-key edit-ansi delete-char 3",
   "bind-key edit-ansi up-cell-and-edit A",
   "bind-key edit-ansi down-cell-and-edit B",
   "bind-key edit-ansi forward-char C",

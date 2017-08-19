@@ -682,29 +682,36 @@ _io_read_kbd (char *buf, int size)
 	FD_CLR (0, &read_pending_fd_set);
 	FD_CLR (0, &exception_pending_fd_set);
 
+	// mcarter 19-Aug-2017
+	// Fix issue#22 wrt home, end and delete key. 
+	// Detailed discussion in TR07
+	// remap home, and and delete keys
 	if(r == 4 && buf[0] == '\033' && buf[3] == '~') {
-		if(buf[2] == '1') {
-			buf[2] = 'H';
-			r = 3;
-		}else if(buf[2] == '4') {
-			buf[2] = 'F';
-			r = 3;
+		switch(buf[2]) {
+			case '1' : buf[2] = 'H'; goto hit; // remap home key
+			case '3' : goto hit; // delete key needs no change except length
+			case '4' : buf[2] = 'F'; // remap end key
+hit:
+				   r = 3;
 		}
-
 	}
 
-	if(false) { // debug stuff
-		char ch = buf[0];
+	auto log_buffer = [&]() -> void {
 		std::string msg = "io-curses.cc:_io_read_kbd(): chars: ";
 		for(int i=0; i<r; ++i)
 			msg += "<" + std::to_string(buf[i]) + ">";
 		msg += "read: " + std::to_string(r) + ", ";
-		msg += std::to_string(KEY_NPAGE);
+		//msg += std::to_string(KEY_NPAGE);
 		log_debug(msg);
-		// apparently never called
-		if(ch == KEY_NPAGE)
-			log_debug("io-curses.cc:_io_read_kbd() encountered PageDown");
+	};
+
+	// I don't think there should be more than 4 chars received
+	if(r>4) {
+		log_debug("io-curses.cc:_io_read_kbd() seems to have read suspiciously too many chars ...");
+		log_buffer();
 	}
+
+	if(false) log_buffer(); // for debugging
 
 	return r;
 }
