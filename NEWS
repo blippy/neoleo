@@ -10,18 +10,20 @@ VERSION 7.0.0 IN DEVELOPMENT
 	q (quit)
 	w (write to file)
 
-* Implemented RFE#21: home and end keys work in edit mode
+* ISS#22 done: fix home, end and delete keys
 
-* Implemented RFE#19: copying and pasting of current cell. 
+* ISS#21 done: make home and end keys work in edit mode
+
+* RFE#19 done: copying and pasting of current cell. 
 Bindings are now:
 	C-c copy-this-cell-formula
 	C-l set-cell-alignment-left
 	C-r set-cell-alignment-right
 	C-v paste-this-cell-formula
 
-* Fixed BUG#18: Cell reference parsing
+* ISS#18 done: Cell reference parsing
 
-* Fixed BUG#17: Copy region
+* BUG#17 done: Copy region
 
 * Added macros: copy-row
 

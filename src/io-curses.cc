@@ -684,7 +684,8 @@ _io_read_kbd (char *buf, int size)
 
 	// mcarter 19-Aug-2017
 	// Fix issue#22 wrt home, end and delete key. 
-	// Detailed discussion in TR07
+	// Detailed discussion in the manual, chapter Keymapms
+	// section Special keys (home, delete, etc.)
 	// remap home, and and delete keys
 	if(r == 4 && buf[0] == '\033' && buf[3] == '~') {
 		switch(buf[2]) {
@@ -705,7 +706,13 @@ hit:
 		log_debug(msg);
 	};
 
-	// I don't think there should be more than 4 chars received
+	// mcarter 19-Aug-2017
+	// Log it when the buffer has more than 4 characters in it.
+	// The function keys (F1, F2, ...) do this, which is not
+	// a problem; I just wanted to guard against big sequences
+	// being read in, which I am not expecting.
+	// Actually, the function keys are good ones to map. I would
+	// especially like to use F1 for menus or help
 	if(r>4) {
 		log_debug("io-curses.cc:_io_read_kbd() seems to have read suspiciously too many chars ...");
 		log_buffer();
