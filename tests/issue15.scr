@@ -1,0 +1,10 @@
+# test of BUG#15
+# stringo.cc find is buggy
+
+i
+"Expect 3:"
+find("greetings", "ee", 1)
+.
+
+w
+q
