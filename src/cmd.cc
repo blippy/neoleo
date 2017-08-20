@@ -472,6 +472,60 @@ block_until_excitement (struct timeval *tv)
 	  }
 }
 
+void
+loop_until_char_avail()
+{
+	/* This loop until a character can be read. */
+	while (!io_input_avail ())
+	{
+		alarm_hooks ();
+		select_hooks ();
+		io_scan_for_input (0);
+		if (io_input_avail ())
+			break;
+		if (Global->auto_recalc && eval_next_cell ())
+		{
+			if (Global->bkgrnd_recalc)
+			{
+				int loop = 0;
+				while (!io_input_avail ()
+						&& eval_next_cell ()
+						&& ++loop < 10)
+					io_scan_for_input (0);
+			}
+			else
+				while (eval_next_cell ())
+					;
+			io_scan_for_input (0);
+			if (!io_input_avail ())
+				io_redisp ();
+			io_flush ();
+			io_scan_for_input (0);
+		}
+		else
+		{
+			io_redisp ();
+			io_flush ();
+			io_scan_for_input (0);
+			if (io_input_avail ())
+				break;
+			if (!Global->alarm_active)
+				block_until_excitement (0);
+			else
+			{
+				struct timeval tv;
+				tv.tv_sec =
+					Global->alarm_seconds ==
+					1 ? 1 : Global->alarm_seconds /
+					2;
+				tv.tv_usec = 0;
+				block_until_excitement (&tv);
+			}
+		}
+	}
+}
+
+
 /*
  * This is the main interact loop.  As quickly as possible
  * it returns a character from the keyboard.  While waiting,
@@ -512,54 +566,7 @@ real_get_chr (void)
 		  goto fini;
 	  }
 
-	/* This loop until a character can be read. */
-	while (!io_input_avail ())
-	  {
-		  alarm_hooks ();
-		  select_hooks ();
-		  io_scan_for_input (0);
-		  if (io_input_avail ())
-			  break;
-		  if (Global->auto_recalc && eval_next_cell ())
-		    {
-			    if (Global->bkgrnd_recalc)
-			      {
-				      int loop = 0;
-				      while (!io_input_avail ()
-					     && eval_next_cell ()
-					     && ++loop < 10)
-					      io_scan_for_input (0);
-			      }
-			    else
-				    while (eval_next_cell ())
-					    ;
-			    io_scan_for_input (0);
-			    if (!io_input_avail ())
-				    io_redisp ();
-			    io_flush ();
-			    io_scan_for_input (0);
-		    }
-		  else
-		    {
-			    io_redisp ();
-			    io_flush ();
-			    io_scan_for_input (0);
-			    if (io_input_avail ())
-				    break;
-			    if (!Global->alarm_active)
-				    block_until_excitement (0);
-			    else
-			      {
-				      struct timeval tv;
-				      tv.tv_sec =
-					      Global->alarm_seconds ==
-					      1 ? 1 : Global->alarm_seconds /
-					      2;
-				      tv.tv_usec = 0;
-				      block_until_excitement (&tv);
-			      }
-		    }
-	  }
+	loop_until_char_avail();
 
 	ret = io_read_kbd (ibuf, sizeof (ibuf));
 	if (ret == 1)
