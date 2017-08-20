@@ -8,8 +8,8 @@ Most important keys:
 	Set alignment of current cell left
 @item C-r
 	Set alignment of current cell right
+@item C-s
+	Save(as) file. Identical to @code{M-x save-spreadsheet}, and similar to @code{C-x C-c}
 @item C-v
 	Paste formula in current clipboard to current cell
-@item C-x C-c
-	Save(as) file
 @end table

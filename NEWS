@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 7.0.0 IN DEVELOPMENT
 
+* RFE#24 done: C-s should save spreadsheet
+
 * Headless words added: 
 	# comment line
 	copy-this-cell-formula

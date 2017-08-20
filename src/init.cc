@@ -118,10 +118,11 @@ static char *init_cmds[] =
   "bind-key main  down-cell  ^n",
   "",
 
-  "# Clipbard functions", // mcarter 17-Aug-2017 issue#19
+  "# Other functions for main",
   "",
-  "bind-key main copy-this-cell-formula ^c",
-  "bind-key main paste-this-cell-formula ^v",
+  "bind-key main copy-this-cell-formula ^c", // mcarter 17-Aug-2017 issue#19
+  "bind-key main save-spreadsheet ^s", // mcarter 20-Aug-2017 RFE#24
+  "bind-key main paste-this-cell-formula ^v", // mcarter 17-Aug-2017 issue#19
   "",
   "# Alignment",
   "",
