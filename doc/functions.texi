@@ -407,12 +407,13 @@ loaded before the string package is loaded, things will fail
 @findex trim
   String beautifier.  Trims extra spaces and non-ASCII characters from
 @var{str}.
+
 @item find(@var{str1}, @var{str2}, @var{pos})
 @findex find
-  Returns the index at or beyond @var{pos} where @var{str2} appears in
-@var{str1} @footnote{Actually, due to a bug in version 1.5 @var{str1} is
-searched for in @var{str2}.}.  If @var{str2} does not appear at or
+  Returns the index (1-based) at or beyond @var{pos} where @var{str2} appears in
+@var{str1}.  If @var{str2} does not appear at or
 beyond @var{pos}, 0 is returned.
+
 @item substr(@var{pos1}, @var{pos2}, @var{str})
 @findex substr
   Extracts the substring from index @var{pos1} through @var{pos2} of

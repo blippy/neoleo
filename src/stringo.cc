@@ -336,13 +336,16 @@ do_strstr (
 	char *strptr	= p->gString();
 	char *str1	= (p+1)->gString();
 	long off	= (p+2)->gLong();
-	char *ret;
+	//char *ret;
 
 	if(off<1 || strlen(strptr)<=off-1)
 		ERROR(OUT_OF_RANGE);
-	ret=(char *)strstr(strptr+off-1,str1);
-	p->Value= ret ? 1 + ret-strptr : 0;
-	p->type=TYP_INT;
+	//ret=(char *)strstr(strptr+off-1,str1);
+	char *loc = strstr(strptr+off-1,str1);
+	size_t pos = loc ? 1 + loc - strptr : 0;
+	//p->Value= ret ? 1 + ret-strptr : 0;
+	//p->type=TYP_INT;
+	p->sLong(pos);
 }
 
 struct function string_funs[] = {

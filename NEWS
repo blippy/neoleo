@@ -29,6 +29,8 @@ Bindings are now:
 
 * BUG#17 done: Copy region
 
+* BUG#15 done: string find function is buggy
+
 * Added macros: copy-row
 
 * Removed X11 support
