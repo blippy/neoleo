@@ -135,6 +135,7 @@ static char *init_cmds[] =
   "",
 
   "# Ansi motion.",
+  "bind-key generic-ansi delete-cell 3", // RFE#20 delete key should delete a cell
   "bind-key generic-ansi scroll-up 5",
   "bind-key generic-ansi scroll-down 6",
   "bind-key generic-ansi up-cell A",
