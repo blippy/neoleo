@@ -2,14 +2,25 @@
 
 Most important keys:
 @table @kbd
+@item C-g
+	Cancel the current operation
+@item C-s
+	Save(as) file. Identical to @code{M-x save-spreadsheet}, and similar to @code{C-x C-c}
+@item C-x C-c
+	Exit @code{neoleo}
+@end table
+
+Other highly useful keys:
+@table @kbd
 @item C-c
 	Copy cell formula to clipboard
 @item C-l
 	Set alignment of current cell left
 @item C-r
 	Set alignment of current cell right
-@item C-s
-	Save(as) file. Identical to @code{M-x save-spreadsheet}, and similar to @code{C-x C-c}
 @item C-v
 	Paste formula in current clipboard to current cell
 @end table
+
+This is by no means a complete list of the key bindings. There are many more described in
+the rest of this manual.
