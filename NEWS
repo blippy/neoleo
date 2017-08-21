@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 7.0.0 IN DEVELOPMENT
 
+* BUG#16 done: headless doesn't insert blank
+
 * BUG#25 done: M-x arrow keys don't work properly
 
 * RFE#24 done: C-s should save spreadsheet
@@ -14,9 +16,9 @@ VERSION 7.0.0 IN DEVELOPMENT
 	q (quit)
 	w (write to file)
 
-* ISS#22 done: fix home, end and delete keys
+* RFE#22 done: fix home, end and delete keys
 
-* ISS#21 done: make home and end keys work in edit mode
+* RFE#21 done: make home and end keys work in edit mode
 
 * RFE#19 done: copying and pasting of current cell. 
 Bindings are now:
@@ -25,7 +27,7 @@ Bindings are now:
 	C-r set-cell-alignment-right
 	C-v paste-this-cell-formula
 
-* ISS#18 done: Cell reference parsing
+* BUG#18 done: Cell reference parsing
 
 * BUG#17 done: Copy region
 
