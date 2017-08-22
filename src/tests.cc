@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <array>
 #include <assert.h>
 #include <iostream>
 #include <string>
@@ -146,6 +148,7 @@ headless_tests()
 	assert(cp);
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
+	//tbl();
 
 	if(true) {
 		cout << "Testing yyparse()\n";

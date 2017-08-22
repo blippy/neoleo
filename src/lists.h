@@ -34,6 +34,7 @@ extern void flush_everything (void);
 struct cell * find_cell (CELLREF row, CELLREF col);
 struct cell *find_or_make_cell (CELLREF row, CELLREF col);
 
+extern void init_cells (void);
 extern void find_cells_in_range (struct rng *r);
 extern void make_cells_in_range (struct rng *r);
 extern struct cell * next_cell_in_range (void);

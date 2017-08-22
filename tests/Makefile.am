@@ -9,6 +9,7 @@ TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	decompile-01.scr \
 	inbuilt-tests.sh \
 	issue15.scr issue16.scr issue17.scr issue18.scr issue19.scr \
+	issue25.sh \
 	ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = ./script.sh

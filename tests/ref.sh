@@ -3,7 +3,8 @@
 # Just verifies that the input matches the output
 # and that no regression has been introduced
 OFILE=`mktemp`
-neoleo ../examples/ref.oleo -H <<< "save-spreadsheet $OFILE"
-mv $OFILE out/test-suite.oleo
-diff out/test-suite.oleo verified/test-suite.oleo
+SS=ref.oleo
+neoleo $SS -H <<< "save-spreadsheet $OFILE"
+mv $OFILE out/$SS
+diff out/$SS verified/$SS
 exit $?

@@ -57,7 +57,6 @@ extern char *err_msg (void);
 extern void init_mem (void);
 extern void init_eval (void);
 extern void init_refs (void);
-extern void init_cells (void);
 extern VOIDSTAR init_stack (void);
 
 extern VOIDSTAR pop_stack (VOIDSTAR);

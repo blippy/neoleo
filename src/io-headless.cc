@@ -22,6 +22,7 @@
 #include "io-curses.h"
 #include "io-utils.h"
 #include "lists.h"
+#include "tbl.h"
 #include "utils.h"
 
 
@@ -274,6 +275,7 @@ static void write_file()
 static map<string, function<void()> > func_map = {
 	{"i", insert_columnwise},
 	{"info", info},
+	{"tbl", tbl},
 	{"type-cell", type_cell},
 	{"view", show_cells},
 	{"w", write_file}

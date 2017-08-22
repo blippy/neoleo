@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 7.0.0 IN DEVELOPMENT
 
+* RFE#25 done: support groff tbl format
+
 * RFE#23 done: quicksatart should mention C-g
 
 * RFE#20 done: Delete key should delete a cell

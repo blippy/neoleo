@@ -83,6 +83,8 @@ class cell
 		~cell();
 		/* char *cell_string; */
 		struct cell_flags_s cell_flags;
+		ValType get_cell_type() { return cell_flags.cell_type;}
+		int get_cell_jst() { return cell_flags.cell_justify; }
 		unsigned short cell_cycle = 0;
 		//struct font_memo *cell_font;
 		struct ref_fm *cell_refs_from = nullptr;
@@ -118,6 +120,7 @@ class cell
 		void set_c_z(vals newval) { c_z = newval; } ; // TODO more ugly hackery
 };
 
+bool vacuous(cell* cp);
 
 struct var
   {

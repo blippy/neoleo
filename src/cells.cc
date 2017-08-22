@@ -100,6 +100,11 @@ cell::sInt(int newval)
 	cell_flags.cell_type = TYP_INT;
 }
 
+bool 
+vacuous(cell* cp)
+{
+	return (cp == nullptr) || (cp->get_cell_type() == TYP_NUL);
+}
 static int
 cell_mc ( long row, long col, char *dowhat, struct value *p)
 {

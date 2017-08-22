@@ -63,16 +63,27 @@ Row: 4 Col: 1
 @table @kbd
 @item @hashchar{} ...
 Insert comment into input stream. No operation is actually performed.
+
 @item i
 Insert data into the spreadsheet columnwise. `;' starts the column
 to the right, and `.' terminated input, and returns to command mode.
+
 @item info
 Prints information, mainly used for debugging an introspecting state
 and constants. As at 17 Aug 2017, only curses keycode info is printed.
+
+@item tbl
+Output the speadsheet in groff tbl format. Example:
+@example
+neoleo foo.oleo -H <<< tbl | groff -T ascii -t | less
+@end example
+
 @item type-cell
 Print the contents of the current cell
+
 @item q
 Quit without saving.
+
 @item view
 Show a grid of the first few items in the spreadsheet. Admittedly,
 this could do with a lot of improvement.
