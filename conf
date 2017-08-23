@@ -9,11 +9,19 @@ fi
 
 DBG=--with-debug
 #GPROF=--with-gprof
-#SAN=--with-asan
+
+# ADDRESS SANITIZER
+# the no-pie fixes some Linux/ASAN incompatabilities
+# on Linux as at 23-Aug-2017
+if true; then
+SANXX="-no-pie"
+SAN=--with-asan
+fi
+
 OPTS="$DBG $GPROF $SAN "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-./configure $OPTS --prefix=$HOME/.local
+./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
 
 
 
