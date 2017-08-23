@@ -729,27 +729,33 @@ copy_region (struct rng *fm, struct rng *to)
 void
 copy_values_region (struct rng *fm, struct rng *to)
 {
-  CELLREF rf, rt, cf, ct;
-  union vals dummy;
-  CELL *cpf;
+	CELLREF rf, rt, cf, ct;
+	union vals dummy;
+	CELL *cpf;
+	using VALPTR=union vals *;
 
-  if (set_to_region (fm, to) < 1)
-    return;
+	if (set_to_region (fm, to) < 1)
+		return;
 
-  for (rf = fm->lr, rt = to->lr; rt <= to->hr; rt++, rf++)
-    {
-      for (cf = fm->lc, ct = to->lc; ct <= to->hc; ct++, cf++)
+	for (rf = fm->lr, rt = to->lr; rt <= to->hr; rt++, rf++)
 	{
-	  cpf = find_cell (rf, cf);
-	  ValType new_type = cpf ?  GET_TYP (cpf) : TYP_NUL;
-	  set_new_value (rt, ct, new_type, cpf ? &(cpf->get_c_z()) : &dummy);
+		for (cf = fm->lc, ct = to->lc; ct <= to->hc; ct++, cf++)
+		{
+			ValType new_type  = cpf ?  GET_TYP (cpf) : TYP_NUL;
+			//VALPTR v = &dummy;
+			cpf = find_cell (rf, cf);
+			if(cpf) 
+				dummy = cpf->get_c_z();
+				//v = &(cpf->get_c_z());
+			//}
+			set_new_value (rt, ct, new_type, &dummy);
 
-	  if (cf == fm->hc)
-	    cf = fm->lc - 1;
+			if (cf == fm->hc)
+				cf = fm->lc - 1;
+		}
+		if (rf == fm->hr)
+			rf = fm->lr - 1;
 	}
-      if (rf == fm->hr)
-	rf = fm->lr - 1;
-    }
 }
 
 void
