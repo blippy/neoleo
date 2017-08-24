@@ -10,12 +10,11 @@ fi
 DBG=--with-debug
 #GPROF=--with-gprof
 
-# ADDRESS SANITIZER
-# the no-pie fixes some Linux/ASAN incompatabilities
-# on Linux as at 23-Aug-2017
-if false; then
-SANXX="-no-pie"
+# SANITIZER
 SAN=--with-asan
+if [ -n "${SAN}" ]; then
+	echo "Configuring with sanitizer"
+       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
 fi
 
 OPTS="$DBG $GPROF $SAN "

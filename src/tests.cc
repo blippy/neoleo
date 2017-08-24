@@ -130,6 +130,7 @@ run_cell_formula_tests()
 	string s1 = "r4c4 + 1";
 	set_cell_from_string(5, 6, "r4c4 + 1");
 	check(decomp(5, 6) == s1, "cellfrm-01");
+	decomp_free();
 
 }
 
