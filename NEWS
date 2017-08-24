@@ -1,6 +1,8 @@
 ===========================================================================
 VERSION 7.0.0 IN DEVELOPMENT
 
+* REF#28 done: set default format to general.float
+
 * RFE#25 done: support groff tbl format
 
 * RFE#23 done: quicksatart should mention C-g

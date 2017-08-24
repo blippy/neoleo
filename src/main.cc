@@ -158,6 +158,7 @@ main(int argc, char **argv)
 
 	oleo_catch_signals(&got_sig);
 
+	execute_command("set-default-format general.float");
 	if(!ignore_init_file) read_init_files();
 
 	if (option_filter) {
