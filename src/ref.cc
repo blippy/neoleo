@@ -239,7 +239,6 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 char *
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
-	unsigned char *new_bytes;
 	extern double __plinf, __neinf; // mcarter , __nan;
 
 	cur_row = row;
@@ -250,7 +249,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 	if (form)
 	{
-		new_bytes = (unsigned char*) parse_and_compile (form);
+		auto new_bytes = (unsigned char*) parse_and_compile (form);
 		my_cell->set_cell_formula(new_bytes);
 	}
 

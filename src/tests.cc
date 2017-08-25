@@ -168,7 +168,8 @@ headless_tests()
 	if(true) {
 		// this causes leak
 		char str1[] =  "\"foo\"";
-		parse_and_compile(str1);
+		char* ret = parse_and_compile(str1);
+		free(ret);
 	}
 
 	if(false) get_set(1, 1, "1.1+2");
