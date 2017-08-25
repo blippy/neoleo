@@ -21,9 +21,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+//int yyparse();
+
 %}
 
 /* %output="parse.cc" */
+
+//%define api.prefix {pvt_yy}
 
 %right '?' ':'
 /* %left '|' */
@@ -45,6 +49,7 @@
 %token	L_LE	L_NE	L_GE
 
 %{
+#include <stdexcept>
 #include "funcdef.h"
 
 #include <ctype.h>
@@ -80,8 +85,15 @@ char *instr;
 int parse_error = 0;
 extern struct obstack tmp_mem;
 
+int yyparse_parse();
+//#define yyparse yyparse_private
+
+void check_parser_called_correctly();
+
 %}
 %%
+top: line { check_parser_called_correctly(); }
+
 line:	exp
 		{ parse_return=$1; }
 	| error {
@@ -326,6 +338,28 @@ unsigned char parse_cell_or_range (char **,struct rng *);
 int str_to_col (char ** str);
 
 static void noa0_number(char **ptr, int *r, int current);
+
+/* create a sentinel to check that yyparse() is only called
+ * via yyparse_parse()
+ */
+
+static bool allow_yyparse = false;	
+void check_parser_called_correctly()
+{
+	if(!allow_yyparse)
+		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
+}
+
+int yyparse_parse(const std::string& input)
+{
+	allow_yyparse = true;	
+	instr = (char*) alloca(input.size()+1);
+	assert(instr);
+	strcpy(instr, input.c_str());
+	int ret = yyparse();
+	allow_yyparse = false;	
+	return ret;
+}
 
 int
 yylex ()

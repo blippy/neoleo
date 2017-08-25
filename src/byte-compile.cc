@@ -67,8 +67,10 @@ local_free (p)
 #include "busi.h"
 #include "date.h"
 //extern "C" {
-#include "parse.hh"
+//#include "parse.hh"
 //}
+#include "parse_parse.h"
+
 #include "stringo.h"
 #include "cell.h"
 //#include "mysql.h"
@@ -80,6 +82,8 @@ local_free (p)
 //extern "C" {
 //extern int yyparse(void);
 //}
+
+//int yyparse_parse();
 
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
@@ -455,18 +459,9 @@ parse_and_compile (const char *string)
   int need_relax;
   int byte;
 
-  // mcarter 01-Apr-2017 Trying to make string a const
-#if 0 // old way
-  instr = string;
-#else
-  instr = (char *) alloca(strlen(string) +1);
-  assert(instr);
-  strcpy(instr, string);
-
-#endif
   parse_error = 0;
   patches_used = 0;
-  if (yyparse () || parse_error)
+  if (yyparse_parse(string) || parse_error)
     {
       ret = (char*) ck_malloc (strlen (string) + 5);
       ret[0] = CONST_ERR;

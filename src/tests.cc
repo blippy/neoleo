@@ -30,11 +30,12 @@ using std::vector;
 //#include "mysql.h"
 #include "ref.h"
 //extern "C" {
-#include "parse.hh"
+//#include "parse.hh"
 //}
 #include "byte-compile.h"
 #include "decompile.h"
 #include "lists.h"
+#include "parse_parse.h"
 
 static bool all_pass = true; // all the checks have passed so far
 
@@ -134,6 +135,18 @@ run_cell_formula_tests()
 
 }
 
+void
+test_yyparse_parse()
+{
+	yyparse_parse("\"foo\"");
+
+	// something similar used to cause a segfault.
+	// Proper allocation is now done.
+	yyparse_parse("1+X");
+
+	cout << "PASS yyparse_parse\n";
+}
+
 bool
 headless_tests()
 {
@@ -150,26 +163,7 @@ headless_tests()
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
 	//tbl();
-
-	if(true) {
-		cout << "Testing yyparse()\n";
-		extern char * instr; // used for parsing
-		instr = (char *) "\"foo\"";
-		yyparse();
-	}
-
-	// parse something bad. Causes segfault
-	if(false) {
-		/* unfortunately there doesn't seem to be a good way of 
-		 * making yyparse() static, thereby encapusalating it better
-		 */
-		cout << "Bad parsing ..." << endl;
-		extern char *instr;
-		//instr = (char *) "1+ 8.X";
-		instr = (char *) "1 + X";
-		yyparse();
-		cout << "...done" << endl;
-	}
+	test_yyparse_parse();
 
 	if(true) {
 		// this causes leak
