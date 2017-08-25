@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <vector>
 
-//#include <obstack.h>
+#include <obstack.h>
 using std::string;
 using std::cout;
 using std::endl;
@@ -139,6 +139,7 @@ void
 test_yyparse_parse()
 {
 	yyparse_parse("\"foo\"");
+	// obstack_free (&tmp_mem, tmp_mem_start); // this doesn't help
 
 	// something similar used to cause a segfault.
 	// Proper allocation is now done.
