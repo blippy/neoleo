@@ -753,7 +753,7 @@ copy_this_cell_formula()
 	CELL *cp = find_cell(curow, cucol);
 	char *dec = decomp(curow, cucol, cp);
 	m_copied_cell_formula = std::string(dec);
-	// TODO I think we need to free dec
+	decomp_free();
 }
 
 void 

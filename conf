@@ -12,15 +12,16 @@ DBG=--with-debug
 
 # SANITIZER
 SAN=--with-asan
-if [ -n "${SAN}" ]; then
-	echo "Configuring with sanitizer"
-       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
-fi
+#if [ -n "${SAN}" ]; then
+#	echo "Configuring with sanitizer"
+#       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
+#fi
 
 OPTS="$DBG $GPROF $SAN "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
+#./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
+./configure $OPTS  --prefix=$HOME/.local
 
 
 
