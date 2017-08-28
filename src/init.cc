@@ -91,12 +91,15 @@ static char *init_cmds[] =
   "",
   "bind-key universal break ^g",
   "bind-key universal redraw-screen ^l",
+  
+  "bind-key generic-main show-menu ^m",
+  "bind-key generic-main kill-oleo ^q", // mcarter 28-Aug-2017 issue#29
   "bind-key generic-main universal-argument ^u",
   "bind-key generic-main suspend-oleo ^z",
+  
   "bind-key generic-trolx kill-oleo ^c",
   "bind-key generic-trolx recalculate !",
   "bind-key generic-meta exec x",
-  "bind-key generic-main show-menu ^m",
   "",
   "# Prefix argument handling",
   "# This keymap is magicly invoked within command_loop in cmd.c.",

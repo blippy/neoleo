@@ -4,10 +4,10 @@ Most important keys:
 @table @kbd
 @item C-g
 	Cancel the current operation
+@item C-q
+	Quit @code{neoleo}. Identical to @code{C-x C-c}.
 @item C-s
-	Save(as) file. Identical to @code{M-x save-spreadsheet}, and similar to @code{C-x C-c}
-@item C-x C-c
-	Exit @code{neoleo}
+	Save(as) file. Identical to @code{M-x save-spreadsheet}.
 @end table
 
 Other highly useful keys:
