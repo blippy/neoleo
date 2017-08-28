@@ -2517,7 +2517,94 @@ io_info_msg (const char *str, ...)
 }
 
 
+// refactoring. Only called by expand_prompt()
+void inner_prompt_expansion(char*& str, struct line& expanded)
+{
+	char *last_pos = str;
+	char *src_pos;
 
+	for (src_pos = index (str, '%'); src_pos;
+			src_pos = index (src_pos, '%'))
+	{
+		catn_line (&expanded, last_pos, src_pos - last_pos);
+		++src_pos;
+		switch (*src_pos)
+		{
+			case '%':
+				catn_line (&expanded, src_pos, 1);
+				++src_pos;
+				break;
+			case 'c':
+				{
+					struct rng rng;
+					char *str;
+					rng.lr = rng.hr =
+						the_cmd_frame->
+						prev->_setrow;
+					rng.lc = rng.hc =
+						the_cmd_frame->
+						prev->_setcol;
+					str = range_name (&rng);
+					catn_line (&expanded, str,
+							strlen (str));
+					++src_pos;
+					break;
+				}
+			case '.':
+				{
+					struct rng rng;
+					char *str;
+					rng.lr = rng.hr =
+						the_cmd_frame->
+						prev->_curow;
+					rng.lc = rng.hc =
+						the_cmd_frame->
+						prev->_cucol;
+					str = range_name (&rng);
+					catn_line (&expanded, str,
+							strlen (str));
+					++src_pos;
+					break;
+				}
+			case '0':
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+				{
+					int argn = *src_pos - '0';
+					if ((cmd_argc > argn)
+							&& the_cmd_frame->
+							argv[argn].is_set
+							&& the_cmd_frame->
+							argv[argn].text.buf)
+						catn_line (&expanded,
+								the_cmd_frame->argv
+								[argn].text.
+								buf,
+								strlen
+								(the_cmd_frame->argv
+								 [argn].text.
+								 buf));
+					else
+						catn_line (&expanded,
+								"????", 4);
+					++src_pos;
+					break;
+				}
+			default:
+				catn_line (&expanded, "%", 1);
+				break;
+		}
+		last_pos = src_pos;
+	}
+	catn_line (&expanded, last_pos, strlen (last_pos));
+}
 
 /* Expands a string that will be used to prompt for an argument.
  *    %n expands to the text of argument n (if defined -- ??? otherwise).
@@ -2530,97 +2617,14 @@ io_info_msg (const char *str, ...)
 char *
 expand_prompt (char *str)
 {
-	struct line expanded;
-	init_line (&expanded);
-	if (!str || !index (str, '%'))
+	if (!str || !index (str, '%')) {
 		return ck_savestr (str);
-	{
-		char *last_pos = str;
-		char *src_pos;
-
-		for (src_pos = index (str, '%'); src_pos;
-		     src_pos = index (src_pos, '%'))
-		  {
-			  catn_line (&expanded, last_pos, src_pos - last_pos);
-			  ++src_pos;
-			  switch (*src_pos)
-			    {
-			    case '%':
-				    catn_line (&expanded, src_pos, 1);
-				    ++src_pos;
-				    break;
-			    case 'c':
-				    {
-					    struct rng rng;
-					    char *str;
-					    rng.lr = rng.hr =
-						    the_cmd_frame->
-						    prev->_setrow;
-					    rng.lc = rng.hc =
-						    the_cmd_frame->
-						    prev->_setcol;
-					    str = range_name (&rng);
-					    catn_line (&expanded, str,
-						       strlen (str));
-					    ++src_pos;
-					    break;
-				    }
-			    case '.':
-				    {
-					    struct rng rng;
-					    char *str;
-					    rng.lr = rng.hr =
-						    the_cmd_frame->
-						    prev->_curow;
-					    rng.lc = rng.hc =
-						    the_cmd_frame->
-						    prev->_cucol;
-					    str = range_name (&rng);
-					    catn_line (&expanded, str,
-						       strlen (str));
-					    ++src_pos;
-					    break;
-				    }
-			    case '0':
-			    case '1':
-			    case '2':
-			    case '3':
-			    case '4':
-			    case '5':
-			    case '6':
-			    case '7':
-			    case '8':
-			    case '9':
-				    {
-					    int argn = *src_pos - '0';
-					    if ((cmd_argc > argn)
-						&& the_cmd_frame->
-						argv[argn].is_set
-						&& the_cmd_frame->
-						argv[argn].text.buf)
-						    catn_line (&expanded,
-							       the_cmd_frame->argv
-							       [argn].text.
-							       buf,
-							       strlen
-							       (the_cmd_frame->argv
-								[argn].text.
-								buf));
-					    else
-						    catn_line (&expanded,
-							       "????", 4);
-					    ++src_pos;
-					    break;
-				    }
-			    default:
-				    catn_line (&expanded, "%", 1);
-				    break;
-			    }
-			  last_pos = src_pos;
-		  }
-		catn_line (&expanded, last_pos, strlen (last_pos));
+	} else {
+		struct line expanded;
+		init_line (&expanded);
+		inner_prompt_expansion(str, expanded);
+		return expanded.buf;
 	}
-	return expanded.buf;
 }
 
 

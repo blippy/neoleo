@@ -11,7 +11,7 @@ DBG=--with-debug
 #GPROF=--with-gprof
 
 # SANITIZER
-SAN=--with-asan
+#SAN=--with-asan
 #if [ -n "${SAN}" ]; then
 #	echo "Configuring with sanitizer"
 #       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
