@@ -870,7 +870,7 @@ void _io_update_width_nothing(int col, int wid) {};
 void 
 InitializeGlobals(void)
 {
-	Global->FileName = NULL;
+	//Global->FileName = NULL;
 	FileSetCurrentFileName("unnamed.oleo");
 	Global->display_opened = 0;
 	Global->return_from_error = 0;

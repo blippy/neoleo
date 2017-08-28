@@ -1,13 +1,5 @@
 #pragma once
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
-
-//#ifndef IO_EDITH
-//#define IO_EDITH
-
 /*
  * $Id: io-edit.h,v 1.5 2000/08/10 21:02:50 danny Exp $
  * 
@@ -48,7 +40,7 @@ extern void delete_word (int n);
 extern void kill_line(void);
 extern void insert_string (char * str, int len);
 extern void over_string (char * str, int len);
-extern void put_string (char * str, int len);
+extern void put_string (const char * str, int len);
 extern void insert_cell_expression (void);
 extern void insert_other_cell_expression (struct rng * rng);
 extern void insert_cell_value(void);
@@ -62,10 +54,3 @@ extern void self_map_command (int c);
 extern void insert_current_filename (void);
 extern void exit_self_inserting (int c);
 extern void insert_context_word (void);
-
-#ifdef __cplusplus
-//}
-#endif
-
-
-//#endif

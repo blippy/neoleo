@@ -1494,11 +1494,12 @@ toggle_load_hooks (int turn_on)
 }
 
 void
-write_cmd (FILE *fp, char * name)
+write_cmd (FILE *fp, const char * name)
 {
-  FileSetCurrentFileName(name ? ck_savestr (name) : 0);
-  (*write_file) (fp, 0);
-  Global->modified = 0;
+	if(name)
+		FileSetCurrentFileName(name);
+	(*write_file) (fp, 0);
+	Global->modified = 0;
 }
 
 void

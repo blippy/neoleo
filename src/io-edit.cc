@@ -404,7 +404,7 @@ over_string (char * str, int len)
 }
 
 void
-put_string (char * str, int len)
+put_string (const char * str, int len)
 {
   if (check_editting_mode ())
     return;
@@ -749,8 +749,9 @@ self_map_command (int c)
 void
 insert_current_filename (void)
 {
-  if (FileGetCurrentFileName())
-    put_string(FileGetCurrentFileName(), strlen (FileGetCurrentFileName()));
+	int len = FileGetCurrentFileName().size();
+	if (len >0)
+		put_string(FileGetCurrentFileName().c_str(), len);
 }
 
 

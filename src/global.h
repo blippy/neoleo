@@ -19,11 +19,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
+#include <string>
 
 #include "sysdef.h"
 //#include "utils.h"
@@ -290,7 +286,7 @@ struct	DatabaseGlobalType;
  */
 struct OleoGlobal {
 	int				valid;
-	char				*FileName;	/* current_file in io-utils.c */
+	std::string			FileName;	/* current_file in io-utils.c */
 	int				modified;
 	CELLREF				cur_row, cur_col;
 /* User settable options */
@@ -413,7 +409,4 @@ extern struct OleoGlobal *Global;
 #endif
 
 
-#ifdef __cplusplus
-}
-#endif
 

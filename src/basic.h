@@ -1,7 +1,4 @@
 #pragma once
-//#ifndef BASICH
-//#define BASICH
-
 /*
  * $Id: basic.h,v 1.6 2000/08/10 21:02:49 danny Exp $
  *
@@ -21,12 +18,6 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 
 #include "global.h"
 
@@ -117,7 +108,7 @@ extern void run_shell(char *cmd);
 extern void forth(char *cmd);
 extern void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name);
 extern void toggle_load_hooks (int turn_on);
-extern void write_cmd (FILE *fp, char * name);
+extern void write_cmd (FILE *fp, const char * name);
 extern void read_cmd (FILE *fp, char * name);
 extern void read_merge_cmd (FILE *fp);
 extern void write_reg_cmd (FILE *fp, struct rng *rng);
@@ -140,10 +131,3 @@ extern void auto_move (void);
 extern void auto_next_set (void);
 extern void recompile_spreadsheet (void);
 
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//#endif  /* BASICH */

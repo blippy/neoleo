@@ -18,24 +18,14 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-//#ifndef IO_UTILSH
-//#define IO_UTILSH
 
-
+#include <string>
 
 #include "global.h"
 #include "cell.h"
 #include "numeric.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int get_abs_rng (char **pptr, struct rng *retp);
-
-#ifdef __cplusplus
-}
-#endif
 
 
 extern char numb_oflo[];
@@ -63,7 +53,7 @@ extern int prompt_len (char * prompt);
 extern int says_default (char * str);
 
 extern void FileSetCurrentFileName(const char *s);
-extern char *FileGetCurrentFileName(void);
+std::string FileGetCurrentFileName();
 //extern void FileCloseCurrent(void);
 extern void FileCloseCurrentFile(void);
 extern char *file_get_default_format(void);
@@ -107,8 +97,3 @@ char *flt_to_str (num_t val);
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
 
-#ifdef __cplusplus
-//}
-#endif
-
-//#endif

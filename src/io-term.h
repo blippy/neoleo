@@ -19,13 +19,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-
-
 #include <stdbool.h>
 #include <setjmp.h>
 #include "global.h"
@@ -116,11 +109,3 @@ void choose_display(bool force_cmd_graphics);
 
 bool get_option_tests();
 void parse_command_line(int argc, char **argv, volatile int *ignore_init_file);
-
-#ifdef __cplusplus
-}
-#endif
-
-
-
-//#endif /* IO_TERMH */

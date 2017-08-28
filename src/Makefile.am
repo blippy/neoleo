@@ -7,6 +7,7 @@ endif
 AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings 
 AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
+#AM_CXXFLAGS += -Wfatal-errors
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i

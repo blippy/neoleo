@@ -265,10 +265,10 @@ static void type_cell()
 
 static void write_file()
 {
-	char *name = FileGetCurrentFileName();
-	FILE *fp = fopen(name, "w");
+	string name = FileGetCurrentFileName();
+	FILE *fp = fopen(name.c_str(), "w");
 	assert(fp);
-	write_cmd(fp, name);
+	write_cmd(fp, name.c_str());
 	fclose(fp);
 
 }

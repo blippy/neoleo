@@ -20,11 +20,6 @@
  */
 #include "global.h"
 #include "obstack.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
  * User settable options - moved into Global.
  *
@@ -54,10 +49,4 @@ extern int set_window_option (int set_opt, char *text);
 extern void show_window_options (void);
 
 extern const int rowmagic[], colmagic[];
-
-
-#ifdef __cplusplus
-}
-#endif
-
 

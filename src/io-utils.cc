@@ -21,6 +21,7 @@
  */
 
 #include <stdlib.h>
+//#include <string>
 
 static char *rcsid = "$Id: ";
 
@@ -1495,24 +1496,30 @@ fmt_get_format()
 
 
 
+static std::string _FileName = "unnamed.oleo";
+
 void 
 FileSetCurrentFileName(const char *s)
 {
 	FileCloseCurrentFile();
 	if(!s) return;
-	Global->FileName = strdup(s);
+	//Global->FileName = strdup(s);
+	_FileName = s;
 }
 
-char *FileGetCurrentFileName(void)
+std::string FileGetCurrentFileName()
 {
-	return Global->FileName;
+	return _FileName;
 }
 
 void FileCloseCurrentFile(void)
 {
+	/*
 	if (Global->FileName)
 		free(Global->FileName);
 	Global->FileName = NULL;
+	*/
+	_FileName =  "";
 }
 
 void OleoSetEncoding(const char *s)
