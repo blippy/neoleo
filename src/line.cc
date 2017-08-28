@@ -54,8 +54,11 @@ set_line (struct line *line, const char *string)
 		line->alloc = len + 1;
 		if (line->buf)
 			line->buf = (CPTR) ck_realloc (line->buf, line->alloc);
-		else
-			line->buf = (CPTR) ck_malloc (line->alloc);
+		else {
+			
+			size_t nbytes = line->alloc;
+			line->buf = (CPTR) ck_malloc(nbytes);
+		}
 	}
 	strcpy (line->buf, string);
 }

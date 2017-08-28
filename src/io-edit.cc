@@ -244,14 +244,24 @@ forward_word (int n)
 static void
 erase (int len)
 {
-  if (check_editting_mode ())
-    return;
-  else
-    {
-      strcpy (&the_text.buf[the_cursor],
-	      &the_text.buf[the_cursor + len]);
-      io_erase (len);
-    }
+	if (check_editting_mode ())
+		return;
+	else {
+#if 0
+		// mcarter 28-Aug-2017 this is how it originally read
+		// BUT it is wrong, because strings are not allowed
+		// to overlap
+		strcpy (&the_text.buf[the_cursor],
+				&the_text.buf[the_cursor + len]);
+#else
+		// alternative strcpy() with overlap
+		// as per https://stackoverflow.com/questions/14476627/strcpy-implementation-in-c
+		char *dst = &the_text.buf[the_cursor];
+		char* src = &the_text.buf[the_cursor + len];
+		while(*dst++ = *src++);
+#endif
+		io_erase (len);
+	}
 }
 
 
