@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cassert>
 #include <stdlib.h>
 #include <string.h>
 
@@ -42,22 +43,21 @@ using CPTR = char *;
 void
 set_line (struct line *line, const char *string)
 {
-  int len;
-
-  len = strlen (string);
-  if (line->alloc <= len)
-    {
-      if (len < LINE_MIN)
-	len = LINE_MIN;
-      else
-	len++;
-      line->alloc = len + 1;
-      if (line->buf)
-	line->buf = (CPTR) ck_realloc (line->buf, line->alloc);
-      else
-	line->buf = (CPTR) ck_malloc (line->alloc);
-    }
-  strcpy (line->buf, string);
+	assert(line);
+	int len  = strlen (string);
+	if (line->alloc <= len)
+	{
+		if (len < LINE_MIN)
+			len = LINE_MIN;
+		else
+			len++;
+		line->alloc = len + 1;
+		if (line->buf)
+			line->buf = (CPTR) ck_realloc (line->buf, line->alloc);
+		else
+			line->buf = (CPTR) ck_malloc (line->alloc);
+	}
+	strcpy (line->buf, string);
 }
 
 void

@@ -2298,7 +2298,8 @@ command_loop (int prefix, int iscmd)
  * as a range address, the macro at that address is executed.
  */
 
-static struct line exec_cmd_line = { 0, 0 };
+//static struct line exec_cmd_line = { 0, 0 };
+static struct line exec_cmd_line;
 
 /* execute_command buils a macro expression of the from `{command args}'.
  * This function quotes the braces in ARGS so that the macro reader knows
@@ -2333,7 +2334,8 @@ execute_command (char *str)
 	 * set to a one cell region.
 	 */
 	struct rng rng;
-	static struct line exec_buf = { 0, 0 };
+	//static struct line exec_buf = { 0, 0 };
+	static struct line exec_buf;
 	int count = 1;
 	ioerror = 0;
 

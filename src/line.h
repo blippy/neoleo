@@ -25,8 +25,8 @@
 
 struct line
 {
-  int alloc;
-  char *buf;
+  int alloc = 0;
+  char *buf = nullptr;
 };
 
 #define init_line(L)  bzero((L), sizeof (struct line))
