@@ -117,7 +117,7 @@ sprint_line (struct line *line, const char * fmt, ...)
 }
 
 void
-splicen_line (struct line * line, char * str, int n, int pos)
+splicen_line (struct line * line, const char * str, int n, int pos)
 {
   int old_len = strlen (line->buf);
   int len = old_len + n;

@@ -1,7 +1,4 @@
 #pragma once
-#ifdef __cplusplus
-//extern "C" {
-#endif
 /*
  * $Id: io-abstract.h,v 1.8 2000/08/10 21:02:50 danny Exp $
  *
@@ -75,7 +72,7 @@ EXTERN void (*io_fix_input) (void);
 EXTERN void (*io_move_cursor) (void);
 EXTERN void (*io_erase) (int len);
 EXTERN void (*io_insert) (int len);
-EXTERN void (*io_over) (char *, int len);
+EXTERN void (*io_over) (const char *, int len);
 
 #ifdef HAVE_X
 int io_col_to_input_pos (int col);
@@ -95,14 +92,6 @@ EXTERN void (*io_inputize_cursor) (void);
 /* The main loop */
 EXTERN void (*io_command_loop) (int);
 
-/*
-void set_headless(bool newval);
-bool running_headless();
-void (*set_curow)(int nrow);
-void (*set_cucol)(int ncol);
-void (*io_recenter_cur_win)(void);
-void (*io_recenter_all_win)(void);
-*/
 
 EXTERN void (*io_set_window_name)(const char *s);
 EXTERN void (*io_run_main_loop)(void);
@@ -111,6 +100,3 @@ EXTERN void (*io_do_button)(int r, int c, char *lbl, char *cmd);
 EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
 EXTERN void (*io_update_width)(int col, int wid);
 
-#ifdef __cplusplus
-//}
-#endif

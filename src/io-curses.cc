@@ -252,7 +252,7 @@ _io_insert (int len)
 }
 	   
 static void
-_io_over (char * str, int len)
+_io_over (const char * str, int len)
 {
   iv_over (&input_view, len);
 }

@@ -377,7 +377,7 @@ kill_line(void)
 }
 
 void
-insert_string (char * str, int len)
+insert_string(const char * str, int len)
 {
   if (check_editting_mode ())
     return;
@@ -387,7 +387,7 @@ insert_string (char * str, int len)
 }
 
 void
-over_string (char * str, int len)
+over_string(const char * str, int len)
 {
   if (check_editting_mode ())
     return;
@@ -399,16 +399,19 @@ over_string (char * str, int len)
     }
   if (len)
     bcopy (str, the_text.buf + the_cursor, len);
-  io_over (str, len);
+  io_over(str, len);
   the_cursor += len;
 }
 
 void
 put_string (const char * str, int len)
 {
-  if (check_editting_mode ())
-    return;
-  (the_overwrite ? over_string : insert_string) (str, len);
+	if (check_editting_mode ())
+		return;
+	if(the_overwrite)
+		over_string(str, len);
+	else
+		insert_string(str, len);
 }
 
 /* Higher Level editting commands. */

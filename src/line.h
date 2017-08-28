@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: line.h,v 1.5 2000/08/10 21:02:50 danny Exp $
  *
@@ -18,9 +19,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef LINEH
-#define LINEH
-
 #include <stdio.h>
 
 #define LINE_MIN 28
@@ -37,9 +35,8 @@ extern void set_line (struct line *line, const char *string);
 extern void setn_line (struct line *line, const char *string, int n);
 extern void catn_line (struct line *line, const char *string, int n);
 extern void sprint_line (struct line *line, const char * fmt, ...);
-extern void splicen_line (struct line * line, char * str, int n, int pos);
+void splicen_line(struct line * line, const char * str, int n, int pos);
 extern void edit_line (struct line * line, int begin, int len);
 extern void free_line (struct line * line);
 extern int read_line (struct line * line, FILE * fp, int * linec);
 
-#endif
