@@ -34,7 +34,8 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
 		 ir.cc key.cc \
 		 line.cc list.cc lists.cc logging.cc \
-		 mdi.cc oleofile.cc \
+		 mdi.cc mem.cc \
+		 oleofile.cc \
 		 ref.cc regions.cc \
 		 sc.cc sort.cc stringo.cc stub.cc sylk.cc \
 		 tbl.cc \

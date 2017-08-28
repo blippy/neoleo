@@ -27,6 +27,7 @@ using std::vector;
 #include "io-utils.h"
 #include "cell.h"
 #include "mdi.h"
+#include "mem.h"
 //#include "mysql.h"
 #include "ref.h"
 //extern "C" {
@@ -138,24 +139,58 @@ run_cell_formula_tests()
 void
 test_yyparse_parse()
 {
-	// leaks
-	if(false) yyparse_parse("\"foo\"");
+	// leak fixed by introduction of mem
+	{
+		mem yymem;
+		yyparse_parse("\"foo\"", yymem);
+		yymem.release_all();
+	}
+
+	// another leak test - which passes
+	{
+		mem yymem;
+		yyparse_parse("len(\"foo\") + len(\"barzy\")", yymem);
+		yymem.release_all();
+	}
 
 	// something similar used to cause a segfault.
 	// Proper allocation is now done.
-	yyparse_parse("1+X");
+	{
+		mem yymem;
+		yyparse_parse("1+X", yymem);
+		yymem.release_all();
+	}
 
 	cout << "PASS yyparse_parse\n";
+}
+
+void
+misc_memchecks()
+{
+	// note that you need to have the sanitizer on to see if everything is OK
+	
+	// these seem OK as at 28-Aug-2017
+	get_set(1, 1, "1.1+2");
+	get_set(1, 1, "1.1+2.2");
+	get_set(1, 1, "63.36");
+	get_set(2, 1, "1 + R[-1]C");
+
+	// leaks fixed as at 28-Aug-2017
+	{
+		char str1[] =  "\"foo\"";
+		mem parser_mem;
+		char* ret = parse_and_compile(str1, parser_mem);
+		parser_mem.release_all();
+	}
 }
 
 bool
 headless_tests()
 {
-	//bool force_cmd_graphics = true;
-	//io_open_display();
-
 	test_formatting();
 	run_cell_formula_tests();
+	test_yyparse_parse();
+	misc_memchecks();
 
 	default_fmt = FMT_GEN;
 	set_cell_from_string(2, 2, "23.3");
@@ -163,20 +198,6 @@ headless_tests()
 	assert(cp);
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
-	//tbl();
-	test_yyparse_parse();
-
-	if(false) {
-		// this causes leak
-		char str1[] =  "\"foo\"";
-		char* ret = parse_and_compile(str1);
-	 	//obstack_free (&tmp_mem, tmp_mem_start); // this doesn't help
-		//free(ret);
-	}
-
-	if(false) get_set(1, 1, "1.1+2");
-	if(false) get_set(1, 1, "1.1+2.2");
-	if(false) get_set(1, 1, "63.36");
 
 	if(false) {
 		char s1[] = "/home/mcarter/repos/neoleo/examples/pivot.oleo"; // TODO generalise
@@ -208,7 +229,6 @@ headless_tests()
 		 */
 	}
 
-	if(true) get_set(2, 1, "1 + R[-1]C");
 
 	//printf("Test atof(63.36):%f\n", atof("63.36"));
 

@@ -21,7 +21,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//int yyparse();
 
 %}
 
@@ -61,6 +60,7 @@
 
 #include "global.h"
 #include "errors.h"
+#include "mem.h"
 #include "node.h"
 #include "eval.h"
 #include "ref.h"
@@ -84,9 +84,6 @@ YYSTYPE make_list (YYSTYPE, YYSTYPE);
 char *instr;
 int parse_error = 0;
 extern struct obstack tmp_mem;
-
-int yyparse_parse();
-//#define yyparse yyparse_private
 
 void check_parser_called_correctly();
 
@@ -350,16 +347,26 @@ void check_parser_called_correctly()
 		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
 }
 
-int yyparse_parse(const std::string& input)
+static mem* _mem_ptr = nullptr;
+
+int yyparse_parse(const std::string& input, mem& yymem)
 {
 	allow_yyparse = true;	
 	instr = (char*) alloca(input.size()+1);
 	assert(instr);
 	strcpy(instr, input.c_str());
+	_mem_ptr = &yymem;
 	int ret = yyparse();
 	allow_yyparse = false;	
 	return ret;
 }
+
+int yyparse_parse(const std::string& input)
+{
+	mem yymem;
+	return yyparse_parse(input, yymem);
+}
+
 
 int
 yylex ()
@@ -438,7 +445,10 @@ yylex ()
 			parse_error=NO_QUOTE;
 			return ERROR;
 		}
-		tmp_str=a_new->n_x.v_string=(char *)ck_malloc(1+instr-begin);
+		tmp_str=(char *)ck_malloc(1+instr-begin);
+		_mem_ptr->add_ptr(tmp_str);
+		a_new->n_x.v_string=tmp_str;
+
 		while(begin!=instr) {
 			unsigned char n;
 

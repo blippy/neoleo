@@ -447,8 +447,16 @@ rot_patch (int n1, int n2)
    subexpressions, instead of silently failing as they do now.  Error checking
    and a way to encode longer branches would be a *good* idea.
  */
+
+char*
+parse_and_compile(const char* string)
+{
+	mem the_mem; // we're just going to ignore the mem allocated
+	return parse_and_compile(string, the_mem);
+}
+
 char *
-parse_and_compile (const char *string)
+parse_and_compile (const char *string, mem& the_mem)
 {
   struct node *new_node;
   struct node *node;
@@ -461,7 +469,7 @@ parse_and_compile (const char *string)
 
   parse_error = 0;
   patches_used = 0;
-  if (yyparse_parse(string) || parse_error)
+  if (yyparse_parse(string, the_mem) || parse_error)
     {
       ret = (char*) ck_malloc (strlen (string) + 5);
       ret[0] = CONST_ERR;
@@ -768,6 +776,7 @@ loop:
 
   buf_siz = obstack_object_size (&tmp_mem);
   ret = (char *) ck_malloc (buf_siz);
+  the_mem.add_ptr(ret);
   bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
 
   need_relax = 0;
