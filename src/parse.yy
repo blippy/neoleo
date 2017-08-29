@@ -347,6 +347,12 @@ void check_parser_called_correctly()
 		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
 }
 
+/* mcarter 29-Aug-2017
+ * mem_ptr is never actually used, now that I've figured out the source of the
+ * memory leak. However, I think I will keep it in for now,
+ * as it will allow for the eventual elimination of obstack
+ */
+
 static mem* _mem_ptr = nullptr;
 
 int yyparse_parse(const std::string& input, mem& yymem)
@@ -445,8 +451,12 @@ yylex ()
 			parse_error=NO_QUOTE;
 			return ERROR;
 		}
+#if 0
 		tmp_str=(char *)ck_malloc(1+instr-begin);
 		_mem_ptr->add_ptr(tmp_str);
+#else
+		tmp_str = (char *) obstack_alloc(&tmp_mem, 1+instr-begin);
+#endif
 		a_new->n_x.v_string=tmp_str;
 
 		while(begin!=instr) {
