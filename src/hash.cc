@@ -422,7 +422,7 @@ char *				/* return error string */
 hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value)
 {
 
-	log_debug("hash.cc:hash_insert()");
+	//log_debug("hash.cc:hash_insert()");
 	register struct hash_entry *entry;
 	register char *retval;
 
