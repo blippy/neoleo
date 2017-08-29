@@ -11,9 +11,12 @@
 class mem {
 	public:
 		void* add_ptr(void* ptr);
+		void auto_release(); // destructor releases everything
 		void release_all();
+		~mem();
 
 
 	private:
 		std::vector<void *> ptrs;
+		bool _release_on_destruction = false;
 };

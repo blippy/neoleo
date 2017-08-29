@@ -179,8 +179,9 @@ misc_memchecks()
 	{
 		char str1[] =  "\"foo\"";
 		mem parser_mem;
+		parser_mem.auto_release(); // for when you want to release out of scope
 		char* ret = parse_and_compile(str1, parser_mem);
-		parser_mem.release_all();
+		//parser_mem.release_all();
 	}
 }
 
