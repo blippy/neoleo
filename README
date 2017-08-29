@@ -1,9 +1,4 @@
-Lightweight curses spreadsheet based on GNU oleo
-
-Neoleo is a light-weight spreadsheet that will work in almost any environment.
-Oleo was an official GNU spreadsheet that had not been updated since 2000. It 
-suffered from considerable bitrot. Neoleo is an update to Oleo that fixes these 
-issues.
+Lightweight curses spreadsheet based on GNU oleo.
 
 If you are downloading the file from github, most people, especially
 distro packagers wanting to do typical configure && make && make install
@@ -17,10 +12,10 @@ Quick start
 ^c	copy cell formula to clipboard
 ^g 	cancels current operation
 ^l	set cell alignment left
+^q 	quit
 ^r	set cell alignment right
 ^s 	save document
 ^v	paste cell formula from clipbaord
-^x^c 	quit
 
 Documents and examples
 ----------------------
