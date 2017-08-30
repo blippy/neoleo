@@ -2,6 +2,11 @@
 
 #include "mem.h"
 
+mem::mem(bool auto_release)
+{
+	_release_on_destruction = auto_release;
+}
+
 void*
 mem::add_ptr(void* ptr)
 {
