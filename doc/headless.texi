@@ -64,9 +64,13 @@ Row: 4 Col: 1
 @item @hashchar{} ...
 Insert comment into input stream. No operation is actually performed.
 
+@item I
+Insert data into the spreadsheet row-wise. `;' starts on a new row,
+and `.' terminates input, and returns to command mode. 
+
 @item i
 Insert data into the spreadsheet columnwise. `;' starts the column
-to the right, and `.' terminated input, and returns to command mode.
+to the right, and `.' terminates input, and returns to command mode.
 
 @item info
 Prints information, mainly used for debugging an introspecting state

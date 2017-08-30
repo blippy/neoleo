@@ -20,6 +20,7 @@ VERSION 7.0.0 IN DEVELOPMENT
 * Headless words added: 
 	# comment line
 	copy-this-cell-formula
+	I (insert data row-wise)
 	i (insert columnar data)
 	info (mostly for debugging purposes)
 	paste-this-cell-formula

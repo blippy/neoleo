@@ -223,6 +223,28 @@ insert_columnwise()
 		//cout << "You said " << line <<  (line != "." ) << endl;
 	}
 }
+static void
+insert_rowwise()
+{
+	for(std::string line; std::getline(std::cin, line);){
+		if(line == ".") break;
+		if(line == ";") {
+			curow++;
+			cucol=1;
+			continue;
+		}
+		if(line.size() ==0) {
+			cucol++;
+			continue;
+		}
+		if(line[0] == '#') continue;
+
+		edit_cell_at(curow, cucol, line);
+		cucol++;
+		
+		//cout << "You said " << line <<  (line != "." ) << endl;
+	}
+}
 
 
 string spaces(int n)
@@ -273,6 +295,7 @@ static void write_file()
 
 }
 static map<string, function<void()> > func_map = {
+	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
 	{"tbl", tbl},
