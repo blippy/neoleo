@@ -181,6 +181,24 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
+
+static bool use_coloured_output = false;
+
+static void
+colours()
+{
+	use_coloured_output = true;
+}
+
+// use a red background
+static std::string
+on_red(const std::string& str)
+{
+	if(use_coloured_output)
+		return "\E[41m" + str + "\E[40m";
+	else return str;
+}
+
 static void 
 info()
 {
@@ -264,12 +282,14 @@ show_cells()
 	//cout << "102 OK Terminated by dot" << endl;
 	cout << "Row: " << curow << " Col: " << cucol << endl;
 	for(int r=1; r<10; ++r) {
-		cout << "R" << pad_right(std::to_string(r), 3)  << " ";
+		cout << on_red(pad_right(std::to_string(r), 3))  << " ";
 		for(int c=1; c< 5; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
 			int w = get_width(c);
 			str = spaces(w - str.size()) + str;
+			if(use_coloured_output && r == curow && c == cucol)
+				str = on_red(str); // encase in red, then switch back to black
 			cout << str << " ";
 			//printf(print_buf);
 		}
@@ -295,6 +315,7 @@ static void write_file()
 
 }
 static map<string, function<void()> > func_map = {
+	{"colours", colours},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},

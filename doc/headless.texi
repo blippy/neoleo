@@ -64,6 +64,9 @@ Row: 4 Col: 1
 @item @hashchar{} ...
 Insert comment into input stream. No operation is actually performed.
 
+@item colours
+Set output to coloured mode. ANSI escape sequences are used.
+
 @item I
 Insert data into the spreadsheet row-wise. `;' starts on a new row,
 and `.' terminates input, and returns to command mode. 
