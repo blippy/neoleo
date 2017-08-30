@@ -94,6 +94,12 @@ Quit without saving.
 @item view
 Show a grid of the first few items in the spreadsheet. Admittedly,
 this could do with a lot of improvement.
+
+@item vis
+Visual mode, similar to the current ncurses, but much more tractable
+to develop with. Highly experimental, and does not do much at this
+stage.
+
 @item w
 Write the data to the file. 
 @end table

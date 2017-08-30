@@ -26,6 +26,7 @@ VERSION 7.0.0 IN DEVELOPMENT
 	info (mostly for debugging purposes)
 	paste-this-cell-formula
 	q (quit)
+	vis (visual mode)
 	w (write to file)
 
 * RFE#22 done: fix home, end and delete keys
