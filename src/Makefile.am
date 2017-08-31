@@ -32,7 +32,7 @@ neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
 		 eval.cc format.cc forminfo.cc funcs.cc \
 		 gsl.cc hash.cc help.cc \
 		 info.cc init.cc input.cc \
-		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc \
+		 io-headless.cc io-curses.cc io-edit.cc io-term.cc io-utils.cc io-visual.cc \
 		 ir.cc key.cc \
 		 line.cc list.cc lists.cc logging.cc \
 		 mdi.cc mem.cc \

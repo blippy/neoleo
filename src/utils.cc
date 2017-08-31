@@ -1102,6 +1102,19 @@ astof (char **sp)
 
 
 std::string 
+spaces(int n)
+{
+	//string result;
+	//if(n<0) return ;
+	n = std::max(0, n);
+	char sa[n+1];
+	std::fill(sa, sa+n, ' ');
+	sa[n] = '\0';
+	//cout << "*" << sa << "*\n";
+	return std::string(sa); 
+}
+
+std::string 
 pad_left(const std::string& s, int width)
 {
 	std::string res = s;

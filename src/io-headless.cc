@@ -1,4 +1,5 @@
 //#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
+//#include <array>
 #include <assert.h>
 #include <algorithm>
 #include <errno.h>
@@ -9,7 +10,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <termios.h>
 #include <vector>
 
 
@@ -17,6 +17,7 @@
 #include "cell.h"
 #include "io-abstract.h"
 #include "io-headless.h"
+#include "io-visual.h"
 #include "cmd.h"
 #include "window.h"
 #include "oleox.hpp"
@@ -182,24 +183,6 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
-
-static bool use_coloured_output = false;
-
-static void
-colours()
-{
-	use_coloured_output = true;
-}
-
-// use a red background
-static std::string
-on_red(const std::string& str)
-{
-	if(use_coloured_output)
-		return "\E[41m" + str + "\E[40m";
-	else return str;
-}
-
 static void 
 info()
 {
@@ -266,38 +249,6 @@ insert_rowwise()
 }
 
 
-string spaces(int n)
-{
-	//string result;
-	//if(n<0) return ;
-	n = std::max(0, n);
-	char sa[n+1];
-	std::fill(sa, sa+n, ' ');
-	sa[n] = '\0';
-	//cout << "*" << sa << "*\n";
-	return string(sa); 
-}
-static void
-show_cells()
-{
-	//cout << "102 OK Terminated by dot" << endl;
-	cout << "Row: " << curow << " Col: " << cucol << endl;
-	for(int r=1; r<10; ++r) {
-		cout << on_red("R" + pad_right(std::to_string(r), 3))  << " ";
-		for(int c=1; c< 5; ++c) {
-			CELL *cp = find_cell(r, c);
-			string str = print_cell(cp);
-			int w = get_width(c);
-			str = spaces(w - str.size()) + str;
-			if(use_coloured_output && r == curow && c == cucol)
-				str = on_red(str); // encase in red, then switch back to black
-			cout << str << " ";
-			//printf(print_buf);
-		}
-		cout << "\n";
-	}
-	//cout << "." <<endl;
-}
 
 static void type_cell()
 {
@@ -307,57 +258,6 @@ static void type_cell()
 }
 
 
-
-
-// http://www.unix.com/programming/20438-unbuffered-streams.html
-int unbuffered_getch()
-{
-      int c=0;
-
-      struct termios org_opts, new_opts;
-      int res=0;
-          //-----  store old settings -----------
-      res=tcgetattr(STDIN_FILENO, &org_opts);
-      assert(res==0);
-          //---- set new terminal parms --------
-      memcpy(&new_opts, &org_opts, sizeof(new_opts));
-      new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
-      tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
-      c=getchar();
-          //------  restore old settings ---------
-      res=tcsetattr(STDIN_FILENO, TCSANOW, &org_opts);
-      assert(res==0);
-      return(c);
-}
-
-/* ANSI sequence:
- * \E[A up
- * \E[B down
- * \E[H home
- * \E   escape
- */
-
-static void
-visual_mode()
-{
-	colours();
-	std::string inp;
-	while(true){
-		cout << "\E[H"; //home
-		show_cells();
-		int c = unbuffered_getch();
-		//cout << "Input = " << c << endl;
-		if(c == 'q') break;
-		if(c == 'h') cucol = std::max(1, cucol-1);
-		if(c == 'j') curow++;
-		if(c == 'k') curow = std::max(1, curow-1);
-		if(c == 'l') cucol++;
-
-
-	}
-	cout << "Exited visual mode\n";
-
-}
 static void write_file()
 {
 	string name = FileGetCurrentFileName();
