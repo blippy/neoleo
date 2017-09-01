@@ -5,6 +5,7 @@
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -74,34 +75,39 @@ enum meta_keys { K_NORM, // The default case. Just a normal char
 // read from stdin, interpreting escape sequences
 int read_and_cook(meta_keys *special)
 {
-	char buf[10];
+	char buf[10] = {0}; // whole array is set to 0
 	ssize_t n = read_in(buf, sizeof(buf));
 	*special = K_NORM;
 	// when n ==1, it could be a normal char (inc. control)
 	// or just the normal ESC key.  However, if the buffer
 	// returns more than 1 char, then it is an escape
 	// seuqnece that needs to be interpreted
-	if(n == 3 && buf[0] == '\E'  && buf[1] == '[') {
-		switch(buf[2]) {
-			case 'A': *special = K_UP; break;
-			case 'B': *special = K_DOWN; break;
-			case 'C': *special = K_RIGHT; break;
-			case 'D': *special = K_LEFT; break;
-			default:  *special = K_UNK;
+	if(n>1) *special = K_UNK; // by default, we don't know what's going on
+	if(buf[0] == '\E' && buf[1] == '[') {
+		if(n == 3) {
+			switch(buf[2]) {
+				case 'A': *special = K_UP; break;
+				case 'B': *special = K_DOWN; break;
+				case 'C': *special = K_RIGHT; break;
+				case 'D': *special = K_LEFT; break;
+				//default:  *special = K_UNK;
+			}
 		}
 	}
 	return buf[0];
 
 }
 
+
 void
-show_cells()
+show_cells(int rt, int ct)
 {
 	//cout << "102 OK Terminated by dot" << endl;
-	cout << "Row: " << curow << " Col: " << cucol << endl;
-	for(int r=1; r<10; ++r) {
+	cout << "r" << curow << "c" << cucol << 
+		"\E[K" << "\n"; // and clear to end of line
+	for(int r=1; r<=rt; ++r) {
 		cout << on_red("R" + pad_right(std::to_string(r), 3))  << " ";
-		for(int c=1; c< 5; ++c) {
+		for(int c=1; c<= ct ; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
 			int w = get_width(c);
@@ -117,6 +123,12 @@ show_cells()
 }
 
 
+void show_cells()
+{
+	show_cells(10, 5);
+}
+
+
 /* ANSI sequence:
  * \E[A up
  * \E[B down
@@ -128,21 +140,29 @@ void
 visual_mode()
 {
 	colours();
+	cout << "\E[2J"; // clear screen
+
+	// terminal size code from
+	// https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
+	struct winsize w; // get size of terminal
+	ioctl(0, TIOCGWINSZ, &w);
+
 	std::string inp;
 	while(true){
 		cout << "\E[H"; //home
-		show_cells();
+		show_cells(w.ws_row-2, w.ws_col/10);
 		meta_keys special;
 		int c = read_and_cook(&special);
 		//int c = unbuffered_getch();
 		//cout << "Input = " << c << endl;
-		if(c == 'q' || (special == K_NORM && c == '\E')) break;
-		if(c == 'h' || special == K_LEFT) cucol = std::max(1, cucol-1);
-		if(c == 'j' || special == K_DOWN) curow++;
-		if(c == 'k' || special == K_UP) curow = std::max(1, curow-1);
-		if(c == 'l' || special == K_RIGHT) cucol++;
+		if(special != K_UNK) {
+			if(c == 'q' || (special == K_NORM && c == '\E')) break;
+			if(c == 'h' || special == K_LEFT) cucol = std::max(1, cucol-1);
+			if(c == 'j' || special == K_DOWN) curow++;
+			if(c == 'k' || special == K_UP) curow = std::max(1, curow-1);
+			if(c == 'l' || special == K_RIGHT) cucol++;
 
-
+		}
 	}
 	cout << "Exited visual mode\n";
 

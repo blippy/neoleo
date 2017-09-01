@@ -275,7 +275,7 @@ static map<string, function<void()> > func_map = {
 	{"tbl", tbl},
 	{"type-cell", type_cell},
 	{"view", show_cells},
-	{"vis", visual_mode},
+	{"vi", visual_mode},
 	{"w", write_file}
 };
 
