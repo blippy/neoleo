@@ -14,11 +14,13 @@
 #include "cmd.h"
 #include "io-utils.h"
 #include "lists.h"
+#include "logging.h"
 #include "utils.h"
 
 using std::cout;
 using std::endl;
 using std::string;
+using std::to_string; 
 
 bool use_coloured_output = false;
 
@@ -129,13 +131,19 @@ void show_cells()
 }
 
 
-/* ANSI sequence:
- * \E[A up
- * \E[B down
- * \E[H home
- * \E   escape
- */
 
+static void
+edit_cell_visually(int display_row)
+{
+	cout << "\E[" << display_row << ";1H"; // move to row/col
+	std::string formula =  get_cell_formula_at(curow, cucol);
+	cout << formula;
+	if(false) log_debug("edit_cell_visually(): display_row = " + to_string(display_row) 
+			+ ", curow=" + to_string(curow) + ", cucol=" + to_string(cucol) + ", formula:" 
+			+ formula);
+
+	cout << " edit_cell_visually() TODO";
+}
 void
 visual_mode()
 {
@@ -155,13 +163,14 @@ visual_mode()
 		int c = read_and_cook(&special);
 		//int c = unbuffered_getch();
 		//cout << "Input = " << c << endl;
-		if(special != K_UNK) {
-			if(c == 'q' || (special == K_NORM && c == '\E')) break;
+		if(special == K_NORM) {
+			if(c == '=') edit_cell_visually(w.ws_row);
+			if(c == 'q' || c == '\E') break;
+		} else if(special != K_UNK) {
 			if(c == 'h' || special == K_LEFT) cucol = std::max(1, cucol-1);
 			if(c == 'j' || special == K_DOWN) curow++;
 			if(c == 'k' || special == K_UP) curow = std::max(1, curow-1);
 			if(c == 'l' || special == K_RIGHT) cucol++;
-
 		}
 	}
 	cout << "Exited visual mode\n";

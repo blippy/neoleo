@@ -105,6 +105,18 @@ vacuous(cell* cp)
 {
 	return (cp == nullptr) || (cp->get_cell_type() == TYP_NUL);
 }
+
+std::string
+get_cell_formula_at(int r, int c)
+{
+
+        CELL *cp = find_cell(r, c);
+	std::string res = decomp(r, c, cp);
+	decomp_free();
+	return res;
+}
+
+
 static int
 cell_mc ( long row, long col, char *dowhat, struct value *p)
 {

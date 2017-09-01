@@ -51,13 +51,6 @@ check(bool ok, std::string msg)
 
 
 
-char * 
-get_formula(int curow, int cucol)
-{
-        CELL *cp = find_cell(curow, cucol);
-        return decomp(curow, cucol, cp);
-}
-
 
 int // returns 1 => OK
 swig_read_file_and_run_hooks(char *name, int ismerge)
@@ -96,8 +89,9 @@ set_cell_from_string(int r,int  c, const string & s)
 void get_set(int r, int c, const string& s)
 {
 	set_cell_from_string(r, c, s);
-	printf("Formula at (%d,%d) is:%s\n", r, c, get_formula(r,c));
-	decomp_free();
+	printf("Formula at (%d,%d) is:", r, c);
+	cout << get_cell_formula_at(r,c) << "\n";
+	//decomp_free();
 	recalculate(1);
 	printf("Cell value at (%d,%d) is:%s\n", r, c, cell_value_string(r,c, 0));
 	puts("");
@@ -208,11 +202,6 @@ headless_tests()
 	        } else {
         	        puts("read couldn't find file");
 	        }
-	}
-
-	if(false) {
-		printf("Formula at (2,2) is:%s\n", get_formula(2,2));
-		decomp_free();
 	}
 
 	if(false){

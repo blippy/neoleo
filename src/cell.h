@@ -121,6 +121,7 @@ class cell
 };
 
 bool vacuous(cell* cp);
+std::string get_cell_formula_at(int r, int c);
 
 struct var
   {
