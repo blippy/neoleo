@@ -3,9 +3,11 @@
  */
 
 #include <cassert>
+//#include <error.h>
 #include <iostream>
 #include <string>
 #include <sys/ioctl.h>
+#include <term.h>
 #include <termios.h>
 #include <unistd.h>
 #include <utility>
@@ -47,53 +49,73 @@ on_red(const std::string& str)
 
 // http://www.unix.com/programming/20438-unbuffered-streams.html
 // with some modification to allow for escape sequences
-// returns the number of character read
-ssize_t read_in(char* buf, int buf_size)
+std::string
+read_in()
 {
-      //int c=0;
+	//int c=0;
 
-      struct termios org_opts, new_opts;
-      int res=0;
-          //-----  store old settings -----------
-      res=tcgetattr(STDIN_FILENO, &org_opts);
-      assert(res==0);
-          //---- set new terminal parms --------
-      memcpy(&new_opts, &org_opts, sizeof(new_opts));
-      new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
-      tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
+	struct termios org_opts, new_opts;
+	int res=0;
+	//-----  store old settings -----------
+	res=tcgetattr(STDIN_FILENO, &org_opts);
+	assert(res==0);
+	//---- set new terminal parms --------
+	memcpy(&new_opts, &org_opts, sizeof(new_opts));
+	new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
+	tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
 
-      //char buf[100];
-      ssize_t n = read(STDIN_FILENO, buf, buf_size);
-      //std::array<char, 6> buf;
-      //ssize_t n = read(STDIN_FILENO, buf, sizeof(buf));
-      //cout << "read " << n << endl;
-      //c=getchar();
+	char buf[10] = {0}; // whole array is set to 0
+	//ssize_t n = read_in(buf, sizeof(buf)-1);
+	ssize_t n = read(STDIN_FILENO, buf, sizeof(buf)-1);
+	buf[sizeof(buf)-1] = 0; // as a backstop against run-away string, which shouldn't happen anyway
+	std::string result = buf;
 
-          //------  restore old settings ---------
-      res=tcsetattr(STDIN_FILENO, TCSANOW, &org_opts);
-      assert(res==0);
-      return n;
+	//------  restore old settings ---------
+	res=tcsetattr(STDIN_FILENO, TCSANOW, &org_opts);
+	assert(res==0);
+	return result;
 }
 
-enum meta_keys { K_NORM, // The default case. Just a normal char
+enum meta_key { K_NORM, // The default case. Just a normal char
 	K_UNK, // Unknown key sequence
-	K_UP, K_DOWN, K_LEFT, K_RIGHT, K_HOME, K_END};
+	K_UP, K_DOWN, K_LEFT, K_RIGHT, K_HOME, K_END, K_DEL};
+
+typedef struct keymap_s {
+	meta_key mkey;
+	std::string code;
+	std::string kseq;
+	std::string desc;
+} keymap_s;
+
+auto keymap = std::vector<keymap_s> {
+	{K_UP, "ku", "?", "K_UP"},
+		{K_DOWN, 	"kd", "?", "K_DOWN"},
+		{K_LEFT,	"kl", "?", "K_LEFT"},
+		{K_RIGHT,	"kr", "?", "K_RIGHT"},
+		{K_HOME,	"ho", "?", "K_HOME"},
+		{K_END,		"@7", "?", "K_END"},
+		{K_DEL,		"kD", "?", "K_DEL"}
+};
 
 // read from stdin, interpreting escape sequences
-int read_and_cook(meta_keys *special)
+int read_and_cook(meta_key *special)
 {
-	char buf[10] = {0}; // whole array is set to 0
-	ssize_t n = read_in(buf, sizeof(buf)-1);
-	buf[sizeof(buf)-1] = 0; // as a backstop against run-away string, which shouldn't happen anyway
+
+	//char buf[10] = {0}; // whole array is set to 0
+	//ssize_t n = read_in(buf, sizeof(buf)-1);
+	//buf[sizeof(buf)-1] = 0; // as a backstop against run-away string, which shouldn't happen anyway
+	std::string input = read_in();
+
 	*special = K_NORM;
 	// when n ==1, it could be a normal char (inc. control)
 	// or just the normal ESC key.  However, if the buffer
 	// returns more than 1 char, then it is an escape
 	// seuqnece that needs to be interpreted
-	if(n>1) {
+	if(input.size()>1) {
 		*special = K_UNK; // by default, we don't know what's going on
 
-		static vector<pair<string,meta_keys>> kmap = { 
+		/*
+		static vector<pair<string,meta_key>> kmap = { 
 			{"\E[1~",	K_HOME},
 			{"\E[4~",	K_END},
 			{"\E[A", 	K_UP},
@@ -101,10 +123,11 @@ int read_and_cook(meta_keys *special)
 			{"\E[C", 	K_RIGHT},
 			{"\E[D", 	K_LEFT}
 		};
+		*/
 
-		for(auto& km:kmap) {
-			if(km.first == buf) {
-				*special = km.second;
+		for(const auto& km:keymap) {
+			if(km.kseq == input) {
+				*special = km.mkey;
 				break;
 			}
 		}
@@ -112,21 +135,8 @@ int read_and_cook(meta_keys *special)
 
 	}
 
-	/*
-	if(buf[0] == '\E' && buf[1] == '[') {
-		if(n == 3) {
-			switch(buf[2]) {
-				case 'A': *special = K_UP; break;
-				case 'B': *special = K_DOWN; break;
-				case 'C': *special = K_RIGHT; break;
-				case 'D': *special = K_LEFT; break;
-				//default:  *special = K_UNK;
-			}
-		}
-	}
-	*/
 
-	return buf[0];
+	return input[0];
 
 }
 
@@ -191,7 +201,7 @@ edit_cell_visually(int display_row)
 
 	bool more = true;
 	while(more) {
-		meta_keys special;
+		meta_key special;
 		int ch = read_and_cook(&special);
 		//cout << c << "\n";
 		switch(special) {
@@ -206,7 +216,9 @@ edit_cell_visually(int display_row)
 				break;
 			case K_RIGHT:
 				col = col+1;
-				// fallthrough
+				col = std::min(col, (int)formula.size()+1);
+				col = std::min(col , 79); // TODO repleace hard-code
+				break;
 			case K_END:
 				col = std::min((int)formula.size()+1, 79); // TODO repleace hard-code
 				break;
@@ -217,9 +229,125 @@ edit_cell_visually(int display_row)
 
 	cout << " edit_cell_visually() TODO";
 }
+
+std::string
+get_term_sequence(const std::string& seq)
+{
+	char buf2[30];
+	char tbuf[512];
+	char* tbufptr = tbuf;
+	//char *cstr;
+	//if(cstr = tgetstr("ho", &tbufptr))
+	
+	char* cstr = tgetstr(seq.c_str(), &tbufptr);
+	//	cout << "Found ho" << endl;
+
+	if(cstr==nullptr) cout << "get_term_sequence(): No can do" << endl;
+	std::string binding = cstr;
+
+	// kludge for presumably wrong terminfo entries
+	if(binding.size()>1 && binding[1] == 'O') binding[1] = '[';
+
+	/*
+	cout << "Looking for " << seq;
+	for(int i=0; i< binding.size(); ++i) cout << " " << (int)binding[i];
+	cout << endl;
+	*/
+	return binding;
+}
+
+void 
+init_keymap()
+{
+
+	// http://c-faq.com/osdep/sd22.html
+	// https://nethackwiki.com/wiki/Source:Hack_1.0/hack.termcap.c
+	// https://www.gnu.org/software/termutils/manual/termcap-1.3/html_mono/termcap.html#SEC26
+	// https://linux.die.net/man/5/termcap
+	// http://invisible-island.net/ncurses/man/terminfo.5.html
+
+	char *tmp = getenv("TERM");
+	if(!tmp) cout << "Can't get TERM" << endl;
+	char *tptr = (char*) alloca(1024);
+	if(tgetent(tptr, tmp) <1) cout << "Uknown terminal type " << endl;
+
+	for(auto& km: keymap){
+		km.kseq = get_term_sequence(km.code);
+
+		// kludge
+		//if(km.kseq.size() > 1 and km.kseq[1] == 'O')
+		//	km.kseq[1] = '[';
+	}
+
+/*
+	while(true) {
+	std::string input = read_in();
+	// bizarre kludge where 0 s/b [, or something
+	//if(input.size()>1) input[1] = 'O';
+	cout << "Input sequence is ";
+	for(char c: input) cout << " " << (int)c;
+	cout << endl;
+	if(input == "q") return;
+		if(input == get_term_sequence("kl")) cout << "FOUND LEFT KEY" << endl;
+		if(input == get_term_sequence("kr")) cout << "FOUND RIGHT KEY" << endl;
+		if(input == get_term_sequence("ku")) cout << "FOUND UP KEY" << endl;
+		if(input == get_term_sequence("kd")) cout << "FOUND DOWN KEY" << endl;
+		if(input == get_term_sequence("kD")) cout << "FOUND DELETE KEY" << endl;
+		if(input == get_term_sequence("ho")) cout << "FOUND HOME KEY" << endl;
+		if(input == get_term_sequence("@7")) cout << "FOUND END KEY" << endl;
+	}
+	cout << endl << endl;
+*/	
+}
+
+void 
+keyboard_test()
+{
+	init_keymap();
+
+	cout << "keymap_test(): keys are as follows\n";
+
+	auto describe = [](keymap_s k) -> void {
+		cout << k.code << " " << pad_right(k.desc, 8);
+		for(char c:k.kseq) {
+			if(c=='\E') 
+				cout << "\\E";
+			else
+				cout << c;
+		}
+	};
+
+	for(const auto& k: keymap) {
+		describe(k);
+		cout << "\n";
+	}
+
+	cout << "Type q to quit\n";
+
+	while(true) {
+		meta_key special;
+		char ch = read_and_cook(&special);
+		cout << "Found: ";
+		if(special == K_NORM)
+			cout << (char)ch; // TODO handle \E and ^?
+		else {
+			for(const auto& k:keymap)
+				if(special==k.mkey)
+					describe(k);
+		}
+		cout << "\n";
+		if(ch == 'q') break;
+	}
+	
+	cout << "keyboard_test() finiahed.\n";
+}
 void
 visual_mode()
 {
+
+	init_keymap();
+	//exit(0);
+
 	colours();
 	cout << "\E[2J"; // clear screen
 
@@ -232,7 +360,7 @@ visual_mode()
 	while(true){
 		cout << "\E[H"; //home
 		show_cells(w.ws_row-2, w.ws_col/10);
-		meta_keys special;
+		meta_key special;
 		int c = read_and_cook(&special);
 		//int c = unbuffered_getch();
 		//cout << "Input = " << c << endl;

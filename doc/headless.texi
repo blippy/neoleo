@@ -79,6 +79,9 @@ to the right, and `.' terminates input, and returns to command mode.
 Prints information, mainly used for debugging an introspecting state
 and constants. As at 17 Aug 2017, only curses keycode info is printed.
 
+@item kt
+Perform keyboard test. This diagnoses potential pitfalls.
+
 @item tbl
 Output the speadsheet in groff tbl format. Example:
 @example

@@ -272,6 +272,7 @@ static map<string, function<void()> > func_map = {
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
+	{"kt", keyboard_test},
 	{"tbl", tbl},
 	{"type-cell", type_cell},
 	{"view", show_cells},
