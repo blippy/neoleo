@@ -92,7 +92,7 @@ auto keymap = std::vector<keymap_s> {
 		{K_DOWN, 	"kd", "?", "K_DOWN"},
 		{K_LEFT,	"kl", "?", "K_LEFT"},
 		{K_RIGHT,	"kr", "?", "K_RIGHT"},
-		{K_HOME,	"ho", "?", "K_HOME"},
+		{K_HOME,	"kh", "?", "K_HOME"},
 		{K_END,		"@7", "?", "K_END"},
 		{K_DEL,		"kD", "?", "K_DEL"}
 };
@@ -239,7 +239,7 @@ get_term_sequence(const std::string& seq)
 	//char *cstr;
 	//if(cstr = tgetstr("ho", &tbufptr))
 	
-	char* cstr = tgetstr(seq.c_str(), &tbufptr);
+	char* cstr = tgetstr((char*) seq.c_str(), &tbufptr);
 	//	cout << "Found ho" << endl;
 
 	if(cstr==nullptr) cout << "get_term_sequence(): No can do" << endl;
