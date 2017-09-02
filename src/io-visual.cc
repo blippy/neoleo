@@ -188,25 +188,41 @@ void show_cells()
 static void
 edit_cell_visually(int display_row)
 {
-	auto gotoc = [&display_row](int c) { gotorc(display_row, c); };
-	gotoc(1);
 	std::string formula =  get_cell_formula_at(curow, cucol);
-	cout << formula;
 	int col = formula.size() +1;
-	gotoc(col);
-	cout << flush;
+	auto gotoc = [&display_row](int c) { gotorc(display_row, c); };
 	if(false) log_debug("edit_cell_visually(): display_row = " + to_string(display_row) 
 			+ ", curow=" + to_string(curow) + ", cucol=" + to_string(cucol) + ", formula:" 
 			+ formula);
 
 	bool more = true;
 	while(more) {
+		// display formula
+		gotoc(1);
+		cout << formula;
+		cleareol();
+		gotoc(col);
+		cout << flush;
+
+		auto erase_at = [&formula] (int col) { formula.erase(formula.begin() + col -1, formula.begin() + col);};
+
 		meta_key special;
 		int ch = read_and_cook(&special);
+		int len = (int)formula.size();
 		//cout << c << "\n";
 		switch(special) {
 			case K_NORM:
-				if(ch == 10) more = false; // return key
+				switch(ch) {
+					case 10:  // return key
+						more = false;
+						break;
+					case 127: // delete backsapce
+						if(col>1) erase_at(--col);
+						break;
+					default:
+						formula.insert(formula.begin() +col-1, ch);
+						col++;
+				}
 				break; 
 			case K_HOME:
 				col = 1;
@@ -216,12 +232,17 @@ edit_cell_visually(int display_row)
 				break;
 			case K_RIGHT:
 				col = col+1;
-				col = std::min(col, (int)formula.size()+1);
+				col = std::min(col, len+1);
 				col = std::min(col , 79); // TODO repleace hard-code
 				break;
 			case K_END:
-				col = std::min((int)formula.size()+1, 79); // TODO repleace hard-code
+				col = std::min(len+1, 79); // TODO repleace hard-code
 				break;
+			case K_DEL:
+				if(col<=len)
+					erase_at(col);
+				break;
+
 		}
 		gotoc(col);
 		cout << flush;
