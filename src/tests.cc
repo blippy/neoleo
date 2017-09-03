@@ -72,26 +72,12 @@ void FreeGlobals()
 	FileCloseCurrentFile();
 }
 
-void
-set_cell_from_string(int r,int  c, const string & s)
-{
-	vector<char> v(s.begin(), s.end());
-	v.push_back(0);
-	char *str = &v[0];
-
-	//char * str = (char *) malloc(s.size()+1);
-	//strcpy(str, s.c_str());
-
-	//set_cell(r, c, str); 
-	new_value(r, c, str); 
-}
 
 void get_set(int r, int c, const string& s)
 {
 	set_cell_from_string(r, c, s);
 	printf("Formula at (%d,%d) is:", r, c);
 	cout << get_cell_formula_at(r,c) << "\n";
-	//decomp_free();
 	recalculate(1);
 	printf("Cell value at (%d,%d) is:%s\n", r, c, cell_value_string(r,c, 0));
 	puts("");

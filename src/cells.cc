@@ -84,13 +84,13 @@ cell::cell(void)
 	//constexpr c_z_size = max(sizeof(size_t), sizeof(long), sizeof(struct rng));
 	//memset(*c_z, 0, c_z_size);
 	memset(&c_z, 0, sizeof(vals));
-	cout << "X";
+	//cout << "X";
 }
 
 cell::~cell(void)
 {
 	magic = 0x0DEFACED; // see TR06
-	cout <<"Y";
+	//cout <<"Y";
 }
 
 void 

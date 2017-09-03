@@ -19,6 +19,7 @@
 #include "io-utils.h"
 #include "lists.h"
 #include "logging.h"
+#include "ref.h"
 #include "utils.h"
 
 using std::cout;
@@ -245,10 +246,13 @@ edit_cell_visually(int display_row)
 
 		}
 		gotoc(col);
+		set_cell_from_string(curow, cucol, formula);
 		cout << flush;
 	}
 
-	cout << " edit_cell_visually() TODO";
+	gotoc(1);
+	cleareol();
+	cout << flush;
 }
 
 std::string

@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <vector>
 
 #include "global.h"
 #include "funcdef.h"
@@ -53,6 +54,7 @@
 
 using std::cout;
 using std::endl;
+using std::vector;
 
 static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);
 static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
@@ -167,6 +169,15 @@ new_value (CELLREF row, CELLREF col, const char *string)
 		my_cell = 0;
 	}
 	return 0;
+}
+
+char *
+set_cell_from_string(int r,int  c, const std::string & s)
+{
+	std::vector<char> v(s.begin(), s.end());
+	v.push_back(0);
+	char *str = &v[0];
+	return new_value(r, c, str); 
 }
 
 /* This sets the cell to a constant, stored in VALUE, whose type is in TYPE */

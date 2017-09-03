@@ -1,8 +1,4 @@
 #pragma once
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 /*
  * $Id: ref.h,v 1.6 2000/08/10 21:02:51 danny Exp $
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
@@ -24,13 +20,7 @@
 #include "global.h"
 #include "cell.h"
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
 extern struct var * find_or_make_var (char *string, int len);
-#ifdef __cplusplus
-//}
-#endif
 
 /* Operations that add or remove cells to the sparse array
  * may cause the (memory) addresses of other cells to change.
@@ -45,6 +35,7 @@ extern struct cell * my_cell;
 
 extern void set_cell (CELLREF row, CELLREF col, const char *string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
+char* set_cell_from_string(int r,int  c, const std::string & s);
 //extern char * quote_new_value (CELLREF row, CELLREF col, char *string);
 extern char * set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value);
 extern char * read_new_value (CELLREF row, CELLREF col, char *form, char *val);
@@ -71,7 +62,3 @@ extern void for_all_vars (void (*func) (char *, struct var *));
 extern struct var * find_var (char *string, int len);
 extern void add_var_ref (void * vvar);
 extern void flush_variables (void);
-
-#ifdef __cplusplus
-//}
-#endif
