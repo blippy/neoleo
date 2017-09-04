@@ -6,7 +6,7 @@
 
 using std::cout;
 
-typedef struct RC_t { int r; int c;} RC_t;
+
 
 /*
  * highest_row() and highest_col() should be expected to 

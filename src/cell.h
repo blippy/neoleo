@@ -225,3 +225,5 @@ void copy_this_cell_formula();
 void paste_this_cell_formula();
 
 
+typedef struct point_t {int r; int c;} point_t;
+typedef point_t RC_t;

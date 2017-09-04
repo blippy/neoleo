@@ -155,17 +155,25 @@ cleareol()
 }
 
 
+/*
 range_t 
-init_display_range(const struct winsize& w)
+init_display_range(const point_t& grid_size)
+//init_display_range(const struct winsize& w)
 {
-	int hr = w.ws_row -3;
-	range_t rng{1, 1, (short unsigned int) hr, 10-1};
+
+	using sint = short unsigned int;
+	//int hr = w.ws_row -3;
+	sint hr = grid_size.r;
+	sint hc = grid_size.c/10;
+	range_t rng{1, 1, hr, hc};
 
 	return rng;
 }
+*/
 
 void
-compute_display_range(const struct winsize& w, range_t& rng)
+compute_display_range(const point_t&  grid_size, range_t& rng)
+//compute_display_range(const struct winsize& w, range_t& rng)
 {
 
 	// TODO this function is too crude: it assumes that each
@@ -175,14 +183,15 @@ compute_display_range(const struct winsize& w, range_t& rng)
 	// into the display
 	
 	if(curow<rng.lr || curow > rng.hr) {
-		int nrows = w.ws_row -3;
+		//int nrows = w.ws_row -3;
+		int nrows = grid_size.r;
 		rng.lr = std::max(1, curow - nrows/2);
 		rng.hr = rng.lr + nrows -1;
 	}
 		
 
 	if(cucol< rng.lc || cucol > rng.hc) {
-		int ncols = w.ws_col/10;
+		int ncols = grid_size.c/10;
 	       	rng.lc = std::max(1, cucol - ncols/2);
 		rng.hc = rng.lc + ncols;
 	}
@@ -407,14 +416,18 @@ visual_mode()
 	// https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
 	struct winsize w; // get size of terminal
 	ioctl(0, TIOCGWINSZ, &w);
+	point_t grid{w.ws_row-3, w.ws_col};
 
-	range_t drng = init_display_range(w);
+	range_t grid_range{1,1,0,0} ;
+	compute_display_range(grid, grid_range);
+
+	//range_t drng = init_display_range(disp_win_size);
 	std::string inp;
 	while(true){
-		cout << "\E[H"; //home
+		cout << "\E[H"; //k
 
-		compute_display_range(w, drng);
-		show_cells(drng);
+		compute_display_range(grid, grid_range);
+		show_cells(grid_range);
 
 		meta_key special;
 		int c = read_and_cook(&special);
