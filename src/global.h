@@ -1,7 +1,5 @@
 #pragma once
 /*
- * $Id: global.h,v 1.20 2001/02/14 20:54:50 danny Exp $
- *
  * Copyright © 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -22,11 +20,6 @@
 #include <string>
 
 #include "sysdef.h"
-//#include "utils.h"
-//#include "numeric.h"
-
-
-
 
 /*
  * Constants for graphs
@@ -162,6 +155,8 @@ struct rng
 {
   CELLREF lr, lc, hr, hc;
 };
+
+typedef struct rng range_t;
 
 #include "oleo_plot.h"
 

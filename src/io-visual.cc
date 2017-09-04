@@ -154,34 +154,83 @@ cleareol()
 	cout << "\E[K";
 }
 
-void
-show_cells(int rt, int ct)
+
+range_t 
+init_display_range(const struct winsize& w)
 {
-	//cout << "102 OK Terminated by dot" << endl;
-	cout << "r" << curow << "c" << cucol;
+	int hr = w.ws_row -3;
+	range_t rng{1, 1, (short unsigned int) hr, 10-1};
+
+	return rng;
+}
+
+void
+compute_display_range(const struct winsize& w, range_t& rng)
+{
+
+	// TODO this function is too crude: it assumes that each
+	// row occupies 1 line, and each cell occupies 10 cells
+	
+	// if the current cell is outside the display range, then recentre it
+	// into the display
+	
+	if(curow<rng.lr || curow > rng.hr) {
+		int nrows = w.ws_row -3;
+		rng.lr = std::max(1, curow - nrows/2);
+		rng.hr = rng.lr + nrows -1;
+	}
+		
+
+	if(cucol< rng.lc || cucol > rng.hc) {
+		int ncols = w.ws_col/10;
+	       	rng.lc = std::max(1, cucol - ncols/2);
+		rng.hc = rng.lc + ncols;
+	}
+
+}
+
+void
+show_cells(const range_t& rng)
+{
+	auto nl = []() { cout << "\n"; };
+
+	// display current cell information
+	cout << "r" << curow << "c" << cucol << " " << cell_value_string(curow, cucol, 0) << " [" << get_cell_formula_at(curow, cucol) << "]";
 	cleareol();
-	cout << "\n"; 
-	for(int r=1; r<=rt; ++r) {
+	nl(); 
+
+	// print column headings
+	cout << pad_right(" ", 4);
+	for(int c=rng.lc; c<= rng.hc ; ++c) {
+		int w = get_width(w);
+		string hdr = pad_right("C" + to_string(c), w);
+		cout << on_red(hdr);
+	}
+	cleareol();
+	nl();
+
+	for(int r=rng.lr; r<=rng.hr; ++r) {
 		cout << on_red("R" + pad_right(std::to_string(r), 3))  << " ";
-		for(int c=1; c<= ct ; ++c) {
+		for(int c = rng.lc; c<= rng.hc ; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
 			int w = get_width(c);
-			str = spaces(w - str.size()) + str;
+			str = pad_left(str, w);
 			if(use_coloured_output && r == curow && c == cucol)
 				str = on_red(str); // encase in red, then switch back to black
-			cout << str << " ";
+			cout << str;
 			//printf(print_buf);
 		}
-		cout << "\n";
+		nl();
 	}
+	cout <<flush;
 	//cout << "." <<endl;
 }
 
 
 void show_cells()
 {
-	show_cells(10, 5);
+	show_cells(range_t{1,2, 10, 5});
 }
 
 
@@ -298,31 +347,8 @@ init_keymap()
 
 	for(auto& km: keymap){
 		km.kseq = get_term_sequence(km.code);
-
-		// kludge
-		//if(km.kseq.size() > 1 and km.kseq[1] == 'O')
-		//	km.kseq[1] = '[';
 	}
 
-/*
-	while(true) {
-	std::string input = read_in();
-	// bizarre kludge where 0 s/b [, or something
-	//if(input.size()>1) input[1] = 'O';
-	cout << "Input sequence is ";
-	for(char c: input) cout << " " << (int)c;
-	cout << endl;
-	if(input == "q") return;
-		if(input == get_term_sequence("kl")) cout << "FOUND LEFT KEY" << endl;
-		if(input == get_term_sequence("kr")) cout << "FOUND RIGHT KEY" << endl;
-		if(input == get_term_sequence("ku")) cout << "FOUND UP KEY" << endl;
-		if(input == get_term_sequence("kd")) cout << "FOUND DOWN KEY" << endl;
-		if(input == get_term_sequence("kD")) cout << "FOUND DELETE KEY" << endl;
-		if(input == get_term_sequence("ho")) cout << "FOUND HOME KEY" << endl;
-		if(input == get_term_sequence("@7")) cout << "FOUND END KEY" << endl;
-	}
-	cout << endl << endl;
-*/	
 }
 
 void 
@@ -366,6 +392,7 @@ keyboard_test()
 	
 	cout << "keyboard_test() finiahed.\n";
 }
+
 void
 visual_mode()
 {
@@ -381,10 +408,14 @@ visual_mode()
 	struct winsize w; // get size of terminal
 	ioctl(0, TIOCGWINSZ, &w);
 
+	range_t drng = init_display_range(w);
 	std::string inp;
 	while(true){
 		cout << "\E[H"; //home
-		show_cells(w.ws_row-2, w.ws_col/10);
+
+		compute_display_range(w, drng);
+		show_cells(drng);
+
 		meta_key special;
 		int c = read_and_cook(&special);
 		//int c = unbuffered_getch();

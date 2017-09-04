@@ -1,8 +1,5 @@
 #pragma once
-
 /*
- * $Id: regions.h,v 1.6 2000/08/10 21:02:51 danny Exp $
- *
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -19,10 +16,6 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 #include "global.h"
 
@@ -58,8 +51,3 @@ extern int cmp_cells (int n1, int n2);
 extern void swp_cells (int n1, int n2);
 extern void rot_cells (int n1, int n2);
 extern void precision_region (struct rng *, int);
-
-#ifdef __cplusplus
-}
-#endif
-
