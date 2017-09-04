@@ -169,11 +169,30 @@ compute_display_range(const point_t&  grid_size, range_t& rng)
 	}
 		
 
-	// TODO use row_hdr_size()
 	if(cucol< rng.lc || cucol > rng.hc) {
-		int ncols = grid_size.c/10;
-	       	rng.lc = std::max(1, cucol - ncols/2);
-		rng.hc = rng.lc + ncols;
+		rng.lc = rng.hc = cucol;
+		int grid_cols = row_hdr_size(rng.hr) + get_width(cucol);
+		int hamming = 1;
+		while(true) {
+
+			if(cucol+hamming <= MAX_ROW) {
+				if(grid_cols + get_width(cucol+hamming) > grid_size.c) break; // column fully utilised
+				rng.hc = cucol+hamming;
+				grid_cols += get_width(rng.hc);
+			}
+
+			if(cucol-hamming>0) {
+				if(grid_cols + get_width(cucol - hamming) > grid_size.c) break;
+				rng.lc = cucol-hamming;
+				grid_cols += get_width(rng.lc);
+			}
+
+			hamming++;
+		}
+
+		//int ncols = grid_size.c/10;
+	       	//rng.lc = std::max(1, cucol - ncols/2);
+		//rng.hc = rng.lc + ncols;
 	}
 
 }
@@ -207,6 +226,7 @@ show_cells(const range_t& rng)
 			string str = print_cell(cp);
 			int w = get_width(c);
 			str = pad_left(str, w);
+			str = str.substr(0, w); // truncate overlong cells
 			if(use_coloured_output && r == curow && c == cucol)
 				str = on_red(str); // encase in red, then switch back to black
 			cout << str;
