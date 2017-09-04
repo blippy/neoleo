@@ -3,7 +3,7 @@
  */
 
 #include <cassert>
-//#include <error.h>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <sys/ioctl.h>
@@ -114,18 +114,6 @@ int read_and_cook(meta_key *special)
 	// seuqnece that needs to be interpreted
 	if(input.size()>1) {
 		*special = K_UNK; // by default, we don't know what's going on
-
-		/*
-		static vector<pair<string,meta_key>> kmap = { 
-			{"\E[1~",	K_HOME},
-			{"\E[4~",	K_END},
-			{"\E[A", 	K_UP},
-			{"\E[B", 	K_DOWN},
-			{"\E[C", 	K_RIGHT},
-			{"\E[D", 	K_LEFT}
-		};
-		*/
-
 		for(const auto& km:keymap) {
 			if(km.kseq == input) {
 				*special = km.mkey;
@@ -155,25 +143,16 @@ cleareol()
 }
 
 
-/*
-range_t 
-init_display_range(const point_t& grid_size)
-//init_display_range(const struct winsize& w)
+
+// calculate row headings size required ("R1",R2", ...)
+// where hr is the bottom-most row you want to calculated
+int row_hdr_size(int hr)
 {
-
-	using sint = short unsigned int;
-	//int hr = w.ws_row -3;
-	sint hr = grid_size.r;
-	sint hc = grid_size.c/10;
-	range_t rng{1, 1, hr, hc};
-
-	return rng;
+	return std::ceil(std::log10(hr)) +2;
 }
-*/
 
 void
 compute_display_range(const point_t&  grid_size, range_t& rng)
-//compute_display_range(const struct winsize& w, range_t& rng)
 {
 
 	// TODO this function is too crude: it assumes that each
@@ -190,6 +169,7 @@ compute_display_range(const point_t&  grid_size, range_t& rng)
 	}
 		
 
+	// TODO use row_hdr_size()
 	if(cucol< rng.lc || cucol > rng.hc) {
 		int ncols = grid_size.c/10;
 	       	rng.lc = std::max(1, cucol - ncols/2);
@@ -208,8 +188,10 @@ show_cells(const range_t& rng)
 	cleareol();
 	nl(); 
 
+	int margin = row_hdr_size(rng.hr);
+
 	// print column headings
-	cout << pad_right(" ", 4);
+	cout << pad_right(" ", margin);
 	for(int c=rng.lc; c<= rng.hc ; ++c) {
 		int w = get_width(w);
 		string hdr = pad_right("C" + to_string(c), w);
@@ -219,7 +201,7 @@ show_cells(const range_t& rng)
 	nl();
 
 	for(int r=rng.lr; r<=rng.hr; ++r) {
-		cout << on_red("R" + pad_right(std::to_string(r), 3))  << " ";
+		cout << on_red(pad_right("R" + std::to_string(r), margin));
 		for(int c = rng.lc; c<= rng.hc ; ++c) {
 			CELL *cp = find_cell(r, c);
 			string str = print_cell(cp);
