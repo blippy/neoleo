@@ -28,15 +28,12 @@ using std::vector;
 #include "cell.h"
 #include "mdi.h"
 #include "mem.h"
-//#include "mysql.h"
 #include "ref.h"
-//extern "C" {
-//#include "parse.hh"
-//}
 #include "byte-compile.h"
 #include "decompile.h"
 #include "lists.h"
 #include "parse_parse.h"
+#include "alt_cells.h"
 
 static bool all_pass = true; // all the checks have passed so far
 
@@ -213,6 +210,7 @@ headless_tests()
 	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
+	run_alt_cells_tests();
 
 	FreeGlobals();
 

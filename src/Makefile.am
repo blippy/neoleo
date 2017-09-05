@@ -26,7 +26,7 @@ neoleo_LDADD = -lm -lncurses -lpanel $(ASAN_FLAGSL)
 #neoleo_LDADD += -lasan
 #endif
 
-neoleo_SOURCES = args.cc basic.cc  busi.cc byte-compile.cc \
+neoleo_SOURCES = alt_cells.cc args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc forminfo.cc funcs.cc \
