@@ -1,7 +1,5 @@
 #pragma once
 /*
- * $Id: lists.h,v 1.5 2000/08/10 21:02:51 danny Exp $
- *
  * Copyright © 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -18,12 +16,6 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#pragma once
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 
 extern float height_scale;
 extern float width_scale;
@@ -85,8 +77,3 @@ struct find
   char fini;
   int ele;
 };
-
-
-#ifdef __cplusplus
-//}
-#endif

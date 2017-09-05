@@ -83,7 +83,9 @@ class cell
 		~cell();
 		/* char *cell_string; */
 		struct cell_flags_s cell_flags;
+		//ValType cell_type = TYP_STR;
 		ValType get_cell_type() { return cell_flags.cell_type;}
+		void set_cell_type(ValType t) { cell_flags.cell_type = t;}
 		int get_cell_jst() { return cell_flags.cell_justify; }
 		unsigned short cell_cycle = 0;
 		//struct font_memo *cell_font;
@@ -97,12 +99,12 @@ class cell
 		void sInt(int newval); // set integer value
 		char * cell_str() { 
 			//assert(magic == 0x000FF1CE);
-			assert(cell_flags.cell_type == TYP_STR); return c_z.c_s ;};
+			assert(get_cell_type() == TYP_STR); return c_z.c_s ;};
 		char * get_cell_str() { 
 			//assert(magic == 0x000FF1CE);
 			return cell_str();};
 		void set_cell_str(char* newval) { c_z.c_s = newval;};
-		long cell_int() { assert(cell_flags.cell_type == TYP_INT); return c_z.c_l ;};
+		long cell_int() { assert(get_cell_type() == TYP_INT); return c_z.c_l ;};
 		long get_cell_int() { 
 			//assert(magic == 0x000FF1CE);
 			return cell_int();
@@ -166,8 +168,8 @@ typedef cell CELL;
 #define LCK_LCK		2
 
 /* The type of a cell, or of a eval_expression() value */
-#define GET_TYP(p)	((p)->cell_flags.cell_type)
-#define SET_TYP(p,x)	((p)->cell_flags.cell_type = (x))
+#define GET_TYP(p)	((p)->get_cell_type())
+#define SET_TYP(p,x)	((p)->set_cell_type(x))
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))

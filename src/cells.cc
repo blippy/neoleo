@@ -97,7 +97,7 @@ void
 cell::sInt(int newval)
 {
 	c_z.c_i = newval;
-	cell_flags.cell_type = TYP_INT;
+	set_cell_type(TYP_INT);
 }
 
 bool 
