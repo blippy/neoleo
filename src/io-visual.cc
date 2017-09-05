@@ -178,13 +178,13 @@ compute_display_range(const point_t&  grid_size, range_t& rng)
 			if(cucol+hamming <= MAX_ROW) {
 				if(grid_cols + get_width(cucol+hamming) > grid_size.c) break; // column fully utilised
 				rng.hc = cucol+hamming;
-				grid_cols += get_width(rng.hc);
+				grid_cols += get_width(rng.hc)+1;
 			}
 
 			if(cucol-hamming>0) {
 				if(grid_cols + get_width(cucol - hamming) > grid_size.c) break;
 				rng.lc = cucol-hamming;
-				grid_cols += get_width(rng.lc);
+				grid_cols += get_width(rng.lc)+1;
 			}
 
 			hamming++;
@@ -212,7 +212,7 @@ show_cells(const range_t& rng)
 	// print column headings
 	cout << pad_right(" ", margin);
 	for(int c=rng.lc; c<= rng.hc ; ++c) {
-		int w = get_width(w);
+		int w = get_width(w)+1;
 		string hdr = pad_right("C" + to_string(c), w);
 		cout << on_red(hdr);
 	}
@@ -229,7 +229,7 @@ show_cells(const range_t& rng)
 			str = str.substr(0, w); // truncate overlong cells
 			if(use_coloured_output && r == curow && c == cucol)
 				str = on_red(str); // encase in red, then switch back to black
-			cout << str;
+			cout << str << " ";
 			//printf(print_buf);
 		}
 		nl();
