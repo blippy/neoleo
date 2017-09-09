@@ -1,5 +1,6 @@
 if  WITH_ASAN
-ASAN_FLAGSC = -fsanitize=address -fno-omit-frame-pointer -no-pie
+ASAN_FLAGSC = -fsanitize=address -fno-omit-frame-pointer
+#ASAN_FLAGSC += -no-pie
 ASAN_FLAGSL = -lasan
 endif
 
