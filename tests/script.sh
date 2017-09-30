@@ -1,12 +1,19 @@
-\#!/usr/bin/env bas1
+#!/usr/bin/env bash
+
+# TODO use  the functinality provided in neotests-env.sh
+
 TMPFILE=`mktemp`
 
 THE_BUILDDIR=`pwd`
+THE_SRCDIR=`pwd`
 
-while getopts "b:" opt
+echo "SRCDIR=$SRCDIR"
+
+while getopts "b:s:" opt
 do
 	case $opt in
 		b) THE_BUILDDIR="$OPTARG" ;;
+		s) THE_SRCDIR="$OPTARG" ;;
        	esac
 done
 
@@ -16,18 +23,22 @@ echo "The builddir is $THE_BUILDDIR"
 #DFILE=nohead-01.oleo
 shift $(( OPTIND - 1 ))
 #DFILE=$1.oleo
-SCR="$@" # e.g. issue19.scr
+SCR=`basename "$@"` # e.g. issue19.scr
 echo "SCR=$SCR"
 OLEO="$SCR.oleo"
 echo "OLEO=$OLEO"
-#DFILE="$THE_BUILDDIR/$@.oleo"
-neoleo --ignore-init-file -H $TMPFILE < "$SCR"
+IFILE="$THE_SRCDIR/$SCR"
+echo "IFILE=$IFILE"
+CMD="neoleo --ignore-init-file -H $TMPFILE < $IFILE"
+echo "CMD=$CMD"
+eval $CMD
+
 #echo "DFILE is $DFILE"
 
 OUTPUT="$THE_BUILDDIR/out/$OLEO"
 echo "OUTPUT=$OUTPUT"
 mv $TMPFILE $OUTPUT
-VERFILE="$THE_BUILDDIR/verified/$OLEO"
+VERFILE="$THE_SRCDIR/verified/$OLEO"
 echo "VERFILE=$VERFILE"
 diff $OUTPUT $VERFILE
 exit $?

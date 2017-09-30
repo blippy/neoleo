@@ -4,6 +4,11 @@
 #AM_TESTS_ENVIRONMENT = . ./.test-suite.sh
 #AM_TESTS_FD_REDIRECT = 9>&2
 
+AM_TESTS_ENVIRONMENT = \
+	export ASRCDIR=$(abs_srcdir); \
+	export ABUILDDIR=$(abs_builddir); \
+	. $(srcdir)/neotests-env.sh;
+
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	decompile-01.scr \
@@ -14,9 +19,9 @@ TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 TEST_EXTENSIONS = .scr
 #SCR_LOG_COMPILER = ./script.sh
 SCR_LOG_COMPILER = $(srcdir)/script.sh
-AM_SCR_LOG_FLAGS = -b $(abs_builddir)
+AM_SCR_LOG_FLAGS = -b $(abs_builddir) -s $(abs_srcdir)
 
-EXTRA_DIST = script.sh $(TESTS)
+EXTRA_DIST = neotests-env.sh script.sh $(TESTS)
 
 # as suggested at:
 # https://www.gnu.org/software/automake/manual/html_node/Clean.html
