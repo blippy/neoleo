@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO use  the functinality provided in neotests-env.sh
+#source neotests-env.sh
 
 TMPFILE=`mktemp`
 
@@ -35,10 +36,12 @@ eval $CMD
 
 #echo "DFILE is $DFILE"
 
-OUTPUT="$THE_BUILDDIR/out/$OLEO"
-echo "OUTPUT=$OUTPUT"
-mv $TMPFILE $OUTPUT
-VERFILE="$THE_SRCDIR/verified/$OLEO"
+#OUTFILE="$THE_BUILDDIR/out/$OLEO"
+#echo "OUTUT=$OUTPUT"
+#VERFILE="$THE_SRCDIR/verified/$OLEO"
+set_productions "$@.oleo"
 echo "VERFILE=$VERFILE"
-diff $OUTPUT $VERFILE
+
+mv $TMPFILE $OUTFILE
+diff $OUTFILE $VERFILE
 exit $?
