@@ -11,4 +11,4 @@ EXTRA_DIST = busi.scr.oleo \
 	nohead-01.scr.oleo \
 	nohead-02.scr.oleo \
 	ref.oleo \
-	stringo.scr.oleo \
+	stringo.scr.oleo

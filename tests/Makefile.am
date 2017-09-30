@@ -14,6 +14,7 @@ TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 TEST_EXTENSIONS = .scr
 #SCR_LOG_COMPILER = ./script.sh
 SCR_LOG_COMPILER = $(srcdir)/script.sh
+AM_SCR_LOG_FLAGS = -b $(abs_builddir)
 
 EXTRA_DIST = script.sh $(TESTS)
 
