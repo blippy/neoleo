@@ -5,7 +5,12 @@ def sys(cmd):
 
 def stage01():
     res = sys("cd .. && make dist && make distcheck")
-    print res
+    if res == 0:
+        print "PASS", 
+    else:
+        print "FAIL",
+    print ": stage01 checking basic compilation"            
+
 
 def main():
     stage01()

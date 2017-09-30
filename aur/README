@@ -7,6 +7,7 @@ When you think everything is fine :
 1. At top level:
 	make dist && make distcheck
    Ensure everything runs smoothly
+BETTER: python2 makeit.py
 
 2. Run
 	mksetup
