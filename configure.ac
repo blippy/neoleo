@@ -15,5 +15,5 @@ AX_GPROF
 AC_PROG_CXX
 AC_PROG_YACC
 
-AC_CONFIG_FILES([Makefile doc/Makefile examples/Makefile src/Makefile tests/Makefile])
+AC_CONFIG_FILES([Makefile doc/Makefile examples/Makefile src/Makefile tests/Makefile tests/out/Makefile tests/verified/Makefile])
 AC_OUTPUT

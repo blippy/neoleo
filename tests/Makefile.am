@@ -1,5 +1,5 @@
 # To run the tests: `make check'
-EXTRA_DIST = ref.sh
+#EXTRA_DIST = inbuilt-tests.sh ref.sh
 #bin_SCRIPTS = . tests/test-suite.sh
 #AM_TESTS_ENVIRONMENT = . ./.test-suite.sh
 #AM_TESTS_FD_REDIRECT = 9>&2
@@ -12,7 +12,10 @@ TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	issue25.sh \
 	ref.sh nohead-01.scr nohead-02.scr stringo.scr
 TEST_EXTENSIONS = .scr
-SCR_LOG_COMPILER = ./script.sh
+#SCR_LOG_COMPILER = ./script.sh
+SCR_LOG_COMPILER = $(srcdir)/script.sh
+
+EXTRA_DIST = script.sh $(TESTS)
 
 # as suggested at:
 # https://www.gnu.org/software/automake/manual/html_node/Clean.html

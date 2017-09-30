@@ -56,23 +56,23 @@ neoleo_SOURCES = alt_cells.cc args.cc basic.cc  busi.cc byte-compile.cc \
 # Ideally obstack would be removed as a dependency anyway
 neoleo_SOURCES += obstack_a.cc
 
-noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
+noinst_HEADERS = alt_cells.h args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h forminfo.h funcdef.h \
 		 funcs.h global.h gsl.h hash.h help.h info.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
-		 io-generic.h io-term.h io-utils.h \
+		 io-generic.h io-term.h io-utils.h io-visual.h \
 		 ir.h key.h \
 		 line.h list.h lists.h logging.h \
-		 mdi.h \
+		 mdi.h mem.h \
 		 node.h  numeric.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
-		 parse.hh \
+		 parse.hh parse_parse.h \
 		 posixtm.hh proto.h ref.h \
 		 regions.h sc.h sort.h stringo.h stub.h stubs.h \
 		 sylk.h sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
-		 tests.h \
+		 tbl.h tests.h \
 		 $(FORTH_HDRS)
 
 noinst_HEADERS += obstack_a.h
