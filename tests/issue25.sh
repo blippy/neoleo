@@ -3,9 +3,13 @@
 # RFE#25
 
 # OFILE=`mktemp`
-SS=issue25.oleo
-REP=issue25.rep
-neoleo $SS -H <<< tbl | groff -T ascii -t | head -10 > out/$REP
+TMPFILE=`mktemp`
+SS=$ASRCDIR/issue25.oleo
+echo "SS=$SS"
+#REP=issue25.rep
+neoleo $SS -H <<< tbl | groff -T ascii -t | head -10 > $TMPFILE
+set_productions issue25.rep
 #mv $OFILE out/ref.oleo
-diff out/$REP verified/$REP
+mv $TMPFILE $OUTFILE
+diff $OUTFILE $VERFILE
 exit $?

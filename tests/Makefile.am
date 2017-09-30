@@ -21,11 +21,9 @@ TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = $(srcdir)/script.sh
 AM_SCR_LOG_FLAGS = -b $(abs_builddir) -s $(abs_srcdir)
 
-EXTRA_DIST = neotests-env.sh script.sh $(TESTS)
+EXTRA_DIST = neotests-env.sh script.sh ref.oleo issue25.oleo $(TESTS)
 
-# as suggested at:
-# https://www.gnu.org/software/automake/manual/html_node/Clean.html
 clean-local : clean-local-out
 .PHONY: clean-local-out
 clean-local-out:
-	-rm -f out/*oleo
+	-rm -f out/*oleo out/*rep

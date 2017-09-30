@@ -3,7 +3,8 @@
 # Just verifies that the input matches the output
 # and that no regression has been introduced
 TMPFILE=`mktemp`
-SS=ref.oleo
+SS=$ASRCDIR/ref.oleo
+echo "SS=$SS"
 neoleo $SS -H <<< "save-spreadsheet $TMPFILE"
 set_productions $SS
 mv $TMPFILE $OUTFILE
