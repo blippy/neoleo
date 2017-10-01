@@ -4,10 +4,8 @@ It's really here only for my (mcarter) benefit. If someone takes over the packag
 
 When you think everything is fine :
 
-1. At top level:
-	make dist && make distcheck
-   Ensure everything runs smoothly
-BETTER: python2 makeit.py
+1. Build archive, and check it:
+	./makeit.py -1
 
 2. Run
 	mksetup

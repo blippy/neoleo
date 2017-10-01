@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import argparse
 import os
 
 def sys(cmd):
@@ -5,14 +7,15 @@ def sys(cmd):
 
 def stage01():
     res = sys("cd .. && make dist && make distcheck")
-    if res == 0:
-        print "PASS", 
-    else:
-        print "FAIL",
-    print ": stage01 checking basic compilation"            
+    rstr = "PASS" if res == 0 else "FAIL"
+    print(rstr, ": stage01 checking basic compilation")
 
 
 def main():
-    stage01()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-1", "--stage01", help="stage 01 construction", action="store_true")
+    args = parser.parse_args()
+    #print(args)
+    if args.stage01: stage01()
 
 if __name__ == "__main__": main()    
