@@ -2,6 +2,13 @@ Packaging directory for Arch Linux
 
 It's really here only for my (mcarter) benefit. If someone takes over the packaging then they may also find it useful. Otherwise, you can just ignore it.
 
+# PREREQUISITES
+
+pip3 install gitpython
+pip3 install PyGithub
+
+# PROCEDURE
+
 When you think everything is fine :
 
 1. Build archive, and check it:
