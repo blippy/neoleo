@@ -4,8 +4,8 @@ It's really here only for my (mcarter) benefit. If someone takes over the packag
 
 # PREREQUISITES
 
-pip3 install gitpython
-pip3 install PyGithub
+pip3 install gitpython # http://gitpython.readthedocs.io/en/stable/tutorial.html
+pip3 install PyGithub 
 
 # PROCEDURE
 
