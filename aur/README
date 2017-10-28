@@ -14,9 +14,8 @@ When you think everything is fine :
 1. Build archive, and check it:
 	./makeit.py -1
 
-2. Run
-	mksetup
-   to create the build directories: `test' and `release'
+2. Create the build directories (`release' and `test'):
+	./makeit.py -2
 
 3. Check that it will build in principle:
 	cd test ; makepkg

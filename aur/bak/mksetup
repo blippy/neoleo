@@ -3,7 +3,7 @@
 rm -rf release test
 mkdir release test
 
-VERSION=`grep AC_INIT ../configure.ac | awk -e '{print $2}' | tr -d '[],'`
+VERSION=`grep AC_INIT ../configure.ac | awk -e '{print $2}' | tr -d ')[],'`
 #echo "VERSION=*${VERSION}*"
 TARBALL="neoleo-$VERSION.tar.gz"
 MD5SUM=`md5sum ../$TARBALL | cut -d " " -f 1 | tr -d "\n"`
