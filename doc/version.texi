@@ -1,0 +1,4 @@
+@set UPDATED 29 October 2017
+@set UPDATED-MONTH October 2017
+@set EDITION 7.0.0
+@set VERSION 7.0.0
