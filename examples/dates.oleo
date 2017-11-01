@@ -1,0 +1,19 @@
+# This file was created by GNU Oleo
+# format 2.1 (requires Oleo 1.99.9 or higher)
+F;DGFR8
+O;auto;background;noa0;ticks 1
+F;W1 1 25
+F;W2 2 12
+C;c1;r1;K"Issue#33: dates"
+C;r2;K"Enter dates like this:"
+C;r3;K"Convert:"
+C;r4;K"And back again:"
+C;r5;K"Or maybe:"
+C;c2;r2;K"12 Oct 2017"
+C;r3;Eget_date(r2c2);K1507762800
+C;r4;Ectime(r3c2);K"Thu Oct 12 00:00:00 2017"
+C;r5;Estrftime("%%d-%%b-%%Y", r3c2);K"12-Oct-2017"
+C;c3;r2;K"(very flexible)"
+O;status 2
+W;N1;A5 2;C7 0 7;Ostandout
+E
