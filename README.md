@@ -7,7 +7,7 @@ source files.
 
 ## Snapshot
 
-![snapshot](snapshot.png snapshot)
+![snapshot](snapshot.png "snapshot")
 
 ## Quick start
 -----------
