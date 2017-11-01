@@ -20,7 +20,8 @@ BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh
 CLEANFILES = $(BUILT_SOURCES)
 
 #neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
-neoleo_LDADD = -lm -lncurses -lpanel $(ASAN_FLAGSL)  
+#neoleo_LDADD = -lm -lncurses -lpanel $(ASAN_FLAGSL)  
+neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 #neoleo_LDADD = -lm -lncurses -lpanel
 #if WITH_ASAN
 #AM_CXXFLAGS += -fsanitize=address
