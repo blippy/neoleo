@@ -5,7 +5,7 @@ TEXIS=		basics.texi bugs.texi cell-refs.texi entering-data.texi \
 		headless.texi \
 		interface.texi keymaps.texi \
 		macros.texi making-changes.texi options.texi print-plot.texi \
-		programs.texi quickstart.texi ranlib.texi style.texi version.texi \
+		programs.texi quickstart.texi ranlib.texi style.texi vers.texi \
 		windows.texi \
 		dbms.texi
 

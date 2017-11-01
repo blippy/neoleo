@@ -1,12 +1,14 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@include version.texi
-@c @set update-date  3 August 2017
-@c @set update-month August 2017
+@set version 7.0.0
+
+@c @include vers.texi
+@set update-date  1 November 2017
+@set update-month November 2017
 
 @setfilename neoleo.info
-@settitle Neoleo @value{VERSION}
+@settitle Neoleo @value{version}
 @c make a command index:
 @defcodeindex cm
 @defindex fs
@@ -62,8 +64,8 @@ by the Free Software Foundation.
 @setchapternewpage odd
 @titlepage
 @title Neoleo
-@subtitle The GNU Spreadsheet:  Version @value{VERSION}
-@subtitle Documentation: @value{UPDATED-MONTH}
+@subtitle The GNU Spreadsheet:  Version @value{version}
+@subtitle Documentation: @value{update-month}
 
 @c is this the Neoleo or documentation author(s)? Let's include everyone
 @author Tom Lord, Kai Getrost, Steve Fisk, Danny Backx
@@ -97,7 +99,7 @@ by the Free Software Foundation.
 @top Neoleo
 
 Neoleo is the GNU spreadsheet program.  This documentation is of Neoleo
-version @value{VERSION}, as of @w{@value{UPDATED}.}  It is by no
+version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
 @menu
