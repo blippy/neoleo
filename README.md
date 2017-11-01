@@ -5,8 +5,11 @@ distro packagers wanting to do typical configure && make && make install
 should download the file neoleo-X.Y.Z.tar.gz, rather than the
 source files.
 
+## Snapshot
 
-Quick start
+![snapshot](snapshot.png snapshot)
+
+## Quick start
 -----------
 
 ^c	copy cell formula to clipboard
