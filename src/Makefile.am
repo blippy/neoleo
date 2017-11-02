@@ -1,11 +1,12 @@
-if  WITH_ASAN
-ASAN_FLAGSC = -fsanitize=address -fno-omit-frame-pointer
-#ASAN_FLAGSC += -no-pie
-ASAN_FLAGSL = -lasan
-endif
+#if  WITH_ASAN
+#ASAN_FLAGSC = -fsanitize=address -fno-omit-frame-pointer
+#ASAN_FLAGSL = -lasan
+#endif
 
 # permissive flag is set due to pesky obstack
-AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings 
+#AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings 
+AM_CXXFLAGS = @ASAN_CXXFLAGS@
+AM_CXXFLAGS += -std=gnu++11 -fpermissive -Wno-write-strings 
 AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 #AM_CXXFLAGS += -Wfatal-errors
@@ -19,14 +20,8 @@ bin_PROGRAMS = neoleo
 BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh 
 CLEANFILES = $(BUILT_SOURCES)
 
-#neoleo_LDADD = $(ASAN_FLAGSL) -lm -lncurses -lpanel
-#neoleo_LDADD = -lm -lncurses -lpanel $(ASAN_FLAGSL)  
-neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
-#neoleo_LDADD = -lm -lncurses -lpanel
-#if WITH_ASAN
-#AM_CXXFLAGS += -fsanitize=address
-#neoleo_LDADD += -lasan
-#endif
+#neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
+neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
 neoleo_SOURCES = alt_cells.cc args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
