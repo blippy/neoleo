@@ -1,3 +1,5 @@
+# Neoleo
+
 Lightweight curses spreadsheet based on GNU oleo.
 
 If you are downloading the file from github, most people, especially
@@ -10,17 +12,19 @@ source files.
 ![snapshot](snapshot.png "snapshot")
 
 ## Quick start
------------
 
-^c	copy cell formula to clipboard
-^g 	cancels current operation
-^l	set cell alignment left
-^q 	quit
-^r	set cell alignment right
-^s 	save document
-^v	paste cell formula from clipbaord
+| Key   | Purpose                              |
+| ----- | ------------------------------------ |
+| Ctl-c	| copy cell formula to clipboard       |
+| Ctl-g | cancels current operation            |
+| Ctl-l	| set cell alignment left              |
+| Alt-m | menu                                 |
+| Ctl-q | quit                                 |
+| Ctl-r	| set cell alignment right             |
+| Ctl-s | save document                        |
+| Ctl-v	| paste cell formula from clipboard    |
 
-Documents and examples
+## Documents and examples
 ----------------------
 
 Neoleo installs examples and html documentation in a shared directory.
@@ -32,7 +36,7 @@ The line prefixed with `Datadir:' will give you the required information.
 
 You should explore that directory to see what is available.
 
-Features
+## Features
 --------
 
 * Ncurses interface
@@ -41,7 +45,7 @@ Features
 * Primitive file format conversions
 
 
-Compiling/installing
+## Compiling/installing
 --------------------
 
 Read INSTALL, which contains general instructions, plus specific 
@@ -52,14 +56,14 @@ and Mint.
 
 
 
-Technical Reports
+## Technical Reports
 -----------------
 
 Technical Reports, which is mostly of interest to developers, but
 may have some bearing on users, so they may be advised to read them.
 
 
-Links
+## Links
 -----
 
 *  bug-oleo archives: http://lists.gnu.org/archive/html/bug-oleo/

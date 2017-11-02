@@ -37,6 +37,7 @@ VERSION 7.0.0 IN DEVELOPMENT
 Bindings are now:
 	C-c copy-this-cell-formula
 	C-l set-cell-alignment-left
+	M-m show-menu
 	C-r set-cell-alignment-right
 	C-v paste-this-cell-formula
 

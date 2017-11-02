@@ -92,7 +92,8 @@ static char *init_cmds[] =
   "bind-key universal break ^g",
   "bind-key universal redraw-screen ^l",
   
-  "bind-key generic-main show-menu ^m",
+  //"bind-key generic-main show-menu ^m",
+  "bind-key generic-meta show-menu m",
   "bind-key generic-main kill-oleo ^q", // mcarter 28-Aug-2017 issue#29
   "bind-key generic-main universal-argument ^u",
   "bind-key generic-main suspend-oleo ^z",
@@ -288,7 +289,7 @@ static char *init_cmds[] =
   "",
   "bind-key meta copy-region c",
   "bind-key meta copy-values-in-region ^c",
-  "bind-key meta move-region m",
+  //"bind-key meta move-region m",
   "bind-key main insert-row ^o",
   "bind-key meta insert-col o",
   "bind-key main delete-row ^k",
