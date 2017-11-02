@@ -4,7 +4,7 @@ generaldir = $(datadir)/neoleo
 
 SUBDIRS = doc examples src tests tests/out tests/verified
 
-EXTRA_DIST = FAQ README
+EXTRA_DIST = FAQ README.md
 general_DATA = $(EXTRA_DIST)
 
 distclean-local: distclean-local-stamp
