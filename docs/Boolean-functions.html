@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Boolean functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Boolean functions (Neoleo 7.0.0)">
+<meta name="keywords" content="Boolean functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions.html#Functions" rel="up" title="Functions">
+<link href="Math-functions.html#Math-functions" rel="next" title="Math functions">
+<link href="Functions.html#Functions" rel="prev" title="Functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Boolean-functions"></a>
+<div class="header">
+<p>
+Next: <a href="Math-functions.html#Math-functions" accesskey="n" rel="next">Math functions</a>, Previous: <a href="Functions.html#Functions" accesskey="p" rel="prev">Functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Boolean-Functions"></a>
+<h3 class="section">14.1 Boolean Functions</h3>
+<a name="index-Boolean-functions"></a>
+
+
+<p>Boolean functions return either a <code>#TRUE</code> or <code>#FALSE</code> value.
+Most arguments (those labelled <var>bool</var>) are also boolean.  If these
+arguments have any other value instead, the function returns
+<code>#NON_BOOL</code> as an error.
+</p>
+<dl compact="compact">
+<dt><code>if(<var>bool</var>, <var>val1</var>, <var>val2</var>)</code></dt>
+<dd><a name="index-if"></a>
+<p>If <var>bool</var> is <code>#TRUE</code>, then <var>val1</var> is returned.  If
+<var>bool</var> is <code>#FALSE</code>, <var>val2</var> is returned.
+</p></dd>
+<dt><code>and(<var>bool1</var>, <var>bool2</var>)</code></dt>
+<dd><a name="index-and"></a>
+<p>Returns <code>#TRUE</code> if and only if both arguments are <code>#TRUE</code>,
+otherwise returns <code>#FALSE</code>.
+</p></dd>
+<dt><code>or(<var>bool1</var>, <var>bool2</var>)</code></dt>
+<dd><a name="index-or"></a>
+<p>Returns <code>#TRUE</code> if either or both arguments are <code>#TRUE</code>,
+otherwise returns <code>#FALSE</code>.
+</p></dd>
+<dt><code>not(<var>bool</var>)</code></dt>
+<dd><p>Returns <code>#TRUE</code> if <var>bool</var> is <code>#FALSE</code>; <code>#FALSE</code> if
+<code>#TRUE</code>.
+</p>
+
+<a name="index-iserr"></a>
+<a name="index-isnum"></a>
+</dd>
+<dt><code>iserr(<var>val</var>)</code></dt>
+<dd><p>returns <code>#TRUE</code> if <var>val</var> is an error, <code>#FALSE</code>
+otherwise.  
+</p></dd>
+<dt><code>isnum(<var>val</var>)</code></dt>
+<dd><p><code>#TRUE</code> if <var>val</var> is a number, or can be automatically
+converted to a number.  Thus, <code>isnum(&quot;12&quot;)</code> is <code>#TRUE</code>, while
+<code>isnum(&quot;foobar&quot;)</code> is <code>#FALSE</code>.
+</p>  
+</dd>
+</dl>
+
+
+
+
+</body>
+</html>

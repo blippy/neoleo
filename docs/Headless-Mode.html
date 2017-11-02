@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Headless Mode (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Headless Mode (Neoleo 7.0.0)">
+<meta name="keywords" content="Headless Mode (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Examples-and-Utilities.html#Examples-and-Utilities" rel="next" title="Examples and Utilities">
+<link href="Name-Options.html#Name-Options" rel="prev" title="Name Options">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Headless-Mode"></a>
+<div class="header">
+<p>
+Next: <a href="Examples-and-Utilities.html#Examples-and-Utilities" accesskey="n" rel="next">Examples and Utilities</a>, Previous: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="p" rel="prev">Printing and Plotting</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Headless-Mode-1"></a>
+<h2 class="chapter">9 Headless Mode</h2>
+<a name="index-Headless"></a>
+
+<p>Headless mode provides interaction with <code>neoleo</code> via <code>stdin</code> and 
+<code>stdout</code>. It is loosely modelled on &lsquo;<code>ed</code>&rsquo;, and gives terse 
+output.  It can be used in the UNIX pipeline.
+</p>
+<p><code>neoleo</code> recognises two sort of commands:
+</p><ul>
+<li> headless-specific commands, which apply only to headless mode
+</li><li> macro commands, which apply to the whole of <code>neoleo</code>
+</li></ul>
+
+<a name="Example-Session"></a>
+<h3 class="section">9.1 Example Session</h3>
+
+<p>Start <code>neoleo</code> in headless mode:
+</p><div class="example">
+<pre class="example">neoleo -H myfile.oleo
+</pre></div>
+<p>This puts <code>neoleo</code> in command mode. Let&rsquo;s enter some values in
+a columnwise fashion. Type:
+</p><div class="example">
+<pre class="example">i
+12
+13
+;
+14
+15
+.
+</pre></div>
+<p>&lsquo;<code>i</code>&rsquo; stands for &lsquo;<code>insert</code>&rsquo;, so that we can start entering
+values. The number &lsquo;12&rsquo; will be inserted into R1C1 (row 1, column 1),
+13 into R2C1, 14 into R2C1 and 15 into R2C2. The &lsquo;;&rsquo; tells <code>neoleo</code>
+to start entering values into a new column, and the &lsquo;.&rsquo; stops
+input and returns to command mode.
+</p>
+<p>We can see the result of our handiwork by typing &lsquo;<code>view</code>&rsquo;:
+</p><div class="example">
+<pre class="example">Row: 3 Col: 2
+      12       14
+      13       15
+
+</pre></div>
+
+<p>Let&rsquo;s move out cursor to R4C1, and find out the sum of the previous two
+rows in the column:
+</p><div class="example">
+<pre class="example">goto-cell r4c1
+edit-cell r1c1 + r2c1
+view
+</pre></div>
+<p>yielding:
+</p><div class="example">
+<pre class="example">Row: 4 Col: 1
+      12       14
+      13       15
+      25
+</pre></div>
+
+
+<a name="Headless-mode-commands"></a>
+<h3 class="section">9.2 Headless mode commands</h3>
+
+<dl compact="compact">
+<dt><kbd># ...</kbd></dt>
+<dd><p>Insert comment into input stream. No operation is actually performed.
+</p>
+</dd>
+<dt><kbd>colours</kbd></dt>
+<dd><p>Set output to coloured mode. ANSI escape sequences are used.
+</p>
+</dd>
+<dt><kbd>I</kbd></dt>
+<dd><p>Insert data into the spreadsheet row-wise. &lsquo;;&rsquo; starts on a new row,
+and &lsquo;.&rsquo; terminates input, and returns to command mode. 
+</p>
+</dd>
+<dt><kbd>i</kbd></dt>
+<dd><p>Insert data into the spreadsheet columnwise. &lsquo;;&rsquo; starts the column
+to the right, and &lsquo;.&rsquo; terminates input, and returns to command mode.
+</p>
+</dd>
+<dt><kbd>info</kbd></dt>
+<dd><p>Prints information, mainly used for debugging an introspecting state
+and constants. As at 17 Aug 2017, only curses keycode info is printed.
+</p>
+</dd>
+<dt><kbd>kt</kbd></dt>
+<dd><p>Perform keyboard test. This diagnoses potential pitfalls.
+</p>
+</dd>
+<dt><kbd>tbl</kbd></dt>
+<dd><p>Output the speadsheet in groff tbl format. Example:
+</p><div class="example">
+<pre class="example">neoleo foo.oleo -H &lt;&lt;&lt; tbl | groff -T ascii -t | less
+</pre></div>
+
+</dd>
+<dt><kbd>type-cell</kbd></dt>
+<dd><p>Print the contents of the current cell
+</p>
+</dd>
+<dt><kbd>q</kbd></dt>
+<dd><p>Quit without saving.
+</p>
+</dd>
+<dt><kbd>view</kbd></dt>
+<dd><p>Show a grid of the first few items in the spreadsheet. Admittedly,
+this could do with a lot of improvement.
+</p>
+</dd>
+<dt><kbd>vi</kbd></dt>
+<dd><p>Visual mode, similar to the current ncurses, but much more tractable
+to develop with. Highly experimental, and does not do much at this
+stage.
+</p>
+</dd>
+<dt><kbd>w</kbd></dt>
+<dd><p>Write the data to the file. 
+</p></dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Examples-and-Utilities.html#Examples-and-Utilities" accesskey="n" rel="next">Examples and Utilities</a>, Previous: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="p" rel="prev">Printing and Plotting</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

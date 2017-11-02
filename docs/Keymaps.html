@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Keymaps (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Keymaps (Neoleo 7.0.0)">
+<meta name="keywords" content="Keymaps (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Functions.html#Functions" rel="next" title="Functions">
+<link href="Commands-in-Programs.html#Commands-in-Programs" rel="prev" title="Commands in Programs">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Keymaps"></a>
+<div class="header">
+<p>
+Next: <a href="Functions.html#Functions" accesskey="n" rel="next">Functions</a>, Previous: <a href="Programs.html#Programs" accesskey="p" rel="prev">Programs</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Keymaps-and-defining-keys"></a>
+<h2 class="chapter">13 Keymaps and defining keys</h2>
+
+<p>What a key does when it is pressed depends on the context.  The listing
+of actions associated with a key in a given context is called a
+&rsquo;keymap&rsquo;.  Keymaps may have a &rsquo;default map&rsquo;.  If a key is pressed which
+does not have an assigned meaning in that map, the map&rsquo;s default map is
+checked, and that map&rsquo;s default map, until a command is found or there
+are no more default maps to scan.
+</p>
+<p>The different keymaps, and their usage are as follows:
+</p>
+<div class="example">
+<pre class="example">  universal         The root of all keymaps.
+  main              The default keymap.
+  meta              Default <span class="key">ESC</span> commands.
+  ansi              ANSI arrow keys.
+  trolx             Default <span class="key">C-x</span> commands.
+  generic-*         More generic versions of the above, work everywhere.
+  mouse             Bindings for mouse buttons.
+  prefix            Number keys, and -, for argument prefix.
+  help              Various levels of help commands.
+</pre></div>
+
+<p>The diagram below shows the relationship between the various keymaps.
+The keymap to the left of a given keymap is its default.
+</p>
+<div class="example">
+<pre class="example">                  | generic-main ----| main
+                  |                  | read-string ---| read-&lt;item&gt;*
+		  |
+                  | generic-meta ----| meta
+                  |                  | meta-read-string --- meta-read-formula
+		  |
+                  | generic-ansi ----| ansi
+                  |                  | edit-ansi
+		  |
+                  | generic-trolx ---| trolx
+                  |                  | trolx-read-string
+  universal ------| mouse
+                  | generic-menu
+                  | prefix
+                  | meta-edit-ansi
+                  | read-keyseq
+                  | set-auto-motion
+                  | read-most-chars ---| read-char
+                  |                    | read-menu
+                  | press-any
+                  | view-info
+                  | set-*-attr  (cell, region, default)
+                  | generic-help ---| unprompted-help
+                                    | help
+                                    | verbose-help
+</pre></div>
+
+<dl compact="compact">
+<dt><code>M-x bind-key</code></dt>
+<dd><p>This asks for the name of a keymap followed by a
+command name and a key to bind it to.  If the &rsquo;command&rsquo; you
+give is a cell or region in the spreadsheet, it is taken as a
+macro, and bound to the key you specify.  For example, to make <tt class="key">C-1</tt>
+move up one cell in the main keymap, type
+<a name="index-bind_002dkey"></a>
+</p>
+<div class="example">
+<pre class="example">        <span class="key">M-x</span> bind-key <span class="key">RET</span> main <span class="key">RET</span> up-cell <span class="key">C-1</span> <span class="key">RET</span>
+</pre></div>
+
+</dd>
+<dt><code>M-x unbind-key</code></dt>
+<dd><a name="index-unbind_002dkey"></a>
+<p>This asks for the name of a keymap and the key in that map to unbind.
+For example, to remove the default mapping bound to <kbd>M-k</kbd>, type
+</p><div class="example">
+<pre class="example">	<span class="key">M-k</span> unbind-key <span class="key">RET</span> meta <span class="key">RET</span> <span class="key">k</span>
+</pre></div>
+
+</dd>
+<dt><code>M-x describe-key</code></dt>
+<dd><a name="index-describe_002dkey-1"></a>
+<p>Have the user press a key, and then describe
+what function that key is bound to. (bound to <kbd>C-h c</kbd>)
+<a name="index-C_002dh-c-1"></a>
+</p>
+</dd>
+<dt><code>M-x write-keys</code></dt>
+<dd><a name="index-write_002dkeys"></a>
+<p>Write a list o<code>f commands</code> to a file that, when
+executed with read-commands, will return the keymaps to their
+current state.  To write a list of commands to the file
+<samp>/tmp/name</samp>, type
+</p>
+<div class="example">
+<pre class="example">        <kbd>M-x</kbd> write-keys <span class="key">RET</span> /tmp/name <span class="key">RET</span>
+</pre></div>
+
+</dd>
+<dt><code>M-x read-commands</code></dt>
+<dd><p>This command opens the file you specify, reads in each
+line, and executes them as if you&rsquo;d typed them in to
+execute-command.  If any command needs more arguments than are
+included on the line, it will prompt you (interactively) for
+the missing information.
+</p>
+
+</dd>
+</dl>
+
+
+
+<a name="Editing-cells"></a>
+<h3 class="section">13.1 Editing cells</h3>
+
+<p>When you edit the contents of a cell, <code>neoleo</code> activates the
+<code>edit-ansi</code> key bindings.  Prior to 18-Aug-2017, the HOME and
+END keys did not work unless you added to the following to 
+<code>~/.oleorc</code>:
+</p>
+<div class="example">
+<pre class="example">bind-key edit-ansi end-of-line F
+bind-key edit-ansi beginning-of-line H
+</pre></div>
+
+<p>Here, F is the END key, and H is the HOME key. These values have
+been added to <code>init.cc</code> as part of the commit to issue#21,
+so the HOME and END keys should now work seamlessly when editing
+cells.
+</p>
+<a name="Special-keys-_0028home_002c-delete_002c-etc_002e_0029"></a>
+<h3 class="section">13.2 Special keys (home, delete, etc.)</h3>
+
+<p>Prior to commit of ISS#22, the home, end and delete keys did not 
+work well, or at all. There are two main factors at play here:
+</p>
+<ul>
+<li> the way that <code>terminfo</code> generates key sequences
+
+</li><li> the way that <code>neoleo</code> handles them, and what it expects
+</li></ul>
+
+
+<p>You can find out the keys that are being generated by
+going to the shell, typing the UNIX command <code>read</code>, followed
+by the key presses. <code>return</code> quits the command. For example,
+on my terminal, The <code>Home</code> key generates the sequence <code>^[[1~</code>.
+You can also use <code>showkey -a</code> to achieve something similar. The 
+problem is that <code>neoleo</code> expected to see <code>^[H</code>.
+</p>
+<p>To fix this, ISS#22 reinterprets inputs of the form <code>^[?N~</code>, where
+&lsquo;?&rsquo; is any character, and N is one of 1, 3, or 4; corresponding to the home,
+delete and end key respectively. It then substitutes the value H for 1, F 
+for 4, and leaves 3 unchanged. <a name="DOCF33" href="#FOOT33"><sup>33</sup></a> It also ignores the 
+trailing ~. It then processes the buffet as it did before.
+</p>
+<p>Here is what <code>neoleo</code> expects to see, against what is usually given,
+and the usual interpretation of the sequence:
+</p><table>
+<thead><tr><th>Expect</th><th>Given</th><th>Meaning</th></tr></thead>
+<tr><td><code>\E[3</code></td><td><code>\E[3~</code></td><td>Delete key</td></tr>
+<tr><td><code>\E[A</code></td><td><code>\E[A</code></td><td>Arrow up</td></tr>
+<tr><td><code>\E[B</code></td><td><code>\E[B</code></td><td>Arrow down</td></tr>
+<tr><td><code>\E[C</code></td><td><code>\E[C</code></td><td>Arrow right</td></tr>
+<tr><td><code>\E[D</code></td><td><code>\E[D</code></td><td>Arrow left</td></tr>
+<tr><td><code>\E[F</code></td><td><code>\E[4~</code></td><td>End key</td></tr>
+<tr><td><code>\E[H</code></td><td><code>\E[1~</code></td><td>Home key</td></tr>
+</table>
+
+<p>In the table, <code>\E</code> is synonymous with <code>\e</code> and <code>^[</code>;
+ so for example
+<code>^[[H</code> and <code>\E[H]</code> mean the same thing. Also worth noting
+is that <code>\E</code> is octal <code>\033</code>. You will notice that the
+arrow keys are identical between what is expected, and what is given.
+They have been included for reference purposes.
+</p>
+<p>By &lsquo;usually&rsquo;, it is meant that it is the sequence that the terminal
+typically generates; but is not guaranteed. You can find out what is 
+actualy generated (barring some potential mismatches) by consulting
+<code>terminfo</code> <a name="DOCF34" href="#FOOT34"><sup>34</sup></a>.
+</p>
+<p>In order to bind a key, you need to use the last letter expected, and
+<code>neoleo</code> will apply it correctly (barring terminal wonks). The
+section &lsquo;Editing cells&rsquo; gives some examples, reproduced below:
+</p><div class="example">
+<pre class="example">bind-key edit-ansi end-of-line F
+bind-key edit-ansi beginning-of-line H
+</pre></div>
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT33" href="#DOCF33">(33)</a></h3>
+<p>The translation occurs in 
+<code>io-curses.cc:_io_read_kbd()</code>, duly annotated.</p>
+<h3><a name="FOOT34" href="#DOCF34">(34)</a></h3>
+<p><code>terminfo</code> is the terminal capability
+database. Arch Linux has a wiki 
+<a href="https://wiki.archlinux.org/index.php/Home_and_End_keys_not_working">page</a>
+explaining the use of <code>infocmp</code> to interrogate the terminal&rsquo;s 
+structure. A discussion on this topic is also on an Arch Forum
+<a href="https://bbs.archlinux.org/viewtopic.php?id=229196">thread</a>
+(included here for archival purposes).
+</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Functions.html#Functions" accesskey="n" rel="next">Functions</a>, Previous: <a href="Programs.html#Programs" accesskey="p" rel="prev">Programs</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

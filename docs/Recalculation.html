@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Recalculation (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Recalculation (Neoleo 7.0.0)">
+<meta name="keywords" content="Recalculation (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Basics.html#Basics" rel="up" title="Basics">
+<link href="Movement.html#Movement" rel="next" title="Movement">
+<link href="Cursor-and-Mark.html#Cursor-and-Mark" rel="prev" title="Cursor and Mark">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Recalculation"></a>
+<div class="header">
+<p>
+Next: <a href="Movement.html#Movement" accesskey="n" rel="next">Movement</a>, Previous: <a href="Cursor-and-Mark.html#Cursor-and-Mark" accesskey="p" rel="prev">Cursor and Mark</a>, Up: <a href="Basics.html#Basics" accesskey="u" rel="up">Basics</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="How-updating-works"></a>
+<h3 class="section">2.5 How updating works</h3>
+
+<p>Neoleo periodically recalculates the values of the spreadsheet 
+that can change.  This calculation can be done between keystrokes, and
+usually stops when a key is pressed.  This behavior can be changed with
+the options <code>background</code> and <code>nobackground</code>.  The time between
+updates (initially 10 seconds) can be changed using the option
+<code>ticks</code>.   You can also disable automatic recalculation with the
+option <code>noauto</code>.  In this case, recalculation is only done when the
+<code>recalculate</code> command is used.
+(see <a href="Options.html#Options">Options</a>)
+<a name="index-background"></a>
+<a name="index-nobackground"></a>
+<a name="index-nobkgrnd"></a>
+<a name="index-bkgrnd"></a>
+<a name="index-ticks"></a>
+<a name="index-auto"></a>
+<a name="index-noauto"></a>
+</p>
+
+
+<dl compact="compact">
+<dt><kbd>C-x !</kbd></dt>
+<dd><p>Recalculate the spreadsheet until all the cells whose
+values may have changed have been evaluated.  If there are
+circular cell references, the cells in the loop will be
+evaluated at most 40 times (this number subject to change!).
+(<code>recalculate</code>)
+<a name="index-C_002dx-_0021"></a>
+<a name="index-recalculate"></a>
+</p></dd>
+</dl>
+
+
+
+
+
+</body>
+</html>

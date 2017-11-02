@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Basics (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Basics (Neoleo 7.0.0)">
+<meta name="keywords" content="Basics (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html#Top" rel="up" title="Top">
+<link href="Typing.html#Typing" rel="next" title="Typing">
+<link href="Quickstart.html#Quickstart" rel="prev" title="Quickstart">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Basics"></a>
+<div class="header">
+<p>
+Next: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="n" rel="next">How to enter data</a>, Previous: <a href="Quickstart.html#Quickstart" accesskey="p" rel="prev">Quickstart</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Basics-1"></a>
+<h2 class="chapter">2 Basics</h2>
+ 
+
+<p><code>Neoleo</code> is the GNU spreadsheet <a name="DOCF1" href="#FOOT1"><sup>1</sup></a>. 
+</p>
+<p><code>Neoleo</code> has more than one user interface.
+The traditional <code>neoleo</code> environment shows a curses based (character mode)
+user interface.
+A bare bones user interface based on the X Window System exists as of
+version 1.6 which dates back to 1994.
+In 1998, development started for a <code>motif</code> based user interface.
+It should be more user friendly than the character based UI.
+</p>
+<p>To start Neoleo, type <code>neoleo</code>.  If <code>filename</code> is the name of a
+spreadsheet that you have saved from a previous <code>neoleo</code> session, you
+can type <code>neoleo filename</code> to start Neoleo with the spreadsheet
+loaded. 
+</p>
+<p>To stop Neoleo, type <code>C-x C-c</code>.  This will prompt you for the name of
+a file in which to save the current spreadsheet.  If you do not want to save
+it, type <tt class="key">RET</tt>, otherwise type the name of the filename that you
+wish to save it in, and then press <tt class="key">RET</tt>.
+</p>
+<p>Type <kbd>C-z</kbd> to suspend <code>neoleo</code>.  This does not do anything if 
+you are running under X-windows. 
+<a name="index-suspend_002doleo"></a>
+</p>
+<p>If you wish to abort a command, type <kbd>C-g</kbd> 
+<a name="index-break"></a>
+</p>
+
+<dl compact="compact">
+<dt><kbd>C-m</kbd></dt>
+<dd><p>Display a menu (experimental)
+<a name="index-show_002dmenu"></a>
+</p></dd>
+</dl>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Typing.html#Typing" accesskey="1">Typing</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">How to type commands
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Cell-referencing.html#Cell-referencing" accesskey="2">Cell referencing</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Two ways of naming cells
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Screen.html#The-Screen" accesskey="3">The Screen</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">The parts of the  screen
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Cursor-and-Mark.html#Cursor-and-Mark" accesskey="4">Cursor and Mark</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">The cell cursor and the mark
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Recalculation.html#Recalculation" accesskey="5">Recalculation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">How updating works
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Movement.html#Movement" accesskey="6">Movement</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Moving around the spreadsheet
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Mouse.html#Mouse" accesskey="7">Mouse</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Using the mouse
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Regions-and-Variables.html#Regions-and-Variables" accesskey="8">Regions and Variables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">How to use regions and variables
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Getting-Help.html#Getting-Help" accesskey="9">Getting Help</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Getting help
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Saving-and-reading.html#Saving-and-reading">Saving and reading</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Saving and reading Spreadsheets
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Command-Line-Options.html#Command-Line-Options">Command Line Options</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Command Line Options
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="_002eoleorc-file.html#g_t_002eoleorc-file">.oleorc file</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">The initialization file
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Expressions.html#Expressions">Expressions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">Types of expressions
+</td></tr>
+</table>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT1" href="#DOCF1">(1)</a></h3>
+<p>better than the high priced
+spread</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="n" rel="next">How to enter data</a>, Previous: <a href="Quickstart.html#Quickstart" accesskey="p" rel="prev">Quickstart</a>, Up: <a href="index.html#Top" accesskey="u" rel="up">Top</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

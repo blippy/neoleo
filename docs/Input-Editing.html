@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Input Editing (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Input Editing (Neoleo 7.0.0)">
+<meta name="keywords" content="Input Editing (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="How-to-enter-data.html#How-to-enter-data" rel="up" title="How to enter data">
+<link href="Cell-Motion.html#Cell-Motion" rel="next" title="Cell Motion">
+<link href="Entering.html#Entering" rel="prev" title="Entering">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Input-Editing"></a>
+<div class="header">
+<p>
+Next: <a href="Cell-Motion.html#Cell-Motion" accesskey="n" rel="next">Cell Motion</a>, Previous: <a href="Entering.html#Entering" accesskey="p" rel="prev">Entering</a>, Up: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="u" rel="up">How to enter data</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Editing-in-the-input-line"></a>
+<h3 class="section">3.3 Editing in the input line</h3>
+
+<p>When the spreadsheet is reading text input, you can use a few
+text-editing commands.  Note that there in no history mechanism and no
+yank command.  If you accidentally type <kbd>C-u</kbd>, the text is <em>erased</em>.
+<a name="DOCF11" href="#FOOT11"><sup>11</sup></a>
+</p>
+<p>While the input area is active, the commands that move the cell cursor
+are disabled.  If you want to move the cell cursor, use the
+other-window command (<kbd>C-x o</kbd>) to leave and later reenter the input area.
+</p>
+<dl compact="compact">
+<dt><kbd>M-a</kbd></dt>
+<dd><p>Insert/over-write an absolute reference to the
+current cell/region. (<code>insert-abs-ref</code>)
+<a name="index-insert_002dabs_002dref"></a>
+</p></dd>
+<dt><kbd>M-r</kbd></dt>
+<dd><p>Insert/over-write a relative reference to the
+current cell/region. (<code>insert-rel-ref</code>)
+<a name="index-insert_002drel_002dref"></a>
+</p></dd>
+<dt><kbd>C-e</kbd></dt>
+<dd><p>Insert/over-write the expression in the
+current cell into the input area. (<code>insert-cell-expression</code>)
+<a name="index-insert_002dcell_002dexpression"></a>
+</p></dd>
+<dt><kbd>M-e</kbd></dt>
+<dd><p>Insert/over-write the value (not the formula) of the current
+cell into the input area. (<code>insert-cell-value</code>)
+<a name="index-insert_002dcell_002dvalue"></a>
+</p></dd>
+<dt><kbd>C-a</kbd></dt>
+<dd><p>Move the cursor to the beginning of the text. (<code>cursor-begin-line</code>)
+<a name="index-cursor_002dbegin_002dline"></a>
+</p></dd>
+<dt><kbd>C-e</kbd></dt>
+<dd><p>Move to the end of the text. (<code>cursor-end-line</code>)
+<a name="index-cursor_002dend_002dline"></a>
+</p></dd>
+<dt><kbd>C-b</kbd></dt>
+<dd><p>Move the cursor back a character. (<code>cursor-back-char</code>)
+<a name="index-cursor_002dback_002dchar"></a>
+</p></dd>
+<dt><kbd>M-b</kbd></dt>
+<dd><p>Move back a word. (<code>cursor-back-word</code>)
+<a name="index-cursor_002dback_002dword"></a>
+</p></dd>
+<dt><kbd>C-f</kbd></dt>
+<dd><p>Move forward a character. (<code>cursor-fwd-char</code>)
+<a name="index-cursor_002dfwd_002dchar"></a>
+</p></dd>
+<dt><kbd>M-f</kbd></dt>
+<dd><p>Move forward a word. (<code>cursor-fwd-word</code>)
+<a name="index-cursor_002dfwd_002dword"></a>
+</p></dd>
+<dt><kbd>C-d</kbd></dt>
+<dd><p>Delete the character under the cursor. (<code>delete-next-char</code>)
+<a name="index-delete_002dnext_002dchar"></a>
+</p></dd>
+<dt><kbd>M-d</kbd></dt>
+<dd><p>Delete the word under the cursor.  (<code>delete-next-word</code>)
+<a name="index-delete_002dnext_002dword"></a>
+</p></dd>
+<dt><kbd>C-?</kbd></dt>
+<dd><p>Delete the character to the left of the cursor. (<code>delete-prev-char</code>)
+<a name="index-delete_002dprev_002dchar"></a>
+</p></dd>
+<dt><kbd>M-C-?</kbd></dt>
+<dd><p>Delete the word to the left of the cursor. (<code>delete-prev-word</code>)
+<a name="index-delete_002dprev_002dword"></a>
+</p></dd>
+<dt><kbd>C-k</kbd></dt>
+<dd><p>Delete from the cursor to the end of the text. (<code>delete-to-end</code>)
+<a name="index-delete_002dto_002dend"></a>
+</p></dd>
+<dt><kbd>C-o</kbd></dt>
+<dd><p>Move the cursor into the cell area.
+</p></dd>
+</dl>
+<a name="index-M_002de"></a>
+<a name="index-C_002de-1"></a>
+<a name="index-M_002da"></a>
+<a name="index-M_002dr"></a>
+<a name="index-C_002da-1"></a>
+<a name="index-C_002de-2"></a>
+<a name="index-C_002db-1"></a>
+<a name="index-M_002db-1"></a>
+<a name="index-C_002df-1"></a>
+<a name="index-M_002df-1"></a>
+<a name="index-C_002dd"></a>
+<a name="index-M_002dd"></a>
+<a name="index-C_002d_003f"></a>
+<a name="index-M_002dC_002d_003f"></a>
+<a name="index-C_002dk"></a>
+<a name="index-C_002do"></a>
+
+<p>The following commands are not bound to any keys
+</p><dl compact="compact">
+<dt><code>toggle-overwrite</code></dt>
+<dd><a name="index-toggle_002doverwrite"></a>
+<p>Toggle between overwrite and insert mode.
+</p></dd>
+<dt><code>delete-to-start</code></dt>
+<dd><a name="index-delete_002dto_002dstart"></a>
+<p>Deletes from the cursor to the beginning of the line
+</p></dd>
+</dl>
+
+<a name="index-Input-Defaults"></a>
+
+<p>Almost all editing commands remember what you typed the last time you used
+that command, and start you up editing a copy of that text.  If you want to
+type in something completely new, just type <kbd>C-x</kbd> (or <kbd>C-u</kbd>) and
+type in your new text.
+</p>
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT11" href="#DOCF11">(11)</a></h3>
+<p>This will be improved in the future.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Cell-Motion.html#Cell-Motion" accesskey="n" rel="next">Cell Motion</a>, Previous: <a href="Entering.html#Entering" accesskey="p" rel="prev">Entering</a>, Up: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="u" rel="up">How to enter data</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

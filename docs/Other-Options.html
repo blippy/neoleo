@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Other Options (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Other Options (Neoleo 7.0.0)">
+<meta name="keywords" content="Other Options (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Options.html#Options" rel="up" title="Options">
+<link href="Printing-and-Plotting.html#Printing-and-Plotting" rel="next" title="Printing and Plotting">
+<link href="Window-Options.html#Window-Options" rel="prev" title="Window Options">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Other-Options"></a>
+<div class="header">
+<p>
+Previous: <a href="Window-Options.html#Window-Options" accesskey="p" rel="prev">Window Options</a>, Up: <a href="Options.html#Options" accesskey="u" rel="up">Options</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Other-Options-1"></a>
+<h3 class="section">7.3 Other Options</h3>
+
+<dl compact="compact">
+<dt><code>auto</code></dt>
+<dd><a name="index-auto-1"></a>
+<p>In auto mode, cells whose values may have changed are
+automatically recalculated.  (<code>Default</code>)
+</p>
+
+</dd>
+<dt><code>noauto</code></dt>
+<dd><a name="index-noauto-1"></a>
+<p>In noauto mode, cells are only
+recalculated when the recalculate command is used.
+</p>
+</dd>
+<dt><code>bkgrnd</code></dt>
+<dd><a name="index-bkgrnd-1"></a>
+</dd>
+<dt><code>background</code></dt>
+<dd><a name="index-background-1"></a>
+<p>In background mode, automatic recalculation is done while
+the spreadsheet waits for you to type a key (and stops while
+the key is being handled).  (<code>Default</code>)
+</p>
+
+</dd>
+<dt><code>nobkgrnd</code></dt>
+<dd><a name="index-nobkgrnd-1"></a>
+</dd>
+<dt><code>nobackground</code></dt>
+<dd><a name="index-nobackground-1"></a>
+<p>In nobackground mode, Neoleo
+performs all its recalculation before listening for
+keystrokes. 
+</p>
+</dd>
+<dt><code>backup</code></dt>
+<dd><a name="index-backup"></a>
+<p>In backup mode, whenever the spreadsheet writes out a file,
+if the file already exists, a backup copy is made (like
+emacs). (<code>Default</code>)
+</p>
+</dd>
+<dt><code>nobackup</code></dt>
+<dd><a name="index-nobackup"></a>
+<p>A backup copy is not made.
+</p>
+</dd>
+<dt><code>bkup_copy</code></dt>
+<dd><a name="index-bkup_005fcopy"></a>
+<p>In bkup_copy mode, backup files are made by copying the original file,
+instead of renaming it.
+</p>
+</dd>
+<dt><code>nobkup_copy</code></dt>
+<dd><a name="index-nobkup_005fcopy"></a>
+<p>In nobackup mode bkup_copy is ignored. (<code>Default</code>)
+</p>
+</dd>
+<dt><code>ticks</code></dt>
+<dd><a name="index-ticks-_0028number_0029"></a>
+<p>This value controls how often should rnd(), cell(), my(),
+curcell(), etc cells get updated.  This value is in
+seconds. <a name="DOCF19" href="#FOOT19"><sup>19</sup></a> The initial value is 10, meaning once every
+10 seconds.
+</p>
+
+</dd>
+<dt><code>print</code></dt>
+<dd><a name="index-print-_0028number_0029"></a>
+<p>This is the width of the page for the print command.  The
+initial value is the width of the screen.
+</p>
+</dd>
+<dt><code>file</code></dt>
+<dd><a name="index-file-_0028format_002dname_0029"></a>
+<p><a name="DOCF20" href="#FOOT20"><sup>20</sup></a>
+If -DUSE_DLD was defined, format-name may be any .o file
+that contains definitions for the appropriate functions, or
+&rsquo;panic&rsquo;, which is the only file format that Neoleo will have
+compiled into it.  If -DUSE_DLD was not defined, format-name
+must be one of sylk, sc, panic, or list, and Neoleo will have
+to be re-compiled before any other formats may be used.
+</p>
+</dd>
+<dt><code>load (file-name)</code></dt>
+<dd><a name="index-load-_0028file_002dname_0029"></a>
+<p><a name="DOCF21" href="#FOOT21"><sup>21</sup></a>This option is only avaliable if
+Neoleo was compiled with
+-DUSE_DLD.  This option loads in a .o file of spreadsheet
+functions, keyboard commands, and/or keymaps.  Spreadsheet
+functions and keyboard commands must be loaded in before they
+can be used in expressions or bound to keys.
+</p>
+</dd>
+</dl>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT19" href="#DOCF19">(19)</a></h3>
+<p>is it?</p>
+<h3><a name="FOOT20" href="#DOCF20">(20)</a></h3>
+<p>I don&rsquo;t understand this</p>
+<h3><a name="FOOT21" href="#DOCF21">(21)</a></h3>
+<p>nor do I understand this one</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Window-Options.html#Window-Options" accesskey="p" rel="prev">Window Options</a>, Up: <a href="Options.html#Options" accesskey="u" rel="up">Options</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Getting Help (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Getting Help (Neoleo 7.0.0)">
+<meta name="keywords" content="Getting Help (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Basics.html#Basics" rel="up" title="Basics">
+<link href="Saving-and-reading.html#Saving-and-reading" rel="next" title="Saving and reading">
+<link href="Regions-and-Variables.html#Regions-and-Variables" rel="prev" title="Regions and Variables">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Getting-Help"></a>
+<div class="header">
+<p>
+Next: <a href="Saving-and-reading.html#Saving-and-reading" accesskey="n" rel="next">Saving and reading</a>, Previous: <a href="Regions-and-Variables.html#Regions-and-Variables" accesskey="p" rel="prev">Regions and Variables</a>, Up: <a href="Basics.html#Basics" accesskey="u" rel="up">Basics</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Getting-Help-1"></a>
+<h3 class="section">2.9 Getting Help</h3>
+<dl compact="compact">
+<dt><kbd>C-h</kbd></dt>
+<dd><a name="index-C_002dh"></a>
+<p>Enter into the help system.  The commands below give various
+bits of information about Neoleo.
+</p>
+</dd>
+<dt><kbd>C-h C</kbd></dt>
+<dd><a name="index-C_002dh-C"></a>
+<p>When a complex command is being invoked (i.e., when Neoleo is prompting
+you for arguments), <kbd>C-x C</kbd> displays documentation for the
+command being invoked.  This can often be used to get more information
+about what is being prompted for.
+</p>
+</dd>
+<dt><kbd>C-h c</kbd></dt>
+<dd><a name="index-C_002dh-c"></a>
+<p>Give the name of the command (if any) associated with of the
+next keystroke(s).  For instance, to find out command is executed when
+you type  <kbd>M-p</kbd>, type
+<kbd>C-h c M-p</kbd>. (<code>describe-key-briefly</code>)
+<a name="index-describe_002dkey_002dbriefly"></a>
+</p>
+</dd>
+<dt><kbd>C-h k</kbd></dt>
+<dd><a name="index-C_002dh-k"></a>
+<p>Give a brief description of the command associated with the next
+keystroke(s).  For instance, to find out what <kbd>M-p</kbd> does, type
+<kbd>C-h k M-p</kbd>. (<code>describe-key</code>)
+<a name="index-describe_002dkey"></a>
+</p>
+</dd>
+<dt><kbd>C-h f</kbd></dt>
+<dd><a name="index-C_002dh-f"></a>
+<p>Give a  description of a command (one that you execute with
+<kbd>M-x</kbd>).  For instance, to find out exactly what &lsquo;<samp>scan-up</samp>&rsquo; does,
+type <kbd>C-h f scan-up</kbd>.  (<code>describe-function</code>)
+<a name="index-describe_002dfunction"></a>
+</p>
+</dd>
+<dt><kbd>C-h F</kbd></dt>
+<dd><a name="index-C_002dh-F"></a>
+<p>Give a  description of a formula function.
+For instance, to find out how to use  &lsquo;<samp>@sum</samp>&rsquo;,
+type <kbd>C-h F sum</kbd>.  Note that even though <code>@sum</code> is used in
+<code>a0</code> mode, you must type <kbd>C-h F sum</kbd>, not <kbd>C-h F @sum</kbd>.
+(<code>describe-formula-function</code>) 
+<a name="index-describe_002dformula_002dfunction"></a>
+</p>
+</dd>
+<dt><kbd>C-h w</kbd></dt>
+<dd><a name="index-C_002dh-w"></a>
+<p>Give the key(s) (if any) that a command is bound to.  For
+example, to find which keys &lsquo;<samp>scan-up</samp>&rsquo; is bound to, type
+<kbd>C-h w scan-up</kbd>.  (<code>where-is</code>)
+<a name="index-where_002dis"></a>
+</p>
+</dd>
+<dt><kbd>C-h v</kbd></dt>
+<dd><a name="index-C_002dh-v-1"></a>
+<p>Show the value of a variable.  (<code>show-variable</code>)
+<a name="index-show_002dvariable"></a>
+</p>
+</dd>
+<dt><kbd>C-h C-v</kbd></dt>
+<dd><a name="index-C_002dh-C_002dv-1"></a>
+<p>Show the values of all the variables. (<code>show-all-variables</code>)
+<a name="index-show_002dall_002dvariables"></a>
+</p>
+</dd>
+<dt><kbd>C-h o</kbd></dt>
+<dd><a name="index-C_002dh-o"></a>
+<p>Show all the options that have been set. (<code>show-options</code>)
+<a name="index-show_002doptions"></a>
+</p>
+
+</dd>
+<dt><kbd>C-h W</kbd></dt>
+<dd><a name="index-C_002dh-W"></a>
+<p>Display all the bindings of the keys. (<code>view-wallchart</code>)
+<a name="index-view_002dwallchart"></a>
+</p>
+</dd>
+<dt><kbd>C-h C-w</kbd></dt>
+<dd><a name="index-C_002dh-C_002dw"></a>
+<p>Write all the bindings of the keys to a file. (<code>write-wallchart</code>)
+<a name="index-write_002dwallchart"></a>
+</p></dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Saving-and-reading.html#Saving-and-reading" accesskey="n" rel="next">Saving and reading</a>, Previous: <a href="Regions-and-Variables.html#Regions-and-Variables" accesskey="p" rel="prev">Regions and Variables</a>, Up: <a href="Basics.html#Basics" accesskey="u" rel="up">Basics</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

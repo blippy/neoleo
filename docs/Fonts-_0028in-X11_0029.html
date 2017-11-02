@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Fonts (in X11) (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Fonts (in X11) (Neoleo 7.0.0)">
+<meta name="keywords" content="Fonts (in X11) (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Style.html#Style" rel="up" title="Style">
+<link href="Multiple-Windows.html#Multiple-Windows" rel="next" title="Multiple Windows">
+<link href="Protection.html#Protection" rel="prev" title="Protection">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Fonts-_0028in-X11_0029"></a>
+<div class="header">
+<p>
+Previous: <a href="Protection.html#Protection" accesskey="p" rel="prev">Protection</a>, Up: <a href="Style.html#Style" accesskey="u" rel="up">Style</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Fonts-_0028in-X11_0029-1"></a>
+<h3 class="section">5.7 Fonts (in X11)</h3>
+
+<p>The default cell font is 12 point times-roman.
+The easiest way to specify a font is to use one of the built-in
+short-hand names.  These names are &lsquo;fixed&rsquo;, &lsquo;times&rsquo;, and &lsquo;courier&rsquo;.
+Optionally, these names can be followed by a scale.  The scale is the
+ratio of the default point size to the desired point size. For
+example, if the default font is a 10 point font, then &lsquo;times 1.2&rsquo;
+refers to a 12 point Times-Roman type font.
+</p>
+<dl compact="compact">
+<dt><kbd>M-a o</kbd></dt>
+<dd><p>Use this command to set the font in a cell.  For instance, to
+set the current cell to &lsquo;<samp>times-roman</samp>&rsquo; at 24pt, type
+</p><div class="example">
+<pre class="example">        M-a o times <span class="key">RET</span> 2.0  <span class="key">RET</span>
+</pre></div>
+<p>Since the default size is 12pt, the 2.0 magnification factor makes the
+size 24 points. (<code>set-cell-font</code>)
+<a name="index-set_002dcell_002dfont"></a>
+</p>
+</dd>
+<dt><kbd>M-r o</kbd></dt>
+<dd><p>Use this command to set the font in a region.  For instance, to
+set the range &lsquo;<samp>A1.E3</samp>&rsquo; to &lsquo;<samp>courier</samp>&rsquo; at 12pt, type
+</p><div class="example">
+<pre class="example">        M-r o courier <span class="key">RET</span> 1.0   <span class="key">RET</span>
+</pre></div>
+<p>(<code>set-region-font</code>)
+<a name="index-set_002dregion_002dfont"></a>
+</p>
+</dd>
+<dt><kbd>M-d o</kbd></dt>
+<dd><p>Use this command to set the default font.  For instance, to
+set the range &lsquo;<samp>A1.E3</samp>&rsquo; to &lsquo;<samp>fixed</samp>&rsquo; at 12pt, type
+</p><div class="example">
+<pre class="example">        M-r o fixed <span class="key">RET</span> 1.0  <span class="key">RET</span>
+</pre></div>
+<p>All cells whose font has not been specified have the default font, so
+changing this will change the font in the entire spreadsheet.
+(<code>set-default-font</code>)
+<a name="index-set_002ddefault_002dfont"></a>
+</p>
+</dd>
+<dt><kbd>M-x set-default-point-size</kbd></dt>
+<dd><p>Set the default point size.  To set the default point size to
+10, type
+</p><div class="example">
+<pre class="example">        M-x set-default-point-size <span class="key">RET</span> 10  <span class="key">RET</span>
+</pre></div>
+<p>(<code>set-default-point-size</code>)
+<a name="index-set_002ddefault_002dpoint_002dsize"></a>
+</p>
+
+</dd>
+<dt><kbd>M-x define-font-name</kbd></dt>
+</dl>
+<a name="index-M_002dd-o"></a>
+<a name="index-M_002dr-o"></a>
+<a name="index-M_002da-o"></a>
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Protection.html#Protection" accesskey="p" rel="prev">Protection</a>, Up: <a href="Style.html#Style" accesskey="u" rel="up">Style</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

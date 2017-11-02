@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Gsl functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Gsl functions (Neoleo 7.0.0)">
+<meta name="keywords" content="Gsl functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions.html#Functions" rel="up" title="Functions">
+<link href="Extending-Neoleo.html#Extending-Neoleo" rel="next" title="Extending Neoleo">
+<link href="Date-functions.html#Date-functions" rel="prev" title="Date functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Gsl-functions"></a>
+<div class="header">
+<p>
+Previous: <a href="Date-functions.html#Date-functions" accesskey="p" rel="prev">Date functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="GSL-Functions"></a>
+<h3 class="section">14.8 GSL Functions</h3>
+<a name="index-GSL-functions"></a>
+<a name="index-Scientific-functions-_0028GSL_0029"></a>
+<a name="index-GNU-Scientific-Library"></a>
+
+<p>The GNU Scientific Library (GSL) is a collection of routines for
+numerical computing.  The routines are written from scratch by the GSL
+team in C, and are meant to present a
+modern Applications Programming Interface (API) for C programmers, while
+allowing wrappers to be written for very high level languages.
+</p>
+<p>More information about GSL is available from <a href="http://sources.redhat.com/gsl/">http://sources.redhat.com/gsl/</a>
+</p>
+<p>Currently only a small subset of the GSL functions (as they are in GSL 0.6) are
+made available in Neoleo. They&rsquo;re most of the statistical functions :
+</p><dl compact="compact">
+<dt>&lsquo;<samp>gsl_stats_mean</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_variance</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_sd</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_absdev</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_skew</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_kurtosis</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_lag1_autocorrelation</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_median_from_sorted_data</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_quantile_from_sorted_data</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_variance_m</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_sd_m</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_variance_with_fixed_mean</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_sd_with_fixed_mean</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_absdev_m</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_skew_m_sd</samp>&rsquo;</dt>
+<dt>&lsquo;<samp>gsl_stats_kurtosis_m_sd</samp>&rsquo;</dt>
+</dl>
+
+<p>The API made available in Neoleo for these functions differs slightly from
+the native C API of GSL. The C API provides for a <code>stride</code> and a <code>number</code>
+parameter when passing a data array. In Neoleo, both of these are not explicitly passed.
+</p>
+<p>For example, the <code>gsl_stats_mean</code> function has just one parameter in Neoleo,
+which is a range of cells from which it calculates the mean. <code>oleo_gsl_stats_kurtosis_m_sd</code>
+has three parameters : a range of cells, and two numbers.
+</p>
+
+
+
+</body>
+</html>

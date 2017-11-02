@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>String functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="String functions (Neoleo 7.0.0)">
+<meta name="keywords" content="String functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions.html#Functions" rel="up" title="Functions">
+<link href="Structural-functions.html#Structural-functions" rel="next" title="Structural functions">
+<link href="Statistical-functions.html#Statistical-functions" rel="prev" title="Statistical functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="String-functions"></a>
+<div class="header">
+<p>
+Next: <a href="Structural-functions.html#Structural-functions" accesskey="n" rel="next">Structural functions</a>, Previous: <a href="Math-functions.html#Math-functions" accesskey="p" rel="prev">Math functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="String-Functions"></a>
+<h3 class="section">14.3 String Functions</h3>
+<a name="index-String-functions"></a>
+<a name="index-Functions_002c-string-manipulation"></a>
+
+<p>Strings indexes start with 1 for the first character.  Indices less
+than 1 or greater than the length of the corresponding string will
+generate an <code>#OUT_OF_RANGE</code> error return, unless otherwise noted.
+</p>
+<p>These functions are in the &lsquo;string&rsquo; package.  If Neoleo is compiled with
+&lsquo;<samp>-DUSE_DLD</samp>&rsquo;, the string package must be loaded before these
+functions can be used.  If a spreadsheet that uses these functions is
+loaded before the string package is loaded, things will fail
+(silently!).  This is a bug.
+</p>
+<dl compact="compact">
+<dt><code>len(<var>str</var>)</code></dt>
+<dd><a name="index-len"></a>
+<p>Returns the number of characters in <var>str</var>.
+</p></dd>
+<dt><code>strupr(<var>str</var>)</code></dt>
+<dd><a name="index-strupr"></a>
+<p>Converts <var>str</var> to all upper  case.
+</p></dd>
+<dt><code>strlwr(<var>str</var>)</code></dt>
+<dd><a name="index-strlwr"></a>
+<p>Converts <var>str</var> to all  lower case.
+</p></dd>
+<dt><code>strcap(<var>str</var>)</code></dt>
+<dd><a name="index-strcap"></a>
+<p>Capitalizes each word in <var>str</var>.
+</p></dd>
+<dt><code>trim(<var>trim</var>)</code></dt>
+<dd><a name="index-trim"></a>
+<p>String beautifier.  Trims extra spaces and non-ASCII characters from
+<var>str</var>.
+</p>
+</dd>
+<dt><code>find(<var>str1</var>, <var>str2</var>, <var>pos</var>)</code></dt>
+<dd><a name="index-find"></a>
+<p>Returns the index (1-based) at or beyond <var>pos</var> where <var>str2</var> appears in
+<var>str1</var>.  If <var>str2</var> does not appear at or
+beyond <var>pos</var>, 0 is returned.
+</p>
+</dd>
+<dt><code>substr(<var>pos1</var>, <var>pos2</var>, <var>str</var>)</code></dt>
+<dd><a name="index-substr"></a>
+<p>Extracts the substring from index <var>pos1</var> through <var>pos2</var> of
+<var>str</var>.  Positive indices, starting with 1, count from the start of
+the string, and negative indices (from -1) count from the end of the
+string.  <var>pos1</var> must occur at or before <var>pos2</var>.
+</p></dd>
+<dt><code>mid(<var>str</var>, <var>pos</var>, <var>len</var>)</code></dt>
+<dd><a name="index-mid"></a>
+<p>Extracts the substring of <var>len</var> characters starting at <var>pos</var> in
+<var>str</var>.  The substring is truncated if it begins or extends beyond
+the end of <var>str</var><a name="DOCF36" href="#FOOT36"><sup>36</sup></a>.
+</p></dd>
+<dt><code>edit(<var>str</var>, <var>pos1</var>, <var>pos2</var>)</code></dt>
+<dd><a name="index-edit"></a>
+<p>Deletes the substring from <var>pos1</var> through <var>pos2</var> of <var>str</var>.
+Negative indices can be used as with <code>substr</code>.
+</p></dd>
+<dt><code>repeat(<var>str</var>, <var>num</var>)</code></dt>
+<dd><a name="index-repeat"></a>
+<p>Returns a string of <var>num</var> concatenations of <var>str</var> with itself;
+e.g., <code>repeat(&quot;foo&quot;, 2)</code> returns <code>&quot;foofoo&quot;</code>.
+</p></dd>
+<dt><code>concat(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-concat"></a>
+<p>Returns the concatenation of all its arguments.  An argument may be a
+range, in which case the cell values in the range are concatenated.
+</p></dd>
+</dl>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT36" href="#DOCF36">(36)</a></h3>
+<p>In version 1.5 this function counts
+indices from 0 instead of 1 as with other string functions; this is
+probably a bug.</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Structural-functions.html#Structural-functions" accesskey="n" rel="next">Structural functions</a>, Previous: <a href="Math-functions.html#Math-functions" accesskey="p" rel="prev">Math functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

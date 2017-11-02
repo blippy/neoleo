@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Structural functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Structural functions (Neoleo 7.0.0)">
+<meta name="keywords" content="Structural functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions.html#Functions" rel="up" title="Functions">
+<link href="Search-functions.html#Search-functions" rel="next" title="Search functions">
+<link href="String-functions.html#String-functions" rel="prev" title="String functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Structural-functions"></a>
+<div class="header">
+<p>
+Next: <a href="Search-functions.html#Search-functions" accesskey="n" rel="next">Search functions</a>, Previous: <a href="String-functions.html#String-functions" accesskey="p" rel="prev">String functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Structural-Functions"></a>
+<h3 class="section">14.4 Structural Functions</h3>
+<a name="index-Information-about-a-cell"></a>
+<a name="index-Cells_002c-information-about"></a>
+<a name="index-Functions_002c-structural"></a>
+
+<p>These functions return information about a cell or range of cells.
+Some of them are in the &lsquo;cells&rsquo; package; if Neoleo is compiled with
+&lsquo;<samp>-DUSE_DLD</samp>&rsquo;, the cells package must be loaded first.
+</p>
+<dl compact="compact">
+<dt><code>row()</code></dt>
+<dt><code>col()</code></dt>
+<dd><a name="index-row"></a>
+<a name="index-col"></a>
+<p>The row or column of the cell the expression is in.
+</p></dd>
+<dt><code>rows(<var>rng</var>)</code></dt>
+<dt><code>cols(<var>rng</var>)</code></dt>
+<dd><a name="index-rows"></a>
+<a name="index-cols"></a>
+<p>The number of rows or columns in <var>rng</var>.
+</p></dd>
+<dt><code>my(<var>key</var>)</code></dt>
+<dd><a name="index-my"></a>
+<p>Returns information about the cell containing the expression according
+to the key string <var>key</var>.  Valid values for <var>key</var> are:
+</p>
+<dl compact="compact">
+<dt><code>&quot;row&quot;</code></dt>
+<dd><p>The cell&rsquo;s row address (an integer).
+</p></dd>
+<dt><code>&quot;column&quot;</code></dt>
+<dd><p>The cell&rsquo;s column address.
+</p></dd>
+<dt><code>&quot;width&quot;</code></dt>
+<dd><p>Width of the cell.
+</p></dd>
+<dt><code>&quot;lock&quot;</code></dt>
+<dt><code>&quot;protection&quot;</code></dt>
+<dd><p><code>&quot;locked&quot;</code> or <code>&quot;unlocked&quot;</code>. 
+</p></dd>
+<dt><code>&quot;justify&quot;</code></dt>
+<dt><code>&quot;alignment&quot;</code></dt>
+<dd><p><code>&quot;left&quot;</code>, <code>&quot;right&quot;</code>, <code>&quot;center&quot;</code> or <code>&quot;default&quot;</code>.
+</p></dd>
+<dt><code>&quot;format&quot;</code></dt>
+<dt><code>&quot;fmt&quot;</code></dt>
+<dd><p><code>&quot;default&quot;</code>, <code>&quot;user-1&quot;</code>, etc.
+</p></dd>
+<dt><code>&quot;type&quot;</code></dt>
+<dd><p>The type of the value of the cell: <code>&quot;error&quot;</code>, <code>&quot;boolean&quot;</code>,
+<code>&quot;float&quot;</code>, <code>&quot;integer&quot;</code>, <code>&quot;null&quot;</code>, <code>&quot;unknown&quot;</code>, etc.
+</p></dd>
+<dt><code>&quot;formula&quot;</code></dt>
+<dd><p>A string of the cell&rsquo;s current formula.
+</p></dd>
+<dt><code>&quot;value&quot;</code></dt>
+<dd><p>The cell&rsquo;s current value.
+</p></dd>
+</dl>
+
+<p>Any other value generates <code>#BAD_INPUT</code>.
+</p></dd>
+<dt><code>curcell(<var>key</var>)</code></dt>
+<dd><a name="index-curcell"></a>
+<p>Same as <code>my()</code>, but returns information about the cell where the
+cell-cursor is.
+</p></dd>
+<dt><code>cell(<var>row</var>, <var>col</var>, <var>key</var>)</code></dt>
+<dd><a name="index-cell"></a>
+<p>Same as <code>my()</code>, but for the cell at (<var>row</var>, <var>col</var>).  Be
+careful about the indices in <code>a0</code> mode.  The cell in row 2, column
+1 is <code>A2</code>, not <code>B1</code>.
+</p></dd>
+</dl>
+
+
+
+
+
+</body>
+</html>

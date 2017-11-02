@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Saving and reading (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Saving and reading (Neoleo 7.0.0)">
+<meta name="keywords" content="Saving and reading (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Basics.html#Basics" rel="up" title="Basics">
+<link href="Command-Line-Options.html#Command-Line-Options" rel="next" title="Command Line Options">
+<link href="Getting-Help.html#Getting-Help" rel="prev" title="Getting Help">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Saving-and-reading"></a>
+<div class="header">
+<p>
+Next: <a href="Command-Line-Options.html#Command-Line-Options" accesskey="n" rel="next">Command Line Options</a>, Previous: <a href="Getting-Help.html#Getting-Help" accesskey="p" rel="prev">Getting Help</a>, Up: <a href="Basics.html#Basics" accesskey="u" rel="up">Basics</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Saving-and-Reading-Spreadsheets"></a>
+<h3 class="section">2.10 Saving and Reading Spreadsheets</h3>
+
+<p><code>Neoleo</code> can save a spreadsheet, visit a saved one, or merge with a
+previously saved one.
+</p>
+<dl compact="compact">
+<dt><kbd>C-x C-s</kbd></dt>
+<dd><a name="index-C_002dx-C_002ds"></a>
+<p>Save the spreadsheet to a file, using the current
+file-format. (<code>save-spreadsheet</code>)
+<a name="index-save_002dspreadsheet"></a>
+<a name="DOCF7" href="#FOOT7"><sup>7</sup></a>
+</p>
+</dd>
+<dt><kbd>C-x C-v</kbd></dt>
+<dd><a name="index-C_002dx-C_002dv"></a>
+<p>Read in a file in the current
+file-format.  This erases the current contents of the
+spreadsheet first.  This may ask for confirmation.
+(<code>visit-spreadsheet</code>)
+<a name="index-visit_002dspreadsheet"></a>
+</p>
+</dd>
+<dt><kbd>C-x i</kbd></dt>
+<dd><a name="index-C_002dx-i"></a>
+<p>Read in a file and merge its contents into the
+current spreadsheet.  Note that some file-formats, (like
+panic-save) won&rsquo;t work with this command.
+(<code>merge-spreadsheet</code>)
+<a name="index-merge_002dspreadsheet"></a>
+</p>
+</dd>
+<dt><kbd>M-x toggle-load-hooks</kbd></dt>
+<dd><a name="index-toggle_002dload_002dhooks"></a>
+<p>Change whether load-hooks are run when spreadsheets are loaded.
+When active, the find-alternate-spreadsheet command looks for a variable
+called &lsquo;load_hooks&rsquo; and executes the macro at that address.
+With a positive prefix argument, turns load hooks on.  With a negative
+argument, turns them off.  With no argument, acts as a toggle.
+<a name="DOCF8" href="#FOOT8"><sup>8</sup></a>
+</p></dd>
+</dl>
+
+
+
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT7" href="#DOCF7">(7)</a></h3>
+<p>where is info on file formats?</p>
+<h3><a name="FOOT8" href="#DOCF8">(8)</a></h3>
+<p>what is the default</p>
+</div>
+
+
+
+</body>
+</html>

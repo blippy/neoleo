@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>noa0 mode (Neoleo 7.0.0)</title>
+
+<meta name="description" content="noa0 mode (Neoleo 7.0.0)">
+<meta name="keywords" content="noa0 mode (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Cell-referencing.html#Cell-referencing" rel="up" title="Cell referencing">
+<link href="a0-mode.html#a0-mode" rel="next" title="a0 mode">
+<link href="Cell-referencing.html#Cell-referencing" rel="prev" title="Cell referencing">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="noa0-mode"></a>
+<div class="header">
+<p>
+Next: <a href="a0-mode.html#a0-mode" accesskey="n" rel="next">a0 mode</a>, Previous: <a href="Cell-referencing.html#Cell-referencing" accesskey="p" rel="prev">Cell referencing</a>, Up: <a href="Cell-referencing.html#Cell-referencing" accesskey="u" rel="up">Cell referencing</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="noa0-Mode"></a>
+<h4 class="subsection">2.2.1 noa0 Mode</h4>
+<a name="index-noa0-mode"></a>
+<a name="index-noa0"></a>
+
+<p>In <code>noa0</code> mode (the default), absolute cell addresses have the
+form <code>R<var>row</var>C<var>col</var></code><!-- /@w -->, where <var>row</var> and <var>col</var> are
+the row and column (as integers).  Thus, <code>R1C2</code> is the second cell
+from the left on the top row.       The cell in the leftmost uppermost corner
+is <code>R1C1</code>, and the cell in the rightmost lowermost corner is
+<code>R65535C65535</code>.  
+</p>
+<p>Relative addresses have the form
+<code>R[<var>rowoffset</var>]C[<var>coloffset</var>]</code><!-- /@w -->, as in <code>R[-1]C[+1]</code>
+(the cell above and to the right of the current cell).  An offset of 0
+can be omitted, along with its square brackets: <code>RC[+2]</code> (the cell
+two columns to the right).  The plus signs of positive offsets can also
+be omitted.  Absolute and relative addresses can be combined, as in
+<code>R4C[-1]</code> (the cell in row four that&rsquo;s one left of the current
+cell).
+</p>
+<p>Ranges in <code>noa0</code> mode are specified as
+<code>R<var>row1</var>:<var>row2</var>C<var>col1</var>:<var>col2</var></code><!-- /@w -->, where the row
+and column references may be either absolute or relative, and can be
+mixed.  Thus, <code>R1:4C1:[-2]</code> refers to the cells of rows one through
+4, columns one through the second column to the left.  If <var>row1</var> =
+<var>row2</var> or <var>col1</var> = <var>col2</var>, the colon and second number may
+be omitted, as in <code>R1:10C2</code> (rows one through ten in column two).
+</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Statistical functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Statistical functions (Neoleo 7.0.0)">
+<meta name="keywords" content="Statistical functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Math-functions.html#Math-functions" rel="up" title="Math functions">
+<link href="String-functions.html#String-functions" rel="next" title="String functions">
+<link href="Trigonometric-functions.html#Trigonometric-functions" rel="prev" title="Trigonometric functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Statistical-functions"></a>
+<div class="header">
+<p>
+Previous: <a href="Trigonometric-functions.html#Trigonometric-functions" accesskey="p" rel="prev">Trigonometric functions</a>, Up: <a href="Math-functions.html#Math-functions" accesskey="u" rel="up">Math functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Statistical-Functions"></a>
+<h4 class="subsection">14.2.3 Statistical Functions</h4>
+<a name="index-Statistical-functions"></a>
+<a name="index-Functions_002c-statistical"></a>
+
+<p>These functions take a variable number of arguments, labeled
+<var>vr1</var>, <var>vr2</var>, etc.  Each of these values can be a
+numeric type or a range.  If the value is a range, the values of all
+numeric cells in that range are used (strings, empty cells, etc. are
+ignored).  Values can also be strings that are easily convertible to
+numbers; i.e., <code>&quot;123&quot;</code>.
+</p>
+<p>If none of the arguments include valid numbers, then the value of the
+function is <code>#NO_VALUES</code>.  To ensure that the expression doesn&rsquo;t
+return an error in such cases, you can provide a default value as an
+extra argument (e.g., <code>@sum(0,r1:10c1:10)</code>).
+</p>
+<p>The spreadsheet below is used for examples of the statistical
+functions.
+</p>
+<div class="example">
+<pre class="example">
+
+             | Col B | Col C | Col D |
+       ------|-------|-------|-------|
+       Row 2 |   2   |   3   |   5   |
+       ------|-------|-------|-------|
+       Row 3 |   8   |   4   |   6   |
+       ------|-------|-------|-------|
+       Row 4 |   9   |   1   |   3   |
+       ------|-------|-------|-------|
+       Row 5 |   4   |   7   |   0   |
+       ------|-------|-------|-------|
+       
+</pre></div>
+
+
+<dl compact="compact">
+<dt><code>sum(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-sum"></a>
+<p>The sum  of the given values.  Each value can be a numeric
+value or a range.
+</p><dl compact="compact">
+<dt><kbd>18</kbd></dt>
+<dd><p>@sum(B2.B5)
+</p></dd>
+<dt><kbd>20</kbd></dt>
+<dd><p>@sum(B2.B5,2)
+</p></dd>
+<dt><kbd>25</kbd></dt>
+<dd><p>@sum(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+
+</dd>
+<dt><code>prod(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-prod"></a>
+<p>The product  of the given values.  Each value can be a numeric
+value or a range.
+</p><dl compact="compact">
+<dt><kbd>512</kbd></dt>
+<dd><p>@prod(B2.B5)
+</p></dd>
+<dt><kbd>1024</kbd></dt>
+<dd><p>@prod(B2.B5,2)
+</p></dd>
+<dt><kbd>0</kbd></dt>
+<dd><p>@prod(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+
+</dd>
+<dt><code>count(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-count"></a>
+<p>The number of numeric values found among the arguments. In the
+example, assume that the first row and column are not numbers.
+</p><dl compact="compact">
+<dt><kbd>4</kbd></dt>
+<dd><p>@count(B2.B5)
+</p></dd>
+<dt><kbd>4</kbd></dt>
+<dd><p>@count(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>6</kbd></dt>
+<dd><p>@count(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+
+
+
+</dd>
+<dt><code>max(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-max"></a>
+<p>The maximum  value of all the arguments.  Non-numeric values are ignored.
+</p><dl compact="compact">
+<dt><kbd>8</kbd></dt>
+<dd><p>@max(B2.B5)
+</p></dd>
+<dt><kbd>8</kbd></dt>
+<dd><p>@max(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>8</kbd></dt>
+<dd><p>@max(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+
+</dd>
+<dt><code>min(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-min"></a>
+<p>The  minimum value of all the arguments.
+</p><dl compact="compact">
+<dt><kbd>2</kbd></dt>
+<dd><p>@min(B2.B5)
+</p></dd>
+<dt><kbd>2</kbd></dt>
+<dd><p>@min(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>1</kbd></dt>
+<dd><p>@min(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+</dd>
+<dt><code>avg(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-avg"></a>
+<p>The average of the given values.  The sum of the numerical values in
+the arguments is divided by the number of numeric values, not by the
+number of cells.
+</p><dl compact="compact">
+<dt><kbd>4.5</kbd></dt>
+<dd><p>@avg(B2.B5)
+</p></dd>
+<dt><kbd>4.5</kbd></dt>
+<dd><p>@avg(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>4.333</kbd></dt>
+<dd><p>@avg(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+</dd>
+<dt><code>std(<var>vr1</var>, ...)</code></dt>
+<dd><a name="index-std"></a>
+<p>The <em>sample</em> standard deviation.  To get the population standard
+deviation, use <code>@sqrt(@var(...))</code>.
+</p><dl compact="compact">
+<dt><kbd>2.51</kbd></dt>
+<dd><p>@std(B2.B5)
+</p></dd>
+<dt><kbd>2.51</kbd></dt>
+<dd><p>@std(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>2.73</kbd></dt>
+<dd><p>@std(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+
+</dd>
+<dt><code>var(<var>vr1</var>, ...)</code></dt>
+<dd><p>The population variance of the arguments.  To get the sample variance,
+use <code>@std(...)^2</code>.
+<a name="index-var"></a>
+</p><dl compact="compact">
+<dt><kbd>4.75</kbd></dt>
+<dd><p>@var(B2.B5)
+</p></dd>
+<dt><kbd>4.75</kbd></dt>
+<dd><p>@var(B2.B5,A1.D1)
+</p></dd>
+<dt><kbd>6.22</kbd></dt>
+<dd><p>@var(B2.B5,C4.C5)
+</p></dd>
+</dl>
+
+</dd>
+</dl>
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Trigonometric-functions.html#Trigonometric-functions" accesskey="p" rel="prev">Trigonometric functions</a>, Up: <a href="Math-functions.html#Math-functions" accesskey="u" rel="up">Math functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

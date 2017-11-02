@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Neoleo values (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Neoleo values (Neoleo 7.0.0)">
+<meta name="keywords" content="Neoleo values (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="How-to-enter-data.html#How-to-enter-data" rel="up" title="How to enter data">
+<link href="Entering.html#Entering" rel="next" title="Entering">
+<link href="How-to-enter-data.html#How-to-enter-data" rel="prev" title="How to enter data">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Neoleo-values"></a>
+<div class="header">
+<p>
+Next: <a href="Entering.html#Entering" accesskey="n" rel="next">Entering</a>, Previous: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="p" rel="prev">How to enter data</a>, Up: <a href="How-to-enter-data.html#How-to-enter-data" accesskey="u" rel="up">How to enter data</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="The-different-values-in-Neoleo"></a>
+<h3 class="section">3.1 The different values in Neoleo</h3>
+
+<p>A value can be a literal (an immediate value, like <code>&quot;foo&quot;</code>,
+<code>16</code>, or <code>#TRUE</code>), a function call, or another expression.
+There are 5 types of values:
+</p>
+<ul>
+<li> Integers.
+</li><li> Floats, expressed in the usual format:
+[<code>-</code>]<var>nnn</var>[<code>.</code><var>nnn</var>][<code>e</code>[<code>-</code>]<var>nnn</var>],
+e.g., -103.14e-7 or .00000012 or 103.14.
+</li><li> <a name="index-String-values"></a>
+Strings, which are surrounded by double quotes.  To include
+unusual characters, you can either quote them with a backslash (e.g.,
+<code>&quot;This&nbsp;is&nbsp;\&quot;quoted\&quot;.&quot;</code><!-- /@w -->) or use an octal escape code: 
+&lsquo;<samp>\<var>nnn</var></samp>&rsquo;
+where <var>nnn</var> is the octal code for the ASCII value of the character.
+</li><li> Expressions, such as <code>@sum(A1.B3)</code>, or <code>A1 + B2</code>.
+</li><li> Errors, which have alphabetic names and start with a &lsquo;<samp>#</samp>&rsquo;
+sign.
+</li><li> Booleans, which are &quot;error&quot; values of either <code>#TRUE</code> or
+<code>#FALSE</code>.
+<a name="index-Boolean-values"></a>
+</li></ul>
+
+
+
+
+
+
+</body>
+</html>

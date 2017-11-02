@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Business functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Business functions (Neoleo 7.0.0)">
+<meta name="keywords" content="Business functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Functions.html#Functions" rel="up" title="Functions">
+<link href="Date-functions.html#Date-functions" rel="next" title="Date functions">
+<link href="Search-functions.html#Search-functions" rel="prev" title="Search functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Business-functions"></a>
+<div class="header">
+<p>
+Next: <a href="Date-functions.html#Date-functions" accesskey="n" rel="next">Date functions</a>, Previous: <a href="Search-functions.html#Search-functions" accesskey="p" rel="prev">Search functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Business-Functions"></a>
+<h3 class="section">14.6 Business Functions</h3>
+<a name="index-Business-functions"></a>
+<a name="index-Functions_002c-business"></a>
+
+<p>Functions for various business-related calculations.  Rates are expressed as
+exactly, i.e. don&rsquo;t expect &lsquo;<samp>10</samp>&rsquo; to mean <var>10%</var>, but rather use
+&lsquo;<samp>0.10</samp>&rsquo;.  The units for <var>term</var> are payment periods.  Thus, if you want
+to calculate any of the following using, for example, monthly componunding, you
+will want &lsquo;<samp>pmt(p, r/12, t*12)</samp>&rsquo;, where <var>t</var> is in years.
+</p>
+<dl compact="compact">
+<dt><code>pmt(<var>p</var>, <var>r</var>, <var>term</var>)</code></dt>
+<dd><a name="index-pmt"></a>
+<p>Payment per period for a loan of principal <var>p</var> at rate <var>r</var> for
+  <var>term</var> payments, assuming a fully amortizing loan which compounds
+  at the payment rate.
+</p></dd>
+<dt><code>pv(<var>pmt</var>, <var>r</var>, <var>term</var>)</code></dt>
+<dd><a name="index-pv"></a>
+<p>Present value of an investment that pays <var>pmt</var> at the end of each
+  of <var>term</var> periods with a discount (interest) rate of <var>r</var>.
+</p></dd>
+<dt><code>npv(<var>rng</var>, <var>r</var>)</code></dt>
+<dd><a name="index-npv"></a>
+<p>Net present value of an investment which will pay uneven payments.  The term
+  is calculated from the number of cells in range <var>rng</var>, with the first
+  cell corresponding to <var>t=0</var> (i.e., assuming a beginning of year paymest
+  stream).  Entries in the range can be positive or negative, corresponding to
+  receipts or payments, respectively.
+</p></dd>
+<dt><code>irr(<var>rng</var>, <var>guess</var>)</code></dt>
+<dd><a name="index-irr"></a>
+<p>Internal rate of return.  Given a range of cells corresponding to
+  uneven periodic payments, calculate the rate <var>r</var> such that
+  <code>npv(rng,r)==0</code>.  This function can be multivalued when entries
+  in the range change sign more than once, and hence returns <code>#BAD_INPUT</code>
+  if it fails to converge.  Argument <var>guess</var> helps the function return
+  more quickly, but is not critical.
+</p></dd>
+<dt><code>fmrr(<var>rng</var>, <var>safe</var>, <var>reinvest</var>, <var>reinvmin</var>)</code></dt>
+<dd><a name="index-fmrr"></a>
+<p>Financial management rate of return.  This function attempts to be a more
+  encompassing and consistent version of the internal rate of return, which
+  ignores the disposition of intermediate cash in- and outflows.  The
+  <code>fmrr</code> function pulls back negative values to the nearest positive ones
+  at the <var>safe</var> rate (e.g. certificate of deposit rate), and pushes
+  forward all outflows to the end of the period as specified by <var>rng</var>.
+  These outflows generate income at the <var>reinvest</var>ment rate if they
+  accumulate to be over <var>reinvinmin</var>, otherwise at the <var>safe</var> rate.
+</p></dd>
+<dt><code>fv(<var>pmt</var>, <var>r</var>, <var>term</var>)</code></dt>
+<dd><a name="index-fv"></a>
+<p>Future value of an annuity that pays <var>pmt</var> at the end of each
+  of <var>term</var> periods assuming a discount rate of <var>r</var>.
+</p></dd>
+<dt><code>rate(<var>fut</var>, <var>pres</var>, <var>term</var>)</code></dt>
+<dd><a name="index-rate"></a>
+<p>Interest rate required to turn current principal <var>pres</var> into
+  future principal <var>fut</var> in <var>term</var> periods.
+</p></dd>
+<dt><code>term(<var>pmt</var>, <var>r</var>, <var>fut</var>)</code></dt>
+<dd><a name="index-term"></a>
+<p>Number of periods required to collect <var>fut</var> in payments of
+  <var>pmt</var>, with an interest rate of <var>r</var>.
+</p></dd>
+<dt><code>cterm(<var>r</var>, <var>fut</var>, <var>pres</var>)</code></dt>
+<dd><a name="index-cterm"></a>
+<p>Number of periods required to collect <var>fut</var> from a single deposit
+  of <var>pres</var>, at an interest rate of <var>r</var>.
+</p></dd>
+<dt><code>sln(<var>cost</var>, <var>scrap</var>, <var>life</var>)</code></dt>
+<dd><a name="index-sln"></a>
+<p>Straight line depreciation of an asset that cost <var>cost</var> when new,
+  can be sold for <var>scrap</var>, and will last for <var>life</var> periods.
+</p></dd>
+<dt><code>syd(<var>cost</var>, <var>scrap</var>, <var>life</var>, <var>per</var>)</code></dt>
+<dd><a name="index-syd"></a>
+<p>Sum-of-the-digits depreciation in period <var>per</var> of an asset that cost
+  <var>cost</var>, can be sold for <var>scrap</var>, and lasts <var>life</var> periods.
+</p></dd>
+<dt><code>ddb(<var>cost</var>, <var>scrap</var>, <var>life</var>, <var>per</var>)</code></dt>
+<dd><a name="index-ddb"></a>
+<p>Double-declining-balance depreciation; similar to <code>syd()</code>.
+</p></dd>
+<dt><code>anrate(<var>pmt</var>, <var>p</var>, <var>term</var>)</code></dt>
+<dd><a name="index-anrate"></a>
+<p>Solve <code>pmt(pmt, r, term) == p</code> for <var>r</var>.
+</p></dd>
+<dt><code>anterm(<var>pmt</var>, <var>prin</var>, <var>r</var>)</code></dt>
+<dd><a name="index-anterm"></a>
+<p>Solve <code>pmt(pmt, r, term) == p</code> for <var>term</var>.
+</p></dd>
+<dt><code>balance(<var>p</var>, <var>r</var>, <var>term</var>, <var>n</var>)</code></dt>
+<dd><a name="index-balance"></a>
+<p>After <var>n</var> payments (of <code>pmt(p, r, term)</code>) towards a debt of 
+  <var>p</var> at interest rate <var>r</var> over <var>term</var> periods, this function
+  gives the amount left due.
+</p></dd>
+<dt><code>paidint(<var>p</var>, <var>r</var>, <var>term</var>, <var>n</var>)</code></dt>
+<dd><a name="index-paidint"></a>
+<p>After <var>n</var> payments (of <code>pmt(p, r, term)</code>) towards a debt of 
+  <var>p</var> at interest rate <var>r</var> over <var>term</var> periods, this function
+  gives the sum of the amounts of the payments which have gone to service
+  the interest on the debt.
+</p></dd>
+<dt><code>kint(<var>p</var>, <var>r</var>, <var>term</var>, <var>n</var>)</code></dt>
+<dd><a name="index-kint"></a>
+<p>At period <var>n</var>, this amount goes towards paying the interest on the
+  amortizing loan at rate <var>r</var>, term <var>term</var>, and principal <var>p</var>.
+</p></dd>
+<dt><code>kprin(<var>p</var>, <var>r</var>, <var>term</var>, <var>n</var>)</code></dt>
+<dd><a name="index-kprin"></a>
+<p>At period <var>n</var>, this amount goes towards reducing the principal on the
+  amortizing loan at rate <var>r</var>, term <var>term</var>, and principal <var>p</var>.
+  Note that <code>kint(p,r,term,n)+kprin(p,r,term,n)==pmt(p,r,term)</code>.
+</p></dd>
+<dt><code>compbal(<var>p</var>, <var>r</var>, <var>term</var>)</code></dt>
+<dd><a name="index-compbal"></a>
+<p>Compound balance.  Returns the value of principal <var>p</var> after earning
+  interest <var>r</var> over <var>term</var> terms.
+</p></dd>
+</dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Date-functions.html#Date-functions" accesskey="n" rel="next">Date functions</a>, Previous: <a href="Search-functions.html#Search-functions" accesskey="p" rel="prev">Search functions</a>, Up: <a href="Functions.html#Functions" accesskey="u" rel="up">Functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

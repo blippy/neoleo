@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Movement examples (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Movement examples (Neoleo 7.0.0)">
+<meta name="keywords" content="Movement examples (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Movement.html#Movement" rel="up" title="Movement">
+<link href="Screen-Moving.html#Screen-Moving" rel="next" title="Screen Moving">
+<link href="Large-Scale-Movement.html#Large-Scale-Movement" rel="prev" title="Large Scale Movement">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Movement-examples"></a>
+<div class="header">
+<p>
+Next: <a href="Screen-Moving.html#Screen-Moving" accesskey="n" rel="next">Screen Moving</a>, Previous: <a href="Large-Scale-Movement.html#Large-Scale-Movement" accesskey="p" rel="prev">Large Scale Movement</a>, Up: <a href="Movement.html#Movement" accesskey="u" rel="up">Movement</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Examples-of-movement-commands"></a>
+<h4 class="subsection">2.6.4 Examples of movement commands</h4>
+<p>We use the spreadsheet below.  The blank squares are empty.
+</p>
+<div class="example">
+<pre class="example">
+
+              | A | B | C | D | E | F |
+            --|---|---|---|---|---|---|
+            1 |   |   |   |   |   |   |
+            --|---|---|---|---|---|---|
+            2 |   |   | x |   | x |   |
+            --|---|---|---|---|---|---|
+            3 |   |   | x | x | x |   |
+            --|---|---|---|---|---|---|
+            4 |   | x |   |   |   |   |
+            --|---|---|---|---|---|---|
+
+
+</pre></div>
+
+<p>The first column is the command, the second is the cell the cell cursor
+is in initially, and the third column is the location of the cell cursor
+at the end of the command.
+</p>
+<div class="example">
+<pre class="example">
+
+                <span class="key">M-&lt;</span>       B4    &rArr;    A1
+
+                <span class="key">M-&gt;</span>       B4    &rArr;    E4
+                <span class="key">M-&gt;</span>       C2    &rArr;    E4
+                
+                <span class="key">C-a</span>       E4    &rArr;    E1
+                <span class="key">C-a</span>       D4    &rArr;    E1
+
+                <span class="key">C-e</span>       A4    &rArr;    B4
+                <span class="key">C-e</span>       A3    &rArr;    E3
+                <span class="key">C-e</span>       A2    &rArr;    E2
+                <span class="key">C-e</span>       A1    &rArr;    A1
+
+                <span class="key">M-C-a</span>     E2    &rArr;    E1
+                <span class="key">M-C-e</span>     B1    &rArr;    B4
+
+                <span class="key">M-f</span>       A4    &rArr;    C4
+                <span class="key">M-f</span>       A2    &rArr;    D2
+</pre></div>
+        
+
+
+
+
+
+
+</body>
+</html>

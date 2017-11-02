@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Writing Files (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Writing Files (Neoleo 7.0.0)">
+<meta name="keywords" content="Writing Files (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Printing-and-Plotting.html#Printing-and-Plotting" rel="up" title="Printing and Plotting">
+<link href="Graphing.html#Graphing" rel="next" title="Graphing">
+<link href="Printing-and-Plotting.html#Printing-and-Plotting" rel="prev" title="Printing and Plotting">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Writing-Files"></a>
+<div class="header">
+<p>
+Next: <a href="Graphing.html#Graphing" accesskey="n" rel="next">Graphing</a>, Previous: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="p" rel="prev">Printing and Plotting</a>, Up: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="u" rel="up">Printing and Plotting</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Writing-ASCII-and-Postscript-Files"></a>
+<h3 class="section">8.1 Writing  ASCII and Postscript Files</h3>
+
+<p>Spreadsheets, and regions of spreadsheets,  can be printed in 
+ASCII, LaTeX, or postscript format.  For postscript files, the font and page
+size can be specified.
+</p>
+<dl compact="compact">
+<dt><kbd>M-C-p a</kbd></dt>
+<dd><a name="index-print_002dregion"></a>
+<p>Write a region to a file in ASCII format. 
+If the mark is set, you are prompted for a file name.  
+The region between mark and cell cursor will be printed in a tabular
+ASCII format. If the mark is not set, then you are first prompted for
+the region, and then for the file name.  (<code>print-region</code>)
+For example, if the mark is not
+set, and you want to print the region A1.C20 to the file
+<samp>/tmp/myfile</samp>, then you type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p a</kbd> A1.C20 <span class="key">RET</span> /tmp/myfile <span class="key">RET</span>
+</pre></div>
+
+<p>If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p a</kbd>  /tmp/myfile <span class="key">RET</span>
+</pre></div>
+
+</dd>
+<dt><kbd>M-C-p l</kbd></dt>
+<dd><a name="index-latex_002dregion"></a>
+<p>Write a region to a file in LaTeX format.  By default the LaTeX code
+prints the entries in ruled boxes in portrait mode.  There are
+directions in the output file for the simple changes to print in
+landscape mode, or to have all the entries unboxed.  If your region
+contains a percent sign, then you must escape it by hand in the LaTeX
+file to make LaTeX run correctly.
+</p>
+<p>If the mark is set, you are prompted for a file name.  The region
+between mark and cell cursor will be printed in LaTeX format.  If the
+mark is not set, then you are first prompted for the region, and then
+for the file name.  (<code>latex-region</code>) For example, if the mark is
+not set, and you want to print the region A1.C20 to the file
+<samp>/tmp/myfile.tex</samp>, then you type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p l</kbd> A1.C20 <span class="key">RET</span> /tmp/myfile.tex <span class="key">RET</span>
+</pre></div>
+
+<p>If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p l</kbd>  /tmp/myfile.tex <span class="key">RET</span>
+</pre></div>
+
+</dd>
+<dt><kbd>M-C-p p p</kbd></dt>
+<dd><a name="index-psprint_002dregion"></a>
+<p>Write a region to a file in PostScript format.
+If the mark is set, you are prompted for a file name.  
+If the mark is not set, then you are first prompted for
+the region, and then for the file name.  (<code>psprint-region</code>)
+For example, if the mark is not
+set, and you want to write the region A1.C20 in PostScript to the file
+<samp>/tmp/myfile</samp>, then you type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p p p</kbd> A1.C20 <span class="key">RET</span> /tmp/myfile <span class="key">RET</span>
+</pre></div>
+
+<p>If the mark had been set so that the region between mark and the current
+cell is A1.C20, then you only need type
+</p><div class="example">
+<pre class="example">             <kbd>M-C-p p p</kbd>  /tmp/myfile <span class="key">RET</span>
+</pre></div>
+
+</dd>
+<dt><kbd>M-C-p p f</kbd></dt>
+<dd><a name="index-set_002ddefault_002dps_002dfont"></a>
+<p>This command sets the default font used in printing a region in
+PostScript.  (<code>set-default-ps-font</code>) see <a href="Fonts-_0028in-X11_0029.html#Fonts-_0028in-X11_0029">Fonts (in X11)</a> for
+information about the possible fonts. 
+To set the font to 24 point courier, type
+</p><div class="example">
+<pre class="example">           M-C-p p f courier 2.0 <span class="key">RET</span><a name="DOCF22" href="#FOOT22">(22)</a>
+</pre></div>
+
+
+</dd>
+<dt><kbd>M-C-p p s</kbd></dt>
+<dd><a name="index-set_002dpage_002dsize"></a>
+<p>Set the page size for the PostScript output
+(<code>set-page-size</code>). You are prompted for a pagesize.  There are
+several possible ways of describing a page size:
+</p>
+<div class="example">
+<pre class="example">        8.5x11          -- a page size in inches.
+        22x28c          -- a page size in centimeters.
+        612x792p        -- a page size in points.
+        letter          -- 8.5 x 11 in. (the default)
+</pre></div>
+
+<p>To set the correct page size for A4 paper, type
+</p>
+<div class="example">
+<pre class="example">         M-C-p p s A4 <span class="key">RET</span>
+</pre></div>
+
+
+<p>The following table gives the possible paper sizes.  The 
+widths and heights are given in &quot;points&quot;, of which there are 
+72 in an inch.  
+</p>
+<div class="example">
+<pre class="example">
+
+   Name            Width   Height    Comments
+   ------------------------------------------------
+   letter          612     792       8.5 x 11   in.   
+   landscape       792     612       11  x 8.5  in.   
+   tabloid         792     1224      11  x 17   in.    
+   ledger          1224    792       17  x 11   in.    
+   legal           612     1008      8.5 x 14   in.   
+   statement       396     612       5.5 x 8.5  in.   
+   executive       540     720       7.5 x 10   in.   
+   a3              842     1190    
+   a4              595     842     
+   latex-a4        523     770       A4 with 1in. margins
+   a5              420     595     
+   b4              729     1032    
+   b5              516     729           
+   folio           612     936       8.5 x 13  in.   
+   quarto          610     780     
+</pre></div>
+
+</dd>
+</dl>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT22" href="#DOCF22">(22)</a></h3>
+<p>actually, this does
+not print correctly - ghostscript gives an error</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Graphing.html#Graphing" accesskey="n" rel="next">Graphing</a>, Previous: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="p" rel="prev">Printing and Plotting</a>, Up: <a href="Printing-and-Plotting.html#Printing-and-Plotting" accesskey="u" rel="up">Printing and Plotting</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

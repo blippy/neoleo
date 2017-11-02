@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Scanning (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Scanning (Neoleo 7.0.0)">
+<meta name="keywords" content="Scanning (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Movement.html#Movement" rel="up" title="Movement">
+<link href="Large-Scale-Movement.html#Large-Scale-Movement" rel="next" title="Large Scale Movement">
+<link href="Single-Cell-Movement.html#Single-Cell-Movement" rel="prev" title="Single Cell Movement">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Scanning"></a>
+<div class="header">
+<p>
+Next: <a href="Large-Scale-Movement.html#Large-Scale-Movement" accesskey="n" rel="next">Large Scale Movement</a>, Previous: <a href="Single-Cell-Movement.html#Single-Cell-Movement" accesskey="p" rel="prev">Single Cell Movement</a>, Up: <a href="Movement.html#Movement" accesskey="u" rel="up">Movement</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Finding-the-next-empty-cell"></a>
+<h4 class="subsection">2.6.2 Finding the next empty cell</h4>
+<p>These commands move to the next empty cell in a given direction.
+<a name="DOCF3" href="#FOOT3"><sup>3</sup></a>
+</p>
+<dl compact="compact">
+<dt><kbd>M-p</kbd></dt>
+<dd><p>Move to the first empty cell above the current cell in the current
+column.  If given a repeat count, go to the N-th most empty cell.
+(<code>scan-up</code>)
+<a name="index-scan_002dup"></a>
+</p></dd>
+<dt><kbd>M-n</kbd></dt>
+<dd><p>Move to the first empty cell below the current cell in the current
+column.  If given a repeat count, go to the N-th most empty cell.
+(<code>scan-down</code>)
+<a name="index-scan_002ddown"></a>
+</p></dd>
+<dt><kbd>M-f</kbd></dt>
+<dd><p>Move to the first empty cell to the right of the current cell in the
+current row.  If given a repeat count, go to the N-th most empty cell.
+(<code>scan-right</code>)
+<a name="index-scan_002dright"></a>
+</p></dd>
+<dt><kbd>M-b</kbd></dt>
+<dd><p>Move to the first empty cell to the left of the current cell in the
+current row.  If given a repeat count, go to the N-th most empty cell.
+(<code>scan-left</code>)
+<a name="index-scan_002dleft"></a>
+</p></dd>
+</dl>
+<a name="index-M_002db"></a>
+<a name="index-M_002df"></a>
+<a name="index-M_002dn"></a>
+<a name="index-M_002dp"></a>
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT3" href="#DOCF3">(3)</a></h3>
+<p>the doc doesn&rsquo;t seem to agree with the behavior; what is
+the intended behavior?  the repeat counts seem to be ignored.</p>
+</div>
+
+
+
+</body>
+</html>

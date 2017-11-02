@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>General math functions (Neoleo 7.0.0)</title>
+
+<meta name="description" content="General math functions (Neoleo 7.0.0)">
+<meta name="keywords" content="General math functions (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Math-functions.html#Math-functions" rel="up" title="Math functions">
+<link href="Trigonometric-functions.html#Trigonometric-functions" rel="next" title="Trigonometric functions">
+<link href="Math-functions.html#Math-functions" rel="prev" title="Math functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="General-math-functions"></a>
+<div class="header">
+<p>
+Next: <a href="Trigonometric-functions.html#Trigonometric-functions" accesskey="n" rel="next">Trigonometric functions</a>, Previous: <a href="Math-functions.html#Math-functions" accesskey="p" rel="prev">Math functions</a>, Up: <a href="Math-functions.html#Math-functions" accesskey="u" rel="up">Math functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="General-Math-Functions"></a>
+<h4 class="subsection">14.2.1 General Math Functions</h4>
+
+<p>For these these functions, the argument <var>x</var> can be a number (integer
+or floating point), a reference to a cell containing an integer, or a
+reference to a cell containing a quoted integer.  Thus, if cell
+<a name="DOCF35" href="#FOOT35"><sup>35</sup></a>
+<code>A2</code> contains <code>&quot;-12.34&quot;</code>,
+then all of the following expressions compute the absolute
+value of -12.34:  
+</p><div class="example">
+<pre class="example">               @abs(-12.34)
+               @abs(A2)
+               @abs(@cell(2,1,&quot;value&quot;))
+</pre></div>
+
+
+<dl compact="compact">
+<dt><code>abs(<var>x</var>)</code></dt>
+<dd><a name="index-abs"></a>
+<p>Returns the absolute value of <var>x</var>.
+</p>
+</dd>
+<dt><code>negate(<var>x</var>)</code></dt>
+<dd><a name="index-negate"></a>
+<p>Returns  -<var>x</var>.
+</p>
+</dd>
+<dt><code>int(<var>x</var>)</code></dt>
+<dd><p><code>int()</code> converts <var>x</var> to an integer by truncating
+the fractional part.  For instance,
+</p><div class="example">
+<pre class="example">           int(2.3)     &rArr;   2
+           int(-2.3)    &rArr;  -2
+</pre></div>
+
+</dd>
+<dt><code>ceil(<var>x</var>)</code></dt>
+<dd><p><code>ceil()</code> replaces <var>x</var> by the least integer greater than or
+equal to <var>x</var>.
+</p><div class="example">
+<pre class="example">           ceil(2.3)     &rArr;   3
+           ceil(-2.3)    &rArr;  -2
+</pre></div>
+
+</dd>
+<dt><code>floor(<var>x</var>)</code></dt>
+<dd><p><code>floor()</code> replaces <var>x</var> by the largest integer less than or
+equal to <var>x</var>.
+</p><div class="example">
+<pre class="example">           floor(2.3)     &rArr;   2
+           floor(-2.3)    &rArr;  -3
+</pre></div>
+
+<a name="index-int"></a>
+<a name="index-ceil"></a>
+<a name="index-floor"></a>
+
+</dd>
+<dt><code>log(<var>x</var>)</code></dt>
+<dd><p>The natural log  of <var>x</var>.  If <var>x</var> is negative, the result is 
+&lsquo;<samp>#MINUS_INFINITY</samp>&rsquo;, and the cell displays is &lsquo;<samp>#OUT_OF_RANGE</samp>&rsquo;.
+<a name="index-log"></a>
+</p>
+</dd>
+<dt><code>exp(<var>x</var>)</code></dt>
+<dd><p>The  exponential of <var>x</var>
+<a name="index-exp"></a>
+</p>
+</dd>
+<dt><code>log10(<var>x</var>)</code></dt>
+<dd><p>The log base 10 of <var>x</var>.  If <var>x</var> is negative, the result is 
+&lsquo;<samp>#MINUS_INFINITY</samp>&rsquo;, and the cell displays is &lsquo;<samp>#OUT_OF_RANGE</samp>&rsquo;.
+<a name="index-log10"></a>
+</p>
+</dd>
+<dt><code>sqrt(<var>x</var>)</code></dt>
+<dd><p>The square root of <var>x</var>.  If <var>x</var> is negative, the error message
+is &lsquo;<samp>#OUT_OF_RANGE</samp>&rsquo;.
+<a name="index-sqrt"></a>
+</p>
+</dd>
+<dt><code>rnd(<var>x</var>)</code></dt>
+<dd><a name="index-rnd"></a>
+<p>Generates a random integer from 0 to <var>x</var>-1.  This is updated
+regularly. This can get annoying. To change the time that it is updated
+from 1 second to 10 seconds, type
+</p><div class="example">
+<pre class="example">        <kbd>M-x</kbd> set-option  <span class="key">RET</span> ticks 10  <span class="key">RET</span>
+</pre></div>
+
+
+</dd>
+<dt><code>fixed(<var>x</var>, <var>places</var>)</code></dt>
+<dd><p>Rounds <var>x</var> to <var>places</var> decimal places.
+<a name="index-fixed"></a>
+</p></dd>
+</dl>
+
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT35" href="#DOCF35">(35)</a></h3>
+<p>how do I make a reference to a cell?</p>
+</div>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Trigonometric-functions.html#Trigonometric-functions" accesskey="n" rel="next">Trigonometric functions</a>, Previous: <a href="Math-functions.html#Math-functions" accesskey="p" rel="prev">Math functions</a>, Up: <a href="Math-functions.html#Math-functions" accesskey="u" rel="up">Math functions</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

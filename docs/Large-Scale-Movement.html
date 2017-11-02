@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Large Scale Movement (Neoleo 7.0.0)</title>
+
+<meta name="description" content="Large Scale Movement (Neoleo 7.0.0)">
+<meta name="keywords" content="Large Scale Movement (Neoleo 7.0.0)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Key-Index.html#Key-Index" rel="index" title="Key Index">
+<link href="Concept-Index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Movement.html#Movement" rel="up" title="Movement">
+<link href="Movement-examples.html#Movement-examples" rel="next" title="Movement examples">
+<link href="Scanning.html#Scanning" rel="prev" title="Scanning">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Large-Scale-Movement"></a>
+<div class="header">
+<p>
+Next: <a href="Movement-examples.html#Movement-examples" accesskey="n" rel="next">Movement examples</a>, Previous: <a href="Scanning.html#Scanning" accesskey="p" rel="prev">Scanning</a>, Up: <a href="Movement.html#Movement" accesskey="u" rel="up">Movement</a> &nbsp; [<a href="Concept-Index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Key-Index.html#Key-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Moving-long-distances"></a>
+<h4 class="subsection">2.6.3 Moving long distances</h4>
+
+
+<p>These commands move over large areas of the spreadsheet, so they first
+set the mark to the current cell before moving (if it&rsquo;s not already
+set).  You can thus jump back to where you were with <kbd>C-x C-x</kbd>
+(<code>exchange-point-and-mark</code>).
+</p>
+<dl compact="compact">
+<dt><kbd>M-&lt;</kbd></dt>
+<dd><p>Go to the upper left cell <a name="DOCF4" href="#FOOT4"><sup>4</sup></a>. 
+(<code>upper-left</code>)
+<a name="index-upper_002dleft"></a>
+</p>
+</dd>
+<dt><kbd>M-&gt;</kbd></dt>
+<dd><p>Go to lower right cell.  
+The lower right cell is the cell in the rightmost column that has a value,
+and the lowermost row that has a value.  There might not be any value in
+the lower right cell. (<code>lower-right</code>)
+<a name="index-lower-right"></a>
+</p>
+</dd>
+<dt><kbd>C-a</kbd></dt>
+<dd><p>Go to the beginning of the row.  With a <kbd>C-u</kbd> prefix argument <var>n</var>,
+it also moves <var>n</var>-1 <a name="DOCF5" href="#FOOT5"><sup>5</sup></a> rows down first. (<code>beginning-of-row</code>)
+<a name="index-beginning_002dof_002drow"></a>
+</p>
+</dd>
+<dt><kbd>C-e</kbd></dt>
+<dd><p>Go to the last cell of the current row (that has a value).  A <kbd>C-u</kbd> prefix
+is also accepted. (<code>end-of-row</code>)
+<a name="index-end_002dof_002drow"></a>
+</p></dd>
+<dt><kbd>M-C-a</kbd></dt>
+<dd><p>Go to the beginning of the column. (<code>beginning-of-column</code>)
+<a name="index-beginning_002dof_002dcolumn"></a>
+</p></dd>
+<dt><kbd>M-C-e</kbd></dt>
+<dd><p>Go to the last cell of the current column. (<code>end-of-column</code>)
+<a name="index-end_002dof_002dcolumn"></a>
+</p></dd>
+</dl>
+<a name="index-M_002dC_002de"></a>
+<a name="index-M_002dC_002da"></a>
+<a name="index-C_002de"></a>
+<a name="index-C_002da"></a>
+<a name="index-M_002d_003e"></a>
+<a name="index-M_002d_003c"></a>
+
+<div class="footnote">
+<hr>
+<h4 class="footnotes-heading">Footnotes</h4>
+
+<h3><a name="FOOT4" href="#DOCF4">(4)</a></h3>
+<p>This is always cell <code>A1</code> in
+the current version, but supposedly might change in the future.</p>
+<h3><a name="FOOT5" href="#DOCF5">(5)</a></h3>
+<p>why -1?</p>
+</div>
+
+
+
+</body>
+</html>
