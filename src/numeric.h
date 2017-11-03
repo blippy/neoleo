@@ -3,14 +3,15 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-//typedef std::decimal::decimal64 num_cc;
-//typedef __decfloat64 num_cc;
 #define USE_DECIMAL 1
-//#include <decimal/decimal.h>
-//typedef __d64 _Decimal64;
 #else
-//#typedef _Decimal64 num_c;
 #define USE_DECIMAL 0
+#endif
+
+#ifndef _GLIBCXX_USE_DECIMAL_FLOAT
+#undef  USE_DECIMAL
+#define USE_DECIMAL 0
+#pragma message "Falling back to doubles instead of decimals"
 #endif
 
 #if USE_DECIMAL
