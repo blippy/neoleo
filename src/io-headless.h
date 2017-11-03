@@ -19,18 +19,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <string>
 /* An interface that basically does nothing at all! It is useful for when
  * you do not want a display, such as the use of Tcl
  * */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 void headless_graphics(void);
-
-#ifdef __cplusplus
-}
-#endif
-
+bool process_headless_line(std::string line, int fildes);

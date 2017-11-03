@@ -1,3 +1,3 @@
 #pragma once
 
-void tbl();
+void tbl(int fildes);

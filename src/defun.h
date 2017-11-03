@@ -1489,14 +1489,6 @@ DEFUN("shell", FDrun_shell, FArun_shell, run_shell)
 "comments and line continuations have not been implemented.",	
 #endif
 
-DEFUN("forth", FDforth, FAforth, forth)
-#ifdef FUNC_ARG_STRINGS
-"sRun Forth command? ",
-#endif
-#ifdef DOC_STRINGS
-"Run an atlast Forth string",
-"It calls atlast_eval().",
-#endif
 
 DEFUN ("toggle-load-hooks",
        FDtoggle_load_hooks, FAtoggle_load_hooks, toggle_load_hooks)

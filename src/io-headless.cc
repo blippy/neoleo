@@ -26,6 +26,7 @@
 #include "lists.h"
 #include "tbl.h"
 #include "utils.h"
+#include "shell.h"
 
 
 using std::cin;
@@ -34,6 +35,9 @@ using std::endl;
 using std::function;
 using std::map;
 using std::vector;
+
+//using T = int;
+typedef int T;
 
 string to_hex(long n)
 {
@@ -184,7 +188,7 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 }
 
 static void 
-info()
+info(int fildes)
 {
 	// print diagnostic information
 	
@@ -204,9 +208,13 @@ info()
 }
 
 static void
-insert_columnwise()
+insert_columnwise(T fildes)
 {
-	for(std::string line; std::getline(std::cin, line);){
+	//FILE *fp=0; // std::cin
+	//for(std::string line; line = getline_from_fildes(fildes);){
+	std::string line;
+	while(true) {
+		line = getline_from_fildes(fildes);
 		if(line == ".") break;
 		if(line == ";") {
 			curow = 1;
@@ -226,9 +234,11 @@ insert_columnwise()
 	}
 }
 static void
-insert_rowwise()
+insert_rowwise(T fildes)
 {
-	for(std::string line; std::getline(std::cin, line);){
+	std::string line;
+	while(true) {
+		line = getline_from_fildes(fildes);
 		if(line == ".") break;
 		if(line == ";") {
 			curow++;
@@ -250,7 +260,7 @@ insert_rowwise()
 
 
 
-static void type_cell()
+static void type_cell(int fildes)
 {
 	//cout << "101 OK value appears on next line\n" 
 	cout	<< print_cell(find_cell(curow, cucol))
@@ -258,7 +268,7 @@ static void type_cell()
 }
 
 
-static void write_file()
+static void write_file(int fildes)
 {
 	string name = FileGetCurrentFileName();
 	FILE *fp = fopen(name.c_str(), "w");
@@ -267,7 +277,7 @@ static void write_file()
 	fclose(fp);
 
 }
-static map<string, function<void()> > func_map = {
+static map<string, function<void(T)> > func_map = {
 	{"colours", colours},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
@@ -280,6 +290,45 @@ static map<string, function<void()> > func_map = {
 	{"w", write_file}
 };
 
+bool
+process_headless_line(std::string line, int fildes)
+{
+	//cout << "process_headless_line: " << line << endl;
+
+	// try to find a canned function and execute it
+	auto it = func_map.find(line);
+	if(it != func_map.end()) {
+		auto fn = it->second;
+		fn(fildes);
+		//(it->second)();
+		cout << std::flush;
+		return true;
+	}
+
+
+	/*if(line == "bye") {
+	  cout << "300 OK bye" << endl;
+	  return;
+	  }
+	  */
+	if(line == "q") {
+	       	//cout << "300 OK bye" << endl;
+		return false;
+	}
+
+	try {
+		//cout << "process_headless_line: execute_command:" << line << endl;
+		execute_command((char*) line.c_str());
+		//std::cout << "100 OK" << endl;
+	} catch (const OleoJmp&) {
+		//cout << "200 FAIL Caught OleoJmp" << endl;
+		cout << "?\n";
+	}
+
+	cout << std::flush;
+	return true;
+}
+
 static void
 _io_run_main_loop()
 {
@@ -288,34 +337,17 @@ _io_run_main_loop()
 
 	//cout << "100 OK" << "\n";
 	std::string line;
-	while(getline(std::cin, line)) {
-
-		// try to find a canned function and execute it
-		auto it = func_map.find(line);
-		if(it != func_map.end()) {
-			(it->second)();
-			cout << std::flush;
-			continue;
-		}
-
-
-		/*if(line == "bye") {
-			cout << "300 OK bye" << endl;
-			return;
-		}
-		*/
-		if(line == "q") return;
-
-		try {
-			execute_command((char*) line.c_str());
-			//std::cout << "100 OK" << endl;
-		} catch (const OleoJmp&) {
-			//cout << "200 FAIL Caught OleoJmp" << endl;
-			cout << "?\n";
-		}
-
-		cout << std::flush;
-
+	constexpr int fildes = STDIN_FILENO;
+	//while(getline(std::cin, line)) {
+	bool cont;
+	while(cont) {
+		line = getline_from_fildes(fildes);
+		//cout << "_io_run_main_loop:line:" << line << endl;
+		//if(line == "q")
+		//	return;
+		//else
+		cont =	process_headless_line(line, fildes);
+		//cout << "_io_run_main_loop: cont:" << cont << endl;
 	}
 	
 }

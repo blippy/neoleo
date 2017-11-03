@@ -33,7 +33,7 @@ using std::vector;
 bool use_coloured_output = false;
 
 void
-colours()
+colours(int fildes)
 {
 	use_coloured_output = true;
 }
@@ -239,7 +239,7 @@ show_cells(const range_t& rng)
 }
 
 
-void show_cells()
+void show_cells(int fildes)
 {
 	show_cells(range_t{1,2, 10, 5});
 }
@@ -363,7 +363,7 @@ init_keymap()
 }
 
 void 
-keyboard_test()
+keyboard_test(int fildes)
 {
 	init_keymap();
 
@@ -405,13 +405,13 @@ keyboard_test()
 }
 
 void
-visual_mode()
+visual_mode(int fildes)
 {
 
 	init_keymap();
 	//exit(0);
 
-	colours();
+	colours(fildes);
 	cout << "\E[2J"; // clear screen
 
 	// terminal size code from

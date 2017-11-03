@@ -1,11 +1,8 @@
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <string>
 
 void run_shell_output_commands(int fildes);
+void run_shell(char* cmd);
+std::string getline_from_fildes(int fildes);
 
-#ifdef __cplusplus
-}
-#endif

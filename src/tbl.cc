@@ -51,7 +51,7 @@ char jst_char(cell* cp)
 }
 
 void 
-tbl()
+tbl(int fildes)
 {
 	cout << ".TS\n";
 

@@ -4,8 +4,8 @@
 
 extern bool use_coloured_output;
 
-void keyboard_test();
-void visual_mode();
-void colours();
+void keyboard_test(int fildes);
+void visual_mode(int fildes);
+void colours(int fildes);
 std::string on_red(const std::string& str);
-void show_cells();
+void show_cells(int fildes);
