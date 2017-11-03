@@ -22,11 +22,12 @@ using std::vector;
 #include "shell.h"
 #include "io-headless.h"
 
+/*
 void
 exec_cmd(string line, int fildes)
 {
 #if 0
-	/* convert from const char* to char* */
+	// convert from const char* to char* 
 	vector<char> v(line.begin(), line.end());
 	v.push_back(0);
 	char* cmd = &v[0];
@@ -35,10 +36,11 @@ exec_cmd(string line, int fildes)
 #endif
 	process_headless_line(line, fildes);
 }
+*/
 
 
 std::string
-getline_from_fildes(int fildes)
+getline_from_fildes(int fildes, bool& eof)
 {
 	/* TODO Account for use of `#' and line continuations `\'
 	 * */
@@ -47,8 +49,10 @@ getline_from_fildes(int fildes)
 	string line;
 	//ofstream ofs;
 	//ofs.open("/tmp/oleo-shell", ofstream::out);
-	while( read(fildes, &ch, 1) == 1)
-	{
+	while(true) {
+		eof = read(fildes, &ch, 1) == 0;
+		if(eof) return line;
+
 		//cout << "getline_from_fildes:ch:" << ch << endl;
 		if(ch == '\n') {
 			//ofs << "line: " << line << endl;
@@ -67,8 +71,9 @@ getline_from_fildes(int fildes)
 void
 run_shell_output_commands(int fildes)
 {
-	auto line = getline_from_fildes(fildes);
-	if(line.size() >0) exec_cmd(line, fildes); //ofs << "line: " << line << endl;
+	bool eof;
+	auto line = getline_from_fildes(fildes, eof);
+	if(line.size() >0) process_headless_line(line, fildes); //ofs << "line: " << line << endl;
 	//ofs.close();
 
 }

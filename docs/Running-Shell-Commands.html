@@ -81,6 +81,7 @@ execution of each command. You will therefore have to wait until the
 script is finished to see the effect.
 </li></ul>
 
+<p><b>Example 1</b></p>
 <p>Here is an example, which is a copy of the bash script <code>oleo42.sh</code> in 
 the <code>examples</code> directory:
 </p><div class="example">
@@ -109,7 +110,21 @@ and type:
 </dd>
 </dl>
 
+<p><b>Example 2: Generate random numbers</b></p>
 
+The following script <code>examples/rnd5</code>) generates 5 random numbers and puts them in your spreadsheet columnwise:
+<pre>
+#!/usr/bin/env bash
+
+echo i
+for n in `seq 5`
+do
+        echo $RANDOM
+done
+
+echo .
+
+</pre>
 
 
 </body>

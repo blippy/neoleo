@@ -214,7 +214,8 @@ insert_columnwise(T fildes)
 	//for(std::string line; line = getline_from_fildes(fildes);){
 	std::string line;
 	while(true) {
-		line = getline_from_fildes(fildes);
+		bool eof;
+		line = getline_from_fildes(fildes, eof);
 		if(line == ".") break;
 		if(line == ";") {
 			curow = 1;
@@ -231,6 +232,7 @@ insert_columnwise(T fildes)
 		curow++;
 		
 		//cout << "You said " << line <<  (line != "." ) << endl;
+		if(eof) return;
 	}
 }
 static void
@@ -238,7 +240,8 @@ insert_rowwise(T fildes)
 {
 	std::string line;
 	while(true) {
-		line = getline_from_fildes(fildes);
+		bool eof;
+		line = getline_from_fildes(fildes, eof);
 		if(line == ".") break;
 		if(line == ";") {
 			curow++;
@@ -255,6 +258,7 @@ insert_rowwise(T fildes)
 		cucol++;
 		
 		//cout << "You said " << line <<  (line != "." ) << endl;
+		if(eof) return;
 	}
 }
 
@@ -339,15 +343,21 @@ _io_run_main_loop()
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
 	//while(getline(std::cin, line)) {
-	bool cont;
+	bool cont = true;
 	while(cont) {
-		line = getline_from_fildes(fildes);
+		bool eof;
+		//cout << "_io_run_main_loop:about to call getline_from_fildes" << endl;
+		line = getline_from_fildes(fildes, eof);
 		//cout << "_io_run_main_loop:line:" << line << endl;
 		//if(line == "q")
 		//	return;
 		//else
 		cont =	process_headless_line(line, fildes);
 		//cout << "_io_run_main_loop: cont:" << cont << endl;
+		if(eof) {
+		       	//cout << "_io_run_main_loop: eof" << endl;
+			cont = false;
+		}
 	}
 	
 }
