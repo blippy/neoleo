@@ -625,188 +625,27 @@ modn(num_t x, num_t *iptr)
 char *
 pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 {
-	if(true){
-		//log_debug("pr_flt:prec:" + std::to_string(prec));
-		static char buffer[BIGFLT]; // not ideal of course
-		//char* buffer = print_buf;
-		bool neg = val < 0;
-		if(val<0) val = -val;
-		std::stringstream ss;
-		if(fmt && fmt->comma) ss.imbue(std::locale(""));
-		if(use_prec) ss << std::setprecision(prec) <<  std::fixed;
-	       	ss << (double)val;
-		std::string s = ss.str();
-		if(fmt) {
-			if(fmt->p_hdr && !neg) s = fmt->p_hdr + s;
-			if(fmt->n_hdr && neg)  s = fmt->n_hdr + s;
-			if(fmt->p_trl && !neg) s = s + fmt->p_trl;
-			if(fmt->n_trl && neg) s = s + fmt->n_trl;
-		}
-
-		for(int i = 0; i< s.size(); ++i) buffer[i] = s[i];
-		buffer[s.size()] = '\0';
-		//strcpy(print_buf, buffer);
-		return buffer;
+	//log_debug("pr_flt:prec:" + std::to_string(prec));
+	static char buffer[BIGFLT]; // not ideal of course
+	//char* buffer = print_buf;
+	bool neg = val < 0;
+	if(val<0) val = -val;
+	std::stringstream ss;
+	if(fmt && fmt->comma) ss.imbue(std::locale(""));
+	if(use_prec) ss << std::setprecision(prec) <<  std::fixed;
+	ss << (double)val;
+	std::string s = ss.str();
+	if(fmt) {
+		if(fmt->p_hdr && !neg) s = fmt->p_hdr + s;
+		if(fmt->n_hdr && neg)  s = fmt->n_hdr + s;
+		if(fmt->p_trl && !neg) s = s + fmt->p_trl;
+		if(fmt->n_trl && neg) s = s + fmt->n_trl;
 	}
 
-  char *iptr;
-  char *fptr;
-  char *pptr;
-  char *pf, *pff;
-  //double fract, integer, tmpval;
-  num_t fract, integer, tmpval;
-  int n;
-  int isneg;
-  int comlen;
-
-
-  val *= (num_t) fmt->scale;
-
-  if (val == (num_t) __plinf)
-    return iname;
-  if (val == (num_t) __neinf)
-    return mname;
-  if (val != val)
-    return nname;
-
-  iptr = &print_buf[BIGFLT];
-  fptr = &print_buf[BIGFLT];
-
-
-  // issue #6/TR01
-  if(use_specified_zero_p(val, fmt->zero)) 
-	  return zero_specifier(fmt->zero);
-  //if (val == 0)
-  //  return fmt->zero ? fmt->zero : "";
-
-  if (val < 0)
-    {
-      isneg = 1;
-      val = -val;
-    }
-  else
-    isneg = 0;
-
-  comlen = 0;
-  if (fmt->comma && *(fmt->comma))
-    for (pf = fmt->comma; *pf; comlen++, pf++)
-      ;
-
-  fract = modn (val, &integer);
-  n = 0;
-  do
-    {
-      if (iptr < &print_buf[comlen])
-	return numb_oflo;
-      tmpval = modn (integer / 10, &integer);
-      *--iptr = '0' + (int) ((tmpval + NUM_HUNDREDTH) * NUM_TEN);
-      if (comlen && n++ == 2 && integer)
-	{
-	  n = 0;
-	  pff = fmt->comma;
-	  pf = pff + comlen;
-	  do
-	    *--iptr = *--pf;
-	  while (pf != pff);
-	}
-    }
-  while (integer);
-
-  if (prec)
-    {
-      int p1;
-
-      p1 = (prec == FLOAT_PRECISION) ? 11 : (prec > 0) ? prec : -prec;
-      pf = fmt->decpt;
-      while (pf && *pf)
-	*fptr++ = *pf++;
-      /* *fptr++='.'; */
-      if (fract)
-	{
-	  do
-	    {
-	      fract = modn (fract * 10, &tmpval);
-	      *fptr++ = '0' + (int) tmpval;
-	    }
-	  while (--p1 && fract);
-	}
-      if (prec > 0 && prec != FLOAT_PRECISION)
-	while (p1--)
-	  *fptr++ = '0';
-      else
-	{
-	  fract = 0;
-	  while (fptr[-1] == '0')
-	    --fptr;
-	  while (!isdigit (fptr[-1]))
-	    --fptr;
-	  *fptr = '\0';
-	}
-    }
-  if (fract)
-    {
-      (void) modn (fract * 10, &tmpval);
-      if (tmpval > 4)
-	{
-	  iptr[-1] = '0';
-	  for (pptr = fptr - 1;; --pptr)
-	    {
-	      if (!isdigit (*pptr))
-		continue;
-	      else if (*pptr == '9')
-		{
-		  if (pptr == fptr - 1 && pptr > &print_buf[BIGFLT] && (prec < 0 || prec == FLOAT_PRECISION))
-		    {
-		      --fptr;
-		      while (!isdigit (pptr[-1]))
-			{
-			  --fptr;
-			  --pptr;
-			}
-		      *pptr = '\0';
-		    }
-		  else
-		    *pptr = '0';
-		}
-	      else
-		{
-		  (*pptr)++;
-		  break;
-		}
-	    }
-	  if (pptr < iptr)
-	    {
-	      --iptr;
-	      if (n == 3)
-		{
-		  char tmpch;
-
-		  tmpch = *iptr++;
-		  for (pf = pff = fmt->comma; *pf; pf++)
-		    ;
-		  do
-		    *--iptr = *--pf;
-		  while (pf != pff);
-		  *--iptr = tmpch;
-		}
-	    }
-	}
-    }
-  pf = pff = (isneg) ? fmt->n_hdr : fmt->p_hdr;
-  if (pf && *pf)
-    {
-      while (*pf)
-	pf++;
-      do
-	*--iptr = *--pf;
-      while (pf != pff);
-    }
-
-  pf = (isneg) ? fmt->n_trl : fmt->p_trl;
-  while (pf && *pf)
-    *fptr++ = *pf++;
-  *fptr = 0;
-  return iptr;
+	for(int i = 0; i< s.size(); ++i) buffer[i] = s[i];
+	buffer[s.size()] = '\0';
+	//strcpy(print_buf, buffer);
+	return buffer;
 }
 
 char *

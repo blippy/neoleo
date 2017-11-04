@@ -2,17 +2,23 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-#define USE_DECIMAL 1
-#else
-#define USE_DECIMAL 0
+#if 0
+	#ifdef __cplusplus
+	#define USE_DECIMAL 1
+	#else
+	#define USE_DECIMAL 0
+	#endif
+
+	#ifndef _GLIBCXX_USE_DECIMAL_FLOAT
+	#undef  USE_DECIMAL
+	#define USE_DECIMAL 0
+	#pragma message "Falling back to doubles instead of decimals"
+	#endif
 #endif
 
-#ifndef _GLIBCXX_USE_DECIMAL_FLOAT
-#undef  USE_DECIMAL
-#define USE_DECIMAL 0
-#pragma message "Falling back to doubles instead of decimals"
-#endif
+// mcarter 04-Nov-2017 I think we're OK with just
+// using good old-fashioned doubles
+#undef USE_DECIMAL
 
 #if USE_DECIMAL
 
