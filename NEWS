@@ -3,6 +3,8 @@ VERSION: 7.0.0
 STATUS:  IN DEVELOPMENT
 DATE:    N/A
 
+* now compiles on a Raspberry Pi (3). All unit tests pass.
+
 * added lab/csv2hless.py as a better way of putting problem CSV files into
   neoleo. Typical usage:
 	python3 csv2hless.py <data.csv | neoleo -H
