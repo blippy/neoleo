@@ -17,6 +17,8 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#include <string>
 #include "global.h"
 #include "cell.h"
 
@@ -33,7 +35,7 @@ extern struct var * find_or_make_var (char *string, int len);
  */
 extern struct cell * my_cell;
 
-extern void set_cell (CELLREF row, CELLREF col, const char *string);
+extern void set_cell(CELLREF row, CELLREF col, const std::string& in_string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
 char* set_cell_from_string(int r,int  c, const std::string & s);
 //extern char * quote_new_value (CELLREF row, CELLREF col, char *string);

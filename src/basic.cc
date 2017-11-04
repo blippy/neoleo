@@ -1758,7 +1758,7 @@ recompile_spreadsheet (void)
        cp;
        cp = next_row_col_in_range(&r, &c))
     {
-      char * form = decomp (r, c, cp);
+	    std::string form = decomp (r, c, cp);
       set_cell (r, c, form);
       if (my_cell)
 	{

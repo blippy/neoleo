@@ -107,20 +107,19 @@ struct cell_buf
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
 void
-set_cell (CELLREF row, CELLREF col, const char *string)
+set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 {
   unsigned char *ret;
 
   cur_row = row;
   cur_col = col;
 
-#ifdef TEST
-  if (!string)
-    {
-      io_error_msg ("Null string to set_cell %s", cell_name (row, col));
-      return;
-    }
-#endif
+  int len = in_string.size();
+  char s1[len+1];
+  for(int i=0; i<len; ++i) s1[i] = in_string[i];
+  s1[len] = '\0';
+  char *string = s1;
+
   while (*string == ' ')
     string++;
 
