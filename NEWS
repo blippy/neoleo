@@ -3,6 +3,10 @@ VERSION: 7.0.0
 STATUS:  IN DEVELOPMENT
 DATE:    N/A
 
+* added lab/csv2hless.py as a better way of putting problem CSV files into
+  neoleo. Typical usage:
+	python3 csv2hless.py <data.csv | neoleo -H
+
 * removed support for sylk and sc files
 
 * RFE#29 done: quite using C-q
