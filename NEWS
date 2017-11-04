@@ -1,5 +1,7 @@
 ===========================================================================
-VERSION 7.0.0 IN DEVELOPMENT
+VERSION: 7.0.0
+STATUS:  IN DEVELOPMENT
+DATE:    N/A
 
 * RFE#29 done: quite using C-q
 
@@ -7,7 +9,7 @@ VERSION 7.0.0 IN DEVELOPMENT
 
 * RFE#25 done: support groff tbl format
 
-* RFE#23 done: quicksatart should mention C-g
+* RFE#23 done: quickstart should mention C-g
 
 * RFE#20 done: Delete key should delete a cell
 
