@@ -90,8 +90,8 @@ extern struct user_fmt cma;
 extern struct user_fmt pct;
 extern struct user_fmt fxt;
 
-//char* pr_flt (double val, struct user_fmt *fmt, int prec);
-char* pr_flt (num_t val, struct user_fmt *fmt, int prec);
+//std::string 
+char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 char *flt_to_str (num_t val);
 
 

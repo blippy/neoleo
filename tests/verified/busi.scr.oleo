@@ -3,23 +3,23 @@
 F;DGFR8
 O;auto;background;noa0;ticks 1
 C;c1;r1;K"pmt - expect 4.74725274725"
-C;r2;Epmt(10, 0.2, 3);K4.74725274725
+C;r2;Epmt(10, 0.2, 3);K4.74725
 C;r3;K"pv - expect 1021.62764637102"
-C;r4;Epv(120, 0.1, 20);K1021.62764637102
+C;r4;Epv(120, 0.1, 20);K1021.63
 C;r5;K"fv - expect 53.82374999999"
-C;r6;Efv(15.5, 0.15, 3);K53.82374999999
+C;r6;Efv(15.5, 0.15, 3);K53.8237
 C;r7;K"rate - expect 0.1"
 C;r8;Erate(1.21, 1, 2);K0.1
 C;r9;K"term - expect 2.75274126023"
-C;r10;Eterm(20, 0.1, 60);K2.75274126023
+C;r10;Eterm(20, 0.1, 60);K2.75274
 C;r11;K"cterm - expect 13.14406258667"
-C;r12;Ecterm(0.1, 70, 20);K13.14406258667
+C;r12;Ecterm(0.1, 70, 20);K13.1441
 C;r13;K"sln - expect 266.66666666666"
-C;r14;Esln(1000, 200, 3);K266.66666666666
+C;r14;Esln(1000, 200, 3);K266.667
 C;r15;K"anrate - expect 0.42570035774"
-C;r16;Eanrate(65, 100, 3);K0.42570035774
+C;r16;Eanrate(65, 100, 3);K0.4257
 C;r17;K"anterm - expect 2.07787462829"
-C;r18;Eanterm(65, 100, 0.22);K2.07787462829
+C;r18;Eanterm(65, 100, 0.22);K2.07787
 C;r19;K"compbal - expect 285.61"
 C;r20;Ecompbal(100, 0.3, 4);K285.61
 C;r21;K"syd - expect 196"
@@ -27,23 +27,23 @@ C;r22;Esyd(1000, 20, 5, 3);K196
 C;r23;K"ddb - expect 144"
 C;r24;Eddb(1000, 20, 5, 3);K144
 C;r25;K"balance - expect 196.80758709931"
-C;r26;Ebalance(300, 0.1, 5, 2);K196.80758709931
+C;r26;Ebalance(300, 0.1, 5, 2);K196.808
 C;r27;K"paidint - expect 55.08607557615"
-C;r28;Epaidint(300, 0.1, 5, 2);K55.08607557615
+C;r28;Epaidint(300, 0.1, 5, 2);K55.0861
 C;r29;K"kint - expect 25.08607557615"
-C;r30;Ekint(300, 0.1, 5, 2);K25.08607557615
+C;r30;Ekint(300, 0.1, 5, 2);K25.0861
 C;r31;K"kprin - expect 54.05316866226"
-C;r32;Ekprin(300, 0.1, 5, 2);K54.05316866226
+C;r32;Ekprin(300, 0.1, 5, 2);K54.0532
 C;c5;r1;K-100.1
 C;r2;K20.3
 C;r3;K40.5
 C;r4;K120.4
 C;c6;r1;K"npv - expect 14.61759259259"
-C;r2;Enpv(r1:4c5, 0.2);K14.61759259259
+C;r2;Enpv(r1:4c5, 0.2);K14.6176
 C;r3;K"irr - expect 0.26881012107"
-C;r4;Eirr(r1:4c5, 0.1);K0.26881012107
+C;r4;Eirr(r1:4c5, 0.1);K0.26881
 C;r5;K"fmrr -expect 0.22970563134"
-C;r6;Efmrr(r1:4c5, 0.05, 0.06, 2);K0.22970563134
+C;r6;Efmrr(r1:4c5, 0.05, 0.06, 2);K0.229706
 O;status 2
 W;N1;A7 6;C7 0 7;Ostandout
 E

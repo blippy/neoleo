@@ -22,6 +22,9 @@
 
 #include <stdlib.h>
 //#include <string>
+#include <iomanip>
+#include <locale>
+#include <sstream>
 
 static char *rcsid = "$Id: ";
 
@@ -53,6 +56,7 @@ static char *rcsid = "$Id: ";
 #include "list.h"
 #include "numeric.h"
 #include "utils.h"
+#include "logging.h"
 
 #ifdef	HAVE_TIME_H
 #include <time.h>
@@ -235,7 +239,9 @@ flt_to_str (num_t val)
       sprintf (print_buf, "%e", (double) val);
       return print_buf;
     }
-  return pr_flt (val, &fxt, FLOAT_PRECISION);
+  char* result = pr_flt (val, &fxt, FLOAT_PRECISION, false);
+  //result[0] = 'X';
+  return result;
 }
 
 /* This is used to return a formatted float for editing.
@@ -372,7 +378,7 @@ print_cell (CELL * cp)
 
 	    if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
 	      goto handle_exp;
-	    return pr_flt (cp->cell_flt(), &fxt, p);
+	    return pr_flt (cp->cell_flt(), &fxt, p, false);
 	  }
 
 	case FMT_DOL:
@@ -617,8 +623,32 @@ modn(num_t x, num_t *iptr)
 }
 
 char *
-pr_flt (num_t val, struct user_fmt *fmt, int prec)
+pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 {
+	if(true){
+		//log_debug("pr_flt:prec:" + std::to_string(prec));
+		static char buffer[BIGFLT]; // not ideal of course
+		//char* buffer = print_buf;
+		bool neg = val < 0;
+		if(val<0) val = -val;
+		std::stringstream ss;
+		if(fmt && fmt->comma) ss.imbue(std::locale(""));
+		if(use_prec) ss << std::setprecision(prec) <<  std::fixed;
+	       	ss << (double)val;
+		std::string s = ss.str();
+		if(fmt) {
+			if(fmt->p_hdr && !neg) s = fmt->p_hdr + s;
+			if(fmt->n_hdr && neg)  s = fmt->n_hdr + s;
+			if(fmt->p_trl && !neg) s = s + fmt->p_trl;
+			if(fmt->n_trl && neg) s = s + fmt->n_trl;
+		}
+
+		for(int i = 0; i< s.size(); ++i) buffer[i] = s[i];
+		buffer[s.size()] = '\0';
+		//strcpy(print_buf, buffer);
+		return buffer;
+	}
+
   char *iptr;
   char *fptr;
   char *pptr;
