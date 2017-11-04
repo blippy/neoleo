@@ -35,7 +35,7 @@ neoleo_SOURCES = alt_cells.cc args.cc basic.cc  busi.cc byte-compile.cc \
 		 mdi.cc mem.cc \
 		 oleofile.cc \
 		 ref.cc regions.cc \
-		 sc.cc sort.cc stringo.cc stub.cc sylk.cc \
+		 sort.cc stringo.cc stub.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
@@ -65,8 +65,8 @@ noinst_HEADERS = alt_cells.h args.h basic.h byte-compile.h busi.h cell.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh proto.h ref.h \
-		 regions.h sc.h sort.h stringo.h stub.h stubs.h \
-		 sylk.h sysdef.h userpref.h utils.h window.h  \
+		 regions.h sort.h stringo.h stub.h stubs.h \
+		 sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h \
 		 $(FORTH_HDRS)

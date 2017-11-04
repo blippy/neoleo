@@ -86,8 +86,8 @@ using std::endl;
 
 
 #include "list.h"
-#include "sc.h"
-#include "sylk.h"
+//#include "sc.h"
+//#include "sylk.h"
 
 #ifdef	HAVE_PANIC_SAVE
 #include "panic.h"
@@ -326,29 +326,6 @@ do_set_option (char *ptr)
 	  write_file = oleo_write_file;
 	  set_file_opts = oleo_set_options;
 	  show_file_opts = oleo_show_options;
-	}
-      else if (!stricmp ("sylk", ptr))
-	{
-	  Global->sylk_a0 = 1;
-	  read_file = sylk_read_file;
-	  write_file = sylk_write_file;
-	  set_file_opts = sylk_set_options;
-	  show_file_opts = sylk_show_options;
-	}
-      else if (!stricmp ("sylk-noa0", ptr))
-	{
-	  Global->sylk_a0 = 0;
-	  read_file = sylk_read_file;
-	  write_file = sylk_write_file;
-	  set_file_opts = sylk_set_options;
-	  show_file_opts = sylk_show_options;
-	}
-      else if (!stricmp ("sc", ptr))
-	{
-	  read_file = sc_read_file;
-	  write_file = sc_write_file;
-	  set_file_opts = sc_set_options;
-	  show_file_opts = sc_show_options;
 	}
 #ifdef	HAVE_PANIC_SAVE
       else if (!stricmp ("panic", ptr))

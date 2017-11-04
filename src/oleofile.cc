@@ -43,7 +43,7 @@
 #include "global.h"
 #include "cell.h"
 #include "line.h"
-#include "sylk.h"
+//#include "sylk.h"
 #include "lists.h"
 #include "ref.h"
 #include "regions.h"

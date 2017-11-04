@@ -3,6 +3,8 @@ VERSION: 7.0.0
 STATUS:  IN DEVELOPMENT
 DATE:    N/A
 
+* removed support for sylk and sc files
+
 * RFE#29 done: quite using C-q
 
 * REF#28 done: set default format to general.float
