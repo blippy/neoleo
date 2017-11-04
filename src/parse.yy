@@ -315,12 +315,19 @@ yyerror (char * s)
 		parse_error=PARSE_ERR;
 }
 
+void*
+alloc_memory(size_t nbytes)
+{
+	return obstack_alloc(&tmp_mem, nbytes);
+}
+
 YYSTYPE
 make_list (YYSTYPE car, YYSTYPE cdr)
 {
 	YYSTYPE ret;
 
-	ret=(YYSTYPE)obstack_alloc(&tmp_mem,sizeof(*ret));
+	//ret=(YYSTYPE)obstack_alloc(&tmp_mem,sizeof(*ret));
+	ret=(YYSTYPE)alloc_memory(sizeof(*ret));
 	ret->comp_value = 0;
 	ret->n_x.v_subs[0]=car;
 	ret->n_x.v_subs[1]=cdr;
@@ -400,7 +407,8 @@ yylex ()
 	if(ch=='(' || ch==',' || ch==')')
 		return ch;
 
-	a_new=(struct node *)obstack_alloc(&tmp_mem,sizeof(struct node));
+	//a_new=(struct node *)obstack_alloc(&tmp_mem,sizeof(struct node));
+	a_new=(struct node *)alloc_memory(sizeof(struct node));
 	a_new->add_byte=0;
 	a_new->sub_value=0;
 	switch(ch) {
@@ -451,12 +459,8 @@ yylex ()
 			parse_error=NO_QUOTE;
 			return ERROR;
 		}
-#if 0
-		tmp_str=(char *)ck_malloc(1+instr-begin);
-		_mem_ptr->add_ptr(tmp_str);
-#else
-		tmp_str = (char *) obstack_alloc(&tmp_mem, 1+instr-begin);
-#endif
+		//tmp_str = (char *) obstack_alloc(&tmp_mem, 1+instr-begin);
+		tmp_str = (char *) alloc_memory(1+instr-begin);
 		a_new->n_x.v_string=tmp_str;
 
 		while(begin!=instr) {
