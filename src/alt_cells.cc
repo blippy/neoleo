@@ -31,7 +31,9 @@ alt_set_cell(int row, int col, const std::string& s)
 	c.set_cell_formula(ret);
 
 	point_t p{row, col};
-	alt_the_cells.emplace(std::make_pair(p, c)); 
+	auto it = alt_the_cells.find(p);
+	if(it != alt_the_cells.end()) alt_the_cells.erase(it);
+	alt_the_cells.insert(std::make_pair(p, c)); 
 }
 
 char*
