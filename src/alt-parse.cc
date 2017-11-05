@@ -33,14 +33,14 @@
 enum Token { L_CELL, L_CONST, GE, NE, LE, L_FN0, L_FN1, L_FN2, L_FN3, L_FN1R , L_VAR, L_RANGE, 
 	BAD_CHAR, BAD_FUNC, NO_QUOTE, PARSE_ERR};
 
-char *instr;
-int parse_error = 0;
+char *alt_instr;
+int alt_parse_error = 0;
 extern struct obstack tmp_mem;
 
 void check_parser_called_correctly();
 
 //* This table contains a list of the infix single-char functions 
-unsigned char fnin[] = {
+unsigned char alt_fnin[] = {
 	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 };
 
@@ -50,282 +50,58 @@ unsigned char fnin[] = {
 
 typedef struct node *YYSTYPE;
 
-#if 0 // ----- big comment out -----
-%right '?' ':'
-%left '&'
-%nonassoc '=' NE
-%nonassoc '<' LE '>' GE
-%left '+' '-'
-%left '*' '/' '%'
-%right '^'
-%left NEG '!'
+int
+alt_str_to_col (char **str)
+{
+	int ret;
+	char c,cc,ccc;
+#if MAX_COL>702
+	char cccc;
+#endif
 
-%token	L_CELL L_RANGE
-%token	L_VAR
-
-%token	L_CONST
-%token	L_FN0	L_FN1	L_FN2	L_FN3	L_FN4	L_FNN
-%token	L_FN1R	L_FN2R	L_FN3R	L_FN4R	L_FNNR
-
-%token	L_LE	L_NE	L_GE
-
-#include "funcdef.h"
-
-
-#include "sysdef.h"
-
-#include "errors.h"
-
-int yylex ();
-void yyerror (char *);
-VOIDSTAR parse_hash;
-//extern VOIDSTAR hash_find();
-
-#define YYSTYPE _y_y_s_t_y_p_e
-YYSTYPE parse_return;
-YYSTYPE make_list (YYSTYPE, YYSTYPE);
-
-
-top: line { check_parser_called_correctly(); }
-
-line:	exp
-		{ parse_return=$1; }
-	| error {
-		if(!parse_error)
-			parse_error=PARSE_ERR;
-		parse_return=0; }
-	;
-
-exp:	  L_CONST
-	| cell
-	| L_FN0 '(' ')' {
-		$$=$1; }
-	| L_FN1 '(' exp ')' {
-		($1)->n_x.v_subs[0]=$3;
-		($1)->n_x.v_subs[1]=(struct node *)0;
-		$$=$1; }
-	| L_FN2 '(' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=$3;
-		($1)->n_x.v_subs[1]=$5;
-		$$=$1; }
-	| L_FN3 '(' exp ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=$7;
- 		$$=$1;}
-	| L_FN4 '(' exp ',' exp ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=make_list($7,$9);
- 		$$=$1;}
-	| L_FNN '(' exp_list ')' {
-		($1)->n_x.v_subs[0]=(struct node *)0;
-		($1)->n_x.v_subs[1]=$3;
-		$$=$1; }
-	| L_FN1R '(' L_RANGE ')' {
-		$1->n_x.v_subs[0]=$3;
-		$$=$1; }
-	| L_FN1R '(' L_VAR ')' {
-		$1->n_x.v_subs[0]=$3;
-		$$=$1; }
-
-	| L_FN2R '(' L_RANGE ',' exp ')' {
-		$1->n_x.v_subs[0]=$3;
-		$1->n_x.v_subs[1]=$5;
-		$$=$1; }
-	| L_FN2R '(' L_VAR ',' exp ')' {
-		$1->n_x.v_subs[0]=$3;
-		$1->n_x.v_subs[1]=$5;
-		$$=$1; }
-
-	/* JF:  These should be FN2R, but I'm hacking this for SYLNK */
-	| L_FN2R '(' L_RANGE ',' exp ',' exp ')' {
-		if($1->comp_value!=F_INDEX)
-			parse_error=PARSE_ERR;
-		$1->comp_value=F_INDEX2;
-		$1->n_x.v_subs[0]=make_list($3,$5);
-		$1->n_x.v_subs[1]=$7;
-		$$=$1; }
-	| L_FN2R '(' L_VAR ',' exp ',' exp ')' {
-		if($1->comp_value!=F_INDEX)
-			parse_error=PARSE_ERR;
-		$1->comp_value=F_INDEX2;
-		$1->n_x.v_subs[0]=make_list($3,$5);
-		$1->n_x.v_subs[1]=$7;
-		$$=$1; }
-
-	| L_FN3R '(' L_RANGE ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=$7;
- 		$$=$1;}
-	| L_FN3R '(' L_VAR ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=$7;
- 		$$=$1;}
-
-	| L_FN4R '(' L_RANGE ',' exp ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=make_list($7,$9);
- 		$$=$1;}
-	| L_FN4R '(' L_VAR ',' exp ',' exp ',' exp ')' {
-		($1)->n_x.v_subs[0]=make_list($3,$5);
- 		($1)->n_x.v_subs[1]=make_list($7,$9);
- 		$$=$1;}
-
-	| L_FNNR '(' range_exp_list ')' {
-		($1)->n_x.v_subs[0]=(struct node *)0;
-		($1)->n_x.v_subs[1]=$3;
-		$$=$1; }
-	| exp '?' exp ':' exp {
-		$2->comp_value=IF;
-		$2->n_x.v_subs[0]=$4;
-		$2->n_x.v_subs[1]=$5;
-		$4->n_x.v_subs[0]=$1;
-		$4->n_x.v_subs[1]=$3;
-		$$=$2; }
-	/* | exp '|' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; } */
-	| exp '&' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '<' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp LE exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '=' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp NE exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '>' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp GE exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '+' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '-' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '*' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '/' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '%' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| exp '^' exp {
-		$2->n_x.v_subs[0]=$1;
-		$2->n_x.v_subs[1]=$3;
-		$$ = $2; }
-	| '+' exp {
-		if($2->comp_value==CONST_FLT) {
-			$2->n_x.v_float= ($2->n_x.v_float);
-			$$=$2;
-		} else if($2->comp_value==CONST_INT) {
-			$2->n_x.v_int= ($2->n_x.v_int);
-			$$=$2;
-		} else {
-			$$ = $2;
-		} }
-	| '-' exp %prec NEG {
-		if($2->comp_value==CONST_FLT) {
-			$2->n_x.v_float= -($2->n_x.v_float);
-			/* free($1); */
-			$$=$2;
-		} else if($2->comp_value==CONST_INT) {
-			$2->n_x.v_int= -($2->n_x.v_int);
-			/* free($1); */
-			$$=$2;
-		} else {
-			$1->comp_value = NEGATE;
-			$1->n_x.v_subs[0]=$2;
-			$1->n_x.v_subs[1]=(struct node *)0;
-			$$ = $1;
-		} }
-	| '!' exp {
-		$1->n_x.v_subs[0]=$2;
-		$1->n_x.v_subs[1]=(struct node *)0;
-		$$ = $1; }
-	| '(' exp ')'
-		{ $$ = $2; }
-	| '(' exp error {
-		if(!parse_error)
-			parse_error=NO_CLOSE;
-		}
-	/* | exp ')' error {
-		if(!parse_error)
-			parse_error=NO_OPEN;
-		} */
-	| '(' error {
-		if(!parse_error)
-			parse_error=NO_CLOSE;
-		}
-	;
-
-
-exp_list: exp
- 		{ $$ = make_list($1, 0); }
-	| exp_list ',' exp
-		{ $$ = make_list($3, $1); }
-	;
-
-range_exp: L_RANGE
-	| exp
-	;
-
-range_exp_list: range_exp
-		{ $$=make_list($1, 0); }
-	|   range_exp_list ',' range_exp
-		{ $$=make_list($3,$1); }
-	;
-
-cell:	L_CELL
-		{ $$=$1; }
-	| L_VAR
-	;
-%%
-#endif // ----- big comment out -----
+	ret=0;
+	c=str[0][0];
+	if(!isalpha((cc=str[0][1]))) {
+		(*str)++;
+		return MIN_COL + (isupper(c) ? c-'A' : c-'a');
+	}
+	if(!isalpha((ccc=str[0][2]))) {
+		(*str)+=2;
+		return MIN_COL+26 + (isupper(c) ? c-'A' : c-'a')*26 + (isupper(cc) ? cc-'A' : cc-'a');
+	}
+#if MAX_COL>702
+	if(!isalpha((cccc=str[0][3]))) {
+		(*str)+=3;
+		return MIN_COL+702 + (isupper(c) ? c-'A' : c-'a')*26*26 + (isupper(cc) ? cc-'A' : cc-'a')*26 + (isupper(ccc) ? ccc-'A' : ccc-'a');
+	}
+	if(!isalpha(str[0][4])) {
+		(*str)+=4;
+		return MIN_COL+18278 + (isupper(c) ? c-'A' : c-'a')*26*26*26 + (isupper(cc) ? cc-'A' : cc-'a')*26*26 + (isupper(ccc) ? ccc-'A' : ccc-'a')*26 + (isupper(cccc) ? cccc-'A' : cccc-'a');
+	}
+#endif
+	return 0;
+}
 
 void
-yyerror (char * s)
+alt_yyerror (char * s)
 {
-	if(!parse_error)
-		parse_error=PARSE_ERR;
+	if(!alt_parse_error)
+		alt_parse_error=PARSE_ERR;
 }
 
 void*
-alloc_memory(size_t nbytes)
+alt_alloc_memory(size_t nbytes)
 {
 	return obstack_alloc(&tmp_mem, nbytes);
 }
 
 YYSTYPE
-make_list (YYSTYPE car, YYSTYPE cdr)
+alt_make_list (YYSTYPE car, YYSTYPE cdr)
 {
 	YYSTYPE ret;
 
 	//ret=(YYSTYPE)obstack_alloc(&tmp_mem,sizeof(*ret));
-	ret=(YYSTYPE)alloc_memory(sizeof(*ret));
+	ret=(YYSTYPE)alt_alloc_memory(sizeof(*ret));
 	ret->comp_value = 0;
 	ret->n_x.v_subs[0]=car;
 	ret->n_x.v_subs[1]=cdr;
@@ -336,21 +112,10 @@ make_list (YYSTYPE car, YYSTYPE cdr)
 
 extern struct node *yylval;
 
-unsigned char parse_cell_or_range (char **,struct rng *);
-int str_to_col (char ** str);
+unsigned char alt_parse_cell_or_range (char **,struct rng *);
+int alt_str_to_col (char ** str);
 
 static void noa0_number(char **ptr, int *r, int current);
-
-/* create a sentinel to check that yyparse() is only called
- * via yyparse_parse()
- */
-
-static bool allow_yyparse = false;	
-void check_parser_called_correctly()
-{
-	if(!allow_yyparse)
-		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
-}
 
 /* mcarter 29-Aug-2017
  * mem_ptr is never actually used, now that I've figured out the source of the
@@ -360,28 +125,19 @@ void check_parser_called_correctly()
 
 static mem* _mem_ptr = nullptr;
 
-int yyparse_parse(const std::string& input, mem& yymem)
+int alt_yyparse_parse(const std::string& input, mem& yymem)
 {
-	allow_yyparse = true;	
-	instr = (char*) alloca(input.size()+1);
-	assert(instr);
-	strcpy(instr, input.c_str());
+	alt_instr = (char*) alloca(input.size()+1);
+	assert(alt_instr);
+	strcpy(alt_instr, input.c_str());
 	_mem_ptr = &yymem;
 	//int ret = yyparse();
 	int ret = 666;
-	allow_yyparse = false;	
 	return ret;
 }
 
-int yyparse_parse(const std::string& input)
-{
-	mem yymem;
-	return yyparse_parse(input, yymem);
-}
-
-
 int
-yylex ()
+alt_yylex ()
 {
 	int ch;
 	struct node *a_new;
@@ -397,17 +153,17 @@ yylex ()
 	int tmp_ch;
 
 #ifdef TEST
-	if(!instr)
+	if(!alt_instr)
 		return ERROR;
 #endif
-	while(isspace(*instr))
-		instr++;
-	ch = *instr++;
+	while(isspace(*alt_instr))
+		alt_instr++;
+	ch = *alt_instr++;
 	if(ch=='(' || ch==',' || ch==')')
 		return ch;
 
 	//a_new=(struct node *)obstack_alloc(&tmp_mem,sizeof(struct node));
-	a_new=(struct node *)alloc_memory(sizeof(struct node));
+	a_new=(struct node *)alt_alloc_memory(sizeof(struct node));
 	a_new->add_byte=0;
 	a_new->sub_value=0;
 	switch(ch) {
@@ -418,8 +174,8 @@ yylex ()
 	case '7': case '8': case '9': case '.':
 		isflt = (ch=='.');
 
-		begin=instr-1;
-		tmp_str=instr;
+		begin=alt_instr-1;
+		tmp_str=alt_instr;
 
 		while(isdigit(*tmp_str) || (!isflt && *tmp_str=='.' && ++isflt))
 			tmp_str++;
@@ -437,32 +193,32 @@ yylex ()
 		} else {
 			a_new->n_x.v_int=astol((char **)(&begin));
 			if(begin!=tmp_str) {
-				begin=instr-1;
+				begin=alt_instr-1;
 				a_new->n_x.v_float=astof((char **)(&begin));
 				byte_value=CONST_FLT;
 			} else
 				byte_value=CONST_INT;
 		}
 		ch=L_CONST;
-		instr=begin;
+		alt_instr=begin;
 		break;
 
 	case '"':
-		begin=instr;
-		while(*instr && *instr!='"') {
-			if(*instr=='\\' && instr[1])
-				instr++;
-			instr++;
+		begin=alt_instr;
+		while(*alt_instr && *alt_instr!='"') {
+			if(*alt_instr=='\\' && alt_instr[1])
+				alt_instr++;
+			alt_instr++;
 		}
-		if(!*instr) {
-			parse_error=NO_QUOTE;
+		if(!*alt_instr) {
+			alt_parse_error=NO_QUOTE;
 			return ERROR;
 		}
-		//tmp_str = (char *) obstack_alloc(&tmp_mem, 1+instr-begin);
-		tmp_str = (char *) alloc_memory(1+instr-begin);
+		//tmp_str = (char *) obstack_alloc(&tmp_mem, 1+alt_instr-begin);
+		tmp_str = (char *) alt_alloc_memory(1+alt_instr-begin);
 		a_new->n_x.v_string=tmp_str;
 
-		while(begin!=instr) {
+		while(begin!=alt_instr) {
 			unsigned char n;
 
 			if(*begin=='\\') {
@@ -487,7 +243,7 @@ yylex ()
 				*tmp_str++= *begin++;
 		}
 		*tmp_str='\0';
-		instr++;
+		alt_instr++;
 		byte_value=CONST_STR;
 		ch=L_CONST;
 		break;
@@ -501,7 +257,7 @@ yylex ()
 	{
 		unsigned char *ptr;
 
-		for(ptr= fnin;*ptr;ptr++)
+		for(ptr= alt_fnin;*ptr;ptr++)
 			if(the_funs[*ptr].fn_str[0]==ch)
 				break;
 #ifdef TEST
@@ -519,11 +275,11 @@ yylex ()
 	case '!':
 	case '<':
 	case '>':
-		if(*instr!='=') {
+		if(*alt_instr!='=') {
 			byte_value = (ch=='<') ? LESS : (ch=='>') ? GREATER : NOT;
 			break;
 		}
-		instr++;
+		alt_instr++;
 		byte_value = (ch=='<') ? LESSEQ : (ch=='>') ? GREATEQ : NOTEQUAL;
 		ch = (ch=='<') ? LE : (ch=='>') ? GE : NE;
 		break;
@@ -538,15 +294,15 @@ yylex ()
 	case '}':
 	case '~':
 	bad_chr:
-		parse_error=BAD_CHAR;
+		alt_parse_error=BAD_CHAR;
 		return ERROR;
 
 	case '#':
-		begin=instr-1;
-		while(*instr && (isalnum(*instr) || *instr=='_'))
-			instr++;
-		ch= *instr;
-		*instr=0;
+		begin=alt_instr-1;
+		while(*alt_instr && (isalnum(*alt_instr) || *alt_instr=='_'))
+			alt_instr++;
+		ch= *alt_instr;
+		*alt_instr=0;
 		if(!stricmp(begin,tname))
 			byte_value=F_TRUE;
 		else if(!stricmp(begin,fname))
@@ -568,7 +324,7 @@ yylex ()
 			a_new->n_x.v_int=n;
 			byte_value=CONST_ERR;
 		}
-		*instr=ch;
+		*alt_instr=ch;
 		ch=L_CONST;
 		break;
 
@@ -577,30 +333,30 @@ yylex ()
 		   goto bad_chr;
 
 		if(Global->a0 && ch=='@') {
-			begin=instr;
-			while(*instr && (isalpha(*instr) || isdigit(*instr) || *instr=='_'))
-				instr++;
-			n=instr-begin;
+			begin=alt_instr;
+			while(*alt_instr && (isalpha(*alt_instr) || isdigit(*alt_instr) || *alt_instr=='_'))
+				alt_instr++;
+			n=alt_instr-begin;
 		} else {
-			begin=instr-1;
+			begin=alt_instr-1;
 			byte_value=parse_cell_or_range(&begin,&(a_new->n_x.v_rng));
 			if(byte_value) {
 				if((byte_value& ~0x3)==R_CELL)
 					ch=L_CELL;
 				else
 					ch=L_RANGE;
-				instr=begin;
+				alt_instr=begin;
 				break;
 			}
 
-			while(*instr && (isalpha(*instr) || isdigit(*instr) || *instr=='_'))
-				instr++;
+			while(*alt_instr && (isalpha(*alt_instr) || isdigit(*alt_instr) || *alt_instr=='_'))
+				alt_instr++;
 
-			n=instr-begin;
-			while(isspace(*instr))
-				instr++;
+			n=alt_instr-begin;
+			while(isspace(*alt_instr))
+				alt_instr++;
 
-			if(*instr!='(') {
+			if(*alt_instr!='(') {
 				ch=L_VAR;
 				byte_value=VAR;
 				a_new->n_x.v_var=find_or_make_var(begin,n);
@@ -613,7 +369,7 @@ yylex ()
 		begin[n]=tmp_ch;
 		byte_value= ERROR;
 		if(!fp) {
-			parse_error=BAD_FUNC;
+			alt_parse_error=BAD_FUNC;
 			return ERROR;
 		}
 
@@ -630,7 +386,7 @@ yylex ()
 #ifdef TEST
 			if(nn==n_usr_funs) {
 				io_error_msg("Couln't turn fp into a ##");
-				parse_error=BAD_FUNC;
+				alt_parse_error=BAD_FUNC;
 				return ERROR;
 			}
 #endif
@@ -680,7 +436,7 @@ a0_parse_cell_or_range (char **ptr, struct rng *retp)
 	}
 	if(!isalpha(*p))
 		return 0;
-	tmpc=str_to_col(&p);
+	tmpc=alt_str_to_col(&p);
 	if(tmpc<MIN_COL || tmpc>MAX_COL)
 		return 0;
 	if(*p=='$') {
@@ -706,7 +462,7 @@ a0_parse_cell_or_range (char **ptr, struct rng *retp)
 		}
 		if(!isalpha(*p))
 			return 0;
-		tmpc1=str_to_col(&p);
+		tmpc1=alt_str_to_col(&p);
 		if(tmpc1<MIN_COL || tmpc1>MAX_COL)
 			return 0;
 		if(*p=='$') {
@@ -1134,7 +890,7 @@ noa0_parse_cell_or_range(char **ptr, struct rng *retp)
  *		HCREL	(8)	high column is relative
  */
 unsigned char
-parse_cell_or_range(char **ptr, struct rng *retp)
+alt_parse_cell_or_range(char **ptr, struct rng *retp)
 {
 	unsigned char	r;
 
@@ -1153,37 +909,6 @@ parse_cell_or_range(char **ptr, struct rng *retp)
 	return r;
 }
 
-int
-str_to_col (char **str)
-{
-	int ret;
-	char c,cc,ccc;
-#if MAX_COL>702
-	char cccc;
-#endif
-
-	ret=0;
-	c=str[0][0];
-	if(!isalpha((cc=str[0][1]))) {
-		(*str)++;
-		return MIN_COL + (isupper(c) ? c-'A' : c-'a');
-	}
-	if(!isalpha((ccc=str[0][2]))) {
-		(*str)+=2;
-		return MIN_COL+26 + (isupper(c) ? c-'A' : c-'a')*26 + (isupper(cc) ? cc-'A' : cc-'a');
-	}
-#if MAX_COL>702
-	if(!isalpha((cccc=str[0][3]))) {
-		(*str)+=3;
-		return MIN_COL+702 + (isupper(c) ? c-'A' : c-'a')*26*26 + (isupper(cc) ? cc-'A' : cc-'a')*26 + (isupper(ccc) ? ccc-'A' : ccc-'a');
-	}
-	if(!isalpha(str[0][4])) {
-		(*str)+=4;
-		return MIN_COL+18278 + (isupper(c) ? c-'A' : c-'a')*26*26*26 + (isupper(cc) ? cc-'A' : cc-'a')*26*26 + (isupper(ccc) ? ccc-'A' : ccc-'a')*26 + (isupper(cccc) ? cccc-'A' : cccc-'a');
-	}
-#endif
-	return 0;
-}
 
 bool run_alt_parse_tests()
 {
