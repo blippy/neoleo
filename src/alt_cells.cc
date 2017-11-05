@@ -12,12 +12,25 @@ using std::endl;
 using std::map;
 using std::string;
 
+
+bool use_alt_cells = false;
+
 bool operator < (const point_t& left, const point_t& right)
 {
 	return std::tie(left.r, left.c) < std::tie(right.r, right.c);
 }
 
 map<point_t, cell> alt_the_cells;
+
+struct cell *
+alt_find_cell(int row, int col)
+{
+	auto it = alt_the_cells.find(point_t{row, col});
+	if(it != alt_the_cells.end())
+		return &(it->second);
+	else
+		return nullptr;
+}
 
 void
 alt_set_cell(int row, int col, const std::string& s)
@@ -92,17 +105,33 @@ test_eq(std::string test_name, const T& lhs, const T& rhs)
 void
 altc_test01()
 {
+	cout << "Running test 01\n";
 	point_t pt{1,1};
 	alt_set_cell_from_string(1, 1, "42");
-	test_eq("altc01", string("42"), string(alt_decomp(pt))); // will actually equal 63.36
+	struct cell* cp = alt_find_cell(1,1);
+	cout << "Found:" << cp->get_cell_int() << "\n";
+
+	string res{alt_decomp(pt)};
+	cout << "Found:" << res << "\n";
+	test_eq("altc01", string("42"), res); // will actually equal 63.36
+}
+void
+altc_test02()
+{
+	cout << "Running test 02\n";
+	point_t pt{1,1};
+	alt_set_cell_from_string(1, 1, "42");
+	string res{alt_decomp(pt)};
+	cout << "Found:" << res << "\n";
+	test_eq("altc01", string("42"), res); // will actually equal 63.36
 }
 
 bool
 run_alt_cells_tests()
 {
-	cout << "Running alt cells tests ...\n";
-	cout << "Pass/fail is skipped, because it mostly doesn't work\n";
+	use_alt_cells = true;
 	altc_test01();
+	altc_test02();
 	cout << "... Finished running alt cells tests\n";
 	return false;
 }

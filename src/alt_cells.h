@@ -5,4 +5,6 @@
  */
 
 
+extern bool use_alt_cells;
 bool run_alt_cells_tests();
+struct cell* alt_find_cell(int row, int col);
