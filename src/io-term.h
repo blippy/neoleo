@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 #include <setjmp.h>
+#include <string>
 #include "global.h"
 //#include "defuns.h"
 
@@ -101,6 +102,7 @@ void save_preferences();
 #endif /* TRUE */
 
 extern int option_filter;
+extern std::string option_tests_argument;
 
 extern void oleo_catch_signals(void (*h)(int));
 int main0(int argc, char **argv);

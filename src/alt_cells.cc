@@ -97,11 +97,12 @@ altc_test01()
 	test_eq("altc01", string("42"), string(alt_decomp(pt))); // will actually equal 63.36
 }
 
-void
+bool
 run_alt_cells_tests()
 {
 	cout << "Running alt cells tests ...\n";
 	cout << "Pass/fail is skipped, because it mostly doesn't work\n";
 	altc_test01();
 	cout << "... Finished running alt cells tests\n";
+	return false;
 }

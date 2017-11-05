@@ -95,6 +95,9 @@ using std::endl;
 
 #include "defuns.h" // mcarter
 
+using std::cout;
+using std::endl;
+
 //#include "neoleo_swig.h"
 
 #if	ENABLE_NLS
@@ -138,6 +141,7 @@ fairly_std_main_loop(void)
 }
 
 static bool	option_tests = false;
+std::string	option_tests_argument = "regular";
 static char	option_separator = '\t';
 static char	*option_format = NULL;
 int		option_filter = 0;
@@ -156,7 +160,7 @@ static struct option long_options[] =
 	{"space",		0,	NULL,	'S'},
 	{"format",		1,	NULL,	'F'},
 	{"filter",		0,	NULL,	'-'},
-	{"tests",		0,	NULL,	'T'},
+	{"tests",		optional_argument,	NULL,	'T'},
 	{"version",		0,	NULL,	'v'},
 	{NULL,			0,	NULL,	0}
 };
@@ -813,7 +817,7 @@ Usage: %s [OPTION]... [FILE]...\n\
   -f, --ignore-init-file   ignore settings defined in init file\n\
   -s x, --separator x	   set separator for 'list' file type to x\n\
   -S, --space		   set separator for 'list' file type to a space\n\
-  -T, --tests              run test suite\n\
+  -T, --tests [x]          run test suite x\n\
   -F x, --format x	   set default file type to x (oleo, list, sc  ...)\n\
   --filter		   read file from stdin, write to stdout on exit\n\
 \n\
@@ -1012,10 +1016,10 @@ print_version()
 void
 parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 {
-	int opt;
+	int opt, optindex;
 
 	while (1) {
-		opt = getopt_long (argc, argv, short_options, long_options, (int *)0);
+		opt = getopt_long (argc, argv, short_options, long_options, &optindex);
 		if (opt == EOF)
 			break;
 
@@ -1074,6 +1078,14 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 				break;
 			case 'T':
 				option_tests = true;
+				//cout << "optindex:" << optind << "\n";
+				if(!optarg 
+						&& optind < argc
+						&& NULL !=argv[optind] 
+						&& '\0' != argv[optind][0]
+						&& '-' != argv[optind][0])
+					option_tests_argument = argv[optind++];
+				//exit(1);
 				break;
 			case '-':
 				option_filter = 1;

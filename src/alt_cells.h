@@ -5,4 +5,4 @@
  */
 
 
-void run_alt_cells_tests();
+bool run_alt_cells_tests();

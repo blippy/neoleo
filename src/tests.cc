@@ -1,17 +1,20 @@
 #include <algorithm>
 #include <array>
 #include <assert.h>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <vector>
+#include <map>
 
 #include <obstack.h>
 using std::string;
 using std::cout;
 using std::endl;
+using std::map;
 using std::vector;
 
 // check for leaks, as suggested at 
@@ -163,7 +166,7 @@ misc_memchecks()
 }
 
 bool
-headless_tests()
+run_regular_tests()
 {
 	test_formatting();
 	run_cell_formula_tests();
@@ -210,13 +213,36 @@ headless_tests()
 	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
-	run_alt_cells_tests();
 
 	FreeGlobals();
 
         cout << "Finished test\n";
 
 	//__lsan_do_leak_check();
+	return all_pass;
+}
+
+bool
+headless_tests()
+{
+	bool all_pass = true;
+	cout << "Running tests: " << option_tests_argument << "\n";
+
+	map<string, std::function<bool()> > func_map = {
+		{"alt-cells",	run_alt_cells_tests},
+		{"regular", 	run_regular_tests}
+	};
+
+	auto it = func_map.find(option_tests_argument);
+	if(it != func_map.end()) {
+		auto fn = it->second;
+		fn();
+	} else {
+		cout << "Test not found\nTests available are:\n";
+		for(auto it=func_map.begin(); it != func_map.end(); ++it)
+			cout << it->first << "\n";
+	}
+
 	return all_pass;
 }
 
