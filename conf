@@ -16,6 +16,10 @@ SAN=--with-asan
 #	echo "Configuring with sanitizer"
 #       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
 #fi
+source /etc/os-release
+if [ "x$ID" = "xraspbian" ]; then
+	SAN=
+fi	
 
 OPTS="$DBG $GPROF $SAN "
 
