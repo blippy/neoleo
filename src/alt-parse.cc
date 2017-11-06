@@ -21,7 +21,11 @@
  */
 
 #include <cctype>
+#include <cstdlib>
+#include <iostream>
 #include <stdexcept>
+#include <regex>
+#include <string>
 
 #include "global.h"
 #include "eval.h"
@@ -29,6 +33,10 @@
 #include "ref.h"
 #include "hash.h"
 #include "mem.h"
+
+
+using std::cout;
+using std::endl;
 
 enum Token { L_CELL, L_CONST, GE, NE, LE, L_FN0, L_FN1, L_FN2, L_FN3, L_FN1R , L_VAR, L_RANGE, 
 	BAD_CHAR, BAD_FUNC, NO_QUOTE, PARSE_ERR};
@@ -909,8 +917,39 @@ alt_parse_cell_or_range(char **ptr, struct rng *retp)
 	return r;
 }
 
+static
+bool test01()
+{
+
+	cout << "test01\n";
+
+	std::smatch m;
+
+	std::string s{"  r1C2"}; //12.3e23 13.4"};
+	auto i0 = s.begin();
+	auto iX = s.end();
+	while(i0<iX && std::isspace(*i0)) i0++; // eat white
+	if(i0 != iX) {
+		std::string s2(i0, iX);
+		// attempt match of float
+		// https://www.regular-expressions.info/floatingpoint.html
+		static const std::regex re_float{"^([-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)"}; 
+		if( std::regex_search(s2, m, re_float)) {
+			cout << "matched float:" << m[0] << "\n";
+		} 
+
+		// attempt match of cell ref - although there must be loads cases
+		static const std::regex re_rc{"^([Rr][0-9]+[Cc][0-9])"};
+		if(std::regex_search(s2, m, re_rc)) {
+			cout << "matched RC:" << m[0] << "\n";
+		}
+	}
+
+	return true;
+}
 
 bool run_alt_parse_tests()
 {
+	test01();
 	return false;
 }
