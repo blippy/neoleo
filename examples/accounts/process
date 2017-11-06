@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+neoleo -H trans.oleo <<<type-dsv  > /tmp/accts1
+
+
+awk -F '\t' </tmp/accts1 '
+{tot[$2] += $4 ; tot[$3] -= $4; }
+
+END { 
+	for(key in tot) { 
+		print "goto-cell " key;
+		print "edit-cell " tot[key];
+	}
+	print "w"
+	print "q"
+
+}
+' >/tmp/accts2
+
+cp accts-plate.oleo accts-out.oleo
+
+neoleo -H    accts-out.oleo </tmp/accts2

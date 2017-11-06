@@ -1,0 +1,49 @@
+# This file was created by GNU Oleo
+# format 2.1 (requires Oleo 1.99.9 or higher)
+F;DF2R8
+O;auto;background;noa0;ticks 1
+F;W1 1 12
+C;c1;r1;K"01 Jan 2017"
+C;r2;K"01 Jan 2017"
+C;r3;K"01 Jan 2017"
+C;r4;K"02 Sep 2017"
+C;r5;K"03 Sep 2017"
+C;r6;K"03 Sep 2017"
+C;r7;K"04 Sep 2017"
+C;r8;K"04 Sep 2017"
+C;c2;r1;K"cash"
+C;r2;K"bank"
+C;r3;K"visa"
+C;r4;K"shop"
+C;r5;K"car"
+C;r6;K"bank"
+C;r7;K"visa"
+C;r8;K"shop"
+C;c3;r1;K"open"
+C;r2;K"open"
+C;r3;K"open"
+C;r4;K"cash"
+C;r5;K"visa"
+C;r6;K"wages"
+C;r7;K"bank"
+C;r8;K"cash"
+C;c4;r1;K100
+F;r2;FF2D
+C;K2000.12
+C;r3;K0
+C;r4;K20.66
+C;r5;K123.4
+C;r6;K200
+C;r7;K5
+C;r8;K20.66
+C;c5;r1;K"Opening balance"
+C;r2;K"Opening balance"
+C;r3;K"Opening balance"
+C;r4;K"Walmart"
+C;r5;K"Petrol"
+C;r6;K"payday"
+C;r7;K"pay off credit card"
+C;r8;K"Walmart"
+O;status 2
+W;N1;A9 1;C7 0 7;Ostandout
+E
