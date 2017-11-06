@@ -63,9 +63,50 @@ can also be used as arguments to any command that expects a region
 address.  A variable name should not be the name of a cell.  Thus,
 <code>A1</code> is not a good name for a variable.
 </p>
+
+<h4>Commands</h4>
+
+Here, <code>rng</code> refers to a range (e.g. <code>r1c2</code>, <code>r1c1:r10c10</code>), <code>name</code> refers to a variable name (e.g. <code>foo</code>), and <code>ref</code> refers to either a range or name.
+
+<h5><b><code>goto-cell ref</code></b></h5>
+
+<p>
+It is worth noting that you can go to the top-left hand corner of a variable name, not just a cell range.
+</p>
+
+<h5><b><code>set-var rng name</code></b></h5>
+
+<p>
+Set a variable name (<code>name</code>) to a range (<code>rng</code>). Example:
+<pre>
+set-var foo r1c1:r2c2
+</pre>
+</p>
+
+<h5><b><code>show-all-variables</code></b></h5>
+<p>
+Show the values of all defined variables
+</p>
+
+<h5><b><code>show-variable name</code></b></h5>
+
+<p>
+Show the value of a variable.
+</p>
+
+<h4>Scripting example</h4>
+
+<pre>
+set-var r4c2 life
+goto-cell life
+edit-cell 42
+</pre>
+
+<h4>Shortcuts</h4>
+
 <dl compact="compact">
 <dt><kbd>C-x :</kbd></dt>
-<dd><p>Use this command to set a variable  (<code>set-variable</code>). For
+<dd><p>Use this command to set a variable  (<code>set-var</code>). For
 <a name="index-set_002dvariable"></a>
 instance, to set the variable <code>test1</code> to the region <code>B2:C3</code>,
 type
