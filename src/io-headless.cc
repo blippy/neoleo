@@ -281,14 +281,35 @@ static void write_file(int fildes)
 	fclose(fp);
 
 }
+
+// this seems to crash
+function<void(int)> with_int(function<void()> fn)
+{
+	//return std::bind(fn, 0);
+	//return fn;
+	return [&](int i) { fn(); };
+}
+
+static void hless_tbl(int fildes)
+{
+	tbl();
+}
+
+static void type_dsv(int fildes)
+{
+	save_dsv(stdout, 0);
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"colours", colours},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
 	{"kt", keyboard_test},
-	{"tbl", tbl},
+	{"tbl", hless_tbl},
+	//{"tbl", with_int(tbl)},
 	{"type-cell", type_cell},
+	{"type-dsv", type_dsv},
 	{"view", show_cells},
 	{"vi", visual_mode},
 	{"w", write_file}

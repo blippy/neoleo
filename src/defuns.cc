@@ -34,26 +34,14 @@
 #include "io-term.h"
 #include "basic.h"
 #include "format.h"
-//#include "print.h"
-//#include "font.h"
 #include "io-curses.h"
-//#include "io-x11.h"
 #include "io-edit.h"
 #include "regions.h"
 #include "help.h"
 #include "window.h"
-//#include "font.h"
-//#include "graph.h"
 #include "lists.h"
+#include "tbl.h"
 
-/*
-#include "basic.h"
-#include "cmd.h"
-#include "font.h"
-#include "help.h"
-#include "io-edit.h"
-#include "io-term.h"
-*/
 
 #define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
 0, \

@@ -1,3 +1,5 @@
 #pragma once
+#include <stdio.h>
 
-void tbl(int fildes);
+void tbl();
+void save_dsv(FILE *fpout, char* file_name);

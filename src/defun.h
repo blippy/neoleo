@@ -1,7 +1,3 @@
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 /*
  * $Id: defun.h,v 1.7 2000/08/10 21:02:50 danny Exp $
  *
@@ -1439,6 +1435,19 @@ DEFUN_3 ("mouse-mark-and-goto",
 
 /* Import and Export Commands of Various Kinds */
 
+DEFUN_5 ("save-dsv", FDwsave_dsv, FAwsave_dsv, DFsave_dsv, save_dsv)
+#ifdef FUNC_ARG_STRINGS
+"fwSave spreadsheet in dsv? ",
+"=%0",
+#endif
+#ifdef FUNC_INIT_CODE
+"{insert-current-filename}",
+0,
+#endif
+#ifdef DOC_STRINGS
+"Save the spreadsheet to FILENAME in dsv format.",
+#endif
+	
 DEFUN_5 ("save-spreadsheet", FDwrite_cmd, FAwrite_cmd, DFwrite_cmd, write_cmd)
 #ifdef FUNC_ARG_STRINGS
 "fwSave spreadsheet? ",
@@ -2475,9 +2484,3 @@ DEFUN_3 ("plotutils-clear-datasets", FDplotutils_clear_datasets, graph_clear_dat
 #endif
 
 #endif	/* ~ HAVE_LIBPLOT */
-
-
-#ifdef __cplusplus
-//}
-#endif
-

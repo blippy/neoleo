@@ -3,37 +3,10 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "lists.h"
+#include "tbl.h"
 
 using std::cout;
 
-
-
-/*
- * highest_row() and highest_col() should be expected to 
- * overallocate the number of rows and columns in the 
- * spreadsheet. The true number of rows and columns must 
- * be calculated
- *
- * TODO this is likely to be a very useful function
- *
- */
-
-RC_t
-ws_extent()
-{
-	int capacity_r = highest_row(), capacity_c = highest_col();
-	//cell* m[capacity_r][capacity_c] = {};
-	int size_r = 0, size_c = 0;
-	for(int r=0; r<capacity_r; ++r)
-		for(int c=0; c < capacity_c; ++c){
-			cell * cp = find_cell(r+1, c+1);
-			if(vacuous(cp)) continue;
-			size_r = std::max(size_r, r+1);
-			size_c = std::max(size_c, c+1);
-			//m[r][c] = cp;
-		}
-	return RC_t{size_r, size_c};
-}
 
 
 char jst_char(cell* cp)
@@ -51,7 +24,7 @@ char jst_char(cell* cp)
 }
 
 void 
-tbl(int fildes)
+tbl()
 {
 	cout << ".TS\n";
 
@@ -82,4 +55,25 @@ tbl(int fildes)
 
 	cout << ".TE\n";
 
+}
+
+void 
+save_dsv(FILE *fpout, char* file_name)
+{
+
+	auto out = [&](const std::string& s) { fprintf(fpout, "%s", s.c_str()); };
+
+	RC_t end{ws_extent()};
+	for(int r =0; r< end.r; ++r) {
+		for(int c=0; c<end.c; ++c) {
+			cell* cp = find_cell(r+1, c+1);
+			if(vacuous(cp))
+			       out("");
+			else
+				out(print_cell(cp));
+				
+			if(c+1<end.c) out("\t");
+		}
+		out("\n");
+	}
 }

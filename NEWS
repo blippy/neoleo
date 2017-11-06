@@ -3,6 +3,8 @@ VERSION: 7.0.0
 STATUS:  IN DEVELOPMENT
 DATE:    N/A
 
+* added command: save-dsv
+
 * now compiles on a Raspberry Pi (3). All unit tests pass.
 
 * added lab/csv2hless.py as a better way of putting problem CSV files into
@@ -36,6 +38,7 @@ DATE:    N/A
 	info (mostly for debugging purposes)
 	paste-this-cell-formula
 	q (quit)
+	type-dsv (type spreadsheet in tab-delimited format)
 	vi (visual mode - experimental)
 	w (write to file)
 
