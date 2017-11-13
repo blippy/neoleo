@@ -7,22 +7,21 @@ distro packagers wanting to do typical configure && make && make install
 should download the file neoleo-X.Y.Z.tar.gz, rather than the
 source files.
 
-## Snapshot
-
-![snapshot](snapshot.png "snapshot")
-
 ## Quick start
+
+Here, `C-` means the `Control character`, `M-` is the mod key, which is
+either `Alt` or `ESC`.
 
 | Key   | Purpose                              |
 | ----- | ------------------------------------ |
-| Ctl-c	| copy cell formula to clipboard       |
-| Ctl-g | cancels current operation            |
-| Ctl-l	| set cell alignment left              |
-| Alt-m | menu                                 |
-| Ctl-q | quit                                 |
-| Ctl-r	| set cell alignment right             |
-| Ctl-s | save document                        |
-| Ctl-v	| paste cell formula from clipboard    |
+| C-c   | copy cell formula to clipboard       |
+| C-g   | cancels current operation            |
+| C-l	| set cell alignment left              |
+| M-m   | menu                                 |
+| C-q   | quit                                 |
+| C-r   | set cell alignment right             |
+| C-s   | save document                        |
+| C-v   | paste cell formula from clipboard    |
 
 ## Documents and examples
 
@@ -51,6 +50,14 @@ Platform-specific comments are contained in INSTALL-${platform}
 files. INSTALL-debian covers Debian-derived distros like Ubuntu
 and Mint.
 
+
+## Screenshots
+
+![snapshot](snapshot.png "snapshot")
+
+![plotting](examples/plot/plot.gif "plot")
+<br>A plot created using gnuplot, output to a dumb terminal (in
+examples/plot)
 
 
 ## Technical Reports
