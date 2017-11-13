@@ -29,5 +29,5 @@ set term dumb ; set style line 1 ; plot '< cat ' with linespoints ls 1
 You'll probably want something more sophisticated for your own purposes,
 though.
 
-![plot](plot.gig "plot")
+![plot](plot.gif "plot")
 
