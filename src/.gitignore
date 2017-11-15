@@ -1,3 +1,4 @@
+*.exe
 getdate.cc
 getdate.hh
 parse.cc

@@ -631,7 +631,11 @@ pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 	bool neg = val < 0;
 	if(val<0) val = -val;
 	std::stringstream ss;
-	if(fmt && fmt->comma) ss.imbue(std::locale(""));
+	if(fmt && fmt->comma) {
+#ifndef __CYGWIN__
+		ss.imbue(std::locale(""));
+#endif
+	}
 	if(use_prec) ss << std::setprecision(prec) <<  std::fixed;
 	ss << (double)val;
 	std::string s = ss.str();

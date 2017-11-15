@@ -62,7 +62,12 @@ read_in()
 	assert(res==0);
 	//---- set new terminal parms --------
 	memcpy(&new_opts, &org_opts, sizeof(new_opts));
-	new_opts.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOPRT | ECHOKE | ICRNL);
+	auto flags = ICANON | ECHO | ECHOE | ECHOK | ECHONL 
+		| ECHOKE | ICRNL;
+#ifndef __CYGWIN__
+	flags |= ECHOPRT;
+#endif
+	new_opts.c_lflag &= ~flags;
 	tcsetattr(STDIN_FILENO, TCSANOW, &new_opts);
 
 	char buf[10] = {0}; // whole array is set to 0

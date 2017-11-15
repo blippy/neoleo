@@ -20,6 +20,10 @@ source /etc/os-release
 if [ "x$ID" = "xraspbian" ]; then
 	SAN=
 fi	
+if [ "x$OS" = "xWindows_NT" ]; then
+	SAN=
+fi
+
 
 OPTS="$DBG $GPROF $SAN "
 
