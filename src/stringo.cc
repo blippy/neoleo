@@ -64,6 +64,16 @@ extern struct obstack tmp_mem;
 
 //extern char *flt_to_str();
 
+char *alloc_tmp_mem(size_t n)
+{
+	return (char *) obstack_alloc(&tmp_mem, n);
+}
+
+char * alloc_value_str(struct value* p)
+{
+	return alloc_tmp_mem(strlen(p->gString())+1);
+}
+
 static void
 do_edit ( int numarg, struct value * p)
 {
@@ -87,7 +97,7 @@ do_edit ( int numarg, struct value * p)
 	ptr2=p->gString() + 1 + (off2>0 ? off2-1 : tmp_len+off2);
 	if(ptr1>ptr2)
 		ERROR(OUT_OF_RANGE);
-	retp=obstack_alloc(&tmp_mem,add_len+tmp_len-(ptr2-ptr1));
+	retp=alloc_tmp_mem(add_len+tmp_len-(ptr2-ptr1));
 	strncpy(retp,p->gString(),ptr1-p->gString());
 	retp[ptr1-p->gString()]='\0';
 	for(mm=3;mm<numarg;mm++)
@@ -111,7 +121,7 @@ do_repeat (
 	if(num<0)
 		ERROR(OUT_OF_RANGE);
 	len=strlen(str);
-	ret=strptr=obstack_alloc(&tmp_mem,len*num+1);
+	ret=strptr=alloc_tmp_mem(len*num+1);
 	while(num--) {
 		if (len)
 		  bcopy(str,strptr,len);
@@ -141,7 +151,8 @@ do_up_str (
 	char *s1,*s2;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (islower(*s2) ? toupper(*s2) : *s2);
 	*s1=0;
@@ -155,7 +166,8 @@ do_dn_str (
 	char *s1,*s2;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
 	*s1=0;
@@ -170,7 +182,8 @@ do_cp_str (
 	char *s1,*s2;
 	int wstart=1;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isalpha(*s2)) {
 			wstart=1;
@@ -193,7 +206,8 @@ do_trim_str (
 	int sstart=0;
 	char *strptr;
 
-	strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
+	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isascii(*s2) || !isprint(*s2))
 			continue;
