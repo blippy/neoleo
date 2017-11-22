@@ -1,0 +1,5 @@
+(define cells (make-hash-table))
+(hash-create-handle! cells '(1 1) 42)
+(hash-create-handle! cells '(1 1) 43)
+(display (hash-get-handle cells '(1 1)))
+(newline)
