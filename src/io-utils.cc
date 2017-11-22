@@ -88,7 +88,7 @@ num_t fabs(num_t x)
 }
 
 
-num_t floor(num_t x)
+num_t neo_floor(num_t x)
 {
 	return (num_t) floor( (double)x);
 }
@@ -615,7 +615,7 @@ modn(num_t x, num_t *iptr)
 	if(x1 <0) { sgn = -1;}
 	x1 *= sgn;
 
-	num_t x2 = floor(x1);
+	num_t x2 = neo_floor(x1);
 	//*iptr = sgn * (x1-x2);
 	//return sgn * x2;
 	*iptr = sgn * x2;

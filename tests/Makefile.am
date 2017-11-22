@@ -12,6 +12,7 @@ AM_TESTS_ENVIRONMENT = \
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	decompile-01.scr \
+	floor.scr \
 	inbuilt-tests.sh \
 	issue15.scr issue16.scr issue17.scr issue18.scr issue19.scr \
 	nohead-01.scr nohead-02.scr stringo.scr \
