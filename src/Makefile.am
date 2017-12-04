@@ -53,7 +53,7 @@ neoleo_SOURCES = alt_cells.cc alt-parse.cc \
 
 # not present on some systems like cygwin
 # Ideally obstack would be removed as a dependency anyway
-neoleo_SOURCES += obstack_a.cc
+#neoleo_SOURCES += obstack_a.cc
 
 noinst_HEADERS = alt_cells.h alt-parse.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
@@ -66,6 +66,7 @@ noinst_HEADERS = alt_cells.h alt-parse.h \
 		 line.h list.h lists.h logging.h \
 		 mdi.h mem.h \
 		 node.h  numeric.h \
+		 obstack.h \
 		 oleofile.h oleo_plot.h oleosql.h oleox.hpp oleo_xb.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh proto.h ref.h \
