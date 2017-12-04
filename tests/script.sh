@@ -32,7 +32,9 @@ OLEO="$SCR.oleo"
 echo "OLEO=$OLEO"
 IFILE="$THE_SRCDIR/$SCR"
 echo "IFILE=$IFILE"
-CMD="neoleo --ignore-init-file -H $TMPFILE < $IFILE"
+NEO=$ABUILDDIR/../src/neoleo
+echo "NEO=$NEO"
+CMD="$NEO --ignore-init-file -H $TMPFILE < $IFILE"
 echo "CMD=$CMD"
 eval $CMD
 

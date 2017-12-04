@@ -1,0 +1,3 @@
+git clean -dfx
+make dist
+make distcheck

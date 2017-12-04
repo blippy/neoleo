@@ -7,7 +7,9 @@ TMPFILE=`mktemp`
 SS=$ASRCDIR/issue25.oleo
 echo "SS=$SS"
 #REP=issue25.rep
-neoleo $SS -H <<< tbl | groff -T ascii -t | head -10 > $TMPFILE
+NEO=$ABUILDDIR/../src/neoleo
+echo "NEO=$NEO"
+$NEO $SS -H <<< tbl | groff -T ascii -t | head -10 > $TMPFILE
 set_productions issue25.rep
 #mv $OFILE out/ref.oleo
 mv $TMPFILE $OUTFILE
