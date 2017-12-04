@@ -23,6 +23,9 @@ fi
 if [ "x$OS" = "xWindows_NT" ]; then
 	SAN=
 fi
+if [ "x$ID" = "xslackware" ]; then
+	SAN=
+fi
 
 
 OPTS="$DBG $GPROF $SAN "
