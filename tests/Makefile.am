@@ -7,6 +7,7 @@
 AM_TESTS_ENVIRONMENT = \
 	export ASRCDIR=$(abs_srcdir); \
 	export ABUILDDIR=$(abs_builddir); \
+	export SRCDIR=$(srcdir); \
 	. $(srcdir)/neotests-env.sh;
 
 # NB Supressing cpreg-01.src for now due to issue#17

@@ -4,11 +4,13 @@
 #source neotests-env.sh
 
 TMPFILE=`mktemp`
+echo "ABUILDDIR=$ABUILDDIR"
+echo "ASRCDIR=$ASRCDIR"
+echo "SRCDIR=$SRCDIR"
 
 THE_BUILDDIR=`pwd`
 THE_SRCDIR=`pwd`
 
-echo "SRCDIR=$SRCDIR"
 
 while getopts "b:s:" opt
 do
