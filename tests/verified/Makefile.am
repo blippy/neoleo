@@ -2,6 +2,7 @@ EXTRA_DIST = busi.scr.oleo \
 	cpreg-02.scr.oleo \
 	cpreg-03.scr.oleo \
 	decompile-01.scr.oleo \
+	floor.scr.oleo \
 	issue15.scr.oleo \
 	issue16.scr.oleo \
 	issue17.scr.oleo \
