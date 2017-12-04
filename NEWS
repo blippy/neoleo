@@ -1,7 +1,7 @@
 ===========================================================================
 VERSION: 7.0.0
-STATUS:  IN DEVELOPMENT
-DATE:    N/A
+STATUS:  RELEASED
+DATE:    2017-12-04
 
 * added command: save-dsv
 
