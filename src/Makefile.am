@@ -6,7 +6,7 @@
 # permissive flag is set due to pesky obstack
 #AM_CXXFLAGS = $(ASAN_FLAGSC) -std=gnu++11 -fpermissive -Wno-write-strings 
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
-AM_CXXFLAGS += -std=gnu++11 -fpermissive -Wno-write-strings 
+AM_CXXFLAGS += -std=gnu++14 -fpermissive -Wno-write-strings 
 AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 #AM_CXXFLAGS += -Wfatal-errors

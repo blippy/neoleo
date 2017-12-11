@@ -37,6 +37,9 @@
 
 using std::cout;
 using std::endl;
+using namespace std::string_literals;
+
+typedef std::vector<std::string> strings;
 
 enum Token { L_CELL, L_CONST, GE, NE, LE, L_FN0, L_FN1, L_FN2, L_FN3, L_FN1R , L_VAR, L_RANGE, 
 	BAD_CHAR, BAD_FUNC, NO_QUOTE, PARSE_ERR};
@@ -917,15 +920,43 @@ alt_parse_cell_or_range(char **ptr, struct rng *retp)
 	return r;
 }
 
+//constexpr std::string wrap(const std::string& str) { return "^("s + str + ")" ; }
+
+class Re {
+	std::regex re;
+	std::string name;
+
+	public:
+		Re(const std::string& str, const std::string& name);
+};
+
+Re::Re(const std::string& str, const std::string& name) : name(name)
+{
+	re = std::regex( "^(" + str + ")" );
+}
+
+
+typedef std::vector<Re> Res;
+
 static
 bool test01()
 {
 
 	cout << "test01\n";
 
+	//static const std::string foo = "hello"s  + "world"s;
+
+	//strings ss = { "foo"s, "bar"s};
+	
+	Res regexes = { 
+		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", "float"),
+		Re("[Rr][0-9]+[Cc][0-9]", "rc") 
+	};
+
+
 	std::smatch m;
 
-	std::string s{"  r1C2"}; //12.3e23 13.4"};
+	std::string s{"  r1C2 12.3e23 13.4"};
 	auto i0 = s.begin();
 	auto iX = s.end();
 	while(i0<iX && std::isspace(*i0)) i0++; // eat white
