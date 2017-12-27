@@ -53,7 +53,7 @@ and Mint.
 
 ## Screenshots
 
-![snapshot](snapshot.png "snapshot")
+![screenshot](screenshot.png "screenshot")
 
 ![plotting](examples/plot/plot.gif "plot")
 <br>A plot created using gnuplot, output to a dumb terminal (in
