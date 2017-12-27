@@ -22,7 +22,14 @@ Libc Maintainers: For already having written lots of memory handling routines.
 Also, for writing the bug reporting script.
 Elenore Amon: For telling me that learning C was a _really_ good idea.
 
-And lastly, mom & dad - Without you, I wouldn't be here.
 
-** E-mail addresses not provided, keep this world SPAM free!! **
+Frank Bennett <bennett@nomolog.nagoya-u.ac.jp> is helping out with
+the testing and documentation of releases, starting February 1999.
 
+Danny Backx is adding a LessTif (Motif) user interface,
+and miscellaneous code maintenance, starting August 1998.
+
+June 1/97 - Jeff Bailey takes over maintainership of Oleo.  
+
+Thanks to Tom Lord, and many others who have contributed to Oleo over the 
+years.  It's on the TODO list to add your names into here!
