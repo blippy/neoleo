@@ -1,4 +1,3 @@
-The following packages should be installed:
-- libncurses5-dev
-- libncurses5-dbg (optional)
-- texinfo
+#The following packages should be installed:
+
+sudo apt install libncurses5-dev libncurses5-dbg bison flex
