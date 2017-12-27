@@ -1,35 +1,29 @@
-The following people have helped or influenced oleo (Or have simply
-bribed me to put their names in here):
+Amon, Elenore 
 
-(If I missed you, send email to bug-oleo@gnu.org)
+Arm, Ted
 
-Art Haas, for several submissions.
+Backx, Danny 
 
-Jeff Bailey, Tom Lord, A whole pile of people from the ChangeLog,
-Joel N. Weber II, Richard Stallman, Mark E. Davidson, Ted Arm
-Steve Fisk, Kai Getrost, Scott Heavner, Markky Rossi.
+Bailey, Jeff
 
-Special Mention:
-Frank Bennett: For making a collection of patches that had been floating
-around on the net, and doing alot of work, even when there wasn't an
-obvious maintainer!
+Bennett, Frank 
 
-Other people deserve a word of thanks:
-Tom Tromey & Friends: For making AutoMake.
-Emacs Maintainers: For giving me X Toolkit code to steal.
-Fileutils Maintainers: For giving me automake examples to steal.
-Libc Maintainers: For already having written lots of memory handling routines.
-Also, for writing the bug reporting script.
-Elenore Amon: For telling me that learning C was a _really_ good idea.
+Davidson, Mark 
 
+Fisk, Steve
 
-Frank Bennett <bennett@nomolog.nagoya-u.ac.jp> is helping out with
-the testing and documentation of releases, starting February 1999.
+Getrost, Kai
 
-Danny Backx is adding a LessTif (Motif) user interface,
-and miscellaneous code maintenance, starting August 1998.
+Haas, Art
 
-June 1/97 - Jeff Bailey takes over maintainership of Oleo.  
+Heavner, Scott 
 
-Thanks to Tom Lord, and many others who have contributed to Oleo over the 
-years.  It's on the TODO list to add your names into here!
+Lord, Tom
+
+Rossi,Markky 
+
+Stallman, Richard
+
+Tromey, Tom 
+
+Weber II, Joel 
