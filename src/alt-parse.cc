@@ -49,6 +49,7 @@ int alt_parse_error = 0;
 extern struct obstack tmp_mem;
 
 void check_parser_called_correctly();
+int alt_yylex();
 
 //* This table contains a list of the infix single-char functions 
 unsigned char alt_fnin[] = {
@@ -142,7 +143,9 @@ int alt_yyparse_parse(const std::string& input, mem& yymem)
 	assert(alt_instr);
 	strcpy(alt_instr, input.c_str());
 	_mem_ptr = &yymem;
-	//int ret = yyparse();
+	
+	alt_yylex();
+
 	int ret = 666;
 	return ret;
 }
@@ -923,11 +926,11 @@ alt_parse_cell_or_range(char **ptr, struct rng *retp)
 //constexpr std::string wrap(const std::string& str) { return "^("s + str + ")" ; }
 
 class Re {
-	std::regex re;
-	std::string name;
 
 	public:
 		Re(const std::string& str, const std::string& name);
+	std::regex re;
+	std::string name;
 };
 
 Re::Re(const std::string& str, const std::string& name) : name(name)
@@ -936,7 +939,46 @@ Re::Re(const std::string& str, const std::string& name) : name(name)
 }
 
 
-typedef std::vector<Re> Res;
+
+
+int
+alt_yylex_a(const std::string& s)
+{
+	typedef std::vector<Re> Res;
+	static Res regexes = { 
+		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", "float"),
+		Re("[Rr][0-9]+[Cc][0-9]", "rc"),
+		Re("[a-zA-z]+", "word"),
+		Re(".", "unknown")
+
+	};
+
+
+	cout << "alt_yylex_a:input:" << s << "\n";
+	std::smatch m;
+
+	auto i0 = s.begin();
+	auto iX = s.end();
+	while(i0 < iX) {
+		while(i0<iX && std::isspace(*i0)) i0++; // eat white
+		if(i0 != iX) {
+			std::string s2(i0, iX);
+			//int matched_size = 0;
+			std::string matched_str;
+			for(const auto& areg: regexes) {
+				if(std::regex_search(s2, m, areg.re)) {
+					matched_str = m[0];
+					cout << "alt_yylex_a:match:" << areg.name << ":" << matched_str << "\n";
+					break;
+				}
+			}
+			i0 += matched_str.size();
+		}
+	}	
+
+	cout << endl;
+}
+
 
 static
 bool test01()
@@ -944,43 +986,28 @@ bool test01()
 
 	cout << "test01\n";
 
-	//static const std::string foo = "hello"s  + "world"s;
-
-	//strings ss = { "foo"s, "bar"s};
-	
-	Res regexes = { 
-		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", "float"),
-		Re("[Rr][0-9]+[Cc][0-9]", "rc") 
-	};
-
-
-	std::smatch m;
-
 	std::string s{"  r1C2 12.3e23 13.4"};
-	auto i0 = s.begin();
-	auto iX = s.end();
-	while(i0<iX && std::isspace(*i0)) i0++; // eat white
-	if(i0 != iX) {
-		std::string s2(i0, iX);
-		// attempt match of float
-		// https://www.regular-expressions.info/floatingpoint.html
-		static const std::regex re_float{"^([-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)"}; 
-		if( std::regex_search(s2, m, re_float)) {
-			cout << "matched float:" << m[0] << "\n";
-		} 
 
-		// attempt match of cell ref - although there must be loads cases
-		static const std::regex re_rc{"^([Rr][0-9]+[Cc][0-9])"};
-		if(std::regex_search(s2, m, re_rc)) {
-			cout << "matched RC:" << m[0] << "\n";
-		}
-	}
+	alt_yylex_a(s);
+
+	alt_yylex_a("foo");
+
+	alt_yylex_a("foo(bar)");
 
 	return true;
+}
+
+static bool
+test02()
+{
+	cout << "test02\n";
+	mem yymem;
+	auto res = alt_yyparse_parse("1+2", yymem);
 }
 
 bool run_alt_parse_tests()
 {
 	test01();
+	test02();
 	return false;
 }
