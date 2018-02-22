@@ -1,4 +1,12 @@
 ===========================================================================
+VERSION: TBD
+STATUS:  DEV
+DATE:    ONGOING
+
+* added command test-curses-suspension
+
+
+===========================================================================
 VERSION: 7.0.0
 STATUS:  RELEASED
 DATE:    2017-12-04

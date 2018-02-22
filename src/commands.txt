@@ -1,0 +1,3 @@
+* test-curses-suspension
+
+Experiment in being able to shutdown and resume a curses session to allow, for example, manual commands

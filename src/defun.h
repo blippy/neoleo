@@ -53,6 +53,12 @@ DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, to_vptr(show_main_menu))
 "Show the main menu.",
 #endif
 
+
+DEFUN_3("test-curses-suspension", FDtest_curses_suspension, to_vptr(test_curses_suspension))
+#ifdef DOC_STRINGS
+"Test abaility to suspend and resume curses",
+#endif
+
 /* Spreadsheet Cursor Motion Commands and Cell Mark */
 
   /* By convention, motion and scrolling commands take a magic number

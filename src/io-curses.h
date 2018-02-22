@@ -25,6 +25,7 @@ extern "C" {
 
 
 extern void show_main_menu();
+extern void test_curses_suspension();
 extern void cont_curses(void);
 extern void stop_curses(void);
 extern void tty_graphics (void);
