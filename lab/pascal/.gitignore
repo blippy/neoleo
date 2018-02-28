@@ -1,0 +1,5 @@
+# freepascal local files
+*.lps
+
+backup
+lib
