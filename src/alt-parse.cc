@@ -24,9 +24,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <stdexcept>
 #include <regex>
 #include <string>
+#include <variant>
 #include <vector>
 
 //#include "global.h"
@@ -36,10 +38,13 @@
 //#include "hash.h"
 //#include "mem.h"
 
+#include "numeric.h"
 
 using std::cout;
 using std::endl;
 using std::map;
+using std::make_unique;
+using std::variant;
 using std::vector;
 using namespace std::string_literals;
 
@@ -56,6 +61,9 @@ typedef std::vector<std::string> strings;
 //unsigned char alt_fnin[] = {
 //	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 //};
+
+///////////////////////////////////////////////////////////////////////////
+// lexical analysis
 
 enum LexType { LT_FLT, LT_WORD, LT_UNK };
 
@@ -138,18 +146,112 @@ lex_and_print(std::string s)
 	cout << endl;
 }
 
+// lexical analysis
+///////////////////////////////////////////////////////////////////////////
+// scanner
+
+typedef variant<num_t, std::string> value_t;
+typedef value_t node_t; // Nodes are not values, but just assume this for now
+
+/*
+class BaseNode
+{
+	public:
+		virtual ~BaseNode() {};
+		virtual value_t  eval() = 0;// {return  0;}
+};
+
+
+class EmptyNode : public BaseNode
+{
+	public:
+		value_t eval() {return "";}
+		~EmptyNode() {};
+};
+
+class FloatNode : public BaseNode
+{
+	public:
+		value_t eval() {return 666;};
+		~FloatNode() {};
+
+};
+*/
+
+
+// from
+// https://gist.github.com/s3rvac/d1f30364ce1f732d75ef0c89a1c8c1ef
+template<typename... Ts> struct make_overload: Ts... { using Ts::operator()...; };
+template<typename... Ts> make_overload(Ts...) -> make_overload<Ts...>;
+
+template<typename Variant, typename... Alternatives>
+decltype(auto) visit_variant(Variant&& variant, Alternatives&&... alternatives) {
+	return std::visit(
+			make_overload{std::forward<Alternatives>(alternatives)...},
+			std::forward<Variant>(variant)
+			);
+}
+
+
+
+std::string
+eval(node_t node)
+{
+	/*
+	if(std::holds_alternative<num_t>(node)) {
+		return "i am a number " + std::to_string(std::get<num_t>(node));
+	} else if(std::holds_alternative<std::string>(node)) {
+		return "i am string " + std::get<std::string>(node);
+	} else {
+		return "eval() :(";
+	}
+	*/
+
+	std::string result;
+	visit_variant(node, 
+			[&](num_t n) { result = "i am a number " + std::to_string(n) ; },
+			[&](std::string const& s) { result = "i am string " + s;}
+		     );
+	return result;
+
+}
+
+void alt_parse(std::string s)
+{
+	lexemes lexes = alt_yylex_a(s);
+
+	//BaseNode top;
+	//auto top = make_unique<EmptyNode>();
+	node_t top;
+
+	// TODO NOW
+	switch(lexes[0].lextype) {
+		case LT_FLT:
+			top = std::stod(lexes[0].lexeme); // TODO need to cover has ege. 24 + 23
+		//	top = FloatNode();
+			break;
+		default:
+			break;
+	}
+
+	//top = make_unique<FloatNode>();
+
+	cout << eval(top) << "\n";
+
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+// tests
+
 static
 bool test01()
 {
-
 	cout << "test01\n";
 
-	//std::string s{"  r1C2 12.3e23 13.4"};
-	//alt_yylex_a(s);
 	lex_and_print("  r1C2 12.3e23 13.4");
-
-	//alt_yylex_a("foo");
-	//alt_yylex_a("foo(bar)");
 	lex_and_print("foo(bar)");
 
 	return true;
@@ -161,6 +263,7 @@ test02()
 	cout << "test02 TODO\n";
 	//mem yymem;
 	//auto res = alt_yyparse_parse("1+2", yymem);
+	alt_parse("23");
 }
 
 bool run_alt_parse_tests()
