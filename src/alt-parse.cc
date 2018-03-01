@@ -23,9 +23,11 @@
 #include <cctype>
 #include <cstdlib>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 #include <regex>
 #include <string>
+#include <vector>
 
 //#include "global.h"
 //#include "eval.h"
@@ -37,6 +39,8 @@
 
 using std::cout;
 using std::endl;
+using std::map;
+using std::vector;
 using namespace std::string_literals;
 
 typedef std::vector<std::string> strings;
@@ -53,44 +57,53 @@ typedef std::vector<std::string> strings;
 //	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 //};
 
+enum LexType { LT_FLT, LT_WORD, LT_UNK };
 
 
+typedef struct {
+	LexType lextype;
+	std::string lexeme;
+} lexeme_s;
 
-
+typedef vector<lexeme_s> lexemes;
 
 
 //constexpr std::string wrap(const std::string& str) { return "^("s + str + ")" ; }
 
+static map<LexType, std::string> type_map;
+
 class Re {
 
 	public:
-		Re(const std::string& str, const std::string& name);
-	std::regex re;
-	std::string name;
+		Re(const std::string& str, LexType lextype, const std::string& name);
+		LexType lextype;
+		std::regex re;
+		std::string name;
 };
 
-Re::Re(const std::string& str, const std::string& name) : name(name)
+Re::Re(const std::string& str, LexType lextype, const std::string& name) : lextype(lextype), name(name)
 {
 	re = std::regex( "^(" + str + ")" );
+	type_map[lextype] = name;
 }
 
 
 
 
-int
+lexemes
 alt_yylex_a(const std::string& s)
 {
+	lexemes lexes;
 	typedef std::vector<Re> Res;
 	static Res regexes = { 
-		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", "float"),
-		Re("[Rr][0-9]+[Cc][0-9]", "rc"),
-		Re("[a-zA-z]+", "word"),
-		Re(".", "unknown")
+		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", LexType::LT_FLT, "float"),
+		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
+		Re("[a-zA-z]+", LexType::LT_WORD, "word"),
+		Re(".", LexType::LT_UNK, "unknown")
 
 	};
 
 
-	cout << "alt_yylex_a:input:" << s << "\n";
 	std::smatch m;
 
 	auto i0 = s.begin();
@@ -104,7 +117,7 @@ alt_yylex_a(const std::string& s)
 			for(const auto& areg: regexes) {
 				if(std::regex_search(s2, m, areg.re)) {
 					matched_str = m[0];
-					cout << "alt_yylex_a:match:" << areg.name << ":" << matched_str << "\n";
+					lexes.push_back({areg.lextype, matched_str});
 					break;
 				}
 			}
@@ -112,9 +125,18 @@ alt_yylex_a(const std::string& s)
 		}
 	}	
 
-	cout << endl;
+	return lexes;
 }
 
+static void
+lex_and_print(std::string s)
+{
+	cout << "lex_and_print:input:`" << s << "'\n";	
+	lexemes lexes = alt_yylex_a(s);
+	for(const auto& l:lexes)
+	       	cout << "match:" << type_map[l.lextype] << ":" << l.lexeme << "\n";
+	cout << endl;
+}
 
 static
 bool test01()
@@ -122,13 +144,13 @@ bool test01()
 
 	cout << "test01\n";
 
-	std::string s{"  r1C2 12.3e23 13.4"};
+	//std::string s{"  r1C2 12.3e23 13.4"};
+	//alt_yylex_a(s);
+	lex_and_print("  r1C2 12.3e23 13.4");
 
-	alt_yylex_a(s);
-
-	alt_yylex_a("foo");
-
-	alt_yylex_a("foo(bar)");
+	//alt_yylex_a("foo");
+	//alt_yylex_a("foo(bar)");
+	lex_and_print("foo(bar)");
 
 	return true;
 }
