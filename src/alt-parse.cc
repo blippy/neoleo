@@ -1,8 +1,4 @@
 /*
- * $Id: parse.y,v 1.11 2001/02/04 00:03:48 pw Exp $
- *
- * Copyright (C) 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
- *
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
  * Oleo is free software; you can redistribute it and/or modify
@@ -22,6 +18,7 @@
 
 #include <cctype>
 #include <cstdlib>
+#include <exception>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -44,6 +41,7 @@ using std::cout;
 using std::endl;
 using std::map;
 using std::make_unique;
+using std::unique_ptr;
 using std::variant;
 using std::vector;
 using namespace std::string_literals;
@@ -65,7 +63,14 @@ typedef std::vector<std::string> strings;
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
 
-enum LexType { LT_FLT, LT_WORD, LT_UNK };
+// TODO include power, ege. 12^5
+
+enum LexType { LT_FLT , 
+	LT_OPE, // = != <= < >= >  
+	LT_OPR, // + -
+	LT_OPP, // um ..
+	LT_OPT, //  * /
+	LT_WORD, LT_UNK };
 
 
 typedef struct {
@@ -104,7 +109,10 @@ alt_yylex_a(const std::string& s)
 	lexemes lexes;
 	typedef std::vector<Re> Res;
 	static Res regexes = { 
-		Re("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", LexType::LT_FLT, "float"),
+		Re("[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", LexType::LT_FLT, "float"),
+		Re("=|!=|<=?|>=?", LT_OPE, "ope"),
+		Re("\\+|\\-", LT_OPR, "opr"),
+		Re("\\*|/", LT_OPT, "opt"),
 		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
 		Re("[a-zA-z]+", LexType::LT_WORD, "word"),
 		Re(".", LexType::LT_UNK, "unknown")
@@ -150,15 +158,62 @@ lex_and_print(std::string s)
 ///////////////////////////////////////////////////////////////////////////
 // scanner
 
-typedef variant<num_t, std::string> value_t;
-typedef value_t node_t; // Nodes are not values, but just assume this for now
+// https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#classic
+// [ ] enclose an optional part of the expression
+// { } encolse 0 or more repetitions
+// | separates alternatives
+// Parse rules (incomplete):
+//  E --> R {( "<" | "<=" | ">" | ">=" | "==" | "!=" ) R}
+//  R --> T {( "+" | "-" ) T}
+//  T --> P {( "*" | "/" ) P}
+//  P --> v | "(" E ")" | "-" T
 
-/*
+class syntax_error : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "#PARSE_ERROR";
+	}
+};
+
+
+typedef variant<num_t, std::string> value_t;
+
+
+
 class BaseNode
 {
 	public:
 		virtual ~BaseNode() {};
-		virtual value_t  eval() = 0;// {return  0;}
+		virtual value_t  eval() =0 ; //{return v}
+
+};
+
+typedef unique_ptr<BaseNode> base_ptr;
+
+class BinopNode : public BaseNode
+{
+	public:
+		BinopNode(std::string op, base_ptr lhs, base_ptr rhs): op(op) {
+			this->lhs = std::move(lhs);
+			this->rhs = std::move(rhs);
+		}
+		value_t eval() { 
+			num_t n1 = std::get<num_t>(lhs->eval());
+			num_t n2 = std::get<num_t>(rhs->eval());
+			cout << "evaluating " << n1 << op << n2 << endl;
+			num_t ret;
+			if(op == "+")
+				ret = n1 + n2;
+			else if(op == "*")
+				ret = n1*n2;
+
+			return ret;
+
+
+		}
+		std::string op;
+		base_ptr lhs, rhs;
 };
 
 
@@ -169,74 +224,84 @@ class EmptyNode : public BaseNode
 		~EmptyNode() {};
 };
 
-class FloatNode : public BaseNode
+class ValueNode : public BaseNode
 {
 	public:
-		value_t eval() {return 666;};
-		~FloatNode() {};
+		ValueNode(value_t v) : v(v) {}
+		value_t eval() {
+			//cout << "evaluating value node " << std::get<num_t>(v) << endl;
+			return v; 
+		}
+		~ValueNode() { 
+			//cout << "ValueNode says bye\n";
+		}
+		value_t v;
 
 };
-*/
 
 
-// from
-// https://gist.github.com/s3rvac/d1f30364ce1f732d75ef0c89a1c8c1ef
-template<typename... Ts> struct make_overload: Ts... { using Ts::operator()...; };
-template<typename... Ts> make_overload(Ts...) -> make_overload<Ts...>;
 
-template<typename Variant, typename... Alternatives>
-decltype(auto) visit_variant(Variant&& variant, Alternatives&&... alternatives) {
-	return std::visit(
-			make_overload{std::forward<Alternatives>(alternatives)...},
-			std::forward<Variant>(variant)
-			);
+
+typedef lexemes::iterator lex_it; // lexeme iterator
+
+base_ptr expr_e(lex_it it, lex_it e);
+
+base_ptr
+binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
+{
+	return make_unique<BinopNode>(op_lexeme, std::move(lhs), std::move(rhs));
 }
 
-
-
-std::string
-eval(node_t node)
+base_ptr
+expr_p(lex_it it, lex_it e)
 {
-	/*
-	if(std::holds_alternative<num_t>(node)) {
-		return "i am a number " + std::to_string(std::get<num_t>(node));
-	} else if(std::holds_alternative<std::string>(node)) {
-		return "i am string " + std::get<std::string>(node);
-	} else {
-		return "eval() :(";
-	}
-	*/
+	// TODO
+	if(it == e) throw syntax_error();
+	return make_unique<ValueNode>(stod(it->lexeme));
+}
 
-	std::string result;
-	visit_variant(node, 
-			[&](num_t n) { result = "i am a number " + std::to_string(n) ; },
-			[&](std::string const& s) { result = "i am string " + s;}
-		     );
-	return result;
+base_ptr
+expr_t(lex_it it, lex_it e)
+{
+	if(it == e) throw syntax_error();
+	lex_it op = it+1; 
+	if(op<e && op->lextype == LT_OPT)
+		return binop(op->lexeme, expr_p(it, e), expr_p(it+2, e));
+	else
+		return expr_p(it, e);
+}
+
+base_ptr
+expr_r(lex_it it, lex_it e)
+{
+	if(it == e) throw syntax_error();
+	lex_it op = it+1; 
+	if(op<e && op->lextype == LT_OPR)
+		return binop(op->lexeme, expr_t(it, e), expr_t(it+2, e));
+	else
+		return expr_t(it, e);
+}
+
+base_ptr
+expr_e(lex_it it, lex_it e)
+{
+	if(it == e) throw syntax_error();
+	lex_it op = it+1; 
+	if(op<e && op->lextype == LT_OPE)
+		return binop(op->lexeme, expr_r(it, e), expr_r(it+2, e));
+	else
+		return expr_r(it, e);
 
 }
 
 void alt_parse(std::string s)
 {
+	cout << "parsing: " << s << endl;
 	lexemes lexes = alt_yylex_a(s);
-
-	//BaseNode top;
-	//auto top = make_unique<EmptyNode>();
-	node_t top;
-
-	// TODO NOW
-	switch(lexes[0].lextype) {
-		case LT_FLT:
-			top = std::stod(lexes[0].lexeme); // TODO need to cover has ege. 24 + 23
-		//	top = FloatNode();
-			break;
-		default:
-			break;
-	}
-
-	//top = make_unique<FloatNode>();
-
-	cout << eval(top) << "\n";
+	lex_it it = lexes.begin();
+	base_ptr node = expr_e(it, lexes.end());
+	cout << "Done parsing. Now evaluating." << endl;
+	cout << std::get<num_t>(node->eval()) << endl;
 
 }
 
@@ -253,6 +318,13 @@ bool test01()
 
 	lex_and_print("  r1C2 12.3e23 13.4");
 	lex_and_print("foo(bar)");
+	lex_and_print("1=2");
+	lex_and_print("1!=2");
+	lex_and_print("1<2");
+	lex_and_print("1<=2");
+	lex_and_print("1+2-3");
+	lex_and_print("1*3/3");
+
 
 	return true;
 }
@@ -261,9 +333,17 @@ static bool
 test02()
 {
 	cout << "test02 TODO\n";
-	//mem yymem;
-	//auto res = alt_yyparse_parse("1+2", yymem);
-	alt_parse("23");
+	alt_parse("66");
+	alt_parse("23<24");
+	alt_parse("23+24");
+	alt_parse("1+2+3");
+	alt_parse("1+2*3");
+	alt_parse("4*2+3");
+
+	//unique_ptr<BaseNode> ptr = make_unique<FloatNode>();
+	//alt_parse("");
+	cout << "Now I am going to delibeartely throw an error\n";
+	throw syntax_error();
 }
 
 bool run_alt_parse_tests()
