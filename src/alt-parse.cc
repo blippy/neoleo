@@ -19,6 +19,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -78,7 +79,25 @@ typedef struct {
 	std::string lexeme;
 } lexeme_s;
 
+
 typedef vector<lexeme_s> lexemes;
+
+class lexemes_c {
+	public:
+		lexemes_c(lexemes lexs);
+		void advance() { idx++;}
+		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
+	private:
+		lexemes lexs;
+		int idx = 0, len;
+};
+
+
+lexemes_c::lexemes_c(lexemes lexs) : lexs(lexs)
+{
+	len = lexs.size();
+}
+
 
 
 //constexpr std::string wrap(const std::string& str) { return "^("s + str + ")" ; }
@@ -224,6 +243,40 @@ class EmptyNode : public BaseNode
 		~EmptyNode() {};
 };
 
+class MultiopNode : public BaseNode
+{
+	public:
+		MultiopNode(base_ptr operand1) {
+			operands.push_back(std::move(operand1));
+		}
+		void append(std::string op, base_ptr operand) {
+			operators.push_back(op);
+			operands.push_back(std::move(operand));
+		}
+		value_t eval();
+	private:
+		vector<base_ptr> operands;
+		strings operators;
+};
+
+num_t num(value_t v) { return std::get<num_t>(v); }
+
+value_t MultiopNode::eval()
+{
+	value_t result = num(operands[0]->eval());
+	for(int i = 0; i< operators.size(); ++i) {
+		//cout << "MultiopNode::eval() 
+		if(operators[i] == "*") 
+			result = num(result) * num(operands[i+1]->eval());
+		else if(operators[i] == "+")
+			result = num(result) + num(operands[i+1]->eval());
+		else
+			cout << "TODO MultiopNode::eval() unhandled operator\n";
+	}
+	cout << "TODO MultiopNode::eval()\n";
+	return result;
+
+}
 class ValueNode : public BaseNode
 {
 	public:
@@ -252,54 +305,51 @@ binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
 	return make_unique<BinopNode>(op_lexeme, std::move(lhs), std::move(rhs));
 }
 
+using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
+
 base_ptr
-expr_p(lex_it it, lex_it e)
+expr_p(lexemes_c& tokes)
 {
 	// TODO
-	if(it == e) throw syntax_error();
-	return make_unique<ValueNode>(stod(it->lexeme));
+	//if(it == e) throw syntax_error();
+	//return make_unique<ValueNode>(stod(it->lexeme));
+	auto result = make_unique<ValueNode>(stod(tokes.curr()));
+	tokes.advance();
+	return result;
+}
+
+base_ptr multiop(strings operators, lexemes_c& tokes, sub_expr_func expr_f)
+{
+	auto exprs = make_unique<MultiopNode>(expr_f(tokes));
+	while(1) {
+		std::string op = tokes.curr();
+		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
+		if(opit == operators.end()) break;
+		tokes.advance();
+		exprs->append(op, expr_f(tokes));
+	}
+	return exprs;
+}
+base_ptr
+expr_t(lexemes_c& tokes)
+{
+	return multiop({"*", "/"}, tokes, expr_p);
 }
 
 base_ptr
-expr_t(lex_it it, lex_it e)
+expr_r(lexemes_c& tokes)
 {
-	if(it == e) throw syntax_error();
-	lex_it op = it+1; 
-	if(op<e && op->lextype == LT_OPT)
-		return binop(op->lexeme, expr_p(it, e), expr_p(it+2, e));
-	else
-		return expr_p(it, e);
+	return multiop({"+", "-"}, tokes, expr_t);
 }
 
-base_ptr
-expr_r(lex_it it, lex_it e)
-{
-	if(it == e) throw syntax_error();
-	lex_it op = it+1; 
-	if(op<e && op->lextype == LT_OPR)
-		return binop(op->lexeme, expr_t(it, e), expr_t(it+2, e));
-	else
-		return expr_t(it, e);
-}
-
-base_ptr
-expr_e(lex_it it, lex_it e)
-{
-	if(it == e) throw syntax_error();
-	lex_it op = it+1; 
-	if(op<e && op->lextype == LT_OPE)
-		return binop(op->lexeme, expr_r(it, e), expr_r(it+2, e));
-	else
-		return expr_r(it, e);
-
-}
 
 void alt_parse(std::string s)
 {
 	cout << "parsing: " << s << endl;
-	lexemes lexes = alt_yylex_a(s);
-	lex_it it = lexes.begin();
-	base_ptr node = expr_e(it, lexes.end());
+	//lexemes lexes = alt_yylex_a(s);
+	lexemes_c tokes{alt_yylex_a(s)};
+	//lex_it it = lexes.begin();
+	base_ptr node = expr_r(tokes); // TODO should be expr_e
 	cout << "Done parsing. Now evaluating." << endl;
 	cout << std::get<num_t>(node->eval()) << endl;
 
@@ -334,6 +384,7 @@ test02()
 {
 	cout << "test02 TODO\n";
 	alt_parse("66");
+	alt_parse("2*3");
 	alt_parse("23<24");
 	alt_parse("23+24");
 	alt_parse("1+2+3");
