@@ -197,6 +197,26 @@ lex_and_print(std::string s)
 typedef variant<num_t, std::string> value_t;
 
 
+num_t num(value_t v) { return std::get<num_t>(v); }
+
+using math_op = std::function<value_t(value_t, value_t)>;
+
+value_t neo_add(value_t v1, value_t v2) { return num(v1) + num(v2); }
+value_t neo_sub(value_t v1, value_t v2) { return num(v1) - num(v2); }
+value_t neo_mul(value_t v1, value_t v2) { return num(v1) * num(v2); }
+value_t neo_div(value_t v1, value_t v2) { return num(v1) / num(v2); }
+value_t neo_lt(value_t v1, value_t v2) { return num(v1) < num(v2); }
+value_t neo_le(value_t v1, value_t v2) { return num(v1) <= num(v2); }
+value_t neo_gt(value_t v1, value_t v2) { return num(v1) > num(v2); }
+value_t neo_ge(value_t v1, value_t v2) { return num(v1) >= num(v2); }
+value_t neo_eq(value_t v1, value_t v2) { return num(v1) == num(v2); }
+value_t neo_ne(value_t v1, value_t v2) { return num(v1) != num(v2); }
+
+map<std::string, math_op> math_ops = { 
+	{ "+", neo_add} , {"-", neo_sub }, 
+	{"*",  neo_mul}, {"/", neo_div}, 
+	{"<", neo_lt}, {"<=", neo_le}, {">", neo_gt}, {">=", neo_ge}, {"=", neo_eq}, {"!=", neo_ne}
+};
 
 class BaseNode
 {
@@ -208,6 +228,7 @@ class BaseNode
 
 typedef unique_ptr<BaseNode> base_ptr;
 
+/*
 class BinopNode : public BaseNode
 {
 	public:
@@ -232,7 +253,7 @@ class BinopNode : public BaseNode
 		std::string op;
 		base_ptr lhs, rhs;
 };
-
+*/
 
 class EmptyNode : public BaseNode
 {
@@ -247,34 +268,44 @@ class MultiopNode : public BaseNode
 		MultiopNode(base_ptr operand1) {
 			operands.push_back(std::move(operand1));
 		}
-		void append(std::string op, base_ptr operand) {
+		void append(math_op op, base_ptr operand) {
 			operators.push_back(op);
 			operands.push_back(std::move(operand));
 		}
 		value_t eval();
 	private:
 		vector<base_ptr> operands;
-		strings operators;
+		//strings operators;
+		std::vector<math_op> operators;
+
 };
 
-num_t num(value_t v) { return std::get<num_t>(v); }
+
+/*
+template<class T, class U>
+T::iterator find(T objs, T target)
+{
+	auto it = std::find(objs.begin(), objs.end(), target);
+	if(it != objs.end())
+		return nullptr;
+	else
+		return it;
+		
+}
+*/
 
 value_t MultiopNode::eval()
 {
 	value_t result = num(operands[0]->eval());
 	for(int i = 0; i< operators.size(); ++i) {
-		//cout << "MultiopNode::eval() 
-		if(operators[i] == "*") 
-			result = num(result) * num(operands[i+1]->eval());
-		else if(operators[i] == "+")
-			result = num(result) + num(operands[i+1]->eval());
-		else
-			cout << "TODO MultiopNode::eval() unhandled operator\n";
+		math_op op = operators[i];
+		value_t rhs = operands[i+1]->eval();
+		result = op(result, rhs);
 	}
-	//cout << "TODO MultiopNode::eval()\n";
 	return result;
-
 }
+
+
 class ValueNode : public BaseNode
 {
 	public:
@@ -297,11 +328,13 @@ typedef lexemes::iterator lex_it; // lexeme iterator
 
 base_ptr expr_e(lexemes_c& tokes);
 
+/*
 base_ptr
 binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
 {
 	return make_unique<BinopNode>(op_lexeme, std::move(lhs), std::move(rhs));
 }
+*/
 
 using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
 
@@ -331,7 +364,8 @@ base_ptr multiop(strings operators, lexemes_c& tokes, sub_expr_func expr_f)
 		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
 		if(opit == operators.end()) break;
 		tokes.advance();
-		exprs->append(op, expr_f(tokes));
+		math_op fop = (math_ops.find(op)->second);
+		exprs->append(fop, expr_f(tokes));
 	}
 	return exprs;
 }
