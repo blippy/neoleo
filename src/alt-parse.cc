@@ -52,14 +52,18 @@ typedef std::vector<std::string> strings;
 //enum Token { L_CELL, L_CONST, GE, NE, LE, L_FN0, L_FN1, L_FN2, L_FN3, L_FN1R , L_VAR, L_RANGE, 
 //	BAD_CHAR, BAD_FUNC, NO_QUOTE, PARSE_ERR};
 
-//char *alt_instr;
-//int alt_parse_error = 0;
-
-
 //* This table contains a list of the infix single-char functions 
 //unsigned char alt_fnin[] = {
 //	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 //};
+
+class syntax_error : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "#PARSE_ERROR";
+	}
+};
 
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
@@ -87,6 +91,7 @@ class lexemes_c {
 		lexemes_c(lexemes lexs);
 		void advance() { idx++;}
 		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
+		void require(std::string s) { if(this->curr() != s) throw syntax_error(); }
 	private:
 		lexemes lexs;
 		int idx = 0, len;
@@ -187,13 +192,6 @@ lex_and_print(std::string s)
 //  T --> P {( "*" | "/" ) P}
 //  P --> v | "(" E ")" | "-" T
 
-class syntax_error : public std::exception
-{
-	virtual const char* what() const throw()
-	{
-		return "#PARSE_ERROR";
-	}
-};
 
 
 typedef variant<num_t, std::string> value_t;
@@ -273,7 +271,7 @@ value_t MultiopNode::eval()
 		else
 			cout << "TODO MultiopNode::eval() unhandled operator\n";
 	}
-	cout << "TODO MultiopNode::eval()\n";
+	//cout << "TODO MultiopNode::eval()\n";
 	return result;
 
 }
@@ -297,7 +295,7 @@ class ValueNode : public BaseNode
 
 typedef lexemes::iterator lex_it; // lexeme iterator
 
-base_ptr expr_e(lex_it it, lex_it e);
+base_ptr expr_e(lexemes_c& tokes);
 
 base_ptr
 binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
@@ -313,7 +311,14 @@ expr_p(lexemes_c& tokes)
 	// TODO
 	//if(it == e) throw syntax_error();
 	//return make_unique<ValueNode>(stod(it->lexeme));
-	auto result = make_unique<ValueNode>(stod(tokes.curr()));
+	base_ptr result;
+	if(tokes.curr() == "(") {
+		tokes.advance();
+		result = expr_e(tokes);
+		tokes.require(")");
+	} else {
+		result = make_unique<ValueNode>(stod(tokes.curr()));
+	}
 	tokes.advance();
 	return result;
 }
@@ -343,16 +348,19 @@ expr_r(lexemes_c& tokes)
 }
 
 
+base_ptr
+expr_e(lexemes_c& tokes)
+{
+	return multiop({"<", "<=", ">", ">=", "=", "!="}, tokes, expr_r);
+}
+
 void alt_parse(std::string s)
 {
 	cout << "parsing: " << s << endl;
-	//lexemes lexes = alt_yylex_a(s);
 	lexemes_c tokes{alt_yylex_a(s)};
-	//lex_it it = lexes.begin();
-	base_ptr node = expr_r(tokes); // TODO should be expr_e
+	base_ptr node = expr_e(tokes);
 	cout << "Done parsing. Now evaluating." << endl;
 	cout << std::get<num_t>(node->eval()) << endl;
-
 }
 
 
@@ -390,6 +398,8 @@ test02()
 	alt_parse("1+2+3");
 	alt_parse("1+2*3");
 	alt_parse("4*2+3");
+	alt_parse("4/5/6");
+	alt_parse("(1+2)*3");
 
 	//unique_ptr<BaseNode> ptr = make_unique<FloatNode>();
 	//alt_parse("");
