@@ -16,7 +16,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdlib>
 #include <exception>
 #include <functional>
@@ -65,6 +67,14 @@ class syntax_error : public std::exception
 	}
 };
 
+class unknown_function : public std::exception
+{
+	virtual const char* what() const throw()
+	{
+		return "#UNK_FUNC";
+	}
+};
+
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
 
@@ -75,7 +85,10 @@ enum LexType { LT_FLT ,
 	LT_OPR, // + -
 	LT_OPP, // um ..
 	LT_OPT, //  * /
-	LT_WORD, LT_UNK };
+	LT_WORD, 
+	LT_UNK,
+	LT_EOF // end of file
+};
 
 
 typedef struct {
@@ -91,6 +104,7 @@ class lexemes_c {
 		lexemes_c(lexemes lexs);
 		void advance() { idx++;}
 		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
+		LexType curr_type() { return idx<len? lexs[idx].lextype : LT_EOF ;}
 		void require(std::string s) { if(this->curr() != s) throw syntax_error(); }
 	private:
 		lexemes lexs;
@@ -105,7 +119,6 @@ lexemes_c::lexemes_c(lexemes lexs) : lexs(lexs)
 
 
 
-//constexpr std::string wrap(const std::string& str) { return "^("s + str + ")" ; }
 
 static map<LexType, std::string> type_map;
 
@@ -190,11 +203,13 @@ lex_and_print(std::string s)
 //  E --> R {( "<" | "<=" | ">" | ">=" | "==" | "!=" ) R}
 //  R --> T {( "+" | "-" ) T}
 //  T --> P {( "*" | "/" ) P}
-//  P --> v | "(" E ")" | "-" T
+//  P --> v | F | "(" E ")" | "-" T
+//  F --> word "(" E ")"
 
 
 
 typedef variant<num_t, std::string> value_t;
+typedef vector<value_t> values;
 
 
 num_t num(value_t v) { return std::get<num_t>(v); }
@@ -218,6 +233,19 @@ map<std::string, math_op> math_ops = {
 	{"<", neo_lt}, {"<=", neo_le}, {">", neo_gt}, {">=", neo_ge}, {"=", neo_eq}, {"!=", neo_ne}
 };
 
+using neo_func = std::function<value_t(values vs)>;
+
+value_t neo_sqrt(values vs)
+{
+	if(vs.size() != 1) throw syntax_error();
+	return std::sqrt(num(vs[0]));
+}
+
+map<std::string, neo_func> neo_funcs = {
+	{"sqrt", neo_sqrt}
+};
+
+
 class BaseNode
 {
 	public:
@@ -227,6 +255,7 @@ class BaseNode
 };
 
 typedef unique_ptr<BaseNode> base_ptr;
+typedef vector<base_ptr> base_ptrs;
 
 /*
 class BinopNode : public BaseNode
@@ -262,6 +291,37 @@ class EmptyNode : public BaseNode
 		~EmptyNode() {};
 };
 
+class FuncNode : public BaseNode
+{
+	public:
+		FuncNode(neo_func f) : f(f) {}
+		void append_arg(base_ptr arg) { args.push_back(std::move(arg)); }
+		value_t eval();
+	private:
+		neo_func f;
+		base_ptrs args;
+		value_t evaluate_arg(base_ptr arg);
+};
+
+value_t FuncNode::eval()
+{ 
+	values the_values;
+	//the_values.push_back(12);
+	//evaluate_arg(std::move(args.at(0)));
+	for(int i = 0 ; i < args.size(); ++i) 
+		the_values.push_back(evaluate_arg(std::move(args[i])));
+	//std::transform(args.begin(), args.end(), std::back_inserter(the_values),
+	//			[](base_ptr arg) -> value_t {return std::move(arg->eval());});
+	return f(the_values); 
+	//return 666;		
+}
+
+value_t FuncNode::evaluate_arg(base_ptr arg)
+{ 
+	auto a = std::move(arg);
+	return a->eval(); 
+}
+
 class MultiopNode : public BaseNode
 {
 	public:
@@ -275,7 +335,6 @@ class MultiopNode : public BaseNode
 		value_t eval();
 	private:
 		vector<base_ptr> operands;
-		//strings operators;
 		std::vector<math_op> operators;
 
 };
@@ -339,16 +398,31 @@ binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
 using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
 
 base_ptr
+expr_f(lexemes_c& tokes)
+{
+	auto fit = neo_funcs.find(tokes.curr());
+	if(fit == neo_funcs.end()) throw unknown_function();
+	neo_func func = fit->second;
+	tokes.advance();
+	tokes.require("(");
+	tokes.advance();
+	auto result = make_unique<FuncNode>(func);
+	result->append_arg(expr_e(tokes));
+	tokes.require(")");
+	tokes.advance();
+	return result;
+}
+
+base_ptr
 expr_p(lexemes_c& tokes)
 {
-	// TODO
-	//if(it == e) throw syntax_error();
-	//return make_unique<ValueNode>(stod(it->lexeme));
 	base_ptr result;
 	if(tokes.curr() == "(") {
 		tokes.advance();
 		result = expr_e(tokes);
 		tokes.require(")");
+	} else if(tokes.curr_type() == LT_WORD) {
+		return expr_f(tokes);
 	} else {
 		result = make_unique<ValueNode>(stod(tokes.curr()));
 	}
@@ -434,10 +508,11 @@ test02()
 	alt_parse("4*2+3");
 	alt_parse("4/5/6");
 	alt_parse("(1+2)*3");
+	alt_parse("sqrt(3+9)");
 
 	//unique_ptr<BaseNode> ptr = make_unique<FloatNode>();
 	//alt_parse("");
-	cout << "Now I am going to delibeartely throw an error\n";
+	cout << "Now I am going to deliberately throw an error\n";
 	throw syntax_error();
 }
 
