@@ -2,16 +2,18 @@
 #include <map>
 #include <tuple>
 
-#include "alt_cells.h"
-#include "byte-compile.h"
-#include "cell.h"
-#include "decompile.h"
+#include "alt-cells.h"
+//#include "byte-compile.h"
+//#include "cell.h"
+//#include "decompile.h"
 
 using std::cout;
 using std::endl;
 using std::map;
 using std::string;
 
+
+typedef struct point_t {int r; int c;} point_t;
 
 //bool use_alt_cells = false;
 
@@ -20,8 +22,9 @@ bool operator < (const point_t& left, const point_t& right)
 	return std::tie(left.r, left.c) < std::tie(right.r, right.c);
 }
 
-map<point_t, cell> alt_the_cells;
+//map<point_t, cell> alt_the_cells;
 
+/*
 struct cell *
 alt_find_cell(int row, int col)
 {
@@ -31,7 +34,9 @@ alt_find_cell(int row, int col)
 	else
 		return nullptr;
 }
+*/
 
+/*
 void
 alt_set_cell(int row, int col, const std::string& s)
 {
@@ -48,13 +53,14 @@ alt_set_cell(int row, int col, const std::string& s)
 	if(it != alt_the_cells.end()) alt_the_cells.erase(it);
 	alt_the_cells.insert(std::make_pair(p, c)); 
 }
+*/
 
 char*
 alt_new_value(int row, int col, const std::string& s)
 {
 	// TODO check lock
 	
-	alt_set_cell(row, col, s);
+	//alt_set_cell(row, col, s);
 
 	// TODO more stuff
 
@@ -66,6 +72,9 @@ alt_set_cell_from_string(int r, int c, const std::string& s)
 	return alt_new_value(r, c, s);
 }
 
+
+
+/*
 std::string
 alt_cell_value_string(const point_t& pt)
 {
@@ -81,13 +90,16 @@ alt_cell_value_string(const point_t& pt)
 			      panic("alt_cell_value_string() didn't handle a type");
 	}
 }
+*/
 
 
+/*
 std::string
 alt_decomp(const point_t& pt)
 {
 	return decomp(pt.r, pt.c);
 }
+*/
 
 template <class T>
 void
@@ -101,7 +113,7 @@ test_eq(std::string test_name, const T& lhs, const T& rhs)
 	cout << " " << test_name << endl;
 }
 
-
+/*
 void
 altc_test01()
 {
@@ -115,6 +127,8 @@ altc_test01()
 	cout << "Found:" << res << "\n";
 	test_eq("altc01", string("42"), res); // will actually equal 63.36
 }
+*/
+/*
 void
 altc_test02()
 {
@@ -125,13 +139,14 @@ altc_test02()
 	cout << "Found:" << res << "\n";
 	test_eq("altc01", string("42"), res); // will actually equal 63.36
 }
+*/
 
 bool
 run_alt_cells_tests()
 {
 	//use_alt_cells = true;
-	altc_test01();
-	altc_test02();
+	//altc_test01();
+	//altc_test02();
 	cout << "... Finished running alt cells tests\n";
 	return false;
 }

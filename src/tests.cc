@@ -36,7 +36,7 @@ using std::vector;
 #include "decompile.h"
 #include "lists.h"
 #include "parse_parse.h"
-#include "alt_cells.h"
+#include "alt-cells.h"
 #include "alt-parse.h"
 
 static bool all_pass = true; // all the checks have passed so far
