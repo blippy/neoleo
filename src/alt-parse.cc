@@ -197,14 +197,14 @@ lex_and_print(std::string s)
 
 // https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#classic
 // [ ] enclose an optional part of the expression
-// { } encolse 0 or more repetitions
+// { } enclose 0 or more repetitions
 // | separates alternatives
 // Parse rules (incomplete):
 //  E --> R {( "<" | "<=" | ">" | ">=" | "==" | "!=" ) R}
 //  R --> T {( "+" | "-" ) T}
 //  T --> P {( "*" | "/" ) P}
 //  P --> v | F | "(" E ")" | "-" T
-//  F --> word "(" E ")"
+//  F --> word "(" [E {"," E} ] ")"
 
 
 
@@ -235,6 +235,18 @@ map<std::string, math_op> math_ops = {
 
 using neo_func = std::function<value_t(values vs)>;
 
+value_t neo_mod(values vs)
+{
+	if(vs.size() != 2) throw syntax_error();
+	return std::fmod(num(vs[0]), num(vs[1]));
+}
+
+value_t neo_pi(values vs)
+{
+	if(vs.size() != 0) throw syntax_error();
+	return 3.141592653589793238;
+}
+
 value_t neo_sqrt(values vs)
 {
 	if(vs.size() != 1) throw syntax_error();
@@ -242,6 +254,8 @@ value_t neo_sqrt(values vs)
 }
 
 map<std::string, neo_func> neo_funcs = {
+	{"mod", neo_mod},
+	{"pi", neo_pi},
 	{"sqrt", neo_sqrt}
 };
 
@@ -403,12 +417,19 @@ expr_f(lexemes_c& tokes)
 	auto fit = neo_funcs.find(tokes.curr());
 	if(fit == neo_funcs.end()) throw unknown_function();
 	neo_func func = fit->second;
+	auto result = make_unique<FuncNode>(func);
 	tokes.advance();
 	tokes.require("(");
 	tokes.advance();
-	auto result = make_unique<FuncNode>(func);
-	result->append_arg(expr_e(tokes));
-	tokes.require(")");
+	if(tokes.curr() != ")") {
+		//tokes.advance();
+		result->append_arg(expr_e(tokes));
+		while(tokes.curr() == ",") {
+			tokes.advance();
+		       	result->append_arg(expr_e(tokes));
+		}
+	}
+	//tokes.require(")");
 	tokes.advance();
 	return result;
 }
@@ -509,6 +530,8 @@ test02()
 	alt_parse("4/5/6");
 	alt_parse("(1+2)*3");
 	alt_parse("sqrt(3+9)");
+	alt_parse("pi()");
+	alt_parse("mod(12, 7)");
 
 	//unique_ptr<BaseNode> ptr = make_unique<FloatNode>();
 	//alt_parse("");
