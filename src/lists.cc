@@ -41,7 +41,7 @@ using std::cout;
 #include "lists.h"
 #include "funcdef.h"
 #include "utils.h"
-#include "alt_cells.h"
+//#include "alt_cells.h"
 
 #include "sysdef.h"
 #ifndef _DEBUG_MALLOC_INC
@@ -455,8 +455,8 @@ flush_everything (void)
 struct cell *
 find_cell (CELLREF row, CELLREF col)
 {
-	if(use_alt_cells)
-		return alt_find_cell(row, col);
+	//if(use_alt_cells)
+	//	return alt_find_cell(row, col);
   void **v;
 
   v = (void**) find (col, Global->the_cols, sizeof (void *));

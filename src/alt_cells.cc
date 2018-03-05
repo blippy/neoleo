@@ -13,7 +13,7 @@ using std::map;
 using std::string;
 
 
-bool use_alt_cells = false;
+//bool use_alt_cells = false;
 
 bool operator < (const point_t& left, const point_t& right)
 {
@@ -129,7 +129,7 @@ altc_test02()
 bool
 run_alt_cells_tests()
 {
-	use_alt_cells = true;
+	//use_alt_cells = true;
 	altc_test01();
 	altc_test02();
 	cout << "... Finished running alt cells tests\n";
