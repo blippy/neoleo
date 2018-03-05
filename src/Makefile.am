@@ -29,7 +29,7 @@ neoleo_SOURCES = alt_cells.cc alt-parse.cc \
 		 args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
-		 eval.cc format.cc forminfo.cc funcs.cc \
+		 eval.cc experimental.cc format.cc forminfo.cc funcs.cc \
 		 gsl.cc hash.cc help.cc \
 		 info.cc init.cc input.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc \
