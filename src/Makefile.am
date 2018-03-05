@@ -57,7 +57,7 @@ neoleo_SOURCES = alt-cells.cc alt-parse.cc \
 # Ideally obstack would be removed as a dependency anyway
 #neoleo_SOURCES += obstack_a.cc
 
-noinst_HEADERS = alt-cells.h alt-parse.h \
+noinst_HEADERS = alt-cells.h alt-parse.h alt-types.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h forminfo.h funcdef.h \

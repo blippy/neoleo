@@ -38,12 +38,14 @@
 //#include "hash.h"
 //#include "mem.h"
 
+#include "alt-cells.h"
 #include "numeric.h"
 
 using std::cout;
 using std::endl;
 using std::map;
 using std::make_unique;
+using std::string;
 using std::unique_ptr;
 using std::variant;
 using std::vector;
@@ -208,11 +210,8 @@ lex_and_print(std::string s)
 
 
 
-typedef variant<num_t, std::string> value_t;
-typedef vector<value_t> values;
 
 
-num_t num(value_t v) { return std::get<num_t>(v); }
 
 using math_op = std::function<value_t(value_t, value_t)>;
 
@@ -254,22 +253,12 @@ value_t neo_sqrt(values vs)
 }
 
 map<std::string, neo_func> neo_funcs = {
+	{"cell", neo_cell},
 	{"mod", neo_mod},
 	{"pi", neo_pi},
 	{"sqrt", neo_sqrt}
 };
 
-
-class BaseNode
-{
-	public:
-		virtual ~BaseNode() {};
-		virtual value_t  eval() =0 ; //{return v}
-
-};
-
-typedef unique_ptr<BaseNode> base_ptr;
-typedef vector<base_ptr> base_ptrs;
 
 /*
 class BinopNode : public BaseNode
@@ -483,15 +472,22 @@ expr_e(lexemes_c& tokes)
 	return multiop({"<", "<=", ">", ">=", "=", "!="}, tokes, expr_r);
 }
 
-void alt_parse(std::string s)
+base_ptr
+alt_parse(std::string s)
 {
-	cout << "parsing: " << s << endl;
+	//cout << "parsing: " << s << endl;
 	lexemes_c tokes{alt_yylex_a(s)};
-	base_ptr node = expr_e(tokes);
+	//base_ptr node = expr_e(tokes);
+	return expr_e(tokes);
+}
+
+void
+test_alt_parse(std::string s)
+{
+	base_ptr node = alt_parse(s);
 	cout << "Done parsing. Now evaluating." << endl;
 	cout << std::get<num_t>(node->eval()) << endl;
 }
-
 
 
 
@@ -520,21 +516,13 @@ static bool
 test02()
 {
 	cout << "test02 TODO\n";
-	alt_parse("66");
-	alt_parse("2*3");
-	alt_parse("23<24");
-	alt_parse("23+24");
-	alt_parse("1+2+3");
-	alt_parse("1+2*3");
-	alt_parse("4*2+3");
-	alt_parse("4/5/6");
-	alt_parse("(1+2)*3");
-	alt_parse("sqrt(3+9)");
-	alt_parse("pi()");
-	alt_parse("mod(12, 7)");
+	auto test_expressions = { "66", "2*3", "23<24",  "23+24", "1+2+3", "1+2*3", "4*2+3", "4/5/6", 
+		"(1+2)*3",  "sqrt(3+9)", "pi()", "mod(12, 7)"};
 
-	//unique_ptr<BaseNode> ptr = make_unique<FloatNode>();
-	//alt_parse("");
+	for(const string& s: test_expressions)
+		test_alt_parse(s);
+
+
 	cout << "Now I am going to deliberately throw an error\n";
 	throw syntax_error();
 }

@@ -1,8 +1,10 @@
 #include <iostream>
 #include <map>
 #include <tuple>
+#include <utility>
 
 #include "alt-cells.h"
+#include "alt-parse.h"
 //#include "byte-compile.h"
 //#include "cell.h"
 //#include "decompile.h"
@@ -17,10 +19,44 @@ typedef struct point_t {int r; int c;} point_t;
 
 //bool use_alt_cells = false;
 
+num_t num(value_t v) { return std::get<num_t>(v); }
+
+
+std::map<int, cell_t> g_cells;
+
+value_t cell_value(int i)
+{
+	value_t v = g_cells[i].ast->eval(); 
+	//return std::to_string(num(v));
+	return v;
+}
+
+std::string cell_value_as_string(int i)
+{
+	return std::to_string(num(cell_value(i)));
+
+}
+value_t neo_cell(values vs)
+{
+	if(vs.size() != 1) throw 666;
+	return cell_value(num(vs[0]));
+	
+	//return g_cells[num(vs[0])].ast->eval();
+}
+
+void set_cell_from_user_text(int i, std::string text)
+{
+	cell_t c{text, alt_parse(text)};
+	g_cells[i] = std::move(c);
+}
+
+
+/*
 bool operator < (const point_t& left, const point_t& right)
 {
 	return std::tie(left.r, left.c) < std::tie(right.r, right.c);
 }
+*/
 
 //map<point_t, cell> alt_the_cells;
 
