@@ -46,8 +46,10 @@ value_t neo_cell(values vs)
 
 void set_cell_from_user_text(int i, std::string text)
 {
-	cell_t c{text, alt_parse(text)};
+	/*
+	cell_t c{text, parse_expression(text)};
 	g_cells[i] = std::move(c);
+	*/
 }
 
 

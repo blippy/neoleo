@@ -17,6 +17,7 @@
  */
 
 #include <algorithm>
+#include <cassert>
 #include <cctype>
 #include <cmath>
 #include <cstdlib>
@@ -28,15 +29,10 @@
 #include <stdexcept>
 #include <regex>
 #include <string>
+#include <type_traits>
+#include <typeinfo>
 #include <variant>
 #include <vector>
-
-//#include "global.h"
-//#include "eval.h"
-//#include "node.h"
-//#include "ref.h"
-//#include "hash.h"
-//#include "mem.h"
 
 #include "alt-cells.h"
 #include "numeric.h"
@@ -44,7 +40,9 @@
 using std::cout;
 using std::endl;
 using std::map;
+using std::make_shared;
 using std::make_unique;
+using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
 using std::variant;
@@ -61,21 +59,6 @@ typedef std::vector<std::string> strings;
 //	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 //};
 
-class syntax_error : public std::exception
-{
-	virtual const char* what() const throw()
-	{
-		return "#PARSE_ERROR";
-	}
-};
-
-class unknown_function : public std::exception
-{
-	virtual const char* what() const throw()
-	{
-		return "#UNK_FUNC";
-	}
-};
 
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
@@ -87,7 +70,7 @@ enum LexType { LT_FLT ,
 	LT_OPR, // + -
 	LT_OPP, // um ..
 	LT_OPT, //  * /
-	LT_WORD, 
+	LT_ID, 
 	LT_UNK,
 	LT_EOF // end of file
 };
@@ -107,7 +90,10 @@ class lexemes_c {
 		void advance() { idx++;}
 		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
 		LexType curr_type() { return idx<len? lexs[idx].lextype : LT_EOF ;}
-		void require(std::string s) { if(this->curr() != s) throw syntax_error(); }
+		void require(std::string s) { 
+			if(this->curr() != s) 
+				throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
+		}
 	private:
 		lexemes lexs;
 		int idx = 0, len;
@@ -153,7 +139,7 @@ alt_yylex_a(const std::string& s)
 		Re("\\+|\\-", LT_OPR, "opr"),
 		Re("\\*|/", LT_OPT, "opt"),
 		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
-		Re("[a-zA-z]+", LexType::LT_WORD, "word"),
+		Re("[a-zA-z]+", LexType::LT_ID, "word"),
 		Re(".", LexType::LT_UNK, "unknown")
 
 	};
@@ -234,21 +220,31 @@ map<std::string, math_op> math_ops = {
 
 using neo_func = std::function<value_t(values vs)>;
 
+value_t neo_println(values vs)
+{
+	cout << "neo_println() says hello\n";
+	cout << "number of args: " << vs.size() << "\n";
+	for(auto& v: vs)
+		cout << num(v)  << ", ";
+	cout << endl;
+	return 0;
+}
+
 value_t neo_mod(values vs)
 {
-	if(vs.size() != 2) throw syntax_error();
+	if(vs.size() != 2) throw std::runtime_error("mod nargs");
 	return std::fmod(num(vs[0]), num(vs[1]));
 }
 
 value_t neo_pi(values vs)
 {
-	if(vs.size() != 0) throw syntax_error();
+	if(vs.size() != 0) throw std::runtime_error("pi nargs");
 	return 3.141592653589793238;
 }
 
 value_t neo_sqrt(values vs)
 {
-	if(vs.size() != 1) throw syntax_error();
+	if(vs.size() != 1) throw std::runtime_error("sqrt nargs");
 	return std::sqrt(num(vs[0]));
 }
 
@@ -256,67 +252,60 @@ map<std::string, neo_func> neo_funcs = {
 	{"cell", neo_cell},
 	{"mod", neo_mod},
 	{"pi", neo_pi},
+	{"println", neo_println},
 	{"sqrt", neo_sqrt}
 };
 
 
+class Factor;
+class Relop;
+class Term;
+
+
+class Expression {
+	public:
+		vector<Relop> operands; // terms;
+		vector<math_op> fops;
+		//const strings operators = strings {"+", "-" };
+};
+
+class Relop {
+	public:
+		vector<Term> operands; // terms;
+		vector<math_op> fops;
+};
+
+class Term {
+	public:
+		vector<Factor> operands; //factors;
+		vector<math_op> fops;
+		//const strings operators = strings { "*", "/" };
+};
+
+
+class FuncCall{
+	public:
+		string name; // TODO evaluation would be quicker with a function pointer.
+		vector<Expression> exprs;
+};
+
+class Factor {
+	public:
+		variant<num_t, Expression, FuncCall> factor;
+};
+
+
+typedef Expression expression_t;
+typedef vector<Expression> expressions_t;
+
+
 /*
-class BinopNode : public BaseNode
-{
-	public:
-		BinopNode(std::string op, base_ptr lhs, base_ptr rhs): op(op) {
-			this->lhs = std::move(lhs);
-			this->rhs = std::move(rhs);
-		}
-		value_t eval() { 
-			num_t n1 = std::get<num_t>(lhs->eval());
-			num_t n2 = std::get<num_t>(rhs->eval());
-			cout << "evaluating " << n1 << op << n2 << endl;
-			num_t ret;
-			if(op == "+")
-				ret = n1 + n2;
-			else if(op == "*")
-				ret = n1*n2;
-
-			return ret;
-
-
-		}
-		std::string op;
-		base_ptr lhs, rhs;
-};
-*/
-
-class EmptyNode : public BaseNode
-{
-	public:
-		value_t eval() {return "";}
-		~EmptyNode() {};
-};
-
-class FuncNode : public BaseNode
-{
-	public:
-		FuncNode(neo_func f) : f(f) {}
-		void append_arg(base_ptr arg) { args.push_back(std::move(arg)); }
-		value_t eval();
-	private:
-		neo_func f;
-		base_ptrs args;
-		value_t evaluate_arg(base_ptr arg);
-};
-
-value_t FuncNode::eval()
+value_t FuncNode::eval() const
 { 
 	values the_values;
-	//the_values.push_back(12);
-	//evaluate_arg(std::move(args.at(0)));
 	for(int i = 0 ; i < args.size(); ++i) 
 		the_values.push_back(evaluate_arg(std::move(args[i])));
-	//std::transform(args.begin(), args.end(), std::back_inserter(the_values),
-	//			[](base_ptr arg) -> value_t {return std::move(arg->eval());});
 	return f(the_values); 
-	//return 666;		
 }
 
 value_t FuncNode::evaluate_arg(base_ptr arg)
@@ -324,6 +313,49 @@ value_t FuncNode::evaluate_arg(base_ptr arg)
 	auto a = std::move(arg);
 	return a->eval(); 
 }
+*/
+
+class FunctionDefinition : public BaseNode
+{
+	public:
+		FunctionDefinition(string function_name);
+		void append_arg(string identifier) { arguments.push_back(identifier); }
+		void append_statement(base_ptr statement) { 
+			//statements.push_back(std::move(statement)); 
+		} 
+		value_t eval() const { 
+			cout << "FunctionDefinition:eval()\n";
+			return 666; 
+		}
+		string function_name;
+		~FunctionDefinition() { cout << "deleting FunctionDefinition\n"; }
+	private:
+		strings arguments;
+		//base_ptrs statements;
+
+};
+
+typedef shared_ptr<FunctionDefinition> interpreted_function_ptr;
+
+map<std::string, interpreted_function_ptr> interpreted_functions;
+
+FunctionDefinition::FunctionDefinition(string function_name): function_name(function_name) 
+{
+	//interpreted_functions[function_name] = this;
+}
+
+/*
+neo_func
+standardise_function(FunctionDefinition fin)
+{
+	neo_func fout = [&](values vs) {
+		
+		return fin.eval();
+		//return 666; 
+	};
+	return fout;
+}
+*/
 
 class MultiopNode : public BaseNode
 {
@@ -343,18 +375,6 @@ class MultiopNode : public BaseNode
 };
 
 
-/*
-template<class T, class U>
-T::iterator find(T objs, T target)
-{
-	auto it = std::find(objs.begin(), objs.end(), target);
-	if(it != objs.end())
-		return nullptr;
-	else
-		return it;
-		
-}
-*/
 
 value_t MultiopNode::eval()
 {
@@ -388,105 +408,254 @@ class ValueNode : public BaseNode
 
 typedef lexemes::iterator lex_it; // lexeme iterator
 
-base_ptr expr_e(lexemes_c& tokes);
+Expression expr_e(lexemes_c& tokes);
 
-/*
-base_ptr
-binop(std::string op_lexeme, base_ptr lhs, base_ptr rhs)
+//using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
+
+
+
+
+//typedef variant<num_t, expression_t> factor_t;
+
+
+
+
+
+
+Expression make_expression(lexemes_c& tokes);
+
+
+FuncCall
+make_funccall(lexemes_c& tokes)
 {
-	return make_unique<BinopNode>(op_lexeme, std::move(lhs), std::move(rhs));
-}
-*/
-
-using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
-
-base_ptr
-expr_f(lexemes_c& tokes)
-{
-	auto fit = neo_funcs.find(tokes.curr());
-	if(fit == neo_funcs.end()) throw unknown_function();
-	neo_func func = fit->second;
-	auto result = make_unique<FuncNode>(func);
+	FuncCall fn;
+	fn.name = tokes.curr();
 	tokes.advance();
 	tokes.require("(");
 	tokes.advance();
+	auto make = [&]() { fn.exprs.push_back(make_expression(tokes)); };
 	if(tokes.curr() != ")") {
-		//tokes.advance();
-		result->append_arg(expr_e(tokes));
+		make();
 		while(tokes.curr() == ",") {
 			tokes.advance();
-		       	result->append_arg(expr_e(tokes));
+			make();
 		}
 	}
-	//tokes.require(")");
 	tokes.advance();
-	return result;
+	return fn;
 }
 
-base_ptr
-expr_p(lexemes_c& tokes)
+Factor
+make_factor(lexemes_c& tokes)
 {
-	base_ptr result;
-	if(tokes.curr() == "(") {
+	Factor f;
+	if(tokes.curr() == "(") { // a parenthesised expression
 		tokes.advance();
-		result = expr_e(tokes);
+		f.factor = make_expression(tokes);
 		tokes.require(")");
-	} else if(tokes.curr_type() == LT_WORD) {
-		return expr_f(tokes);
+		tokes.advance();
+	} else if(tokes.curr_type() == LT_ID) {
+		f.factor = make_funccall(tokes);
 	} else {
-		result = make_unique<ValueNode>(stod(tokes.curr()));
+		num_t v = std::stod(tokes.curr());
+		f.factor = v;
+		tokes.advance();
 	}
-	tokes.advance();
-	return result;
+
+	return f;
 }
 
-base_ptr multiop(strings operators, lexemes_c& tokes, sub_expr_func expr_f)
+Term
+make_term(lexemes_c& tokes)
 {
-	auto exprs = make_unique<MultiopNode>(expr_f(tokes));
+	Term  t;
+	auto operators = strings {"*", "/"};
+	auto make = make_factor;
+	//cout << "decltype(make_factor):" << type_name<decltype(make)>() << "\n";
+	t.operands.push_back(make(tokes));
 	while(1) {
 		std::string op = tokes.curr();
 		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
 		if(opit == operators.end()) break;
 		tokes.advance();
 		math_op fop = (math_ops.find(op)->second);
-		exprs->append(fop, expr_f(tokes));
+		t.fops.push_back(fop);
+		t.operands.push_back(make(tokes));
 	}
-	return exprs;
+	return t;
 }
-base_ptr
-expr_t(lexemes_c& tokes)
+
+Relop
+make_relop(lexemes_c& tokes)
 {
-	return multiop({"*", "/"}, tokes, expr_p);
+	Relop r;
+	auto make = make_term;
+	auto operators = strings {"<", "<=", ">", ">=", "=", "!"};
+	r.operands.push_back(make(tokes));
+	while(1) {
+		std::string op = tokes.curr();
+		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
+		if(opit == operators.end()) break;
+		tokes.advance();
+		math_op fop = (math_ops.find(op)->second);
+		r.fops.push_back(fop);
+		r.operands.push_back(make(tokes));
+	}
+	return r;
 }
-
-base_ptr
-expr_r(lexemes_c& tokes)
+Expression
+make_expression(lexemes_c& tokes)
 {
-	return multiop({"+", "-"}, tokes, expr_t);
+	Expression e;
+	auto make = make_relop;
+	auto operators = strings {"+", "-"};
+	e.operands.push_back(make(tokes));
+	while(1) {
+		std::string op = tokes.curr();
+		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
+		if(opit == operators.end()) break;
+		tokes.advance();
+		math_op fop = (math_ops.find(op)->second);
+		e.fops.push_back(fop);
+		e.operands.push_back(make(tokes));
+	}
+	return e;
 }
 
-
-base_ptr
-expr_e(lexemes_c& tokes)
-{
-	return multiop({"<", "<=", ">", ">=", "=", "!="}, tokes, expr_r);
-}
-
-base_ptr
-alt_parse(std::string s)
+Expression
+parse_expression(std::string s)
 {
 	//cout << "parsing: " << s << endl;
 	lexemes_c tokes{alt_yylex_a(s)};
 	//base_ptr node = expr_e(tokes);
-	return expr_e(tokes);
+	return make_expression(tokes);
 }
 
-void
-test_alt_parse(std::string s)
+/*
+bool
+function_definition(lexemes_c& tokes)
 {
-	base_ptr node = alt_parse(s);
+	if(tokes.curr() != "func") return false;
+	tokes.advance();
+	FunctionDefinition ast{tokes.curr()};
+	//interpreted_functions[tokes.curr()] = ast;
+	cout << "a1" << endl;
+	
+
+
+	tokes.advance();
+
+	// argument list
+	tokes.require("(");
+	tokes.advance();
+	if(tokes.curr() != ")") {
+		ast.append_arg(tokes.curr());
+		tokes.advance();
+		while(tokes.curr() == ",") {
+			tokes.advance();
+			ast.append_arg(tokes.curr());
+			tokes.advance();
+		}
+	}
+	//tokes.require(")");
+	tokes.advance();
+
+	// compound statement
+	tokes.require("{");
+	tokes.advance();
+	if(tokes.curr() != "}") {
+		ast.append_statement(expr_e(tokes));
+		tokes.require(";");
+		tokes.advance();
+	}
+	tokes.advance();
+
+	//register_user_function(std::move(ast));
+	//neo_funcs[tokes.curr()] = standardise_function(ast);
+	neo_funcs[tokes.curr()] = [ast](values vs) { 		
+		//auto ast1 = std::move(ast);
+		//return 667;
+		return ast.eval(); 
+	};
+	return true;
+}
+
+
+void
+parse_translation_unit(std::string s)
+{
+	lexemes_c tokes{alt_yylex_a(s)};
+	//base_ptr ast;
+	while( tokes.curr_type()!= LT_EOF) {
+		if(! function_definition(tokes)) {
+			auto expr = expr_e(tokes);
+			expr->eval();
+		}
+	}
+	//return nullptr;
+}
+*/
+
+value_t eval(Expression e);
+
+value_t eval(FuncCall fn)
+{	
+	values vs;
+	for(const auto& e: fn.exprs)
+		vs.push_back(eval(e));	
+
+	auto it  =  neo_funcs.find(fn.name);
+	if(it == neo_funcs.end()) {
+		throw std::runtime_error("#UNK_FUNC: " + fn.name);
+	}
+	neo_func f = it->second;
+	return f(vs);
+}
+
+value_t
+eval(Factor f)
+{
+	if(std::holds_alternative<num_t>(f.factor)) {
+		return std::get<num_t>(f.factor);
+	} else if(std::holds_alternative<Expression>(f.factor)) {
+		return eval(std::get<Expression>(f.factor));
+	} else if(std::holds_alternative<FuncCall>(f.factor)) {
+		return eval(std::get<FuncCall>(f.factor));
+	} else {
+		throw std::logic_error("eval(Factor f) unhandled alternative");
+	}
+
+}
+
+
+
+template<class T>
+value_t eval_multiop(T expr)
+{
+	assert(expr.operands.size()>0);
+	value_t result = eval(expr.operands[0]);
+	for(int i = 0; i< expr.fops.size() ; i++) {
+		auto& fop = expr.fops[i];
+		result = fop(result, eval(expr.operands[i+1]));
+	}
+	return result;
+}
+
+value_t eval(Term t) { return eval_multiop(t); }
+value_t eval(Relop r) { return eval_multiop(r); }
+value_t eval(Expression e) { return eval_multiop(e); }
+
+string str(value_t v)
+{
+	return std::to_string(std::get<num_t>(v));
+}
+void
+test_parse_expression(std::string s)
+{
+	cout << "test_parse_expression():" << s << "\n";
+	Expression e{parse_expression(s)};
 	cout << "Done parsing. Now evaluating." << endl;
-	cout << std::get<num_t>(node->eval()) << endl;
+	cout << str(eval(e)) << "\n" << endl;
 }
 
 
@@ -512,24 +681,36 @@ bool test01()
 	return true;
 }
 
-static bool
+static void
 test02()
 {
-	cout << "test02 TODO\n";
-	auto test_expressions = { "66", "2*3", "23<24",  "23+24", "1+2+3", "1+2*3", "4*2+3", "4/5/6", 
+	cout << "test02\n";
+	auto test_expressions = { "66", "1-2-3", "2*3", "23<24",  "23+24", "1+2+3", "1+2*3", "4*2+3", "4/5/6", 
 		"(1+2)*3",  "sqrt(3+9)", "pi()", "mod(12, 7)"};
 
 	for(const string& s: test_expressions)
-		test_alt_parse(s);
+		test_parse_expression(s);
 
 
-	cout << "Now I am going to deliberately throw an error\n";
-	throw syntax_error();
+	//cout << "Now I am going to deliberately throw an error\n";
+	//throw syntax_error();
 }
+
+void
+test03()
+{
+	cout << "test03\n";
+	//std::string prog = "func foo (v) { println(v+1); } func bar () { } println(1, 2, 3, 12+13) foo(5)";
+	std::string prog = "func foo (v) { println(1+1); } foo(1)";
+	//std::string prog = "func foo (v) { println(1+1); }";
+	//parse_translation_unit(prog);
+}
+
 
 bool run_alt_parse_tests()
 {
 	test01();
 	test02();
+	test03();
 	return false;
 }
