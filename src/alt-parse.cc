@@ -50,14 +50,8 @@ using std::vector;
 using namespace std::string_literals;
 
 typedef std::vector<std::string> strings;
+typedef map<string, value_t> varmap_t;
 
-//enum Token { L_CELL, L_CONST, GE, NE, LE, L_FN0, L_FN1, L_FN2, L_FN3, L_FN1R , L_VAR, L_RANGE, 
-//	BAD_CHAR, BAD_FUNC, NO_QUOTE, PARSE_ERR};
-
-//* This table contains a list of the infix single-char functions 
-//unsigned char alt_fnin[] = {
-//	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
-//};
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -269,6 +263,8 @@ class Expression {
 		//const strings operators = strings {"+", "-" };
 };
 
+value_t eval(Expression e);
+
 class Relop {
 	public:
 		vector<Term> operands; // terms;
@@ -294,69 +290,17 @@ class Factor {
 		variant<num_t, Expression, FuncCall> factor;
 };
 
-
-typedef Expression expression_t;
-typedef vector<Expression> expressions_t;
-
-
-/*
-value_t FuncNode::eval() const
-{ 
-	values the_values;
-	for(int i = 0 ; i < args.size(); ++i) 
-		the_values.push_back(evaluate_arg(std::move(args[i])));
-	return f(the_values); 
-}
-
-value_t FuncNode::evaluate_arg(base_ptr arg)
-{ 
-	auto a = std::move(arg);
-	return a->eval(); 
-}
-*/
-
-class FunctionDefinition : public BaseNode
-{
+class FuncDef{
 	public:
-		FunctionDefinition(string function_name);
-		void append_arg(string identifier) { arguments.push_back(identifier); }
-		void append_statement(base_ptr statement) { 
-			//statements.push_back(std::move(statement)); 
-		} 
-		value_t eval() const { 
-			cout << "FunctionDefinition:eval()\n";
-			return 666; 
-		}
-		string function_name;
-		~FunctionDefinition() { cout << "deleting FunctionDefinition\n"; }
-	private:
-		strings arguments;
-		//base_ptrs statements;
-
+		string name;
+		strings args;
+		vector<Expression> statements; // TODO expressions are not statements
 };
 
-typedef shared_ptr<FunctionDefinition> interpreted_function_ptr;
 
-map<std::string, interpreted_function_ptr> interpreted_functions;
 
-FunctionDefinition::FunctionDefinition(string function_name): function_name(function_name) 
-{
-	//interpreted_functions[function_name] = this;
-}
 
 /*
-neo_func
-standardise_function(FunctionDefinition fin)
-{
-	neo_func fout = [&](values vs) {
-		
-		return fin.eval();
-		//return 666; 
-	};
-	return fout;
-}
-*/
-
 class MultiopNode : public BaseNode
 {
 	public:
@@ -386,7 +330,7 @@ value_t MultiopNode::eval()
 	}
 	return result;
 }
-
+*/
 
 class ValueNode : public BaseNode
 {
@@ -406,20 +350,7 @@ class ValueNode : public BaseNode
 
 
 
-typedef lexemes::iterator lex_it; // lexeme iterator
-
-Expression expr_e(lexemes_c& tokes);
-
-//using sub_expr_func = std::function<base_ptr(lexemes_c&)>;
-
-
-
-
-//typedef variant<num_t, expression_t> factor_t;
-
-
-
-
+typedef lexemes::iterator lex_it;
 
 
 Expression make_expression(lexemes_c& tokes);
@@ -527,34 +458,47 @@ parse_expression(std::string s)
 {
 	//cout << "parsing: " << s << endl;
 	lexemes_c tokes{alt_yylex_a(s)};
-	//base_ptr node = expr_e(tokes);
 	return make_expression(tokes);
 }
 
-/*
+
+// Used to turn a user-defined function into a neo_func
+value_t wrap_defun(FuncDef func, values vs)
+{
+	// bind argument identifiers to values
+	if(vs.size() != func.args.size()) 
+		throw std::runtime_error("#FUNC_ARGS:" + func.name 
+				+ "():Expected " + std::to_string(func.args.size()) 
+				+ " args, got " + std::to_string(vs.size()));
+	varmap_t varmap;
+	for(int i=0; i< vs.size(); ++i)
+		varmap[func.args[i]] = vs[i];
+	//cout << "wrap_defun():arg[0]:" << num(vs[0]) << "\n";
+
+	for(const auto& stm: func.statements)
+		eval(stm);
+	return 666;
+}
+
 bool
-function_definition(lexemes_c& tokes)
+define_function(lexemes_c& tokes)
 {
 	if(tokes.curr() != "func") return false;
 	tokes.advance();
-	FunctionDefinition ast{tokes.curr()};
-	//interpreted_functions[tokes.curr()] = ast;
-	cout << "a1" << endl;
-	
+	FuncDef func;
 
-
+	func.name = tokes.curr();
 	tokes.advance();
 
+	auto append_arg = [&]() { func.args.push_back(tokes.curr()); tokes.advance(); } ;
 	// argument list
 	tokes.require("(");
 	tokes.advance();
 	if(tokes.curr() != ")") {
-		ast.append_arg(tokes.curr());
-		tokes.advance();
+		append_arg();
 		while(tokes.curr() == ",") {
 			tokes.advance();
-			ast.append_arg(tokes.curr());
-			tokes.advance();
+			append_arg();
 		}
 	}
 	//tokes.require(")");
@@ -563,40 +507,46 @@ function_definition(lexemes_c& tokes)
 	// compound statement
 	tokes.require("{");
 	tokes.advance();
-	if(tokes.curr() != "}") {
-		ast.append_statement(expr_e(tokes));
-		tokes.require(";");
-		tokes.advance();
+	while(tokes.curr() != "}") {
+		func.statements.push_back(make_expression(tokes)); // TODO make_statement()
+		//tokes.require(";");
+		//tokes.advance();
 	}
+	tokes.require("}");
 	tokes.advance();
 
-	//register_user_function(std::move(ast));
-	//neo_funcs[tokes.curr()] = standardise_function(ast);
-	neo_funcs[tokes.curr()] = [ast](values vs) { 		
-		//auto ast1 = std::move(ast);
-		//return 667;
-		return ast.eval(); 
-	};
+	cout << "define_function():name:" << func.name << "\n";
+	using namespace std::placeholders;
+	neo_funcs[func.name] = std::bind(wrap_defun, func, _1);
+
+	cout << "define_function() returning\n";
 	return true;
 }
 
 
 void
-parse_translation_unit(std::string s)
+parse_program(std::string s)
 {
 	lexemes_c tokes{alt_yylex_a(s)};
 	//base_ptr ast;
 	while( tokes.curr_type()!= LT_EOF) {
-		if(! function_definition(tokes)) {
-			auto expr = expr_e(tokes);
-			expr->eval();
+		if(! define_function(tokes)) {
+			cout << "parse_program():curr toke:" << tokes.curr() << "\n";
+			Expression e{make_expression(tokes)};
+			cout << "Evaluating\n";
+			eval(e);
 		}
 	}
 	//return nullptr;
 }
-*/
 
-value_t eval(Expression e);
+
+///////////////////////////////////////////////////////////////////////////
+// eval
+
+
+	
+varmap_t global_varmap;
 
 value_t eval(FuncCall fn)
 {	
@@ -669,7 +619,7 @@ bool test01()
 	cout << "test01\n";
 
 	lex_and_print("  r1C2 12.3e23 13.4");
-	lex_and_print("foo(bar)");
+	lex_and_print("goo(bar)");
 	lex_and_print("1=2");
 	lex_and_print("1!=2");
 	lex_and_print("1<2");
@@ -701,9 +651,10 @@ test03()
 {
 	cout << "test03\n";
 	//std::string prog = "func foo (v) { println(v+1); } func bar () { } println(1, 2, 3, 12+13) foo(5)";
-	std::string prog = "func foo (v) { println(1+1); } foo(1)";
+	std::string prog = "func foo (v) { println(1+1) println(22, 23) } foo(1+2)";
 	//std::string prog = "func foo (v) { println(1+1); }";
-	//parse_translation_unit(prog);
+	cout << "parsing: " << prog << "\n";
+	parse_program(prog);
 }
 
 
