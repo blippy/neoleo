@@ -1,11 +1,13 @@
 ===========================================================================
-VERSION: TBD
+VERSION: 8.0.0
 STATUS:  DEV
 DATE:    ONGOING
 
+* C++17 COMPILER IS NOW REQUIRED TO COMPILE SOURCES
+
 * added command test-curses-suspension
 
-* Added command line option -x for experimental feature
+* added command line option -x for experimental feature
 
 
 ===========================================================================

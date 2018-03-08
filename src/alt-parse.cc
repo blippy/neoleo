@@ -65,6 +65,7 @@ enum LexType { LT_FLT ,
 	LT_OPP, // um ..
 	LT_OPT, //  * /
 	LT_ID, 
+	LT_VAR,
 	LT_UNK,
 	LT_EOF // end of file
 };
@@ -133,6 +134,7 @@ alt_yylex_a(const std::string& s)
 		Re("\\+|\\-", LT_OPR, "opr"),
 		Re("\\*|/", LT_OPT, "opt"),
 		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
+		Re("\\?[a-zA=Z]+", LT_VAR, "var"),
 		Re("[a-zA-z]+", LexType::LT_ID, "word"),
 		Re(".", LexType::LT_UNK, "unknown")
 
@@ -267,13 +269,13 @@ value_t eval(varmap_t& vars, Expression e);
 
 class Relop {
 	public:
-		vector<Term> operands; // terms;
+		vector<Term> operands;
 		vector<math_op> fops;
 };
 
 class Term {
 	public:
-		vector<Factor> operands; //factors;
+		vector<Factor> operands;
 		vector<math_op> fops;
 		//const strings operators = strings { "*", "/" };
 };
@@ -285,9 +287,14 @@ class FuncCall{
 		vector<Expression> exprs;
 };
 
+class Variable {
+	public:
+		string name;
+};
+
 class Factor {
 	public:
-		variant<num_t, Expression, FuncCall> factor;
+		variant<num_t, Expression, FuncCall, Variable> factor;
 };
 
 class FuncDef{
@@ -327,6 +334,16 @@ make_funccall(lexemes_c& tokes)
 	return fn;
 }
 
+Variable
+make_variable(lexemes_c& tokes)
+{
+	Variable var;
+	var.name = tokes.curr();
+	cout << "make_variable():variable:" << var.name << "\n";
+	tokes.advance();
+	return var;
+}
+
 Factor
 make_factor(lexemes_c& tokes)
 {
@@ -338,6 +355,8 @@ make_factor(lexemes_c& tokes)
 		tokes.advance();
 	} else if(tokes.curr_type() == LT_ID) {
 		f.factor = make_funccall(tokes);
+	} else if(tokes.curr_type() == LT_VAR) {
+		f.factor = make_variable(tokes);
 	} else {
 		num_t v = std::stod(tokes.curr());
 		f.factor = v;
@@ -424,6 +443,7 @@ value_t wrap_defun(FuncDef func, values vs)
 	varmap_t vars;
 	for(int i=0; i< vs.size(); ++i)
 		vars[func.args[i]] = vs[i];
+
 	//cout << "wrap_defun():arg[0]:" << num(vs[0]) << "\n";
 
 	for(const auto& stm: func.statements)
@@ -441,8 +461,14 @@ define_function(lexemes_c& tokes)
 	func.name = tokes.curr();
 	tokes.advance();
 
-	auto append_arg = [&]() { func.args.push_back(tokes.curr()); tokes.advance(); } ;
 	// argument list
+	auto append_arg = [&]() { 
+		if(tokes.curr_type() != LT_VAR)
+			throw std::runtime_error("#PARSE:Function definition of " + func.name 
+					+ " has non-var arg " + tokes.curr());
+		func.args.push_back(tokes.curr()); 
+		tokes.advance(); 
+	};
 	tokes.require("(");
 	tokes.advance();
 	if(tokes.curr() != ")") {
@@ -497,9 +523,24 @@ parse_program(varmap_t& vars, std::string s)
 
 
 	
-varmap_t global_varmap;
+varmap_t global_varmap = { {"?pi", 3.141592653589793238} };
 
-value_t eval(varmap_t vars, FuncCall fn)
+value_t eval(varmap_t& vars, Variable var)
+{
+	if(true) {
+		cout << "eval(Variable):name:" << var.name <<"\n";
+		cout << "Keys are:";
+		for(auto it = vars.begin(); it!= vars.end(); it++) cout << it->first << " ";
+		cout << endl;
+	}
+
+	auto it = vars.find(var.name);
+	if(it == vars.end())
+		return 0; // TODO should return Empty
+	return it->second;
+}
+
+value_t eval(varmap_t& vars, FuncCall fn)
 {	
 	values vs;
 	for(const auto& e: fn.exprs)
@@ -522,6 +563,8 @@ eval(varmap_t& vars, Factor f)
 		return eval(vars, std::get<Expression>(f.factor));
 	} else if(std::holds_alternative<FuncCall>(f.factor)) {
 		return eval(vars, std::get<FuncCall>(f.factor));
+	} else if(std::holds_alternative<Variable>(f.factor)) {
+		return eval(vars, std::get<Variable>(f.factor));
 	} else {
 		throw std::logic_error("eval(Factor f) unhandled alternative");
 	}
@@ -577,6 +620,7 @@ bool test01()
 	lex_and_print("1<=2");
 	lex_and_print("1+2-3");
 	lex_and_print("1*3/3");
+	lex_and_print("?foo+12");
 
 
 	return true;
@@ -602,7 +646,7 @@ test03()
 {
 	cout << "test03\n";
 	//std::string prog = "FUNC foo (v) { println(v+1); } func bar () { } println(1, 2, 3, 12+13) foo(5)";
-	std::string prog = "FUNC foo (v) { println(1+1) println(22, 23) } foo(1+2)";
+	std::string prog = "FUNC foo (?v) { println(1+1) println(22, 23) println(?v+1) } FUNC bar(?x) { foo(?x*?x) } bar(1+2) println(?pi)";
 	//std::string prog = "FUNC foo (v) { println(1+1); }";
 	cout << "parsing: " << prog << "\n";
 	parse_program(global_varmap, prog);
