@@ -725,24 +725,8 @@ static char *init_cmds[] =
   "",
 #endif // HAVE_PRINTING
 
-#if 0
-  "# Other init commands:",
-  "define-font times *times-medium-r-* Times-Roman",
-  "define-font times-italic *times-medium-i-* Times-Italic",
-  "define-font times-oblique *times-medium-o-* Times-Italic",
-  "define-font times-bold *times-bold-r-* Times-Bold",
-  "define-font times-oblique-bold *times-bold-o-* Times-BoldItalic",
-  "define-font times-italic-bold *times-bold-i-* Times-BoldItalic",
-  "define-font courier *courier-medium-r-* Courier",
-  "define-font courier-oblique *courier-medium-o-* Courier-Italic",
-  "define-font courier-bold *courier-bold-r-* Courier-Bold",
-  "define-font courier-bold-oblique *courier-bold-o-* Courier-BoldItalic",
-  "define-font helvetica *helvetica-medium-r-* Helvetica",
-  "define-font helvetica-oblique *helvetica-medium-o-* Helvetica-Italic",
-  "define-font helvetica-bold *helvetica-bold-r-* Helvetica-Bold",
-  "define-font helvetica-bold-oblique *helvetica-bold-o-* Helvetica-BoldItalic",
-  "define-font fixed *fixed-medium-r-* Times-Roman",
-#endif
+
+  "set-option a0",
 
   0
 
