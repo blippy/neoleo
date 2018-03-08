@@ -26,9 +26,9 @@ std::map<int, cell_t> g_cells;
 
 value_t cell_value(int i)
 {
-	value_t v = g_cells[i].ast->eval(); 
+	//value_t v = g_cells[i].ast->eval(); 
 	//return std::to_string(num(v));
-	return v;
+	return 666;
 }
 
 std::string cell_value_as_string(int i)

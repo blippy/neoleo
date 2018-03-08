@@ -300,55 +300,6 @@ class FuncDef{
 
 
 
-/*
-class MultiopNode : public BaseNode
-{
-	public:
-		MultiopNode(base_ptr operand1) {
-			operands.push_back(std::move(operand1));
-		}
-		void append(math_op op, base_ptr operand) {
-			operators.push_back(op);
-			operands.push_back(std::move(operand));
-		}
-		value_t eval();
-	private:
-		vector<base_ptr> operands;
-		std::vector<math_op> operators;
-
-};
-
-
-
-value_t MultiopNode::eval()
-{
-	value_t result = num(operands[0]->eval());
-	for(int i = 0; i< operators.size(); ++i) {
-		math_op op = operators[i];
-		value_t rhs = operands[i+1]->eval();
-		result = op(result, rhs);
-	}
-	return result;
-}
-*/
-
-class ValueNode : public BaseNode
-{
-	public:
-		ValueNode(value_t v) : v(v) {}
-		value_t eval() {
-			//cout << "evaluating value node " << std::get<num_t>(v) << endl;
-			return v; 
-		}
-		~ValueNode() { 
-			//cout << "ValueNode says bye\n";
-		}
-		value_t v;
-
-};
-
-
-
 
 typedef lexemes::iterator lex_it;
 
