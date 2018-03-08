@@ -263,7 +263,7 @@ class Expression {
 		//const strings operators = strings {"+", "-" };
 };
 
-value_t eval(Expression e);
+value_t eval(varmap_t& vars, Expression e);
 
 class Relop {
 	public:
@@ -421,20 +421,20 @@ value_t wrap_defun(FuncDef func, values vs)
 		throw std::runtime_error("#FUNC_ARGS:" + func.name 
 				+ "():Expected " + std::to_string(func.args.size()) 
 				+ " args, got " + std::to_string(vs.size()));
-	varmap_t varmap;
+	varmap_t vars;
 	for(int i=0; i< vs.size(); ++i)
-		varmap[func.args[i]] = vs[i];
+		vars[func.args[i]] = vs[i];
 	//cout << "wrap_defun():arg[0]:" << num(vs[0]) << "\n";
 
 	for(const auto& stm: func.statements)
-		eval(stm);
+		eval(vars, stm);
 	return 666;
 }
 
 bool
 define_function(lexemes_c& tokes)
 {
-	if(tokes.curr() != "func") return false;
+	if(tokes.curr() != "FUNC") return false;
 	tokes.advance();
 	FuncDef func;
 
@@ -476,7 +476,7 @@ define_function(lexemes_c& tokes)
 
 
 void
-parse_program(std::string s)
+parse_program(varmap_t& vars, std::string s)
 {
 	lexemes_c tokes{alt_yylex_a(s)};
 	//base_ptr ast;
@@ -485,7 +485,7 @@ parse_program(std::string s)
 			cout << "parse_program():curr toke:" << tokes.curr() << "\n";
 			Expression e{make_expression(tokes)};
 			cout << "Evaluating\n";
-			eval(e);
+			eval(vars, e);
 		}
 	}
 	//return nullptr;
@@ -499,11 +499,11 @@ parse_program(std::string s)
 	
 varmap_t global_varmap;
 
-value_t eval(FuncCall fn)
+value_t eval(varmap_t vars, FuncCall fn)
 {	
 	values vs;
 	for(const auto& e: fn.exprs)
-		vs.push_back(eval(e));	
+		vs.push_back(eval(vars, e));	
 
 	auto it  =  neo_funcs.find(fn.name);
 	if(it == neo_funcs.end()) {
@@ -514,14 +514,14 @@ value_t eval(FuncCall fn)
 }
 
 value_t
-eval(Factor f)
+eval(varmap_t& vars, Factor f)
 {
 	if(std::holds_alternative<num_t>(f.factor)) {
 		return std::get<num_t>(f.factor);
 	} else if(std::holds_alternative<Expression>(f.factor)) {
-		return eval(std::get<Expression>(f.factor));
+		return eval(vars, std::get<Expression>(f.factor));
 	} else if(std::holds_alternative<FuncCall>(f.factor)) {
-		return eval(std::get<FuncCall>(f.factor));
+		return eval(vars, std::get<FuncCall>(f.factor));
 	} else {
 		throw std::logic_error("eval(Factor f) unhandled alternative");
 	}
@@ -531,32 +531,32 @@ eval(Factor f)
 
 
 template<class T>
-value_t eval_multiop(T expr)
+value_t eval_multiop(varmap_t& vars, T expr)
 {
 	assert(expr.operands.size()>0);
-	value_t result = eval(expr.operands[0]);
+	value_t result = eval(vars, expr.operands[0]);
 	for(int i = 0; i< expr.fops.size() ; i++) {
 		auto& fop = expr.fops[i];
-		result = fop(result, eval(expr.operands[i+1]));
+		result = fop(result, eval(vars, expr.operands[i+1]));
 	}
 	return result;
 }
 
-value_t eval(Term t) { return eval_multiop(t); }
-value_t eval(Relop r) { return eval_multiop(r); }
-value_t eval(Expression e) { return eval_multiop(e); }
+value_t eval(varmap_t& vars, Term t) { return eval_multiop(vars, t); }
+value_t eval(varmap_t& vars, Relop r) { return eval_multiop(vars, r); }
+value_t eval(varmap_t& vars, Expression e) { return eval_multiop(vars, e); }
 
 string str(value_t v)
 {
 	return std::to_string(std::get<num_t>(v));
 }
 void
-test_parse_expression(std::string s)
+test_parse_expression(varmap_t vars, std::string s)
 {
 	cout << "test_parse_expression():" << s << "\n";
 	Expression e{parse_expression(s)};
 	cout << "Done parsing. Now evaluating." << endl;
-	cout << str(eval(e)) << "\n" << endl;
+	cout << str(eval(vars, e)) << "\n" << endl;
 }
 
 
@@ -590,7 +590,7 @@ test02()
 		"(1+2)*3",  "sqrt(3+9)", "pi()", "mod(12, 7)"};
 
 	for(const string& s: test_expressions)
-		test_parse_expression(s);
+		test_parse_expression(global_varmap, s);
 
 
 	//cout << "Now I am going to deliberately throw an error\n";
@@ -601,11 +601,11 @@ void
 test03()
 {
 	cout << "test03\n";
-	//std::string prog = "func foo (v) { println(v+1); } func bar () { } println(1, 2, 3, 12+13) foo(5)";
-	std::string prog = "func foo (v) { println(1+1) println(22, 23) } foo(1+2)";
-	//std::string prog = "func foo (v) { println(1+1); }";
+	//std::string prog = "FUNC foo (v) { println(v+1); } func bar () { } println(1, 2, 3, 12+13) foo(5)";
+	std::string prog = "FUNC foo (v) { println(1+1) println(22, 23) } foo(1+2)";
+	//std::string prog = "FUNC foo (v) { println(1+1); }";
 	cout << "parsing: " << prog << "\n";
-	parse_program(prog);
+	parse_program(global_varmap, prog);
 }
 
 
