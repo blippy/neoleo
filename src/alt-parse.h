@@ -1,6 +1,7 @@
 #pragma once
 
 //#include <memory>
+#include <stdio.h>
 #include <string>
 //#include <vector>
 
@@ -9,4 +10,4 @@
 
 //base_ptr alt_parse(std::string s);
 bool run_alt_parse_tests();
-
+void bload(FILE* fp);

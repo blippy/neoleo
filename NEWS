@@ -5,6 +5,10 @@ DATE:    ONGOING
 
 * C++17 COMPILER IS NOW REQUIRED TO COMPILE SOURCES
 
+* added `neobasic', a builtin BASIC-like language
+
+* added command bload to load a neobasic file
+
 * added command test-curses-suspension
 
 * added command line option -x for experimental feature

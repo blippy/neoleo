@@ -1,3 +1,10 @@
+* bload 
+
+Load a neo-basic program
+Added v 8.0.0
+
+See examples/simple.bas
+
 * test-curses-suspension
 
 Experiment in being able to shutdown and resume a curses session to allow, for example, manual commands

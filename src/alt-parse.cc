@@ -605,6 +605,19 @@ test_parse_expression(varmap_t vars, std::string s)
 
 
 ///////////////////////////////////////////////////////////////////////////
+
+void bload(FILE* fp)
+{
+	string program;
+	char buffer[1024];
+	while(int n = fread(buffer, 1 , sizeof(buffer), fp) >0) {
+		program += buffer;
+	}
+	parse_program(global_varmap, program);
+
+}
+
+///////////////////////////////////////////////////////////////////////////
 // tests
 
 static
