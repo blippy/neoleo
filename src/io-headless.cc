@@ -331,11 +331,6 @@ process_headless_line(std::string line, int fildes)
 	}
 
 
-	/*if(line == "bye") {
-	  cout << "300 OK bye" << endl;
-	  return;
-	  }
-	  */
 	if(line == "q") {
 	       	//cout << "300 OK bye" << endl;
 		return false;
@@ -345,9 +340,9 @@ process_headless_line(std::string line, int fildes)
 		//cout << "process_headless_line: execute_command:" << line << endl;
 		execute_command((char*) line.c_str());
 		//std::cout << "100 OK" << endl;
-	} catch (const OleoJmp&) {
+	} catch (const OleoJmp& e) {
 		//cout << "200 FAIL Caught OleoJmp" << endl;
-		cout << "?\n";
+		cout << "? " << e.what() << "\n";
 	}
 
 	cout << std::flush;

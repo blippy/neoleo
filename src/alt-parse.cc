@@ -40,6 +40,7 @@
 using std::cout;
 using std::endl;
 using std::map;
+using std::ostream;
 using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
@@ -53,6 +54,7 @@ typedef std::vector<std::string> strings;
 typedef map<string, value_t> varmap_t;
 
 
+ostream& operator<<(ostream& os, const value_t v);
 
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
@@ -64,7 +66,9 @@ enum LexType { LT_FLT ,
 	LT_OPR, // + -
 	LT_OPP, // um ..
 	LT_OPT, //  * /
+	LT_LRB, // left round bracket
 	LT_ID, 
+	LT_STR,
 	LT_VAR,
 	LT_UNK,
 	LT_EOF // end of file
@@ -135,7 +139,9 @@ alt_yylex_a(const std::string& s)
 		Re("\\*|/", LT_OPT, "opt"),
 		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
 		Re("\\?[a-zA=Z]+", LT_VAR, "var"),
-		Re("[a-zA-z]+", LexType::LT_ID, "word"),
+		Re("[a-zA-z]+", LexType::LT_ID, "id"),
+		Re("\"(?:[^\"\\\\]|\\\\.)*\"", LT_STR, "str"),
+		Re("\\(", LT_LRB, "lrb"),
 		Re(".", LexType::LT_UNK, "unknown")
 
 	};
@@ -218,10 +224,14 @@ using neo_func = std::function<value_t(values vs)>;
 
 value_t neo_println(values vs)
 {
-	cout << "neo_println() says hello\n";
-	cout << "number of args: " << vs.size() << "\n";
-	for(auto& v: vs)
-		cout << num(v)  << ", ";
+	//cout << "neo_println() says hello\n";
+	//cout << "number of args: " << vs.size() << "\n";
+	//for(auto& v: vs)
+	//	cout << v  << ", ";
+	for(auto it= vs.begin(); it != vs.end(); ++it) {
+		cout << *it;
+		if(it+1 != vs.end()) cout << ", ";
+	}
 	cout << endl;
 	return 0;
 }
@@ -294,7 +304,7 @@ class Variable {
 
 class Factor {
 	public:
-		variant<num_t, Expression, FuncCall, Variable> factor;
+		variant<value_t, Expression, FuncCall, Variable> factor;
 };
 
 class FuncDef{
@@ -348,6 +358,33 @@ Factor
 make_factor(lexemes_c& tokes)
 {
 	Factor f;
+	switch(tokes.curr_type()) {
+		case LT_LRB:
+		       	tokes.advance();
+			f.factor = make_expression(tokes);
+			tokes.require(")");
+			tokes.advance();
+			break;
+		case LT_ID:
+			f.factor = make_funccall(tokes);
+			break;
+		case LT_VAR:
+			f.factor = make_variable(tokes);
+			break;
+		case LT_STR:
+			//f.factor = std::get<string>(tokes.curr());
+			f.factor = tokes.curr().substr(1, tokes.curr().size()-2);
+			tokes.advance();
+			break;
+		case LT_FLT: 
+			f.factor = std::stod(tokes.curr());
+			tokes.advance();
+			break;
+		default:
+			throw std::logic_error("#UNHANDLED: make_factor type");
+
+	}
+	/*
 	if(tokes.curr() == "(") { // a parenthesised expression
 		tokes.advance();
 		f.factor = make_expression(tokes);
@@ -357,11 +394,12 @@ make_factor(lexemes_c& tokes)
 		f.factor = make_funccall(tokes);
 	} else if(tokes.curr_type() == LT_VAR) {
 		f.factor = make_variable(tokes);
-	} else {
+	} else 
 		num_t v = std::stod(tokes.curr());
 		f.factor = v;
 		tokes.advance();
 	}
+	*/
 
 	return f;
 }
@@ -557,8 +595,8 @@ value_t eval(varmap_t& vars, FuncCall fn)
 value_t
 eval(varmap_t& vars, Factor f)
 {
-	if(std::holds_alternative<num_t>(f.factor)) {
-		return std::get<num_t>(f.factor);
+	if(std::holds_alternative<value_t>(f.factor)) {
+		return std::get<value_t>(f.factor);
 	} else if(std::holds_alternative<Expression>(f.factor)) {
 		return eval(vars, std::get<Expression>(f.factor));
 	} else if(std::holds_alternative<FuncCall>(f.factor)) {
@@ -605,6 +643,7 @@ test_parse_expression(varmap_t vars, std::string s)
 
 
 ///////////////////////////////////////////////////////////////////////////
+// supporting functions
 
 void bload(FILE* fp)
 {
@@ -617,6 +656,17 @@ void bload(FILE* fp)
 
 }
 
+ostream& operator<<(ostream& os, const value_t v)
+{
+	if(std::holds_alternative<num_t>(v))
+		os << num(v);
+	else if(std::holds_alternative<string>(v))
+		os << std::get<string>(v);
+	else
+		throw std::logic_error("#UNHANDLED:conversion to string in alt-parse operator<<");
+
+	return os;
+}
 ///////////////////////////////////////////////////////////////////////////
 // tests
 
