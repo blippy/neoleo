@@ -1,6 +1,8 @@
 # copy region test
 # See https://github.com/blippy/neoleo/issues/17
 
+set-option noa0
+
 i
 10
 ;

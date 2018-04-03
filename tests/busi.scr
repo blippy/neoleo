@@ -2,6 +2,8 @@
 # Only fledgling at the moment, obviously
 
 
+set-option noa0
+
 i
 "pmt - expect 4.74725274725"
 pmt(10, 0.2, 3)

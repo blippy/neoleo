@@ -47,5 +47,11 @@ set_productions "$@.oleo"
 echo "VERFILE=$VERFILE"
 
 mv $TMPFILE $OUTFILE
-diff $OUTFILE $VERFILE
+
+
+function reduce {
+	egrep -v "^O;auto" $1
+}
+
+diff <(reduce $OUTFILE) <(reduce $VERFILE)
 exit $?
