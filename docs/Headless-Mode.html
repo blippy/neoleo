@@ -185,6 +185,21 @@ Next: <a href="Examples-and-Utilities.html#Examples-and-Utilities" accesskey="n"
 </div>
 
 
+<h3 class="section">9.3 Embedded neobasic</h3>
+
+Neoleo allows you to embed a version of the BASIC programming language, called `neobasic`, inside headless mode. neobasic code must be encapsulated between the lines <code>.BAS</code> and <code>.XBAS</code>. For example:
+<pre>
+.BAS
+println(1+2)
+println(10)
+.XBAS
+</pre>
+produces the lines:
+<pre>
+3
+10
+</pre>
+
 
 </body>
 </html>

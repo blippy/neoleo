@@ -543,25 +543,29 @@ void
 parse_program(varmap_t& vars, std::string s)
 {
 	lexemes_c tokes{alt_yylex_a(s)};
-	//base_ptr ast;
 	while( tokes.curr_type()!= LT_EOF) {
 		if(! define_function(tokes)) {
-			cout << "parse_program():curr toke:" << tokes.curr() << "\n";
+			//cout << "parse_program():curr toke:" << tokes.curr() << "\n";
 			Expression e{make_expression(tokes)};
-			cout << "Evaluating\n";
+			//cout << "Evaluating\n";
 			eval(vars, e);
 		}
 	}
-	//return nullptr;
 }
 
+
+varmap_t global_varmap = { {"?pi", 3.141592653589793238} };
+
+void run_neobasic(std::string program)
+{
+	parse_program(global_varmap, program);
+}
 
 ///////////////////////////////////////////////////////////////////////////
 // eval
 
 
 	
-varmap_t global_varmap = { {"?pi", 3.141592653589793238} };
 
 value_t eval(varmap_t& vars, Variable var)
 {

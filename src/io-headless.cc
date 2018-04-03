@@ -13,6 +13,7 @@
 #include <vector>
 
 
+#include "alt-parse.h"
 #include "basic.h"
 #include "cell.h"
 #include "io-abstract.h"
@@ -235,6 +236,24 @@ insert_columnwise(T fildes)
 		if(eof) return;
 	}
 }
+
+/* run a neobasic program between .BAS and .XBAS
+ */
+static void
+bas(int fildes)
+{
+	string prog;
+	bool eof = false;
+	while(!eof) {
+		bool eof;
+		string line{getline_from_fildes(fildes,eof)};
+		if(line == ".XBAS") break;
+		prog += line + "\n";
+	}
+
+	run_neobasic(prog);
+}
+
 static void
 insert_rowwise(T fildes)
 {
@@ -301,6 +320,7 @@ static void type_dsv(int fildes)
 }
 
 static map<string, function<void(T)> > func_map = {
+	{".BAS", bas},
 	{"colours", colours},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
