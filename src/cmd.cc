@@ -2423,6 +2423,11 @@ execute_command (char *str)
 	  }
 }
 
+void
+execute_command_str(std::string cmd)
+{
+	execute_command((char*) cmd.c_str());
+}
 
 
 

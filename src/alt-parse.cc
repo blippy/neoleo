@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "alt-cells.h"
+#include "cmd.h"
 #include "numeric.h"
 
 using std::cout;
@@ -222,6 +223,22 @@ map<std::string, math_op> math_ops = {
 
 using neo_func = std::function<value_t(values vs)>;
 
+
+bool isstring(value_t v, string& str)
+{
+	bool is = std::holds_alternative<string>(v);
+	if(is) str = std::get<string>(v);
+	return is;
+}
+
+value_t neo_cmd(values vs)
+{
+	string cmd;
+	if(vs.size()>0 && isstring(vs[0], cmd)) 
+		execute_command_str(cmd);
+	return 0;
+}
+
 value_t neo_println(values vs)
 {
 	//cout << "neo_println() says hello\n";
@@ -256,6 +273,7 @@ value_t neo_sqrt(values vs)
 
 map<std::string, neo_func> neo_funcs = {
 	{"cell", neo_cell},
+	{"cmd", neo_cmd},
 	{"mod", neo_mod},
 	{"pi", neo_pi},
 	{"println", neo_println},

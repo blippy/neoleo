@@ -1,3 +1,13 @@
+Key:
+  B - means a neobasic command
+
+
+B cmd
+
+Added v 8.0.0
+
+Execute a command
+
 * bload 
 
 Load a neo-basic program

@@ -1,8 +1,4 @@
 #pragma once
-
-//#ifndef CMDH
-//#define CMDH
-
 /*
  * $Id: cmd.h,v 1.9 2001/02/14 19:22:57 danny Exp $
  *
@@ -37,9 +33,6 @@
 #include "funcs.h"
 #include "info.h"
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
 typedef void (*alarm_fn)(void);
 
 struct alarm_entry
@@ -352,6 +345,7 @@ extern void init_arg_text (struct command_arg * arg, const char * text);
 extern void set_default_arg (struct command_arg * arg, char * text, int len);
 extern void command_loop (int prefix, int iscmd);
 void execute_command (char *str);
+void execute_command_str(std::string cmd);
 extern int get_chr (void);
 extern void display_msg (char * msg, int c);
 extern void pushback_keystroke (int c);
@@ -367,10 +361,3 @@ extern void one_cmd_with_keymap (char * mapname, struct key_sequence * keyseq);
 
 void set_curow(int nrow);
 void set_cucol(int nrow);
-
-#ifdef __cplusplus
-//}
-#endif
-
-
-//#endif
