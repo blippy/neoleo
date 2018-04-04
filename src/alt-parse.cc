@@ -72,6 +72,7 @@ enum LexType { LT_FLT ,
 	LT_OPT, //  * /
 	LT_LRB, // left round bracket
 	LT_ID, 
+	LT_REM,
 	LT_STR,
 	LT_VAR,
 	LT_UNK,
@@ -88,6 +89,7 @@ const static map<LexType, string_view> typenames = {
 	{LT_OPT, "OPT"sv},
 	{LT_LRB, "LRB"sv},
 	{LT_ID,  "ID"sv},
+	{LT_REM, "REM"sv},
 	{LT_STR, "STR"sv},
 	{LT_VAR, "VAR"sv},
 	{LT_UNK, "UNK"sv},
@@ -193,6 +195,7 @@ alt_yylex_a(const std::string& s)
 		Re("\\?[a-zA=Z]+", LT_VAR, "var"),
 		Re("[a-zA-z]+", LexType::LT_ID, "id"),
 		Re("\"(?:[^\"\\\\]|\\\\.)*\"", LT_STR, "str"),
+		Re("#.*\\n", LT_REM, "rem"),
 		Re("\\(", LT_LRB, "lrb"),
 		Re(".", LexType::LT_UNK, "unknown")
 
@@ -212,7 +215,8 @@ alt_yylex_a(const std::string& s)
 			for(const auto& areg: regexes) {
 				if(std::regex_search(s2, m, areg.re)) {
 					matched_str = m[0];
-					lexes.push_back({areg.lextype, matched_str});
+					if(areg.lextype != LT_REM)
+						lexes.push_back({areg.lextype, matched_str});
 					break;
 				}
 			}

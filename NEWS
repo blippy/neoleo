@@ -11,6 +11,8 @@ DATE:    ONGOING
 
 * added neobasic commands: cmd, for, let, println
 
+* added neobasic comments. They begin with `#'
+
 * added command bload to load a neobasic file
 
 * added command test-curses-suspension
