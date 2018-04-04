@@ -1,6 +1,31 @@
+#!/usr/bin/env bash
+
+# pass in option raw to print to stdout
+
+raw=no
+if [ x"$1" == xraw ]; then
+       raw=yes
+fi
+
 OFILE=neobasic03.rep
-neoleo -H  <<EOF
+
+function out {
+	if [ $raw == yes ]; then
+		cat
+	else
+		cat >out/$OFILE
+	fi
+}
+
+function runit {
+neoleo -H  <<EOI
 bload neobasic03.bas
-EOF
-#diff out/$OFILE verified/$OFILE
-#exit $?
+EOI
+}
+
+runit | out
+
+if [ $raw == no ]; then
+	diff out/$OFILE verified/$OFILE
+	exit $?
+fi

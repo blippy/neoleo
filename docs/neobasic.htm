@@ -11,7 +11,7 @@
 <code>Neobasic</code> is an embedded BASIC-like language.
 
 <p>
-It has syntaxtic elements: let
+It has syntaxtic elements: for, let
 </p>
 
 <p><b>Variable names</b> must be prefixed with <code>?</code>, e.g. <code>?myvar</code>. This is to stop potential confusion if I want to add things like cell references as first syntactic objects. Variables do not have to be defined before use.</p>
@@ -27,6 +27,15 @@ cmd("edit-cell 42")
 </pre>
 This will set the value of cell B2 to 42.
 
+
+<h3>for loops</h3>
+
+They work as follows:
+<pre>
+for ?i := 1 to 3
+	println(?i)
+next
+</pre>
   
 <h3>let</h3>
 

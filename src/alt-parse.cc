@@ -106,6 +106,8 @@ typedef struct {
 	std::string lexeme;
 } lexeme_s;
 
+using token = lexeme_s;
+
 
 typedef vector<lexeme_s> lexemes;
 
@@ -120,15 +122,37 @@ class lexemes_c {
 				throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
 		}
 		bool empty() {return idx >= len; }
+		token curr_lex() { return lexs[idx]; }
 	private:
 		lexemes lexs;
 		int idx = 0, len;
 };
 
+typedef lexemes_c tokens;
 
 lexemes_c::lexemes_c(lexemes lexs) : lexs(lexs)
 {
 	len = lexs.size();
+}
+
+string curr(tokens& tokes) { return tokes.curr(); }
+
+
+
+token take(tokens& tokes) 
+{ 
+	token toke = tokes.curr_lex();
+	tokes.advance();
+	return toke;
+	//token toke = tokes.front(); tokes.pop_front(); return toke; 
+}
+
+void require(tokens& tokes, string required) 
+{ 
+	auto toke = take(tokes);
+	string found = toke.lexeme; 
+	if(found != required)
+		throw std::runtime_error("#PARSE_ERR: Required:" + required + ",found:" + found);
 }
 
 
@@ -309,6 +333,7 @@ map<std::string, neo_func> neo_funcs = {
 
 
 class Factor;
+class For;
 class Let;
 class Relop;
 class Term;
@@ -322,11 +347,12 @@ class Expression {
 };
 
 //typedef variant<Expression,Def,If,Let,For,While> Statement;
-typedef variant<Expression,Let> Statement;
+typedef variant<Expression,Let,For> Statement;
 typedef vector<Statement> Statements;
 
 class Program { public: Statements statements; };
 class Let { public: string varname; Expression expr; };
+class For { public: string varname; Expression from, to; Statements statements; };
 
 
 value_t eval(varmap_t& vars, Expression e);
@@ -518,13 +544,44 @@ Let make_let(lexemes_c& tokes)
 	let.expr = make_expression(tokes);
 	return let; 
 }
-					
+
+Statement make_statement(lexemes_c& tokes);
+
+Statements collect_statements(tokens& tokes, const string& terminator)
+{
+	Statements stmts;
+	while(curr(tokes) != terminator)
+		stmts.push_back(make_statement(tokes));
+	return stmts;
+}
+
+For make_for(tokens& tokes)
+{
+	cout << "make_for:in\n";
+	require(tokes, "for");
+	For a_for;
+	a_for.varname = take(tokes).lexeme;
+	cout << "make_for()::varname:" << a_for.varname;
+	require(tokes, ":=");
+	cout << "make_for()::=from:" << curr(tokes);
+	a_for.from = make_expression(tokes);
+	require(tokes, "to");
+	a_for.to = make_expression(tokes);
+	a_for.statements = collect_statements(tokes, "next");
+	require(tokes, "next");
+	cout << "make_for:out\n";
+	return a_for;
+}
+
+
+
+
 Statement make_statement(lexemes_c& tokes)
 {
 	static const map<string, std::function<Statement(lexemes_c&)>> commands = {
 		//{"def",   make_def},
 		//{"if",    make_if},
-		//{"for",   make_for},
+		{"for",   make_for},
 		{"let",   make_let}
 		//{"while", make_while}
 	};
@@ -645,13 +702,13 @@ parse_program_XXX(varmap_t& vars, std::string s)
 void
 parse_program(varmap_t& vars, std::string s)
 {
-	cout << "parse_program:in\n";
+	//cout << "parse_program:in\n";
 	//lex_and_print(s);
 	lexemes_c tokes{alt_yylex_a(s)};
 	Program prog{make_program(tokes)};
 	//cout << "parse_program: statements:" << prog.statements.size() << "\n";
 	eval(vars, prog);
-	cout << "parse_program:out\n";
+	//cout << "parse_program:out\n";
 }
 
 varmap_t global_varmap = { {"?pi", 3.141592653589793238} };
@@ -670,7 +727,7 @@ void run_neobasic(std::string program)
 
 value_t eval(varmap_t& vars, Variable var)
 {
-	if(true) {
+	if(false) {
 		cout << "eval(Variable):name:" << var.name <<"\n";
 		cout << "Keys are:";
 		for(auto it = vars.begin(); it!= vars.end(); it++) cout << it->first << " ";
@@ -755,6 +812,17 @@ bool eval_holder(varmap_t& vars, Statement statement, value_t& v)
 							
 
 
+value_t eval(varmap_t& vars, For a_for)
+{
+	double i = num(eval(vars, a_for.from));
+	double to = num(eval(vars, a_for.to));
+	while(i <= to) {
+		vars[a_for.varname] = i;
+		eval(vars, a_for.statements);
+		i++;
+	}
+	return 0;
+}
 
 
 value_t eval(varmap_t& vars, Statements statements)
@@ -765,7 +833,7 @@ value_t eval(varmap_t& vars, Statements statements)
 			//|| eval_holder<Def>(vars, s, ret)
 			//|| eval_holder<If>(vars, s, ret)
 			|| eval_holder<Let>(vars, s, ret)
-			//|| eval_holder<For>(vars, s, ret)
+			|| eval_holder<For>(vars, s, ret)
 			//|| eval_holder<While>(vars, s, ret)
 			;
 		if(!executed)

@@ -16,7 +16,7 @@ TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
 	floor.scr \
 	inbuilt-tests.sh \
 	issue15.scr issue16.scr issue17.scr issue18.scr issue19.scr \
-	neobasic01.sh neobasic02.sh \
+	neobasic01.sh neobasic02.sh neobasic03.sh \
 	nohead-01.scr nohead-02.scr stringo.scr \
 	issue25.sh ref.sh
 
