@@ -46,10 +46,12 @@ using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::string;
+using std::string_view;
 using std::unique_ptr;
 using std::variant;
 using std::vector;
 using namespace std::string_literals;
+using namespace std::string_view_literals;
 
 typedef std::vector<std::string> strings;
 typedef map<string, value_t> varmap_t;
@@ -75,6 +77,27 @@ enum LexType { LT_FLT ,
 	LT_EOF // end of file
 };
 
+
+const static map<LexType, string_view> typenames = {
+	{LT_FLT, "FLT"sv},
+	{LT_OPE, "OPE"sv},
+	{LT_OPR,  "OPR"sv},
+	{LT_OPP, "OPP"sv},
+	{LT_OPT, "OPT"sv},
+	{LT_LRB, "LRB"sv},
+	{LT_ID,  "ID"sv},
+	{LT_STR, "STR"sv},
+	{LT_VAR, "VAR"sv},
+	{LT_UNK, "UNK"sv},
+	{LT_EOF, "EOF"sv}
+};
+
+//static_assert(typenames.size()>0);
+string_view lextypename(LexType ltype)
+{
+	//assert(sizeof(LexType) == typenames.size());
+	return typenames.at(ltype);
+}
 
 typedef struct {
 	LexType lextype;
@@ -399,25 +422,11 @@ make_factor(lexemes_c& tokes)
 			tokes.advance();
 			break;
 		default:
-			throw std::logic_error("#UNHANDLED: make_factor type");
+			throw std::logic_error("#UNHANDLED: make_factor token: " 
+					+ tokes.curr()
+					+ ", type:" + string(lextypename(tokes.curr_type())));
 
 	}
-	/*
-	if(tokes.curr() == "(") { // a parenthesised expression
-		tokes.advance();
-		f.factor = make_expression(tokes);
-		tokes.require(")");
-		tokes.advance();
-	} else if(tokes.curr_type() == LT_ID) {
-		f.factor = make_funccall(tokes);
-	} else if(tokes.curr_type() == LT_VAR) {
-		f.factor = make_variable(tokes);
-	} else 
-		num_t v = std::stod(tokes.curr());
-		f.factor = v;
-		tokes.advance();
-	}
-	*/
 
 	return f;
 }
@@ -671,9 +680,17 @@ void bload(FILE* fp)
 {
 	string program;
 	char buffer[1024];
-	while(int n = fread(buffer, 1 , sizeof(buffer), fp) >0) {
-		program += buffer;
+	int n;
+loop:
+	n = fread(buffer, 1, sizeof(buffer), fp);
+	if(n>0) {
+	//while(int n = fread(buffer, 1 , sizeof(buffer), fp) >0) {
+		for(int i=0; i< n; ++i) program += buffer[i];
+		//program += buffer;
+		goto loop;
 	}
+
+	//cout << "bload:\n" << program << "\n";
 	parse_program(global_varmap, program);
 
 }
@@ -706,6 +723,7 @@ bool test01()
 	lex_and_print("1+2-3");
 	lex_and_print("1*3/3");
 	lex_and_print("?foo+12");
+	lex_and_print("\"A space-delimited string\"");
 
 
 	return true;
