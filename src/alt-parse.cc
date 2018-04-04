@@ -65,6 +65,7 @@ ostream& operator<<(ostream& os, const value_t v);
 // TODO include power, ege. 12^5
 
 enum LexType { LT_FLT , 
+	LT_ASS,
 	LT_OPE, // = != <= < >= >  
 	LT_OPR, // + -
 	LT_OPP, // um ..
@@ -80,6 +81,7 @@ enum LexType { LT_FLT ,
 
 const static map<LexType, string_view> typenames = {
 	{LT_FLT, "FLT"sv},
+	{LT_ASS, "ASS"sv},
 	{LT_OPE, "OPE"sv},
 	{LT_OPR,  "OPR"sv},
 	{LT_OPP, "OPP"sv},
@@ -117,6 +119,7 @@ class lexemes_c {
 			if(this->curr() != s) 
 				throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
 		}
+		bool empty() {return idx >= len; }
 	private:
 		lexemes lexs;
 		int idx = 0, len;
@@ -157,6 +160,7 @@ alt_yylex_a(const std::string& s)
 	lexemes lexes;
 	typedef std::vector<Re> Res;
 	static Res regexes = { 
+		Re(":=", LT_ASS, "ass"),
 		Re("[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", LexType::LT_FLT, "float"),
 		Re("=|!=|<=?|>=?", LT_OPE, "ope"),
 		Re("\\+|\\-", LT_OPR, "opr"),
@@ -305,6 +309,7 @@ map<std::string, neo_func> neo_funcs = {
 
 
 class Factor;
+class Let;
 class Relop;
 class Term;
 
@@ -316,7 +321,17 @@ class Expression {
 		//const strings operators = strings {"+", "-" };
 };
 
+//typedef variant<Expression,Def,If,Let,For,While> Statement;
+typedef variant<Expression,Let> Statement;
+typedef vector<Statement> Statements;
+
+class Program { public: Statements statements; };
+class Let { public: string varname; Expression expr; };
+
+
 value_t eval(varmap_t& vars, Expression e);
+value_t eval(varmap_t& vars, Statements statements);
+value_t eval(varmap_t& vars, Program prog);
 
 class Relop {
 	public:
@@ -488,6 +503,55 @@ make_expression(lexemes_c& tokes)
 	return e;
 }
 
+//token take(lexemes_c& tokes) { token toke = tokes.front(); tokes.pop_front(); return toke; }
+
+Let make_let(lexemes_c& tokes)
+{
+	tokes.require("let");
+	tokes.advance();
+	Let let;
+	let.varname = tokes.curr();
+	tokes.advance();
+	//cout << "make_let():varname:" << let.varname << "\n";
+	tokes.require(":=");
+	tokes.advance();
+	let.expr = make_expression(tokes);
+	return let; 
+}
+					
+Statement make_statement(lexemes_c& tokes)
+{
+	static const map<string, std::function<Statement(lexemes_c&)>> commands = {
+		//{"def",   make_def},
+		//{"if",    make_if},
+		//{"for",   make_for},
+		{"let",   make_let}
+		//{"while", make_while}
+	};
+
+	Statement stm;
+	auto it = commands.find(tokes.curr());
+	if(it != commands.end()) {
+		auto make = it->second;
+		stm = make(tokes);
+	}
+	else
+		stm = make_expression(tokes);
+	return stm;
+}
+					
+
+
+Program make_program(lexemes_c& tokes)
+{
+	Program prog;
+	while(!tokes.empty()) 
+		prog.statements.push_back(make_statement(tokes));
+	return prog;
+}
+
+
+
 Expression
 parse_expression(std::string s)
 {
@@ -567,25 +631,35 @@ define_function(lexemes_c& tokes)
 
 
 void
-parse_program(varmap_t& vars, std::string s)
+parse_program_XXX(varmap_t& vars, std::string s)
 {
 	lexemes_c tokes{alt_yylex_a(s)};
 	while( tokes.curr_type()!= LT_EOF) {
 		if(! define_function(tokes)) {
-			//cout << "parse_program():curr toke:" << tokes.curr() << "\n";
 			Expression e{make_expression(tokes)};
-			//cout << "Evaluating\n";
 			eval(vars, e);
 		}
 	}
 }
 
+void
+parse_program(varmap_t& vars, std::string s)
+{
+	cout << "parse_program:in\n";
+	//lex_and_print(s);
+	lexemes_c tokes{alt_yylex_a(s)};
+	Program prog{make_program(tokes)};
+	//cout << "parse_program: statements:" << prog.statements.size() << "\n";
+	eval(vars, prog);
+	cout << "parse_program:out\n";
+}
 
 varmap_t global_varmap = { {"?pi", 3.141592653589793238} };
 
 void run_neobasic(std::string program)
 {
 	parse_program(global_varmap, program);
+
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -657,6 +731,57 @@ value_t eval_multiop(varmap_t& vars, T expr)
 value_t eval(varmap_t& vars, Term t) { return eval_multiop(vars, t); }
 value_t eval(varmap_t& vars, Relop r) { return eval_multiop(vars, r); }
 value_t eval(varmap_t& vars, Expression e) { return eval_multiop(vars, e); }
+
+value_t eval(varmap_t& vars, Let let)
+{
+	vars[let.varname] = eval(vars, let.expr);
+	return 0;
+}
+
+
+
+
+
+template<typename T>
+bool eval_holder(varmap_t& vars, Statement statement, value_t& v)
+{
+	if(std::holds_alternative<T>(statement)) {
+		v = eval(vars, std::get<T>(statement));
+		//cout << "eval_holder():" << to_string(v) << "\n";
+		return true;
+	}
+	return false;
+}
+							
+
+
+
+
+value_t eval(varmap_t& vars, Statements statements)
+{
+	value_t ret;
+	for(auto& s: statements) {
+		bool executed = eval_holder<Expression>(vars, s, ret) 
+			//|| eval_holder<Def>(vars, s, ret)
+			//|| eval_holder<If>(vars, s, ret)
+			|| eval_holder<Let>(vars, s, ret)
+			//|| eval_holder<For>(vars, s, ret)
+			//|| eval_holder<While>(vars, s, ret)
+			;
+		if(!executed)
+			std::logic_error("eval<Program>(): Unhandled statement type");
+	}
+	return ret;
+}
+
+value_t eval(varmap_t& vars, Program prog)
+{
+	eval(vars, prog.statements);
+	return 0;
+}
+
+
+
 
 string str(value_t v)
 {

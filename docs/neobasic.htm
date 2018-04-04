@@ -10,6 +10,12 @@
 
 <code>Neobasic</code> is an embedded BASIC-like language.
 
+<p>
+It has syntaxtic elements: let
+</p>
+
+<p><b>Variable names</b> must be prefixed with <code>?</code>, e.g. <code>?myvar</code>. This is to stop potential confusion if I want to add things like cell references as first syntactic objects. Variables do not have to be defined before use.</p>
+
 <hr><h2>Commands</h2>
 
 <h3>cmd</h3>
@@ -22,5 +28,17 @@ cmd("edit-cell 42")
 This will set the value of cell B2 to 42.
 
   
+<h3>let</h3>
+
+Assigns the value of an expression to a variable. Example:
+<pre>
+let ?life := 41+1
+println("Meaning of life is ", ?life)
+</pre>
+
+<h3>println</h3>
+
+Prints a list of elements. See the <code>let</code> example.
+
 </body>
 </html>

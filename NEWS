@@ -9,7 +9,7 @@ DATE:    ONGOING
 
 * added .BAS and .XBAS to headless mode to allow embedding of neobasic
 
-* added neobasic command: cmd
+* added neobasic commands: cmd, let
 
 * added command bload to load a neobasic file
 
