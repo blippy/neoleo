@@ -47,8 +47,6 @@
 
 
 #define Float	x.c_n
-//#define String	x.c_s
-//#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
 
@@ -151,7 +149,6 @@ do_up_str (
 	char *s1,*s2;
 	char *strptr;
 
-	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
 	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (islower(*s2) ? toupper(*s2) : *s2);
@@ -166,7 +163,6 @@ do_dn_str (
 	char *s1,*s2;
 	char *strptr;
 
-	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
 	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++)
 		*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
@@ -182,7 +178,6 @@ do_cp_str (
 	char *s1,*s2;
 	int wstart=1;
 
-	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
 	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isalpha(*s2)) {
@@ -206,7 +201,6 @@ do_trim_str (
 	int sstart=0;
 	char *strptr;
 
-	//strptr=obstack_alloc(&tmp_mem,strlen(p->gString())+1);
 	strptr=alloc_value_str(p);
 	for(s1=strptr,s2=p->gString();*s2;s2++) {
 		if(!isascii(*s2) || !isprint(*s2))
