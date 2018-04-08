@@ -56,7 +56,15 @@ for ?i := 1 to 3
 	println(?i)
 next
 </pre>
-  
+ 
+<h3>gotorc</h3>
+
+Set the current cell to a given row and column. E.g.
+<pre>
+gotorc(2,3) # go to row 2, col 3
+cmd('edit-cell 42') # set the value at that cell to 42
+</pre>
+
 <h3>let</h3>
 
 Assigns the value of an expression to a variable. Example:
@@ -68,6 +76,21 @@ println("Meaning of life is ", ?life)
 <h3>println</h3>
 
 Prints a list of elements. See the <code>let</code> example.
+
+<h3>refresh</h3>
+
+Repaint the screen. You should only do this if neoleo is in ncurses mode. Example:
+<pre>
+cmd('redraw-screen')
+refresh()
+</pre>
+
+<h3>sleeps</h3>
+
+Sleep for a given number of seconds. Example:
+<pre>
+sleeps(0.5)
+</pre>
 
 </body>
 </html>

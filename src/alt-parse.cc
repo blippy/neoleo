@@ -26,10 +26,12 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <curses.h>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
+#include <unistd.h>
 #include <variant>
 #include <vector>
 
@@ -78,6 +80,12 @@ ostream& operator<<(ostream& os, const value_t v);
 
 
 
+void require_nargs(const values& vs, int n , const std::string& caller)
+{
+	if(vs.size() != n)
+		throw std::runtime_error("#NARGS:" + caller 
+				+ ":expected " + std::to_string(n) + " args, got " + std::to_string(vs.size()));
+}
 
 
 using math_op = std::function<value_t(value_t, value_t)>;
@@ -117,6 +125,14 @@ value_t neo_cmd(values vs)
 	return 0;
 }
 
+value_t neo_gotorc(values vs)
+{
+	require_nargs(vs, 2, "gotorc");
+	curow = std::get<num_t>(vs[0]);
+	cucol = std::get<num_t>(vs[1]);
+	return 0;
+}
+
 value_t neo_println(values vs)
 {
 	//cout << "neo_println() says hello\n";
@@ -143,6 +159,19 @@ value_t neo_pi(values vs)
 	return 3.141592653589793238;
 }
 
+value_t neo_refresh(values vs)
+{
+	refresh();
+	return 0;
+}
+
+value_t neo_sleeps(values vs)
+{
+	require_nargs(vs, 1, "sleeps");
+	double usecs = std::get<num_t>(vs[0]) * (double) 1'000'000;
+	return usleep(usecs);
+}
+
 value_t neo_sqrt(values vs)
 {
 	if(vs.size() != 1) throw std::runtime_error("sqrt nargs");
@@ -152,9 +181,12 @@ value_t neo_sqrt(values vs)
 map<std::string, neo_func> neo_funcs = {
 	{"cell", neo_cell},
 	{"cmd", neo_cmd},
+	{"gotorc", neo_gotorc},
 	{"mod", neo_mod},
 	{"pi", neo_pi},
 	{"println", neo_println},
+	{"refresh", neo_refresh},
+	{"sleeps", neo_sleeps},
 	{"sqrt", neo_sqrt}
 };
 
