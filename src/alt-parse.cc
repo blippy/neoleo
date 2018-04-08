@@ -27,7 +27,6 @@
 #include <map>
 #include <memory>
 #include <stdexcept>
-#include <regex>
 #include <string>
 #include <type_traits>
 #include <typeinfo>
@@ -35,6 +34,7 @@
 #include <vector>
 
 #include "alt-cells.h"
+#include "alt-lex.h"
 #include "cmd.h"
 #include "numeric.h"
 
@@ -46,12 +46,10 @@ using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::string;
-using std::string_view;
 using std::unique_ptr;
 using std::variant;
 using std::vector;
 using namespace std::string_literals;
-using namespace std::string_view_literals;
 
 typedef std::vector<std::string> strings;
 typedef map<string, value_t> varmap_t;
@@ -61,182 +59,6 @@ ostream& operator<<(ostream& os, const value_t v);
 
 ///////////////////////////////////////////////////////////////////////////
 // lexical analysis
-
-// TODO include power, ege. 12^5
-
-enum LexType { LT_FLT , 
-	LT_ASS,
-	LT_OPE, // = != <= < >= >  
-	LT_OPR, // + -
-	LT_OPP, // um ..
-	LT_OPT, //  * /
-	LT_LRB, // left round bracket
-	LT_ID, 
-	LT_REM,
-	LT_STR,
-	LT_VAR,
-	LT_UNK,
-	LT_EOF // end of file
-};
-
-
-const static map<LexType, string_view> typenames = {
-	{LT_FLT, "FLT"sv},
-	{LT_ASS, "ASS"sv},
-	{LT_OPE, "OPE"sv},
-	{LT_OPR,  "OPR"sv},
-	{LT_OPP, "OPP"sv},
-	{LT_OPT, "OPT"sv},
-	{LT_LRB, "LRB"sv},
-	{LT_ID,  "ID"sv},
-	{LT_REM, "REM"sv},
-	{LT_STR, "STR"sv},
-	{LT_VAR, "VAR"sv},
-	{LT_UNK, "UNK"sv},
-	{LT_EOF, "EOF"sv}
-};
-
-//static_assert(typenames.size()>0);
-string_view lextypename(LexType ltype)
-{
-	//assert(sizeof(LexType) == typenames.size());
-	return typenames.at(ltype);
-}
-
-typedef struct {
-	LexType lextype;
-	std::string lexeme;
-} lexeme_s;
-
-using token = lexeme_s;
-
-
-typedef vector<lexeme_s> lexemes;
-
-class lexemes_c {
-	public:
-		lexemes_c(lexemes lexs);
-		void advance() { idx++;}
-		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
-		LexType curr_type() { return idx<len? lexs[idx].lextype : LT_EOF ;}
-		void require(std::string s) { 
-			if(this->curr() != s) 
-				throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
-		}
-		bool empty() {return idx >= len; }
-		token curr_lex() { return lexs[idx]; }
-	private:
-		lexemes lexs;
-		int idx = 0, len;
-};
-
-typedef lexemes_c tokens;
-
-lexemes_c::lexemes_c(lexemes lexs) : lexs(lexs)
-{
-	len = lexs.size();
-}
-
-string curr(tokens& tokes) { return tokes.curr(); }
-
-
-
-token take(tokens& tokes) 
-{ 
-	token toke = tokes.curr_lex();
-	tokes.advance();
-	return toke;
-	//token toke = tokes.front(); tokes.pop_front(); return toke; 
-}
-
-void require(tokens& tokes, string required) 
-{ 
-	auto toke = take(tokes);
-	string found = toke.lexeme; 
-	if(found != required)
-		throw std::runtime_error("#PARSE_ERR: Required:" + required + ",found:" + found);
-}
-
-
-
-
-static map<LexType, std::string> type_map;
-
-class Re {
-
-	public:
-		Re(const std::string& str, LexType lextype, const std::string& name);
-		LexType lextype;
-		std::regex re;
-		std::string name;
-};
-
-Re::Re(const std::string& str, LexType lextype, const std::string& name) : lextype(lextype), name(name)
-{
-	re = std::regex( "^(" + str + ")" );
-	type_map[lextype] = name;
-}
-
-
-
-
-lexemes
-alt_yylex_a(const std::string& s)
-{
-	lexemes lexes;
-	typedef std::vector<Re> Res;
-	static Res regexes = { 
-		Re(":=", LT_ASS, "ass"),
-		Re("[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?", LexType::LT_FLT, "float"),
-		Re("=|!=|<=?|>=?", LT_OPE, "ope"),
-		Re("\\+|\\-", LT_OPR, "opr"),
-		Re("\\*|/", LT_OPT, "opt"),
-		// Re("[Rr][0-9]+[Cc][0-9]", "rc"),
-		Re("\\?[a-zA=Z]+", LT_VAR, "var"),
-		Re("[a-zA-z]+", LexType::LT_ID, "id"),
-		Re("\"(?:[^\"\\\\]|\\\\.)*\"", LT_STR, "str"),
-		Re("'(?:[^'\\\\]|\\\\.)*'", LT_STR, "str"),
-		Re("#.*\\n", LT_REM, "rem"),
-		Re("\\(", LT_LRB, "lrb"),
-		Re(".", LexType::LT_UNK, "unknown")
-
-	};
-
-
-	std::smatch m;
-
-	auto i0 = s.begin();
-	auto iX = s.end();
-	while(i0 < iX) {
-		while(i0<iX && std::isspace(*i0)) i0++; // eat white
-		if(i0 != iX) {
-			std::string s2(i0, iX);
-			//int matched_size = 0;
-			std::string matched_str;
-			for(const auto& areg: regexes) {
-				if(std::regex_search(s2, m, areg.re)) {
-					matched_str = m[0];
-					if(areg.lextype != LT_REM)
-						lexes.push_back({areg.lextype, matched_str});
-					break;
-				}
-			}
-			i0 += matched_str.size();
-		}
-	}	
-
-	return lexes;
-}
-
-static void
-lex_and_print(std::string s)
-{
-	cout << "lex_and_print:input:`" << s << "'\n";	
-	lexemes lexes = alt_yylex_a(s);
-	for(const auto& l:lexes)
-	       	cout << "match:" << type_map[l.lextype] << ":" << l.lexeme << "\n";
-	cout << endl;
-}
 
 // lexical analysis
 ///////////////////////////////////////////////////////////////////////////

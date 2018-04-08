@@ -25,7 +25,7 @@ CLEANFILES = $(BUILT_SOURCES)
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
-neoleo_SOURCES = alt-cells.cc alt-parse.cc \
+neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
@@ -57,7 +57,7 @@ neoleo_SOURCES = alt-cells.cc alt-parse.cc \
 # Ideally obstack would be removed as a dependency anyway
 #neoleo_SOURCES += obstack_a.cc
 
-noinst_HEADERS = alt-cells.h alt-parse.h alt-types.h \
+noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h forminfo.h funcdef.h \
