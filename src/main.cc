@@ -2,6 +2,8 @@
 #include <getopt.h>
 #include <iostream>
 #include <string>
+#include <sys/auxv.h>
+//#include <sys/param.h> // for PATH_MAX
 #include <unistd.h>
 #include <vector>
 
@@ -158,7 +160,17 @@ print_version()
 	printf(_("For more information about these matters, "));
 	printf(_("see the files named COPYING.\n"));
 	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
+	printf("Auxval: %s\n", (char *)getauxval(AT_EXECFN));
+	printf("Exe: %s\n", Global->argv[0]);
 	printf("Datadir: %s/neoleo\n", DATADIR);
+
+	/*
+	char resolved_path[PATH_MAX];
+	if( realpath(Global->argv[0], resolved_path) ==0) 
+		fprintf (stderr, "realpath failed: %s\n", strerror (errno));
+	else
+		printf("Realpath: %s \n", resolved_path);
+		*/
 	// will probably call exit after printing this
 }
 
