@@ -195,6 +195,7 @@ alt_yylex_a(const std::string& s)
 		Re("\\?[a-zA=Z]+", LT_VAR, "var"),
 		Re("[a-zA-z]+", LexType::LT_ID, "id"),
 		Re("\"(?:[^\"\\\\]|\\\\.)*\"", LT_STR, "str"),
+		Re("'(?:[^'\\\\]|\\\\.)*'", LT_STR, "str"),
 		Re("#.*\\n", LT_REM, "rem"),
 		Re("\\(", LT_LRB, "lrb"),
 		Re(".", LexType::LT_UNK, "unknown")
@@ -435,7 +436,7 @@ make_variable(lexemes_c& tokes)
 {
 	Variable var;
 	var.name = tokes.curr();
-	cout << "make_variable():variable:" << var.name << "\n";
+	//cout << "make_variable():variable:" << var.name << "\n";
 	tokes.advance();
 	return var;
 }
@@ -561,19 +562,19 @@ Statements collect_statements(tokens& tokes, const string& terminator)
 
 For make_for(tokens& tokes)
 {
-	cout << "make_for:in\n";
+	//cout << "make_for:in\n";
 	require(tokes, "for");
 	For a_for;
 	a_for.varname = take(tokes).lexeme;
-	cout << "make_for()::varname:" << a_for.varname;
+	//cout << "make_for()::varname:" << a_for.varname;
 	require(tokes, ":=");
-	cout << "make_for()::=from:" << curr(tokes);
+	//cout << "make_for()::=from:" << curr(tokes);
 	a_for.from = make_expression(tokes);
 	require(tokes, "to");
 	a_for.to = make_expression(tokes);
 	a_for.statements = collect_statements(tokes, "next");
 	require(tokes, "next");
-	cout << "make_for:out\n";
+	//cout << "make_for:out\n";
 	return a_for;
 }
 

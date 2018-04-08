@@ -19,6 +19,16 @@ It has syntactic elements: for, let
 <pre>#This is a comment</pre>
 </p>
 
+<p>
+<b>Strings</b> may be enclosed in double or single quotes, like so:
+<pre>
+println("String tests")
+println('Single quotes')
+println('Embedded "double quotes" within single quotes')
+</pre>
+</p>
+
+
 
 <p><b>Variable names</b> must be prefixed with <code>?</code>, e.g. <code>?myvar</code>. This is to stop potential confusion if I want to add things like cell references as first syntactic objects. Variables do not have to be defined before use.</p>
 
@@ -28,8 +38,12 @@ It has syntactic elements: for, let
 
 Execute a regular neoleo command. Example:
 <pre>
-cmd("goto-cell B2")
-cmd("edit-cell 42")
+cmd("goto-cell A1")
+cmd("edit-cell 42") # straightforward value
+cmd("goto-cell A2")
+cmd('edit-cell "a string"') # a string
+cmd("goto-cell A3")
+cmd('edit-cell 1 + 2') # a formula
 </pre>
 This will set the value of cell B2 to 42.
 

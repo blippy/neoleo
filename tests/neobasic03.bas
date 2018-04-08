@@ -8,3 +8,7 @@ println("Testing loop 1 to 3")
 for ?i := 1 to 3
 	println(?i)
 next
+
+println("String tests")
+println('Single quotes')
+println('Embedded "double quotes" within single quotes')
