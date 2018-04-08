@@ -106,8 +106,7 @@ do_edit ( int numarg, struct value * p)
 }
 
 static void
-do_repeat (
-     struct value * p)
+do_repeat(struct value * p)
 {
 	char *str = p->gString();
 	long num  = (p+1)->gLong();
@@ -130,8 +129,7 @@ do_repeat (
 }
 
 static void
-do_len (
-     struct value * p)
+do_len(struct value * p)
 {
 	long ret;
 	char *ptr;
@@ -143,8 +141,7 @@ do_len (
 }
 
 static void
-do_up_str (
-     struct value * p)
+do_up_str(struct value * p)
 {
 	char *s1,*s2;
 	char *strptr;
@@ -157,8 +154,7 @@ do_up_str (
 }
 
 static void
-do_dn_str (
-     struct value * p)
+do_dn_str(struct value * p)
 {
 	char *s1,*s2;
 	char *strptr;
@@ -171,8 +167,7 @@ do_dn_str (
 }
 
 static void
-do_cp_str (
-     struct value * p)
+do_cp_str(struct value * p)
 {
 	char *strptr;
 	char *s1,*s2;
@@ -194,8 +189,7 @@ do_cp_str (
 }
 
 static void
-do_trim_str (
-     struct value * p)
+do_trim_str(struct value * p)
 {
 	char *s1,*s2;
 	int sstart=0;
@@ -220,9 +214,7 @@ do_trim_str (
 }
 
 static void
-do_concat (
-     int  numarg,
-      struct value * p)
+do_concat(int  numarg, struct value * p)
 {
 	int cur_string;
 	char *s;
@@ -283,8 +275,7 @@ do_concat (
 
 
 static void
-do_mid (
-     struct value * p)
+do_mid(struct value * p)
 {
 	char *str = p->gString();
 	long from = (p+1)->gLong()-1;
@@ -309,8 +300,7 @@ do_mid (
 
 
 static void
-do_substr (
-     struct value * p)
+do_substr(struct value * p)
 {
 	long off1 = (p  )->gLong();
 	long off2 = (p+1)->gLong();
@@ -334,12 +324,10 @@ do_substr (
 	strncpy(ret,ptr1,tmp);
 	ret[tmp]=0;
 	p->sString(ret);
-	//p->type=TYP_STR;
 }
 
 static void
-do_strstr (
-     struct value * p)
+do_strstr(struct value * p)
 {
 	char *strptr	= p->gString();
 	char *str1	= (p+1)->gString();
@@ -351,8 +339,6 @@ do_strstr (
 	//ret=(char *)strstr(strptr+off-1,str1);
 	char *loc = strstr(strptr+off-1,str1);
 	size_t pos = loc ? 1 + loc - strptr : 0;
-	//p->Value= ret ? 1 + ret-strptr : 0;
-	//p->type=TYP_INT;
 	p->sLong(pos);
 }
 
