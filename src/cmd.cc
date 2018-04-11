@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <memory>
 #include <stdarg.h>
 #include "sysdef.h"
 #include <termios.h>
@@ -120,17 +121,19 @@ struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
 int ioerror = 0;
 
 /* The current stream from which commands are being read. */
-struct input_stream *the_input_stream = 0;
+//input_stream_ptr make_input_stream() { return std::make_shared<struct input_stream>(); }
+input_stream_ptr make_input_stream() { return  (input_stream_ptr) ck_malloc(sizeof(struct input_stream));}
+input_stream_ptr the_input_stream = nullptr;
 
 
-static struct input_stream *
+static input_stream_ptr
 default_input_stream (void)
 {
 	if (!the_input_stream)
 	  {
-		  the_input_stream =
-			  (struct input_stream *)
-			  ck_malloc (sizeof (struct input_stream));
+		  the_input_stream = make_input_stream();
+			  //(struct input_stream *)
+			  //ck_malloc (sizeof (struct input_stream));
 		  the_input_stream->_rmac = 0;
 		  the_input_stream->_func_arg = 0;
 		  obstack_init (&the_input_stream->_macro_stack);
@@ -150,13 +153,13 @@ default_input_stream (void)
  */
 
 
-static struct input_stream *
+static input_stream_ptr
 macro_only_input_stream (struct rng *rng, char *first_line, int len,
 			 struct command_frame *frame)
 {
-	struct input_stream *ret;
-	ret = (struct input_stream *)
-		ck_malloc (sizeof (struct input_stream));
+	input_stream_ptr ret = make_input_stream();
+	//ret = (struct input_stream *)
+	//	ck_malloc (sizeof (struct input_stream));
 	ret->_func_arg = 0;
 	obstack_init (&ret->_macro_stack);
 	ret->_rmac =
@@ -176,7 +179,7 @@ macro_only_input_stream (struct rng *rng, char *first_line, int len,
 	ret->_last_macro = 0;
 	ret->prev_stream = frame->input;
 	{
-		struct input_stream *key = frame->input;
+		input_stream_ptr key = frame->input;
 		while (frame->input == key)
 		  {
 			  frame->input = ret;
@@ -188,14 +191,14 @@ macro_only_input_stream (struct rng *rng, char *first_line, int len,
 }
 
 void
-free_input_stream (struct input_stream *stream)
+free_input_stream (input_stream_ptr stream)
 {
 	if (stream->_macro_start)
 		free (stream->_macro_start);
 	if (stream->_last_macro)
 		free (stream->_last_macro);
 	obstack_free (&stream->_macro_stack, 0);
-	free (stream);
+	free(stream);
 }
 
 /* This gets rid of an input stream created by macro_only_input_stream.
@@ -208,7 +211,7 @@ pop_input_stream (void)
 	if (the_cmd_frame->input->prev_stream)
 	  {
 		  struct command_frame *fr = the_cmd_frame;
-		  struct input_stream *key = the_cmd_frame->input;
+		  input_stream_ptr key = the_cmd_frame->input;
 		  while (fr->input == key)
 		    {
 			    fr->input = key->prev_stream;
@@ -883,7 +886,7 @@ recover_from_error (void)
 
 	/* cancel the current macros */
 	{
-		struct input_stream *stream = the_cmd_frame->input;
+		input_stream_ptr stream = the_cmd_frame->input;
 		if (stream->_macro_start)
 			free (stream->_macro_start);
 		if (stream->_last_macro)

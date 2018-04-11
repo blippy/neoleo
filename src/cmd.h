@@ -19,6 +19,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+//#include <memory>
+
 /*
  * This file explains the generic interface to interactive functions.
  * This covers how C functions are made available to the user, how
@@ -57,6 +59,9 @@ extern struct alarm_entry alarm_table[];
 struct command_frame;
 struct macro;
 
+//typedef std::shared_ptr<struct input_stream> input_stream_ptr;
+typedef struct input_stream* input_stream_ptr;
+
 struct input_stream
 {
   /* The currently executing macro. */
@@ -85,7 +90,7 @@ struct input_stream
    * Note that within an input stream there is another macro stack. 
    * That stack is used internally to command_loop.
    */
-  struct input_stream * prev_stream;
+  input_stream_ptr prev_stream;
 
   int _pushed_back_char;
 };
@@ -168,13 +173,14 @@ struct command_arg
 
 /* These declarations make up the state of the command interpreter. */
 
+
 struct command_frame 
 {
   /* If `recursive' edits are enabled, there can be more than one of these. */
   struct command_frame * next;
   struct command_frame * prev;
 
-  struct input_stream * input;
+  input_stream_ptr input;
   
   /* The cell being editted (if any). */
   CELLREF _setrow;
