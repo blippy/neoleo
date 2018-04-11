@@ -270,9 +270,8 @@ blang_funcs_t blang_funcs = {
 class Def;
 class Factor;
 class For;
+class If;
 class Let;
-//class Relop;
-//class Term;
 
 
 
@@ -287,13 +286,16 @@ typedef Precedence<Relop> Expression;
 
 
 //typedef variant<Expression,Def,If,Let,For,While> Statement;
-typedef variant<Expression,Def,Let,For> Statement;
+typedef variant<Expression,Def,If,Let,For> Statement;
 typedef vector<Statement> Statements;
 
 class Program { public: Statements statements; };
+class If { public: Expression condition; Statements consequent, alternative; };
 class Let { public: string varname; Expression expr; };
 class For { public: string varname; Expression from, to; Statements statements; };
 
+
+Statement make_statement(tokens& tokes);
 
 value_t eval(varmap_t& vars, Expression e);
 value_t eval(varmap_t& vars, Statements statements);
@@ -425,6 +427,33 @@ Expression make_expression(tokens& tokes) { return parse_multiop<Expression, Rel
 
 
 
+If make_if(tokens& tokes)
+{
+	If an_if;
+	require(tokes, "if");
+	an_if.condition = make_expression(tokes);
+	require(tokes, "then");
+
+	int num_elses = 0;
+	while(curr(tokes) != "fi") {
+		if(curr(tokes) == "else") { num_elses++; advance(tokes); }
+		switch(num_elses) {
+			case 0:
+				an_if.consequent.push_back(make_statement(tokes));
+				break;
+			case 1:
+				an_if.alternative.push_back(make_statement(tokes));
+				break;
+			default:
+				throw std::runtime_error("Unexpected else in alternative branch of 'if'");
+		}
+	}
+	require(tokes, "fi");
+	return an_if;
+}
+
+
+
 Let make_let(tokens& tokes)
 {
 	require(tokes, "let");
@@ -476,7 +505,7 @@ Statement make_statement(tokens& tokes)
 {
 	static const map<string, std::function<Statement(tokens&)>> commands = {
 		{"def",   make_def},
-		//{"if",    make_if},
+		{"if",    make_if},
 		{"for",   make_for},
 		{"let",   make_let}
 		//{"while", make_while}
@@ -691,13 +720,24 @@ value_t eval(varmap_t& vars, For a_for)
 }
 
 
+value_t eval(varmap_t& vars, If an_if)
+{
+	if(num(eval(vars, an_if.condition)))
+		eval(vars, an_if.consequent);
+	else
+		eval(vars, an_if.alternative);
+	return 0;
+}
+
+
+
 value_t eval(varmap_t& vars, Statements statements)
 {
 	value_t ret;
 	for(auto& s: statements) {
 		bool executed = eval_holder<Expression>(vars, s, ret) 
 			|| eval_holder<Def>(vars, s, ret)
-			//|| eval_holder<If>(vars, s, ret)
+			|| eval_holder<If>(vars, s, ret)
 			|| eval_holder<Let>(vars, s, ret)
 			|| eval_holder<For>(vars, s, ret)
 			//|| eval_holder<While>(vars, s, ret)

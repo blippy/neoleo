@@ -11,7 +11,7 @@
 <code>Neobasic</code> is an embedded BASIC-like language.
 
 <p>
-It has syntactic elements: def (defines functions), for, let
+It has syntactic elements: def (defines functions), for, if, let
 </p>
 
 <p>
@@ -65,6 +65,20 @@ println("inc 12=", inc(12), "expecting 13")
 </pre>
 </p>
 
+<p>
+Example of creating factorials:
+<pre>
+def fact(?n)
+        if ?n &lt; 2 then
+                let ?v := 1
+        else
+                let ?v :=  ?n * fact(?n-1)
+        fi
+        ?v
+fed
+println("10!=", fact(10), "Expecting 3628800"))
+</pre>
+</p>
 
 <h3>for loops</h3>
 
@@ -75,6 +89,20 @@ for ?i := 1 to 3
 next
 </pre>
  
+
+<h3>if</h3>
+
+Conditional blocks are in <code>if ... fi</code>, with an optional <code>else</code> statement. Example:
+<pre>
+if 1&lt;2 then
+        println("1 is less than 2")
+else
+        println("1 is not less than 2")
+fi
+
+     
+</pre>
+
 <h3>gotorc</h3>
 
 Set the current cell to a given row and column. E.g.
