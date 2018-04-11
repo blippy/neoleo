@@ -272,6 +272,7 @@ class Factor;
 class For;
 class If;
 class Let;
+class While;
 
 
 
@@ -285,14 +286,15 @@ typedef Precedence<Term> Relop;
 typedef Precedence<Relop> Expression;
 
 
-//typedef variant<Expression,Def,If,Let,For,While> Statement;
-typedef variant<Expression,Def,If,Let,For> Statement;
+typedef variant<Expression,Def,If,Let,For,While> Statement;
 typedef vector<Statement> Statements;
 
 class Program { public: Statements statements; };
 class If { public: Expression condition; Statements consequent, alternative; };
 class Let { public: string varname; Expression expr; };
 class For { public: string varname; Expression from, to; Statements statements; };
+class While { public: Expression condition; Statements statements; };
+
 
 
 Statement make_statement(tokens& tokes);
@@ -498,6 +500,15 @@ For make_for(tokens& tokes)
 }
 
 
+While make_while(tokens& tokes)
+{
+	require(tokes, "while");
+	While a_while;
+	a_while.condition = make_expression(tokes);
+	a_while.statements = collect_statements(tokes, "wend");
+	return a_while;
+}
+
 
 Def make_def(tokens& tokes);
 
@@ -507,8 +518,8 @@ Statement make_statement(tokens& tokes)
 		{"def",   make_def},
 		{"if",    make_if},
 		{"for",   make_for},
-		{"let",   make_let}
-		//{"while", make_while}
+		{"let",   make_let},
+		{"while", make_while}
 	};
 
 	Statement stm;
@@ -729,7 +740,18 @@ value_t eval(varmap_t& vars, If an_if)
 	return 0;
 }
 
-
+value_t eval(varmap_t& vars, While a_while)
+{
+	//cout << "eval<While>() called\n";
+	while(1) {
+		value_t test = eval(vars, a_while.condition);
+		//cout << "eval<While>():test:" << num(test) << "\n";
+		if(num(test) == 0) break;
+		eval(vars, a_while.statements);
+	}
+	return 0;
+}
+		
 
 value_t eval(varmap_t& vars, Statements statements)
 {
@@ -740,7 +762,7 @@ value_t eval(varmap_t& vars, Statements statements)
 			|| eval_holder<If>(vars, s, ret)
 			|| eval_holder<Let>(vars, s, ret)
 			|| eval_holder<For>(vars, s, ret)
-			//|| eval_holder<While>(vars, s, ret)
+			|| eval_holder<While>(vars, s, ret)
 			;
 		if(!executed)
 			std::logic_error("eval<Program>(): Unhandled statement type");

@@ -11,7 +11,7 @@
 <code>Neobasic</code> is an embedded BASIC-like language.
 
 <p>
-It has syntactic elements: def (defines functions), for, if, let
+It has syntactic elements: def (defines functions), for, if, let, while
 </p>
 
 <p>
@@ -137,6 +137,21 @@ Sleep for a given number of seconds. Example:
 <pre>
 sleeps(0.5)
 </pre>
+i
+
+<h3>while ... wend loops</h3>
+<p>
+<code>while</code> loops loop until a condition is false. The following code will print out the values 0 ... 4:
+<pre>
+let ?i := 0
+while ?i &lt; 5
+        println(?i)
+        let ?i := ?i +1
+wend
+
+</pre>
+</p>
+
 
 </body>
 </html>

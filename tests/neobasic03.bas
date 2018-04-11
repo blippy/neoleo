@@ -33,4 +33,11 @@ def fact(?n)
 	fi
 	?v
 fed
-println("10!=", fact(10), "Expecting 3628800"))
+println("10!=", fact(10), "Expecting 3628800")
+
+println("Test a while loop")
+let ?i := 0
+while ?i < 5
+	println(?i)
+	let ?i := ?i +1
+wend
