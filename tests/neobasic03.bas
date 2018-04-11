@@ -17,5 +17,5 @@ def inc(?v)
 	let ?v := ?v +1
 	?v
 fed
-println("inc 12=", 12, "expecting 13")
+println("inc 12=", inc(12), "expecting 13")
 

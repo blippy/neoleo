@@ -274,14 +274,6 @@ class Let;
 //class Relop;
 //class Term;
 
-/*
-class Expression {
-	public:
-		vector<Relop> operands; // terms;
-		vector<math_op> fops;
-		//const strings operators = strings {"+", "-" };
-};
-*/
 
 
 template<typename T>
@@ -315,26 +307,11 @@ class FuncCall{
 		vector<Expression> exprs;
 };
 
-class Variable {
-	public:
-		string name;
-};
+class Variable { public: string name; };
 
-class Factor { public: char sign = '+'; variant<value_t, Expression, FuncCall, Variable> factor;
-};
+class Factor { public: char sign = '+'; variant<value_t, Expression, FuncCall, Variable> factor; };
 
-class Def{
-	public:
-		string name;
-		strings args;
-		Statements statements;
-};
-
-
-
-
-
-//typedef lexemes::iterator lex_it;
+class Def{ public: string name; strings args; Statements statements; };
 
 
 Expression make_expression(tokens& tokes);
@@ -354,27 +331,6 @@ void make_funcargs(tokens& tokes,T make)
 }
 
 
-/*
-FuncCall
-make_funccall(lexemes_c& tokes)
-{
-	FuncCall fn;
-	fn.name = tokes.curr();
-	tokes.advance();
-	tokes.require("(");
-	tokes.advance();
-	auto make = [&]() { fn.exprs.push_back(make_expression(tokes)); };
-	if(tokes.curr() != ")") {
-		make();
-		while(tokes.curr() == ",") {
-			tokes.advance();
-			make();
-		}
-	}
-	tokes.advance();
-	return fn;
-}
-*/
 
 
 FuncCall make_funccall(string name, tokens& tokes)
@@ -490,6 +446,7 @@ Statements collect_statements(tokens& tokes, const string& terminator)
 	Statements stmts;
 	while(curr(tokes) != terminator)
 		stmts.push_back(make_statement(tokes));
+	require(tokes, terminator);
 	return stmts;
 }
 
@@ -506,7 +463,7 @@ For make_for(tokens& tokes)
 	require(tokes, "to");
 	a_for.to = make_expression(tokes);
 	a_for.statements = collect_statements(tokes, "next");
-	require(tokes, "next");
+	//require(tokes, "next");
 	//cout << "make_for:out\n";
 	return a_for;
 }
@@ -573,63 +530,9 @@ value_t wrap_def(Def def, values vs)
 
 	//cout << "wrap_defun():arg[0]:" << num(vs[0]) << "\n";
 
-	//for(const auto& stm: func.statements)
-	//	eval(vars, stm);
-	//return 666;
 	return eval(vars, def.statements);
 }
 
-/*
-Def make_defXXX(lexemes_c& tokes)
-{
-	cout << "make_def:in\n";
-	//if(tokes.curr() != "def") return false;
-	//tokes.advance();
-	require(tokes, "def");
-	Def def;
-
-	func.name = tokes.curr();
-	tokes.advance();
-	cout << "make_def:name:" << def.name << "\n";
-
-	// argument list
-	auto append_arg = [&]() { 
-		if(tokes.curr_type() != LT_VAR)
-			throw std::runtime_error("#PARSE:Function definition of " + func.name 
-					+ " has non-var arg " + tokes.curr());
-		func.args.push_back(tokes.curr()); 
-		tokes.advance(); 
-	};
-	tokes.require("(");
-	tokes.advance();
-	if(tokes.curr() != ")") {
-		append_arg();
-		while(tokes.curr() == ",") {
-			tokes.advance();
-			append_arg();
-		}
-	}
-	//tokes.require(")");
-	tokes.advance();
-
-	// compound statement
-	tokes.require("{");
-	tokes.advance();
-	while(tokes.curr() != "}") {
-		def.statements.push_back(make_expression(tokes)); // TODO make_statement()
-		//tokes.require(";");
-		//tokes.advance();
-	}
-	tokes.require("}");
-	tokes.advance();
-
-	using namespace std::placeholders;
-	neo_funcs[def.name] = std::bind(wrap_def, def, _1);
-
-	cout << "make_def() returning\n";
-	return func;
-}
-*/
 
 
 Def make_def(tokens& tokes)
@@ -639,9 +542,9 @@ Def make_def(tokens& tokes)
 	def.name = take(tokes).value;
 	auto make = [&def](tokens& tokes) { 
 		auto toke = take(tokes);
-		if(toke.type != LT_ID)
-			throw std::runtime_error("#PARSE: def of " + def.name 
-					+ "has non-var arg " + toke.value);
+		if(toke.type != LT_VAR)
+			throw std::runtime_error("#PARSE: def of `" + def.name 
+					+ "' has non-var arg " + toke.value);
 		def.args.push_back(toke.value); 
 	};
 	make_funcargs(tokes, make);

@@ -11,7 +11,7 @@
 <code>Neobasic</code> is an embedded BASIC-like language.
 
 <p>
-It has syntactic elements: for, let
+It has syntactic elements: def (defines functions), for, let
 </p>
 
 <p>
@@ -46,6 +46,24 @@ cmd("goto-cell A3")
 cmd('edit-cell 1 + 2') # a formula
 </pre>
 This will set the value of cell B2 to 42.
+
+
+<h3>def: function definitions</h3>
+
+<p>
+Functions should be enclosed in <code>def ... fed</code> blocks. If the last value is an expression, then that is the value that is returned from the function.
+</p>
+
+<p>
+The following example returns the input value, incremented by 1:
+<pre>
+def inc(?v)
+        let ?v := ?v +1
+        ?v
+fed
+println("inc 12=", inc(12), "expecting 13")
+</pre>
+</p>
 
 
 <h3>for loops</h3>
