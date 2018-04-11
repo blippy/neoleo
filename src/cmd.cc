@@ -2612,8 +2612,8 @@ char *
 expand_prompt (char *str)
 {
 	if (!str || !index (str, '%')) {
-		return ck_savestr (str);
-		//return str;
+		//return ck_savestr (str);
+		return str;
 	} else {
 		struct line expanded;
 		init_line (&expanded);
