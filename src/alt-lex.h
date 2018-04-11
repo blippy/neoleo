@@ -1,6 +1,7 @@
 #pragma once
 
-#include <vector>
+#include <deque>
+//#include <vector>
 
 
 // TODO include power, ege. 12^5
@@ -20,38 +21,36 @@ enum LexType { LT_FLT ,
 	LT_EOF // end of file
 };
 
-typedef struct {
-	LexType lextype;
-	std::string lexeme;
-} lexeme_s;
+typedef struct token {	LexType type;	std::string value;} token;
 
-using token = lexeme_s;
+//using token = lexeme_s;
 
 
-typedef std::vector<lexeme_s> lexemes;
+//typedef std::vector<lexeme_s> lexemes;
+typedef std::deque<token> tokens;
 
+/*
 class lexemes_c {
 	public:
 		lexemes_c(lexemes lexs);
-		void advance() { idx++;}
-		std::string curr() { return idx<len? lexs[idx].lexeme : "" ;}
-		LexType curr_type() { return idx<len? lexs[idx].lextype : LT_EOF ;}
-		void require(std::string s) { 
-			if(this->curr() != s) 
-				throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
-		}
-		bool empty() {return idx >= len; }
-		token curr_lex() { return lexs[idx]; }
+		void advance();
+		std::string curr();
+		LexType curr_type();
+		void require(std::string s);
+		bool empty();
+		token curr_lex();
 	private:
 		lexemes lexs;
 		int idx = 0, len;
 };
+*/
 
-typedef lexemes_c tokens;
+//typedef lexemes_c tokens;
 
 std::string_view lextypename(LexType ltype);
 std::string curr(tokens& tokes);
 void require(tokens& tokes, std::string required);
 token take(tokens& tokes);
-lexemes alt_yylex_a(const std::string& s);
+void advance(tokens& tokes);
+tokens alt_yylex_a(const std::string& s);
 void lex_and_print(std::string s);

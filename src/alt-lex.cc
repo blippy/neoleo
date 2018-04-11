@@ -35,15 +35,36 @@ std::string_view lextypename(LexType ltype)
 
 
 
+/*
 lexemes_c::lexemes_c(lexemes lexs) : lexs(lexs)
 {
 	len = lexs.size();
 }
 
-std::string curr(tokens& tokes) { return tokes.curr(); }
+void lexemes_c::advance() { idx++;}
+
+std::string lexemes_c::curr() { return idx<len? lexs[idx].value : "" ;}
+
+LexType lexemes_c::curr_type() { return idx<len? lexs[idx].type : LT_EOF ;}
+
+void lexemes_c::require(std::string s) { 
+	if(this->curr() != s) 
+		throw std::runtime_error("#PARSE_ERR: Expecting " + s + ", got " + this->curr()); 
+}
+*/
 
 
+//bool lexemes_c::empty() {return idx >= len; }
 
+//token lexemes_c::curr_lex() { return lexs[idx]; }
+
+std::string curr(tokens& tokes) {return tokes.empty() ? "" : tokes.front().value; }
+token take(tokens& tokes) { token toke = tokes.front(); tokes.pop_front(); return toke; }
+
+
+void advance(tokens& tokes) { tokes.pop_front();}
+
+/*
 token take(tokens& tokes) 
 { 
 	token toke = tokes.curr_lex();
@@ -51,11 +72,12 @@ token take(tokens& tokes)
 	return toke;
 	//token toke = tokes.front(); tokes.pop_front(); return toke; 
 }
+*/
 
 void require(tokens& tokes, std::string required) 
 { 
 	auto toke = take(tokes);
-	string found = toke.lexeme; 
+	string found = toke.value; 
 	if(found != required)
 		throw std::runtime_error("#PARSE_ERR: Required:" + required + ",found:" + found);
 }
@@ -83,9 +105,9 @@ Re::Re(const std::string& str, LexType lextype, const std::string& name) : lexty
 
 
 
-lexemes alt_yylex_a(const std::string& s)
+tokens alt_yylex_a(const std::string& s)
 {
-	lexemes lexes;
+	tokens lexes;
 	typedef std::vector<Re> Res;
 	static Res regexes = { 
 		Re(":=", LT_ASS, "ass"),
@@ -133,9 +155,9 @@ lexemes alt_yylex_a(const std::string& s)
 void lex_and_print(std::string s)
 {
 	cout << "lex_and_print:input:`" << s << "'\n";	
-	lexemes lexes = alt_yylex_a(s);
+	tokens lexes = alt_yylex_a(s);
 	for(const auto& l:lexes)
-	       	cout << "match:" << type_map[l.lextype] << ":" << l.lexeme << "\n";
+	       	cout << "match:" << type_map[l.type] << ":" << l.value << "\n";
 	cout << endl;
 }
 

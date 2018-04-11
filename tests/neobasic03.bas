@@ -12,3 +12,10 @@ next
 println("String tests")
 println('Single quotes')
 println('Embedded "double quotes" within single quotes')
+
+def inc(?v)
+	let ?v := ?v +1
+	?v
+fed
+println("inc 12=", 12, "expecting 13")
+

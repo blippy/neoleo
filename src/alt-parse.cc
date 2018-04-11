@@ -78,6 +78,30 @@ ostream& operator<<(ostream& os, const value_t v);
 //  F --> word "(" [E {"," E} ] ")"
 
 
+bool is_str(value_t v) { return std::holds_alternative<string>(v); }
+bool is_num(value_t v) { return std::holds_alternative<double>(v); }
+//double dbl(value_t v) { return std::get<double>(v); }
+
+string str(value_t v) 
+{ 
+	if(is_str(v))
+		return std::get<string>(v);
+	else if(is_num(v))
+		return std::to_string(std::get<num_t>(v));
+	else
+		throw std::runtime_error("#UNHANDLED:str:conversion type");
+}
+
+
+std::tuple<double, double> two_nums(values vs) 
+{ 
+	if(vs.size()!=2) 
+		throw std::runtime_error("#BAD_CALL: Expected 2 arguments");
+	double v1 = num(vs[0]), v2 = num(vs[1]);
+	return std::make_tuple(v1, v2);
+}
+
+
 
 
 void require_nargs(const values& vs, int n , const std::string& caller)
@@ -87,27 +111,68 @@ void require_nargs(const values& vs, int n , const std::string& caller)
 				+ ":expected " + std::to_string(n) + " args, got " + std::to_string(vs.size()));
 }
 
+void need(values vs, int n, string func_name)
+{
+	if(vs.size() != n)
+		throw std::runtime_error("#FUNC_ARGS:" + func_name 
+				+ ": requires " + std::to_string(n)  
+				+ " args, got " + std::to_string(vs.size()));
+}
 
+
+
+
+
+value_t blang_add(values vs)
+{ 
+	need(vs, 2, "+");
+	value_t v1 = vs[0], v2 = vs[1];
+	if(is_str(v1) && is_str(v2))
+		return str(v1) + str(v2);
+	else
+		return num(v1) + num(v2);
+}
+value_t blang_eq(values vs) { auto [v1, v2] = two_nums(vs); return v1 == v2; }
+value_t blang_ge(values vs) { auto [v1, v2] = two_nums(vs); return v1 >= v2; }
+value_t blang_gt(values vs) { auto [v1, v2] = two_nums(vs); return v1 > v2; }
+value_t blang_le(values vs) { auto [v1, v2] = two_nums(vs); return v1 <= v2; }
+value_t blang_lt(values vs) { auto [v1, v2] = two_nums(vs); return v1 < v2; }
+value_t blang_ne(values vs) { auto [v1, v2] = two_nums(vs); return v1 != v2; }
+value_t blang_sub(values vs) { auto [v1, v2] = two_nums(vs); return v1 - v2; }
+value_t blang_mul(values vs) { auto [v1, v2] = two_nums(vs); return v1 * v2; }
+value_t blang_div(values vs) { auto [v1, v2] = two_nums(vs); return v1 / v2; }
+
+
+
+
+
+/*
 using math_op = std::function<value_t(value_t, value_t)>;
 
-value_t neo_add(value_t v1, value_t v2) { return num(v1) + num(v2); }
-value_t neo_sub(value_t v1, value_t v2) { return num(v1) - num(v2); }
-value_t neo_mul(value_t v1, value_t v2) { return num(v1) * num(v2); }
-value_t neo_div(value_t v1, value_t v2) { return num(v1) / num(v2); }
-value_t neo_lt(value_t v1, value_t v2) { return num(v1) < num(v2); }
-value_t neo_le(value_t v1, value_t v2) { return num(v1) <= num(v2); }
-value_t neo_gt(value_t v1, value_t v2) { return num(v1) > num(v2); }
-value_t neo_ge(value_t v1, value_t v2) { return num(v1) >= num(v2); }
-value_t neo_eq(value_t v1, value_t v2) { return num(v1) == num(v2); }
-value_t neo_ne(value_t v1, value_t v2) { return num(v1) != num(v2); }
+value_t blang_add(value_t v1, value_t v2) { return num(v1) + num(v2); }
+value_t blang_sub(value_t v1, value_t v2) { return num(v1) - num(v2); }
+value_t blang_mul(value_t v1, value_t v2) { return num(v1) * num(v2); }
+value_t blang_div(value_t v1, value_t v2) { return num(v1) / num(v2); }
+value_t blang_lt(value_t v1, value_t v2) { return num(v1) < num(v2); }
+value_t blang_le(value_t v1, value_t v2) { return num(v1) <= num(v2); }
+value_t blang_gt(value_t v1, value_t v2) { return num(v1) > num(v2); }
+value_t blang_ge(value_t v1, value_t v2) { return num(v1) >= num(v2); }
+value_t blang_eq(value_t v1, value_t v2) { return num(v1) == num(v2); }
+value_t blang_ne(value_t v1, value_t v2) { return num(v1) != num(v2); }
+*/
 
+
+/*
 map<std::string, math_op> math_ops = { 
 	{ "+", neo_add} , {"-", neo_sub }, 
 	{"*",  neo_mul}, {"/", neo_div}, 
 	{"<", neo_lt}, {"<=", neo_le}, {">", neo_gt}, {">=", neo_ge}, {"=", neo_eq}, {"!=", neo_ne}
 };
+*/
 
-using neo_func = std::function<value_t(values vs)>;
+typedef std::function<value_t(values vs)> blang_func;
+typedef map<string, blang_func> blang_funcs_t;
+
 
 
 bool isstring(value_t v, string& str)
@@ -178,7 +243,18 @@ value_t neo_sqrt(values vs)
 	return std::sqrt(num(vs[0]));
 }
 
-map<std::string, neo_func> neo_funcs = {
+blang_funcs_t blang_funcs = {
+	{"<", blang_lt},
+	{"<=", blang_le},
+        {">", blang_gt},
+        {">=", blang_ge},
+        {"==", blang_eq},
+        {"!=", blang_ne},
+        {"+", blang_add},
+        {"/", blang_div},
+        {"*", blang_mul},
+        {"-", blang_sub},
+
 	{"cell", neo_cell},
 	{"cmd", neo_cmd},
 	{"gotorc", neo_gotorc},
@@ -191,22 +267,35 @@ map<std::string, neo_func> neo_funcs = {
 };
 
 
+class Def;
 class Factor;
 class For;
 class Let;
-class Relop;
-class Term;
+//class Relop;
+//class Term;
 
-
+/*
 class Expression {
 	public:
 		vector<Relop> operands; // terms;
 		vector<math_op> fops;
 		//const strings operators = strings {"+", "-" };
 };
+*/
+
+
+template<typename T>
+class Precedence {
+	        public: vector<T> operands; vector<blang_func> fops;
+};
+
+typedef Precedence<Factor> Term;
+typedef Precedence<Term> Relop;
+typedef Precedence<Relop> Expression;
+
 
 //typedef variant<Expression,Def,If,Let,For,While> Statement;
-typedef variant<Expression,Let,For> Statement;
+typedef variant<Expression,Def,Let,For> Statement;
 typedef vector<Statement> Statements;
 
 class Program { public: Statements statements; };
@@ -218,18 +307,6 @@ value_t eval(varmap_t& vars, Expression e);
 value_t eval(varmap_t& vars, Statements statements);
 value_t eval(varmap_t& vars, Program prog);
 
-class Relop {
-	public:
-		vector<Term> operands;
-		vector<math_op> fops;
-};
-
-class Term {
-	public:
-		vector<Factor> operands;
-		vector<math_op> fops;
-		//const strings operators = strings { "*", "/" };
-};
 
 
 class FuncCall{
@@ -243,28 +320,41 @@ class Variable {
 		string name;
 };
 
-class Factor {
-	public:
-		variant<value_t, Expression, FuncCall, Variable> factor;
+class Factor { public: char sign = '+'; variant<value_t, Expression, FuncCall, Variable> factor;
 };
 
-class FuncDef{
+class Def{
 	public:
 		string name;
 		strings args;
-		vector<Expression> statements; // TODO expressions are not statements
+		Statements statements;
 };
 
 
 
 
 
-typedef lexemes::iterator lex_it;
+//typedef lexemes::iterator lex_it;
 
 
-Expression make_expression(lexemes_c& tokes);
+Expression make_expression(tokens& tokes);
+
+template<typename T>
+void make_funcargs(tokens& tokes,T make)
+{
+	require(tokes, "(");
+	if(curr(tokes) != ")") {
+		make(tokes);
+		while(curr(tokes) == ",") {
+			advance(tokes);
+			make(tokes);
+		}
+	}
+	require(tokes, ")");
+}
 
 
+/*
 FuncCall
 make_funccall(lexemes_c& tokes)
 {
@@ -284,127 +374,116 @@ make_funccall(lexemes_c& tokes)
 	tokes.advance();
 	return fn;
 }
+*/
+
+
+FuncCall make_funccall(string name, tokens& tokes)
+{
+	//cout << "make_funccall()\n";
+	FuncCall fn;
+	fn.name = name;
+	auto make = [&fn](tokens& tokes) { fn.exprs.push_back(make_expression(tokes)); };
+	make_funcargs(tokes, make);
+	return fn;
+}
+		
+	
 
 Variable
-make_variable(lexemes_c& tokes)
+make_variable(string name, tokens& tokes)
 {
 	Variable var;
-	var.name = tokes.curr();
+	var.name = name;
 	//cout << "make_variable():variable:" << var.name << "\n";
-	tokes.advance();
+	//tokes.advance();
 	return var;
 }
 
 Factor
-make_factor(lexemes_c& tokes)
+make_factor(tokens& tokes)
 {
 	Factor f;
-	switch(tokes.curr_type()) {
+	token toke = take(tokes);
+
+	//optional sign
+	if((toke.value == "+") || (toke.value == "-")) {
+		f.sign = toke.value[0];
+		toke = take(tokes);
+	}
+
+
+	switch(toke.type) {
 		case LT_LRB:
-		       	tokes.advance();
+			//tokes.advance();
 			f.factor = make_expression(tokes);
-			tokes.require(")");
-			tokes.advance();
+			require(tokes, ")");
+			//tokes.advance();
 			break;
-		case LT_ID:
-			f.factor = make_funccall(tokes);
-			break;
-		case LT_VAR:
-			f.factor = make_variable(tokes);
+		case LT_FLT: 
+			f.factor = std::stod(toke.value);
+			//tokes.advance();
 			break;
 		case LT_STR:
 			//f.factor = std::get<string>(tokes.curr());
-			f.factor = tokes.curr().substr(1, tokes.curr().size()-2);
-			tokes.advance();
+			f.factor = toke.value.substr(1, toke.value.size()-2);
+			//tokes.advance();
 			break;
-		case LT_FLT: 
-			f.factor = std::stod(tokes.curr());
-			tokes.advance();
+		case LT_ID:
+			f.factor = make_funccall(toke.value, tokes);
+			break;
+		case LT_VAR:
+			f.factor = make_variable(toke.value, tokes);
 			break;
 		default:
-			throw std::logic_error("#UNHANDLED: make_factor token: " 
-					+ tokes.curr()
-					+ ", type:" + string(lextypename(tokes.curr_type())));
+			throw std::logic_error("#UNHANDLED: make_factor:"s
+				       + "type:"s + string(lextypename(toke.type))
+				       + ", value:"s + toke.value);
 
 	}
 
 	return f;
 }
 
-Term
-make_term(lexemes_c& tokes)
+template <typename T, typename U>
+T parse_multiop(tokens& tokes, std::function<U(tokens&)> make, strings ops)
 {
-	Term  t;
-	auto operators = strings {"*", "/"};
-	auto make = make_factor;
-	//cout << "decltype(make_factor):" << type_name<decltype(make)>() << "\n";
-	t.operands.push_back(make(tokes));
+	T node;
+	node.operands.push_back(make(tokes));
 	while(1) {
-		std::string op = tokes.curr();
-		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
-		if(opit == operators.end()) break;
-		tokes.advance();
-		math_op fop = (math_ops.find(op)->second);
-		t.fops.push_back(fop);
-		t.operands.push_back(make(tokes));
+		string op = curr(tokes);
+		strings::iterator opit = std::find(ops.begin(), ops.end(), op);
+		if(opit == ops.end()) break;
+		tokes.pop_front();
+		auto fop = blang_funcs.find(op)->second;
+		node.fops.push_back(fop);
+
+		node.operands.push_back(make(tokes));
 	}
-	return t;
+	return node;
 }
 
-Relop
-make_relop(lexemes_c& tokes)
-{
-	Relop r;
-	auto make = make_term;
-	auto operators = strings {"<", "<=", ">", ">=", "=", "!"};
-	r.operands.push_back(make(tokes));
-	while(1) {
-		std::string op = tokes.curr();
-		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
-		if(opit == operators.end()) break;
-		tokes.advance();
-		math_op fop = (math_ops.find(op)->second);
-		r.fops.push_back(fop);
-		r.operands.push_back(make(tokes));
-	}
-	return r;
-}
-Expression
-make_expression(lexemes_c& tokes)
-{
-	Expression e;
-	auto make = make_relop;
-	auto operators = strings {"+", "-"};
-	e.operands.push_back(make(tokes));
-	while(1) {
-		std::string op = tokes.curr();
-		strings::iterator opit = std::find(operators.begin(), operators.end(), op);
-		if(opit == operators.end()) break;
-		tokes.advance();
-		math_op fop = (math_ops.find(op)->second);
-		e.fops.push_back(fop);
-		e.operands.push_back(make(tokes));
-	}
-	return e;
-}
+Term make_term(tokens& tokes) { return parse_multiop<Term,Factor>(tokes, make_factor, {"*", "/"}); }
+Relop make_relop(tokens& tokes) { return parse_multiop<Relop,Term>(tokes, make_term, {"+", "-"}); }
+Expression make_expression(tokens& tokes) { return parse_multiop<Expression, Relop>(tokes, make_relop, 
+		                {">", ">=", "<", "<=", "==", "!="}); }
 
-//token take(lexemes_c& tokes) { token toke = tokes.front(); tokes.pop_front(); return toke; }
 
-Let make_let(lexemes_c& tokes)
+
+Let make_let(tokens& tokes)
 {
-	tokes.require("let");
-	tokes.advance();
+	require(tokes, "let");
+	//tokes.advance();
 	Let let;
-	let.varname = tokes.curr();
-	tokes.advance();
+	let.varname = take(tokes).value;
+	//tokes.advance();
 	//cout << "make_let():varname:" << let.varname << "\n";
-	tokes.require(":=");
-	tokes.advance();
+	require(tokes, ":=");
+	//tokes.advance();
 	let.expr = make_expression(tokes);
 	return let; 
 }
 
-Statement make_statement(lexemes_c& tokes);
+Statement make_statement(tokens& tokes);
 
 Statements collect_statements(tokens& tokes, const string& terminator)
 {
@@ -419,7 +498,7 @@ For make_for(tokens& tokes)
 	//cout << "make_for:in\n";
 	require(tokes, "for");
 	For a_for;
-	a_for.varname = take(tokes).lexeme;
+	a_for.varname = take(tokes).value;
 	//cout << "make_for()::varname:" << a_for.varname;
 	require(tokes, ":=");
 	//cout << "make_for()::=from:" << curr(tokes);
@@ -434,11 +513,12 @@ For make_for(tokens& tokes)
 
 
 
+Def make_def(tokens& tokes);
 
-Statement make_statement(lexemes_c& tokes)
+Statement make_statement(tokens& tokes)
 {
-	static const map<string, std::function<Statement(lexemes_c&)>> commands = {
-		//{"def",   make_def},
+	static const map<string, std::function<Statement(tokens&)>> commands = {
+		{"def",   make_def},
 		//{"if",    make_if},
 		{"for",   make_for},
 		{"let",   make_let}
@@ -446,7 +526,7 @@ Statement make_statement(lexemes_c& tokes)
 	};
 
 	Statement stm;
-	auto it = commands.find(tokes.curr());
+	auto it = commands.find(curr(tokes));
 	if(it != commands.end()) {
 		auto make = it->second;
 		stm = make(tokes);
@@ -458,7 +538,7 @@ Statement make_statement(lexemes_c& tokes)
 					
 
 
-Program make_program(lexemes_c& tokes)
+Program make_program(tokens& tokes)
 {
 	Program prog;
 	while(!tokes.empty()) 
@@ -472,39 +552,45 @@ Expression
 parse_expression(std::string s)
 {
 	//cout << "parsing: " << s << endl;
-	lexemes_c tokes{alt_yylex_a(s)};
+	tokens tokes{alt_yylex_a(s)};
 	return make_expression(tokes);
 }
 
 
+value_t eval(varmap_t& vars, Statements statements);
+
 // Used to turn a user-defined function into a neo_func
-value_t wrap_defun(FuncDef func, values vs)
+value_t wrap_def(Def def, values vs)
 {
 	// bind argument identifiers to values
-	if(vs.size() != func.args.size()) 
-		throw std::runtime_error("#FUNC_ARGS:" + func.name 
-				+ "():Expected " + std::to_string(func.args.size()) 
+	if(vs.size() != def.args.size()) 
+		throw std::runtime_error("#FUNC_ARGS:" + def.name 
+				+ "():Expected " + std::to_string(def.args.size()) 
 				+ " args, got " + std::to_string(vs.size()));
 	varmap_t vars;
 	for(int i=0; i< vs.size(); ++i)
-		vars[func.args[i]] = vs[i];
+		vars[def.args[i]] = vs[i];
 
 	//cout << "wrap_defun():arg[0]:" << num(vs[0]) << "\n";
 
-	for(const auto& stm: func.statements)
-		eval(vars, stm);
-	return 666;
+	//for(const auto& stm: func.statements)
+	//	eval(vars, stm);
+	//return 666;
+	return eval(vars, def.statements);
 }
 
-bool
-define_function(lexemes_c& tokes)
+/*
+Def make_defXXX(lexemes_c& tokes)
 {
-	if(tokes.curr() != "FUNC") return false;
-	tokes.advance();
-	FuncDef func;
+	cout << "make_def:in\n";
+	//if(tokes.curr() != "def") return false;
+	//tokes.advance();
+	require(tokes, "def");
+	Def def;
 
 	func.name = tokes.curr();
 	tokes.advance();
+	cout << "make_def:name:" << def.name << "\n";
 
 	// argument list
 	auto append_arg = [&]() { 
@@ -530,40 +616,51 @@ define_function(lexemes_c& tokes)
 	tokes.require("{");
 	tokes.advance();
 	while(tokes.curr() != "}") {
-		func.statements.push_back(make_expression(tokes)); // TODO make_statement()
+		def.statements.push_back(make_expression(tokes)); // TODO make_statement()
 		//tokes.require(";");
 		//tokes.advance();
 	}
 	tokes.require("}");
 	tokes.advance();
 
-	cout << "define_function():name:" << func.name << "\n";
 	using namespace std::placeholders;
-	neo_funcs[func.name] = std::bind(wrap_defun, func, _1);
+	neo_funcs[def.name] = std::bind(wrap_def, def, _1);
 
-	cout << "define_function() returning\n";
-	return true;
+	cout << "make_def() returning\n";
+	return func;
 }
+*/
 
 
-void
-parse_program_XXX(varmap_t& vars, std::string s)
+Def make_def(tokens& tokes)
 {
-	lexemes_c tokes{alt_yylex_a(s)};
-	while( tokes.curr_type()!= LT_EOF) {
-		if(! define_function(tokes)) {
-			Expression e{make_expression(tokes)};
-			eval(vars, e);
-		}
-	}
+	require(tokes, "def");
+	Def def;
+	def.name = take(tokes).value;
+	auto make = [&def](tokens& tokes) { 
+		auto toke = take(tokes);
+		if(toke.type != LT_ID)
+			throw std::runtime_error("#PARSE: def of " + def.name 
+					+ "has non-var arg " + toke.value);
+		def.args.push_back(toke.value); 
+	};
+	make_funcargs(tokes, make);
+	def.statements = collect_statements(tokes, "fed");
+
+	using namespace std::placeholders;
+	blang_funcs[def.name] = std::bind(wrap_def, def, _1);
+	return def;
 }
+
+
+
 
 void
 parse_program(varmap_t& vars, std::string s)
 {
 	//cout << "parse_program:in\n";
 	//lex_and_print(s);
-	lexemes_c tokes{alt_yylex_a(s)};
+	tokens tokes{alt_yylex_a(s)};
 	Program prog{make_program(tokes)};
 	//cout << "parse_program: statements:" << prog.statements.size() << "\n";
 	eval(vars, prog);
@@ -605,11 +702,11 @@ value_t eval(varmap_t& vars, FuncCall fn)
 	for(const auto& e: fn.exprs)
 		vs.push_back(eval(vars, e));	
 
-	auto it  =  neo_funcs.find(fn.name);
-	if(it == neo_funcs.end()) {
+	auto it  =  blang_funcs.find(fn.name);
+	if(it == blang_funcs.end()) {
 		throw std::runtime_error("#UNK_FUNC: " + fn.name);
 	}
-	neo_func f = it->second;
+	blang_func f = it->second;
 	return f(vs);
 }
 
@@ -639,7 +736,7 @@ value_t eval_multiop(varmap_t& vars, T expr)
 	value_t result = eval(vars, expr.operands[0]);
 	for(int i = 0; i< expr.fops.size() ; i++) {
 		auto& fop = expr.fops[i];
-		result = fop(result, eval(vars, expr.operands[i+1]));
+		result = fop({result, eval(vars, expr.operands[i+1])});
 	}
 	return result;
 }
@@ -656,6 +753,13 @@ value_t eval(varmap_t& vars, Let let)
 
 
 
+value_t eval(varmap_t& vars, Def def)
+{
+	// The function was actually created by make_def()
+	// and put in blang_funcs, so there is nothing to do here
+	return 0;
+}
+		                 
 
 
 template<typename T>
@@ -689,7 +793,7 @@ value_t eval(varmap_t& vars, Statements statements)
 	value_t ret;
 	for(auto& s: statements) {
 		bool executed = eval_holder<Expression>(vars, s, ret) 
-			//|| eval_holder<Def>(vars, s, ret)
+			|| eval_holder<Def>(vars, s, ret)
 			//|| eval_holder<If>(vars, s, ret)
 			|| eval_holder<Let>(vars, s, ret)
 			|| eval_holder<For>(vars, s, ret)
@@ -710,10 +814,12 @@ value_t eval(varmap_t& vars, Program prog)
 
 
 
+/*
 string str(value_t v)
 {
 	return std::to_string(std::get<num_t>(v));
 }
+*/
 void
 test_parse_expression(varmap_t vars, std::string s)
 {
