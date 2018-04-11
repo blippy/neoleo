@@ -1,0 +1,18 @@
+Start neobasic03.bas
+Meaning of life is , 42
+Testing loop 1 to 3
+1
+2
+3
+String tests
+Single quotes
+Embedded "double quotes" within single quotes
+inc 12=, 13, expecting 13
+1 is less than 2
+10!=, 3.6288e+06, Expecting 3628800
+Test a while loop
+0
+1
+2
+3
+4
