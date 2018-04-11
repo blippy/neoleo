@@ -23,6 +23,7 @@
 #endif
 
 #ifdef	WITH_DMALLOC
+static_assert(false);
 #include <dmalloc.h>
 #endif
 
@@ -122,7 +123,15 @@ int ioerror = 0;
 
 /* The current stream from which commands are being read. */
 //input_stream_ptr make_input_stream() { return std::make_shared<struct input_stream>(); }
-input_stream_ptr make_input_stream() { return  (input_stream_ptr) ck_malloc(sizeof(struct input_stream));}
+
+input_stream_ptr make_input_stream() 
+{ 
+	//auto ptr = (input_stream_ptr) ck_malloc(sizeof(struct input_stream));
+	auto ptr = new input_stream();
+	obstack_init (&ptr->_macro_stack);
+	return ptr;
+}
+
 input_stream_ptr the_input_stream = nullptr;
 
 
@@ -130,20 +139,7 @@ static input_stream_ptr
 default_input_stream (void)
 {
 	if (!the_input_stream)
-	  {
-		  the_input_stream = make_input_stream();
-			  //(struct input_stream *)
-			  //ck_malloc (sizeof (struct input_stream));
-		  the_input_stream->_rmac = 0;
-		  the_input_stream->_func_arg = 0;
-		  obstack_init (&the_input_stream->_macro_stack);
-		  the_input_stream->_macro = 0;
-		  the_input_stream->_macro_start = 0;
-		  the_input_stream->_macro_size = 0;
-		  the_input_stream->prev_stream = 0;
-		  the_input_stream->_last_macro = 0;
-		  the_input_stream->_pushed_back_char = -1;
-	  }
+		the_input_stream = make_input_stream();
 	return the_input_stream;
 }
 
@@ -154,29 +150,17 @@ default_input_stream (void)
 
 
 static input_stream_ptr
-macro_only_input_stream (struct rng *rng, char *first_line, int len,
-			 struct command_frame *frame)
+macro_only_input_stream (struct rng *rng, char *first_line, int len, struct command_frame *frame)
 {
 	input_stream_ptr ret = make_input_stream();
-	//ret = (struct input_stream *)
-	//	ck_malloc (sizeof (struct input_stream));
-	ret->_func_arg = 0;
-	obstack_init (&ret->_macro_stack);
-	ret->_rmac =
-		(struct macro *) obstack_alloc (&ret->_macro_stack,
-						sizeof (struct macro));
+	ret->_rmac = (struct macro *) obstack_alloc (&ret->_macro_stack, sizeof (struct macro));
 	ret->_rmac->mac_prev = 0;
 	ret->_rmac->mac_rng = *rng;
 	ret->_rmac->mac_row = rng->lr;
 	ret->_rmac->mac_col = rng->lc;
 	(void) obstack_grow (&ret->_macro_stack, first_line, len);
 	(void) obstack_grow (&ret->_macro_stack, "", 1);
-	ret->_rmac->mac_start = ret->_rmac->mac_exe
-		= (unsigned char *) obstack_finish (&ret->_macro_stack);
-	ret->_macro = 0;
-	ret->_macro_start = 0;
-	ret->_macro_size = 0;
-	ret->_last_macro = 0;
+	ret->_rmac->mac_start = ret->_rmac->mac_exe = (unsigned char *) obstack_finish (&ret->_macro_stack);
 	ret->prev_stream = frame->input;
 	{
 		input_stream_ptr key = frame->input;
@@ -186,7 +170,6 @@ macro_only_input_stream (struct rng *rng, char *first_line, int len,
 			  frame = frame->prev;
 		  }
 	}
-	ret->_pushed_back_char = -1;
 	return ret;
 }
 
@@ -198,7 +181,8 @@ free_input_stream (input_stream_ptr stream)
 	if (stream->_last_macro)
 		free (stream->_last_macro);
 	obstack_free (&stream->_macro_stack, 0);
-	free(stream);
+	//free(stream);
+	delete stream;
 }
 
 /* This gets rid of an input stream created by macro_only_input_stream.

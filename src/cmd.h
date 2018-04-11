@@ -65,22 +65,22 @@ typedef struct input_stream* input_stream_ptr;
 struct input_stream
 {
   /* The currently executing macro. */
-  struct macro *_rmac;
+  struct macro *_rmac = 0;
 
-  unsigned char * _last_macro;		/* The last anonymous macro. */
+  unsigned char * _last_macro = 0;		/* The last anonymous macro. */
 
   /* If a macro is being exectuted, arguments to a command
    * are read from this string.
    */
-  char *_func_arg;
+  char *_func_arg = 0;
 
   /* Call stack for macros. */
   struct obstack _macro_stack;
 
   /* The macro being recorded, if any. */
-  unsigned char *_macro;
-  unsigned char *_macro_start;
-  unsigned int _macro_size;
+  unsigned char *_macro = 0;
+  unsigned char *_macro_start = 0;
+  unsigned int _macro_size = 0;
 
   /* If this input stream was created only to execute a macro, 
    * this will point to the input_stream it suspended.
@@ -90,9 +90,9 @@ struct input_stream
    * Note that within an input stream there is another macro stack. 
    * That stack is used internally to command_loop.
    */
-  input_stream_ptr prev_stream;
+  input_stream_ptr prev_stream = 0;
 
-  int _pushed_back_char;
+  int _pushed_back_char = -1;
 };
 
 struct macro
