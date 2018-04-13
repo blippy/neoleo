@@ -30,15 +30,18 @@ using std::cout;
 #endif
 
 #ifdef	WITH_DMALLOC
+static_assert(false);
 #include <dmalloc.h>
 #endif
 
 #ifdef	HAVE_MALLOC_H
+static_assert(false);
 #include <malloc.h>
 #endif
 
 #include "global.h"
 #include "lists.h"
+#include "logging.h"
 #include "funcdef.h"
 #include "utils.h"
 //#include "alt_cells.h"
@@ -670,19 +673,19 @@ set_width (CELLREF col, int wid)
 	io_update_width(col, wid);
 }
 
-void 
+struct find*
 find_widths (CELLREF lo, CELLREF hi)
 {
-  Global->w_find = (FPTR) find_rng (&Global->wids, lo, hi, sizeof (int));
+	return (FPTR) find_rng (&Global->wids, lo, hi, sizeof (int));
 }
 
 int 
-next_width (CELLREF *posp)
+next_width (struct find* w_find, CELLREF *posp)
 {
   int *ptr;
 
   do
-    ptr = (IPTR) next_rng (Global->w_find, posp);
+    ptr = (IPTR) next_rng (w_find, posp);
   while (ptr && !*ptr);
   return ptr ? *ptr : 0;
 }
@@ -747,7 +750,11 @@ do_shift (int over, CELLREF lo, CELLREF hi, struct list **start, int buf)
 void 
 shift_widths (int over, CELLREF lo, CELLREF hi)
 {
-  do_shift (over, lo, hi, &Global->wids, COL_BUF);
+	if constexpr (true) {
+		log_debug("shift_widths:over:" + std::to_string(over) + ",lo:" + std::to_string(lo) 
+				+ ",hi:" + std::to_string(hi));
+	}
+	do_shift (over, lo, hi, &Global->wids, COL_BUF);
 }
 
 
@@ -807,19 +814,17 @@ get_scaled_width (CELLREF c)
 }
 
 
-void 
-find_heights (CELLREF lo, CELLREF hi)
+struct find* find_heights (CELLREF lo, CELLREF hi)
 {
-  Global->h_find = (FPTR) find_rng (&Global->hgts, lo, hi, sizeof (int));
+  return (FPTR) find_rng (&Global->hgts, lo, hi, sizeof (int));
 }
 
-int 
-next_height (CELLREF *posp)
+int next_height(struct find* h_find, CELLREF *posp)
 {
   int *ptr;
 
   do
-    ptr = (IPTR) next_rng (Global->h_find, posp);
+    ptr = (IPTR) next_rng (h_find, posp);
   while (ptr && !*ptr);
   return ptr ? *ptr : 0;
 }

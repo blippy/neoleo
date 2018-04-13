@@ -800,302 +800,300 @@ write_mp_windows (
 }
 
 void
-oleo_write_file (
-     FILE *fp,
-     struct rng *rng)
+oleo_write_file(FILE *fp, struct rng *rng)
 {
-  CELLREF r, c;
-  CELL *cp;
-  CELLREF crow = 0, ccol = 0;
-  unsigned short w;
-  /* struct var *var; */
-  int old_a0, i, fnt_map_size = 0;
-  char	*s;
+	CELLREF r, c;
+	CELL *cp;
+	CELLREF crow = 0, ccol = 0;
+	unsigned short w;
+	/* struct var *var; */
+	int old_a0, i, fnt_map_size = 0;
+	char	*s;
 
-  (void) fprintf (fp, "# This file was created by GNU Oleo\n");
+	(void) fprintf (fp, "# This file was created by GNU Oleo\n");
 
-  /* All versions of the oleo file format should have a 
-   * version cookie on the second line.
-   */
-  (void) fprintf (fp, "# format 2.1 (requires Oleo 1.99.9 or higher)\n");
+	/* All versions of the oleo file format should have a 
+	 * version cookie on the second line.
+	 */
+	(void) fprintf (fp, "# format 2.1 (requires Oleo 1.99.9 or higher)\n");
 
-  /* If no range given, write the entire file */
-  if (!rng)
-    {
-      int n;
-      int fmts;
-      char *data[9];
-
-      rng = &all_rng;
-
-      (void) fprintf (fp, "F;D%s%c%u\n",
-		oleo_fmt_to_str (default_fmt, default_prc),
-		jst_to_chr (default_jst),
-		default_width);
-
-      fmts = usr_set_fmts ();
-      for (n = 0; n < 16; n++)
+	/* If no range given, write the entire file */
+	if (!rng)
 	{
-	  if (fmts & (1 << n))
-	    {
-	      get_usr_stats (n, data);
-	      fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
-	      if (data[0][0])
-		fprintf (fp, ";HP%s", data[0]);
-	      if (data[1][0])
-		fprintf (fp, ";HN%s", data[1]);
-	      if (data[2][0])
-		fprintf (fp, ";TP%s", data[2]);
-	      if (data[3][0])
-		fprintf (fp, ";TN%s", data[3]);
-	      if (data[4][0])
-		fprintf (fp, ";Z%s", data[4]);
-	      if (data[5][0])
-		fprintf (fp, ";C%s", data[5]);
-	      if (data[6])
-		fprintf (fp, ";D%s", data[6]);
-	      putc ('\n', fp);
-	    }
+		int n;
+		int fmts;
+		char *data[9];
+
+		rng = &all_rng;
+
+		(void) fprintf (fp, "F;D%s%c%u\n",
+				oleo_fmt_to_str (default_fmt, default_prc),
+				jst_to_chr (default_jst),
+				default_width);
+
+		fmts = usr_set_fmts ();
+		for (n = 0; n < 16; n++)
+		{
+			if (fmts & (1 << n))
+			{
+				get_usr_stats (n, data);
+				fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
+				if (data[0][0])
+					fprintf (fp, ";HP%s", data[0]);
+				if (data[1][0])
+					fprintf (fp, ";HN%s", data[1]);
+				if (data[2][0])
+					fprintf (fp, ";TP%s", data[2]);
+				if (data[3][0])
+					fprintf (fp, ";TN%s", data[3]);
+				if (data[4][0])
+					fprintf (fp, ";Z%s", data[4]);
+				if (data[5][0])
+					fprintf (fp, ";C%s", data[5]);
+				if (data[6])
+					fprintf (fp, ";D%s", data[6]);
+				putc ('\n', fp);
+			}
+		}
+		write_mp_options (fp);
 	}
-      write_mp_options (fp);
-    }
 
-  old_a0 = Global->a0;
-  Global->a0 = 0;
+	old_a0 = Global->a0;
+	Global->a0 = 0;
 
-  find_widths (rng->lc, rng->hc);
-  w = next_width (&c);
-  while (w)
-    {
-      CELLREF cc, ccc;
-      unsigned short ww;
-      cc = c;
-      do
-	ww = next_width (&ccc);
-      while (ccc == ++cc && ww == w);
-      (void) fprintf (fp, "F;W%u %u %u\n", c, cc - 1, w - 1);
-      c = ccc;
-      w = ww;
-    }
+	struct find* w_find = find_widths (rng->lc, rng->hc);
+	w = next_width(w_find, &c);
+	while (w)
+	{
+		CELLREF cc, ccc;
+		unsigned short ww;
+		cc = c;
+		do
+			ww = next_width(w_find, &ccc);
+		while (ccc == ++cc && ww == w);
+		(void) fprintf (fp, "F;W%u %u %u\n", c, cc - 1, w - 1);
+		c = ccc;
+		w = ww;
+	}
 
-  find_heights (rng->lr, rng->hr);
-  w = next_height (&r);
-  while (w)
-    {
-      CELLREF rr, rrr;
-      unsigned short ww;
+	struct find* h_find = find_heights (rng->lr, rng->hr);
+	w = next_height(h_find, &r);
+	while (w)
+	{
+		CELLREF rr, rrr;
+		unsigned short ww;
 
-      rr = r;
-      do
-	ww = next_height (&rrr);
-      while (rrr == ++rr && ww == w);
-      (void) fprintf (fp, "F;H%u %u %u\n", r, rr - 1, w - 1);
-      r = rrr;
-      w = ww;
-    }
+		rr = r;
+		do
+			ww = next_height(h_find, &rrr);
+		while (rrr == ++rr && ww == w);
+		(void) fprintf (fp, "F;H%u %u %u\n", r, rr - 1, w - 1);
+		r = rrr;
+		w = ww;
+	}
 
-  oleo_fp = fp;
-  oleo_rng = rng;
-  for_all_vars (oleo_write_var);
-  find_cells_in_range (rng);
+	oleo_fp = fp;
+	oleo_rng = rng;
+	for_all_vars (oleo_write_var);
+	find_cells_in_range (rng);
 
 #if 0
-  {
-    struct font_memo * fm;
-    for (fm = font_list; fm; fm = fm->next)
-      fm->id_memo = -1;
-  }
-#endif
-  while ((cp = next_row_col_in_range (&r, &c)))
-    {
-      char *ptr;
-      int f1, j1;
-      char p_buf[40];
-
-      f1 = GET_FORMAT (cp);
-      j1 = GET_JST (cp);
-      //if (f1 != FMT_DEF || j1 != JST_DEF || cp->cell_font)
-      if (f1 != FMT_DEF || j1 != JST_DEF )
 	{
-		/*
-	  if (cp->cell_font)
-	    {
-	      if (cp->cell_font->id_memo < 0)
+		struct font_memo * fm;
+		for (fm = font_list; fm; fm = fm->next)
+			fm->id_memo = -1;
+	}
+#endif
+	while ((cp = next_row_col_in_range (&r, &c)))
+	{
+		char *ptr;
+		int f1, j1;
+		char p_buf[40];
+
+		f1 = GET_FORMAT (cp);
+		j1 = GET_JST (cp);
+		//if (f1 != FMT_DEF || j1 != JST_DEF || cp->cell_font)
+		if (f1 != FMT_DEF || j1 != JST_DEF )
 		{
-		  cp->cell_font->id_memo = fnt_map_size++;
-		  if (isnan(cp->cell_font->scale))
-			fprintf (fp, "%%F%s,%s,%f\n",
+			/*
+			   if (cp->cell_font)
+			   {
+			   if (cp->cell_font->id_memo < 0)
+			   {
+			   cp->cell_font->id_memo = fnt_map_size++;
+			   if (isnan(cp->cell_font->scale))
+			   fprintf (fp, "%%F%s,%s,%f\n",
 			   cp->cell_font->names->x_name,
 			   cp->cell_font->names->ps_name,
 			   cp->cell_font->scale);
-		  else
-			fprintf (fp, "%%F%s,%s,%f\n",
+			   else
+			   fprintf (fp, "%%F%s,%s,%f\n",
 			   cp->cell_font->names->x_name,
 			   cp->cell_font->names->ps_name,
 			   1.0);
+			   }
+			   }
+			   */
+			(void) fprintf (fp, "F;");
+			if (c != ccol)
+			{
+				(void) fprintf (fp, "c%u;", c);
+				ccol = c;
+			}
+			if (r != crow)
+			{
+				(void) fprintf (fp, "r%u;", r);
+				crow = r;
+			}
+			//if (cp->cell_font) (void) fprintf (fp, "f%d;", cp->cell_font->id_memo);
+			(void) fprintf (fp, "F%s%c\n",
+					oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
 		}
-	    }
-	    */
-	  (void) fprintf (fp, "F;");
-	  if (c != ccol)
-	    {
-	      (void) fprintf (fp, "c%u;", c);
-	      ccol = c;
-	    }
-	  if (r != crow)
-	    {
-	      (void) fprintf (fp, "r%u;", r);
-	      crow = r;
-	    }
-	  //if (cp->cell_font) (void) fprintf (fp, "f%d;", cp->cell_font->id_memo);
-	    (void) fprintf (fp, "F%s%c\n",
-			  oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
-	}
 
-      if (!GET_TYP (cp) && !cp->get_cell_formula())
-	continue;
+		if (!GET_TYP (cp) && !cp->get_cell_formula())
+			continue;
 
-      (void) fprintf (fp, "C;");
-      if (c != ccol)
-	{
-	  (void) fprintf (fp, "c%u;", c);
-	  ccol = c;
-	}
-      if (r != crow)
-	{
-	  (void) fprintf (fp, "r%u;", r);
-	  crow = r;
-	}
+		(void) fprintf (fp, "C;");
+		if (c != ccol)
+		{
+			(void) fprintf (fp, "c%u;", c);
+			ccol = c;
+		}
+		if (r != crow)
+		{
+			(void) fprintf (fp, "r%u;", r);
+			crow = r;
+		}
 
-      if (cp->get_cell_formula())
-	{
-	  (void) fprintf (fp, "E%s", decomp(r, c, cp));
-	  decomp_free();
-	}
+		if (cp->get_cell_formula())
+		{
+			(void) fprintf (fp, "E%s", decomp(r, c, cp));
+			decomp_free();
+		}
 
-      switch (GET_TYP (cp))
-	{
-	case 0:
-	  ptr = 0;
-	  break;
-	case TYP_STR:
-	  ptr = 0;
-	  if (cp->get_cell_formula())
-	    putc (';', fp);
-	  (void) fprintf (fp, "K\"%s\"", cp->cell_str());
-	  break;
-	case TYP_FLT:
-	  ptr = flt_to_str (cp->cell_flt());
-	  break;
-	case TYP_INT:
-	  sprintf (p_buf, "%ld", cp->cell_int());
-	  ptr = p_buf;
-	  break;
-	case TYP_BOL:
-	  ptr = bname[cp->cell_bol()];
-	  break;
-	case TYP_ERR:
-	  ptr = ename[cp->cell_err()];
-	  break;
-	default:
-	  ptr = 0;
+		switch (GET_TYP (cp))
+		{
+			case 0:
+				ptr = 0;
+				break;
+			case TYP_STR:
+				ptr = 0;
+				if (cp->get_cell_formula())
+					putc (';', fp);
+				(void) fprintf (fp, "K\"%s\"", cp->cell_str());
+				break;
+			case TYP_FLT:
+				ptr = flt_to_str (cp->cell_flt());
+				break;
+			case TYP_INT:
+				sprintf (p_buf, "%ld", cp->cell_int());
+				ptr = p_buf;
+				break;
+			case TYP_BOL:
+				ptr = bname[cp->cell_bol()];
+				break;
+			case TYP_ERR:
+				ptr = ename[cp->cell_err()];
+				break;
+			default:
+				ptr = 0;
 #ifdef TEST
-	  panic ("What cell type %d", GET_TYP (cp));
+				panic ("What cell type %d", GET_TYP (cp));
 #endif
+		}
+
+		if (ptr)
+		{
+			if (cp->get_cell_formula())
+				putc (';', fp);
+			(void) fprintf (fp, "K%s", ptr);
+		}
+		if (GET_LCK (cp) == LCK_LCK)
+			(void) fprintf (fp, ";P");
+
+		putc ('\n', fp);
 	}
 
-      if (ptr)
-	{
-	  if (cp->get_cell_formula())
-	    putc (';', fp);
-	  (void) fprintf (fp, "K%s", ptr);
+	if (rng == &all_rng)
+		write_mp_windows (fp);
+
+#if 0
+	if(false) { // graph stuff now doesn't work
+		/* Graphs */
+		for (i=0; i<NUM_DATASETS; i++) {
+			struct rng	r;
+			int		a, b, c, d;
+
+			r = graph_get_data(i);
+			if (r.lc == 0 && r.lr == 0 && r.hc == 0 && r.hr == 0)
+				continue;
+
+			/* Write this thing */
+			a = r.lc;
+			b = r.lr;
+			c = r.hc;
+			d = r.hr;
+			fprintf(fp, "G%d,%d,%d,%d,%d\n", i, a, b, c, d);
+		}
+		/* Graph title */
+		s = graph_get_title();
+		if (s && strlen(s)) {
+			fprintf(fp, "GT%s\n", s);
+		}
+
+		s = graph_get_axis_title('x');
+		if (s && strlen(s)) {
+			fprintf(fp, "GDx%s\n", s);
+		}
+
+		s = graph_get_axis_title('y');
+		if (s && strlen(s)) {
+			fprintf(fp, "GDy%s\n", s);
+		}
+
+		for (i=0; i<NUM_DATASETS; i++) {
+			if (graph_get_data_title(i))
+				fprintf(fp, "Gt%c%s\n", i + '0', graph_get_data_title(i));
+		}
+
+		/* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
+		for (i=0; i< 2; i++) {
+			double	d;
+			d = graph_get_axis_lo(i);
+			if (! isnan(d))
+				fprintf(fp, "Gr%c0%f\n", '0' + i, d);
+			d = graph_get_axis_hi(i);
+			if (! isnan(d))
+				fprintf(fp, "Gr%c1%f\n", '0' + i, d);
+		}
+
+		/* Automatic axis setting : Gax0 or Gax1 */
+		fprintf(fp, "Ga0%c\n", graph_get_axis_auto(0) ? '1' : '0');	/* X axis */
+		fprintf(fp, "Ga1%c\n", graph_get_axis_auto(1) ? '1' : '0');	/* Y axis */
+
+		/* Draw line to offscreen data points */
+		fprintf(fp, "Go%c\n", graph_get_linetooffscreen() ? '1' : '0');
+
+		/* Axis tick marks */
+		fprintf(fp, "Gm0%c%s\n",
+				'0' + graph_get_axis_ticktype(0),
+				graph_get_axis_tickformat(0) ? graph_get_axis_tickformat(0) : "(null)");
+		fprintf(fp, "Gm1%c%s\n",
+				'0' + graph_get_axis_ticktype(1),
+				graph_get_axis_tickformat(1) ? graph_get_axis_tickformat(1) : "(null)");
 	}
-      if (GET_LCK (cp) == LCK_LCK)
-	(void) fprintf (fp, ";P");
-
-      putc ('\n', fp);
-    }
-
-  if (rng == &all_rng)
-    write_mp_windows (fp);
-
-#if 0
-  if(false) { // graph stuff now doesn't work
-  /* Graphs */
-  for (i=0; i<NUM_DATASETS; i++) {
-	struct rng	r;
-	int		a, b, c, d;
-
-	r = graph_get_data(i);
-	if (r.lc == 0 && r.lr == 0 && r.hc == 0 && r.hr == 0)
-		continue;
-
-	/* Write this thing */
-	a = r.lc;
-	b = r.lr;
-	c = r.hc;
-	d = r.hr;
-	fprintf(fp, "G%d,%d,%d,%d,%d\n", i, a, b, c, d);
-  }
-  /* Graph title */
-  s = graph_get_title();
-  if (s && strlen(s)) {
-    fprintf(fp, "GT%s\n", s);
-  }
-
-  s = graph_get_axis_title('x');
-  if (s && strlen(s)) {
-    fprintf(fp, "GDx%s\n", s);
-  }
-
-  s = graph_get_axis_title('y');
-  if (s && strlen(s)) {
-    fprintf(fp, "GDy%s\n", s);
-  }
-
-  for (i=0; i<NUM_DATASETS; i++) {
-	if (graph_get_data_title(i))
-		fprintf(fp, "Gt%c%s\n", i + '0', graph_get_data_title(i));
-  }
-
-  /* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
-  for (i=0; i< 2; i++) {
-	double	d;
-	d = graph_get_axis_lo(i);
-	if (! isnan(d))
-		fprintf(fp, "Gr%c0%f\n", '0' + i, d);
-	d = graph_get_axis_hi(i);
-	if (! isnan(d))
-		fprintf(fp, "Gr%c1%f\n", '0' + i, d);
-  }
-
-  /* Automatic axis setting : Gax0 or Gax1 */
-  fprintf(fp, "Ga0%c\n", graph_get_axis_auto(0) ? '1' : '0');	/* X axis */
-  fprintf(fp, "Ga1%c\n", graph_get_axis_auto(1) ? '1' : '0');	/* Y axis */
-
-  /* Draw line to offscreen data points */
-  fprintf(fp, "Go%c\n", graph_get_linetooffscreen() ? '1' : '0');
-
-  /* Axis tick marks */
-  fprintf(fp, "Gm0%c%s\n",
-	'0' + graph_get_axis_ticktype(0),
-	graph_get_axis_tickformat(0) ? graph_get_axis_tickformat(0) : "(null)");
-  fprintf(fp, "Gm1%c%s\n",
-	'0' + graph_get_axis_ticktype(1),
-	graph_get_axis_tickformat(1) ? graph_get_axis_tickformat(1) : "(null)");
-  }
 #endif
-  /* Database stuff */
+	/* Database stuff */
 #if 0
-  if (DatabaseInitialised()) {
-	fprintf(fp, "Dn%s\n", DatabaseGetName() ? DatabaseGetName() : "");
-	fprintf(fp, "Dh%s\n", DatabaseGetHost() ? DatabaseGetHost() : "");
-	fprintf(fp, "Du%s\n", DatabaseGetUser() ? DatabaseGetUser() : "");
-  }
+	if (DatabaseInitialised()) {
+		fprintf(fp, "Dn%s\n", DatabaseGetName() ? DatabaseGetName() : "");
+		fprintf(fp, "Dh%s\n", DatabaseGetHost() ? DatabaseGetHost() : "");
+		fprintf(fp, "Du%s\n", DatabaseGetUser() ? DatabaseGetUser() : "");
+	}
 #endif
-  /* End of writing */
-  (void) fprintf (fp, "E\n");
-  Global->a0 = old_a0;
+	/* End of writing */
+	(void) fprintf (fp, "E\n");
+	Global->a0 = old_a0;
 }
 
 int

@@ -325,7 +325,8 @@ struct OleoGlobal {
 
 	struct cf			*fp;
 	struct list			*the_cols, *wids, *hgts;
-	struct find			*w_find, *h_find;
+	//struct find			*w_find;
+	//struct find			*h_find;
 
 	int				display_formula_mode;
 	struct find			*finds = 0;
