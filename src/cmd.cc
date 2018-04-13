@@ -689,8 +689,8 @@ struct command_frame *running_frames = 0;
 void
 push_command_frame (struct rng *rng, char *first_line, int len)
 {
-	struct command_frame *new_cf =
-		(struct command_frame *) ck_malloc (sizeof (*new_cf));
+	//struct command_frame *new_cf = (struct command_frame *) ck_malloc (sizeof (*new_cf));
+	auto new_cf = new struct command_frame;
 
 	new_cf->next = new_cf;
 	new_cf->prev = new_cf;
@@ -827,7 +827,8 @@ free_cmd_frame (struct command_frame *frame)
 				    free (frame->argv[argc].expanded_prompt);
 		    }
 	  }
-	ck_free (frame);
+	//ck_free (frame);
+	delete frame;
 }
 
 /*
