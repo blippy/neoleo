@@ -280,7 +280,7 @@ struct	DatabaseGlobalType;
  * around all over.
  */
 struct OleoGlobal {
-	int				valid;
+	int				valid = 1;
 	std::string			FileName;	/* current_file in io-utils.c */
 	int				modified;
 	CELLREF				cur_row, cur_col;
@@ -328,7 +328,7 @@ struct OleoGlobal {
 	struct find			*w_find, *h_find;
 
 	int				display_formula_mode;
-	struct find			*finds;
+	struct find			*finds = 0;
 
 /* Basic.c */
 	int				auto_motion_direction;
@@ -353,7 +353,7 @@ struct OleoGlobal {
 	int				mouse_id;
 
 /* new stuff */
-	char				*encoding;
+	char				*encoding = 0;
 	int				return_from_error;
 	int				had_error;
 

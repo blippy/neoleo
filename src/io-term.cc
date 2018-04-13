@@ -27,6 +27,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #endif
 
 #ifdef	WITH_DMALLOC
+static_assert(false);
 #include <dmalloc.h>
 #endif
 
@@ -803,6 +804,7 @@ InitializeGlobals(void)
 {
 	//Global->FileName = NULL;
 	FileSetCurrentFileName("unnamed.oleo");
+	//assert(Global->valid == 666);
 	Global->display_opened = 0;
 	Global->return_from_error = 0;
 

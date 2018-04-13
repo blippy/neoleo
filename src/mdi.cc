@@ -35,16 +35,25 @@ static struct OleoGlobal	*globals = 0;
 
 #define	NGLOBALS_INC	10
 
-void
-MdiInitialize(void)
+void MdiInitializeXXX(void)
 {
-	globals = (struct OleoGlobal *)
-		calloc(NGLOBALS_INC, sizeof(struct OleoGlobal));
+	globals = (struct OleoGlobal *) calloc(NGLOBALS_INC, sizeof(struct OleoGlobal));
 	maxglobals = NGLOBALS_INC;
 
 	Global = &globals[0];
 	globals[0].valid = 1;
 	nglobals++;
+
+}
+void MdiInitialize(void)
+{
+	globals = new struct OleoGlobal;
+	Global = globals;
+	//maxglobals = NGLOBALS_INC;
+
+	//Global = &globals[0];
+	//globals[0].valid = 1;
+	//nglobals++;
 
 }
 
