@@ -158,7 +158,6 @@ struct rng
 
 typedef struct rng range_t;
 
-#include "oleo_plot.h"
 
 /* A ref_fm structure contains a list of all cells that reference some
  * value.  The value can be another cell or some global (such as the system
