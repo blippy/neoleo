@@ -688,6 +688,7 @@ insert_cell_attr (struct rng * rng, char * attr)
 	*/
     }
   put_string (line.buf, strlen (line.buf));
+  free_line(&line);
 }
 
 void
