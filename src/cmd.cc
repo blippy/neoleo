@@ -961,14 +961,14 @@ get_argument (char *prompt, struct prompt_style *style)
 	if (the_cmd_frame->cmd->init_code
 	    && the_cmd_frame->cmd->init_code[cur_arg])
 	  {
-		  char *init_code =
-			  expand_prompt (the_cmd_frame->
-					 cmd->init_code[cur_arg]);
+		  struct line init_code;
+		  init_line(&init_code);
+		  expand_prompt (the_cmd_frame-> cmd->init_code[cur_arg], init_code);
 		  struct rng rng;
 		  rng.lr = rng.hr = rng.lc = rng.hc = 1;
-		  macro_only_input_stream (&rng, init_code,
-					   strlen (init_code), the_cmd_frame);
+		  macro_only_input_stream (&rng, init_code.buf, strlen (init_code.buf), the_cmd_frame);
 		  command_loop (1, 0);
+		  free_line(&init_code);
 	  }
 
 	return 1;
@@ -2620,6 +2620,18 @@ expand_prompt (char *str)
 		init_line (&expanded);
 		inner_prompt_expansion(str, expanded);
 		return expanded.buf;
+	}
+}
+
+void expand_prompt(char *str, struct line& line)
+{
+	if (!str || !index (str, '%')) {
+		set_line(&line, str);
+	} else {
+		//struct line expanded;
+		//init_line (&expanded);
+		inner_prompt_expansion(str, line);
+		//return expanded.buf;
 	}
 }
 

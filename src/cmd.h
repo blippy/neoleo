@@ -358,6 +358,7 @@ extern void pushback_keystroke (int c);
 extern void io_error_msg (const char *str,...);
 extern void io_info_msg (const char *str,...);
 extern char * expand_prompt (char * str);
+void expand_prompt (char * str, struct line& line);
 extern void set_info (char * name);
 extern void page_info_backwards (int rep);
 extern void page_info (int rep);
