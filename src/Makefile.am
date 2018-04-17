@@ -69,7 +69,7 @@ noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 mdi.h mem.h \
 		 node.h  numeric.h \
 		 obstack.h \
-		 oleofile.h  oleosql.h oleox.hpp oleo_xb.h \
+		 oleofile.h  oleox.hpp oleo_xb.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh proto.h ref.h \
 		 regions.h sort.h stringo.h stub.h stubs.h \

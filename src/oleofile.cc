@@ -53,10 +53,6 @@
 #include "decompile.h"
 #include "lists.h"
 
-//#include "graph.h"
-
-#include "oleosql.h"
-
 /* These functions read and write OLEO style files. */
 
 void
