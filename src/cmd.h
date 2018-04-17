@@ -352,6 +352,7 @@ extern void set_default_arg (struct command_arg * arg, char * text, int len);
 extern void command_loop (int prefix, int iscmd);
 void execute_command (char *str);
 void execute_command_str(std::string cmd);
+void execute_command(std::string_view cmd);
 extern int get_chr (void);
 extern void display_msg (char * msg, int c);
 extern void pushback_keystroke (int c);

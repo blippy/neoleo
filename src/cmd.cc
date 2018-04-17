@@ -2417,6 +2417,11 @@ execute_command_str(std::string cmd)
 	execute_command((char*) cmd.c_str());
 }
 
+void execute_command(std::string_view cmd)
+{
+	execute_command_str(std::string(cmd));
+}
+
 
 
 /* Read a character.  If we're in a macro, read from the macro. . . */
