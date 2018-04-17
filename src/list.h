@@ -19,20 +19,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
-
 extern void list_read_file (FILE *, int);
 extern void list_write_file (FILE *, struct rng *);
 extern int list_set_options (int, char *);
 extern void list_show_options (void);
 extern int list_set_separator(char sep);
 extern char list_get_separator(void);
-
-
-#ifdef __cplusplus
-//}
-#endif
-

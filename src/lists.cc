@@ -680,12 +680,12 @@ find_widths (CELLREF lo, CELLREF hi)
 }
 
 int 
-next_width (struct find* w_find, CELLREF *posp)
+next_span(struct find* s_find, CELLREF *posp)
 {
   int *ptr;
 
   do
-    ptr = (IPTR) next_rng (w_find, posp);
+    ptr = (IPTR) next_rng(s_find, posp);
   while (ptr && !*ptr);
   return ptr ? *ptr : 0;
 }
@@ -819,15 +819,6 @@ struct find* find_heights (CELLREF lo, CELLREF hi)
   return (FPTR) find_rng (&Global->hgts, lo, hi, sizeof (int));
 }
 
-int next_height(struct find* h_find, CELLREF *posp)
-{
-  int *ptr;
-
-  do
-    ptr = (IPTR) next_rng (h_find, posp);
-  while (ptr && !*ptr);
-  return ptr ? *ptr : 0;
-}
 
 void 
 shift_heights (int dn, CELLREF lo, CELLREF hi)

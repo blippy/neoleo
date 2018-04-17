@@ -39,8 +39,10 @@ extern CELLREF highest_col (void);
 extern int get_width (CELLREF col);
 extern int get_nodef_width (CELLREF col);
 extern void set_width (CELLREF col, int wid);
-extern struct find*  find_widths(CELLREF lo, CELLREF hi);
-extern int next_width(struct find* w_find, CELLREF *posp);
+struct find*  find_widths(CELLREF lo, CELLREF hi);
+//struct find* find_span(CELLREF lo, CELLREF hi);
+//extern int next_width(struct find* w_find, CELLREF *posp);
+int next_span(struct find* s_find, CELLREF *posp);
 extern void shift_widths (int over, CELLREF lo, CELLREF hi);
 extern int get_height (CELLREF row);
 extern int get_nodef_height (CELLREF row);
@@ -49,7 +51,7 @@ extern void set_user_scales (double hs, double ws);
 extern int get_scaled_height (CELLREF r);
 extern int get_scaled_width (CELLREF c);
 extern struct find* find_heights(CELLREF lo, CELLREF hi);
-extern int next_height(struct find* h_find, CELLREF *posp);
+//extern int next_height(struct find* h_find, CELLREF *posp);
 extern void shift_heights (int dn, CELLREF lo, CELLREF hi);
 
 struct cf

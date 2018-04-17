@@ -799,6 +799,24 @@ write_mp_windows (
   free (line.buf);
 }
 
+void write_spans(FILE* fp, struct find* s_find, char typechar)
+{
+	CELLREF c;
+	unsigned short w = next_span(s_find, &c);
+	while (w)
+	{
+		CELLREF cc, ccc;
+		unsigned short ww;
+		cc = c;
+		do
+			ww = next_span(s_find, &ccc);
+		while (ccc == ++cc && ww == w);
+		(void) fprintf (fp, "F;%c%u %u %u\n", typechar, c, cc - 1, w - 1);
+		c = ccc;
+		w = ww;
+	}
+}
+
 void
 oleo_write_file(FILE *fp, struct rng *rng)
 {
@@ -862,35 +880,10 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	Global->a0 = 0;
 
 	struct find* w_find = find_widths (rng->lc, rng->hc);
-	w = next_width(w_find, &c);
-	while (w)
-	{
-		CELLREF cc, ccc;
-		unsigned short ww;
-		cc = c;
-		do
-			ww = next_width(w_find, &ccc);
-		while (ccc == ++cc && ww == w);
-		(void) fprintf (fp, "F;W%u %u %u\n", c, cc - 1, w - 1);
-		c = ccc;
-		w = ww;
-	}
+	write_spans(fp, w_find, 'W');
 
 	struct find* h_find = find_heights (rng->lr, rng->hr);
-	w = next_height(h_find, &r);
-	while (w)
-	{
-		CELLREF rr, rrr;
-		unsigned short ww;
-
-		rr = r;
-		do
-			ww = next_height(h_find, &rrr);
-		while (rrr == ++rr && ww == w);
-		(void) fprintf (fp, "F;H%u %u %u\n", r, rr - 1, w - 1);
-		r = rrr;
-		w = ww;
-	}
+	write_spans(fp, h_find, 'H');
 
 	oleo_fp = fp;
 	oleo_rng = rng;
