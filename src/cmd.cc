@@ -2417,7 +2417,7 @@ execute_command_str(std::string cmd)
 	execute_command((char*) cmd.c_str());
 }
 
-void execute_command(std::string_view cmd)
+void execute_command_sv(std::string_view cmd)
 {
 	execute_command_str(std::string(cmd));
 }

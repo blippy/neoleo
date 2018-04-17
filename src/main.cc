@@ -323,7 +323,7 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 	oleo_catch_signals(&got_sig);
 
 	using namespace std::literals;
-	execute_command("set-default-format general.float"sv);
+	execute_command_sv("set-default-format general.float"sv);
 	if(!ignore_init_file) read_init_files();
 
 	if (option_filter) {
