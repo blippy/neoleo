@@ -689,12 +689,11 @@ ToYear (
 }
 
 static int
-LookupWord (
-     char *buff)
+LookupWord ( char *buff)
 {
-  register char *p;
-  register char *q;
-  register const TABLE *tp;
+  char *p;
+  char *q;
+  const TABLE *tp;
   int i;
   int abbrev;
 
@@ -812,8 +811,8 @@ LookupWord (
 static int
 yylex ()
 {
-  register char c;
-  register char *p;
+  char c;
+  char *p;
   char buff[20];
   int Count;
   int sign;

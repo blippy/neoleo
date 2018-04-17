@@ -109,7 +109,7 @@ backup_file_name (char *file_name)
   char *dir_name, *dir_end;
 
   DIR *dir;
-  register struct dirent *dp;
+  struct dirent *dp;
   int len;
   int max_fnum;
   int cur_fnum;
@@ -565,9 +565,9 @@ strdup (str)
 int
 stricmp (const char * s1, const char * s2)
 {
-  register const char *scan1;
-  register const char *scan2;
-  register char chr1, chr2;
+  const char *scan1;
+  const char *scan2;
+  char chr1, chr2;
 
   scan1 = s1;
   scan2 = s2;
@@ -603,10 +603,10 @@ stricmp (const char * s1, const char * s2)
 int
 strincmp (const char * s1, const char * s2, size_t n)
 {
-  register const char *scan1;
-  register const char *scan2;
-  register size_t count;
-  register char chr1, chr2;
+  const char *scan1;
+  const char *scan2;
+  size_t count;
+  char chr1, chr2;
 
   scan1 = s1;
   scan2 = s2;
@@ -646,9 +646,9 @@ strincmp (const char * s1, const char * s2, size_t n)
 char *
 strstr (const char *s, const char *wanted)
 {
-  register const char *scan;
-  register size_t len;
-  register char firstc;
+  const char *scan;
+  size_t len;
+  char firstc;
 
   
 	// * The odd placement of the two tests is so "" is findable.
@@ -892,8 +892,8 @@ char_to_string (int ch)
 long
 astol (char **ptr)
 {
-  register long i = 0;
-  register int c;
+  long i = 0;
+  int c;
   int sign = 1;
   char *s;
 
@@ -962,13 +962,13 @@ static num_t exps1[10] =
 #endif
 };
 
-#define REGISTER register
+//#define REGISTER register
 
 num_t
 astof (char **sp)
 {
-  REGISTER char *s;
-  REGISTER char *cp;
+ char *s;
+   char *cp;
   long ipart, epart;
   int neg = 0;
   num_t res;
