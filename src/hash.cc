@@ -251,7 +251,7 @@ static char hash_found;		/* returned by hash_ask() to stop
 /* FALSE: we inserted a value */
 
 static struct hash_entry *hash_ask ();
-static int hash_code ( struct hash_control *handle, register char *string);
+static int hash_code ( struct hash_control *handle, char *string);
 static char *hash_grow (struct hash_control *handle);
 static struct hash_entry * hash_ask(struct hash_control *handle, char *string, int access);
 
@@ -264,10 +264,10 @@ struct hash_control *
 hash_new ()			/* create a new hash table */
      /* return handle (address of struct hash) */
 {
-  register struct hash_control *retval;
-  register struct hash_entry *room;	/* points to hash table */
-  register struct hash_entry *wall;
-  register struct hash_entry *entry;
+  struct hash_control *retval;
+  struct hash_entry *room;	/* points to hash table */
+  struct hash_entry *wall;
+  struct hash_entry *entry;
 
   /* +1 for the wall entry */
   if ((room = (struct hash_entry *) malloc (sizeof (struct hash_entry) * ((1 << START_POWER) + 1))) == 0)
@@ -321,12 +321,12 @@ hash_die (struct hash_control *handle)
  */
 void
 hash_say (
-     register struct hash_control *handle,
-     register int buffer[ /* bufsiz */ ],
-     register int bufsiz)
+     struct hash_control *handle,
+     int buffer[ /* bufsiz */ ],
+     int bufsiz)
 {
-  register int *nd;		/* limit of statistics block */
-  register int *ip;		/* scan statistics */
+  int *nd;		/* limit of statistics block */
+  int *ip;		/* scan statistics */
 
   ip = handle->hash_stat;
   nd = ip + std::min (bufsiz - 1, STATLENGTH);
@@ -352,11 +352,11 @@ hash_say (
 char *				/* NULL if string not in table, else */
 /* returns value of deleted symbol */
 hash_delete (
-     register struct hash_control *handle,
-     register char *string)
+     struct hash_control *handle,
+     char *string)
 {
-  register char *retval;	/* NULL if string not in table */
-  register struct hash_entry *entry;	/* NULL or entry of this
+  char *retval;	/* NULL if string not in table */
+  struct hash_entry *entry;	/* NULL or entry of this
 						 * symbol */
 
   entry = hash_ask (handle, string, STAT__WRITE);
@@ -389,12 +389,12 @@ hash_delete (
  */
 char *
 hash_replace (
-     register struct hash_control *handle,
-     register char *string,
-     register char *value)
+     struct hash_control *handle,
+     char *string,
+     char *value)
 {
-  register struct hash_entry *entry;
-  register char *retval;
+  struct hash_entry *entry;
+  char *retval;
 
   entry = hash_ask (handle, string, STAT__WRITE);
   if (hash_found)
@@ -419,13 +419,12 @@ hash_replace (
  */
 
 char *				/* return error string */
-hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value)
+hash_insert (struct hash_control *handle, char *string, VOIDSTAR value)
 {
 
 	//log_debug("hash.cc:hash_insert()");
-	register struct hash_entry *entry;
-	register char *retval;
-
+	struct hash_entry *entry;
+	char *retval; 
 	retval = NULL;
 	if (handle->hash_stat[STAT_USED] > handle->hash_full)
 		retval = hash_grow (handle);
@@ -459,13 +458,10 @@ hash_insert (register struct hash_control *handle, register char *string, regist
  * we inserted.
  */
 char *
-hash_jam (
-     register struct hash_control *handle,
-     register char *string,
-     register char *value)
+hash_jam ( struct hash_control *handle, char *string, char *value)
 {
-  register char *retval;
-  register struct hash_entry *entry;
+  char *retval;
+  struct hash_entry *entry;
 
   if (handle->hash_stat[STAT_USED] > handle->hash_full)
     retval = hash_grow (handle);
@@ -495,13 +491,13 @@ hash_jam (
 static char *
 hash_grow (struct hash_control *handle)
 {
-  register struct hash_entry *newwall;
-  register struct hash_entry *newwhere;
+  struct hash_entry *newwall;
+  struct hash_entry *newwhere;
   struct hash_entry *newtrack;
-  register struct hash_entry *oldtrack;
-  register struct hash_entry *oldwhere;
-  register struct hash_entry *oldwall;
-  register int temp;
+  struct hash_entry *oldtrack;
+  struct hash_entry *oldwhere;
+  struct hash_entry *oldwall;
+  int temp;
   int newsize;
   char *string;
   char *retval;
@@ -620,8 +616,8 @@ hash_grow (struct hash_control *handle)
 char *
 hash_apply (struct hash_control *handle, char *(*function) (char *, char *))
 {
-  register struct hash_entry *entry;
-  register struct hash_entry *wall;
+  struct hash_entry *entry;
+  struct hash_entry *wall;
 
   wall = handle->hash_wall;
   for (entry = handle->hash_where; entry < wall; entry++)
@@ -642,7 +638,7 @@ hash_apply (struct hash_control *handle, char *(*function) (char *, char *))
 VOIDSTAR
 hash_find(struct hash_control *handle, char *string)
 {
-  register struct hash_entry *entry;
+  struct hash_entry *entry;
 
   entry = hash_ask (handle, string, STAT__READ);
   return hash_found ? entry->hash_value : NULL;
@@ -659,11 +655,11 @@ hash_find(struct hash_control *handle, char *string)
 static struct hash_entry *	/* string slot, may be empty or deleted */
 hash_ask(struct hash_control *handle, char *string, int access)
 {
-  register char *string1;	/* JF avoid strcmp calls */
-  register char *s;
-  register int c;
-  register struct hash_entry *slot;
-  register int collision;	/* count collisions */
+  char *string1;	/* JF avoid strcmp calls */
+  char *s;
+  int c;
+  struct hash_entry *slot;
+  int collision;	/* count collisions */
 
   slot = handle->hash_where + hash_code (handle, string);	/* start looking here */
   handle->hash_stat[STAT_ACCESS + access] += 1;
@@ -735,11 +731,11 @@ hash_ask(struct hash_control *handle, char *string, int access)
  * Does hashing of symbol string to hash number. Internal.
  */
 static int
-hash_code ( struct hash_control *handle, register char *string)
+hash_code(struct hash_control *handle, char *string)
 {
-  register long int h;		/* hash code built here */
-  register long int c;		/* each character lands here */
-  register int n;		/* Amount to shift h by */
+  long int h;		/* hash code built here */
+  long int c;		/* each character lands here */
+  int n;		/* Amount to shift h by */
 
   n = (handle->hash_sizelog - 3);
   h = 0;

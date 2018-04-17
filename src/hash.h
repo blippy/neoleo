@@ -20,16 +20,6 @@
  * along with GAS; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
-
-/* define the type of bindings: */
-//#undef  VOIDSTAR
-//#define VOIDSTAR	char *
-
 #ifndef VOIDSTAR
 #define VOIDSTAR void *
 #endif
@@ -66,14 +56,7 @@ void hash_say ();
 char *hash_delete ();		/* previous value         */
 char *hash_relpace ();		/* previous value         */
 //char *hash_insert ();		/* error string           */
-char * hash_insert (register struct hash_control *handle, register char *string, register VOIDSTAR value);
+char * hash_insert (struct hash_control *handle, char *string, VOIDSTAR value);
 char * hash_apply (struct hash_control *handle, char *(*function) (char *, char *)); /* 0 means OK */
 VOIDSTAR hash_find(struct hash_control *handle, char *string);
 char *hash_jam ();		/* error text (internal)  */
-//#endif /* #ifdef hashH */
-
-
-#ifdef __cplusplus
-//}
-#endif
-
