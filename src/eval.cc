@@ -267,20 +267,20 @@ int overflow;
 	else if((val)->type==TYP_INT) {	\
 		char *s;	\
 		(val)->type=TYP_STR;	\
-		s=obstack_alloc(&tmp_mem,30); \
+		s=(char*) obstack_alloc(&tmp_mem,30); \
 		sprintf(s,"%ld",(val)->Int); \
 		(val)->String=s;	\
 	} else if((val)->type==TYP_FLT) {		\
 		char *s;				\
 		s=flt_to_str((val)->Float);		\
 		(void)obstack_grow(&tmp_mem,s,strlen(s)+1); \
-		(val)->String=obstack_finish(&tmp_mem);	\
+		(val)->String=(char*) obstack_finish(&tmp_mem);	\
 		(val)->type=TYP_STR;			\
 	} else if((val)->type==TYP_ERR) {		\
 		ERROR((val)->Value);	\
 	} else if((val)->type==0) {	\
 		(val)->type=TYP_STR;	\
-		(val)->String=obstack_alloc(&tmp_mem,1); \
+		(val)->String=(char*) obstack_alloc(&tmp_mem,1); \
 		(val)->String[0]='\0'; \
 	} else \
 		ERROR(NON_STRING);
@@ -701,7 +701,7 @@ eval_expression ( unsigned char *expr)
 		case F_CTIME:
 			p->type = TYP_STR;
 			strptr = ctime ((time_t*) &p->Int);
-			p->String = obstack_alloc (&tmp_mem, 25);
+			p->String = (char*) obstack_alloc (&tmp_mem, 25);
 			strncpy (p->String, strptr, 24);
 			p->String[24] = '\0';
 			break;
@@ -1105,7 +1105,7 @@ eval_expression ( unsigned char *expr)
 				}
 				fclose (fp);
 				(void) obstack_1grow (&tmp_mem, 0);
-				p->String = obstack_finish (&tmp_mem);
+				p->String = (char*) obstack_finish (&tmp_mem);
 				break;
 			}
 

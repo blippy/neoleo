@@ -230,7 +230,7 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 				if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->get_cell_formula()))
 				{
 					char* strptr = decomp (row, col, cell_ptr);
-					p->String = obstack_alloc (&tmp_mem, strlen (strptr) + 1);
+					p->String = (char *) obstack_alloc (&tmp_mem, strlen (strptr) + 1);
 					strcpy (p->String, strptr);
 					decomp_free ();
 				}
