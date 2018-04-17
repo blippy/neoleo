@@ -4,7 +4,7 @@ AM_CXXFLAGS = @ASAN_CXXFLAGS@
 AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -fpermissive
 AM_CXXFLAGS += -Wno-write-strings 
-AM_CXXFLAGS += -Wformat -Wformat-security
+#AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += -Wfatal-errors
 
