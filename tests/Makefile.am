@@ -11,7 +11,7 @@ AM_TESTS_ENVIRONMENT = \
 	. $(srcdir)/neotests-env.sh;
 
 # NB Supressing cpreg-01.src for now due to issue#17
-TESTS = busi.scr cpreg-02.scr cpreg-03.scr \
+TESTS = busi.scr cellspans.scr cpreg-02.scr cpreg-03.scr \
 	decompile-01.scr \
 	floor.scr \
 	inbuilt-tests.sh \
