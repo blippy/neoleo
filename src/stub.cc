@@ -18,7 +18,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char *rcsid = "$Id: stub.c,v 1.5 2000/07/22 06:13:16 danny Exp $";
+static const char *rcsid = "$Id: stub.c,v 1.5 2000/07/22 06:13:16 danny Exp $";
 
 /*
  * This is a collection of stubs that are used to call interactive functions.
