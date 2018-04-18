@@ -1,6 +1,4 @@
-#ifndef ARGSH
-#define ARGSH
-
+#pragma once
 /*
  * $Id: args.h,v 1.4 2000/08/10 21:02:49 danny Exp $
  * Copyright © 1993 Free Software Foundation, Inc.
@@ -117,5 +115,3 @@ DEFSTYLE(int_constant_style, 0, 0, cmd_int, 0);
 DEFSTYLE(range_constant_style, 0, 0, cmd_range, 0);
 DEFSTYLE(inc_cmd_style, incremental_cmd_verify, 0, cmd_none, "direction");
 DEFSTYLE(mode_style, noop_verify, 0, cmd_none, 0);
-
-#endif  /* ARGSH */
