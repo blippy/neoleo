@@ -473,7 +473,7 @@ insert_cell_value(void)
     return;
   else
     {
-      char * in_str;
+      const char * in_str;
       in_str = cell_value_string (curow, cucol, 0);
       put_string (in_str, strlen(in_str));
     }
@@ -490,7 +490,7 @@ insert_other_cell_value(struct rng * rng)
     return;
   else
     {
-      char * in_str;
+      const char * in_str;
       in_str = cell_value_string (rng->lr, rng->lc, 0);
       put_string (in_str, strlen(in_str));
     }

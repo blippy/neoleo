@@ -501,7 +501,7 @@ print_cell (CELL * cp)
  * In particular, strings are \\ed, and if add_quote is true,
  * they will have "" around them.
  */
-char *
+const char *
 cell_value_string (CELLREF row, CELLREF col, int add_quote)
 {
   CELL *cp;

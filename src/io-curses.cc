@@ -835,7 +835,7 @@ _io_update_status (void)
 {
   CELL *cp;
   char *dec;
-  char *ptr;
+  const char *ptr;
   static char hmbuf[40];
   int wid;
   int plen;

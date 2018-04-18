@@ -96,7 +96,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 		struct pr_node **&c_node)
 {
 	num_t tmp_flt;
-	char *tmp_str;
+	const char *tmp_str;
 	struct var *v;
 	unsigned char save_val;
 
@@ -704,7 +704,7 @@ decomp_free (void)
  *
  * If add_quote is 1, escape normal quotes, if it is 2, also escape %.
  */
-char *
+const char *
 backslash_a_string (char *string, int add_quote)
 {
 	char		*pf, *pt;

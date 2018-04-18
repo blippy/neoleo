@@ -24,7 +24,7 @@
 #include "cell.h"
 
 extern void decomp_free ();
-extern char * backslash_a_string (char *string, int add_quote);
+const char * backslash_a_string (char *string, int add_quote);
 std::string decomp(const CELLREF r, const CELLREF c);
 char * decomp (const CELLREF r, const CELLREF c, CELL *cell);
 //std::string decomp(const CELLREF r, const CELLREF c, CELL *cell);
