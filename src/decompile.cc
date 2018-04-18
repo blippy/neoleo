@@ -531,9 +531,6 @@ byte_decompile ( unsigned char *expr)
 	struct pr_node *newn = 0;
 
 
-	//unsigned char byte;
-
-
 #ifdef TEST
 	if (!expr)
 		panic ("No expression to decompile");
@@ -610,9 +607,6 @@ decomp(const CELLREF r, const CELLREF c)
 	if(cp == nullptr) return res;
 	char *tmp = decomp(r, c, cp);
 	if(tmp) res = std::string(tmp);
-	//decomp_free();
-	//if(tmp == nullptr) return res;
-       	//res = std::string(tmp);
 	return res;
 }
 
