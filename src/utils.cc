@@ -106,66 +106,63 @@ panic (const char *s,...)
 char *
 backup_file_name (char *file_name)
 {
-  char *dir_name, *dir_end;
+	//char *dir_name;
+	char *dir_end;
 
-  DIR *dir;
-  struct dirent *dp;
-  int len;
-  int max_fnum;
-  int cur_fnum;
+	DIR *dir;
+	struct dirent *dp;
+	int len;
+	int max_fnum;
+	int cur_fnum;
 
-  char *tmp_ptr;
+	char *tmp_ptr;
 
-  char *return_value;
+	char *return_value;
 
-  dir_end = (char *)rindex (file_name, '/');
-  if (dir_end)
-    {
-      dir_name = file_name;
-      file_name = dir_end + 1;
-      *dir_end = '\0';
-    }
-  else
-    {
-      dir_name = ".";
-    }
-  len = strlen (file_name);
+	dir_end = (char *)rindex (file_name, '/');
+	const char* dir_name = dir_end? file_name : ".";
+	if (dir_end)
+	{
+		file_name = dir_end + 1;
+		*dir_end = '\0';
+	}
+	len = strlen (file_name);
 
-  dir = opendir (dir_name);
-  if (dir == 0)
-    {
-      if (dir_end)
-	*dir_end = '/';
-      return (char *) 0;
-    }
+	dir = opendir (dir_name);
+	if (dir == 0)
+	{
+		if (dir_end)
+			*dir_end = '/';
+		return (char *) 0;
+	}
 
-  max_fnum = 0;
-  while ((dp = readdir (dir)))
-    {
-      if (!dp->d_ino
-	  || NLENGTH (dp) <= len
-	  || strncmp (dp->d_name, file_name, len)
-	  || dp->d_name[len] != '.'
-	  || dp->d_name[len + 1] != '~'
-	  || dp->d_name[NLENGTH(dp) - 1] != '~')
-	continue;
+	max_fnum = 0;
+	while ((dp = readdir (dir)))
+	{
+		if (!dp->d_ino
+				|| NLENGTH (dp) <= len
+				|| strncmp (dp->d_name, file_name, len)
+				|| dp->d_name[len] != '.'
+				|| dp->d_name[len + 1] != '~'
+				|| dp->d_name[NLENGTH(dp) - 1] != '~')
+			continue;
 
-      tmp_ptr = &(dp->d_name[len + 2]);
-      for (cur_fnum = 0; isdigit (*tmp_ptr); tmp_ptr++)
-	cur_fnum = cur_fnum * 10 + *tmp_ptr - '0';
-      if (tmp_ptr != &(dp->d_name[NLENGTH(dp) - 1]) || cur_fnum < max_fnum)
-	continue;
-      max_fnum = cur_fnum;
-    }
-  closedir (dir);
-  max_fnum++;
-  return_value = (char *) malloc (strlen (dir_name) + len + 12);
-  if (!return_value)
-    return (char *) 0;
-  sprintf (return_value, "%s/%s.~%d~", dir_name, file_name, max_fnum);
-  if (dir_end)
-    *dir_end = '/';
-  return return_value;
+		tmp_ptr = &(dp->d_name[len + 2]);
+		for (cur_fnum = 0; isdigit (*tmp_ptr); tmp_ptr++)
+			cur_fnum = cur_fnum * 10 + *tmp_ptr - '0';
+		if (tmp_ptr != &(dp->d_name[NLENGTH(dp) - 1]) || cur_fnum < max_fnum)
+			continue;
+		max_fnum = cur_fnum;
+	}
+	closedir (dir);
+	max_fnum++;
+	return_value = (char *) malloc (strlen (dir_name) + len + 12);
+	if (!return_value)
+		return (char *) 0;
+	sprintf (return_value, "%s/%s.~%d~", dir_name, file_name, max_fnum);
+	if (dir_end)
+		*dir_end = '/';
+	return return_value;
 }
 
 
