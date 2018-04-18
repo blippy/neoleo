@@ -166,7 +166,7 @@ backup_file_name (char *file_name)
 }
 
 
-char *
+const char *
 __fp_name (
      FILE *fp)
 {
