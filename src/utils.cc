@@ -624,33 +624,6 @@ strincmp (const char * s1, const char * s2, size_t n)
 #endif
 #endif /* ndef _DEBUG_MALLOC_INC */
 
-/* mcarter
-#ifndef _DEBUG_MALLOC_INC
-#ifndef HAVE_STRSTR
-char *
-strstr (const char *s, const char *wanted)
-{
-  const char *scan;
-  size_t len;
-  char firstc;
-
-  
-	// * The odd placement of the two tests is so "" is findable.
-	// * Also, we inline the first char for speed.
-	// * The ++ on scan has been moved down for optimization.
-
-  firstc = *wanted;
-  len = strlen (wanted);
-  for (scan = s; *scan != firstc || strncmp (scan, wanted, len) != 0;)
-    if (*scan++ == '\0')
-      return (char *) 0;
-  return scan;
-}
-#endif
-#endif 
-*/
-
-
 char *
 err_msg (void)
 {
