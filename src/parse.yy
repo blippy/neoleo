@@ -49,6 +49,9 @@
 
 %{
 #include <stdexcept>
+#include <string_view>
+using namespace std::literals;
+
 #include "funcdef.h"
 
 #include <ctype.h>
@@ -67,7 +70,8 @@
 #include "hash.h"
 
 int yylex ();
-void yyerror (char *);
+//void yyerror (char *);
+void yyerror (std::string_view s);
 VOIDSTAR parse_hash;
 //extern VOIDSTAR hash_find();
 
@@ -308,8 +312,7 @@ cell:	L_CELL
 	;
 %%
 
-void
-yyerror (char * s)
+void yyerror (std::string_view s)
 {
 	if(!parse_error)
 		parse_error=PARSE_ERR;
