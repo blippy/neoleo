@@ -1090,39 +1090,3 @@ pad_right(const std::string& s, int width)
 		res += " ";
 	return res;
 }
-
-#ifdef TEST_ASTOF
-main_utils ()
-{
-  char buf[80];
-  char *ptr;
-  double at, ast;
-  double atof ();
-
-  while (gets (buf))
-    {
-      at = atof (buf);
-      ptr = buf;
-      ast = astof (&ptr);
-      printf ("%15.6f %15.6f %s ", at, ast, at == ast ? "eq" : "NEQ");
-      if (*ptr)
-	printf ("%s->'%s'\n", buf, ptr);
-      else
-	printf ("%s\n", buf);
-    }
-}
-char *
-ck_savestr (str)
-     char *str;
-{
-  char *newstr = 0;
-  if (str)
-    {
-      int len = strlen (str) + 1;
-      newstr = (char *) ck_malloc (len);
-      bcopy (str, newstr, len);
-    }
-  return newstr;
-}
-
-#endif
