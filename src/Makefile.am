@@ -48,9 +48,6 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 tests.cc 
 	
 
-# not present on some systems like cygwin
-# Ideally obstack would be removed as a dependency anyway
-#neoleo_SOURCES += obstack_a.cc
 
 noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
@@ -70,19 +67,9 @@ noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 regions.h sort.h stringo.h stub.h stubs.h \
 		 sysdef.h userpref.h utils.h window.h  \
 		 shell.h \
-		 tbl.h tests.h \
-		 $(FORTH_HDRS)
+		 tbl.h tests.h 
 
-noinst_HEADERS += obstack_a.h
 
 byte-compile.o : parse.hh
 ref.o : parse.hh
 sc.o : parse.hh	
-
-#parse.cc parse.hh : parse.y
-#	bison  -d parse.y -o parse.cc
-#	rm -f parse.c
-
-#posixtm.cc posixxtm.hh : posixtm.y
-#	bison -d posixtm.y -o posixtm.cc
-#	rm -f posixtm.c
