@@ -122,8 +122,7 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 {
 	struct func
 	{
-		char *name;
-		//int typ;
+		const char *name;
 		ValType typ;
 	};
 
@@ -144,8 +143,6 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		{0, TYP_NUL}
 	};
 
-	//CELL *cell_ptr;
-	//char *strptr;
 	struct func *func;
 	struct func *f1;
 	int n;
