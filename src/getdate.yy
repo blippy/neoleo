@@ -29,6 +29,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string_view>
 #include <ctype.h>
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
@@ -118,7 +119,7 @@ extern time_t		mktime ();
 #define yycheck  gd_yycheck
 
 static int yylex ();
-static int yyerror (char *s);
+static int yyerror(std::string_view s);
 
 #define EPOCH		1970
 #define HOUR(x)		((x) * 60)
@@ -636,8 +637,7 @@ static TABLE const MilitaryTable[] = {
 
 
 /* ARGSUSED */
-static int
-yyerror (char *s)
+static int yyerror(std::string_view s)
 {
   return 0;
 }

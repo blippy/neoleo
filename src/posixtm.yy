@@ -21,13 +21,6 @@
 
 /* Written by Jim Kingdon and David MacKenzie. */
 %{
-
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
-
-
-
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else
@@ -43,6 +36,7 @@ char *alloca ();
 #endif
 
 #include <stdio.h>
+#include <string_view>
 #include <sys/types.h>
 #include <time.h>
 
@@ -58,12 +52,7 @@ time_t mktime ();
 
 //#define yyparse posixtime_yyparse
 static int yylex ();
-static int yyerror (char * s);
-
-//#ifdef __cplusplus
-//}
-//#endif
-
+static int yyerror(std::string_view s);
 
 %}
 
@@ -158,8 +147,7 @@ yylex ()
     return '?';			/* Cause an error.  */
 }
 
-static int
-yyerror( char * s)
+static int yyerror(std::string_view s)
 {
   return 0;
 }
