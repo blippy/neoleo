@@ -364,96 +364,73 @@ other_window (void)
 int
 set_window_option (int set_opt, char *text)
 {
-  int n;
-  int stat;
-  static struct opt
-    {
-      char *text;
-      int bits;
-    }
-  opts[] =
-  {
-    {
-      S "reverse", WIN_EDGE_REV
-    }
-    ,
-    {
-      S "standout", WIN_EDGE_REV
-    }
-    ,
-    {
-      S "page", WIN_PAG_HZ | WIN_PAG_VT
-    }
-    ,
-    {
-      S "pageh", WIN_PAG_HZ
-    }
-    ,
-    {
-      S "pagev", WIN_PAG_VT
-    }
-    ,
-    {
-      S "lockh", WIN_LCK_HZ
-    }
-    ,
-    {
-      S "lockv", WIN_LCK_VT
-    }
-    ,
-    {
-      S "edges", WIN_EDGES
-    }
-  };
-  if ((stat = (!strincmp (text, "status", 6) && isspace (text[6])))
-      || (!strincmp (text, "input", 5) && isspace (text[5])))
-    {
-      int n = set_opt ? atoi (text + 6 + stat) : 0;	/* A little pun. */
-      int new_inp = stat ? user_input : n;
-      int new_stat = stat ? n : user_status;
-      io_set_input_status (new_inp, new_stat, 1);
-    }
-  else if (!strincmp (text, "link", 4))
-    {
-      if (set_opt)
+	int n;
+	int stat;
+	static struct opt
 	{
-	  n = atoi (text + 4) - 1;
-	  if (n < 0 || n > nwin)
-	    io_error_msg ("Can't '%s': window # out of range", text);
-	  else
-	    cwin->link = n;
+		char *text;
+		int bits;
 	}
-      else
-	cwin->link = -1;
-    }
-  else if (set_opt && !stricmp (text, "unlink"))
-    cwin->link = -1;
-  else if (set_opt && !strincmp (text, "row ", 4))
-    {
-      text += 4;
-      curow = astol (&text);
-    }
-  else if (set_opt && !strincmp (text, "col ", 4))
-    {
-      text += 4;
-      cucol = astol (&text);
-    }
-  else
-    {
-      for (n = 0; n < sizeof (opts) / sizeof (struct opt); n++)
-	if (!stricmp (text, opts[n].text))
-	  {
-	    if (set_opt)
-	      cwin->flags |= opts[n].bits;
-	    else
-	      cwin->flags &= ~opts[n].bits;
-	    break;
-	  }
+	opts[] =
+	{
+		{ S "reverse", WIN_EDGE_REV } ,
+		{ S "standout", WIN_EDGE_REV } ,
+		{ S "page", WIN_PAG_HZ | WIN_PAG_VT } ,
+		{ S "pageh", WIN_PAG_HZ } ,
+		{ S "pagev", WIN_PAG_VT } ,
+		{ S "lockh", WIN_LCK_HZ } ,
+		{ S "lockv", WIN_LCK_VT } ,
+		{ S "edges", WIN_EDGES }
+	};
+	if ((stat = (!strincmp (text, "status", 6) && isspace (text[6])))
+			|| (!strincmp (text, "input", 5) && isspace (text[5])))
+	{
+		int n = set_opt ? atoi (text + 6 + stat) : 0;	/* A little pun. */
+		int new_inp = stat ? user_input : n;
+		int new_stat = stat ? n : user_status;
+		io_set_input_status (new_inp, new_stat, 1);
+	}
+	else if (!strincmp (text, "link", 4))
+	{
+		if (set_opt)
+		{
+			n = atoi (text + 4) - 1;
+			if (n < 0 || n > nwin)
+				io_error_msg ("Can't '%s': window # out of range", text);
+			else
+				cwin->link = n;
+		}
+		else
+			cwin->link = -1;
+	}
+	else if (set_opt && !stricmp (text, "unlink"))
+		cwin->link = -1;
+	else if (set_opt && !strincmp (text, "row ", 4))
+	{
+		text += 4;
+		curow = astol (&text);
+	}
+	else if (set_opt && !strincmp (text, "col ", 4))
+	{
+		text += 4;
+		cucol = astol (&text);
+	}
+	else
+	{
+		for (n = 0; n < sizeof (opts) / sizeof (struct opt); n++)
+			if (!stricmp (text, opts[n].text))
+			{
+				if (set_opt)
+					cwin->flags |= opts[n].bits;
+				else
+					cwin->flags &= ~opts[n].bits;
+				break;
+			}
 
-      if (n == sizeof (opts) / sizeof (struct opt))
-	  return 0;
-    }
-  return 1;
+		if (n == sizeof (opts) / sizeof (struct opt))
+			return 0;
+	}
+	return 1;
 }
 
 void
@@ -1283,18 +1260,7 @@ scan_cell_cursor (int magic, int count)
 void
 edit_cell (const char* new_formula)
 {
-
-	/*
-	   char * fail;
-	   fail = new_value (setrow, setcol, new_formula);
-	   if (fail)
-	   io_error_msg (fail);
-	   else
-	   Global->modified = 1;
-	  */
-
 	edit_cell_at(setrow, setcol, new_formula);
-
 }
 
 
