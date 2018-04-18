@@ -78,7 +78,7 @@ search_map_for_cmd (struct line * line, int map, int vec, int code)
 		  used[x] = 1;
 		if (found_it || (try_prefix && prefix_key))
 		  {
-		    char * c = char_to_string (x);
+		    const char * c = char_to_string (x);
 		    catn_line (line, " ", 1);
 		    catn_line (line, c, strlen (c));
 		    if (found_it

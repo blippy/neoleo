@@ -827,7 +827,7 @@ string_to_char (char ** ptr)
 }
 
 /* Take a char and turn it into a readable string */
-char *
+const char *
 char_to_string (int ch)
 {
   static char buf[] = "M-\0\0\0\0";

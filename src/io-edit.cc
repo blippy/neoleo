@@ -738,7 +738,7 @@ self_map_command (int c)
 {
   struct keymap * map = the_maps[the_cmd_arg.val.key.cmd.code];
   char space = ' ';
-  char * str = char_to_string (c);
+  const char * str = char_to_string (c);
 
   insert_string (str, strlen (str));
   insert_string (&space, 1);
@@ -775,7 +775,7 @@ insert_current_filename (void)
 void
 exit_self_inserting (int c)
 {
-  char * str = char_to_string (c);
+  const char * str = char_to_string (c);
 
   insert_string (str, strlen (str));
   exit_minibuffer ();

@@ -40,7 +40,7 @@ extern void ck_free (VOIDSTAR);
   ((OLD) ? ck_realloc ((OLD), (SIZE)) : ck_malloc (SIZE))
 
 extern num_t astof(char **sp);
-extern char *char_to_string (int);
+extern const char *char_to_string (int);
 extern int string_to_char (char **);
 extern int strincmp (const char *, const char *, size_t);
 
