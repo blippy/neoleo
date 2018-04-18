@@ -34,7 +34,6 @@ extern VOIDSTAR ck_malloc (size_t);
 extern VOIDSTAR ck_calloc (size_t);
 extern VOIDSTAR ck_realloc (void *,size_t);
 extern char * ck_savestr (const char *);
-extern char * ck_savestrn (char *, int);
 extern void ck_free (VOIDSTAR);
 #define ck_remalloc(OLD, SIZE) \
   ((OLD) ? ck_realloc ((OLD), (SIZE)) : ck_malloc (SIZE))

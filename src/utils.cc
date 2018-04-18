@@ -406,19 +406,6 @@ ck_savestr (const char *str)
 }
 
 
-char *
-ck_savestrn (char *str, int n)
-{
-  char *newstr = 0;
-  if (str)
-    {
-      newstr = (char *) ck_malloc (n + 1);
-      if (n)
-	bcopy (str, newstr, n);
-      newstr[n] = '\0';
-    }
-  return newstr;
-}
 
 void *
 ck_calloc (size_t size)
