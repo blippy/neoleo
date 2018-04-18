@@ -16,6 +16,7 @@
 #include "alt-parse.h"
 #include "basic.h"
 #include "cell.h"
+#include "defuns.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "io-visual.h"
@@ -281,7 +282,10 @@ insert_rowwise(T fildes)
 	}
 }
 
-
+static void hless_rewrite_defuns(int fildes)
+{
+	rewrite_defuns();
+}
 
 static void type_cell(int fildes)
 {
@@ -328,6 +332,7 @@ static map<string, function<void(T)> > func_map = {
 	{"kt", keyboard_test},
 	{"tbl", hless_tbl},
 	//{"tbl", with_int(tbl)},
+	{"rewrite-defuns", hless_rewrite_defuns},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},
 	{"view", show_cells},

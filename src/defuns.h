@@ -127,13 +127,10 @@ static char * DFfnord[] =
 	DEFUN_5(Sname, FDname, 0, 0, Cname)
 */
 
-//extern struct cmd_func cmd_funcs[];
-/*=
-{
-  { "fnord", FDfnord, FAfnord, DFfnord, fnord },
-#include "defun.h"
-  { 0, 0, 0, 0, 0 }
-};
-*/
 
 struct cmd_func** get_cmd_funcs();
+
+
+
+
+void rewrite_defuns();
