@@ -48,6 +48,7 @@
 %token	L_LE	L_NE	L_GE
 
 %{
+#include <map>
 #include <stdexcept>
 #include <string_view>
 using namespace std::literals;
@@ -67,11 +68,12 @@ using namespace std::literals;
 #include "node.h"
 #include "eval.h"
 #include "ref.h"
-#include "hash.h"
+#include "parse_parse.h"
 
 int yylex ();
 void yyerror (std::string_view s);
-VOIDSTAR parse_hash;
+//VOIDSTAR parse_hash;
+
 
 /* This table contains a list of the infix single-char functions */
 unsigned char fnin[] = {
@@ -382,6 +384,22 @@ int yyparse_parse(const std::string& input)
 }
 
 
+std::map<std::string,function*> parse_hash_1;
+void add_parse_hash(const char* name, function* func)
+{
+	parse_hash_1[name] = func;
+}
+
+function* find_func(char* name)
+{
+	//return (function*) hash_find((hash_control*) parse_hash, name);
+
+	auto it = parse_hash_1.find(name);
+	if(it != parse_hash_1.end())
+		return it->second;
+	return nullptr;
+}
+
 int
 yylex ()
 {
@@ -611,7 +629,7 @@ yylex ()
 		}
 		tmp_ch=begin[n];
 		begin[n]='\0';
-		fp=(function *) hash_find( (hash_control*) parse_hash,begin);
+		fp = find_func(begin);
 		begin[n]=tmp_ch;
 		byte_value= ERROR;
 		if(!fp) {

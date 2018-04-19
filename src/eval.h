@@ -20,11 +20,6 @@
  * along with Oleo; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 #include "cell.h"
 #include "utils.h"
 
@@ -158,32 +153,32 @@
 #define SKIP_L		255
 
 struct function
-  {
-    /* See C_mumble below.  This is used when byte-compiling,
- 		   and decompiling */
-    /* The infix information is *not* used for parsing, although
-		   it should be. . . */
-    short fn_comptype;
+{
+	/* See C_mumble below.  This is used when byte-compiling,
+	   and decompiling */
+	/* The infix information is *not* used for parsing, although
+	   it should be. . . */
+	short fn_comptype;
 
-    /* See X_mumble below.  This encodes the number of arguments
-		   this function takes.  It is used by the expression
-		   evaluator and the parser. */
-    char fn_argn;
+	/* See X_mumble below.  This encodes the number of arguments
+	   this function takes.  It is used by the expression
+	   evaluator and the parser. */
+	char fn_argn;
 
-    /* This is used by the expression evaluator to convert the
- 		   args to the fun into the appropriate type
- 		   (And by the parser to see if the function will accept
-		   regions as arguments) */
-    char fn_argt[5];
+	/* This is used by the expression evaluator to convert the
+	   args to the fun into the appropriate type
+	   (And by the parser to see if the function will accept
+	   regions as arguments) */
+	char fn_argt[5];
 
-    /* This function is called by the expression evaluator
- 		   when the (spreadsheet) function is executed */
-    void (*fn_fun) ();
+	/* This function is called by the expression evaluator
+	   when the (spreadsheet) function is executed */
+	void (*fn_fun) ();
 
-    /* This is the function's name.  It gets used for compiling
-		   decompiling, and parsing. . . */
-    char *fn_str;
-  };
+	/* This is the function's name.  It gets used for compiling
+	   decompiling, and parsing. . . */
+	char *fn_str;
+};
 
 extern struct function the_funs[];
 extern int n_usr_funs;
@@ -242,10 +237,3 @@ extern void update_cell (CELL *);
 extern double rtd (double);
 extern double dtr (double);
 extern double to_int (double);
-
-
-#ifdef __cplusplus
-//}
-#endif
-
-

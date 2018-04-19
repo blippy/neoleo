@@ -20,8 +20,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <assert.h>
-#include <math.h>
+//#include <cassert>
+//#include <math.h>
 #include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
@@ -35,9 +35,12 @@
 
 /* FIXME #include "funcdef.h" */
 #include <stdio.h>
-#include <string.h>
+//#include <string.h>
 
-#include "hash.h"
+#include <string>
+#include <map>
+#include "funcs.h"
+#include "parse_parse.h"
 #include "sysdef.h"
 
 #ifdef	HAVE_MALLOC_H
@@ -316,20 +319,18 @@ struct function skip_funs[] =
 };
 
 
-/* mcarter 19-Apr-2018
- * hash_insert() doesn't remember the key names, so we have to do it for it.
- * This workaround is only necessary because I want to use `const char* name'
- * instead of `char* name'. What would be better would be to use C++ `map'
- * and eliminate the use of Neoleo's hash implementation
- */
-static mem m_function_names(true);
 
-void init_bcode_func(void* h, const char* name, void* funcs)
+void init_bcode_func(const char* name, function* funcs)
 {
+	/*
 	char* ptr = (char*) ck_malloc(strlen(name)+1);
 	strcpy(ptr, name);
 	m_function_names.add_ptr(ptr);
-	hash_insert((hash_control *)h, ptr, funcs);
+	hash_insert((hash_control *)parse_hash, ptr, funcs);
+	*/
+
+	// The new way
+	add_parse_hash(name, funcs);
 }
 
 /* The memory allocated here is used for several things, but byte_compile
@@ -344,19 +345,19 @@ init_mem ()
 	for (i=0; i<n_usr_funs; i++)
 		usr_n_funs[i] = init_function_counts[i]();
 
-	parse_hash = hash_new ();
-	init_bcode_func(parse_hash, the_funs[F_IF].fn_str, &the_funs[F_IF]);
-	init_bcode_func(parse_hash, the_funs[AND].fn_str, &the_funs[AND]);
-	init_bcode_func(parse_hash, the_funs[OR].fn_str, &the_funs[OR]);
+	//parse_hash = hash_new ();
+	init_bcode_func(the_funs[F_IF].fn_str, &the_funs[F_IF]);
+	init_bcode_func(the_funs[AND].fn_str, &the_funs[AND]);
+	init_bcode_func(the_funs[OR].fn_str, &the_funs[OR]);
 	for (n = F_PI; n < USR1; n++)
-		init_bcode_func(parse_hash, the_funs[n].fn_str, &the_funs[n]);
+		init_bcode_func(the_funs[n].fn_str, &the_funs[n]);
 
 	for (n = 0; n < n_usr_funs; n++)
 	{
 		int nn;
 
 		for (nn = 0; usr_funs[n][nn].fn_str; nn++)
-			init_bcode_func(parse_hash, usr_funs[n][nn].fn_str,  &usr_funs[n][nn]);
+			init_bcode_func(usr_funs[n][nn].fn_str,  &usr_funs[n][nn]);
 #ifdef TEST
 		if (usr_n_funs[n] != nn)
 		{
