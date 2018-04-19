@@ -66,24 +66,14 @@ local_free (p)
 #include "sort.h"
 #include "busi.h"
 #include "date.h"
-//extern "C" {
-//#include "parse.hh"
-//}
 #include "parse_parse.h"
 
 #include "stringo.h"
 #include "cell.h"
-//#include "mysql.h"
-//#include "gsl.h"
 #include "byte-compile.h"
 #include "utils.h"
 
 #define BUSI
-//extern "C" {
-//extern int yyparse(void);
-//}
-
-//int yyparse_parse();
 
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
@@ -119,7 +109,6 @@ char *tmp_mem_start;
 
 
 #define V (void(*)())
-//#define VV(x) (void(*x)(double))
 double acos1(double x) { return acos(x); }
 double asin1(double x) { return asin(x); }
 double atan1(double x) { return atan(x); }
@@ -326,45 +315,62 @@ struct function skip_funs[] =
   {C_SKIP, X_A0 | X_JL,  "", 0,  (char *)"<SkipL %u>"},
 };
 
+
+/* mcarter 19-Apr-2018
+ * hash_insert() doesn't remember the key names, so we have to do it for it.
+ * This workaround is only necessary because I want to use `const char* name'
+ * instead of `char* name'. What would be better would be to use C++ `map'
+ * and eliminate the use of Neoleo's hash implementation
+ */
+static mem m_function_names(true);
+
+void init_bcode_func(void* h, const char* name, void* funcs)
+{
+	char* ptr = (char*) ck_malloc(strlen(name)+1);
+	strcpy(ptr, name);
+	m_function_names.add_ptr(ptr);
+	hash_insert((hash_control *)h, ptr, funcs);
+}
+
 /* The memory allocated here is used for several things, but byte_compile
    is a small file, so it might as well be here */
 void
 init_mem ()
 {
-  int n, i;
+	int n, i;
 
-  /* Initialise counters */
-  usr_n_funs = (int *)calloc(n_usr_funs, sizeof(int));
-  for (i=0; i<n_usr_funs; i++)
-    usr_n_funs[i] = init_function_counts[i]();
+	/* Initialise counters */
+	usr_n_funs = (int *)calloc(n_usr_funs, sizeof(int));
+	for (i=0; i<n_usr_funs; i++)
+		usr_n_funs[i] = init_function_counts[i]();
 
-  parse_hash = hash_new ();
-  hash_insert ((hash_control *)parse_hash, the_funs[F_IF].fn_str, (char *) &the_funs[F_IF]);
-  hash_insert ((hash_control *)parse_hash, the_funs[AND].fn_str, (char *) &the_funs[AND]);
-  hash_insert ((hash_control *)parse_hash, the_funs[OR].fn_str, (char *) &the_funs[OR]);
-  for (n = F_PI; n < USR1; n++)
-    hash_insert ((hash_control *)parse_hash, the_funs[n].fn_str, (char *) &the_funs[n]);
+	parse_hash = hash_new ();
+	init_bcode_func(parse_hash, the_funs[F_IF].fn_str, &the_funs[F_IF]);
+	init_bcode_func(parse_hash, the_funs[AND].fn_str, &the_funs[AND]);
+	init_bcode_func(parse_hash, the_funs[OR].fn_str, &the_funs[OR]);
+	for (n = F_PI; n < USR1; n++)
+		init_bcode_func(parse_hash, the_funs[n].fn_str, &the_funs[n]);
 
-  for (n = 0; n < n_usr_funs; n++)
-    {
-      int nn;
-
-      for (nn = 0; usr_funs[n][nn].fn_str; nn++)
-	hash_insert ((hash_control *)parse_hash, usr_funs[n][nn].fn_str,(char *)  &usr_funs[n][nn]);
-#ifdef TEST
-      if (usr_n_funs[n] != nn)
+	for (n = 0; n < n_usr_funs; n++)
 	{
-	  fprintf (stderr, "Usr_n_funs[%d]%d!=%d", n, usr_n_funs[n], nn);
-	  usr_n_funs[n] = nn;
+		int nn;
 
-	}
+		for (nn = 0; usr_funs[n][nn].fn_str; nn++)
+			init_bcode_func(parse_hash, usr_funs[n][nn].fn_str,  &usr_funs[n][nn]);
+#ifdef TEST
+		if (usr_n_funs[n] != nn)
+		{
+			fprintf (stderr, "Usr_n_funs[%d]%d!=%d", n, usr_n_funs[n], nn);
+			usr_n_funs[n] = nn;
+
+		}
 #endif
-    }
+	}
 
-  fn_stack = init_stack ();
-  str_stack = init_stack ();
-  obstack_begin (&tmp_mem, 400);
-  tmp_mem_start = (char *) obstack_alloc (&tmp_mem, 0);
+	fn_stack = init_stack ();
+	str_stack = init_stack ();
+	obstack_begin (&tmp_mem, 400);
+	tmp_mem_start = (char *) obstack_alloc (&tmp_mem, 0);
 }
 
 /* Stash away a backpatch for future editing. */

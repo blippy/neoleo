@@ -70,10 +70,8 @@ using namespace std::literals;
 #include "hash.h"
 
 int yylex ();
-//void yyerror (char *);
 void yyerror (std::string_view s);
 VOIDSTAR parse_hash;
-//extern VOIDSTAR hash_find();
 
 /* This table contains a list of the infix single-char functions */
 unsigned char fnin[] = {
