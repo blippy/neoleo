@@ -26,47 +26,52 @@
 #include <dmalloc.h>
 #endif
 
-#include <string.h>
+#include <map>
+#include <string>
+#include <stdarg.h>
 
 #include "global.h"
 #include "info.h"
-#include "hash.h"
+//#include "hash.h"
 #include "cmd.h"
-#include <stdarg.h>
+#include "logging.h"
 #include "utils.h"
 
-struct hash_control * info_buffers;
-
+using namespace std::string_literals;
 
-void
-init_info (void)
-{
-  info_buffers = hash_new();
-}
+struct hash_control * info_buffers;
+std::map<std::string, struct info_buffer *> info_buffers_1;
+
 
 struct info_buffer *
 find_info (char * name)
 {
-  return (struct info_buffer *)hash_find (info_buffers, name);
+	//return (struct info_buffer *)hash_find (info_buffers, name);
+	auto it = info_buffers_1.find(name);
+	if(it != info_buffers_1.end())
+		return it->second;
+	else
+		return nullptr;
 }
 
 
 struct info_buffer * 
-find_or_make_info (char * name)
+find_or_make_info(char * name)
 {
-  struct info_buffer * buf =
-    (struct info_buffer *)hash_find (info_buffers, name);
-  if (buf)
-    return buf;
-  
-  buf = ((struct info_buffer *)
-	 ck_malloc (sizeof (struct info_buffer) + strlen(name) + 1));
-  buf->name = (char *)buf + sizeof (*buf);
-  strcpy (buf->name, name);
-  buf->len = 0;
-  buf->text = 0;
-  hash_insert (info_buffers, buf->name, (char *) buf);
-  return buf;
+	if constexpr(false) log_debug("find_or_make_info:"s + name);
+	struct info_buffer * buf = find_info(name);
+	if (buf)
+		return buf;
+
+	buf = ((struct info_buffer *)
+			ck_malloc (sizeof (struct info_buffer) + strlen(name) + 1));
+	buf->name = (char *)buf + sizeof (*buf);
+	strcpy (buf->name, name);
+	buf->len = 0;
+	buf->text = 0;
+	//hash_insert (info_buffers, buf->name, (char *) buf);
+	info_buffers_1[buf->name] = buf;
+	return buf;
 }
 
 void
@@ -111,7 +116,6 @@ print_info (struct info_buffer * buf, char * format, ...)
 }
 
 
-
 
 /* A generic buffer for the use informational commands like show-options */
 static struct info_buffer * the_text_buf;

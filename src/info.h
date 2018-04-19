@@ -1,13 +1,4 @@
 #pragma once
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-//#ifndef INFOH
-//#define INFOH
-
 /*
  * $Id: info.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -34,7 +25,6 @@ struct info_buffer
   char ** text;
 };
 
-extern void init_info (void);
 extern struct info_buffer * find_info (char * name);
 extern struct info_buffer * find_or_make_info (char * name);
 extern void clear_info (struct info_buffer * buf);
@@ -42,8 +32,3 @@ extern void print_info (struct info_buffer * buf, char * format, ...);
 extern void io_text_start (void);
 extern void io_text_line (const char * format, ...);
 extern void io_text_finish (void);
-
-#ifdef __cplusplus
-}
-#endif
-

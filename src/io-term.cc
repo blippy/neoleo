@@ -961,8 +961,6 @@ init_basics()
 	init_eval ();
 	init_refs ();
 	init_cells ();
-	//init_fonts ();
-	init_info ();
 }
 
   
