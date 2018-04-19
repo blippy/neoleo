@@ -36,6 +36,7 @@
 #include "help.h"
 #include "key.h"
 #include "io-utils.h"
+#include "mem.h"
 #include "utils.h"
 
 #ifndef alloca
@@ -134,45 +135,51 @@ expand_help_msg (struct info_buffer * out, struct info_buffer * in)
 }
 
 
-
 
-void
-describe_function (char * name)
+void describe_function_const(const char* name_arg)
 {
-  int vector;
-  struct cmd_func * cmd;
-  if (!(   !find_function (&vector, &cmd, name, strlen(name))
-	&& cmd->func_doc))
-    io_error_msg ("%s is not a function.", name); /* no return */
-  
-  {
-    struct info_buffer * ib_disp = find_or_make_info ("help-buffer");
-    clear_info (ib_disp);
-    print_info (ib_disp, "");
-    print_info (ib_disp, "%s", name);
-    {
-      struct info_buffer ib;
-/* FIXME:
- * Something is screwed up here.  ib.len is wrongly identified
- * for help texts defined through name-macro-string.  Looks
- * like it should always be 1.  I _really_ don't know what I am
- * doing here.  This is a hack.  And probably stoopid.  But for
- * now it's better than the current core-dump-on-help behaviour.
- * 
- * 
- *    for (ib.len = 0; cmd->func_doc[ib.len]; ++ib.len) ;
- */
-      ib.len = 1;
-      ib.text = cmd->func_doc;
-      ib.name = name;
-      expand_help_msg (ib_disp, &ib);
-    }
-  }
+	strcpy_c tstr(name_arg);
+	char* name = tstr.data();
+	describe_function_nonconst(name);
+}
 
-  {
-    static char buf[] = "{view-info help-buffer}";
-    run_string_as_macro (buf);
-  }
+void describe_function_nonconst(char* name)
+{
+
+	int vector;
+	struct cmd_func * cmd;
+	if (!(   !find_function (&vector, &cmd, name, strlen(name))
+				&& cmd->func_doc))
+		io_error_msg ("%s is not a function.", name); /* no return */
+
+	{
+		struct info_buffer * ib_disp = find_or_make_info ("help-buffer");
+		clear_info (ib_disp);
+		print_info (ib_disp, "");
+		print_info (ib_disp, "%s", name);
+		{
+			struct info_buffer ib;
+			/* FIXME:
+			 * Something is screwed up here.  ib.len is wrongly identified
+			 * for help texts defined through name-macro-string.  Looks
+			 * like it should always be 1.  I _really_ don't know what I am
+			 * doing here.  This is a hack.  And probably stoopid.  But for
+			 * now it's better than the current core-dump-on-help behaviour.
+			 * 
+			 * 
+			 *    for (ib.len = 0; cmd->func_doc[ib.len]; ++ib.len) ;
+			 */
+			ib.len = 1;
+			ib.text = cmd->func_doc;
+			ib.name = name;
+			expand_help_msg (ib_disp, &ib);
+		}
+	}
+
+	{
+		static char buf[] = "{view-info help-buffer}";
+		run_string_as_macro (buf);
+	}
 }
 
 
@@ -190,14 +197,18 @@ brief_describe_key (struct key_sequence * keyseq)
 void
 describe_key (struct key_sequence * keyseq)
 {
-  if (keyseq->cmd.vector < 0 && keyseq->cmd.code < 0)
-    io_info_msg ("%s is unbound", keyseq->keys->buf);
-  else if (keyseq->cmd.vector < 0)
-    io_info_msg ("%s is a prefix leading to the keymap `%s'.",
-		 keyseq->keys->buf, map_names[keyseq->cmd.code]);
-  else
-    describe_function
-      (the_funcs[keyseq->cmd.vector][keyseq->cmd.code].func_name); 
+	if (keyseq->cmd.vector < 0 && keyseq->cmd.code < 0)
+		io_info_msg ("%s is unbound", keyseq->keys->buf);
+	else if (keyseq->cmd.vector < 0)
+		io_info_msg ("%s is a prefix leading to the keymap `%s'.",
+				keyseq->keys->buf, map_names[keyseq->cmd.code]);
+	else {
+		//strcpy_c tstr(the_funcs[keyseq->cmd.vector][keyseq->cmd.code].func_name);
+		//char* fname = tstr.data();
+		const char* fname = the_funcs[keyseq->cmd.vector][keyseq->cmd.code].func_name;
+		describe_function_const(fname);
+	}
+
 }
 
 
@@ -236,9 +247,9 @@ where_is (char * name)
 void
 help_with_command (void)
 {
-  if (!the_cmd_frame->cmd)
-    io_info_msg ("help-with-command: No command is executing now.");
-  describe_function (the_cmd_frame->cmd->func_name);
+	if (!the_cmd_frame->cmd)
+		io_info_msg ("help-with-command: No command is executing now.");
+	describe_function_const(the_cmd_frame->cmd->func_name);
 }
 
 

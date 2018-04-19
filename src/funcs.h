@@ -100,12 +100,12 @@ typedef void (*interactive_function) ();
 
 struct cmd_func
 {
-  char *func_name;
-  char ** func_doc;
-  char ** func_args;
-  char ** init_code;
-  interactive_function func_func;
-  char *cpp_func_name;
+	const char *func_name;
+	char ** func_doc;
+	char ** func_args;
+	char ** init_code;
+	interactive_function func_func;
+	const char *cpp_func_name;
 };
 
 // cast it into the void for table look-up purposes

@@ -1,6 +1,4 @@
-#ifndef HELPH
-#define HELPH
-
+#pragma once
 /*
  * $Id: help.h,v 1.4 2000/08/10 21:02:50 danny Exp $
  *
@@ -23,7 +21,8 @@
 #include "info.h"
 
 extern void expand_help_msg ();
-extern void describe_function(char* name);
+void describe_function_nonconst(char* name);
+void describe_function_const(const char* name);
 extern void brief_describe_key (struct key_sequence * keyseq);
 extern void describe_key(struct key_sequence * keyseq);
 extern void where_is (char* name);;
@@ -31,5 +30,3 @@ extern void help_with_command ();
 extern void builtin_help(char* name);
 extern void make_wallchart_info ();
 extern void write_info(char * info, FILE * fp);
-
-#endif  /* HELPH */

@@ -1842,8 +1842,7 @@ DEFUN ("describe-key",
 "Display the full documentation of the function KEYSEQ invokes.",
 #endif
 
-DEFUN ("describe-function",
-       FDdescribe_function, FAdescribe_function, describe_function)
+DEFUN ("describe-function", FDdescribe_function, FAdescribe_function, describe_function_nonconst)
 #ifdef FUNC_ARG_STRINGS
 "CDescribe function? ",
 #endif
