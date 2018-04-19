@@ -51,6 +51,7 @@
 #include "ref.h"
 #include "cmd.h"
 #include "lists.h"
+#include "logging.h"
 
 using std::cout;
 using std::endl;
@@ -2221,6 +2222,7 @@ static struct cell_buf cell_buffer;
 void
 init_refs (void)
 {
+	log_debug("init_refs called");
 	cell_buffer.size = FIFO_START;
 	cell_buffer.buf = (struct pos *) ck_malloc (cell_buffer.size * sizeof (struct pos));
 	bzero (cell_buffer.buf, cell_buffer.size * sizeof (struct pos));
@@ -2568,6 +2570,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 void
 for_all_vars (void (*func) (char *, struct var *))
 {
+	log_debug("for_all_vars called");
 	hash_apply (the_vars, (char* (*)(char*, char*)) func);
 }
 
@@ -2578,6 +2581,7 @@ for_all_vars (void (*func) (char *, struct var *))
 struct var *
 find_or_make_var (char *string, int len)
 {
+	log_debug("find_or_make_var called");
 	struct var *ret;
 	int ch;
 
@@ -2608,6 +2612,7 @@ find_or_make_var (char *string, int len)
 struct var *
 find_var (char *string, int len)
 {
+	log_debug("find_var called");
 	int ch;
 	struct var *ret;
 
@@ -2659,7 +2664,8 @@ flush_var (char *name, struct var *var)
 void
 flush_variables (void)
 {
-  for_all_vars (flush_var);
-  hash_die (the_vars);
-  the_vars = hash_new ();
+	log_debug("flush_variables called");
+	for_all_vars (flush_var);
+	hash_die (the_vars);
+	the_vars = hash_new ();
 }
