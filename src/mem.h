@@ -22,3 +22,14 @@ class mem {
 		std::vector<void *> ptrs;
 		bool _release_on_destruction = false;
 };
+
+// offers a kludge around const and non-constant strings
+// Use with care.
+class strcpy_c {
+	public:
+		strcpy_c(const char* str);
+		char* data() const;
+		~strcpy_c();
+	private:
+		char* null_terminated_str;
+};

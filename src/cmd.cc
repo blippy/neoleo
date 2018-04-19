@@ -42,6 +42,7 @@ static_assert(false);
 #include "decompile.h"
 #include "lists.h"
 #include "logging.h"
+#include "mem.h"
 
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free
@@ -2312,8 +2313,17 @@ quote_macro_args (char *args)
 }
 
 void
-execute_command (char *str)
+execute_command(const char *instr)
 {
+	// kludge to ensure we can pass in a const string
+	strcpy_c mem(instr);
+	char *str = mem.data();
+	//mem a_mem(true);
+	//char *str = (char*) malloc(1+strlen(instr));
+	//a_mem.add_ptr(str);
+	//strcpy(str, instr);
+
+
 	int iscmd = 0;
 	char *ptr = str;
 	char *run;		/* The first string to execute. */

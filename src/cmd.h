@@ -19,8 +19,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#include <memory>
-
 /*
  * This file explains the generic interface to interactive functions.
  * This covers how C functions are made available to the user, how
@@ -350,7 +348,7 @@ extern void setn_arg_text (struct command_arg * arg, const char * text, int len)
 extern void init_arg_text (struct command_arg * arg, const char * text);
 extern void set_default_arg (struct command_arg * arg, char * text, int len);
 extern void command_loop (int prefix, int iscmd);
-void execute_command(char *str);
+void execute_command(const char *str);
 void execute_command_str(std::string cmd);
 void execute_command_sv(std::string_view cmd);
 extern int get_chr (void);
