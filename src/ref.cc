@@ -2574,6 +2574,11 @@ for_all_vars (void (*func) (char *, struct var *))
 	hash_apply (the_vars, (char* (*)(char*, char*)) func);
 }
 
+struct var *find_var_1(char* str)
+{
+	return (struct var*) hash_find(the_vars, str);	
+}
+
 /* Find a variable in the list of variables, or create it if it doesn't
    exist.  Takes a name and a length so the name doesn't have to be
    null-terminated
@@ -2588,7 +2593,7 @@ find_or_make_var (char *string, int len)
 	ch = string[len];
 	string[len] = '\0';
 
-	ret = (struct var *) hash_find (the_vars, string);
+	ret = find_var_1( string);
 	if (ret)
 	{
 		string[len] = ch;
@@ -2618,7 +2623,7 @@ find_var (char *string, int len)
 
 	ch = string[len];
 	string[len] = '\0';
-	ret = (struct var *) hash_find (the_vars, string);
+	ret = find_var_1(string);
 	string[len] = ch;
 	return ret;
 }
