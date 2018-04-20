@@ -39,14 +39,12 @@
 
 using namespace std::string_literals;
 
-struct hash_control * info_buffers;
 std::map<std::string, struct info_buffer *> info_buffers_1;
 
 
 struct info_buffer *
 find_info(const char * name)
 {
-	//return (struct info_buffer *)hash_find (info_buffers, name);
 	auto it = info_buffers_1.find(name);
 	if(it != info_buffers_1.end())
 		return it->second;
@@ -69,7 +67,6 @@ find_or_make_info(const char * name)
 	strcpy (buf->name, name);
 	buf->len = 0;
 	buf->text = 0;
-	//hash_insert (info_buffers, buf->name, (char *) buf);
 	info_buffers_1[buf->name] = buf;
 	return buf;
 }

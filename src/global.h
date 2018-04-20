@@ -173,9 +173,6 @@ extern void add_range_ref (struct rng *);
 extern void add_timer_ref (int);
 extern void add_ref_to (int);
 
-struct hash_control; /* in case it hasn't been declared yet */
-//extern char *hash_insert (struct hash_control *, char *, VOIDSTAR);
-//extern char *flt_to_str (num_c val);
 extern void push_refs (struct ref_fm *);
 extern void no_more_cells (void);
 

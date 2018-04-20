@@ -72,7 +72,6 @@ using namespace std::literals;
 
 int yylex ();
 void yyerror (std::string_view s);
-//VOIDSTAR parse_hash;
 
 
 /* This table contains a list of the infix single-char functions */
@@ -385,6 +384,7 @@ int yyparse_parse(const std::string& input)
 
 
 std::map<std::string,function*> parse_hash_1;
+
 void add_parse_hash(const char* name, function* func)
 {
 	parse_hash_1[name] = func;
@@ -392,8 +392,6 @@ void add_parse_hash(const char* name, function* func)
 
 function* find_func(char* name)
 {
-	//return (function*) hash_find((hash_control*) parse_hash, name);
-
 	auto it = parse_hash_1.find(name);
 	if(it != parse_hash_1.end())
 		return it->second;

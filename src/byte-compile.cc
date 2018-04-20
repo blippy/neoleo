@@ -322,14 +322,6 @@ struct function skip_funs[] =
 
 void init_bcode_func(const char* name, function* funcs)
 {
-	/*
-	char* ptr = (char*) ck_malloc(strlen(name)+1);
-	strcpy(ptr, name);
-	m_function_names.add_ptr(ptr);
-	hash_insert((hash_control *)parse_hash, ptr, funcs);
-	*/
-
-	// The new way
 	add_parse_hash(name, funcs);
 }
 
