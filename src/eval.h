@@ -152,7 +152,7 @@
 #define SKIP		254
 #define SKIP_L		255
 
-struct function
+typedef struct function
 {
 	/* See C_mumble below.  This is used when byte-compiling,
 	   and decompiling */
@@ -177,8 +177,8 @@ struct function
 
 	/* This is the function's name.  It gets used for compiling
 	   decompiling, and parsing. . . */
-	char *fn_str;
-};
+	const char *fn_str;
+} function_t;
 
 extern struct function the_funs[];
 extern int n_usr_funs;

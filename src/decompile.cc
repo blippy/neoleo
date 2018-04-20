@@ -68,7 +68,7 @@ static CELLREF decomp_col;
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
 static struct pr_node *
-n_alloc (int size, int tightness, char *fmt, ...)
+n_alloc (int size, int tightness, const char *fmt, ...)
 {
 	struct pr_node *ret;
 	va_list args;
@@ -102,7 +102,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 
 	int pri;
 	int aso;
-	char *chr;
+	const char *chr;
 	switch (GET_COMP (f->fn_comptype)) {
 		case C_IF:
 			{
@@ -188,7 +188,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 		case C_CELL:
 			{
 				int num1, num2;
-				char *str;
+				const char *str;
 				CELLREF row, col;
 
 				row = GET_ROW (expr);

@@ -683,7 +683,7 @@ do_compbal (struct value *p)
   p->Float = principal * busi_pow (1 + rate, term);
 }
 
-struct function busi_funs[] =
+function_t busi_funs[] =
 {
   {C_FN2, X_A2, "RF", to_vptr(do_npv), "npv"},		/* 1 */
   {C_FN2, X_A2, "RF", to_vptr(do_irr), "irr"},		/* 2 */
