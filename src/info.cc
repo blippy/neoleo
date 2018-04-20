@@ -89,6 +89,15 @@ clear_info (struct info_buffer * buf)
   buf->len = 0;
 }
 
+void fill_info_buffer(struct info_buffer* buf, char* text, int len)
+{
+
+	++buf->len;		// Number of lines in the the_text_buf
+	buf->text = (char **)ck_remalloc (buf->text, buf->len * sizeof (char *));
+	buf->text[buf->len - 1] = (char *)ck_malloc (len + 1);
+	bcopy(text, buf->text[buf->len - 1], len + 1);
+}
+	
 /* This appears to be a source of trouble in the help
  * system.  Every time help is requested for non-standard
  * instructions (macros and the like), Oleo dumps core.
@@ -100,19 +109,23 @@ clear_info (struct info_buffer * buf)
 void
 print_info (struct info_buffer * buf, const char * format, ...)
 {
-  va_list ap;
-  char txt[1000];
-  int len;			/* Length of the new line */
-  
-  va_start (ap, format);
-  vsprintf (txt, format, ap);
-  va_end (ap);
-  len = strlen (txt);
+	log_debug("print_info");
+	va_list ap;
+	char txt[1000];
+	int len;			// Length of the new line
 
-  ++buf->len;			/* Number of lines in the buffer */
-  buf->text = (char **)ck_remalloc (buf->text, buf->len * sizeof (char *));
-  buf->text[buf->len - 1] = (char *)ck_malloc (len + 1);
-  bcopy (txt, buf->text[buf->len - 1], len + 1);
+	va_start (ap, format);
+	vsprintf (txt, format, ap);
+	va_end (ap);
+	len = strlen (txt);
+
+	/*
+	++buf->len;			// Number of lines in the buffer
+	buf->text = (char **)ck_remalloc (buf->text, buf->len * sizeof (char *));
+	buf->text[buf->len - 1] = (char *)ck_malloc (len + 1);
+	bcopy (txt, buf->text[buf->len - 1], len + 1);
+	*/
+	fill_info_buffer(buf, txt, len);
 }
 
 
@@ -132,24 +145,21 @@ io_text_start (void)
 void
 io_text_line (const char * format, ...)
 {
-  va_list ap;
-  char txt[1000];
-  int len;			/* Length of the new line */
-  
-  va_start (ap, format);
-  vsprintf (txt, format, ap);
-  va_end (ap);
-  len = strlen (txt);
+	log_debug("io_text_line");
+	
+	va_list ap;
+	char txt[1000];
+	int len;			// Length of the new line
 
-  if (the_text_buf == NULL)
-	return;
+	va_start (ap, format);
+	vsprintf (txt, format, ap);
+	va_end (ap);
+	len = strlen (txt);
 
-  ++the_text_buf->len;		/* Number of lines in the the_text_buf */
-  the_text_buf->text =
-    (char **)ck_remalloc (the_text_buf->text,
-			  the_text_buf->len * sizeof (char *));
-  the_text_buf->text[the_text_buf->len - 1] = (char *)ck_malloc (len + 1);
-  bcopy (txt, the_text_buf->text[the_text_buf->len - 1], len + 1);
+	if (the_text_buf == NULL) return;
+
+	fill_info_buffer(the_text_buf, txt, len);
+
 }
 
 void

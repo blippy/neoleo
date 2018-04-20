@@ -36,6 +36,7 @@
 #include "help.h"
 #include "key.h"
 #include "io-utils.h"
+#include "logging.h"
 #include "mem.h"
 #include "utils.h"
 
@@ -324,9 +325,10 @@ make_wallchart_info (void)
 void
 write_info (char * info, FILE * fp)
 {
-  struct info_buffer * ib = find_or_make_info (info);
-  int x;
-  for (x = 0; x < ib->len; ++x)
-    fprintf (fp, "%s\n", ib->text[x]);
+	log_debug("write_info() called");
+	struct info_buffer * ib = find_or_make_info (info);
+	int x;
+	for (x = 0; x < ib->len; ++x)
+		fprintf (fp, "%s\n", ib->text[x]);
 }
 
