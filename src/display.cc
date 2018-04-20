@@ -36,6 +36,33 @@
 #include "io-utils.h"
 #include "utils.h"
 
+/*
+#define xx_IRllx(R)  ((R)->x)
+#define xx_IRlly(R)  ((R)->y)
+#define xx_IRurx(R)  ((R)->x + (R)->w - 1)
+#define xx_IRury(R)  ((R)->y + (R)->h - 1)
+*/
+
+#define xx_IRx(R) ((R)->x)
+#define xx_IRy(R) ((R)->y)
+#define xx_IRw(R) ((R)->w)
+#define xx_IRh(R) ((R)->h)
+#define xx_IRxl(R) xx_IRx(R)
+#define xx_IRyl(R) xx_IRy(R)
+#define xx_IRxh(R) (xx_IRx(R) + xx_IRw(R) - 1)
+#define xx_IRyh(R) (xx_IRy(R) + xx_IRh(R) - 1)
+
+#define xx_IRinit(R,X,Y,W,H)   (void)(((R)->x = (X)), ((R)->y = (Y)), \
+				      ((R)->w = (W)), ((R)->h = (H)))
+/* extern int xx_IRintersects (xx_IntRectangle, xx_IntRectangle); */
+/*
+#define xx_IRintersects(R1,R2) \
+  (xx_IRllx(R1) <= xx_IRurx(R2) &&\
+   xx_IRurx(R1) >= xx_IRllx(R2) &&\
+   xx_IRlly(R1) <= xx_IRury(R2) &&\
+   xx_IRury(R1) >= xx_IRlly(R2))
+*/
+
 struct cell_display *
 cell_display_of (struct display *disp, CELLREF r, CELLREF c)
 {

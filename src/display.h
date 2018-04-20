@@ -20,20 +20,21 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#pragma once
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 #include "global.h"
-//#include "font.h"
 #include "cell.h"
-#include "ir.h"
+//#include "ir.h"
 
 union cell_numeric
 {
   int integer;
   double dbl;
+};
+
+typedef struct xx_sIntRectangle * xx_IntRectangle;
+struct xx_sIntRectangle
+{
+  int x, y;
+  unsigned int w, h;
 };
 
 struct cell_display
@@ -103,9 +104,3 @@ extern int pr_display_cell (struct display *, CELLREF, CELLREF, CELL *);
 #define dpy_aref(DPY,R,C) \
    ((DPY)->cells + (((R) - (DPY)->range.lr) * dpy_cols(DPY)) \
     + ((C) - (DPY)->range.lc))
-
-
-#ifdef __cplusplus
-//}
-#endif
-
