@@ -22,10 +22,6 @@
 #include "config.h"
 #endif
 
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include "sysdef.h"
 #include "forminfo.h"
 
@@ -1409,9 +1405,7 @@ char * formula_info[] =
 
 
 /* Search for some formula documentation. */
-
-char **
-forminfo_text (char * name)
+char** forminfo_text (const char* name)
 {
   char ** pos = formula_info;
   while (*pos)
