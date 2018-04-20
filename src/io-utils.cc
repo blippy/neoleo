@@ -96,7 +96,7 @@ char nname[] = "#NOT_A_NUMBER";
 char iname[] = "#INFINITY";
 char mname[] = "#MINUS_INFINITY";
 
-char *date_formats[] = {
+const char *date_formats[] = {
 	"%Y/%m/%d",			/* YYYY/MM/DD */
 	"%Y-%m-%d",			/* YYYY-MM-DD */
 	"%d/%m/%Y",			/* European style */
