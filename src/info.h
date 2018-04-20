@@ -28,7 +28,7 @@ struct info_buffer
 struct info_buffer* find_info(const char * name);
 struct info_buffer* find_or_make_info(const char * name);
 extern void clear_info (struct info_buffer * buf);
-extern void print_info (struct info_buffer * buf, char * format, ...);
+extern void print_info (struct info_buffer * buf, const char* format, ...);
 extern void io_text_start (void);
 extern void io_text_line (const char * format, ...);
 extern void io_text_finish (void);

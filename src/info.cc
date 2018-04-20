@@ -98,7 +98,7 @@ clear_info (struct info_buffer * buf)
  */
 
 void
-print_info (struct info_buffer * buf, char * format, ...)
+print_info (struct info_buffer * buf, const char * format, ...)
 {
   va_list ap;
   char txt[1000];
