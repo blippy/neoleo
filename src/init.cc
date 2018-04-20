@@ -31,7 +31,7 @@
 
 #include <string.h>
 
-#include "proto.h"
+//#include "proto.h"
 #include "init.h"
 #include "global.h"
 #include "io-term.h"

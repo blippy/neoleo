@@ -31,7 +31,7 @@
 
 #include <iostream>
 #include <assert.h>
-#include "proto.h"
+//#include "proto.h"
 #include "funcdef.h"
 #include <stdio.h>
 #include <stdlib.h>
