@@ -39,7 +39,27 @@
 
 using namespace std::string_literals;
 
-std::map<std::string, struct info_buffer *> info_buffers_1;
+std::map<std::string, info_buffer_t*> info_buffers_1;
+
+//////////////////////////////////////////////////////////////////////////
+// atexit cleanup
+// There must surely be a better way of doing this: probably by
+// declaring info_buffer as a class, and making info_buffers_1
+// be a map of info_buffer's rather than their pointers.
+//
+class cleanup_buffers { public: ~cleanup_buffers(); };
+
+cleanup_buffers::~cleanup_buffers() 
+{
+	for(auto it = info_buffers_1.begin() ; it != info_buffers_1.end(); ++it) {
+		auto buf = it->second;
+		clear_info(buf);
+		delete buf;
+	}
+}
+
+static cleanup_buffers buffer_cleaner;
+//////////////////////////////////////////////////////////////////////////
 
 
 struct info_buffer *
@@ -53,7 +73,7 @@ find_info(const char * name)
 }
 
 
-struct info_buffer * 
+info_buffer_t * 
 find_or_make_info(const char * name)
 {
 	if constexpr(false) log_debug("find_or_make_info:"s + name);
@@ -61,13 +81,14 @@ find_or_make_info(const char * name)
 	if (buf)
 		return buf;
 
-	buf = ((struct info_buffer *)
-			ck_malloc (sizeof (struct info_buffer) + strlen(name) + 1));
-	buf->name = (char *)buf + sizeof (*buf);
-	strcpy (buf->name, name);
-	buf->len = 0;
-	buf->text = 0;
-	info_buffers_1[buf->name] = buf;
+	//buf = ((struct info_buffer *) ck_malloc (sizeof (struct info_buffer) + strlen(name) + 1));
+	buf = new info_buffer_t;
+	buf->name = name;
+	//buf->name = (char *)buf + sizeof (*buf);
+	//strcpy (buf->name, name);
+	//buf->len = 0;
+	//buf->text = 0;
+	info_buffers_1[name] = buf;
 	return buf;
 }
 
@@ -116,12 +137,6 @@ print_info (struct info_buffer * buf, const char * format, ...)
 	va_end (ap);
 	len = strlen (txt);
 
-	/*
-	++buf->len;			// Number of lines in the buffer
-	buf->text = (char **)ck_remalloc (buf->text, buf->len * sizeof (char *));
-	buf->text[buf->len - 1] = (char *)ck_malloc (len + 1);
-	bcopy (txt, buf->text[buf->len - 1], len + 1);
-	*/
 	fill_info_buffer(buf, txt, len);
 }
 
@@ -133,8 +148,8 @@ static struct info_buffer * the_text_buf;
 void
 io_text_start (void)
 {
-  the_text_buf = find_or_make_info ("_text");
-  clear_info (the_text_buf);
+	the_text_buf = find_or_make_info ("_text");
+	clear_info (the_text_buf);
 }
 
 

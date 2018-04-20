@@ -18,12 +18,15 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-struct info_buffer 
+
+#include <string>
+
+typedef struct info_buffer 
 {
-  char * name;
-  int len;
-  char ** text;
-};
+	std::string name;
+	int len = 0;
+	char ** text = nullptr;
+} info_buffer_t;
 
 struct info_buffer* find_info(const char * name);
 struct info_buffer* find_or_make_info(const char * name);
