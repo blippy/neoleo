@@ -331,7 +331,7 @@ extern void free_input_stream (struct input_stream * stream);
 extern void pop_input_stream (void);
 extern void start_entering_macro (void);
 extern void bound_macro (int num);
-extern void run_string_as_macro (char * macro);
+void run_string_as_macro(const char * macro);
 extern void call_last_kbd_macro (int count);
 extern void end_macro (void);
 extern void stop_entering_macro (void);

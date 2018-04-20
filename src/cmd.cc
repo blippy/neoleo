@@ -151,7 +151,7 @@ default_input_stream (void)
 
 
 static input_stream_ptr
-macro_only_input_stream (struct rng *rng, char *first_line, int len, struct command_frame *frame)
+macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
 	input_stream_ptr ret = make_input_stream();
 	ret->_rmac = (struct macro *) obstack_alloc (&ret->_macro_stack, sizeof (struct macro));
@@ -245,7 +245,7 @@ bound_macro (int num)
 }
 
 void
-run_string_as_macro (char *macro)
+run_string_as_macro (const char *macro)
 {
 	struct rng rng;
 	/* This is going to continue the command loop
