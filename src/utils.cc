@@ -1090,3 +1090,8 @@ pad_right(const std::string& s, int width)
 		res += " ";
 	return res;
 }
+
+size_t strlen(const std::string& s)
+{
+	return s.size();
+}

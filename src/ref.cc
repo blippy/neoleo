@@ -31,8 +31,9 @@
 #endif
 
 #include <iostream>
-#include <string.h>
-#include <vector>
+#include <map>
+#include <string>
+//#include <vector>
 
 #include "global.h"
 #include "funcdef.h"
@@ -45,7 +46,7 @@
 #include "eval.h"
 #include "io-abstract.h"
 #include "io-generic.h"
-#include "hash.h"
+//#include "hash.h"
 #include "byte-compile.h"
 #include "parse.hh"
 #include "ref.h"
@@ -55,7 +56,7 @@
 
 using std::cout;
 using std::endl;
-using std::vector;
+//using std::vector;
 
 static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);
 static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
@@ -87,7 +88,8 @@ extern int debug;
 #endif
 
 /* Functions for dealing exclusively with variables */
-struct hash_control *the_vars;
+//struct hash_control *the_vars;
+std::map<std::string, struct var>the_vars_1;
 
 
 /* For the fifo-buffer */
@@ -2228,7 +2230,7 @@ init_refs (void)
 	bzero (cell_buffer.buf, cell_buffer.size * sizeof (struct pos));
 	cell_buffer.push_to_here = cell_buffer.buf;
 	cell_buffer.pop_frm_here = cell_buffer.buf;
-	the_vars = hash_new ();
+	//the_vars = hash_new ();
 }
 
 /* Push the cells in REF onto the FIFO.  This calls push_cell to do the
@@ -2571,12 +2573,23 @@ void
 for_all_vars (void (*func) (char *, struct var *))
 {
 	log_debug("for_all_vars called");
-	hash_apply (the_vars, (char* (*)(char*, char*)) func);
+	//hash_apply (the_vars, (char* (*)(char*, char*)) func);
+	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {
+		auto s1{it->first};
+		strcpy_c s2(s1.c_str());
+		char* s3 = s2.data();
+		func(s3, &(it->second));
+	}
 }
 
 struct var *find_var_1(char* str)
 {
-	return (struct var*) hash_find(the_vars, str);	
+	//return (struct var*) hash_find(the_vars, str);
+	auto it = the_vars_1.find(str);
+	if(it != the_vars_1.end())
+		return &(it ->second);
+	else
+		return nullptr;
 }
 
 /* Find a variable in the list of variables, or create it if it doesn't
@@ -2587,7 +2600,17 @@ struct var *
 find_or_make_var (char *string, int len)
 {
 	log_debug("find_or_make_var called");
-	struct var *ret;
+	assert(strlen(string) == len);
+
+	struct var *ret = find_var_1(string);
+	if(ret) return ret;
+
+	struct var new_var;
+	new_var.var_name = string;
+	the_vars_1[string] = new_var;
+	return find_var_1(string);
+
+	/*
 	int ch;
 
 	ch = string[len];
@@ -2600,6 +2623,10 @@ find_or_make_var (char *string, int len)
 		return ret;
 	}
 
+	ret = new var_t;
+	ret->var_name = string;
+	*/
+	/*
 	ret = (struct var *) ck_malloc (sizeof (struct var) + len);
 	bcopy (string, ret->var_name, len + 1);
 	ret->var_flags = VAR_UNDEF;
@@ -2608,9 +2635,13 @@ find_or_make_var (char *string, int len)
 	ret->v_rng.hr = 0;
 	ret->v_rng.hc = 0;
 	ret->var_ref_fm = 0;
-	hash_insert (the_vars, ret->var_name, (char *)ret);
+	*/
+	//hash_insert (the_vars, ret->var_name, (char *)ret);
+	/*
+	the_vars_1[ret->var_name] = ret;
 	string[len] = ch;
 	return ret;
+	*/
 }
 
 /* Like find-or-make-var except returns 0 if it doesn't exist */
@@ -2654,12 +2685,13 @@ add_var_ref (void * vvar)
     }
 }
 
+/*
 static void
 flush_var (char *name, struct var *var)
 {
   free (var);
 }
-
+*/
 
 /* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
    associated with each variable.  Note that this does not get rid of
@@ -2670,7 +2702,8 @@ void
 flush_variables (void)
 {
 	log_debug("flush_variables called");
-	for_all_vars (flush_var);
-	hash_die (the_vars);
-	the_vars = hash_new ();
+	//for_all_vars (flush_var);
+	//hash_die (the_vars);
+	//the_vars = hash_new ();
+	the_vars_1.clear();
 }

@@ -125,22 +125,6 @@ class cell
 bool vacuous(cell* cp);
 std::string get_cell_formula_at(int r, int c);
 
-struct var
-  {
-    struct var *var_next;
-
-    short var_flags;
-    struct rng v_rng;
-
-    /* This is a list of the cells that reference this variable.  If the 
-     * variable changes, all the cells in the vars new range must be given
-     * ref_froms that point to these variables
-     */
-    struct ref_fm *var_ref_fm;
-
-    /* A variable sized array that holds the var-name. */
-    char var_name[1];
-  };
 
 //typedef struct cell CELL;
 typedef cell CELL;
@@ -153,6 +137,23 @@ typedef cell CELL;
  */
 #define VAR_DANGLING_RANGE 4
 
+typedef struct var
+{
+	//struct var *var_next;
+
+	short var_flags = VAR_UNDEF;
+	struct rng v_rng{0, 0 ,0 ,0};
+
+	/* This is a list of the cells that reference this variable.  If the 
+	 * variable changes, all the cells in the vars new range must be given
+	 * ref_froms that point to these variables
+	 */
+	struct ref_fm *var_ref_fm = nullptr;
+
+	/* A variable sized array that holds the var-name. */
+	//char var_name[1];
+	std::string var_name;
+} var_t;
 /* Shorthand for the cell union */
 //#define cell_flt	c_z.c_n
 //#define cell_str	c_z.c_s
