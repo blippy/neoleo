@@ -25,8 +25,8 @@ struct info_buffer
   char ** text;
 };
 
-extern struct info_buffer * find_info (char * name);
-extern struct info_buffer * find_or_make_info (char * name);
+struct info_buffer* find_info(const char * name);
+struct info_buffer* find_or_make_info(const char * name);
 extern void clear_info (struct info_buffer * buf);
 extern void print_info (struct info_buffer * buf, char * format, ...);
 extern void io_text_start (void);

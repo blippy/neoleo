@@ -44,7 +44,7 @@ std::map<std::string, struct info_buffer *> info_buffers_1;
 
 
 struct info_buffer *
-find_info (char * name)
+find_info(const char * name)
 {
 	//return (struct info_buffer *)hash_find (info_buffers, name);
 	auto it = info_buffers_1.find(name);
@@ -56,7 +56,7 @@ find_info (char * name)
 
 
 struct info_buffer * 
-find_or_make_info(char * name)
+find_or_make_info(const char * name)
 {
 	if constexpr(false) log_debug("find_or_make_info:"s + name);
 	struct info_buffer * buf = find_info(name);
