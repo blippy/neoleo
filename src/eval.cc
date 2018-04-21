@@ -45,10 +45,6 @@
 #define M_PI (3.1415926535897932384626433832795028841971693993751)
 #endif
 
-#ifdef __TURBOC__
-#define SMALLEVAL
-#endif
-
 #include "funcdef.h"
 
 #define obstack_chunk_alloc ck_malloc
@@ -76,9 +72,7 @@ extern int n_usr_funs;
 static int deal_area ( unsigned char cmd, unsigned char num_args, struct value *p);
 static void add_int (long value);
 static void add_flt (double value);
-#ifndef __TURBOC__
 RETSIGTYPE math_sig ( int sig);
-#endif
 
 int fls (long);
 #ifdef SMALLEVAL
@@ -324,9 +318,7 @@ init_eval ()
   stack = (struct value *) ck_malloc (stackmax * sizeof (struct value));
   curstack = 0;
   current_cycle = 1;
-#ifndef __TURBOC__
   (void) signal (SIGFPE, math_sig);
-#endif
 }
 
 /* This huge function takes a byte-compiled expression and executes it. */
@@ -1440,20 +1432,6 @@ to_int (double x)
 /* Various methods of dealing with arithmatic overflow.  They don't work well.
    Someone should really convince this thing to properly deal with it.
  */
-#ifdef __TURBOC__
-int
-matherr (exc)
-     struct exception *exc;
-{
-  stack[curstack].type = TYP_ERR;
-  stack[curstack].Value = BAD_INPUT;
-  write (2, "MATHERR\n", 8);
-  return 1;
-}
-
-#endif
-
-#ifndef __TURBOC__
 RETSIGTYPE
 math_sig ( int sig)
 {
@@ -1461,7 +1439,6 @@ math_sig ( int sig)
   stack[curstack].Value = BAD_INPUT;
 }
 
-#endif
 
 /* Here's the entry point for this module. */
 void
