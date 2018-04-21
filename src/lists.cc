@@ -73,9 +73,6 @@ local_free (p)
 #define MIN MIN_ROW
 static struct obstack find_stack;
 
-#if 1
-#define malloc_chain_check(x)
-#endif
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -189,7 +186,6 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
 	  *prevp = ptr;
 	}
       bzero (ptr->mem, size);
-      malloc_chain_check (1);
     }
   else if ((*prevp)->lo > lo)
     {
@@ -204,7 +200,6 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
       bzero (ptr->mem, ((*prevp)->lo - ptr->lo) * ele);
       resync (*prevp, ptr, ele);
       *prevp = ptr;
-      malloc_chain_check (1);
     }
   else if ((*prevp)->hi < hi && (*prevp)->next && (*prevp)->next->lo <= hi)
     {
@@ -222,7 +217,6 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
       resync ((*prevp)->next, ptr, ele);
       resync (*prevp, ptr, ele);
       *prevp = ptr;
-      malloc_chain_check (1);
     }
   else if ((*prevp)->hi < hi)
     {
@@ -236,7 +230,6 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
       bzero (ptr->mem + (1 + (*prevp)->hi - ptr->lo) * ele, (hi - (*prevp)->hi) * ele);
       resync (*prevp, ptr, ele);
       *prevp = ptr;
-      malloc_chain_check (1);
     }
   else
     ptr = *prevp;
@@ -319,7 +312,6 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 	  *prevp = ptr;
 	}
       *prevp = ptr;
-      malloc_chain_check (1);
     }
   else
     {
@@ -337,7 +329,6 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 	  bzero (ptr->mem, ((*prevp)->lo - lo) * ele);
 	  resync (*prevp, ptr, ele);
 	  *prevp = ptr;
-	  malloc_chain_check (1);
 	}
       while ((*prevp)->hi < hi && (*prevp)->next && (*prevp)->next->lo <= hi)
 	{
@@ -356,7 +347,6 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 	  resync ((*prevp)->next, ptr, ele);
 	  resync (*prevp, ptr, ele);
 	  *prevp = ptr;
-	  malloc_chain_check (1);
 	}
       if ((*prevp)->hi < hi)
 	{
@@ -370,7 +360,6 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 	  bzero (ptr->mem + (1 + (*prevp)->hi - ptr->lo) * ele, (hi - (*prevp)->hi) * ele);
 	  resync (*prevp, ptr, ele);
 	  *prevp = ptr;
-	  malloc_chain_check (1);
 	}
     }
 #ifdef TEST
