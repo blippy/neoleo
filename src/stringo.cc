@@ -20,14 +20,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
+#include <functional>
 #include <string.h>
 #include <ctype.h>
 #include "funcdef.h"
@@ -342,6 +337,43 @@ do_strstr(struct value * p)
 	p->sLong(pos);
 }
 
+
+
+
+// Mostly for testing purposes for a better way of wrapping functions
+static std::string do_version(struct value* p)
+{
+	return VERSION;
+}
+
+std::function<void(struct value*)>
+wrapfunc(std::function<std::string(struct value*)> func)
+{
+	auto fn = [=](struct value* p) { 
+		std::string s = func(p);
+		char* ret = alloc_tmp_mem(s.size()+1);		
+		strcpy(ret,  s.c_str());
+		p->sString(ret);
+		return; 
+	};
+	//return reinterpret_cast<vptr>(fn);
+	return fn;
+}
+
+static void do_version_1(struct value* p) { wrapfunc(do_version)(p); }
+
+static std::string do_concata(struct value* p)
+{
+	std::string s1 = (p)->gString();
+	std::string s2 = (p+1)->gString();
+	return s1+s2;
+}
+
+static void do_concata_1(struct value* p)
+{
+	wrapfunc(do_concata)(p);
+}
+
 struct function string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" },	// 1 
 { C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" },	// 2 
@@ -357,6 +389,8 @@ struct function string_funs[] = {
 { C_FN2,	X_A2,	"SI",   to_vptr(do_repeat),	"repeat" },	// 9 
 { C_FNN,	X_AN,	"EEEE", to_vptr(do_concat),	"concat" },	// 10 
 { C_FNN,	X_AN,	"SIIS", to_vptr(do_edit),	"edit" },	// 11 
+{ C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },  // 12
+{ C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },  // 13
 
 { 0,		0,	{0},	0,		0 }
 };
