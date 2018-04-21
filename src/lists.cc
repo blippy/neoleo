@@ -25,19 +25,7 @@
 
 using std::cout;
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-static_assert(false);
-#include <dmalloc.h>
-#endif
-
-#ifdef	HAVE_MALLOC_H
-static_assert(false);
-#include <malloc.h>
-#endif
 
 #include "global.h"
 #include "lists.h"
@@ -73,21 +61,6 @@ local_free (p)
 #define MIN MIN_ROW
 static struct obstack find_stack;
 
-
-#ifdef __GNUC__
-#define inline __inline__
-#else
-#define inline
-#endif
-
-#ifdef TEST_ME
-typedef unsigned char CELLREF;
-typedef unsigned int size_t;
-#define ck_malloc malloc
-extern void *malloc ();
-#define MIN 1
-#define MAX 65535
-#endif
 
 using FPTR = find *;
 using IPTR = int *;
@@ -943,110 +916,3 @@ dbg_print_cols (pos)
 
 #endif
 
-#ifdef TEST_ME
-main ()
-{
-  char buf[100];
-  static void *vec[10];
-  static siz[10];
-  char *ret;
-  int n;
-  int t;
-  int hi, lo;
-  CELLREF pos;
-  int z;
-
-
-  while (printf ("-->"), gets (buf))
-    {
-      n = buf[1] - '0';
-      switch (buf[0])
-	{
-	case 'i':
-	  if (sscanf (&buf[2], "%d %d", &siz[n], &t) < 1)
-	    {
-	      printf ("No size?\n");
-	      break;
-	    }
-	  vec[n] = list_init (siz[n], t);
-	  printf ("vec %d init'd to %lx with siz %u and buf %d\n", n, vec[n], siz[n], t);
-	  break;
-
-	case 'f':
-	  ret = find (vec[n], atoi (&buf[2]));
-	  if (ret)
-	    {
-	      printf ("Found at %lx  ", ret);
-	      for (t = 0; t < siz[n]; t++)
-		printf ("%x ", ret[t]);
-	      printf ("\n");
-	    }
-	  else
-	    printf ("Not found\n");
-	  break;
-
-	case 'F':
-	  if (sscanf (&buf[2], "%d %d", &lo, &hi) != 2)
-	    {
-	      printf ("Faild to scan\n");
-	      break;
-	    }
-	  find_rng (vec[n], lo, hi);
-	  while (ret = next_rng (&pos))
-	    {
-	      printf ("Found %u at %lx  ", pos, ret);
-	      for (t = 0; t < siz[n]; t++)
-		printf ("%x ", ret[t]);
-	      printf ("\n");
-	    }
-	  break;
-
-	case 'm':
-	  ret = make (vec[n], atoi (&buf[2]));
-	  if (ret)
-	    {
-	      z = atoi (&buf[4]);
-	      printf ("Made at %lx  ", ret);
-	      for (t = 0; t < siz[n]; t++)
-		{
-		  printf ("%x(%x) ", ret[t], z);
-		  ret[t] = z;
-		}
-	      printf ("\n");
-	    }
-	  else
-	    printf ("Failed!!\n");
-	  break;
-
-	case 'M':
-	  z = 0;
-	  if (sscanf (&buf[2], "%d %d %d", &lo, &hi, &z) < 2)
-	    {
-	      printf ("Scan failed\n");
-	      break;
-	    }
-	  make_rng (vec[n], lo, hi);
-	  while (ret = next_rng (&pos))
-	    {
-	      printf ("Found %u at %lx  ", pos, ret);
-	      for (t = 0; t < siz[n]; t++)
-		{
-		  printf ("%x(%x) ", ret[t], z);
-		  ret[t] = z;
-		}
-	      if (z)
-		z++;
-	      printf ("\n");
-	    }
-	  break;
-
-	case 'q':
-	  exit (0);
-
-	default:
-	  printf ("Unknown command!\n");
-	}
-    }
-}
-
-#endif
