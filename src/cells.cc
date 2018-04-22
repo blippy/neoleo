@@ -211,16 +211,9 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 			break;
 		case 10:
 			{
-				CELL* cell_ptr = find_cell (row, col);
-				if (cell_ptr && (GET_TYP (cell_ptr) || cell_ptr->get_cell_formula()))
-				{
-					char* strptr = decomp (row, col, cell_ptr);
-					p->String = (char *) obstack_alloc (&tmp_mem, strlen (strptr) + 1);
-					strcpy (p->String, strptr);
-					decomp_free ();
-				}
-				else
-					p->String = "";
+				std::string formula = decomp_str(row, col);
+				p->String = (char *) obstack_alloc (&tmp_mem, formula.size() + 1);
+				strcpy(p->String, formula.c_str());
 				break;
 			}
 		case 11:
@@ -768,10 +761,7 @@ static std::string m_copied_cell_formula = "";
 void
 copy_this_cell_formula()
 {
-	CELL *cp = find_cell(curow, cucol);
-	char *dec = decomp(curow, cucol, cp);
-	m_copied_cell_formula = std::string(dec);
-	decomp_free();
+	m_copied_cell_formula = decomp_str(curow, cucol);
 }
 
 void 
