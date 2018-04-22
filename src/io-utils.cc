@@ -1306,12 +1306,8 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 		list_set_separator(',');
 		list_read_file(fp, ismerge);
 	} else if (stricmp("dbf", format) == 0) {
-#if defined(HAVE_LIBXBASE) || defined(HAVE_LIBXDB)
-		ReadXbaseFile(name, ismerge);
-#else
 		io_error_msg ("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
 		return -1;
-#endif
 	} else {
 		return -1;
 	}
