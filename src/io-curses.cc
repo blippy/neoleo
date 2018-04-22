@@ -21,17 +21,8 @@
 
 #include <unistd.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <iostream>
 #include <assert.h>
-//#include "proto.h"
 #include "funcdef.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,11 +36,6 @@ using std::endl;
 using std::string;
 using std::vector;
 
-//#if defined(HAVE_LIBNCURSES) && defined(HAVE_NCURSES_H)
-//#include <ncurses.h>
-//#else
-//#include <curses.h>
-//#endif
 #include <ncurses.h>
 #include <menu.h>
 #include <panel.h>
@@ -809,82 +795,76 @@ move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 static void
 _io_update_status (void)
 {
-  CELL *cp;
-  char *dec;
-  const char *ptr;
-  static char hmbuf[40];
-  int wid;
-  int plen;
-  int dlen;
-  int yy, xx;
-  
-  if (!user_status || input_view.current_info)
-    return;
-  getyx (stdscr, yy, xx);
-  move (Global->status, 0);
-  wid = columns - 2;
-  
-  if (mkrow != NON_ROW)
-    {
-      struct rng r;
-      
-      addch ('*');
-      --wid;
-      set_rng (&r, curow, cucol, mkrow, mkcol);
-      ptr = range_name (&r);
-    }
-  else
-    ptr = cell_name (curow, cucol);
-  
-  addstr (ptr);
-  wid -= strlen (ptr);
-  
-  if (how_many != 1)
-    {
-      sprintf (hmbuf, " {%d}", how_many);
-      addstr (hmbuf);
-      wid -= strlen (hmbuf);
-    }
-  
-  if ((cp = find_cell (curow, cucol)) && cp->get_cell_formula())
-    {
-      dec = decomp (curow, cucol, cp);
-      dlen = strlen (dec);
-    }
-  else
-    {
-      dec = 0;
-      dlen = 0;
-    }
-  
-  ptr = cell_value_string (curow, cucol, 1);
-  plen = strlen (ptr);
-  
-  if (dec)
-    {
-      wid -= 4;
-      if (dlen + plen > wid)
+	CELL *cp;
+	//char *dec;
+	const char *ptr;
+	static char hmbuf[40];
+	int wid;
+	int plen;
+	//int dlen;
+	int yy, xx;
+
+	if (!user_status || input_view.current_info)
+		return;
+	getyx (stdscr, yy, xx);
+	move (Global->status, 0);
+	wid = columns - 2;
+
+	if (mkrow != NON_ROW)
 	{
-	  if (plen + 3 > wid)
-	    printw (" %.*s... [...]", wid - 6, ptr);
-	  else
-	    printw (" %s [%.*s...]", ptr, wid - plen - 3, dec);
+		struct rng r;
+
+		addch ('*');
+		--wid;
+		set_rng (&r, curow, cucol, mkrow, mkcol);
+		ptr = range_name (&r);
 	}
-      else
-	printw (" %s [%s]", ptr, dec);
-      decomp_free ();
-    }
-  else if (plen)
-    {
-      --wid;
-      if (plen > wid)
-	printw (" %.*s...", wid - 3, ptr);
-      else
-	printw (" %s", ptr);
-    }
-  
-  clrtoeol ();
-  move (yy, xx);
+	else
+		ptr = cell_name (curow, cucol);
+
+	addstr (ptr);
+	wid -= strlen (ptr);
+
+	if (how_many != 1)
+	{
+		sprintf (hmbuf, " {%d}", how_many);
+		addstr (hmbuf);
+		wid -= strlen (hmbuf);
+	}
+
+	string dec;
+	if ((cp = find_cell (curow, cucol)) && cp->get_cell_formula())
+		dec = decomp (curow, cucol, cp);
+
+	ptr = cell_value_string (curow, cucol, 1);
+	plen = strlen (ptr);
+
+	int dlen = dec.size();
+	if(dlen>0)
+	{
+		wid -= 4;
+		if (dlen + plen > wid)
+		{
+			if (plen + 3 > wid)
+				printw (" %.*s... [...]", wid - 6, ptr);
+			else
+				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec);
+		}
+		else
+			printw (" %s [%s]", ptr, dec);
+		decomp_free ();
+	}
+	else if (plen)
+	{
+		--wid;
+		if (plen > wid)
+			printw (" %.*s...", wid - 3, ptr);
+		else
+			printw (" %s", ptr);
+	}
+
+	clrtoeol ();
+	move (yy, xx);
 }
 
 extern int auto_recalc;
@@ -917,194 +897,194 @@ _io_clear_input_after (void)
 static void
 _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
-  int glowing;
-  int lenstr;
-  int j;
-  int wid, wwid;
-  int hgt;
-  char *ptr;
-  int yy, xx;
-  
-  if (input_view.current_info)
-    return;
+	int glowing;
+	int lenstr;
+	int j;
+	int wid, wwid;
+	int hgt;
+	char *ptr;
+	int yy, xx;
 
-  wid = get_width (c);
-  if (!wid)
-    return;
-  if (wid > win->numc)
-    wid = win->numc;
-  hgt = get_height (r);
-  if (!hgt)
-    return;
-  if (hgt > win->numr)
-    hgt = win->numr;
-  
-  getyx (stdscr, yy, xx);
-  glowing = (r == curow && c == cucol && win == cwin);
-  ptr = print_cell (cp);
-  move_cursor_to (win, r, c, 0);
-  if (glowing)
-    standout ();
-  j = GET_JST (cp);
-  if (j == JST_DEF)
-    j = default_jst;
-  lenstr = strlen (ptr);
-  
-  if (lenstr <= wid - 1)
-    {
-      CELLREF ccl, cch;
-      
-      if (j == JST_LFT)
-	printw ("%-*.*s", wid, wid - 1, ptr);
-      else if (j == JST_RGT)
-	printw ("%*.*s ", wid - 1, wid - 1, ptr);
-      else if (j == JST_CNT)
+	if (input_view.current_info)
+		return;
+
+	wid = get_width (c);
+	if (!wid)
+		return;
+	if (wid > win->numc)
+		wid = win->numc;
+	hgt = get_height (r);
+	if (!hgt)
+		return;
+	if (hgt > win->numr)
+		hgt = win->numr;
+
+	getyx (stdscr, yy, xx);
+	glowing = (r == curow && c == cucol && win == cwin);
+	ptr = print_cell (cp);
+	move_cursor_to (win, r, c, 0);
+	if (glowing)
+		standout ();
+	j = GET_JST (cp);
+	if (j == JST_DEF)
+		j = default_jst;
+	lenstr = strlen (ptr);
+
+	if (lenstr <= wid - 1)
 	{
-	  wwid = (wid - 1) - lenstr;
-	  printw ("%*s%*s ", (wwid + 1) / 2 + lenstr, ptr, wwid / 2, "");
-	}
+		CELLREF ccl, cch;
+
+		if (j == JST_LFT)
+			printw ("%-*.*s", wid, wid - 1, ptr);
+		else if (j == JST_RGT)
+			printw ("%*.*s ", wid - 1, wid - 1, ptr);
+		else if (j == JST_CNT)
+		{
+			wwid = (wid - 1) - lenstr;
+			printw ("%*s%*s ", (wwid + 1) / 2 + lenstr, ptr, wwid / 2, "");
+		}
 #ifdef TEST
-      else
-	panic ("Unknown justification");
+		else
+			panic ("Unknown justification");
 #endif
-      if (glowing)
-	standend ();
-      
-      if (lenstr == 0 && c > win->screen.lc
-	  && find_slop (win->win_slops, r, c - 1, &ccl, &cch))
-	{
-	  CELLREF ccdl, ccdh;
-	  
-	  if (find_slop (win->win_slops, r, c, &ccdl, &ccdh) && ccdl == c)
-	    {
-	      kill_slop (win->win_slops, r, ccdl, ccdh);
-	      for (; ccdh != ccdl; --ccdh)
-		if (ccdh != c && (wwid = get_width (ccdh)))
-		  {
-		    move_cursor_to (win, r, ccdh, 0);
-		    printw ("%*s", wwid, "");
-		  }
-	    }
-	  kill_slop (win->win_slops, r, ccl, cch);
-	  io_pr_cell (r, ccl, find_cell (r, ccl));
+		if (glowing)
+			standend ();
+
+		if (lenstr == 0 && c > win->screen.lc
+				&& find_slop (win->win_slops, r, c - 1, &ccl, &cch))
+		{
+			CELLREF ccdl, ccdh;
+
+			if (find_slop (win->win_slops, r, c, &ccdl, &ccdh) && ccdl == c)
+			{
+				kill_slop (win->win_slops, r, ccdl, ccdh);
+				for (; ccdh != ccdl; --ccdh)
+					if (ccdh != c && (wwid = get_width (ccdh)))
+					{
+						move_cursor_to (win, r, ccdh, 0);
+						printw ("%*s", wwid, "");
+					}
+			}
+			kill_slop (win->win_slops, r, ccl, cch);
+			io_pr_cell (r, ccl, find_cell (r, ccl));
+		}
+		else if (find_slop (win->win_slops, r, c, &ccl, &cch))
+		{
+			kill_slop (win->win_slops, r, ccl, cch);
+			for (; cch != ccl; --cch)
+				if (cch != c && (wwid = get_width (cch)))
+				{
+					move_cursor_to (win, r, cch, 0);
+					printw ("%*s", wwid, "");
+				}
+			io_pr_cell (r, ccl, find_cell (r, ccl));
+		}
 	}
-      else if (find_slop (win->win_slops, r, c, &ccl, &cch))
+	else
 	{
-	  kill_slop (win->win_slops, r, ccl, cch);
-	  for (; cch != ccl; --cch)
-	    if (cch != c && (wwid = get_width (cch)))
-	      {
-		move_cursor_to (win, r, cch, 0);
-		printw ("%*s", wwid, "");
-	      }
-	  io_pr_cell (r, ccl, find_cell (r, ccl));
+		CELLREF cc = c;
+		CELL *ccp;
+		CELLREF ccl, cch;
+
+		for (wwid = wid; lenstr > wwid - 1; wwid += get_width (cc))
+		{
+			if (++cc > win->screen.hc
+					|| ((ccp = find_cell (r, cc))
+						&& GET_TYP (ccp)
+						&& (GET_FORMAT (ccp) != FMT_HID
+							|| (GET_FORMAT (ccp) == FMT_DEF
+								&& default_fmt != FMT_HID))))
+			{
+				--cc;
+				break;
+			}
+		}
+
+		if (lenstr > wwid - 1) {  /* FIXME: This construct needs to be checked */
+			if (GET_TYP (cp) == TYP_FLT)
+				ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
+			else if (GET_TYP (cp) == TYP_INT)
+				ptr = (char *) numb_oflo;
+		}
+
+		if (wwid == 1)
+		{
+			addch (' ');
+			if (glowing)
+				standend ();
+		}
+		else if (wwid == wid)
+		{
+			printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
+			if (glowing)
+				standend ();
+		}
+		else if (glowing)
+		{
+			printw ("%.*s", wid, ptr);
+			standend ();
+			printw ("%-*.*s ", wwid - wid - 1, wwid - wid - 1, ptr + wid);
+		}
+		else if (r == curow && (cucol > c && cucol <= cc))
+		{
+			CELLREF ctmp;
+			int w_left;
+			int w_here;
+
+			w_left = wid;
+			for (ctmp = c + 1; ctmp < cucol; ctmp++)
+				w_left += get_width (ctmp);
+			printw ("%.*s", w_left, ptr);
+			standout ();
+			w_here = get_width (cucol);
+			if (wwid > w_left + w_here)
+			{
+				printw ("%-*.*s", w_here, w_here, ptr + w_left);
+				standend ();
+				printw ("%-*.*s ",
+						wwid - (w_left + w_here) - 1, wwid - (w_left + w_here) - 1,
+						ptr + w_left + w_here);
+			}
+			else
+			{
+				printw ("%-*.*s", w_here, w_here - 1, ptr + w_left);
+				standend ();
+			}
+		}
+		else
+			printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
+
+		if (find_slop (win->win_slops, r, c, &ccl, &cch))
+		{
+			change_slop (win->win_slops, r, ccl, cch, c, cc);
+			for (; cch > cc; --cch)
+				if ((wwid = get_width (cch)))
+				{
+					move_cursor_to (win, r, cch, 0);
+					printw ("%*s", wwid, "");
+				}
+			for (cch = c - 1; cch > ccl; --cch)
+				if ((wwid = get_width (cch)))
+				{
+					move_cursor_to (win, r, cch, 0);
+					printw ("%*s", wwid, "");
+				}
+			if (ccl != c)
+				io_pr_cell (r, ccl, find_cell (r, ccl));
+		}
+		else
+			set_slop ((VOIDSTAR *) (&(win->win_slops)), r, c, cc);
 	}
-    }
-  else
-    {
-      CELLREF cc = c;
-      CELL *ccp;
-      CELLREF ccl, cch;
-      
-      for (wwid = wid; lenstr > wwid - 1; wwid += get_width (cc))
+	if ((hgt > 1) && Global->display_formula_mode)
 	{
-	  if (++cc > win->screen.hc
-	      || ((ccp = find_cell (r, cc))
-		  && GET_TYP (ccp)
-		  && (GET_FORMAT (ccp) != FMT_HID
-		      || (GET_FORMAT (ccp) == FMT_DEF
-			  && default_fmt != FMT_HID))))
-	    {
-	      --cc;
-	      break;
-	    }
+		move_cursor_to (win, r, c, 1);
+		ptr = decomp (r, c, cp);
+		printw ("%.*s ", wid - 1, ptr);
+		decomp_free ();
 	}
-      
-      if (lenstr > wwid - 1) {  /* FIXME: This construct needs to be checked */
-	if (GET_TYP (cp) == TYP_FLT)
-	  ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
-	else if (GET_TYP (cp) == TYP_INT)
-	  ptr = (char *) numb_oflo;
-      }
-      
-      if (wwid == 1)
-	{
-	  addch (' ');
-	  if (glowing)
-	    standend ();
-	}
-      else if (wwid == wid)
-	{
-	  printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
-	  if (glowing)
-	    standend ();
-	}
-      else if (glowing)
-	{
-	  printw ("%.*s", wid, ptr);
-	  standend ();
-	  printw ("%-*.*s ", wwid - wid - 1, wwid - wid - 1, ptr + wid);
-	}
-      else if (r == curow && (cucol > c && cucol <= cc))
-	{
-	  CELLREF ctmp;
-	  int w_left;
-	  int w_here;
-	  
-	  w_left = wid;
-	  for (ctmp = c + 1; ctmp < cucol; ctmp++)
-	    w_left += get_width (ctmp);
-	  printw ("%.*s", w_left, ptr);
-	  standout ();
-	  w_here = get_width (cucol);
-	  if (wwid > w_left + w_here)
-	    {
-	      printw ("%-*.*s", w_here, w_here, ptr + w_left);
-	      standend ();
-	      printw ("%-*.*s ",
-		      wwid - (w_left + w_here) - 1, wwid - (w_left + w_here) - 1,
-		      ptr + w_left + w_here);
-	    }
-	  else
-	    {
-	      printw ("%-*.*s", w_here, w_here - 1, ptr + w_left);
-	      standend ();
-	    }
-	}
-      else
-	printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
-      
-      if (find_slop (win->win_slops, r, c, &ccl, &cch))
-	{
-	  change_slop (win->win_slops, r, ccl, cch, c, cc);
-	  for (; cch > cc; --cch)
-	    if ((wwid = get_width (cch)))
-	      {
-		move_cursor_to (win, r, cch, 0);
-		printw ("%*s", wwid, "");
-	      }
-	  for (cch = c - 1; cch > ccl; --cch)
-	    if ((wwid = get_width (cch)))
-	      {
-		move_cursor_to (win, r, cch, 0);
-		printw ("%*s", wwid, "");
-	      }
-	  if (ccl != c)
-	    io_pr_cell (r, ccl, find_cell (r, ccl));
-	}
-      else
-	set_slop ((VOIDSTAR *) (&(win->win_slops)), r, c, cc);
-    }
-  if ((hgt > 1) && Global->display_formula_mode)
-    {
-      move_cursor_to (win, r, c, 1);
-      ptr = decomp (r, c, cp);
-      printw ("%.*s ", wid - 1, ptr);
-      decomp_free ();
-    }
-  if (glowing)
-    io_update_status ();
-  move (yy, xx);
+	if (glowing)
+		io_update_status ();
+	move (yy, xx);
 }
 
 
