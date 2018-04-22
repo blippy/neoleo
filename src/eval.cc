@@ -20,33 +20,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <ctype.h>
+#include <cmath>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef	HAVE_MATH_H
-#include <math.h>
-#else
-/*
- * Non-standard platform.
- */
-#ifdef	M_PI
-#undef M_PI
-#endif
-#define M_PI (3.1415926535897932384626433832795028841971693993751)
-#endif
-
 #include "funcdef.h"
 
+constexpr auto pi = std::acos(-1);
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
@@ -648,7 +630,7 @@ eval_expression ( unsigned char *expr)
 
 		case F_PI:
 			p->type = TYP_FLT;
-			p->Float = M_PI;
+			p->Float = pi;
 			break;
 
 		case F_ROW:
