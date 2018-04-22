@@ -688,27 +688,7 @@ DEFUN ("insert-col", FDinsert_col, FAinsert_col, to_vptr(insert_col))
 "Insert ARG empty cols.",
 #endif
 
-#if 0 /* From Oleo-patches-B, no assignment yet */
-DEFUN ("insert-copy-row", FDinsert_copy_row, FAinsert_copy_row,
-       insert_copy_row)
-#ifdef FUNC_ARG_STRINGS
-"+p",
-#endif
-#ifdef DOC_STRINGS
-"Insert ARG copies of the current row, below the current row.",
-#endif
-#endif /* 0 */
 
-#if 0 /* From Oleo-Patches-B, no assignment yet */
-DEFUN ("insert-copy-col", FDinsert_copy_col, FAinsert_copy_col,
-       insert_copy_col)
-#ifdef FUNC_ARG_STRINGS
-"+p",
-#endif
-#ifdef DOC_STRINGS
-"Insert ARG copies of the current column, to the right of the current column.",
-#endif
-#endif /* 0 */
 
 DEFUN ("delete-row", FDdelete_row, FAdelete_row, to_vptr(delete_row))
 #ifdef FUNC_ARG_STRINGS
@@ -1084,26 +1064,6 @@ DEFUN ("set-default-format",
 "See set-region-format for an explanation of formats.",
 #endif
 
-#if 0
-DEFUN ("set-default-font",
-       FDset_default_font, FAset_default_font, set_default_font)
-#ifdef FUNC_ARG_STRINGS
-"wSet default font to? ",
-"dPoint size? (e.g. 1.3) ",
-#endif
-#ifdef DOC_STRINGS
-"Set the default font to NAME at SCALE",
-"NAME should be a name defined with [define-font].",
-"SCALE should be a floating point number, which will be interpreted",
-"as a ratio to the default point size.  For example, if SCALE is 1.33",
-"and the default point size is 12 then this cell will be drawn with",
-"a point size of 16.",
-"",
-"Under X, this scaling behavior depends on having a wide variety of fonts",
-"installed, and wildcarding point-sizes in x11 font names passed to ",
-"define-font.",
-#endif
-#endif
 
 /* Commands for Inserting Cell Details Into Input Area  */
 
@@ -1218,30 +1178,8 @@ DEFUN ("insert-user-format-part",
 /* Keyboard Macro and Variable Commands */
 
 DEFUN_3 ("start-entering-macro", FDstart_entering_macro, start_entering_macro)
-#ifdef DOC_STRINGS
-"Record subsequent keyboard input, defining a keyboard macro.",
-"The commands are recorded even as they are executed.",
-"Use [stop-entering-macro] to finish recording and make the macro available.",
-"Use [store-last-macro] to record the macro in a spreadsheet cell.",
-#if 0
-Should support this:
-Non-nil arg (prefix arg) means append to last macro defined;
-This begins by re-executing that macro as if you typed it again.
-#endif
-#endif
 
 DEFUN_3 ("stop-entering-macro", FDstop_entering_macro, stop_entering_macro)
-#ifdef DOC_STRINGS
-"Finish defining a keyboard macro.",
-"The definition was started by [start-entering-macro]",
-"The macro is now available for use via [call-last-kbd-macro]",
-"or it can be given a name with [store-last-macro] and then invoked",
-"by passing its cell address to [exec].",
-#if 0
-"With numeric arg, repeat macro now that many times,",
-"counting the definition just completed as the first repetition.",
-#endif
-#endif
 
 DEFUN ("call-last-kbd-macro", FDcall_last_kbd_macro,
        FAcall_last_kbd_macro, call_last_kbd_macro)
