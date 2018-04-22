@@ -475,9 +475,6 @@ do_fn2:
 			tmp_str = (char *) expr + jumpto;
 			expr++;
 			newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", tmp_str);
-			/* bcopy((VOIDSTAR)expr,(VOIDSTAR)&tmp_str,sizeof(char *));
-			   expr+=sizeof(char *);
-			   new=n_alloc(strlen(tmp_str)+1,1000,f->fn_str,tmp_str); */
 			break;
 
 		case C_FLT:
@@ -560,8 +557,6 @@ byte_decompile ( unsigned char *expr)
 			c_node = &the_line[line_alloc / 2];
 		}
 
-		//if (*expr)
-		//	goto next_byte;
 	}
 
 
