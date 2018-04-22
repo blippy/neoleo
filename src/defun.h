@@ -137,14 +137,14 @@ DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, to_vptr(mark_cell_cmd))
 DEFUN_3 ("clear-mark", FDclear_mark, unmark_cmd)
 
 DEFUN ("save-mark-to-cell", FDsave_mark_to_cell,
-	FAsave_mark_to_cell, 
+	FAsave_mark_to_cell,
 	to_vptr(save_mark_to_cell))
 #ifdef FUNC_ARG_STRINGS
 "RSave mark to cell? ",
 #endif
 
 DEFUN ("save-point-to-cell", FDsave_point_to_cell,
-	FAsave_point_to_cell, 
+	FAsave_point_to_cell,
 	to_vptr(save_point_to_cell))
 #ifdef FUNC_ARG_STRINGS
 "RSave point to cell? ",
@@ -193,8 +193,7 @@ DEFUN ("scroll-upleft", FDscroll_upleft, FAscroll_upleft, to_vptr(scroll_cell_cu
 "Scroll the current window upleft ARG row/cols; or full screen if no ARG.",
 #endif
 
-DEFUN ("scroll-downright", FDscroll_downright, FAscroll_downright,
-       to_vptr(scroll_cell_cursor)) 
+DEFUN ("scroll-downright", FDscroll_downright, FAscroll_downright, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#6",
 "p",
@@ -305,7 +304,7 @@ DEFUN_3 ("redraw-screen", FDredraw_screen, to_vptr(redraw_screen))
 
 DEFUN ("edit-cell", FDedit_cell, FAedit_cell, to_vptr(edit_cell))
 #ifdef FUNC_ARG_STRINGS
-"$Set %c to? ", 
+"$Set %c to? ",
 #endif
 #ifdef DOC_STRINGS
 "Assign FORMULA to the current cell.",
@@ -313,7 +312,7 @@ DEFUN ("edit-cell", FDedit_cell, FAedit_cell, to_vptr(edit_cell))
 
 DEFUN ("set-cell", FDset_cell, FAset_cell, to_vptr(edit_cell))
 #ifdef FUNC_ARG_STRINGS
-"$'Set %c to? ", 
+"$'Set %c to? ",
 #endif
 #ifdef DOC_STRINGS
 "Assign FORMULA to the current cell.",
@@ -604,7 +603,7 @@ DEFUN ("copy-region", FDcopy_region, FAcopy_region, to_vptr(copy_region))
 "destination), or a range containing the same number of cells as the",
 "source range.",
 #endif
-  
+ 
 DEFUN("copy-this-cell-formula", FDcopy_this_cell_formula, FAcopy_this_cell_formula, copy_this_cell_formula)
 #ifdef DOC_STRINGS
 "Copy the formula in the current row to the yank buffer",
@@ -636,7 +635,7 @@ DEFUN ("copy-values-in-region",
 "destination), or a range containing the same number of cells as the",
 "source range.",
 #endif
-    
+
 DEFUN ("move-region",
        FDmove_region, FAmove_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
@@ -652,7 +651,7 @@ DEFUN ("move-region",
 "This command makes adjustments to all formulas in the range as well as to",
 "formulas and variable bindings that refer to the range.",
 #endif
-    
+
 DEFUN ("move-marked-region",
        FDmove_marked_region, FAmove_marked_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
@@ -671,7 +670,7 @@ DEFUN ("move-marked-region",
 "This command should be used in macros only when the mark is known to have",
 "been set.",
 #endif
-    
+
 DEFUN ("insert-row", FDinsert_row, FAinsert_row, to_vptr(insert_row))
 #ifdef FUNC_ARG_STRINGS
 "+p",
@@ -1128,11 +1127,10 @@ DEFUN ("insert-abs-cell-ref", FDinsert_abs_cell_ref,
 "Insert an absolute reference to the current cell in the input area.",
 #endif
 
-DEFUN ("insert-cell-attr",
-       FDinsert_cell_attr, FAinsert_cell_attr, insert_cell_attr)
+DEFUN ("insert-cell-attr", FDinsert_cell_attr, FAinsert_cell_attr, insert_cell_attr)
 #ifdef FUNC_ARG_STRINGS
 "RInsert attribute of cell? ",
-"SInsert %0 attribute? ", 
+"SInsert %0 attribute? ",
 #endif
 #ifdef DOC_STRINGS
 "(Internal use -- probably not useful as a command.)",
@@ -1198,8 +1196,7 @@ DEFUN_3 ("end-macro", FDend_macro, end_macro)
 "Oleo executes this command as part of the process of executing a kbd  macro.",
 #endif
 
-DEFUN ("store-last-macro",
-       FDstore_last_macro, FAstore_last_macro, store_last_macro) 
+DEFUN ("store-last-macro", FDstore_last_macro, FAstore_last_macro, store_last_macro)
 #ifdef FUNC_ARG_STRINGS
 "rStore at? ",
 #endif
@@ -1396,7 +1393,7 @@ DEFUN ("merge-spreadsheet",
 "Combine the spreadsheet in FILE with the current spreadsheet.",
 "This reads a new spreadsheet without clearing all cells first.",
 #endif
-    
+
 DEFUN ("write-region-to-file",
        FDwrite_reg_cmd, FAwrite_reg_cmd, write_reg_cmd)
 #ifdef FUNC_ARG_STRINGS
@@ -1451,7 +1448,7 @@ DEFUN_3 ("split-window-vertically", FDvsplit_window, vsplit_window)
 #ifdef DOC_STRINGS
 "Divide the current window evenly into two stacked windows.",
 #endif
-    
+
 DEFUN_3 ("delete-window", FDdelete_window, delete_window)
 #ifdef DOC_STRINGS
 "Remove the current window from the display.",
@@ -1469,7 +1466,7 @@ DEFUN ("close-window", FDclose_window, FAclose_window, close_window)
 #ifdef DOC_STRINGS
 "Remove the window ARG from the display.",
 #endif
-    
+ 
 DEFUN ("goto-window", FDgoto_window, FAgoto_window, goto_window)
 #ifdef FUNC_ARG_STRINGS
 "NGoto window number? ",
@@ -1477,7 +1474,7 @@ DEFUN ("goto-window", FDgoto_window, FAgoto_window, goto_window)
 #ifdef DOC_STRINGS
 "Make the ARGth window the current window.",
 #endif
-    
+
 DEFUN_3 ("goto-minibuffer", FDgoto_minibuffer, goto_minibuffer)
 #ifdef DOC_STRINGS
 "Select the input area as the current window.",
@@ -1585,7 +1582,6 @@ DEFUN ("show-variable", FDshow_variable, FAshow_variable, show_var)
 "Report the current binding of a user-defined variable.",
 "Variables can be defined using the [set-variable].",
 #endif
-      
 
 DEFUN ("write-keys", FDwrite_keys_cmd, FAwrite_keys_cmd, write_keys_cmd)
 #ifdef FUNC_ARG_STRINGS
@@ -1600,19 +1596,7 @@ DEFUN ("write-keys", FDwrite_keys_cmd, FAwrite_keys_cmd, write_keys_cmd)
 DEFUN ("write-variables",
        FDwrite_variables, FAwrite_variables, write_variables)
 #ifdef FUNC_ARG_STRINGS
-"fwWrite variables to file? ", 
-#endif
-#ifdef DOC_STRINGS
-"Use variable names to construct a shell script to FILE.",
-"This command looks for all variables that are bound to a single",
-"cell (rather than to a range).  It writes a shell script that assigns",
-"the value of that cell to a shell variable.  For example, if the",
-"variable `w2_exemptions' is bound to cell R2C3, and that cell contains",
-"the value `2', then the output of write-variables will include a line:",
-"	w2_exemptions=2",
-"",
-"This command is of limited utility, but was implemented as part of a crude",
-"system of forms generation.",
+"fwWrite variables to file? ",
 #endif
 
 /* Keymap Commands */
@@ -1642,12 +1626,7 @@ DEFUN ("create-keymap", FDcreate_keymap, FAcreate_keymap, create_keymap)
 DEFUN ("set-map-prompt", FDset_map_prompt, FAset_map_prompt, set_map_prompt)
 #ifdef FUNC_ARG_STRINGS
 "KSet prompt for keymap? ",
-"sPrompt for %1? ", 
-#endif
-#ifdef DOC_STRINGS
-"Set the prompt for KEYMAP to STRING.",
-"When KEYMAP is the current keymap, the prompt is displayed in the input",
-"area.",
+"sPrompt for %1? ",
 #endif
 
 DEFUN ("bind-key", FDbind_key, FAbind_key, bind_key)
@@ -1760,19 +1739,11 @@ DEFUN ("exit-self-inserting",
 #ifdef FUNC_ARG_STRINGS
 "l",
 #endif
-#ifdef DOC_STRINGS
-"Insert the name of the last character typed and exit the minibuffer.",
-"This is used to implement commands which prompt the user for a character.",
-#endif
 
 DEFUN ("pushback-keystroke",
        FApushback_keystroke, FDpushback_keystroke, pushback_keystroke)
 #ifdef FUNC_ARG_STRINGS
 "c'(any key continues) ",
-#endif
-#ifdef DOC_STRINGS
-"(Internal use -- probably not useful as a command.)",
-"Push the last keystroke back onto the input stream.",
 #endif
 
 DEFUN ("display-msg",
@@ -1781,9 +1752,6 @@ DEFUN ("display-msg",
 "sMessage? ",
 "c'%0",
 #endif
-#ifdef DOC_STRINGS
-"(For internal use only)",
-#endif
 
 DEFUN ("error-msg",
        FDerror_msg, FAerror_msg, display_msg)
@@ -1791,19 +1759,9 @@ DEFUN ("error-msg",
 "sMessage? ",
 "c!%0",
 #endif
-#ifdef DOC_STRINGS
-"Display an error message for the user.",
-"Macro processing will come to a halt.  The message vanishes as soon as the",
-"user types the next character of input or after a brief timeout.",
-#endif
-
-
 
 
 DEFUN ("bload", FDbload, FAbload, bload)
 #ifdef FUNC_ARG_STRINGS
 "frLoad neo-basic? ",
-#endif
-#ifdef DOC_STRINGS
-"Load neoleo basic FILENAME.",
 #endif
