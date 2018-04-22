@@ -159,8 +159,8 @@ stub_isssssssss (
  */
 struct cmd_stub
 {
-  char * type;
-  cmd_invoker stub;
+	const char * type;
+	cmd_invoker stub;
 };
 
 #undef STUB1
