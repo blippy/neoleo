@@ -24,9 +24,8 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 args.cc basic.cc  busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
-		 eval.cc experimental.cc format.cc forminfo.cc funcs.cc \
-		 help.cc \
-		 info.cc init.cc input.cc \
+		 eval.cc experimental.cc format.cc funcs.cc \
+		 init.cc input.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc io-visual.cc \
 		 key.cc \
@@ -52,8 +51,8 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
-		 errors.h eval.h format.h forminfo.h funcdef.h \
-		 funcs.h global.h help.h info.h init.h \
+		 errors.h eval.h format.h funcdef.h \
+		 funcs.h global.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-visual.h \
 		 key.h \

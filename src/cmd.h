@@ -31,7 +31,6 @@
 #include "key.h"
 #include "args.h"
 #include "funcs.h"
-#include "info.h"
 
 typedef void (*alarm_fn)(void);
 

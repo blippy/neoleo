@@ -5,6 +5,8 @@ DATE:    ONGOING
 
 * C++17 COMPILER IS NOW REQUIRED TO COMPILE SOURCES
 
+* removed help system. Read the html file instead
+
 * added `neobasic', a builtin BASIC-like language
 
 * added .BAS and .XBAS to headless mode to allow embedding of neobasic

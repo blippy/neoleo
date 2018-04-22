@@ -123,7 +123,6 @@ struct OleoGlobal	__tempGlobal,
 void (*read_file) (FILE *, int) = oleo_read_file;
 void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
-void (*show_file_opts) () = oleo_show_options;
 
 
 EXTERN void
@@ -305,7 +304,7 @@ do_set_option (char *ptr)
 	  read_file = oleo_read_file;
 	  write_file = oleo_write_file;
 	  set_file_opts = oleo_set_options;
-	  show_file_opts = oleo_show_options;
+	  //show_file_opts = oleo_show_options;
 	}
 #ifdef	HAVE_PANIC_SAVE
       else if (!stricmp ("panic", ptr))
@@ -313,7 +312,7 @@ do_set_option (char *ptr)
 	  read_file = panic_read_file;
 	  write_file = panic_write_file;
 	  set_file_opts = panic_set_options;
-	  show_file_opts = panic_show_options;
+	  //show_file_opts = panic_show_options;
 	}
 #endif
       else if (!stricmp ("list", ptr))
@@ -321,7 +320,7 @@ do_set_option (char *ptr)
 	  read_file = list_read_file;
 	  write_file = list_write_file;
 	  set_file_opts = list_set_options;
-	  show_file_opts = list_show_options;
+	  //show_file_opts = list_show_options;
 	  /*if (ptr[4])
 	    {
 	    ptr+=4;
@@ -394,63 +393,6 @@ set_options (char * ptr)
     io_recenter_cur_win ();
 }
 
-void 
-show_options (void)
-{
-  int n;
-  int fmts;
-  char *data_buf[9];
-
-  n = Global->auto_recalc;
-  io_text_start ();
-
-  io_text_line ("auto-recalculation: %s        Recalculate in background: %s",
-		n ? " on" : "off", Global->bkgrnd_recalc ? "on" : "off");
-  io_text_line ("make backup files:  %s        Copy files into backups:   %s",
-	__make_backups ? " on" : "off", __backup_by_copying ? "on" : "off");
-
-  io_text_line ("Asynchronous updates every %u ???",
-		cell_timer_seconds);
-
-  io_text_line ("Print width:      %5u", print_width);
-
-  io_text_line ("");
-
-  (*show_file_opts) ();
-
-  io_text_line ("");
-  show_window_options ();
-  io_text_line ("");
-
-  fmts = usr_set_fmts ();
-  if (fmts)
-    {
-      io_text_line ("User-defined formats:");
-      io_text_line ("Fmt    +Hdr    -Hdr   +Trlr   -Trlr    Zero   Comma Decimal  Prec         Scale");
-      for (n = 0; n < 16; n++)
-	{
-	  if (fmts & (1 << n))
-	    {
-	      get_usr_stats (n, data_buf);
-	      io_text_line ("%3d %7s %7s %7s %7s %7s %7s %7s %5s %13s",
-			    n + 1,
-			    data_buf[0],
-			    data_buf[1],
-			    data_buf[2],
-			    data_buf[3],
-			    data_buf[4],
-			    data_buf[5],
-			    data_buf[6],
-			    data_buf[7],
-			    data_buf[8]);
-	    }
-	}
-    }
-  else
-    io_text_line ("No user-defined formats have been defined");
-
-  io_text_finish ();
-}
 
 
 void
@@ -637,30 +579,7 @@ show_var (char *ptr)
   io_info_msg (print_buf);
 }
 
-static void
-show_a_var (char *name, struct var *v)
-{
-  if (v->var_flags == VAR_UNDEF)
-    return;
-  if (Global->a0)
-    {
-      if (v->v_rng.lr != v->v_rng.hr || v->v_rng.lc != v->v_rng.hc)
-	/* FOO */ io_text_line ("%-20s  $%s$%u:$%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr, col_to_str (v->v_rng.hc), v->v_rng.hr);
-      else
-	/* FOO */ io_text_line ("%-20s  $%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr);
-    }
-  else
-    io_text_line ("%-20s  %s", v->var_name, range_name (&(v->v_rng)));
-}
 
-void
-show_all_var (void)
-{
-  io_text_start ();
-  io_text_line ("%-20s  Current Value", "Variable Name");
-  for_all_vars (show_a_var);
-  io_text_finish ();
-}
 
 static FILE * write_variable_fp = 0;
 

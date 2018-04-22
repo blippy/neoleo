@@ -48,7 +48,6 @@
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-#include "info.h"
 #include "cmd.h"
 #include "decompile.h"
 #include "lists.h"
@@ -1093,11 +1092,6 @@ oleo_set_options(
   return -1;
 }
 
-void
-oleo_show_options ()
-{
-  io_text_line ("File format: oleo.");
-}
 
 
 #if 0

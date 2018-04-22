@@ -2062,7 +2062,6 @@ do_got_command ()
 	if (cur_cmd == break_cmd)
 	  {
 		  io_bell ();
-		  set_info (0);
 		  if (input_active)
 			  pop_unfinished_command ();	/* Abort a complex command. */
 		  //goto new_cycle;
@@ -2653,59 +2652,12 @@ void expand_prompt(char *str, struct line& line)
 
 /* Info commands */
 
-void
-set_info (char *name)
-{
-	struct info_buffer *ib = (name ? find_or_make_info (name) : 0);
-
-	if (the_cmd_frame->cmd && (the_cmd_arg.prompt_info != ib))
-	  {
-		  the_cmd_arg.info_line = 0;
-		  the_cmd_arg.prompt_info = ib;
-	  }
-	if (!ib && name && *name)
-		io_error_msg ("No information about %s.", name);
-}
 
 
-void
-page_info_backwards (int rep)
-{
-	if (rep < 0)
-		page_info (-rep);
-	else if (the_cmd_frame->cmd && the_cmd_arg.prompt_info)
-	  {
-		  int vis_lines =
-			  (Global->scr_lines - input_rows) / info_rows;
-		  int next = the_cmd_arg.info_line - vis_lines * rep;
-		  the_cmd_arg.info_line = ((next >= 0) ? next : 0);
-	  }
-	else
-		io_error_msg ("No info to page.");
-}
 
 #undef MAX
 #define MAX(A,B) (((A) >= (B)) ? (A) : (B))
 
-void
-page_info (int rep)
-{
-	if (rep < 0)
-		page_info_backwards (-rep);
-	else if (the_cmd_frame->cmd && the_cmd_arg.prompt_info)
-	  {
-		  int vis_lines =
-			  (Global->scr_lines - input_rows) / info_rows;
-		  int next = the_cmd_arg.info_line + vis_lines * rep;
-		  the_cmd_arg.info_line =
-			  ((next >= the_cmd_arg.prompt_info->len)
-			   ? MAX (0,
-				  (the_cmd_arg.prompt_info->len -
-				   vis_lines)) : next);
-	  }
-	else
-		io_error_msg ("No info to page.");
-}
 
 void
 view_info (char *name, int ignore)

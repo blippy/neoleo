@@ -1822,94 +1822,7 @@ DEFUN_3 ("other-window", FDother_window, other_window)
 "Select the ARGth different window.",
 #endif
 
-/* Informative Commands */
 
-DEFUN ("describe-key-briefly",
-       FDbrief_describe_key, FAbrief_describe_key, brief_describe_key)
-#ifdef FUNC_ARG_STRINGS
-"kDescribe key briefly? ",
-#endif
-#ifdef DOC_STRINGS
-"Print the name of the function KEYSEQ invokes.",
-#endif
-
-DEFUN ("describe-key",
-       FDdescribe_key, FAdescribe_key, describe_key)
-#ifdef FUNC_ARG_STRINGS
-"kDescribe key? ",
-#endif
-#ifdef DOC_STRINGS
-"Display the full documentation of the function KEYSEQ invokes.",
-#endif
-
-DEFUN ("describe-function", FDdescribe_function, FAdescribe_function, describe_function_nonconst)
-#ifdef FUNC_ARG_STRINGS
-"CDescribe function? ",
-#endif
-#ifdef DOC_STRINGS
-"Display the full documentation of FUNCTION (a symbol).",
-#endif
-
-DEFUN_5 ("describe-formula", FDdescribe_formula, FAdescribe_formula,
-	 DFdescribe_formula, view_info)
-#ifdef FUNC_ARG_STRINGS
-"SHelp with what formula function? ",
-"mview-info", 
-#endif
-#ifdef FUNC_INIT_CODE
-"{insert-context-word}",
-"{builtin-help %0}",
-#endif
-#ifdef DOC_STRINGS
-"Display the documentation for the given formula FUNCTION",
-#endif
-
-DEFUN_3 ("help-with-command", FAhelp_with_command, help_with_command)
-#ifdef DOC_STRINGS
-"Display help for the currently executing command.",
-#endif
-
-DEFUN ("where-is", FDwhere_is, FAwhere_is, where_is)
-#ifdef FUNC_ARG_STRINGS
-"SCommand or keymap? ",
-#endif
-#ifdef DOC_STRINGS
-"Print message listing a key sequence that invokes a specified command.",
-"Argument is a command name or keymap name.  If a keymap name is given,",
-"then the output tells what prefix select that keymap.",
-#endif
-
-DEFUN ("builtin-help", FDbuiltin_help, FAbuiltin_help, builtin_help)
-#ifdef FUNC_ARG_STRINGS
-"SHelp for what symbol? ",
-#endif
-#ifdef DOC_STRINGS
-"(Internal use -- probably not useful as a command.)",
-"Make one of the help messages built-in to Oleo the current prompt-info.",
-#endif
-
-DEFUN ("write-info", FDwrite_info, FAwrite_info, write_info)
-#ifdef FUNC_ARG_STRINGS
-"SWrite what info buffer? ",
-"fwWrite %0 to what file? ",
-#endif
-#ifdef DOC_STRINGS
-"(internal use) Write the info buffer NAME to FILE.",
-#endif
-
-
-DEFUN_3 ("make-wallchart-info", FAmake_wallchart_info, make_wallchart_info)
-#ifdef DOC_STRINGS
-"(Internal use -- probably not useful as a command.)",
-"Ensure the existence of an info buffer named `wallchart'.",
-"The buffer will contain a categoricly organized list of keybindings.",
-#endif
-
-DEFUN_3 ("show-options", FDshow_options, show_options)
-#ifdef DOC_STRINGS
-"Show the current state of all the spreadsheet options.",
-"Also shows the current definitions for all the user-defined variables.",
-#endif
 
 DEFUN ("set-option", FDset_option, FAset_option, set_options)
 #ifdef FUNC_ARG_STRINGS
@@ -2003,11 +1916,6 @@ DEFUN ("show-variable", FDshow_variable, FAshow_variable, show_var)
 "Variables can be defined using the [set-variable].",
 #endif
       
-DEFUN_3 ("show-all-variables", FDshow_all_variables, show_all_var)
-#ifdef DOC_STRINGS
-"Report the current bindings of all user-defined variables.",
-"Variables can be defined using the [set-variable].",
-#endif
 
 DEFUN ("write-keys", FDwrite_keys_cmd, FAwrite_keys_cmd, write_keys_cmd)
 #ifdef FUNC_ARG_STRINGS
@@ -2219,58 +2127,11 @@ DEFUN ("error-msg",
 "user types the next character of input or after a brief timeout.",
 #endif
 
-/* Temporary Hacks For Multi-line Text Display. */
 
-DEFUN ("set-info", FDset_info, FAset_info, set_info)
-#ifdef FUNC_ARG_STRINGS
-"SDisplay what info? ",
-#endif
-#ifdef DOC_STRINGS
-"(internal use -- probably not useful as an interactive command).",
-"Display the info-buffer ARG instead of the cell windows.",
-"Display-cells undoes this.",
-#endif
 
-DEFUN ("display-cells", FDdisplay_cells, FAdisplay_cells, set_info)
-#ifdef FUNC_ARG_STRINGS
-"#0",
-#endif
-#ifdef DOC_STRINGS
-"(internal use -- probably not useful as an interactive command).",
-"Display the cells windows instead of an info buffer. This is the",
-"opposite of set-info.",
-#endif
 
-DEFUN_5 ("view-info", FDview_info, FAview_info, DFview_info, view_info)
-#ifdef FUNC_ARG_STRINGS
-"sInfo to view? ", 
-"mview-info",
-#endif
-#ifdef FUNC_INIT_CODE
-0,
-"{set-info %0}",
-#endif
-#ifdef DOC_STRINGS
-"(internal use only -- probably not useful as an interactive command).",
-"Let the user page through the info buffer named ARG.",
-#endif
 
-DEFUN ("page-info", FDpage_info, FApage_info, page_info)
-#ifdef FUNC_ARG_STRINGS
-"p",
-#endif
-#ifdef DOC_STRINGS
-"Move forward a page in an info text.  With a prefix, move that many pages.",
-#endif
 
-DEFUN ("page-info-backwards",
-       FDpage_info_backwards, FApage_info_backwards, page_info_backwards)
-#ifdef FUNC_ARG_STRINGS
-"p",
-#endif
-#ifdef DOC_STRINGS
-"Move backward a page in an info text.  With a prefix, move that many pages.",
-#endif
 
 
 DEFUN ("bload", FDbload, FAbload, bload)

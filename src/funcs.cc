@@ -42,7 +42,6 @@
 //#include "io-x11.h"
 #include "io-edit.h"
 #include "regions.h"
-#include "help.h"
 #include "window.h"
 //#include "font.h"
 //#include "graph.h"
@@ -109,12 +108,6 @@ name_macro_string (char * name, char * str)
     cf->func_name = ck_savestr (name);
     cf->func_func = to_vptr(run_string_as_macro);
     cf->init_code = 0;
-    {
-      struct info_buffer * ib = find_or_make_info (name);
-      clear_info (ib);
-      print_info (ib, "Equivalent to %s.", str);
-      cf->func_doc = ib->text;
-    }
     {
       int i = 0;
       cf->func_args = (char **)ck_malloc (3 * sizeof (char *));

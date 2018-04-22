@@ -433,36 +433,6 @@ set_window_option (int set_opt, char *text)
 	return 1;
 }
 
-void
-show_window_options (void)
-{
-  int n;
-
-  cwin->win_curow = curow;
-  cwin->win_cucol = cucol;
-  if (user_status)
-    io_text_line ("Status line at %d", user_status);
-  else
-    io_text_line ("Status line disabled.");
-  io_text_line ("");
-  for (n = 0; n < nwin; n++)
-    {
-      int flags = wins[n].flags;
-      io_text_line ("Window #%d showing %s, with cursor at %s",
-		    n + 1,
-		    range_name (&wins[n].screen),
-		    cell_name (wins[n].win_curow, wins[n].win_cucol));
-      io_text_line ("   Options:  %sedges (%sreverse)%s%s%s%s",
-		    flags & WIN_EDGES ? "" : "no",
-		    flags & WIN_EDGE_REV ? "" : "no",
-		    flags & WIN_PAG_HZ ? ", pageh" : "",
-		    flags & WIN_PAG_VT ? ", pagev" : "",
-		    flags & WIN_LCK_HZ ? ", lockh" : "",
-		    flags & WIN_LCK_VT ? ", lockv" : "");
-      if (wins[n].link != -1)
-	io_text_line ("Linked to window %d", wins[n].link + 1);
-    }
-}
 
 void
 recenter_window (void)

@@ -75,7 +75,6 @@ using std::vector;
 #include "window.h"
 #include "key.h"
 #include "input.h"
-#include "info.h"
 #include <term.h>
 #include "logging.h"
 #include "ref.h"
@@ -222,27 +221,7 @@ _io_redraw_input (void)
 }
 
 
-#undef MIN
-#define MIN(A,B) (((A) < (B)) ? (A) : (B))
 
-void
-redraw_info (void)
-{
-  if (!input_view.current_info)
-    return;
-  {
-    int ipos = input_view.info_pos;
-    int stop = MIN (input_view.current_info->len, Global->scr_lines - 1 + ipos);
-    while (ipos < stop)
-      {
-	move (1 + ipos - input_view.info_pos, 0);
-	addstr (input_view.current_info->text[ipos]);
-	clrtoeol ();
-	++ipos;
-      }
-  }
-  _io_redraw_input ();
-}
 
 
 static void
@@ -563,13 +542,10 @@ _io_repaint (void)
   clear ();
   io_fix_input ();
   redrew++;
-  if (input_view.current_info)
-    {
-      redraw_info ();
-      input_view.redraw_needed = FULL_REDRAW;
-      _io_redraw_input ();
-      return;
-    }
+ 
+  // basically, this functionality just shouldn't exist
+  if(input_view.current_info)
+	 return;
 
   for (win = wins; win < &wins[nwin]; win++)
     {

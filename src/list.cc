@@ -251,9 +251,3 @@ char list_get_separator(void)
 	return Global->sl_sep;
 }
 
-void
-list_show_options ()
-{
-  io_text_line ("File format: list    (character separated list of cell values)");
-  io_text_line ("Save file element separator: %s", char_to_string (Global->sl_sep));
-}

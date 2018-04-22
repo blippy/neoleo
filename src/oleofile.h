@@ -27,7 +27,6 @@
 extern void oleo_read_file (FILE *, int);
 extern void oleo_write_file (FILE *, struct rng *);
 extern int oleo_set_options (int, char *);
-extern void oleo_show_options (void);
 
 #ifdef __cplusplus
 //}
