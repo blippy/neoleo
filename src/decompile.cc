@@ -83,11 +83,12 @@ static pr_node_t* byte_decompile(unsigned char *expr);
  * Note that this function call byte_decompile() - so there is recursion
  */
 void decompile_comp(struct function*& f, struct pr_node*& newn,  
-		unsigned char* &expr,  long&tmp_lng,  
+		unsigned char* &expr,   
 		unsigned jumpto, unsigned char &byte, 
 		struct pr_node **&c_node)
 {
 	num_t tmp_flt;
+	long tmp_lng;
 	const char *tmp_str;
 	struct var *v;
 	unsigned char save_val;
@@ -545,7 +546,7 @@ byte_decompile ( unsigned char *expr)
 				jumpto = 0;
 
 
-			decompile_comp(f, newn, expr, tmp_lng, jumpto, byte, c_node);
+			decompile_comp(f, newn, expr, jumpto, byte, c_node);
 		}
 
 
