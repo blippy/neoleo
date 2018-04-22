@@ -22,7 +22,7 @@
 #include "io-visual.h"
 #include "cmd.h"
 #include "window.h"
-#include "oleox.hpp"
+#include "oleox.h"
 #include "io-curses.h"
 #include "io-utils.h"
 #include "lists.h"

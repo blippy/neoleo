@@ -38,7 +38,7 @@ static_assert(false);
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "oleox.hpp"
+#include "oleox.h"
 #include "decompile.h"
 #include "lists.h"
 #include "logging.h"

@@ -60,7 +60,7 @@ static_assert(false);
 #include "io-term.h"
 #include "io-utils.h"
 
-#include "oleox.hpp"
+#include "oleox.h"
 
 using std::cerr;
 using std::endl;

@@ -24,7 +24,7 @@
 #include "tests.h"
 #include "utils.h"
 
-#include "oleox.hpp"
+#include "oleox.h"
 
 using std::cerr;
 using std::cout;
