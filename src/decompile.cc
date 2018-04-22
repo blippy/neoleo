@@ -20,15 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
 #include <string.h>
-
 #include <stdarg.h>
 #include <ctype.h>
 #include "global.h"
@@ -42,15 +34,15 @@
 
 using CPTR = char*;
 
-struct pr_node
+typedef struct pr_node
 {
 	int tightness;
 	int len;
 	char string[1];
-};
+} pr_node_t;
 
 
-static VOIDSTAR save_decomp;
+static char* save_decomp = nullptr;
 static CELLREF decomp_row;
 static CELLREF decomp_col;
 
@@ -84,7 +76,7 @@ n_alloc (int size, int tightness, const char *fmt, ...)
 
 #define n_free(x)	ck_free(x)
 
-extern struct pr_node * byte_decompile ( unsigned char *expr);
+static pr_node_t* byte_decompile(unsigned char *expr);
 
 /* This function is only called by byte_decompile, but I refactored it out
  * Everything is still monstrous, mind.
@@ -515,7 +507,7 @@ do_fn2:
 			panic ("Bad decompile %d", f->fn_comptype);
 	}
 }
-extern struct pr_node *
+static pr_node_t*
 byte_decompile ( unsigned char *expr)
 {
 	static struct pr_node **c_node;
@@ -529,14 +521,7 @@ byte_decompile ( unsigned char *expr)
 	}
 
 	struct pr_node *newn = 0;
-
-
-#ifdef TEST
-	if (!expr)
-		panic ("No expression to decompile");
-#endif
 	while(*expr) {
-		//next_byte:
 		unsigned char byte = *expr++;
 		struct function *f;
 		long tmp_lng;
@@ -606,7 +591,7 @@ decomp(const CELLREF r, const CELLREF c)
 }
 
 char *
-decomp (const CELLREF r, const CELLREF c, CELL *cell)
+decomp(const CELLREF r, const CELLREF c, CELL *cell)
 {
 	char *tmp = decomp_formula (r, c, cell, 0);
 	return (tmp);
@@ -621,7 +606,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 	{
 		str = (CPTR) ck_malloc (1);
 		str[0] = '\0';
-		save_decomp = (VOIDSTAR) str;
+		save_decomp =  str;
 		return str;
 	}
 	decomp_row = r;
@@ -659,15 +644,13 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				break;
 			default:
 				str = 0;
-#ifdef TEST
 				panic ("Unknown type %d in decomp", GET_TYP (cell));
-#endif
 		}
-		save_decomp = (VOIDSTAR) str;
+		save_decomp = str;
 		return str;
 	} else {
 		struct pr_node *ret = byte_decompile (cell->get_cell_formula());
-		save_decomp = (VOIDSTAR) ret;
+		save_decomp = (char*) ret; // TODO this recasting seems dubious
 		return &(ret->string[0]);
 	}
 }
@@ -675,14 +658,8 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 void
 decomp_free (void)
 {
-#ifdef TEST
-	if (!save_decomp)
-		panic ("No save decomp");
-	n_free (save_decomp);
-	save_decomp = (VOIDSTAR) 0;
-#else
-	n_free (save_decomp);
-#endif
+	if(save_decomp) free(save_decomp);
+	save_decomp = nullptr;
 }
 
 /*
