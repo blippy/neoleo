@@ -852,9 +852,6 @@ DEFUN ("recalculate", FDrecalculate, FArecalculate, recalculate)
 "p?",
 #endif
 
-DEFUN_3 ("recompile_spreadsheet",
-	 FDrecompile_spreadsheet, recompile_spreadsheet)
-
 /* Window Commands */
 
 DEFUN ("open-window", FDopen_window, FAopen_window, open_window)

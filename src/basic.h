@@ -129,5 +129,4 @@ extern void define_usr_fmt (int fmt, char * pos_h, char * neg_h, char * pos_t,
 extern void set_auto_direction (enum motion_magic magic);
 extern void auto_move (void);
 extern void auto_next_set (void);
-extern void recompile_spreadsheet (void);
 

@@ -18,15 +18,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
-
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -35,8 +26,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include "sysdef.h"
-//#include "global.h"
-//#include "atlast.h"
 #include "basic.h"
 #include "cmd.h"
 #include "regions.h"
@@ -56,7 +45,6 @@
 #include "userpref.h"
 #include "shell.h"
 #include "utils.h"
-#include "decompile.h"
 
 using std::cout;
 using std::endl;
@@ -1670,44 +1658,5 @@ auto_next_set (void)
       shift_cell_cursor (Global->auto_motion_direction, 1);
   }
   shift_cell_cursor (complementary_motion[Global->auto_motion_direction], 1);
-}
-
-/* This decompiles and then recompiles all of the formulas of cells.
- * This is never normally necessary unless you happen to have some
- * spreadsheets written when the byte-code compiler had bugs that
- * made your formulas produce parse errors.
- */
-
-void
-recompile_spreadsheet (void)
-{
-  struct rng rng;
-  CELL * cp;
-  CELLREF r;
-  CELLREF c;
-  rng.lr = MIN_ROW;
-  rng.lc = MIN_COL;
-  rng.hr = MAX_ROW;
-  rng.hc = MAX_COL;
-  find_cells_in_range (&rng);
-  for (cp = next_row_col_in_range (&r, &c);
-       cp;
-       cp = next_row_col_in_range(&r, &c))
-    {
-	    std::string form = decomp (r, c, cp);
-      set_cell (r, c, form);
-      if (my_cell)
-	{
-	  update_cell (my_cell);
-	  if (is_constant (my_cell->get_cell_formula()))
-	    {
-	      byte_free (my_cell->get_cell_formula());
-	      my_cell->set_cell_formula(0);
-	    }
-	  io_pr_cell (r, c, my_cell);
-	  my_cell = 0;
-	}
-      decomp_free ();
-    }
 }
 
