@@ -19,15 +19,6 @@
  */
 
 #include <stdlib.h>
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <string.h>
 
 #include "utils.h"
@@ -94,10 +85,6 @@ oleo_read_file (
     {
       lineno++;
 
-#if 0
-      if (lineno % 50 == 0)
-	io_info_msg ("Line %d", lineno);
-#endif
       if ((ptr = (char *)index (cbuf, '\n')))
 	*ptr = '\0';
 
@@ -136,10 +123,6 @@ oleo_read_file (
 						while (isspace (*ptr))
 							++ptr;
 						{
-#if 0
-							struct font_memo * fm = parsed_matching_font (ptr);
-							set_region_font (&rng, fm->names->oleo_name, fm->scale);
-#endif
 						}
 						break;
 					}
@@ -562,81 +545,8 @@ oleo_read_file (
 			Global->a0 = 0;
 			break;
 		case 'G':	/* Graph data */
-#if 0 // just ignore graph data
-			/*	  fprintf(stderr, "Graph input line '%s'\n", cbuf);	*/
-			switch (*(ptr+1)) {
-				case 'T':	/* Graph Title */
-					graph_set_title(cbuf+2);
-					break;
-				case 'D':	/* Axis title : GDxtitle */
-					graph_set_axis_title(cbuf[2], cbuf+3);
-					break;
-				case 't':	/* Graph data title : Gtxtitle */
-					graph_set_data_title(cbuf[2] - '0', cbuf+3);
-					break;
-				case 'a':	/* Automatic axis setting : Gax0 or Gax1 */
-					graph_set_axis_auto(cbuf[2] - '0', cbuf[3] == '1');
-					break;
-				case 'o':	/* Whether to draw line to offscreen data points */
-					graph_set_linetooffscreen(cbuf[2] == '1');
-					break;
-				case 'r':	/* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
-					if (cbuf[3] == '0')
-						graph_set_axis_lo('x' + cbuf[2] - '0', &cbuf[4]);
-					else if (cbuf[3] == '1')
-						graph_set_axis_hi('x' + cbuf[2] - '0', &cbuf[4]);
-					break;
-				case 'L':	/* Axis logness GLx0 or GLx1 */
-					graph_set_logness(cbuf[2], 1, cbuf[3] == '1');
-					break;
-				case '0': case '1': case '2': case '3':
-				case '4': case '5': case '6': case '7':
-				case '8': case '9':
-					{
-						int	i, a, b, c, d;
-						struct rng r;
-						sscanf(cbuf, "G%d,%d,%d,%d,%d", &i, &a, &b, &c, &d);
-						r.lc = a;
-						r.lr = b;
-						r.hc = c;
-						r.hr = d;
-						graph_set_data(i, &r);
-					}
-					break;
-				case 'm':	/* Tick marks Gmxts, x = 0 or 1, t = 0 .. 4 (the tick type),
-						 * s is the format string, if any.
-						 */
-					{
-						int	axis, tp;
-
-						axis = cbuf[2] - '0';
-						tp = cbuf[3] - '0';
-
-						graph_set_axis_ticks(axis, tp, strdup(&cbuf[4]));
-					}
-					break;
-				default:
-					fprintf(stderr, "Graph: invalid line '%s'\n", cbuf);
-			}
-#endif
 			break;
 		case 'D':	/* Database Access */
-#if 0
-			ptr++;
-			switch (*ptr) {
-				case 'u':
-					DatabaseSetUser(ptr+1);
-					break;
-				case 'h':
-					DatabaseSetHost(ptr+1);
-					break;
-				case 'n':
-					DatabaseSetName(ptr+1);
-					break;
-				default:
-					io_error_msg("Line %d - unknown code %s\n", lineno, cbuf);
-			}
-#endif
 			break;
 		default:
 bad_field:
@@ -717,9 +627,6 @@ oleo_fmt_to_str (int f1, int p1)
 	  break;
 	default:
 	  p_buf[0] = '?';
-#if 0
-	  fprintf(stderr, "OleoWrite: format %d not supported\n", f1);
-#endif
 	  break;
 	}
       break;
@@ -774,10 +681,6 @@ oleo_write_var (
 
       (void) fprintf(oleo_fp, "NN;N%s;E%s\n", var->var_name, range_name (&(var->v_rng)));
       break;
-#ifdef TEST
-    default:
-      panic ("Unknown var type %d", var->var_flags);
-#endif
     }
 }
 
@@ -885,13 +788,6 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	for_all_vars (oleo_write_var);
 	find_cells_in_range (rng);
 
-#if 0
-	{
-		struct font_memo * fm;
-		for (fm = font_list; fm; fm = fm->next)
-			fm->id_memo = -1;
-	}
-#endif
 	while ((cp = next_row_col_in_range (&r, &c)))
 	{
 		char *ptr;
@@ -985,9 +881,6 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				break;
 			default:
 				ptr = 0;
-#ifdef TEST
-				panic ("What cell type %d", GET_TYP (cp));
-#endif
 		}
 
 		if (ptr)
@@ -1005,80 +898,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	if (rng == &all_rng)
 		write_mp_windows (fp);
 
-#if 0
-	if(false) { // graph stuff now doesn't work
-		/* Graphs */
-		for (i=0; i<NUM_DATASETS; i++) {
-			struct rng	r;
-			int		a, b, c, d;
-
-			r = graph_get_data(i);
-			if (r.lc == 0 && r.lr == 0 && r.hc == 0 && r.hr == 0)
-				continue;
-
-			/* Write this thing */
-			a = r.lc;
-			b = r.lr;
-			c = r.hc;
-			d = r.hr;
-			fprintf(fp, "G%d,%d,%d,%d,%d\n", i, a, b, c, d);
-		}
-		/* Graph title */
-		s = graph_get_title();
-		if (s && strlen(s)) {
-			fprintf(fp, "GT%s\n", s);
-		}
-
-		s = graph_get_axis_title('x');
-		if (s && strlen(s)) {
-			fprintf(fp, "GDx%s\n", s);
-		}
-
-		s = graph_get_axis_title('y');
-		if (s && strlen(s)) {
-			fprintf(fp, "GDy%s\n", s);
-		}
-
-		for (i=0; i<NUM_DATASETS; i++) {
-			if (graph_get_data_title(i))
-				fprintf(fp, "Gt%c%s\n", i + '0', graph_get_data_title(i));
-		}
-
-		/* Axis range : GrxlVALUE , l = 0 for low, 1 for high */
-		for (i=0; i< 2; i++) {
-			double	d;
-			d = graph_get_axis_lo(i);
-			if (! isnan(d))
-				fprintf(fp, "Gr%c0%f\n", '0' + i, d);
-			d = graph_get_axis_hi(i);
-			if (! isnan(d))
-				fprintf(fp, "Gr%c1%f\n", '0' + i, d);
-		}
-
-		/* Automatic axis setting : Gax0 or Gax1 */
-		fprintf(fp, "Ga0%c\n", graph_get_axis_auto(0) ? '1' : '0');	/* X axis */
-		fprintf(fp, "Ga1%c\n", graph_get_axis_auto(1) ? '1' : '0');	/* Y axis */
-
-		/* Draw line to offscreen data points */
-		fprintf(fp, "Go%c\n", graph_get_linetooffscreen() ? '1' : '0');
-
-		/* Axis tick marks */
-		fprintf(fp, "Gm0%c%s\n",
-				'0' + graph_get_axis_ticktype(0),
-				graph_get_axis_tickformat(0) ? graph_get_axis_tickformat(0) : "(null)");
-		fprintf(fp, "Gm1%c%s\n",
-				'0' + graph_get_axis_ticktype(1),
-				graph_get_axis_tickformat(1) ? graph_get_axis_tickformat(1) : "(null)");
-	}
-#endif
 	/* Database stuff */
-#if 0
-	if (DatabaseInitialised()) {
-		fprintf(fp, "Dn%s\n", DatabaseGetName() ? DatabaseGetName() : "");
-		fprintf(fp, "Dh%s\n", DatabaseGetHost() ? DatabaseGetHost() : "");
-		fprintf(fp, "Du%s\n", DatabaseGetUser() ? DatabaseGetUser() : "");
-	}
-#endif
 	/* End of writing */
 	(void) fprintf (fp, "E\n");
 	Global->a0 = old_a0;
@@ -1093,35 +913,4 @@ oleo_set_options(
 }
 
 
-
-#if 0
-This was used in releases 1.0 and 1.1 to write fonts.  
-It is no longer used but is kept here for reference since 1.2 and later
-versions should continue to understand the older file format for a while.
-
-static int
-oleo_write_fonts (rng, font, ignore)
-     struct rng *rng;
-     struct font_memo *font;
-     void *ignore;
-{
-  struct rng r;
-  char *rname;
-  r = *rng;
-  if (r.lr < oleo_rng->lr)
-    r.lr = oleo_rng->lr;
-  if (r.lc < oleo_rng->lc)
-    r.lc = oleo_rng->lc;
-  if (r.hr > oleo_rng->hr)
-    r.hr = oleo_rng->hr;
-  if (r.hc > oleo_rng->hc)
-    r.hc = oleo_rng->hc;
-  rname = range_name (&r);
-  fprintf (oleo_fp, "%%f %s %s,%s,%f\n",
-	   rname, font->name, font->psname, font->scale);
-  return 1;
-}
-
-
-#endif
 
