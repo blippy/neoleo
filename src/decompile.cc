@@ -575,14 +575,17 @@ byte_decompile ( unsigned char *expr)
  */
 
 std::string
-decomp(const CELLREF r, const CELLREF c)
+decomp_str(const CELLREF r, const CELLREF c)
 {
 
 	std::string res;
+	save_decomp = nullptr;
 	CELL *cp = find_cell(r, c);
-	if(cp == nullptr) return res;
-	char *tmp = decomp(r, c, cp);
-	if(tmp) res = std::string(tmp);
+	if(cp != nullptr) {
+		char *tmp = decomp(r, c, cp);
+		if(tmp) res = std::string(tmp);
+	}
+	decomp_free();
 	return res;
 }
 
