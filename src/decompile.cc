@@ -43,11 +43,11 @@
 using CPTR = char*;
 
 struct pr_node
-  {
-    int tightness;
-    int len;
-    char string[1];
-  };
+{
+	int tightness;
+	int len;
+	char string[1];
+};
 
 
 static VOIDSTAR save_decomp;
@@ -580,12 +580,7 @@ byte_decompile ( unsigned char *expr)
 	}
 
 
-	/* if(c_node != &the_line[1]) {
-	   io_error_msg("%d values on decompile stack!",c_node - the_line);
-	   return the_line[0];
-	   } */
 	newn = *--c_node;
-	/* free(the_line); */
 	return newn;
 }
 
