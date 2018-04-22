@@ -101,7 +101,6 @@ typedef void (*interactive_function) ();
 struct cmd_func
 {
 	const char *func_name;
-	char ** func_doc;
 	char ** func_args;
 	char ** init_code;
 	interactive_function func_func;

@@ -171,7 +171,6 @@ bind_key (char * keymap, char * function, int ch)
   tmpfunc->func_args[0] = mk_sprintf ("#%d", n_bound_macros - 1);
   tmpfunc->func_args[1] = 0;
   tmpfunc->init_code = 0;
-  tmpfunc->func_doc = 0;
   tmpfunc->func_name = ck_savestr (function);
   tmpfunc->func_func = to_vptr(bound_macro);
 fini:
@@ -303,7 +302,6 @@ bind_all_keys (char * keymap, char * function)
   tmpfunc->func_args = (char **)ck_malloc (2 * sizeof (char *));
   tmpfunc->func_args[0] = mk_sprintf ("#%d", n_bound_macros - 1);
   tmpfunc->func_args[1] = 0;
-  tmpfunc->func_doc = 0;
   tmpfunc->func_name = ck_savestr (function);
   tmpfunc->func_func = to_vptr(bound_macro);
 fini:

@@ -70,35 +70,6 @@ static char * FAfnord[] =
 0,
 };
 
-/* Docstrings */
-
-#undef DEFUN
-#undef DEFUN_3
-#undef DEFUN_5
-#undef FUNC_ARG_STRINGS
-#undef DOC_STRINGS
-#undef FUNC_INIT_CODE
-
-#define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
-0, \
-}; \
-\
-static char * FDname [] = \
-{
-
-#define DEFUN(Sname, FDname, FAname, Cname) \
-	DEFUN_5(Sname, FDname, FAname, 0, Cname)
-#define DEFUN_3(Sname, FDname, Cname) DEFUN(Sname, FDname, 0, Cname)
-
-#define DOC_STRINGS	1
-
-static char * FDfnord[] = 
-{
-  "Well, you know.",
-#include "defun.h"
-0,
-};
-
 
 /* init_code */
 
@@ -138,8 +109,13 @@ static char * DFfnord[] =
 #undef DOC_STRINGS
 #undef FUNC_INIT_CODE
 
+/*
+ * mcarter 22-Apr-2018
+ * Note that FDname is never used as it relates to help documents which have
+ * been purged from the system recently.
+ */
 #define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
-	{ Sname, FDname, FAname, DFname, to_vptr(Cname), "\"" #Cname "\"" },
+	{ Sname, FAname, DFname, to_vptr(Cname), "\"" #Cname "\"" },
 
 #define DEFUN(Sname, FDname, FAname, Cname) \
 	DEFUN_5(Sname, FDname, FAname, 0, Cname)
@@ -148,9 +124,9 @@ static char * DFfnord[] =
 
 struct cmd_func cmd_funcs[] =
 {
-  { "fnord", FDfnord, FAfnord, DFfnord, to_vptr(fnord), "fnord" },
+  { "fnord", FAfnord, DFfnord, to_vptr(fnord), "fnord" },
 #include "defun.h"
-  { 0, 0, 0, 0, to_vptr(0), 0 }
+  { 0, 0, 0, to_vptr(0), 0 }
 };
 
 

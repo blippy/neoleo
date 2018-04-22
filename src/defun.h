@@ -35,29 +35,17 @@ DEFUN ("kill-oleo", FDkill_oleo, FAkill_oleo, to_vptr(kill_oleo))
 #ifdef FUNC_ARG_STRINGS
 "MSpreadsheet modified.  Quit without saving? (yes or no) ",
 #endif
-#ifdef DOC_STRINGS
-"Kill this Oleo.  This does NOT save any files.",
-#endif
 
 DEFUN_3 ("suspend-oleo", FDsuspend_oleo, to_vptr(suspend_oleo))
-#ifdef DOC_STRINGS
-"Stop Oleo and return to its superior process.  Oleo may be resumed.",
-#endif
 
 DEFUN ("show-menu", FDshow_main_menu, FAshow_main_menu, to_vptr(show_main_menu))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Show the main menu.",
-#endif
 
 
 DEFUN_3("test-curses-suspension", FDtest_curses_suspension, to_vptr(test_curses_suspension))
-#ifdef DOC_STRINGS
-"Test abaility to suspend and resume curses",
-#endif
 
 /* Spreadsheet Cursor Motion Commands and Cell Mark */
 
@@ -71,26 +59,17 @@ DEFUN ("up-cell", FDup_cell, FAup_cell, to_vptr(shift_cell_cursor))
 "+#0",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Move cursor up ARG rows.",
-#endif
 
 DEFUN ("down-cell", FDdown_cell, FAdown_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#1",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Move cursor down ARG rows.",
-#endif
 
 DEFUN ("right-cell", FDright_cell, FAright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#2",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Move cursor right ARG cols.",
 #endif
 
 DEFUN ("left-cell", FDleft_cell, FAleft_cell, to_vptr(shift_cell_cursor))
@@ -101,17 +80,11 @@ DEFUN ("left-cell", FDleft_cell, FAleft_cell, to_vptr(shift_cell_cursor))
 #ifndef fnord
 #define fnord	0
 #endif
-#ifdef DOC_STRINGS
-"Move cursor left ARG cols.",
-#endif
 
 DEFUN ("upright-cell", FDupright_cell, FAupright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#4",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Move cursor upright ARG rows and cols.",
 #endif
 
 DEFUN ("upleft-cell", FDupleft_cell, FAupleft_cell, to_vptr(shift_cell_cursor))
@@ -119,17 +92,11 @@ DEFUN ("upleft-cell", FDupleft_cell, FAupleft_cell, to_vptr(shift_cell_cursor))
 "+#5",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Move cursor upleft ARG rows and cols.",
-#endif
 
 DEFUN ("downright-cell", FDdownright_cell, FAdownright_cell, to_vptr(shift_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#6",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Move cursor downright ARG rows and cols.",
 #endif
 
 DEFUN ("downleft-cell", FDdownleft_cell, FAdownleft_cell, to_vptr(shift_cell_cursor))
@@ -137,81 +104,43 @@ DEFUN ("downleft-cell", FDdownleft_cell, FAdownleft_cell, to_vptr(shift_cell_cur
 "+#7",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Move cursor downleft ARG rows and cols.",
-#endif
 
 DEFUN ("goto-cell", FDgoto_cell, FAgoto_cell, to_vptr(goto_cell))
 #ifdef FUNC_ARG_STRINGS
 "RGoto cell? ",
-#endif
-#ifdef DOC_STRINGS
-"Goto CELL by name.  If a region is given, the upper-left corner is used.",
 #endif
 
 DEFUN ("goto-region", FDgoto_region, FAgoto_region, to_vptr(goto_region))
 #ifdef FUNC_ARG_STRINGS
 "RGoto region? ",
 #endif
-#ifdef DOC_STRINGS
-"Select REGION by name.",
-"The cell cursor is moved to the upper left corner, and the mark is placed",
-"at the lower right.",
-#endif
 
 DEFUN_3 ("upper-left", FDupper_left, to_vptr(upper_left))
-#ifdef DOC_STRINGS
-"Move the cell cursor to the first row and column.",
-#endif
 
 DEFUN_3 ("lower-left", FDlower_left, to_vptr(lower_left))
-#ifdef DOC_STRINGS
-"Move the cell cursor to the last filled row and first column.",
-#endif
 
 DEFUN_3 ("upper-right", FDupper_right, to_vptr(upper_right))
-#ifdef DOC_STRINGS
-"Move the cell cursor to the first row and rightmost filled column.",
-#endif
 
 DEFUN_3 ("lower-right", FDlower_right, to_vptr(lower_right))
-#ifdef DOC_STRINGS
-"Move the cell cursor to the last filled row and column.",
-#endif
 
 DEFUN ("exchange-point-and-mark", FDexchange_point_and_mark,
        FAexchange_point_and_mark, to_vptr(exchange_point_and_mark))
 #ifdef FUNC_ARG_STRINGS
 "p?",
 #endif
-#ifdef DOC_STRINGS
-"Mark the current cell, but move the cell cursor to where the mark is now.",
-"With a prefix argument, the mark is cleared but the cell cursor remains where",
-"it is.",
-#endif
 
 DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, to_vptr(mark_cell_cmd))
 #ifdef FUNC_ARG_STRINGS
 "p?",
 #endif
-#ifdef DOC_STRINGS
-"Mark the current cell. With a prefix arg, pop the mark.",
-#endif
 
 DEFUN_3 ("clear-mark", FDclear_mark, unmark_cmd)
-#ifdef DOC_STRINGS
-"Unset the mark.",
-#endif
 
 DEFUN ("save-mark-to-cell", FDsave_mark_to_cell,
 	FAsave_mark_to_cell, 
 	to_vptr(save_mark_to_cell))
 #ifdef FUNC_ARG_STRINGS
 "RSave mark to cell? ",
-#endif
-#ifdef DOC_STRINGS
-"Save the current mark to a cell for future reference.  If the",
-"mark is not set, save the current point.",
 #endif
 
 DEFUN ("save-point-to-cell", FDsave_point_to_cell,
@@ -220,17 +149,11 @@ DEFUN ("save-point-to-cell", FDsave_point_to_cell,
 #ifdef FUNC_ARG_STRINGS
 "RSave point to cell? ",
 #endif
-#ifdef DOC_STRINGS
-"Save the current cursor point to a cell for future reference.",
-#endif
 
 DEFUN ("scroll-up", FDscroll_up, FAscroll_up, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Scroll the current window up ARG rows; or near full screen if no ARG.",
 #endif
 
 DEFUN ("scroll-down", FDscroll_down, FAscroll_down, to_vptr(scroll_cell_cursor))
@@ -238,17 +161,11 @@ DEFUN ("scroll-down", FDscroll_down, FAscroll_down, to_vptr(scroll_cell_cursor))
 "+#1",
 "p",
 #endif
-#ifdef DOC_STRINGS
-"Scroll the current window down ARG rows; or near full screen if no ARG.",
-#endif
 
 DEFUN ("scroll-right", FDscroll_right, FAscroll_right, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#2",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Scroll the current window right ARG cols; or near full screen if no ARG.",
 #endif
 
 DEFUN ("scroll-left", FDscroll_left, FAscroll_left, to_vptr(scroll_cell_cursor))

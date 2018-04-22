@@ -56,7 +56,6 @@ static char * FAfnord[] =
 #undef DEFUN_3
 #undef DEFUN_5
 #undef FUNC_ARG_STRINGS
-#undef DOC_STRINGS
 #undef FUNC_INIT_CODE
 
 #define DEFUN_5(Sname, FDname, FAname, DFname, Cname) \
@@ -69,6 +68,7 @@ static char * FDname [] = \
 #define DEFUN(Sname, FDname, FAname, Cname) \
 	DEFUN_5(Sname, FDname, FAname, 0, Cname)
 #define DEFUN_3(Sname, FDname, Cname) DEFUN(Sname, FDname, 0, Cname)
+
 
 #define DOC_STRINGS	1
 
