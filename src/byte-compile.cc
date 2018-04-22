@@ -24,18 +24,7 @@
 //#include <math.h>
 #include <stdlib.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
-/* FIXME #include "funcdef.h" */
 #include <stdio.h>
-//#include <string.h>
 
 #include <string>
 #include <map>
@@ -43,11 +32,9 @@
 #include "parse_parse.h"
 #include "sysdef.h"
 
-#ifdef	HAVE_MALLOC_H
-#include <malloc.h>
-#endif
 
 #ifdef _DEBUG_MALLOC_INC
+static_assert(false);
 static void
 local_free (p)
      void * p;
@@ -370,20 +357,20 @@ init_mem ()
 static void
 add_backpatch (unsigned from, unsigned to)
 {
-  if (!patches)
-    {
-      patches_allocated = 5;
-      patches = (struct backpatch *) ck_malloc (patches_allocated * sizeof (struct backpatch));
-      patches_used = 0;
-    }
-  if (patches_allocated == patches_used)
-    {
-      patches_allocated *= 2;
-      patches = (struct backpatch *) ck_realloc (patches, patches_allocated * sizeof (struct backpatch));
-    }
-  patches[patches_used].from = from;
-  patches[patches_used].to = to;
-  patches_used++;
+	if (!patches)
+	{
+		patches_allocated = 5;
+		patches = (struct backpatch *) ck_malloc (patches_allocated * sizeof (struct backpatch));
+		patches_used = 0;
+	}
+	if (patches_allocated == patches_used)
+	{
+		patches_allocated *= 2;
+		patches = (struct backpatch *) ck_realloc (patches, patches_allocated * sizeof (struct backpatch));
+	}
+	patches[patches_used].from = from;
+	patches[patches_used].to = to;
+	patches_used++;
 }
 
 static int
@@ -408,14 +395,14 @@ swp_patch (int n1, int n2)
 static void
 rot_patch (int n1, int n2)
 {
-  struct backpatch tmp;
-  tmp = patches[n2];
-  while (n2 > n1)
-    {
-      patches[n2] = patches[n2 - 1];
-      --n2;
-    }
-  patches[n2] = tmp;
+	struct backpatch tmp;
+	tmp = patches[n2];
+	while (n2 > n1)
+	{
+		patches[n2] = patches[n2 - 1];
+		--n2;
+	}
+	patches[n2] = tmp;
 }
 
 
@@ -457,397 +444,397 @@ parse_and_compile(const char* string)
 char *
 parse_and_compile (const char *string, mem& the_mem)
 {
-  struct node *new_node;
-  struct node *node;
-  const struct function *f;
-  char *ret;
-  int n;
-  unsigned buf_siz;
-  int need_relax;
-  int byte;
+	struct node *new_node;
+	struct node *node;
+	const struct function *f;
+	char *ret;
+	int n;
+	unsigned buf_siz;
+	int need_relax;
+	int byte;
 
-  parse_error = 0;
-  patches_used = 0;
-  if (yyparse_parse(string, the_mem) || parse_error)
-    {
-      ret = (char*) ck_malloc (strlen (string) + 5);
-      ret[0] = CONST_ERR;
-      ret[1] = 2;
-      ret[2] = parse_error;
-      ret[3] = ENDCOMP;
-      strcpy ((char *) &ret[4], string);
-      (void) obstack_free (&tmp_mem, tmp_mem_start);
-      return ret;
-    }
+	parse_error = 0;
+	patches_used = 0;
+	if (yyparse_parse(string, the_mem) || parse_error)
+	{
+		ret = (char*) ck_malloc (strlen (string) + 5);
+		ret[0] = CONST_ERR;
+		ret[1] = 2;
+		ret[2] = parse_error;
+		ret[3] = ENDCOMP;
+		strcpy ((char *) &ret[4], string);
+		(void) obstack_free (&tmp_mem, tmp_mem_start);
+		return ret;
+	}
 
-  node = parse_return;
-  if (!node)
-    return 0;
+	node = parse_return;
+	if (!node)
+		return 0;
 
 loop:
-  if (node->comp_value < USR1)
-    {
-      f = &the_funs[node->comp_value];
-    }
-  else if (node->comp_value < SKIP)
-    {
-      n = node->sub_value;
-      f = &usr_funs[node->comp_value - USR1][n];
-    }
-  else
-    {
-      f = &skip_funs[node->comp_value - SKIP];
-    }
-  byte = node->comp_value;
+	if (node->comp_value < USR1)
+	{
+		f = &the_funs[node->comp_value];
+	}
+	else if (node->comp_value < SKIP)
+	{
+		n = node->sub_value;
+		f = &usr_funs[node->comp_value - USR1][n];
+	}
+	else
+	{
+		f = &skip_funs[node->comp_value - SKIP];
+	}
+	byte = node->comp_value;
 
 #ifdef TEST
-  if (!f)
-    panic ("f is zero in byte_compile!");
+	if (!f)
+		panic ("f is zero in byte_compile!");
 #endif
-  switch (GET_COMP (f->fn_comptype))
-    {
-    case C_IF:
-      /* if compiles to
-		   test-code IF amt-to-skip-on-false true-code SKIP
- 		      amt-to-skip-on-true false-code */
-      if (node->n_x.v_subs[0])
+	switch (GET_COMP (f->fn_comptype))
 	{
-	  if (node->n_x.v_subs[0]->n_x.v_subs[0])
-	    {
-	      /* Put out the test-code */
-	      push_stack (fn_stack, node);
-	      new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
-	      node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
-	      node = new_node;
-	      goto loop;
-	    }
-	  /* Put out IF, null-byte to backpatch */
-	  (void) obstack_1grow (&tmp_mem, byte);
-	  node->add_byte = obstack_object_size (&tmp_mem);
-	  (void) obstack_1grow (&tmp_mem, 0);
+		case C_IF:
+			/* if compiles to
+			   test-code IF amt-to-skip-on-false true-code SKIP
+			   amt-to-skip-on-true false-code */
+			if (node->n_x.v_subs[0])
+			{
+				if (node->n_x.v_subs[0]->n_x.v_subs[0])
+				{
+					/* Put out the test-code */
+					push_stack (fn_stack, node);
+					new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
+					node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
+					node = new_node;
+					goto loop;
+				}
+				/* Put out IF, null-byte to backpatch */
+				(void) obstack_1grow (&tmp_mem, byte);
+				node->add_byte = obstack_object_size (&tmp_mem);
+				(void) obstack_1grow (&tmp_mem, 0);
 
-	  /* put out true-code */
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      if (node->n_x.v_subs[1])
-	{
+				/* put out true-code */
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
+			}
+			if (node->n_x.v_subs[1])
+			{
 
-	  (void) obstack_1grow (&tmp_mem, (char)SKIP);
-	  (void) obstack_1grow (&tmp_mem, 0);
-	  add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-	  node->add_byte = obstack_object_size (&tmp_mem) - 1;
+				(void) obstack_1grow (&tmp_mem, (char)SKIP);
+				(void) obstack_1grow (&tmp_mem, 0);
+				add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+				node->add_byte = obstack_object_size (&tmp_mem) - 1;
 
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[1];
-	  node->n_x.v_subs[1] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-      break;
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[1];
+				node->n_x.v_subs[1] = 0;
+				node = new_node;
+				goto loop;
+			}
+			add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+			break;
 
-    case C_ANDOR:
-      if (node->n_x.v_subs[0])
-	{
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      if (node->n_x.v_subs[1])
-	{
-	  (void) obstack_1grow (&tmp_mem, byte);
-	  node->add_byte = obstack_object_size (&tmp_mem);
-	  (void) obstack_1grow (&tmp_mem, 0);	/* for backpatching */
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[1];
-	  node->n_x.v_subs[1] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-      break;
+		case C_ANDOR:
+			if (node->n_x.v_subs[0])
+			{
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
+			}
+			if (node->n_x.v_subs[1])
+			{
+				(void) obstack_1grow (&tmp_mem, byte);
+				node->add_byte = obstack_object_size (&tmp_mem);
+				(void) obstack_1grow (&tmp_mem, 0);	/* for backpatching */
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[1];
+				node->n_x.v_subs[1] = 0;
+				node = new_node;
+				goto loop;
+			}
+			add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+			break;
 
-    case C_ERR:
-      (void) obstack_1grow (&tmp_mem, byte);
-      node->add_byte = obstack_object_size (&tmp_mem);
-      (void) obstack_1grow (&tmp_mem, 0);
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_int);
-      node->n_x.v_string = ename[node->n_x.v_int];
-      push_stack (str_stack, node);
-      break;
+		case C_ERR:
+			(void) obstack_1grow (&tmp_mem, byte);
+			node->add_byte = obstack_object_size (&tmp_mem);
+			(void) obstack_1grow (&tmp_mem, 0);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_int);
+			node->n_x.v_string = ename[node->n_x.v_int];
+			push_stack (str_stack, node);
+			break;
 
-    case C_FLT:
-      (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num_t));
-      break;
+		case C_FLT:
+			(void) obstack_1grow (&tmp_mem, byte);
+			(void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num_t));
+			break;
 
-    case C_INT:
-      (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_int), sizeof (long));
-      break;
+		case C_INT:
+			(void) obstack_1grow (&tmp_mem, byte);
+			(void) obstack_grow (&tmp_mem, &(node->n_x.v_int), sizeof (long));
+			break;
 
-    case C_STR:
-      (void) obstack_1grow (&tmp_mem, byte);
-      node->add_byte = obstack_object_size (&tmp_mem);
-      (void) obstack_1grow (&tmp_mem, 0);
-      push_stack (str_stack, node);
-      break;
+		case C_STR:
+			(void) obstack_1grow (&tmp_mem, byte);
+			node->add_byte = obstack_object_size (&tmp_mem);
+			(void) obstack_1grow (&tmp_mem, 0);
+			push_stack (str_stack, node);
+			break;
 
-    case C_VAR:
-      add_ref_to (obstack_object_size (&tmp_mem));
-      add_var_ref (node->n_x.v_var);
-      (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_var), sizeof (struct var *));
-      break;
+		case C_VAR:
+			add_ref_to (obstack_object_size (&tmp_mem));
+			add_var_ref (node->n_x.v_var);
+			(void) obstack_1grow (&tmp_mem, byte);
+			(void) obstack_grow (&tmp_mem, &(node->n_x.v_var), sizeof (struct var *));
+			break;
 
-    case C_CELL:
-      add_ref_to (obstack_object_size (&tmp_mem));
-      add_ref (node->n_x.v_rng.lr, node->n_x.v_rng.lc);
-      (void) obstack_1grow (&tmp_mem, byte);
+		case C_CELL:
+			add_ref_to (obstack_object_size (&tmp_mem));
+			add_ref (node->n_x.v_rng.lr, node->n_x.v_rng.lc);
+			(void) obstack_1grow (&tmp_mem, byte);
 #if BITS_PER_CELLREF==16
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr >> 8);
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc >> 8);
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr >> 8);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc >> 8);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
 #else
 #if BITS_PER_CELLREF==8
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
-      (void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
+			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
 #else
-      Insert appropriate code here
+			Insert appropriate code here
 #endif
 #endif
-        break;
+				break;
 
-    case C_RANGE:
-      add_ref_to (obstack_object_size (&tmp_mem));
-      add_range_ref (&(node->n_x.v_rng));
-      (void) obstack_1grow (&tmp_mem, byte);
-      (void) obstack_grow (&tmp_mem, &(node->n_x.v_rng), sizeof (struct rng));
-      break;
+		case C_RANGE:
+			add_ref_to (obstack_object_size (&tmp_mem));
+			add_range_ref (&(node->n_x.v_rng));
+			(void) obstack_1grow (&tmp_mem, byte);
+			(void) obstack_grow (&tmp_mem, &(node->n_x.v_rng), sizeof (struct rng));
+			break;
 
-    case C_FN0X:
-      add_ref_to (obstack_object_size (&tmp_mem));
-      /* FALLTHROUGH */
-    case C_FN0:
-    case C_CONST:
-    add_byte:
-      if (f->fn_comptype & C_T)
-	add_timer_ref (obstack_object_size (&tmp_mem));
-      (void) obstack_1grow (&tmp_mem, byte);
-      if (byte >= USR1 && byte < SKIP)
-	(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
-      break;
+		case C_FN0X:
+			add_ref_to (obstack_object_size (&tmp_mem));
+			/* FALLTHROUGH */
+		case C_FN0:
+		case C_CONST:
+add_byte:
+			if (f->fn_comptype & C_T)
+				add_timer_ref (obstack_object_size (&tmp_mem));
+			(void) obstack_1grow (&tmp_mem, byte);
+			if (byte >= USR1 && byte < SKIP)
+				(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
+			break;
 
-    case C_FN1:
-    case C_UNA:
-      if (node->n_x.v_subs[0])
-	{
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      goto add_byte;
-
-    case C_FN2:
-    case C_INF:
-      if (node->n_x.v_subs[0])
-	{
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      if (node->n_x.v_subs[1])
-	{
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[1];
-	  node->n_x.v_subs[1] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      goto add_byte;
-
-    case C_FN3:
-      if (node->n_x.v_subs[0])
-	{
-	  if (node->n_x.v_subs[0]->n_x.v_subs[0])
-	    {
-	      push_stack (fn_stack, node);
-	      new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
-	      node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
-	      node = new_node;
-	      goto loop;
-	    }
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      if (node->n_x.v_subs[1])
-	{
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[1];
-	  node->n_x.v_subs[1] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      goto add_byte;
-
-    case C_FN4:
-      if (node->n_x.v_subs[0])
-	{
-	  if (node->n_x.v_subs[0]->n_x.v_subs[0])
-	    {
-	      push_stack (fn_stack, node);
-	      new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
-	      node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
-	      node = new_node;
-	      goto loop;
-	    }
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
-	  node->n_x.v_subs[0] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      if (node->n_x.v_subs[1])
-	{
-	  if (node->n_x.v_subs[1]->n_x.v_subs[0])
-	    {
-	      push_stack (fn_stack, node);
-	      new_node = node->n_x.v_subs[1]->n_x.v_subs[0];
-	      node->n_x.v_subs[1]->n_x.v_subs[0] = 0;
-	      node = new_node;
-	      goto loop;
-	    }
-	  push_stack (fn_stack, node);
-	  new_node = node->n_x.v_subs[1]->n_x.v_subs[1];
-	  node->n_x.v_subs[1] = 0;
-	  node = new_node;
-	  goto loop;
-	}
-      goto add_byte;
-
-    case C_FNN:
-      if (node->n_x.v_subs[1])
-	{
-	  if (node->add_byte == 0)
-	    for (new_node = node; new_node->n_x.v_subs[1]; new_node = new_node->n_x.v_subs[1])
-	      node->add_byte++;
-	  for (new_node = node; new_node->n_x.v_subs[1]->n_x.v_subs[1]; new_node = new_node->n_x.v_subs[1])
-	    ;
-	  push_stack (fn_stack, node);
-	  node = new_node->n_x.v_subs[1]->n_x.v_subs[0];
-	  new_node->n_x.v_subs[1] = 0;
-	  goto loop;
-	}
-      (void) obstack_1grow (&tmp_mem, byte);
-      if (byte >= USR1 && byte < SKIP)
-	(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
-      (void) obstack_1grow (&tmp_mem, node->add_byte);
-      break;
-
-    default:
-      panic ("Bad comptype %d", f->fn_comptype);
-    }
-  node = (struct node *) pop_stack (fn_stack);
-  if (node)
-    goto loop;
-
-  (void) obstack_1grow (&tmp_mem, 0);
-
-  while (node = (struct node *) pop_stack (str_stack))
-    {
-      add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-      (void) obstack_grow (&tmp_mem, node->n_x.v_string, strlen (node->n_x.v_string) + 1);
-    }
-
-  buf_siz = obstack_object_size (&tmp_mem);
-  ret = (char *) ck_malloc (buf_siz);
-  the_mem.add_ptr(ret);
-  bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
-
-  need_relax = 0;
-  for (n = 0; n < patches_used; n++)
-    {
-      long offset;
-
-      offset = (patches[n].to - patches[n].from) - 1;
-      if (offset < 0 || offset > 255)
-	need_relax++;
-      else
-	ret[patches[n].from] = offset;
-    }
-  if (need_relax)
-    {
-      int n_lo;
-      long offset;
-      int start;
-
-      /* ... Sort the patches list ... */
-      sort ((int) patches_used, (IFPTR) cmp_patch, (VIFPTR) swp_patch, (VIFPTR)rot_patch);
-
-      while (need_relax)
-	{
-	  ret = (char *)ck_realloc (ret, buf_siz + need_relax);
-	  for (n_lo = 0; n_lo < patches_used; n_lo++)
-	    {
-	      offset = (patches[n_lo].to - patches[n_lo].from) - 1;
-	      if (offset < 0 || offset > 255 - need_relax)
-		break;
-	    }
-
-	  /* n_lo points to the first jump that may need to be relaxed */
-	  for (n = n_lo; n < patches_used; n++)
-	    {
-	      offset = (patches[n].to - patches[n].from) - 1;
-	      if (offset < 0 || offset > 255)
-		{
-		  int nn;
-
-		  start = patches[n].from;
-
-		  ret[start - 1]++;	/* Translate insn to LONG */
-		  ret[start] = offset;
-		  bcopy (&ret[start + 1], &ret[start + 2], buf_siz - start);
-		  ret[start + 1] = offset >> 8;
-		  need_relax--;
-		  buf_siz++;
-		  for (nn = 0; nn < patches_used; nn++)
-		    {
-		      if (patches[nn].from > start)
-			patches[nn].from++;
-		      if (patches[nn].to > start)
-			patches[nn].to++;
-		      if (patches[nn].from < start && patches[nn].to > start && ret[patches[nn].from]++ == 255)
+		case C_FN1:
+		case C_UNA:
+			if (node->n_x.v_subs[0])
 			{
-			  if (ret[patches[nn].from - 1] & 01)
-			    ret[patches[nn].from + 1]++;
-			  else
-			    need_relax++;
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
 			}
-		    }
-		}
-	    }
+			goto add_byte;
+
+		case C_FN2:
+		case C_INF:
+			if (node->n_x.v_subs[0])
+			{
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
+			}
+			if (node->n_x.v_subs[1])
+			{
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[1];
+				node->n_x.v_subs[1] = 0;
+				node = new_node;
+				goto loop;
+			}
+			goto add_byte;
+
+		case C_FN3:
+			if (node->n_x.v_subs[0])
+			{
+				if (node->n_x.v_subs[0]->n_x.v_subs[0])
+				{
+					push_stack (fn_stack, node);
+					new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
+					node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
+					node = new_node;
+					goto loop;
+				}
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
+			}
+			if (node->n_x.v_subs[1])
+			{
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[1];
+				node->n_x.v_subs[1] = 0;
+				node = new_node;
+				goto loop;
+			}
+			goto add_byte;
+
+		case C_FN4:
+			if (node->n_x.v_subs[0])
+			{
+				if (node->n_x.v_subs[0]->n_x.v_subs[0])
+				{
+					push_stack (fn_stack, node);
+					new_node = node->n_x.v_subs[0]->n_x.v_subs[0];
+					node->n_x.v_subs[0]->n_x.v_subs[0] = 0;
+					node = new_node;
+					goto loop;
+				}
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[0]->n_x.v_subs[1];
+				node->n_x.v_subs[0] = 0;
+				node = new_node;
+				goto loop;
+			}
+			if (node->n_x.v_subs[1])
+			{
+				if (node->n_x.v_subs[1]->n_x.v_subs[0])
+				{
+					push_stack (fn_stack, node);
+					new_node = node->n_x.v_subs[1]->n_x.v_subs[0];
+					node->n_x.v_subs[1]->n_x.v_subs[0] = 0;
+					node = new_node;
+					goto loop;
+				}
+				push_stack (fn_stack, node);
+				new_node = node->n_x.v_subs[1]->n_x.v_subs[1];
+				node->n_x.v_subs[1] = 0;
+				node = new_node;
+				goto loop;
+			}
+			goto add_byte;
+
+		case C_FNN:
+			if (node->n_x.v_subs[1])
+			{
+				if (node->add_byte == 0)
+					for (new_node = node; new_node->n_x.v_subs[1]; new_node = new_node->n_x.v_subs[1])
+						node->add_byte++;
+				for (new_node = node; new_node->n_x.v_subs[1]->n_x.v_subs[1]; new_node = new_node->n_x.v_subs[1])
+					;
+				push_stack (fn_stack, node);
+				node = new_node->n_x.v_subs[1]->n_x.v_subs[0];
+				new_node->n_x.v_subs[1] = 0;
+				goto loop;
+			}
+			(void) obstack_1grow (&tmp_mem, byte);
+			if (byte >= USR1 && byte < SKIP)
+				(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
+			(void) obstack_1grow (&tmp_mem, node->add_byte);
+			break;
+
+		default:
+			panic ("Bad comptype %d", f->fn_comptype);
 	}
-    }
+	node = (struct node *) pop_stack (fn_stack);
+	if (node)
+		goto loop;
 
-  (void) obstack_free (&tmp_mem, tmp_mem_start);
+	(void) obstack_1grow (&tmp_mem, 0);
 
-  patches_used = 0;
+	while (node = (struct node *) pop_stack (str_stack))
+	{
+		add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+		(void) obstack_grow (&tmp_mem, node->n_x.v_string, strlen (node->n_x.v_string) + 1);
+	}
 
-  return ret;
+	buf_siz = obstack_object_size (&tmp_mem);
+	ret = (char *) ck_malloc (buf_siz);
+	the_mem.add_ptr(ret);
+	bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
+
+	need_relax = 0;
+	for (n = 0; n < patches_used; n++)
+	{
+		long offset;
+
+		offset = (patches[n].to - patches[n].from) - 1;
+		if (offset < 0 || offset > 255)
+			need_relax++;
+		else
+			ret[patches[n].from] = offset;
+	}
+	if (need_relax)
+	{
+		int n_lo;
+		long offset;
+		int start;
+
+		/* ... Sort the patches list ... */
+		sort ((int) patches_used, (IFPTR) cmp_patch, (VIFPTR) swp_patch, (VIFPTR)rot_patch);
+
+		while (need_relax)
+		{
+			ret = (char *)ck_realloc (ret, buf_siz + need_relax);
+			for (n_lo = 0; n_lo < patches_used; n_lo++)
+			{
+				offset = (patches[n_lo].to - patches[n_lo].from) - 1;
+				if (offset < 0 || offset > 255 - need_relax)
+					break;
+			}
+
+			/* n_lo points to the first jump that may need to be relaxed */
+			for (n = n_lo; n < patches_used; n++)
+			{
+				offset = (patches[n].to - patches[n].from) - 1;
+				if (offset < 0 || offset > 255)
+				{
+					int nn;
+
+					start = patches[n].from;
+
+					ret[start - 1]++;	/* Translate insn to LONG */
+					ret[start] = offset;
+					bcopy (&ret[start + 1], &ret[start + 2], buf_siz - start);
+					ret[start + 1] = offset >> 8;
+					need_relax--;
+					buf_siz++;
+					for (nn = 0; nn < patches_used; nn++)
+					{
+						if (patches[nn].from > start)
+							patches[nn].from++;
+						if (patches[nn].to > start)
+							patches[nn].to++;
+						if (patches[nn].from < start && patches[nn].to > start && ret[patches[nn].from]++ == 255)
+						{
+							if (ret[patches[nn].from - 1] & 01)
+								ret[patches[nn].from + 1]++;
+							else
+								need_relax++;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	(void) obstack_free (&tmp_mem, tmp_mem_start);
+
+	patches_used = 0;
+
+	return ret;
 }
 
 /* Back when strings stored a char*, they needed to be freed when a
@@ -857,71 +844,6 @@ loop:
 void
 byte_free (unsigned char *form)
 {
-  /* no longer needed
-	unsigned char *f;
-
-	for(f=form;*f;f++) {
-		switch(*f) {
-		case IF:
-		case F_IF:
-		case SKIP:
-		case AND:
-		case OR:
-		case CONST_STR:
-			f++;
-			break;
-		case CONST_INT:
-			f+=sizeof(long);
-			break;
-		case CONST_FLT:
-			f+=sizeof(double);
-			break;
-		case VAR:
-			f+=sizeof(struct var *);
-			break;
-		case R_CELL:
-		case R_CELL|ROWREL:
-		case R_CELL|COLREL:
-		case R_CELL|ROWREL|COLREL:
-			f+=EXP_ADD;
-			break;
-		case RANGE:
-		case RANGE|LRREL:
-		case RANGE|LRREL|LCREL:
-		case RANGE|LRREL|LCREL|HCREL:
-		case RANGE|LRREL|HCREL:
-		case RANGE|LRREL|HRREL:
-		case RANGE|LRREL|HRREL|LCREL:
-		case RANGE|LRREL|HRREL|LCREL|HCREL:
-		case RANGE|LRREL|HRREL|HCREL:
-		case RANGE|HRREL:
-		case RANGE|HRREL|LCREL:
-		case RANGE|HRREL|LCREL|HCREL:
-		case RANGE|HRREL|HCREL:
-		case RANGE|LCREL:
-		case RANGE|LCREL|HCREL:
-		case RANGE|HCREL:
-			f+=EXP_ADD_RNG;
-			break;
-		case F_PRINTF:
-		case F_CONCAT:
-		case F_ONEOF:
-		case F_STRSTR:
-		case F_EDIT:
-		case AREA_SUM:
-		case AREA_PROD:
-		case AREA_AVG:
-		case AREA_STD:
-		case AREA_MAX:
-		case AREA_MIN:
-		case AREA_CNT:
-		case AREA_VAR:
-			f++;
-			break;
-		default:
-			break;
-		}
-	} */
   free (form);
 }
 
