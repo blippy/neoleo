@@ -832,11 +832,6 @@ _io_update_status (void)
 		wid -= strlen (hmbuf);
 	}
 
-	/*
-	string dec;
-	if ((cp = find_cell (curow, cucol)) && cp->get_cell_formula())
-		dec = decomp_str(curow, cucol, cp);
-		*/
 	std::string dec = decomp_str(curow, cucol);
 
 	ptr = cell_value_string (curow, cucol, 1);
@@ -855,7 +850,6 @@ _io_update_status (void)
 		}
 		else
 			printw (" %s [%s]", ptr, dec);
-		//decomp_free ();
 	}
 	else if (plen)
 	{

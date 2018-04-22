@@ -20,19 +20,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
-//extern "C" {
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
-//}
 #include "funcdef.h"
 #include "sysdef.h"
 #include <iostream>
@@ -110,9 +100,7 @@ std::string
 get_cell_formula_at(int r, int c)
 {
 
-        CELL *cp = find_cell(r, c);
-	std::string res = decomp(r, c, cp);
-	decomp_free();
+	std::string res = decomp_str(r, c);
 	return res;
 }
 
