@@ -123,7 +123,6 @@ struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
 int ioerror = 0;
 
 /* The current stream from which commands are being read. */
-//input_stream_ptr make_input_stream() { return std::make_shared<struct input_stream>(); }
 
 input_stream_ptr make_input_stream() 
 { 

@@ -429,36 +429,18 @@ put_string (const char * str, int len)
 void
 insert_cell_expression (void)
 {
-  if (check_editting_mode ())
-    return;
-  else
-    {
-      CELL *cp;
-      char * in_str;
-      if (!(cp = find_cell (curow, cucol)))
-	return;
-      in_str = decomp (curow, cucol, cp);
-      put_string (in_str, strlen(in_str));
-      decomp_free ();
-    }
+	if (check_editting_mode ()) return;
+	std::string in_str = decomp_str(curow, cucol);
+	put_string(in_str.c_str(), in_str.size());
 }
 
 
 void
 insert_other_cell_expression (struct rng * rng)
 {
-  if (check_editting_mode ())
-    return;
-  else
-    {
-      CELL *cp;
-      char * in_str;
-      if (!(cp = find_cell (rng->lr, rng->lc)))
-        return;
-      in_str = decomp (rng->lr, rng->lc, cp);
-      put_string (in_str, strlen(in_str));
-      decomp_free ();
-    }
+	if (check_editting_mode ()) return;
+	std::string in_str = decomp_str(rng->lr, rng->lc);
+	put_string(in_str.c_str(), in_str.size());
 }
 
 /* No quotes are provided here, because it's easier to add
@@ -469,14 +451,14 @@ insert_other_cell_expression (struct rng * rng)
 void
 insert_cell_value(void)
 {
-  if (check_editting_mode ())
-    return;
-  else
-    {
-      const char * in_str;
-      in_str = cell_value_string (curow, cucol, 0);
-      put_string (in_str, strlen(in_str));
-    }
+	if (check_editting_mode ())
+		return;
+	else
+	{
+		const char * in_str;
+		in_str = cell_value_string (curow, cucol, 0);
+		put_string (in_str, strlen(in_str));
+	}
 }
 
 /* Ditto.
@@ -486,14 +468,14 @@ insert_cell_value(void)
 void
 insert_other_cell_value(struct rng * rng)
 {
-  if (check_editting_mode ())
-    return;
-  else
-    {
-      const char * in_str;
-      in_str = cell_value_string (rng->lr, rng->lc, 0);
-      put_string (in_str, strlen(in_str));
-    }
+	if (check_editting_mode ())
+		return;
+	else
+	{
+		const char * in_str;
+		in_str = cell_value_string (rng->lr, rng->lc, 0);
+		put_string (in_str, strlen(in_str));
+	}
 }
 
 void
