@@ -795,7 +795,7 @@ move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 static void
 _io_update_status (void)
 {
-	CELL *cp;
+	//CELL *cp;
 	//char *dec;
 	const char *ptr;
 	static char hmbuf[40];
@@ -832,9 +832,12 @@ _io_update_status (void)
 		wid -= strlen (hmbuf);
 	}
 
+	/*
 	string dec;
 	if ((cp = find_cell (curow, cucol)) && cp->get_cell_formula())
-		dec = decomp (curow, cucol, cp);
+		dec = decomp_str(curow, cucol, cp);
+		*/
+	std::string dec = decomp_str(curow, cucol);
 
 	ptr = cell_value_string (curow, cucol, 1);
 	plen = strlen (ptr);
@@ -852,7 +855,7 @@ _io_update_status (void)
 		}
 		else
 			printw (" %s [%s]", ptr, dec);
-		decomp_free ();
+		//decomp_free ();
 	}
 	else if (plen)
 	{

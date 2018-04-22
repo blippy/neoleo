@@ -5,7 +5,7 @@ AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -Wno-write-strings 
 #AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
-#AM_CXXFLAGS += -Wfatal-errors
+AM_CXXFLAGS += -Wfatal-errors
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
