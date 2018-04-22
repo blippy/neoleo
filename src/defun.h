@@ -1,7 +1,7 @@
 /*
  * $Id: defun.h,v 1.7 2000/08/10 21:02:50 danny Exp $
  *
- * Copyright © 1993, 2000 Free Software Foundation, Inc.
+ * Copyright (c) 1993, 2000 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -172,9 +172,6 @@ DEFUN ("scroll-left", FDscroll_left, FAscroll_left, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#3",
 "p",
-#endif
-#ifdef DOC_STRINGS
-"Scroll the current window left ARG cols; or near full screen if no ARG.",
 #endif
 
 DEFUN ("scroll-upright", FDscroll_upright, FAscroll_upright,
@@ -1474,189 +1471,7 @@ DEFUN ("write-region-to-file",
 "inside of RANGE.",
 #endif
 
-/* Setting Font Names for PostScript Printing and X11 */
 
-#if 0
-DEFUN ("define-font", FDdefine_font, FAdefine_font, define_font)
-#ifdef FUNC_ARG_STRINGS
-"wDefine font name? ",
-"wX11 name for %0? ",
-"wPostscript name for %0? ",
-#endif
-#ifdef DOC_STRINGS
-"Define the font OLEONAME to correspond to X11NAME and POSTSCRIPTNAME.",
-"",
-"The Oleo name of a font is used with commands like set-region-font.",
-"It should be easy to type and to remember, for example: ",
-"",
-"		times",
-"",
-"To achieve the best results, the X11 font name should leave the",
-"pointsize wild-carded.  For example: ",
-"",
-"		*times-medium-r-*",
-"",
-"The postscript name should be a font name acceptable to your printer.",
-"For example:",
-"",
-"		Times-Roman",
-"",
-#endif
-#endif
-
-/* Printing Commands */
-/*
-DEFUN ("set-page-size", FDset_page_size, FAset_page_size, set_page_size_cmd)
-#ifdef FUNC_ARG_STRINGS
-"sSet page size? ",
-#endif
-#ifdef DOC_STRINGS
-"Use PAGESIZE when printing PostScript.",
-"PAGESIZE may take the following forms:",
-"	8.5x11		-- a page size in inches.",
-"	22x28c		-- a page size in centimeters",
-"	612x792p	-- a page size in points",
-"or any of number of symbolic names? ",
-"	letter		-- 8.5 x 11 in.",
-"	landscape	-- 11 x 8.5 in.",
-"	etc.",
-"To see a complete list of available names, see the Oleo source file",
-"`print.c'.",
-#endif
-*/
-
-/*
-DEFUN ("set-default-ps-font",
-       FDset_ps_font_cmd, FAset_ps_font_cmd, set_ps_font_cmd)
-#ifdef FUNC_ARG_STRINGS
-"sSet default postscript font? ",
-#endif
-#ifdef DOC_STRINGS
-"Make FONT the default postscript font.",
-"FONT should be a valid postscript font name (e.g. Times-Roman). That font",
-"will be used to print all cells with no explicitly defined font.",
-#endif
-
-DEFUN ("print-region", FDprint_region, FAprint_region, txt_print_region)
-#ifdef FUNC_ARG_STRINGS
-"rRegion? ",
-"fwPrint to file? ",
-#endif
-#ifdef DOC_STRINGS
-"Print (in ascii) the contents of REGION to FILE.",
-#endif
-
-DEFUN ("psprint-region",
-       FDpsprint_region, FApsprint_region, print_region_cmd)
-#ifdef FUNC_ARG_STRINGS
-"rPrint region? ",
-"fwWrite EPS to file? ",
-#endif
-#ifdef DOC_STRINGS
-"Print the contents of REGION (in PostScript) to FILE.",
-#endif
-*/
-
-
-/* Control of X11 GUI Display */
-
-#ifdef HAVE_X11_X_H
-DEFUN ("set-default-x-font",
-       FDset_default__x_font, FAset_default_x_font, set_x_default_font)
-#ifdef FUNC_ARG_STRINGS
-"sSet default X11 font? ",
-#endif
-#ifdef DOC_STRINGS
-"Make FONT the default X11 font.",
-"FONT should be a valid X11 font name, with the point size wildcarded.",
-"For example: ",
-"		*times-medium-r-*",
-"",
-"This will be used to display all cells with no explicitly defined font.",
-#endif
-
-#endif
-
-#ifdef HAVE_X11_X_H
-DEFUN ("set-default-point-size", FDset_x_default_point_size,
-       FAset_x_default_point_size, set_x_default_point_size)
-#ifdef FUNC_ARG_STRINGS
-"NSet default point size? ",
-#endif
-#ifdef DOC_STRINGS
-"Set the default point size of cell text under X11 to ARG.",
-"Presuming that properly wildcarded font names have been used",
-"This causes all other fonts to be scaled accordingly.",
-#endif
-
-#endif
-
-#ifdef HAVE_X11_X_H
-DEFUN ("set-x-default-font",
-       FDset_x_def_font, FAset_x_def_font, set_x_default_font)
-#ifdef FUNC_ARG_STRINGS
-"sX11 font specification? ",
-#endif
-#ifdef DOC_STRINGS
-"Set the X11 name of the default font.",
-"The name should be a valid X11 font name, preferably with the point",
-"size wild-carded, for example:",
-"",
-"		*times-medium-r-*",
-#endif
-#endif
-
-#if 0
-DEFUN_5 ("set-cell-font", FDset_cell_font, FAset_cell_font,
-	 DFset_cell_font, set_region_font)
-#ifdef FUNC_ARG_STRINGS
-".'",
-"wSet %0 font to? ",
-"dScale? (ratio to the default point size e.g. 1.3) ",
-#endif
-#ifdef FUNC_INIT_CODE
-0,
-"{insert-cell-attr %0 font}",
-"{insert-cell-attr %0 font-scale}",
-#endif
-#ifdef DOC_STRINGS
-"Set the current cell's font to NAME at SCALE",
-"NAME should be a name defined with [define-font].",
-"SCALE should be a floating point number, which will be interpreted",
-"as a ratio to the default point size.  For example, if SCALE is 1.33",
-"and the default point size is 12 then this cell will be drawn with",
-"a point size of 16.",
-"",
-"Under X, this scaling behavior depends on having a wide variety of fonts",
-"installed, and wildcarding point-sizes in x11 font names passed to ",
-"define-font.",
-#endif
-
-DEFUN_5 ("set-region-font", FDset_region_font, FAset_region_font,
-	 DFset_region_font, set_region_font)
-#ifdef FUNC_ARG_STRINGS
-"rSet font for what region? ",
-"wSet %0 font to? ",
-"dPoint size? ",
-#endif
-#ifdef FUNC_INIT_CODE
-0,
-"{insert-cell-attr %0 font}",
-"{insert-cell-attr %0 font-scale}",
-#endif
-#ifdef DOC_STRINGS
-"Set the font of cells in REGION to NAME at SCALE",
-"NAME should be a name defined with [define-font].",
-"SCALE should be a floating point number, which will be interpreted",
-"as a ratio to the default point size.  For example, if SCALE is 1.33",
-"and the default point size is 12 then this cell will be drawn with",
-"a point size of 16.",
-"",
-"Under X, this scaling behavior depends on having a wide variety of fonts",
-"installed, and wildcarding point-sizes in x11 font names passed to ",
-"define-font.",
-#endif
-#endif
 
 /* Commands that Trigger Calculation */
 
@@ -2043,10 +1858,6 @@ DEFUN ("error-msg",
 "Macro processing will come to a halt.  The message vanishes as soon as the",
 "user types the next character of input or after a brief timeout.",
 #endif
-
-
-
-
 
 
 
