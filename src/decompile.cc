@@ -32,6 +32,8 @@
 #include "lists.h"
 #include "utils.h"
 
+char * decomp(const CELLREF r, const CELLREF c, CELL *cell);
+
 using CPTR = char*;
 
 typedef struct pr_node

@@ -1075,9 +1075,8 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	if ((hgt > 1) && Global->display_formula_mode)
 	{
 		move_cursor_to (win, r, c, 1);
-		ptr = decomp (r, c, cp);
-		printw ("%.*s ", wid - 1, ptr);
-		decomp_free ();
+		std::string formula = decomp_str(r, c);
+		printw ("%.*s ", wid - 1, formula.c_str());
 	}
 	if (glowing)
 		io_update_status ();

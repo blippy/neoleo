@@ -131,13 +131,6 @@ alt_cell_value_string(const point_t& pt)
 */
 
 
-/*
-std::string
-alt_decomp(const point_t& pt)
-{
-	return decomp(pt.r, pt.c);
-}
-*/
 
 template <class T>
 void

@@ -851,8 +851,8 @@ oleo_write_file(FILE *fp, struct rng *rng)
 
 		if (cp->get_cell_formula())
 		{
-			(void) fprintf (fp, "E%s", decomp(r, c, cp));
-			decomp_free();
+			std::string formula = decomp_str(r, c);
+			(void) fprintf (fp, "E%s", formula.c_str());
 		}
 
 		switch (GET_TYP (cp))
