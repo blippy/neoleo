@@ -42,7 +42,6 @@ using CPTR = char*;
 typedef struct pr_node
 {
 	int tightness;
-	int len;
 	std::string string;
 } pr_node_t;
 
@@ -62,26 +61,18 @@ static CELLREF decomp_col;
 #define FN1	Global->a0?(CPTR)"@%s(%s":(CPTR)"%s(%s"
 
 
+void log_debug_1(std::string s)
+{
+       	if constexpr(true) log_debug(s); 
+}
+
+
+
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
-/*
-static struct pr_node *
-n_allocXXX (int size, int tightness, const char *fmt, ...)
-{
-	struct pr_node *ret;
-	va_list args;
 
-	ret = (pr_node*) ck_malloc (sizeof (struct pr_node) + size + 1);
-	ret->len = size;
-	ret->tightness = tightness;
-	va_start (args, fmt);
-	vsprintf (ret->string, fmt, args);
-	va_end (args);
-	return ret;
-}
-*/
 static struct pr_node *
-n_alloc (int size, int tightness, const char *fmt, ...)
+n_alloc (int tightness, const char *fmt, ...)
 {
 	char buffer[1000];
 	va_list args;
@@ -90,10 +81,9 @@ n_alloc (int size, int tightness, const char *fmt, ...)
 	va_end (args);
 
 	pr_node_t* ret = new pr_node_t;
-	ret->string = buffer;
 	ret->tightness = tightness;
-	ret->len = strlen(buffer);
-	log_debug("n_alloc:"s + ret->string);
+	ret->string = buffer;
+	log_debug_1("n_alloc:"s + ret->string);
 	return ret;
 }
 
@@ -160,20 +150,19 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				expr += jumpto;
 				if (byte == IF || byte == IF_L)
 				{
-					log_debug("decomp:IF(_L)");
+					log_debug_1("decomp:IF(_L)");
 					if (c_node[0]->tightness <= 1)
-						newn = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
-								1,
-								"(%s) ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+						newn = n_alloc(1, "(%s) ? %s : %s", 
+								c_node[0]->string, c_node[1]->string, c_node[2]->string);
 					else
-						newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
-								1,
-								"%s ? %s : %s", c_node[0]->string.c_str(), c_node[1]->string.c_str(), c_node[2]->string.c_str());
+						newn = n_alloc(1, "%s ? %s : %s", 
+								c_node[0]->string.c_str(), c_node[1]->string.c_str(), 
+								c_node[2]->string.c_str());
 				}
 				else
-					newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
-							1000,
-							F3, f->fn_str, c_node[0]->string.c_str(), c_node[1]->string.c_str(), c_node[2]->string.c_str());
+					newn = n_alloc(1000, F3, f->fn_str, 
+							c_node[0]->string.c_str(), c_node[1]->string.c_str(), 
+							c_node[2]->string.c_str());
 				n_free (c_node[0]);
 				n_free (c_node[1]);
 				n_free (c_node[2]);
@@ -200,8 +189,8 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 		case C_STR:
 			{
 				std::string str = std::string(backslash_a_string ((char *) expr + jumpto, 2));
-				newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", str.c_str());
-				log_debug("decomp:C_STR:"s + newn->string);
+				newn = n_alloc(1000, "%s", str.c_str());
+				log_debug_1("decomp:C_STR:"s + newn->string);
 			}
 			break;
 
@@ -217,7 +206,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 
 				if (Global->a0)
 				{
-					newn = n_alloc (30, 1000, f->fn_str, col_to_str (col), row);
+					newn = n_alloc(1000, f->fn_str, col_to_str (col), row);
 				}
 				else
 				{
@@ -265,11 +254,10 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 						num1 = row;
 						num2 = col;
 					}
-					newn = n_alloc (30, 1000, str, num1, num2);
+					newn = n_alloc(1000, str, num1, num2);
 				}
-				newn->len = strlen (newn->string);
 			}
-			log_debug("decomp:C_CELL:"s + newn->string);
+			log_debug_1("decomp:C_CELL:"s + newn->string);
 			break;
 
 		case C_RANGE:
@@ -282,7 +270,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				expr += EXP_ADD_RNG;
 
 				if (Global->a0)
-					newn = n_alloc (40, 1000, f->fn_str, col_to_str (rng.lc), rng.lr, col_to_str (rng.hc), rng.hr);
+					newn = n_alloc(1000, f->fn_str, col_to_str (rng.lc), rng.lr, col_to_str (rng.hc), rng.hr);
 				else
 				{
 					/* Check for special cases */
@@ -354,28 +342,25 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 					else
 						(void) sprintf (tmpcbuf, "c%u:%u", rng.hc, rng.lc);
 
-					newn = n_alloc (40, 1000, "%s%s", tmprbuf, tmpcbuf);
+					newn = n_alloc(1000, "%s%s", tmprbuf, tmpcbuf);
 				}
-				newn->len = strlen (newn->string);
 			}
 			break;
 
 		case C_CONST:
-			newn = n_alloc (strlen (f->fn_str) + 1, 1000, f->fn_str);
+			newn = n_alloc(1000, f->fn_str);
 			break;
 
 		case C_FN0:
 		case C_FN0X:
 		case C_FN0 | C_T:
-			newn = n_alloc (strlen (f->fn_str) + 3, 1000, F0, f->fn_str);
-			log_debug("decomp:C_FN?:"s + newn->string);
+			newn = n_alloc(1000, F0, f->fn_str);
+			log_debug_1("decomp:C_FN?:"s + newn->string);
 			break;
 
 		case C_FN1:
 			--c_node;
-			newn = n_alloc (c_node[0]->len + strlen (f->fn_str) + 3,
-					1000,
-					F1, f->fn_str, c_node[0]->string.c_str());
+			newn = n_alloc(1000, F1, f->fn_str, c_node[0]->string.c_str());
 			n_free (*c_node);
 			break;
 
@@ -383,15 +368,11 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 			--c_node;
 			if (c_node[0]->tightness < 9)
 			{
-				newn = n_alloc (3 + c_node[0]->len,
-						9,
-						"%s(%s)", f->fn_str, c_node[0]->string.c_str());
+				newn = n_alloc(9, "%s(%s)", f->fn_str, c_node[0]->string.c_str());
 			}
 			else
 			{
-				newn = n_alloc (1 + c_node[0]->len,
-						9,
-						"%s%s", f->fn_str, c_node[0]->string.c_str());
+				newn = n_alloc(9, "%s%s", f->fn_str, c_node[0]->string.c_str());
 			}
 			n_free (*c_node);
 			break;
@@ -406,51 +387,38 @@ do_infix:
 			if (c_node[0]->tightness < pri || (c_node[0]->tightness == pri && aso != 1))
 			{
 				if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
-					newn = n_alloc (7 + c_node[0]->len + c_node[1]->len,
-							pri,
-							"(%s) %s (%s)", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
+					newn = n_alloc(pri, "(%s) %s (%s)", c_node[0]->string.c_str(), chr, 
+							c_node[1]->string.c_str());
 				else
-					newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
-							pri,
-							"(%s) %s %s", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
+					newn = n_alloc( pri, "(%s) %s %s", c_node[0]->string.c_str(), 
+							chr, c_node[1]->string.c_str());
 			}
 			else if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
-				newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
-						pri,
-						"%s %s (%s)", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
+				newn = n_alloc(pri, "%s %s (%s)", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 			else
-				newn = n_alloc (3 + c_node[0]->len + c_node[1]->len,
-						pri,
-						"%s %s %s", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
+				newn = n_alloc(pri, "%s %s %s", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 
 			n_free (c_node[0]);
 			n_free (c_node[1]);
-			log_debug("decomp:C_INF:"s + newn->string);
+			log_debug_1("decomp:C_INF:"s + newn->string);
 			break;
 
 		case C_FN2:
 do_fn2:
 			c_node -= 2;
-			newn = n_alloc (c_node[0]->len + c_node[1]->len + strlen (f->fn_str) + 5,
-					1000,
-					F2, f->fn_str, c_node[0]->string.c_str(), c_node[1]->string.c_str());
+			newn = n_alloc(1000, F2, f->fn_str, c_node[0]->string.c_str(), c_node[1]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			break;
 
 		case C_FN3:
 			c_node -= 3;
-			newn = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str) + 7,
-					1000,
-					F3,
-					f->fn_str,
-					c_node[0]->string.c_str(),
-					c_node[1]->string.c_str(),
-					c_node[2]->string.c_str());
+			newn = n_alloc( 1000, F3, f->fn_str, c_node[0]->string.c_str(), 
+					c_node[1]->string.c_str(), c_node[2]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			n_free (c_node[2]);
-			log_debug("decomp:C_FN3:"s + newn->string);
+			log_debug_1("decomp:C_FN3:"s + newn->string);
 			break;
 
 		case C_FNN:
@@ -458,41 +426,28 @@ do_fn2:
 			c_node -= aso;
 
 			if (aso == 1)
-				newn = n_alloc (3 + c_node[0]->len + strlen (f->fn_str),
-						1000,
-						F1, f->fn_str, c_node[0]->string.c_str());
+				newn = n_alloc(1000, F1, f->fn_str, c_node[0]->string.c_str());
 			else
 			{
-				newn = n_alloc (2 + c_node[0]->len + strlen (f->fn_str),
-						1000,
-						FN1, f->fn_str, c_node[0]->string);
+				newn = n_alloc(1000, FN1, f->fn_str, c_node[0]->string);
 				--aso;
 				for (pri = 1; pri < aso; pri++)
 				{
 					n_free (c_node[0]);
 					c_node[0] = newn;
-					newn = n_alloc (2 + newn->len + c_node[pri]->len,
-							1000,
-							"%s, %s", newn->string.c_str(), c_node[pri]->string.c_str());
+					newn = n_alloc(1000, "%s, %s", newn->string.c_str(), c_node[pri]->string.c_str());
 				}
 				n_free (c_node[0]);
 				c_node[0] = newn;
-				newn = n_alloc (3 + newn->len + c_node[aso]->len,
-						1000,
-						"%s, %s)", newn->string.c_str(), c_node[aso]->string.c_str());
+				newn = n_alloc(1000, "%s, %s)", newn->string.c_str(), c_node[aso]->string.c_str());
 			}
 			n_free (c_node[0]);
 			break;
 
 		case C_FN4:
 			c_node -= 4;
-			newn = n_alloc (c_node[0]->len + c_node[1]->len + c_node[2]->len + c_node[3]->len + strlen (f->fn_str) + 6,
-					1000,
-					F4,
-					f->fn_str,
-					c_node[0]->string.c_str(),
-					c_node[1]->string.c_str(),
-					c_node[2]->string.c_str(),
+			newn = n_alloc(1000, F4, f->fn_str, c_node[0]->string.c_str(), 
+					c_node[1]->string.c_str(), c_node[2]->string.c_str(),
 					c_node[3]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
@@ -504,32 +459,28 @@ do_fn2:
 			{
 				std::string str = (char *) expr + jumpto;
 				expr++;
-				newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", str.c_str());
+				newn = n_alloc(1000, "%s", str.c_str());
 			}
 			break;
 
 		case C_FLT:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_flt, sizeof (num_t));
 			expr += sizeof (num_t);
-			newn = n_alloc (20, 1000, f->fn_str, (double) tmp_flt); 
-			newn->len = strlen (newn->string);
-			log_debug("decomp:C_FLT:"s + newn->string);
+			newn = n_alloc(1000, f->fn_str, (double) tmp_flt); 
+			log_debug_1("decomp:C_FLT:"s + newn->string);
 			break;
 
 		case C_INT:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_lng, sizeof (long));
 			expr += sizeof (long);
-			newn = n_alloc (20, 1000, f->fn_str, tmp_lng);
-			newn->len = strlen (newn->string);
-			log_debug("decomp:C_INT:"s + newn->string);
+			newn = n_alloc(1000, f->fn_str, tmp_lng);
+			log_debug_1("decomp:C_INT:"s + newn->string);
 			break;
 
 		case C_VAR:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & v, sizeof (struct var *));
 			expr += sizeof (struct var *);
-			newn = n_alloc (strlen (v->var_name) + 1,
-					1000,
-					f->fn_str, v->var_name);
+			newn = n_alloc(1000, f->fn_str, v->var_name);
 			break;
 
 
@@ -537,6 +488,7 @@ do_fn2:
 			panic ("Bad decompile %d", f->fn_comptype);
 	}
 }
+
 static pr_node_t*
 byte_decompile ( unsigned char *expr)
 {
@@ -608,6 +560,7 @@ byte_decompile ( unsigned char *expr)
  * used to turn on formatted editing.
  */
 
+
 std::string
 decomp_str(const CELLREF r, const CELLREF c)
 {
@@ -623,6 +576,7 @@ decomp_str(const CELLREF r, const CELLREF c)
 	return res;
 }
 
+
 const char *
 decomp(const CELLREF r, const CELLREF c, CELL *cell)
 {
@@ -630,9 +584,8 @@ decomp(const CELLREF r, const CELLREF c, CELL *cell)
 	return tmp;
 }
 
-	
-	
-	const char *
+
+const char *
 decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
 	char *str;
@@ -664,7 +617,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				{
 					str = strdup (flt_to_str (cell->cell_flt()));
 				}
-				log_debug("decomp_formula:TYP_FLT:"s + str);
+				log_debug_1("decomp_formula:TYP_FLT:"s + str);
 				break;
 			case TYP_INT:
 				str = (CPTR) ck_malloc (20);
@@ -672,7 +625,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				break;
 			case TYP_STR:
 				str = strdup (backslash_a_string (cell->cell_str(), 1));
-				log_debug("decomp_formula:TYP_STR:"s + str);
+				log_debug_1("decomp_formula:TYP_STR:"s + str);
 				break;
 			case TYP_BOL:
 				str = strdup (bname[cell->cell_bol()]);
