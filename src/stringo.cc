@@ -68,7 +68,7 @@ char * alloc_value_str(struct value* p)
 }
 
 static void
-do_edit ( int numarg, struct value * p)
+do_edit_XXX( int numarg, struct value * p)
 {
 	int mm;
 	int add_len;
@@ -369,10 +369,19 @@ static std::string do_concata(struct value* p)
 	return s1+s2;
 }
 
-static void do_concata_1(struct value* p)
+static void do_concata_1(struct value* p) { wrapfunc(do_concata)(p); }
+
+static std::string do_edit(struct value* p)
 {
-	wrapfunc(do_concata)(p);
+	std::string s1 = p->gString();
+	int pos = (p+1)->gLong() -1;
+	int len = (p+2)->gLong() - pos;
+	return s1.erase(pos, len);
 }
+static void do_edit_1(struct value*p) { wrapfunc(do_edit)(p);}
+
+
+
 
 struct function string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" },	// 1 
@@ -388,7 +397,7 @@ struct function string_funs[] = {
 
 { C_FN2,	X_A2,	"SI",   to_vptr(do_repeat),	"repeat" },	// 9 
 { C_FNN,	X_AN,	"EEEE", to_vptr(do_concat),	"concat" },	// 10 
-{ C_FNN,	X_AN,	"SIIS", to_vptr(do_edit),	"edit" },	// 11 
+{ C_FN3,	X_A3,	"SII", to_vptr(do_edit_1),	"edit" },	// 11 
 { C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },  // 12
 { C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },  // 13
 

@@ -168,12 +168,12 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 					else
 						newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
 								1,
-								"%s ? %s : %s", c_node[0]->string, c_node[1]->string, c_node[2]->string);
+								"%s ? %s : %s", c_node[0]->string.c_str(), c_node[1]->string.c_str(), c_node[2]->string.c_str());
 				}
 				else
 					newn = n_alloc (6 + c_node[0]->len + c_node[1]->len + c_node[2]->len + strlen (f->fn_str),
 							1000,
-							F3, f->fn_str, c_node[0]->string, c_node[1]->string, c_node[2]->string);
+							F3, f->fn_str, c_node[0]->string.c_str(), c_node[1]->string.c_str(), c_node[2]->string.c_str());
 				n_free (c_node[0]);
 				n_free (c_node[1]);
 				n_free (c_node[2]);
@@ -421,10 +421,11 @@ do_infix:
 			else
 				newn = n_alloc (3 + c_node[0]->len + c_node[1]->len,
 						pri,
-						"%s %s %s", c_node[0]->string, chr, c_node[1]->string);
+						"%s %s %s", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 
 			n_free (c_node[0]);
 			n_free (c_node[1]);
+			log_debug("decomp:C_INF:"s + newn->string);
 			break;
 
 		case C_FN2:
@@ -671,6 +672,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				break;
 			case TYP_STR:
 				str = strdup (backslash_a_string (cell->cell_str(), 1));
+				log_debug("decomp_formula:TYP_STR:"s + str);
 				break;
 			case TYP_BOL:
 				str = strdup (bname[cell->cell_bol()]);
