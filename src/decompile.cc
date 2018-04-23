@@ -46,7 +46,7 @@ typedef struct pr_node
 } pr_node_t;
 
 
-static pr_node_t* save_decomp = nullptr;
+static pr_node_t save_decomp;
 static CELLREF decomp_row;
 static CELLREF decomp_col;
 
@@ -566,7 +566,7 @@ decomp_str(const CELLREF r, const CELLREF c)
 {
 
 	std::string res;
-	save_decomp = nullptr;
+	//save_decomp = nullptr;
 	CELL *cp = find_cell(r, c);
 	if(cp != nullptr) {
 		const char *tmp = decomp(r, c, cp);
@@ -585,76 +585,71 @@ decomp(const CELLREF r, const CELLREF c, CELL *cell)
 }
 
 
-const char *
-decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
+const std::string
+decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
-	char *str;
-	extern char *bname[];
+	std::string str;
 
-	if (!cell)
-	{
-		str = (CPTR) ck_malloc (1);
-		str[0] = '\0';
-		save_decomp =  new pr_node_t;
-		return str;
+	extern char *bname[];
+	switch (GET_TYP (cell)) {
+		case 0:
+			return "";
+			break;
+		case TYP_FLT:
+			if (tog)
+				str = flt_to_str_fmt(cell);
+			else
+				str = flt_to_str (cell->cell_flt());
+			log_debug_1("decomp_formula:TYP_FLT:"s + str);
+			break;
+		case TYP_INT:
+			{
+				static char buf[20];
+				sprintf(buf, "%ld", cell->cell_int());
+				str = buf;
+			}
+			break;
+		case TYP_STR:
+			str = backslash_a_string (cell->cell_str(), 1);
+			log_debug_1("decomp_formula:TYP_STR:"s + str);
+			break;
+		case TYP_BOL:
+			str = bname[cell->cell_bol()];
+			break;
+		case TYP_ERR:
+			str = ename[cell->cell_bol()];
+			break;
+		default:
+			panic ("Unknown type %d in decomp", GET_TYP (cell));
+
 	}
+	return str;
+}
+
+const char *
+decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
+{
+	if(!cell) return "";
 	decomp_row = r;
 	decomp_col = c;
-	if (cell->get_cell_formula() == 0)
-	{
-		switch (GET_TYP (cell))
-		{
-			case 0:
-				str = (CPTR) ck_malloc (1);
-				str[0] = '\0';
-				break;
-			case TYP_FLT:
-				if (tog)
-				{
-					str = strdup (flt_to_str_fmt(cell));
-				}
-				else
-				{
-					str = strdup (flt_to_str (cell->cell_flt()));
-				}
-				log_debug_1("decomp_formula:TYP_FLT:"s + str);
-				break;
-			case TYP_INT:
-				str = (CPTR) ck_malloc (20);
-				sprintf (str, "%ld", cell->cell_int());
-				break;
-			case TYP_STR:
-				str = strdup (backslash_a_string (cell->cell_str(), 1));
-				log_debug_1("decomp_formula:TYP_STR:"s + str);
-				break;
-			case TYP_BOL:
-				str = strdup (bname[cell->cell_bol()]);
-				break;
-			case TYP_ERR:
-				str = strdup (ename[cell->cell_bol()]);
-				break;
-			default:
-				str = 0;
-				panic ("Unknown type %d in decomp", GET_TYP (cell));
-		}
-		//save_decomp = new pr_node_t;
-		//save_decomp->string = str;
-		return str;
+
+	// we don't care about 'tightness', as all the computation has been done
+	if (cell->get_cell_formula() == 0) {
+		save_decomp.string = decomp_formula_1(r, c, cell, tog);
 	} else {
-		pr_node_t  *ret = byte_decompile (cell->get_cell_formula());
-		//save_decomp = ret;
-		//save_decomp = new pr_node_t
-		save_decomp = ret; // TODO this recasting seems dubious
-		return &(ret->string[0]);
-		//return ret->string.c_str();
+		pr_node_t* n = byte_decompile (cell->get_cell_formula());
+		save_decomp.string = n->string;
+		delete n;
 	}
+	return save_decomp.string.c_str();
 }
+
 
 void
 decomp_free (void)
 {
-	if(save_decomp) delete save_decomp;
-	save_decomp = nullptr;
+	//if(save_decomp) delete save_decomp;
+	save_decomp.string = ""; // admittedly this will hang around until program exits
 }
 
 /*
