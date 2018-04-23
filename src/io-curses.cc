@@ -35,6 +35,7 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+using namespace std::string_literals;
 
 #include <ncurses.h>
 #include <menu.h>
@@ -74,6 +75,11 @@ static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
 
+static void log_debug_1(std::string msg)
+{
+	if constexpr(true)
+		log_debug("io-curses.cc:"s + msg);
+}
 
 void
 show_main_menu()
@@ -795,8 +801,6 @@ move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 static void
 _io_update_status (void)
 {
-	//CELL *cp;
-	//char *dec;
 	const char *ptr;
 	static char hmbuf[40];
 	int wid;
@@ -833,6 +837,7 @@ _io_update_status (void)
 	}
 
 	std::string dec = decomp_str(curow, cucol);
+	log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
 
 	ptr = cell_value_string (curow, cucol, 1);
 	plen = strlen (ptr);
@@ -846,10 +851,10 @@ _io_update_status (void)
 			if (plen + 3 > wid)
 				printw (" %.*s... [...]", wid - 6, ptr);
 			else
-				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec);
+				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec.c_str());
 		}
 		else
-			printw (" %s [%s]", ptr, dec);
+			printw (" %s [%s]", ptr, dec.c_str());
 	}
 	else if (plen)
 	{
@@ -1076,6 +1081,7 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	{
 		move_cursor_to (win, r, c, 1);
 		std::string formula = decomp_str(r, c);
+		log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}
 	if (glowing)

@@ -1881,34 +1881,15 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 						      curow;
 					      the_cmd_frame->prev->_setcol =
 						      cucol;
-					      if (get_argument
-						  (prompt, &formula_style))
-						{
-							if (do_init)
-							  {
-								  if (rmac
-								      &&
-								      !iscmd)
-									  init_arg_text
-										  (&the_cmd_arg,
-										   decomp_formula
-										   (curow,
-										    cucol,
-										    cp,
-										    0));
-								  else
-									  init_arg_text
-										  (&the_cmd_arg,
-										   decomp_formula
-										   (curow,
-										    cucol,
-										    cp,
-										    1));
-								  decomp_free
-									  ();
-							  }
-							//goto new_cycle;
-							return true;	// state machine
+					      if (get_argument (prompt, &formula_style)) {
+						      if (do_init) {
+							      if (rmac && !iscmd)
+								      init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 0));
+							      else
+								      init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 1));
+						      }
+						      log_debug("cmd.cc:point a");
+						      return true;	// state machine
 						}
 					      goto next_arg;
 				      }

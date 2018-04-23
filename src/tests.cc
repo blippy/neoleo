@@ -116,7 +116,7 @@ run_cell_formula_tests()
 	string s1 = "r4c4 + 1";
 	set_cell_from_string(5, 6, "r4c4 + 1");
 	check(decomp_str(5, 6) == s1, "cellfrm-01");
-	decomp_free();
+	//decomp_free();
 
 }
 
@@ -130,7 +130,10 @@ void decomp_n(int i, std::string s)
 void test_decomp()
 {
 	decomp_n(1, "\"hello world\""s);
-	decomp_n(2, "1+a2"s);
+
+	set_cell_from_string(2, 1, "41");
+	decomp_n(2, "1+r2c1"s);
+	
 	decomp_n(3, "concata(\"foo\", \"bar\")"s);
 	decomp_n(4, "12.3"s);
 	

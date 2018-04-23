@@ -61,7 +61,7 @@ static CELLREF decomp_col;
 #define FN1	Global->a0?(CPTR)"@%s(%s":(CPTR)"%s(%s"
 
 
-void log_debug_1(std::string s)
+static void log_debug_1(std::string s)
 {
        	if constexpr(true) log_debug(s); 
 }
@@ -572,7 +572,8 @@ decomp_str(const CELLREF r, const CELLREF c)
 		const char *tmp = decomp(r, c, cp);
 		if(tmp) res = std::string(tmp);
 	}
-	decomp_free();
+	log_debug_1("decomp_str:res:"s + res);
+	//decomp_free();
 	return res;
 }
 
@@ -600,7 +601,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				str = flt_to_str_fmt(cell);
 			else
 				str = flt_to_str (cell->cell_flt());
-			log_debug_1("decomp_formula:TYP_FLT:"s + str);
+			log_debug_1("decomp_formula_1:TYP_FLT:"s + str);
 			break;
 		case TYP_INT:
 			{
@@ -611,7 +612,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 			break;
 		case TYP_STR:
 			str = backslash_a_string (cell->cell_str(), 1);
-			log_debug_1("decomp_formula:TYP_STR:"s + str);
+			log_debug_1("decomp_formula_1:TYP_STR:"s + str);
 			break;
 		case TYP_BOL:
 			str = bname[cell->cell_bol()];
@@ -641,6 +642,7 @@ decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 		save_decomp.string = n->string;
 		delete n;
 	}
+	log_debug_1("decomp_formula:return:"s + save_decomp.string);
 	return save_decomp.string.c_str();
 }
 
