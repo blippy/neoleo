@@ -27,5 +27,5 @@ extern void decomp_free ();
 const char * backslash_a_string (char *string, int add_quote);
 std::string decomp_str(const CELLREF r, const CELLREF c);
 std::string decomp_str(const CELLREF r, const CELLREF c, CELL *cell);
-char * decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog);
+const char * decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog);
 

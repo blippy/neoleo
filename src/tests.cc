@@ -17,6 +17,8 @@ using std::endl;
 using std::map;
 using std::vector;
 
+using namespace std::string_literals;
+
 // check for leaks, as suggested at 
 // http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
 //#include <sanitizer/lsan_interface.h>
@@ -102,6 +104,7 @@ test_formatting()
 	check_fmt(1.0DD,  "1.00");
 }
 
+//void check_decomp(
 void
 run_cell_formula_tests()
 {
@@ -115,6 +118,22 @@ run_cell_formula_tests()
 	check(decomp_str(5, 6) == s1, "cellfrm-01");
 	decomp_free();
 
+}
+
+void decomp_n(int i, std::string s)
+{
+	cout << "decomp-" << i << "\n";
+	set_cell_from_string(1, 1, s);
+	cout << decomp_str(1,1) << "\n";
+}
+
+void test_decomp()
+{
+	decomp_n(1, "\"hello world\""s);
+	decomp_n(2, "1+a2"s);
+	decomp_n(3, "concata(\"foo\", \"bar\")"s);
+	decomp_n(4, "12.3"s);
+	
 }
 
 void
@@ -220,6 +239,7 @@ run_regular_tests()
         cout << "Finished test\n";
 
 	//__lsan_do_leak_check();
+	test_decomp();
 	return all_pass;
 }
 

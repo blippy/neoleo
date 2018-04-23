@@ -20,7 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <string.h>
+#include <cstring>
 #include <stdarg.h>
 #include <ctype.h>
 #include "global.h"
@@ -30,9 +30,12 @@
 #include "io-utils.h"
 #include "cmd.h"
 #include "lists.h"
+#include "logging.h"
 #include "utils.h"
 
-char * decomp(const CELLREF r, const CELLREF c, CELL *cell);
+using namespace std::string_literals;
+
+const char * decomp(const CELLREF r, const CELLREF c, CELL *cell);
 
 using CPTR = char*;
 
@@ -40,11 +43,11 @@ typedef struct pr_node
 {
 	int tightness;
 	int len;
-	char string[1];
+	std::string string;
 } pr_node_t;
 
 
-static char* save_decomp = nullptr;
+static pr_node_t* save_decomp = nullptr;
 static CELLREF decomp_row;
 static CELLREF decomp_col;
 
@@ -61,8 +64,9 @@ static CELLREF decomp_col;
 
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
+/*
 static struct pr_node *
-n_alloc (int size, int tightness, const char *fmt, ...)
+n_allocXXX (int size, int tightness, const char *fmt, ...)
 {
 	struct pr_node *ret;
 	va_list args;
@@ -75,8 +79,27 @@ n_alloc (int size, int tightness, const char *fmt, ...)
 	va_end (args);
 	return ret;
 }
+*/
+static struct pr_node *
+n_alloc (int size, int tightness, const char *fmt, ...)
+{
+	char buffer[1000];
+	va_list args;
+	va_start (args, fmt);
+	vsprintf (buffer, fmt, args);
+	va_end (args);
 
-#define n_free(x)	ck_free(x)
+	pr_node_t* ret = new pr_node_t;
+	ret->string = buffer;
+	ret->tightness = tightness;
+	ret->len = strlen(buffer);
+	log_debug("n_alloc:"s + ret->string);
+	return ret;
+}
+
+//#define n_free(x)	ck_free(x)
+
+void n_free(pr_node_t* p) { delete p; }
 
 static pr_node_t* byte_decompile(unsigned char *expr);
 
@@ -91,7 +114,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 {
 	num_t tmp_flt;
 	long tmp_lng;
-	const char *tmp_str;
+	const std::string tmp_str;
 	struct var *v;
 	unsigned char save_val;
 
@@ -137,6 +160,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				expr += jumpto;
 				if (byte == IF || byte == IF_L)
 				{
+					log_debug("decomp:IF(_L)");
 					if (c_node[0]->tightness <= 1)
 						newn = n_alloc (8 + c_node[0]->len + c_node[1]->len + c_node[2]->len,
 								1,
@@ -174,10 +198,11 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				goto do_fn2;
 
 		case C_STR:
-			tmp_str = backslash_a_string ((char *) expr + jumpto, 2);
-			newn = n_alloc (strlen (tmp_str) + 1,
-					1000,
-					"%s", tmp_str);
+			{
+				std::string str = std::string(backslash_a_string ((char *) expr + jumpto, 2));
+				newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", str.c_str());
+				log_debug("decomp:C_STR:"s + newn->string);
+			}
 			break;
 
 		case C_CELL:
@@ -244,6 +269,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				}
 				newn->len = strlen (newn->string);
 			}
+			log_debug("decomp:C_CELL:"s + newn->string);
 			break;
 
 		case C_RANGE:
@@ -341,17 +367,15 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 		case C_FN0:
 		case C_FN0X:
 		case C_FN0 | C_T:
-			newn = n_alloc (strlen (f->fn_str) + 3,
-					1000,
-					F0,
-					f->fn_str);
+			newn = n_alloc (strlen (f->fn_str) + 3, 1000, F0, f->fn_str);
+			log_debug("decomp:C_FN?:"s + newn->string);
 			break;
 
 		case C_FN1:
 			--c_node;
 			newn = n_alloc (c_node[0]->len + strlen (f->fn_str) + 3,
 					1000,
-					F1, f->fn_str, c_node[0]->string);
+					F1, f->fn_str, c_node[0]->string.c_str());
 			n_free (*c_node);
 			break;
 
@@ -361,13 +385,13 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 			{
 				newn = n_alloc (3 + c_node[0]->len,
 						9,
-						"%s(%s)", f->fn_str, c_node[0]->string);
+						"%s(%s)", f->fn_str, c_node[0]->string.c_str());
 			}
 			else
 			{
 				newn = n_alloc (1 + c_node[0]->len,
 						9,
-						"%s%s", f->fn_str, c_node[0]->string);
+						"%s%s", f->fn_str, c_node[0]->string.c_str());
 			}
 			n_free (*c_node);
 			break;
@@ -384,16 +408,16 @@ do_infix:
 				if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
 					newn = n_alloc (7 + c_node[0]->len + c_node[1]->len,
 							pri,
-							"(%s) %s (%s)", c_node[0]->string, chr, c_node[1]->string);
+							"(%s) %s (%s)", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 				else
 					newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
 							pri,
-							"(%s) %s %s", c_node[0]->string, chr, c_node[1]->string);
+							"(%s) %s %s", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 			}
 			else if (c_node[1]->tightness < pri || (c_node[1]->tightness == pri && aso != -1))
 				newn = n_alloc (5 + c_node[0]->len + c_node[1]->len,
 						pri,
-						"%s %s (%s)", c_node[0]->string, chr, c_node[1]->string);
+						"%s %s (%s)", c_node[0]->string.c_str(), chr, c_node[1]->string.c_str());
 			else
 				newn = n_alloc (3 + c_node[0]->len + c_node[1]->len,
 						pri,
@@ -408,7 +432,7 @@ do_fn2:
 			c_node -= 2;
 			newn = n_alloc (c_node[0]->len + c_node[1]->len + strlen (f->fn_str) + 5,
 					1000,
-					F2, f->fn_str, c_node[0]->string, c_node[1]->string);
+					F2, f->fn_str, c_node[0]->string.c_str(), c_node[1]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			break;
@@ -419,12 +443,13 @@ do_fn2:
 					1000,
 					F3,
 					f->fn_str,
-					c_node[0]->string,
-					c_node[1]->string,
-					c_node[2]->string);
+					c_node[0]->string.c_str(),
+					c_node[1]->string.c_str(),
+					c_node[2]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			n_free (c_node[2]);
+			log_debug("decomp:C_FN3:"s + newn->string);
 			break;
 
 		case C_FNN:
@@ -434,7 +459,7 @@ do_fn2:
 			if (aso == 1)
 				newn = n_alloc (3 + c_node[0]->len + strlen (f->fn_str),
 						1000,
-						F1, f->fn_str, c_node[0]->string);
+						F1, f->fn_str, c_node[0]->string.c_str());
 			else
 			{
 				newn = n_alloc (2 + c_node[0]->len + strlen (f->fn_str),
@@ -447,13 +472,13 @@ do_fn2:
 					c_node[0] = newn;
 					newn = n_alloc (2 + newn->len + c_node[pri]->len,
 							1000,
-							"%s, %s", newn->string, c_node[pri]->string);
+							"%s, %s", newn->string.c_str(), c_node[pri]->string.c_str());
 				}
 				n_free (c_node[0]);
 				c_node[0] = newn;
 				newn = n_alloc (3 + newn->len + c_node[aso]->len,
 						1000,
-						"%s, %s)", newn->string, c_node[aso]->string);
+						"%s, %s)", newn->string.c_str(), c_node[aso]->string.c_str());
 			}
 			n_free (c_node[0]);
 			break;
@@ -464,10 +489,10 @@ do_fn2:
 					1000,
 					F4,
 					f->fn_str,
-					c_node[0]->string,
-					c_node[1]->string,
-					c_node[2]->string,
-					c_node[3]->string);
+					c_node[0]->string.c_str(),
+					c_node[1]->string.c_str(),
+					c_node[2]->string.c_str(),
+					c_node[3]->string.c_str());
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			n_free (c_node[2]);
@@ -475,9 +500,11 @@ do_fn2:
 			break;
 
 		case C_ERR:
-			tmp_str = (char *) expr + jumpto;
-			expr++;
-			newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", tmp_str);
+			{
+				std::string str = (char *) expr + jumpto;
+				expr++;
+				newn = n_alloc (strlen (tmp_str) + 1, 1000, "%s", str.c_str());
+			}
 			break;
 
 		case C_FLT:
@@ -485,6 +512,7 @@ do_fn2:
 			expr += sizeof (num_t);
 			newn = n_alloc (20, 1000, f->fn_str, (double) tmp_flt); 
 			newn->len = strlen (newn->string);
+			log_debug("decomp:C_FLT:"s + newn->string);
 			break;
 
 		case C_INT:
@@ -492,6 +520,7 @@ do_fn2:
 			expr += sizeof (long);
 			newn = n_alloc (20, 1000, f->fn_str, tmp_lng);
 			newn->len = strlen (newn->string);
+			log_debug("decomp:C_INT:"s + newn->string);
 			break;
 
 		case C_VAR:
@@ -512,10 +541,11 @@ byte_decompile ( unsigned char *expr)
 {
 	static struct pr_node **c_node;
 	static int line_alloc;
-	static struct pr_node **the_line;
+	static pr_node_t** the_line;
 	if (!the_line)
 	{
-		the_line = (struct pr_node **) ck_malloc (20 * sizeof (struct pr_node *));
+		//the_line = (struct pr_node **) ck_malloc (20 * sizeof (struct pr_node *));
+		the_line = new pr_node_t*[20];
 		line_alloc = 20;
 		c_node = the_line;
 	}
@@ -555,6 +585,7 @@ byte_decompile ( unsigned char *expr)
 		*c_node++ = newn;
 		if (c_node == &the_line[line_alloc])
 		{
+			assert(false);
 			line_alloc *= 2;
 			the_line = (pr_node**) ck_realloc (the_line, line_alloc * sizeof (struct pr_node *));
 			c_node = &the_line[line_alloc / 2];
@@ -584,20 +615,23 @@ decomp_str(const CELLREF r, const CELLREF c)
 	save_decomp = nullptr;
 	CELL *cp = find_cell(r, c);
 	if(cp != nullptr) {
-		char *tmp = decomp(r, c, cp);
+		const char *tmp = decomp(r, c, cp);
 		if(tmp) res = std::string(tmp);
 	}
 	decomp_free();
 	return res;
 }
 
-char *
+const char *
 decomp(const CELLREF r, const CELLREF c, CELL *cell)
 {
-	char *tmp = decomp_formula (r, c, cell, 0);
-	return (tmp);
+	const char *tmp = decomp_formula (r, c, cell, 0);
+	return tmp;
 }
-char *
+
+	
+	
+	const char *
 decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
 	char *str;
@@ -607,7 +641,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 	{
 		str = (CPTR) ck_malloc (1);
 		str[0] = '\0';
-		save_decomp =  str;
+		save_decomp =  new pr_node_t;
 		return str;
 	}
 	decomp_row = r;
@@ -629,6 +663,7 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				{
 					str = strdup (flt_to_str (cell->cell_flt()));
 				}
+				log_debug("decomp_formula:TYP_FLT:"s + str);
 				break;
 			case TYP_INT:
 				str = (CPTR) ck_malloc (20);
@@ -647,19 +682,23 @@ decomp_formula (const CELLREF r, const CELLREF c, CELL *cell, int tog)
 				str = 0;
 				panic ("Unknown type %d in decomp", GET_TYP (cell));
 		}
-		save_decomp = str;
+		//save_decomp = new pr_node_t;
+		//save_decomp->string = str;
 		return str;
 	} else {
-		struct pr_node *ret = byte_decompile (cell->get_cell_formula());
-		save_decomp = (char*) ret; // TODO this recasting seems dubious
+		pr_node_t  *ret = byte_decompile (cell->get_cell_formula());
+		//save_decomp = ret;
+		//save_decomp = new pr_node_t
+		save_decomp = ret; // TODO this recasting seems dubious
 		return &(ret->string[0]);
+		//return ret->string.c_str();
 	}
 }
 
 void
 decomp_free (void)
 {
-	if(save_decomp) free(save_decomp);
+	if(save_decomp) delete save_decomp;
 	save_decomp = nullptr;
 }
 
