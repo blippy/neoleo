@@ -493,19 +493,10 @@ bool process_function(const struct function* f, struct node*& node, int& byte)
 			add_ref_to (obstack_object_size (&tmp_mem));
 			add_ref (node->n_x.v_rng.lr, node->n_x.v_rng.lc);
 			(void) obstack_1grow (&tmp_mem, byte);
-#if BITS_PER_CELLREF==16
 			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr >> 8);
 			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
 			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc >> 8);
 			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
-#else
-#if BITS_PER_CELLREF==8
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
-#else
-			Insert appropriate code here
-#endif
-#endif
 				break;
 
 		case C_RANGE:

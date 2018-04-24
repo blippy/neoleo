@@ -32,9 +32,7 @@
    the avaliable virtual memory on any 32-bit machine.
  */
 
-#ifndef BITS_PER_CELLREF
-#define BITS_PER_CELLREF 16
-#endif
+inline constexpr auto BITS_PER_CELLREF = 16;
 
 /* The location of a cell that can never be referenced */
 #define NON_ROW		0
@@ -43,7 +41,6 @@
 #define MIN_ROW		1
 #define MIN_COL 	1
 
-#if BITS_PER_CELLREF==16
 typedef unsigned short CELLREF;
 #define CELLREF_MASK 0xFFFF
 #define MAX_ROW 65535
@@ -55,22 +52,6 @@ typedef unsigned short CELLREF;
 #define PUT_ROW(name,val)	((name)[0]=((val)>>8)),((name)[1]=val)
 #define PUT_COL(name,val)	((name)[2]=((val)>>8)),((name)[3]=val)
 #define EXP_ADD			sizeof(CELLREF)*2
-#else
-#if BITS_PER_CELLREF==8
-typedef unsigned char CELLREF;
-#define CELLREF_MASK 0xFF
-#define MAX_ROW	      255
-#define MAX_COL       255
-
-#define GET_ROW(name)		((name)[0])
-#define GET_COL(name)		((name)[1])
-#define PUT_ROW(name,val)	((name)[0]=(val))
-#define PUT_COL(name,val)	((name)[1]=(val))
-#define EXP_ADD			sizeof(CELLREF)*2
-#else
-#error "FOO FOO FOO You need to define the obvious macros above"
-#endif
-#endif
 
 /* Struct rng is used to describe a region of cells */
 struct rng
@@ -131,7 +112,6 @@ extern char mname[];
 extern char nname[];
 
 extern VOIDSTAR parse_hash;
-//extern double __plinf, __neinf, __nan;
 extern double __plinf, __neinf;
 
 /* These have two uses.  During parsing, these contain the 
@@ -158,15 +138,8 @@ extern int ioerror;
 extern int errno;
 extern const char oleo_version_string[];
 
-//extern double astof (char **);
 extern long astol (char **);
 extern void panic (const char *, ...);
-
-//extern VOIDSTAR init_stack (void);
-//extern void flush_stack (void *);
-//extern void push_stack (void *, void *);
-//extern VOIDSTAR pop_stack (void *);
-//extern int size_stack (void *);
 
 extern void add_ref (CELLREF, CELLREF);
 extern void add_range_ref (struct rng *);
@@ -178,8 +151,6 @@ extern void no_more_cells (void);
 
 extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
-
-//extern char *new_value (CELLREF, CELLREF, const char *);
 
 extern unsigned char parse_cell_or_range (char **, struct rng *);
 
@@ -323,4 +294,4 @@ extern struct OleoGlobal *Global;
 #endif
 
 
-
+static_assert(BITS_PER_CELLREF == 16);
