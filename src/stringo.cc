@@ -70,10 +70,15 @@ std::function<void(struct value*)>
 wrapfunc(std::function<std::string(struct value*)> func)
 {
 	auto fn = [=](struct value* p) { 
-		std::string s = func(p);
-		char* ret = alloc_tmp_mem(s.size()+1);		
-		strcpy(ret,  s.c_str());
-		p->sString(ret);
+		try {
+			std::string s = func(p);
+			char* ret = alloc_tmp_mem(s.size()+1);		
+			strcpy(ret,  s.c_str());
+			p->sString(ret);
+		} catch (int e) {
+			p->Value = e;
+			p->type = TYP_ERR;
+		}
 		return; 
 	};
 	return fn;
@@ -85,7 +90,7 @@ static std::string do_repeat(struct value* p)
 {
 	char* str = p->gString();
 	long num  = (p+1)->gLong();
-	//if(num<0) ERROR(OUT_OF_RANGE);
+	if(num<0) throw OUT_OF_RANGE;
 	std::string res;
 	while(num--) res += str;
 	return res;
