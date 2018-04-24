@@ -10,7 +10,6 @@
 #include <vector>
 #include <map>
 
-#include <obstack.h>
 using std::string;
 using std::cout;
 using std::endl;
@@ -55,16 +54,6 @@ check(bool ok, std::string msg)
 
 
 
-int // returns 1 => OK
-swig_read_file_and_run_hooks(char *name, int ismerge)
-{
-        FILE *fp = fopen(name, "r");
-        if(fp == 0) return 0;
-        read_file_and_run_hooks(fp, ismerge, name);
-        fclose(fp);
-        return 1;
-
-}
 
 void FreeGlobals()
 {
@@ -203,29 +192,12 @@ run_regular_tests()
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
 
-	if(false) {
-		char s1[] = "/home/mcarter/repos/neoleo/examples/pivot.oleo"; // TODO generalise
-	        int read_status = swig_read_file_and_run_hooks(s1, 0);
-        	if(read_status == 1) {
-                	puts("read worked");
-	        } else {
-        	        puts("read couldn't find file");
-	        }
-	}
 
-	if(false){
+	{
 		char str[] = "\"foo\"";
 		// NB must enquote strings otherwise it segfault trying to find or make foo as var
 		get_set(1, 1, str); 
-		//obstack_free (&tmp_mem, tmp_mem_start); // this doesn't help
-		/* causes the following output in sanitiser:
-		 * Direct leak of 4 byte(s) in 1 object(s) allocated from:
-		 *     #0 0x7f68d0831e40 in __interceptor_malloc /build/gcc/src/gcc/libsanitizer/asan/asan_malloc_linux.cc:62
-		 *     #1 0x4acd1e in ck_malloc /home/mcarter/repos/neoleo/src/utils.c:388
-		 *     #2 0x4c9851 in yylex /home/mcarter/repos/neoleo/src/parse.y:402
-		 *     #3 0x4c4a14 in yyparse /home/mcarter/repos/neoleo/src/parse.c:1422
-		 *     #4 0x41933e in parse_and_compile /home/mcarter/repos/neoleo/src/byte-compile.cc:456
-		 */
+		// mcarter 24-Apr-2018 Used to have mem leak, but now confirmed it is leakless
 	}
 
 
