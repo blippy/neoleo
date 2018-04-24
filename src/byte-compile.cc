@@ -383,91 +383,10 @@ rot_patch (int n1, int n2)
 }
 
 
-/* This takes an ascii string and returns a pointer to the byte-compiled
-   result.  It calls yyparse() to do the actual parsing.  This is complicated
-   only because yyparse returns a parse tree which needs to be turned into
-   postfix compiled bytes.  This is further complicated by the presence of
-   forward branches in the byte-compiled code.  That's what the backpatch
-   stuff is for.
-
-   It'd be nice if oneof() could compile into
-   arg1
-   ONEOF n_possibilities
-   JUMP poss1
-   JUMP poss2
-   JUMP poss3
-   ...
-   JUMP error
-   {poss 1}
-   JUMP end
-   {poss 2}
-   JUMP end
-   ...
-   end: {rest of expression}
-   instead of the simplistic (and slow-to-execute) version currently used
-
-   It'd also be nice if byte-compiled expressions could have *BIG*
-   subexpressions, instead of silently failing as they do now.  Error checking
-   and a way to encode longer branches would be a *good* idea.
- */
-
-char*
-parse_and_compile(const char* string)
-{
-	mem the_mem; // we're just going to ignore the mem allocated
-	return parse_and_compile(string, the_mem);
-}
-
-char *
-parse_and_compile (const char *string, mem& the_mem)
+bool process_function(const struct function* f, struct node*& node, int& byte)
 {
 	struct node *new_node;
-	struct node *node;
-	const struct function *f;
-	char *ret;
-	int n;
-	unsigned buf_siz;
-	int need_relax;
-	int byte;
 
-	parse_error = 0;
-	patches_used = 0;
-	if (yyparse_parse(string, the_mem) || parse_error)
-	{
-		ret = (char*) ck_malloc (strlen (string) + 5);
-		ret[0] = CONST_ERR;
-		ret[1] = 2;
-		ret[2] = parse_error;
-		ret[3] = ENDCOMP;
-		strcpy ((char *) &ret[4], string);
-		(void) obstack_free (&tmp_mem, tmp_mem_start);
-		return ret;
-	}
-
-	node = parse_return;
-	if (!node)
-		return 0;
-
-loop:
-	if (node->comp_value < USR1)
-	{
-		f = &the_funs[node->comp_value];
-	}
-	else if (node->comp_value < SKIP)
-	{
-		n = node->sub_value;
-		f = &usr_funs[node->comp_value - USR1][n];
-	}
-	else
-	{
-		f = &skip_funs[node->comp_value - SKIP];
-	}
-	byte = node->comp_value;
-
-#ifdef TEST
-	if (!f)
-		panic ("f is zero in byte_compile!");
-#endif
 	switch (GET_COMP (f->fn_comptype))
 	{
 		case C_IF:
@@ -725,6 +644,100 @@ add_byte:
 		default:
 			panic ("Bad comptype %d", f->fn_comptype);
 	}
+
+	return false;
+loop:
+	return true;
+
+}
+
+
+/* This takes an ascii string and returns a pointer to the byte-compiled
+   result.  It calls yyparse() to do the actual parsing.  This is complicated
+   only because yyparse returns a parse tree which needs to be turned into
+   postfix compiled bytes.  This is further complicated by the presence of
+   forward branches in the byte-compiled code.  That's what the backpatch
+   stuff is for.
+
+   It'd be nice if oneof() could compile into
+   arg1
+   ONEOF n_possibilities
+   JUMP poss1
+   JUMP poss2
+   JUMP poss3
+   ...
+   JUMP error
+   {poss 1}
+   JUMP end
+   {poss 2}
+   JUMP end
+   ...
+   end: {rest of expression}
+   instead of the simplistic (and slow-to-execute) version currently used
+
+   It'd also be nice if byte-compiled expressions could have *BIG*
+   subexpressions, instead of silently failing as they do now.  Error checking
+   and a way to encode longer branches would be a *good* idea.
+ */
+
+char*
+parse_and_compile(const char* string)
+{
+	mem the_mem; // we're just going to ignore the mem allocated
+	return parse_and_compile(string, the_mem);
+}
+
+char *
+parse_and_compile (const char *string, mem& the_mem)
+{
+	struct node *node;
+	const struct function *f;
+	char *ret;
+	int n;
+	unsigned buf_siz;
+	int need_relax;
+	int byte;
+
+	parse_error = 0;
+	patches_used = 0;
+	if (yyparse_parse(string, the_mem) || parse_error)
+	{
+		ret = (char*) ck_malloc (strlen (string) + 5);
+		ret[0] = CONST_ERR;
+		ret[1] = 2;
+		ret[2] = parse_error;
+		ret[3] = ENDCOMP;
+		strcpy ((char *) &ret[4], string);
+		(void) obstack_free (&tmp_mem, tmp_mem_start);
+		return ret;
+	}
+
+	node = parse_return;
+	if (!node)
+		return 0;
+
+loop:
+	if (node->comp_value < USR1)
+	{
+		f = &the_funs[node->comp_value];
+	}
+	else if (node->comp_value < SKIP)
+	{
+		n = node->sub_value;
+		f = &usr_funs[node->comp_value - USR1][n];
+	}
+	else
+	{
+		f = &skip_funs[node->comp_value - SKIP];
+	}
+	byte = node->comp_value;
+
+#ifdef TEST
+	if (!f)
+		panic ("f is zero in byte_compile!");
+#endif
+	if(process_function(f, node, byte)) goto loop;
+
 	node = (struct node *) pop_stack (fn_stack);
 	if (node)
 		goto loop;
