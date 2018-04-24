@@ -24,6 +24,7 @@
 
 %}
 
+%define api.prefix {yyreg}
 
 %right '?' ':'
 /* %left '|' */
@@ -67,8 +68,8 @@ using namespace std::literals;
 #include "ref.h"
 #include "parse_parse.h"
 
-int yylex ();
-void yyerror (std::string_view s);
+int yyreglex ();
+void yyregerror (std::string_view s);
 
 
 /* This table contains a list of the infix single-char functions */
@@ -76,10 +77,12 @@ unsigned char fnin[] = {
 	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
 };
 
-#define YYSTYPE _y_y_s_t_y_p_e
-typedef struct node *YYSTYPE;
-YYSTYPE parse_return;
-YYSTYPE make_list (YYSTYPE, YYSTYPE);
+//#define YYSTYPE _y_y_s_t_y_p_e
+//typedef struct node *YYSTYPE;
+#define YYREGSTYPE struct node*
+//typedef struct node* YYREGSTYPE;
+YYREGSTYPE  parse_return;
+YYREGSTYPE make_list (YYREGSTYPE, YYREGSTYPE);
 
 char *instr;
 int parse_error = 0;
@@ -320,7 +323,7 @@ alloc_memory(size_t nbytes)
 	return obstack_alloc(&tmp_mem, nbytes);
 }
 
-YYSTYPE
+YYREGSTYPE
 make_list (YYSTYPE car, YYSTYPE cdr)
 {
 	YYSTYPE ret;
@@ -334,7 +337,7 @@ make_list (YYSTYPE car, YYSTYPE cdr)
 
 #define ERROR -1
 
-extern struct node *yylval;
+//extern struct node *yylval;
 
 unsigned char parse_cell_or_range (char **,struct rng *);
 int str_to_col (char ** str);
@@ -395,7 +398,7 @@ function* find_func(char* name)
 }
 
 int
-yylex ()
+yyreglex ()
 {
 	int ch;
 	struct node *a_new;
