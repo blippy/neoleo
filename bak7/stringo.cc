@@ -55,6 +55,8 @@
 
 extern struct obstack tmp_mem;
 
+//extern char *flt_to_str();
+
 char *alloc_tmp_mem(size_t n)
 {
 	return (char *) obstack_alloc(&tmp_mem, n);
@@ -65,21 +67,38 @@ char * alloc_value_str(struct value* p)
 	return alloc_tmp_mem(strlen(p->gString())+1);
 }
 
-
-std::function<void(struct value*)>
-wrapfunc(std::function<std::string(struct value*)> func)
+static void
+do_edit_XXX( int numarg, struct value * p)
 {
-	auto fn = [=](struct value* p) { 
-		std::string s = func(p);
-		char* ret = alloc_tmp_mem(s.size()+1);		
-		strcpy(ret,  s.c_str());
-		p->sString(ret);
-		return; 
-	};
-	return fn;
+	int mm;
+	int add_len;
+	int tmp_len;
+	char *ptr1,*ptr2,*retp;
+	int off1,off2;
+
+	if(numarg<3)
+		ERROR(BAD_INPUT);
+	for(mm=3,add_len=0;mm<numarg;mm++)
+		add_len+=strlen((p+mm)->gString());
+	tmp_len=strlen(p->gString());
+	off1=(p+1)->gLong();
+	off2=(p+2)->gLong();
+	if(off1==0 || tmp_len < ((off1<0) ? -off1 : off1) ||
+	   off2==0 || tmp_len < ((off2<0) ? -off2 : off2))
+		ERROR(OUT_OF_RANGE);
+	ptr1=p->gString() + (off1>0 ? off1-1 : tmp_len+off1);
+	ptr2=p->gString() + 1 + (off2>0 ? off2-1 : tmp_len+off2);
+	if(ptr1>ptr2)
+		ERROR(OUT_OF_RANGE);
+	retp=alloc_tmp_mem(add_len+tmp_len-(ptr2-ptr1));
+	strncpy(retp,p->gString(),ptr1-p->gString());
+	retp[ptr1-p->gString()]='\0';
+	for(mm=3;mm<numarg;mm++)
+		strcat(retp,(p+mm)->gString());
+	strcat(retp,ptr2);
+	p->sString(retp);
+	p->type=TYP_STR;
 }
-
-
 
 static void
 do_repeat(struct value * p)
@@ -189,6 +208,66 @@ do_trim_str(struct value * p)
 	p->sString(strptr);
 }
 
+static void
+do_concat(int  numarg, struct value * p)
+{
+	int cur_string;
+	char *s;
+	char buf[40];
+	CELLREF crow,ccol;
+	CELL *cell_ptr;
+
+	for(cur_string=0;cur_string<numarg;cur_string++) {
+		switch(p[cur_string].type) {
+		case 0:
+			continue;
+		case TYP_RNG:
+			for(crow=p[cur_string].Rng.lr;crow<=p[cur_string].Rng.hr;crow++)
+				for(ccol=p[cur_string].Rng.lc;ccol<=p[cur_string].Rng.hc;ccol++) {
+					if(!(cell_ptr=find_cell(crow,ccol)))
+						continue;
+					switch(GET_TYP(cell_ptr)) {
+					case 0:
+						break;
+					case TYP_STR:
+						(void)obstack_grow(&tmp_mem,cell_ptr->cell_str(),strlen(cell_ptr->cell_str()));
+						break;
+					case TYP_INT:
+						sprintf(buf,"%ld",cell_ptr->get_cell_int());
+						(void)obstack_grow(&tmp_mem,buf,strlen(buf));
+						break;
+					case TYP_FLT:
+						s=flt_to_str(cell_ptr->get_cell_flt());
+						(void)obstack_grow(&tmp_mem,s,strlen(s));
+						break;
+					default:
+						(void)obstack_finish(&tmp_mem);
+						ERROR(NON_STRING);
+					}
+			}
+			break;
+		case TYP_STR:
+			s=p[cur_string].gString();
+			(void)obstack_grow(&tmp_mem,s,strlen(s));
+			break;
+		case TYP_INT:
+			sprintf(buf,"%ld",p[cur_string].gLong());
+			(void)obstack_grow(&tmp_mem,buf,strlen(buf));
+			break;
+		case TYP_FLT:
+			s=flt_to_str(p[cur_string].Float);
+			(void)obstack_grow(&tmp_mem,s,strlen(s));
+			break;
+		default:
+			(void)obstack_finish(&tmp_mem);
+			ERROR(NON_STRING);
+		}
+	}
+	(void)obstack_1grow(&tmp_mem,0);
+	p->type=TYP_STR;
+	p->sString((char *)obstack_finish(&tmp_mem));
+}
+
 
 static void
 do_mid(struct value * p)
@@ -267,9 +346,21 @@ static std::string do_version(struct value* p)
 	return VERSION;
 }
 
+std::function<void(struct value*)>
+wrapfunc(std::function<std::string(struct value*)> func)
+{
+	auto fn = [=](struct value* p) { 
+		std::string s = func(p);
+		char* ret = alloc_tmp_mem(s.size()+1);		
+		strcpy(ret,  s.c_str());
+		p->sString(ret);
+		return; 
+	};
+	//return reinterpret_cast<vptr>(fn);
+	return fn;
+}
+
 static void do_version_1(struct value* p) { wrapfunc(do_version)(p); }
-
-
 
 static std::string do_concata(struct value* p)
 {
@@ -277,9 +368,8 @@ static std::string do_concata(struct value* p)
 	std::string s2 = (p+1)->gString();
 	return s1+s2;
 }
+
 static void do_concata_1(struct value* p) { wrapfunc(do_concata)(p); }
-
-
 
 static std::string do_edit(struct value* p)
 {
@@ -294,19 +384,22 @@ static void do_edit_1(struct value*p) { wrapfunc(do_edit)(p);}
 
 
 struct function string_funs[] = {
-{ C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" }, 
-{ C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" }, 
+{ C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" },	// 1 
+{ C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" },	// 2 
 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_up_str),	"strupr" }, 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_dn_str),	"strlwr" }, 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_cp_str),	"strcap" }, 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_trim_str),	"trim" }, 
-{ C_FN3,	X_A3,	"IIS",  to_vptr(do_substr),	"substr" }, 
-{ C_FN3,	X_A3,	"SII",  to_vptr(do_mid),	"mid" }, 
-{ C_FN2,	X_A2,	"SI",   to_vptr(do_repeat),	"repeat" }, 
-{ C_FN3,	X_A3,	"SII", to_vptr(do_edit_1),	"edit" }, 
-{ C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },
-{ C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },
+{ C_FN1,	X_A1,	"S",    to_vptr(do_up_str),	"strupr" },	// 3 
+{ C_FN1,	X_A1,	"S",    to_vptr(do_dn_str),	"strlwr" },	// 4 
+{ C_FN1,	X_A1,	"S",    to_vptr(do_cp_str),	"strcap" },	// 5 
+{ C_FN1,	X_A1,	"S",    to_vptr(do_trim_str),	"trim" },	// 6 
+
+{ C_FN3,	X_A3,	"IIS",  to_vptr(do_substr),	"substr" },	// 7 
+{ C_FN3,	X_A3,	"SII",  to_vptr(do_mid),	"mid" },	// 8 
+
+{ C_FN2,	X_A2,	"SI",   to_vptr(do_repeat),	"repeat" },	// 9 
+{ C_FNN,	X_AN,	"EEEE", to_vptr(do_concat),	"concat" },	// 10 
+{ C_FN3,	X_A3,	"SII", to_vptr(do_edit_1),	"edit" },	// 11 
+{ C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },  // 12
+{ C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },  // 13
 
 { 0,		0,	{0},	0,		0 }
 };

@@ -1,13 +1,29 @@
 # test string functions in stringo.cc
 # see issue #15, though.
 i
+"Expect:7"
 len("how big")
+
+"Expect:FOOD"
 strupr("fooD")
+
+"Expect:Making Headlines"
 strcap("making headlines")
+
+"Expect:trimming"
 trim("  trimming ")
+
+"Expect:hat"
 mid("what say you", 2, 3)
+
+"Expect:hel"
 edit("hello", 4, 5)
+
+"Expect:WWWWW"
 repeat("W", 5)
+
+"Expect:hello world"
+concata("hello ", "world")
 .
 w
 q

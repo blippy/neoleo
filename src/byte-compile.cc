@@ -20,8 +20,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#include <cassert>
-//#include <math.h>
 #include <stdlib.h>
 
 #include <stdio.h>
@@ -63,31 +61,24 @@ local_free (p)
 #include "byte-compile.h"
 #include "utils.h"
 
-#define BUSI
-
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
 
 extern struct function date_funs[];
-#ifdef BUSI
 extern struct function busi_funs[];
-#endif
 extern struct function string_funs[];
 extern struct function cells_funs[];
-//extern struct function mysql_functions[];
-//extern struct function gsl_functions[];
 
 extern char *instr;
 extern int parse_error;
 extern struct node *parse_return;
-//extern void sort ();
 
 static void add_backpatch (unsigned, unsigned);
 
 struct backpatch
-  {
-    unsigned from, to;
-  };
+{
+	unsigned from, to;
+};
 
 static struct backpatch *patches;
 static int patches_allocated;
@@ -128,13 +119,9 @@ struct function the_funs[] =
   {C_IF, X_A1 | X_J, "D", 0, S "if"},
   {C_IF, X_A1 | X_JL, "D", 0, S "if"},
   {C_ANDOR, X_A1 | X_J, "D", 0, S "and"},
-/* { C_ANDOR|L|INF(3), X_A1, "DD", 0,		"&" }, */
   {C_ANDOR, X_A1 | X_JL, "D", 0, S "and"},
-/* { C_ANDOR|L|INF(3), X_A1, "DD", 0,		"&" }, */
   {C_ANDOR, X_A1 | X_J, "D", 0, S "or"},
-/* { C_ANDOR|L|INF(2), X_A1, "DD", 0,		"|" }, */
   {C_ANDOR, X_A1 | X_JL, "D", 0, S "or"},
-/* { C_ANDOR|L|INF(2), X_A1, "DD", 0,		"|" }, */
   {C_STR, X_A0 | X_J, "", 0, S "\"%s\""},
   {C_STR, X_A0 | X_JL, "", 0,S  "\"%s\""},
 
@@ -248,13 +235,9 @@ struct function the_funs[] =
 static struct function *__usr_funs[] =
 {
 	date_funs,
-#ifdef BUSI
 	busi_funs,
-#endif
 	string_funs,
 	cells_funs,
-	//mysql_functions,
-	//gsl_functions,
 	/* Add something here */
 };
 
@@ -263,9 +246,7 @@ static struct function *__usr_funs[] =
  * it defines.
  */
 extern int init_date_function_count(void);
-#ifdef BUSI
 extern int init_busi_function_count(void);
-#endif
 extern int init_string_function_count(void);
 extern int init_cells_function_count(void);
 //extern int init_mysql_function_count(void);
@@ -276,13 +257,9 @@ typedef int (*init_function_count)(void);
 
 static init_function_count init_function_counts[] = {
 	&init_date_function_count,
-#ifdef BUSI
 	&init_busi_function_count,
-#endif
 	&init_string_function_count,
 	&init_cells_function_count,
-	//&init_mysql_function_count,
-	//&init_gsl_function_count
 	/* Add something here */
 };
 
