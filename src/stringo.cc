@@ -81,28 +81,18 @@ wrapfunc(std::function<std::string(struct value*)> func)
 
 
 
-static void
-do_repeat(struct value * p)
+static std::string do_repeat(struct value* p)
 {
-	char *str = p->gString();
+	char* str = p->gString();
 	long num  = (p+1)->gLong();
-
-	char *ret;
-	char *strptr;
-	int len;
-
-	if(num<0)
-		ERROR(OUT_OF_RANGE);
-	len=strlen(str);
-	ret=strptr=alloc_tmp_mem(len*num+1);
-	while(num--) {
-		if (len)
-		  bcopy(str,strptr,len);
-		strptr+=len;
-	}
-	*strptr=0;
-	p->sString(ret);
+	//if(num<0) ERROR(OUT_OF_RANGE);
+	std::string res;
+	while(num--) res += str;
+	return res;
 }
+static void do_repeat_1(struct value* p) { wrapfunc(do_repeat)(p); }
+
+
 
 static void
 do_len(struct value * p)
@@ -115,6 +105,8 @@ do_len(struct value * p)
 	p->sLong(ret);
 	//p->type=TYP_INT;
 }
+
+
 
 static void
 do_up_str(struct value * p)
@@ -129,6 +121,8 @@ do_up_str(struct value * p)
 	p->sString(strptr);
 }
 
+
+
 static void
 do_dn_str(struct value * p)
 {
@@ -141,6 +135,8 @@ do_dn_str(struct value * p)
 	*s1=0;
 	p->sString(strptr);
 }
+
+
 
 static void
 do_cp_str(struct value * p)
@@ -163,6 +159,8 @@ do_cp_str(struct value * p)
 	*s1=0;
 	p->sString(strptr);
 }
+
+
 
 static void
 do_trim_str(struct value * p)
@@ -242,6 +240,8 @@ do_substr(struct value * p)
 	p->sString(ret);
 }
 
+
+
 static void
 do_strstr(struct value * p)
 {
@@ -266,7 +266,6 @@ static std::string do_version(struct value* p)
 {
 	return VERSION;
 }
-
 static void do_version_1(struct value* p) { wrapfunc(do_version)(p); }
 
 
@@ -303,7 +302,7 @@ struct function string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_trim_str),	"trim" }, 
 { C_FN3,	X_A3,	"IIS",  to_vptr(do_substr),	"substr" }, 
 { C_FN3,	X_A3,	"SII",  to_vptr(do_mid),	"mid" }, 
-{ C_FN2,	X_A2,	"SI",   to_vptr(do_repeat),	"repeat" }, 
+{ C_FN2,	X_A2,	"SI",   to_vptr(do_repeat_1),	"repeat" }, 
 { C_FN3,	X_A3,	"SII", to_vptr(do_edit_1),	"edit" }, 
 { C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },
 { C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },
