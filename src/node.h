@@ -1,3 +1,4 @@
+#pragma once
 /*
  * $Id: node.h,v 1.3 2000/08/10 21:02:51 danny Exp $
  *
@@ -21,6 +22,7 @@
  */
 
 #include "numeric.h"
+#include "global.h"
 
 struct node
   {

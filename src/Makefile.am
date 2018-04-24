@@ -43,7 +43,8 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 posixtm.yy \
 		 main.cc \
 		 shell.cc \
-		 tests.cc 
+		 tests.cc \
+		 yyreglex.cc
 	
 
 
