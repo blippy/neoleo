@@ -67,7 +67,7 @@ using IPTR = int *;
 using LPTR = list*;
 using LLPTR = list**;
 
-static inline void
+static void
 flush (struct list *ptr)
 {
   struct list *nxt;
@@ -80,7 +80,7 @@ flush (struct list *ptr)
     }
 }
 
-static inline void
+static void
 resync (struct list *tofree, struct list *newl, int ele)
 {
   struct find *findp;
@@ -107,7 +107,7 @@ resync (struct list *tofree, struct list *newl, int ele)
   free (tofree);
 }
 
-static inline void *
+static void *
 find (CELLREF pos, struct list *ptr, int ele)
 {
   for (; ptr; ptr = ptr->next)
@@ -120,7 +120,7 @@ find (CELLREF pos, struct list *ptr, int ele)
   return 0;
 }
 
-static inline void *
+static void *
 make (CELLREF pos, struct list **prevp, int ele, int buf)
 {
 	//cout << "M" ;
@@ -214,7 +214,7 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
   return ptr->mem + (pos - ptr->lo) * ele;
 }
 
-static inline void *
+static void *
 find_rng (struct list **start, CELLREF lo, CELLREF hi, int ele)
 {
   struct list *ptr;
@@ -243,7 +243,7 @@ find_rng (struct list **start, CELLREF lo, CELLREF hi, int ele)
   return f;
 }
 
-static inline void *
+static void *
 make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 {
   struct list **prevp;
@@ -346,7 +346,7 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
   return f;
 }
 
-static inline void *
+static void *
 next_rng (struct find *f, CELLREF *posp)
 {
   void *ret;
