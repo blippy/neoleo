@@ -1239,664 +1239,669 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 	assert ("we never reach here" == 0);
 }
 
+#define interactive_mode_1 (!rmac || iscmd)
+
+bool turd_1(bool interactive_mode, bool iscmd)
+{
+	 /* FUNC_ARGS string. To continue this loop, use `goto next_arg;'.
+	 *
+	 * If user interaction is required, the appropriate keymap,
+	 * editing area, etc. is set up, and the command loop resumes
+	 * (`goto new_cycle').
+	 */
+	char *prompt = the_cmd_arg.arg_desc;
+
+	OleoLog ("Prompt [%s]\n", prompt);
+
+	switch (*prompt)
+	{	/* Main prompt */
+		case 'c':
+			{
+				int tmp;
+				++prompt;
+				if (*prompt == '#')
+				{
+					++prompt;
+					the_cmd_arg.
+						val.integer =
+						*prompt;
+					the_cmd_arg.is_set =
+						1;
+					the_cmd_arg.do_prompt
+						= 0;
+					the_cmd_arg.style =
+						&int_constant_style;
+					{
+						char c[2];
+						c[0] = cur_chr;
+						c[1] = '\0';
+						init_arg_text
+							(&the_cmd_arg,
+							 c);
+					}
+					goto next_arg;
+				}
+				else if (*prompt == '\'')
+				{
+					the_cmd_arg.timeout_seconds
+						= 3;
+					alarm_table[1].freq =
+						1;
+					++prompt;
+					tmp = get_argument
+						(prompt,
+						 &char_style);
+				}
+				else if (*prompt == '!')
+				{
+					the_cmd_arg.timeout_seconds
+						= 3;
+					alarm_table[1].freq =
+						1;
+					++prompt;
+					ioerror = 1;
+					tmp = get_argument
+						(prompt,
+						 &char_style);
+				}
+				else
+					tmp = get_argument
+						(prompt,
+						 &char_style);
+				if (tmp)
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'C':
+			{
+				++prompt;
+				if (get_argument
+						(prompt, &command_style))
+					// goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'd':
+			{
+				++prompt;
+				if (get_argument
+						(prompt, &double_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'f':
+			{
+				char type;
+				struct prompt_style *style;
+				++prompt;
+				type = *prompt;
+				++prompt;
+				switch (type)
+				{
+					case 'r':
+						style = &read_file_style;
+						break;
+					case 'w':
+						style = &write_file_style;
+						break;
+					case 'n':
+						style = &file_name_style;
+						break;
+					default:
+						style = 0;	/* shutup gcc -ansi -pendantic -Wall! */
+						io_error_msg
+							("func_args bug for %s",
+							 the_cmd_frame->cmd->func_name);
+				}
+				if (get_argument
+						(prompt, style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'F':
+			{
+				++prompt;
+				if (get_argument
+						(prompt, &format_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'k':
+			{
+				++prompt;
+				the_cmd_arg.val.key.cmd.vector =
+					-1;
+				the_cmd_arg.val.key.cmd.code =
+					the_cmd_frame->
+					prev->top_keymap;
+				the_cmd_arg.val.key.keys =
+					&the_cmd_arg.text;
+				if (get_argument
+						(prompt, &keyseq_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'K':
+			{
+				++prompt;
+				if (get_argument
+						(prompt, &keymap_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'l':
+			{
+				the_cmd_arg.val.integer =
+					cur_chr;
+				the_cmd_arg.is_set = 1;
+				the_cmd_arg.do_prompt = 0;
+				the_cmd_arg.style =
+					&int_constant_style;
+				{
+					char c[2];
+					c[0] = cur_chr;
+					c[1] = '\0';
+					init_arg_text
+						(&the_cmd_arg,
+						 c);
+				}
+				goto next_arg;
+			}
+		case 'm':
+			{
+				int want_keyseq = 0;
+				++prompt;
+				want_keyseq = (*prompt == '\'');
+				if (want_keyseq)
+				{
+					char *map;
+					++prompt;
+					map = expand_prompt
+						(prompt);
+					the_cmd_arg.val.
+						key.cmd.
+						vector = -1;
+					the_cmd_arg.val.
+						key.cmd.code =
+						map_id (map);
+					the_cmd_arg.val.
+						key.keys =
+						&the_cmd_arg.text;
+				}
+				else
+				{
+					if (mode_style.keymap)
+						ck_free (mode_style.keymap);
+					mode_style.keymap =
+						expand_prompt
+						(prompt);
+				}
+				if (get_argument
+						(prompt,
+						 (want_keyseq ?
+						  &keyseq_style :
+						  &mode_style)))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'M':
+			if (Global->modified)
+			{
+				++prompt;
+				if (get_argument
+						(prompt, &yes_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+			else
+			{
+				the_cmd_arg.is_set = 1;
+				the_cmd_arg.do_prompt = 1;
+				the_cmd_arg.style =
+					&yes_style;
+				init_arg_text (&the_cmd_arg,
+						"yes");
+				goto next_arg;
+			}
+		case 'p':
+			{
+				++prompt;
+
+				if (*prompt == '?')
+				{	/* Command wants to know if prefix provided */
+					the_cmd_arg.
+						val.integer =
+						(the_cmd_frame->prev->_raw_prefix.alloc
+						 &&
+						 the_cmd_frame->prev->_raw_prefix.buf
+						 [0]);
+					the_cmd_arg.is_set =
+						1;
+					the_cmd_arg.do_prompt
+						= 0;
+					the_cmd_arg.style =
+						&int_constant_style;
+					init_arg_text
+						(&the_cmd_arg,
+						 the_cmd_arg.val.integer
+						 ? "1" : "0");
+				}
+				else
+				{
+					the_cmd_arg.
+						val.integer =
+						the_cmd_frame->prev->_how_many;
+					the_cmd_arg.is_set =
+						1;
+					the_cmd_arg.do_prompt
+						= 0;
+					the_cmd_arg.style =
+						&int_constant_style;
+					init_arg_text
+						(&the_cmd_arg,
+						 long_to_str ((long) the_cmd_arg.val.integer));
+				}
+				goto next_arg;
+			}
+		case 'N':
+		case 'n':
+			{
+				long low = 0;
+				long high = -1;
+				char type = *prompt;
+				++prompt;
+				if (*prompt == '[')
+				{
+					++prompt;
+					low = astol (&prompt);
+					while (isspace
+							(*prompt))
+						++prompt;
+					if (*prompt == ',')
+						++prompt;
+					high = astol
+						(&prompt);
+					while (isspace
+							(*prompt))
+						++prompt;
+					if (*prompt == ']')
+						++prompt;
+				}
+				if ((type == 'N')
+						&& the_cmd_frame->
+						prev->_raw_prefix.alloc
+						&& the_cmd_frame->
+						prev->_raw_prefix.buf[0])
+				{
+					the_cmd_arg.
+						val.integer =
+						the_cmd_frame->prev->_how_many;
+					the_cmd_arg.is_set =
+						1;
+					the_cmd_arg.do_prompt
+						= 1;
+					the_cmd_arg.style =
+						&number_style;
+					if ((low >= high)
+							&&
+							((low >
+							  the_cmd_arg.
+							  val.integer)
+							 || (high <
+								 the_cmd_arg.val.integer)))
+						io_error_msg
+							("Out of range %d (should be in [%d-%d]).");
+					else
+						init_arg_text
+							(&the_cmd_arg,
+							 long_to_str
+							 ((long) the_cmd_arg.val.integer));
+				}
+				else
+				{
+					if (get_argument
+							(prompt,
+							 &number_style))
+						//goto new_cycle;
+						return true;	// state machine
+				}
+				goto next_arg;
+			}
+			/* This might look slightly tangled, but it makes the command
+			 * interface less fickle and more flexible for the user who
+			 * wants to macrify a spreadsheet.
+			 *
+			 * A lowercase 'r' should trigger a prompt for a range in
+			 * interactice mode if the mark is not set; if the mark IS set,
+			 * then it should grab the range as the implicit answer.  Inside
+			 * a macro, 'r' should always expect an explicit argument.
+			 * 
+			 * The '@' argument should provide a default range with opportunity
+			 * for editing (if run interactively), or an implicit argument (if
+			 * run non-interactively in a macro).  If the mark is not set, then
+			 * the default range or implicit argument is set to the current
+			 * cell location.
+			 *
+			 * If the user really and truly wants interactive behaviour inside a
+			 * macro (perhaps because the command is the last in the chain), he
+			 * or she can have it by using exec to launch the command.
+			 * 
+			 * --FB, 1997.12.27
+			 */
+
+#define mark_is_set (mkrow != NON_ROW)
+
+		case '@':
+		case 'r':
+		case 'R':
+			{
+#if 0
+				/*
+				 * I don't know what I'm breaking by uncommenting this.
+				 * Danny 18/7/2000.
+				 */
+				if (*prompt != '@'
+						&& !mark_is_set)
+				{
+					/* Default to current cell */
+					mkrow = curow;
+					mkcol = cucol;
+				}
+#endif
+				if ((*prompt != 'R'
+							&& interactive_mode_1
+							&& mark_is_set)
+						|| *prompt == '@')
+				{
+					the_cmd_arg.val.
+						range.lr =
+						MIN (mkrow,
+								curow);
+					the_cmd_arg.val.
+						range.hr =
+						MAX (mkrow,
+								curow);
+					the_cmd_arg.val.
+						range.lc =
+						MIN (mkcol,
+								cucol);
+					the_cmd_arg.val.
+						range.hc =
+						MAX (mkcol,
+								cucol);
+					mkrow = NON_ROW;
+					mkcol = NON_COL;
+					io_update_status ();
+					if (*prompt == '@'
+							&&
+							interactive_mode_1)
+					{
+						++prompt;
+						if (get_argument (prompt, &range_style))
+						{
+							init_arg_text
+								(&the_cmd_arg,
+								 range_name
+								 (&the_cmd_arg.val.range));
+						}
+						//goto new_cycle;
+						return true;	// state machine
+					}
+					else
+					{	/* (Noninteractive mode and @) or r */
+						++prompt;
+						the_cmd_arg.is_set
+							= 1;
+						the_cmd_arg.do_prompt
+							= 1;
+						the_cmd_arg.style
+							=
+							&range_style;
+						init_arg_text
+							(&the_cmd_arg,
+							 range_name
+							 (&the_cmd_arg.val.range));
+					}
+					goto next_arg;
+				}
+				else
+				{	/* R */
+					++prompt;
+					if (get_argument
+							(prompt,
+							 &range_style))
+						//goto new_cycle;
+						return true;	// state machine
+					goto next_arg;
+				}
+			}
+		case 's':
+			{
+				{
+					++prompt;
+					if (get_argument
+							(prompt,
+							 &string_style))
+						//goto new_cycle;
+						return true;	// state machine
+					goto next_arg;
+				}
+			}
+		case 'S':
+			{
+				{
+					++prompt;
+					if (*prompt == '\'')
+						++prompt;
+					if (get_argument
+							(prompt,
+							 &symbol_style))
+						//goto new_cycle;
+						return true;	// state machine
+					goto next_arg;
+				}
+			}
+		case 'V':
+			{
+				++prompt;
+				the_cmd_arg.inc_cmd =
+					io_shift_cell_cursor;
+				if (get_argument
+						(prompt, &inc_cmd_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case 'w':
+			{
+				{
+					++prompt;
+					if (*prompt == '\'')
+						++prompt;
+					if (get_argument
+							(prompt,
+							 &word_style))
+						//goto new_cycle;
+						return true;	// state machine
+					goto next_arg;
+				}
+			}
+		case '#':
+			{
+				++prompt;
+
+				init_arg_text (&the_cmd_arg,
+						prompt);
+				the_cmd_arg.val.integer =
+					astol (&prompt);
+				the_cmd_arg.is_set = 1;
+				the_cmd_arg.do_prompt = 0;
+				the_cmd_arg.style =
+					&int_constant_style;
+				goto next_arg;
+			}
+		case '=':
+			{
+				++prompt;
+				the_cmd_arg.expanded_prompt =
+					expand_prompt (prompt);
+				init_arg_text (&the_cmd_arg,
+						the_cmd_arg.expanded_prompt);
+				the_cmd_arg.val.string =
+					the_cmd_arg.expanded_prompt;
+				the_cmd_arg.is_set = 1;
+				the_cmd_arg.do_prompt = 0;
+				the_cmd_arg.style =
+					&string_style;
+				goto next_arg;
+			}
+		case '.':
+			{
+				++prompt;
+				the_cmd_arg.val.range.lr =
+					curow;
+				the_cmd_arg.val.range.lc =
+					cucol;
+				if (*prompt == '\'')
+				{
+					the_cmd_arg.val.
+						range.hr =
+						curow;
+					the_cmd_arg.val.
+						range.hc =
+						cucol;
+				}
+				else
+				{
+					the_cmd_arg.val.
+						range.hr =
+						mkrow;
+					the_cmd_arg.val.
+						range.hc =
+						mkcol;
+				}
+				the_cmd_arg.is_set = 1;
+				the_cmd_arg.do_prompt = 0;
+				init_arg_text (&the_cmd_arg,
+						range_name
+						(&the_cmd_arg.val.
+						 range));
+				the_cmd_arg.style =
+					&range_constant_style;
+				goto next_arg;
+			}
+		case '[':
+			{
+				++prompt;
+				while (*prompt
+						&& (*prompt != ']'))
+					if (*prompt != '\\')
+						++prompt;
+					else
+					{
+						++prompt;
+						if (*prompt)
+							++prompt;
+					}
+				if (*prompt == ']')
+					++prompt;
+
+				if (get_argument
+						(prompt, &menu_style))
+					//goto new_cycle;
+					return true;	// state machine
+				goto next_arg;
+			}
+		case '$':
+			{
+				/* Edit a cell's formula. */
+				CELL *cp = find_cell (curow,
+						cucol);
+				int do_init;
+				++prompt;
+				if (*prompt == '\'')
+				{
+					do_init = 0;
+					++prompt;
+				}
+				else
+					do_init = 1;
+				if (((!cp
+								|| GET_LCK (cp) ==
+								LCK_DEF)
+							&& (default_lock ==
+								LCK_LCK)) || (cp
+								&&
+								GET_LCK
+								(cp) ==
+								LCK_LCK))
+				{
+					io_error_msg
+						("Cell %s is locked",
+						 cell_name
+						 (curow,
+						  cucol));
+					pop_unfinished_command
+						();
+					//goto new_cycle;
+					return true;	// state machine
+				}
+				the_cmd_frame->prev->_setrow =
+					curow;
+				the_cmd_frame->prev->_setcol =
+					cucol;
+				if (get_argument (prompt, &formula_style)) {
+					if (do_init) {
+						if (rmac && !iscmd)
+							init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 0));
+						else
+							init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 1));
+					}
+					log_debug("cmd.cc:point a");
+					return true;	// state machine
+				}
+				goto next_arg;
+			}
+
+		default:
+			{
+				io_error_msg
+					("Interaction-string error!!!");
+				pop_unfinished_command ();
+				//goto new_cycle;
+				return true;	// state machine
+			}
+	}
+	return true;
+next_arg:
+	return false;
+}
+
+
 bool				// return true if we have to jump to new_cycle upon completion 
 resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 {
-	while (cur_arg < cmd_argc)
-	  {
-		  if (the_cmd_arg.is_set)
-			  goto next_arg;
-		  else if (the_cmd_arg.prompt)
-		    {
-			    begin_edit ();
-			    //goto new_cycle;
-			    return true;	// state machine
-		    }
-		  else
-		    {
-			    /* If we're just starting on this argument, then parse the
-			     * FUNC_ARGS string. To continue this loop, use `goto next_arg;'.
-			     *
-			     * If user interaction is required, the appropriate keymap,
-			     * editing area, etc. is set up, and the command loop resumes
-			     * (`goto new_cycle').
-			     */
-			    char *prompt = the_cmd_arg.arg_desc;
-
-			    OleoLog ("Prompt [%s]\n", prompt);
-
-			    switch (*prompt)
-			      {	/* Main prompt */
-			      case 'c':
-				      {
-					      int tmp;
-					      ++prompt;
-					      if (*prompt == '#')
-						{
-							++prompt;
-							the_cmd_arg.
-								val.integer =
-								*prompt;
-							the_cmd_arg.is_set =
-								1;
-							the_cmd_arg.do_prompt
-								= 0;
-							the_cmd_arg.style =
-								&int_constant_style;
-							{
-								char c[2];
-								c[0] = cur_chr;
-								c[1] = '\0';
-								init_arg_text
-									(&the_cmd_arg,
-									 c);
-							}
-							goto next_arg;
-						}
-					      else if (*prompt == '\'')
-						{
-							the_cmd_arg.timeout_seconds
-								= 3;
-							alarm_table[1].freq =
-								1;
-							++prompt;
-							tmp = get_argument
-								(prompt,
-								 &char_style);
-						}
-					      else if (*prompt == '!')
-						{
-							the_cmd_arg.timeout_seconds
-								= 3;
-							alarm_table[1].freq =
-								1;
-							++prompt;
-							ioerror = 1;
-							tmp = get_argument
-								(prompt,
-								 &char_style);
-						}
-					      else
-						      tmp = get_argument
-							      (prompt,
-							       &char_style);
-					      if (tmp)
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'C':
-				      {
-					      ++prompt;
-					      if (get_argument
-						  (prompt, &command_style))
-						      // goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'd':
-				      {
-					      ++prompt;
-					      if (get_argument
-						  (prompt, &double_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'f':
-				      {
-					      char type;
-					      struct prompt_style *style;
-					      ++prompt;
-					      type = *prompt;
-					      ++prompt;
-					      switch (type)
-						{
-						case 'r':
-							style = &read_file_style;
-							break;
-						case 'w':
-							style = &write_file_style;
-							break;
-						case 'n':
-							style = &file_name_style;
-							break;
-						default:
-							style = 0;	/* shutup gcc -ansi -pendantic -Wall! */
-							io_error_msg
-								("func_args bug for %s",
-								 the_cmd_frame->cmd->func_name);
-						}
-					      if (get_argument
-						  (prompt, style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'F':
-				      {
-					      ++prompt;
-					      if (get_argument
-						  (prompt, &format_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'k':
-				      {
-					      ++prompt;
-					      the_cmd_arg.val.key.cmd.vector =
-						      -1;
-					      the_cmd_arg.val.key.cmd.code =
-						      the_cmd_frame->
-						      prev->top_keymap;
-					      the_cmd_arg.val.key.keys =
-						      &the_cmd_arg.text;
-					      if (get_argument
-						  (prompt, &keyseq_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'K':
-				      {
-					      ++prompt;
-					      if (get_argument
-						  (prompt, &keymap_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'l':
-				      {
-					      the_cmd_arg.val.integer =
-						      cur_chr;
-					      the_cmd_arg.is_set = 1;
-					      the_cmd_arg.do_prompt = 0;
-					      the_cmd_arg.style =
-						      &int_constant_style;
-					      {
-						      char c[2];
-						      c[0] = cur_chr;
-						      c[1] = '\0';
-						      init_arg_text
-							      (&the_cmd_arg,
-							       c);
-					      }
-					      goto next_arg;
-				      }
-			      case 'm':
-				      {
-					      int want_keyseq = 0;
-					      ++prompt;
-					      want_keyseq = (*prompt == '\'');
-					      if (want_keyseq)
-						{
-							char *map;
-							++prompt;
-							map = expand_prompt
-								(prompt);
-							the_cmd_arg.val.
-								key.cmd.
-								vector = -1;
-							the_cmd_arg.val.
-								key.cmd.code =
-								map_id (map);
-							the_cmd_arg.val.
-								key.keys =
-								&the_cmd_arg.text;
-						}
-					      else
-						{
-							if (mode_style.keymap)
-								ck_free (mode_style.keymap);
-							mode_style.keymap =
-								expand_prompt
-								(prompt);
-						}
-					      if (get_argument
-						  (prompt,
-						   (want_keyseq ?
-						    &keyseq_style :
-						    &mode_style)))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'M':
-				      if (Global->modified)
-					{
-						++prompt;
-						if (get_argument
-						    (prompt, &yes_style))
-							//goto new_cycle;
-							return true;	// state machine
-						goto next_arg;
-					}
-				      else
-					{
-						the_cmd_arg.is_set = 1;
-						the_cmd_arg.do_prompt = 1;
-						the_cmd_arg.style =
-							&yes_style;
-						init_arg_text (&the_cmd_arg,
-							       "yes");
-						goto next_arg;
-					}
-			      case 'p':
-				      {
-					      ++prompt;
-
-					      if (*prompt == '?')
-						{	/* Command wants to know if prefix provided */
-							the_cmd_arg.
-								val.integer =
-								(the_cmd_frame->prev->_raw_prefix.alloc
-								 &&
-								 the_cmd_frame->prev->_raw_prefix.buf
-								 [0]);
-							the_cmd_arg.is_set =
-								1;
-							the_cmd_arg.do_prompt
-								= 0;
-							the_cmd_arg.style =
-								&int_constant_style;
-							init_arg_text
-								(&the_cmd_arg,
-								 the_cmd_arg.val.integer
-								 ? "1" : "0");
-						}
-					      else
-						{
-							the_cmd_arg.
-								val.integer =
-								the_cmd_frame->prev->_how_many;
-							the_cmd_arg.is_set =
-								1;
-							the_cmd_arg.do_prompt
-								= 0;
-							the_cmd_arg.style =
-								&int_constant_style;
-							init_arg_text
-								(&the_cmd_arg,
-								 long_to_str ((long) the_cmd_arg.val.integer));
-						}
-					      goto next_arg;
-				      }
-			      case 'N':
-			      case 'n':
-				      {
-					      long low = 0;
-					      long high = -1;
-					      char type = *prompt;
-					      ++prompt;
-					      if (*prompt == '[')
-						{
-							++prompt;
-							low = astol (&prompt);
-							while (isspace
-							       (*prompt))
-								++prompt;
-							if (*prompt == ',')
-								++prompt;
-							high = astol
-								(&prompt);
-							while (isspace
-							       (*prompt))
-								++prompt;
-							if (*prompt == ']')
-								++prompt;
-						}
-					      if ((type == 'N')
-						  && the_cmd_frame->
-						  prev->_raw_prefix.alloc
-						  && the_cmd_frame->
-						  prev->_raw_prefix.buf[0])
-						{
-							the_cmd_arg.
-								val.integer =
-								the_cmd_frame->prev->_how_many;
-							the_cmd_arg.is_set =
-								1;
-							the_cmd_arg.do_prompt
-								= 1;
-							the_cmd_arg.style =
-								&number_style;
-							if ((low >= high)
-							    &&
-							    ((low >
-							      the_cmd_arg.
-							      val.integer)
-							     || (high <
-								 the_cmd_arg.val.integer)))
-								io_error_msg
-									("Out of range %d (should be in [%d-%d]).");
-							else
-								init_arg_text
-									(&the_cmd_arg,
-									 long_to_str
-									 ((long) the_cmd_arg.val.integer));
-						}
-					      else
-						{
-							if (get_argument
-							    (prompt,
-							     &number_style))
-								//goto new_cycle;
-								return true;	// state machine
-						}
-					      goto next_arg;
-				      }
-/* This might look slightly tangled, but it makes the command
- * interface less fickle and more flexible for the user who
- * wants to macrify a spreadsheet.
- *
- * A lowercase 'r' should trigger a prompt for a range in
- * interactice mode if the mark is not set; if the mark IS set,
- * then it should grab the range as the implicit answer.  Inside
- * a macro, 'r' should always expect an explicit argument.
- * 
- * The '@' argument should provide a default range with opportunity
- * for editing (if run interactively), or an implicit argument (if
- * run non-interactively in a macro).  If the mark is not set, then
- * the default range or implicit argument is set to the current
- * cell location.
- *
- * If the user really and truly wants interactive behaviour inside a
- * macro (perhaps because the command is the last in the chain), he
- * or she can have it by using exec to launch the command.
- * 
- * --FB, 1997.12.27
- */
-
-#define mark_is_set (mkrow != NON_ROW)
-#define interactive_mode (!rmac || iscmd)
-
-			      case '@':
-			      case 'r':
-			      case 'R':
-				      {
-#if 0
-					      /*
-					       * I don't know what I'm breaking by uncommenting this.
-					       * Danny 18/7/2000.
-					       */
-					      if (*prompt != '@'
-						  && !mark_is_set)
-						{
-							/* Default to current cell */
-							mkrow = curow;
-							mkcol = cucol;
-						}
-#endif
-					      if ((*prompt != 'R'
-						   && interactive_mode
-						   && mark_is_set)
-						  || *prompt == '@')
-						{
-							the_cmd_arg.val.
-								range.lr =
-								MIN (mkrow,
-								     curow);
-							the_cmd_arg.val.
-								range.hr =
-								MAX (mkrow,
-								     curow);
-							the_cmd_arg.val.
-								range.lc =
-								MIN (mkcol,
-								     cucol);
-							the_cmd_arg.val.
-								range.hc =
-								MAX (mkcol,
-								     cucol);
-							mkrow = NON_ROW;
-							mkcol = NON_COL;
-							io_update_status ();
-							if (*prompt == '@'
-							    &&
-							    interactive_mode)
-							  {
-								  ++prompt;
-								  if (get_argument (prompt, &range_style))
-								    {
-									    init_arg_text
-										    (&the_cmd_arg,
-										     range_name
-										     (&the_cmd_arg.val.range));
-								    }
-								  //goto new_cycle;
-								  return true;	// state machine
-							  }
-							else
-							  {	/* (Noninteractive mode and @) or r */
-								  ++prompt;
-								  the_cmd_arg.is_set
-									  = 1;
-								  the_cmd_arg.do_prompt
-									  = 1;
-								  the_cmd_arg.style
-									  =
-									  &range_style;
-								  init_arg_text
-									  (&the_cmd_arg,
-									   range_name
-									   (&the_cmd_arg.val.range));
-							  }
-							goto next_arg;
-						}
-					      else
-						{	/* R */
-							++prompt;
-							if (get_argument
-							    (prompt,
-							     &range_style))
-								//goto new_cycle;
-								return true;	// state machine
-							goto next_arg;
-						}
-				      }
-			      case 's':
-				      {
-					      {
-						      ++prompt;
-						      if (get_argument
-							  (prompt,
-							   &string_style))
-							      //goto new_cycle;
-							      return true;	// state machine
-						      goto next_arg;
-					      }
-				      }
-			      case 'S':
-				      {
-					      {
-						      ++prompt;
-						      if (*prompt == '\'')
-							      ++prompt;
-						      if (get_argument
-							  (prompt,
-							   &symbol_style))
-							      //goto new_cycle;
-							      return true;	// state machine
-						      goto next_arg;
-					      }
-				      }
-			      case 'V':
-				      {
-					      ++prompt;
-					      the_cmd_arg.inc_cmd =
-						      io_shift_cell_cursor;
-					      if (get_argument
-						  (prompt, &inc_cmd_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case 'w':
-				      {
-					      {
-						      ++prompt;
-						      if (*prompt == '\'')
-							      ++prompt;
-						      if (get_argument
-							  (prompt,
-							   &word_style))
-							      //goto new_cycle;
-							      return true;	// state machine
-						      goto next_arg;
-					      }
-				      }
-			      case '#':
-				      {
-					      ++prompt;
-
-					      init_arg_text (&the_cmd_arg,
-							     prompt);
-					      the_cmd_arg.val.integer =
-						      astol (&prompt);
-					      the_cmd_arg.is_set = 1;
-					      the_cmd_arg.do_prompt = 0;
-					      the_cmd_arg.style =
-						      &int_constant_style;
-					      goto next_arg;
-				      }
-			      case '=':
-				      {
-					      ++prompt;
-					      the_cmd_arg.expanded_prompt =
-						      expand_prompt (prompt);
-					      init_arg_text (&the_cmd_arg,
-							     the_cmd_arg.expanded_prompt);
-					      the_cmd_arg.val.string =
-						      the_cmd_arg.expanded_prompt;
-					      the_cmd_arg.is_set = 1;
-					      the_cmd_arg.do_prompt = 0;
-					      the_cmd_arg.style =
-						      &string_style;
-					      goto next_arg;
-				      }
-			      case '.':
-				      {
-					      ++prompt;
-					      the_cmd_arg.val.range.lr =
-						      curow;
-					      the_cmd_arg.val.range.lc =
-						      cucol;
-					      if (*prompt == '\'')
-						{
-							the_cmd_arg.val.
-								range.hr =
-								curow;
-							the_cmd_arg.val.
-								range.hc =
-								cucol;
-						}
-					      else
-						{
-							the_cmd_arg.val.
-								range.hr =
-								mkrow;
-							the_cmd_arg.val.
-								range.hc =
-								mkcol;
-						}
-					      the_cmd_arg.is_set = 1;
-					      the_cmd_arg.do_prompt = 0;
-					      init_arg_text (&the_cmd_arg,
-							     range_name
-							     (&the_cmd_arg.val.
-							      range));
-					      the_cmd_arg.style =
-						      &range_constant_style;
-					      goto next_arg;
-				      }
-			      case '[':
-				      {
-					      ++prompt;
-					      while (*prompt
-						     && (*prompt != ']'))
-						      if (*prompt != '\\')
-							      ++prompt;
-						      else
-							{
-								++prompt;
-								if (*prompt)
-									++prompt;
-							}
-					      if (*prompt == ']')
-						      ++prompt;
-
-					      if (get_argument
-						  (prompt, &menu_style))
-						      //goto new_cycle;
-						      return true;	// state machine
-					      goto next_arg;
-				      }
-			      case '$':
-				      {
-					      /* Edit a cell's formula. */
-					      CELL *cp = find_cell (curow,
-								    cucol);
-					      int do_init;
-					      ++prompt;
-					      if (*prompt == '\'')
-						{
-							do_init = 0;
-							++prompt;
-						}
-					      else
-						      do_init = 1;
-					      if (((!cp
-						    || GET_LCK (cp) ==
-						    LCK_DEF)
-						   && (default_lock ==
-						       LCK_LCK)) || (cp
-								     &&
-								     GET_LCK
-								     (cp) ==
-								     LCK_LCK))
-						{
-							io_error_msg
-								("Cell %s is locked",
-								 cell_name
-								 (curow,
-								  cucol));
-							pop_unfinished_command
-								();
-							//goto new_cycle;
-							return true;	// state machine
-						}
-					      the_cmd_frame->prev->_setrow =
-						      curow;
-					      the_cmd_frame->prev->_setcol =
-						      cucol;
-					      if (get_argument (prompt, &formula_style)) {
-						      if (do_init) {
-							      if (rmac && !iscmd)
-								      init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 0));
-							      else
-								      init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 1));
-						      }
-						      log_debug("cmd.cc:point a");
-						      return true;	// state machine
-						}
-					      goto next_arg;
-				      }
-
-			      default:
-				      {
-					      io_error_msg
-						      ("Interaction-string error!!!");
-					      pop_unfinished_command ();
-					      //goto new_cycle;
-					      return true;	// state machine
-				      }
-			      }
-		    }
-		next_arg:
-		  ++cur_arg;
-	  }
+	while (cur_arg < cmd_argc) {
+		if (the_cmd_arg.is_set)
+			goto next_arg;
+		else if (the_cmd_arg.prompt) {
+			begin_edit ();
+			return true;	// state machine
+		} else {
+			bool stinky = turd_1(interactive_mode, iscmd);
+			if(stinky) return true;
+		}
+next_arg:
+		++cur_arg;
+	}
 	return false;
 }
 
@@ -2185,7 +2190,7 @@ inner_command_loop (int state, int iscmd)
 		    case sc_resume_getting_arguments:
 			    //resume_getting_arguments:
 			    state = do_resume_getting_arguments
-				    (interactive_mode, iscmd);
+				    (interactive_mode_1, iscmd);
 
 			    assert (state == sc_new_cycle
 				    || state == sc_resume_getting_arguments
