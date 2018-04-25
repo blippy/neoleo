@@ -132,11 +132,7 @@ union command_arg_val
 };
 
 
-#ifdef __STDC__
 typedef void (*direction_function) (int magic, int repeat);
-#else
-typedef void (*direction_function) ();
-#endif
 
 
 
