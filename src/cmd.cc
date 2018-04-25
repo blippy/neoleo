@@ -1332,11 +1332,10 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				goto next_arg;
 			}
 		case 'f':
-			{
-				char type;
+		       	{
 				struct prompt_style *style;
 				++prompt;
-				type = *prompt;
+				char type = *prompt;
 				++prompt;
 				switch (type)
 				{
@@ -1351,13 +1350,9 @@ bool turd_1(bool interactive_mode, bool iscmd)
 						break;
 					default:
 						style = 0;	/* shutup gcc -ansi -pendantic -Wall! */
-						io_error_msg
-							("func_args bug for %s",
-							 the_cmd_frame->cmd->func_name);
+						io_error_msg("func_args bug for %s", the_cmd_frame->cmd->func_name);
 				}
-				if (get_argument
-						(prompt, style))
-					//goto new_cycle;
+				if (get_argument(prompt, style))
 					return true;	// state machine
 				goto next_arg;
 			}
