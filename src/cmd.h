@@ -139,32 +139,33 @@ typedef void (*direction_function) ();
 #endif
 
 
-struct command_arg
-{
-  int do_prompt;		/* If true, the user gets to edit this. */
-  int is_set;			/* If true, a valid value is stored here. */
-  struct prompt_style * style;	/* The editting mode for this argument. */
-  char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
-  char * prompt;		/* Unexpanded prompt */
-  char * expanded_prompt;
 
-  struct info_buffer * prompt_info;/* Info that should be displayed while */
+typedef struct command_arg
+{
+  int do_prompt = 0;		/* If true, the user gets to edit this. */
+  int is_set = 0;		/* If true, a valid value is stored here. */
+  struct prompt_style* style = 0;	/* The editting mode for this argument. */
+  char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
+  char * prompt = 0;		/* Unexpanded prompt */
+  char * expanded_prompt = 0;
+
+  struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
 				/* prompting for this argument. */
-  int info_line;		/* First line visible in prompt_info */
+  int info_line = 0;		/* First line visible in prompt_info */
 
   struct line text;		/* A buffer for the user to edit this value. */
-  int cursor;			/* cursor position of this buffer. */
-  int overwrite;		/* Is overwrite mode on? */
+  int cursor = 0;			/* cursor position of this buffer. */
+  int overwrite = 0;		/* Is overwrite mode on? */
 
   /* For incremental commands. */
-  direction_function inc_cmd;
+  direction_function inc_cmd = 0;
 
   /* For reading a character with timeout. */
-  int timeout_seconds;
+  int timeout_seconds = 0;
 
   /* The value as it will be passed to the cmd function. */
   union command_arg_val val;
-};
+} command_arg_t;
 
 #define MAX_COMMAND_ARGS	10
 

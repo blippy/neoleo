@@ -742,22 +742,12 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 			  char **prompt = new_cf->cmd->func_args;
 			  while (prompt && *prompt)
 			    {
-				    new_cf->argv[argc].do_prompt = 0;
-				    new_cf->argv[argc].is_set = 0;
-				    new_cf->argv[argc].style = 0;
-				    new_cf->argv[argc].arg_desc = *prompt;
-				    new_cf->argv[argc].prompt = 0;
-				    new_cf->argv[argc].expanded_prompt = 0;
-				    new_cf->argv[argc].prompt_info = 0;
-				    new_cf->argv[argc].info_line = 0;
-				    init_line (&new_cf->argv[argc].text);
-				    set_line (&new_cf->argv[argc].text, "");
-				    new_cf->argv[argc].cursor = 0;
-				    new_cf->argv[argc].overwrite = 0;
-				    new_cf->argv[argc].inc_cmd = 0;
-				    new_cf->argv[argc].timeout_seconds = 0;
-				    bzero (&new_cf->argv[argc].val,
-					   sizeof (union command_arg_val));
+				    // other initialisation of cfn taken care of by constructor
+				    command_arg_t* cfn = &new_cf->argv[argc];
+				    cfn->arg_desc = *prompt;
+				    init_line (&cfn->text);
+				    set_line (&cfn->text, "");
+				    bzero (&cfn->val, sizeof (union command_arg_val));
 				    ++argc;
 				    ++prompt;
 			    }
