@@ -42,6 +42,8 @@ using namespace std::string_literals;
 
 static bool all_pass = true; // all the checks have passed so far
 
+extern bool yyreglex_experiment();
+
 void 
 check(bool ok, std::string msg)
 {
@@ -225,7 +227,8 @@ headless_tests()
 	map<string, std::function<bool()> > func_map = {
 		{"alt-cells",	run_alt_cells_tests},
 		{"alt-parse",	run_alt_parse_tests},
-		{"regular", 	run_regular_tests}
+		{"regular", 	run_regular_tests},
+		{"yyreglex",	yyreglex_experiment}
 	};
 
 	auto it = func_map.find(option_tests_argument);

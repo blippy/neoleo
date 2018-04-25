@@ -1,10 +1,15 @@
 #include <map>
+#include <iostream>
 
 #include "errors.h"
 #include "node.h"
 #include "parse_parse.h"
 #include "parse.hh"
 #include "ref.h"
+
+using std::cout;
+using std::endl;
+
 
 #define ERROR -1
 
@@ -36,7 +41,7 @@ int
 yyreglex ()
 {
 	int ch;
-	struct node *a_new;
+	struct node *a_new = 0;
 	int isflt;
 	char *begin;
 	char *tmp_str;
@@ -833,4 +838,59 @@ str_to_col (char **str)
 	}
 #endif
 	return 0;
+}
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Experimental section
+
+
+bool yyreglex_experiment()
+{
+	char prog[1000];
+	strcpy(prog, "(12.3+12");
+	instr = prog;
+	while(true) {
+		int ch = yyreglex();
+		if(ch == 0 || ch == ERROR) break;
+		node_t* n = yyreglval;
+		//if(n->comp_value == 0 && n->sub_value == 0 && n->add_byte == 0) break;
+
+		if(ch>0){
+		       	cout << ch << ":" << (char) ch << endl;
+			//continue;
+		}
+		if(n == 0) continue;
+		//cout << "yyregval:" << yyreglval << endl;
+		assert(n->add_byte == 0); // should never be set
+
+		if(n->sub_value) { 
+			cout << "user defined value:" << n->sub_value << endl;
+		}
+
+		switch(n->comp_value) {
+			case 0: // not a comp value
+				break;
+				/*
+			case L_CONST:
+				cout << "L_CONST:" << ch <<endl;
+				break;
+				*/
+			case CONST_FLT:
+			       	cout << yyreglval->n_x.v_float << endl;
+				break;
+			case CONST_INT:
+			       	cout << yyreglval->n_x.v_int << "\n";
+				break;
+			default:
+				cout << "Unknown comp_value" <<endl;
+		}
+	}
+	return true;
 }
