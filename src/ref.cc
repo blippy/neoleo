@@ -2582,7 +2582,7 @@ for_all_vars (void (*func) (char *, struct var *))
 	}
 }
 
-struct var *find_var_1(char* str)
+struct var *find_var_1(const char* str)
 {
 	//return (struct var*) hash_find(the_vars, str);
 	auto it = the_vars_1.find(str);
@@ -2597,18 +2597,20 @@ struct var *find_var_1(char* str)
    null-terminated
  */
 struct var *
-find_or_make_var (char *string, int len)
+find_or_make_var(const char *string, int len)
 {
 	log_debug("find_or_make_var called");
-	assert(strlen(string) == len);
+	assert(strlen(string) >= len);
+	std::string varname;
+	for(int i=0; i<len; ++i) varname += string[i];
 
-	struct var *ret = find_var_1(string);
+	struct var *ret = find_var_1(varname.c_str());
 	if(ret) return ret;
 
 	struct var new_var;
-	new_var.var_name = string;
-	the_vars_1[string] = new_var;
-	return find_var_1(string);
+	new_var.var_name = varname;
+	the_vars_1[varname] = new_var;
+	return find_var_1(varname.c_str());
 
 	/*
 	int ch;

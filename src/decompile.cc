@@ -480,7 +480,7 @@ do_fn2:
 		case C_VAR:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & v, sizeof (struct var *));
 			expr += sizeof (struct var *);
-			newn = n_alloc(1000, f->fn_str, v->var_name);
+			newn = n_alloc(1000, f->fn_str, v->var_name.c_str());
 			break;
 
 

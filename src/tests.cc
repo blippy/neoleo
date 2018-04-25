@@ -187,18 +187,16 @@ run_regular_tests()
 
 	default_fmt = FMT_GEN;
 	set_cell_from_string(2, 2, "23.3");
-        CELL *cp = find_cell(2, 2);
+	CELL *cp = find_cell(2, 2);
 	assert(cp);
 	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
 
 
 
-	{
-		char str[] = "\"foo\"";
-		// NB must enquote strings otherwise it segfault trying to find or make foo as var
-		get_set(1, 1, str); 
-		// mcarter 24-Apr-2018 Used to have mem leak, but now confirmed it is leakless
-	}
+	// Fixed a bug in undeclared variable names
+	// This will barf if run under an address sanitizer
+	get_set(1, 1, "foo"); 
+	cout << "PASS: undeclared variable name\n";
 
 
 	//printf("Test atof(63.36):%f\n", atof("63.36"));
@@ -211,7 +209,7 @@ run_regular_tests()
 
 	FreeGlobals();
 
-        cout << "Finished test\n";
+	cout << "Finished test\n";
 
 	//__lsan_do_leak_check();
 	test_decomp();

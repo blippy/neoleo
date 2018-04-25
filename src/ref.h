@@ -22,7 +22,7 @@
 #include "global.h"
 #include "cell.h"
 
-extern struct var * find_or_make_var (char *string, int len);
+struct var * find_or_make_var(const char *string, int len);
 
 /* Operations that add or remove cells to the sparse array
  * may cause the (memory) addresses of other cells to change.
