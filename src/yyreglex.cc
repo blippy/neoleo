@@ -814,6 +814,7 @@ str_to_col (char **str)
 	int ret;
 	char c,cc,ccc;
 #if MAX_COL>702
+	static_assert(true);
 	char cccc;
 #endif
 
@@ -854,7 +855,7 @@ str_to_col (char **str)
 bool yyreglex_experiment()
 {
 	char prog[1000];
-	strcpy(prog, "(12.3+12");
+	strcpy(prog, "(12.3+12)* \"a string\" ");
 	instr = prog;
 	while(true) {
 		int ch = yyreglex();
@@ -863,8 +864,18 @@ bool yyreglex_experiment()
 		//if(n->comp_value == 0 && n->sub_value == 0 && n->add_byte == 0) break;
 
 		if(ch>0){
-		       	cout << ch << ":" << (char) ch << endl;
-			//continue;
+			switch(ch) {
+				/*
+				case L_CONST:
+					cout << "L_CONST:" << (char) ch <<endl;
+					continue;
+					break;
+					*/
+				default:
+					cout << ch << ":" << (char) ch << endl;
+					//continue;
+			}
+
 		}
 		if(n == 0) continue;
 		//cout << "yyregval:" << yyreglval << endl;
@@ -874,22 +885,21 @@ bool yyreglex_experiment()
 			cout << "user defined value:" << n->sub_value << endl;
 		}
 
+		node_value val = yyreglval->n_x;
 		switch(n->comp_value) {
 			case 0: // not a comp value
 				break;
-				/*
-			case L_CONST:
-				cout << "L_CONST:" << ch <<endl;
-				break;
-				*/
 			case CONST_FLT:
-			       	cout << yyreglval->n_x.v_float << endl;
+				cout << "flt:" << val.v_float << endl;
 				break;
 			case CONST_INT:
-			       	cout << yyreglval->n_x.v_int << "\n";
+				cout << "int:" << val.v_int << "\n";
+				break;
+			case CONST_STR:
+				cout << "str:" <<  val.v_string << "\n";
 				break;
 			default:
-				cout << "Unknown comp_value" <<endl;
+				cout << "Unknown comp_value:" << ch << ":" << (char) ch  <<endl;
 		}
 	}
 	return true;

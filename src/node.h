@@ -24,19 +24,21 @@
 #include "numeric.h"
 #include "global.h"
 
+union node_value {
+	num_t v_float;
+	char *v_string;
+	long v_int;
+	struct node *v_subs[2];
+	struct rng v_rng;
+	VOIDSTAR v_var;
+};
+
+
 typedef struct node 
 {
 
 	unsigned char comp_value;
 	unsigned char sub_value;	/* Used only for USR functions */
 	unsigned short add_byte;
-	union
-	{
-		num_t v_float;
-		char *v_string;
-		long v_int;
-		struct node *v_subs[2];
-		struct rng v_rng;
-		VOIDSTAR v_var;
-	} n_x;
+	union node_value n_x;
 } node_t;
