@@ -372,331 +372,331 @@ set_to_region (struct rng *fm, struct rng *to)
 void
 move_region (struct rng *fm, struct rng *to)
 {
-  /* Delta {row,col} */
-  int dr, dc;
-  int nr, nc;
-  int ov, dn;
-  struct rng del_to_1, del_to_2;
-  int do_2, dirs[2];
-  int maxr, maxc;
-  CELLREF cmax, rmax;
-  int cdmax, rdmax;
-  int must_repaint = 0;		/* If this move changes cell widths/heights */
+	/* Delta {row,col} */
+	int dr, dc;
+	int nr, nc;
+	int ov, dn;
+	struct rng del_to_1, del_to_2;
+	int do_2, dirs[2];
+	int maxr, maxc;
+	CELLREF cmax, rmax;
+	int cdmax, rdmax;
+	int must_repaint = 0;		/* If this move changes cell widths/heights */
 
-  switch (set_to_region (fm, to))
-    {
-    case 0:
-      return;
-
-    case 1:
-      io_error_msg ("Can't move source to multiple targets");
-      return;
-
-    case 2:
-      del_to_1 = *to;
-
-      do_2 = 0;
-      dirs[0] = 1;
-      dirs[1] = 1;
-
-      /* del_fm_1= *fm; */
-      break;
-
-    default:
-      /* They overlap.  There are eight ways that
-		   they can overlap.  */
-      if (to->lc == fm->lc && to->lr < fm->lr)
+	switch (set_to_region (fm, to))
 	{
-	  /* State 1:  'from' on bottom */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = fm->lr - 1;
-	  del_to_1.hc = to->hc;
+		case 0:
+			return;
 
-	  do_2 = 0;
-	  dirs[0] = 1;
-	  dirs[1] = 1;
+		case 1:
+			io_error_msg ("Can't move source to multiple targets");
+			return;
 
-	  /* del_fm_1.lr=to->hr+1;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=fm->hr;	del_fm_1.hc=fm->hc; */
+		case 2:
+			del_to_1 = *to;
+
+			do_2 = 0;
+			dirs[0] = 1;
+			dirs[1] = 1;
+
+			/* del_fm_1= *fm; */
+			break;
+
+		default:
+			/* They overlap.  There are eight ways that
+			   they can overlap.  */
+			if (to->lc == fm->lc && to->lr < fm->lr)
+			{
+				/* State 1:  'from' on bottom */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = fm->lr - 1;
+				del_to_1.hc = to->hc;
+
+				do_2 = 0;
+				dirs[0] = 1;
+				dirs[1] = 1;
+
+				/* del_fm_1.lr=to->hr+1;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=fm->hr;	del_fm_1.hc=fm->hc; */
+			}
+			else if (to->lc == fm->lc)
+			{
+				/* State 2: 'from' on top */
+				del_to_1.lr = fm->hr + 1;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = to->hr;
+				del_to_1.hc = to->hc;
+
+				do_2 = 0;
+				dirs[0] = -1;
+				dirs[1] = 1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc; */
+			}
+			else if (to->lr == fm->lr && to->lc < fm->lc)
+			{
+				/* State 3: 'from' on right */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = to->hr;
+				del_to_1.hc = fm->lc - 1;
+
+				do_2 = 0;
+				dirs[0] = 1;
+				dirs[1] = 1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=to->hc+1;
+				   del_fm_1.hr=fm->hr;	del_fm_1.hc=fm->hc; */
+			}
+			else if (to->lr == fm->lr)
+			{
+				/* State 4: 'from' on left */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = fm->hc + 1;
+				del_to_1.hr = to->hr;
+				del_to_1.hc = to->hc;
+
+				do_2 = 0;
+				dirs[0] = 1;
+				dirs[1] = -1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=fm->hr;	del_fm_1.hc=to->lc-1; */
+			}
+			else if (fm->lr < to->lr && fm->lc < to->lc)
+			{
+				/* State 5: From on topleft */
+
+				del_to_1.lr = to->lr;
+				del_to_1.lc = fm->hc + 1;
+				del_to_1.hr = fm->hr;
+				del_to_1.hc = to->hc;
+
+				del_to_2.lr = fm->hr + 1;
+				del_to_2.lc = to->lc;
+				del_to_2.hr = to->hr;
+				del_to_2.hc = to->hc;
+
+				do_2 = 1;
+				dirs[0] = -1;
+				dirs[1] = -1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc;
+
+				   del_fm_2.lr=to->lr;	del_fm_2.lc=fm->lc;
+				   del_fm_2.hr=fm->hr;	del_fm_2.hc=to->lc-1; */
+			}
+			else if (fm->lr < to->lr)
+			{
+				/* State 6: 'from' on topright */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = fm->hr;
+				del_to_1.hc = fm->lc - 1;
+
+				del_to_2.lr = fm->hr + 1;
+				del_to_2.lc = to->lc;
+				del_to_2.hr = to->hr;
+				del_to_2.hc = to->hc;
+
+				do_2 = 1;
+				dirs[0] = -1;
+				dirs[1] = 1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc;
+
+				   del_fm_2.lr=to->lr;	del_fm_2.lc=to->hc+1;
+				   del_fm_2.hr=fm->hr;	del_fm_2.hc=fm->hc; */
+			}
+			else if (fm->lc < to->lc)
+			{
+				/* State 7: 'from on bottomleft */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = fm->lr - 1;
+				del_to_1.hc = to->hc;
+
+				del_to_2.lr = fm->lr;
+				del_to_2.lc = fm->hc;
+				del_to_2.hr = to->hr;
+				del_to_2.hc = to->hc;
+
+				do_2 = 1;
+				dirs[0] = 1;
+				dirs[1] = -1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
+				   del_fm_1.hr=to->hr;	del_fm_1.hc=to->lc-1;
+
+				   del_fm_2.lr=to->hr+1;	del_fm_2.lc=fm->lc;
+				   del_fm_2.hr=to->hr+1;	del_fm_2.hc=to->lc-1; */
+			}
+			else
+			{
+				/* State 8: 'from' on bottomright */
+				del_to_1.lr = to->lr;
+				del_to_1.lc = to->lc;
+				del_to_1.hr = fm->lr - 1;
+				del_to_1.hc = to->hc;
+
+				del_to_2.lr = fm->lr;
+				del_to_2.lc = to->lc;
+				del_to_2.hr = to->hr;
+				del_to_2.hc = fm->lc - 1;
+
+				do_2 = 1;
+				dirs[0] = 1;
+				dirs[1] = 1;
+
+				/* del_fm_1.lr=fm->lr;	del_fm_1.lc=to->hc+1;
+				   del_fm_1.hr=to->hr;	del_fm_1.hc=fm->hc;
+
+				   del_fm_2.lr=to->hr+1;	del_fm_2.lc=fm->lc;
+				   del_fm_2.hr=fm->hr;	del_fm_2.hc=fm->hc; */
+			}
 	}
-      else if (to->lc == fm->lc)
+	dn = to->hr - fm->hr;
+	ov = to->hc - fm->hc;
+
+	dr = fm->hr - fm->lr;
+	dc = fm->hc - fm->lc;
+
+	delete_region (&del_to_1);
+	if (do_2)
+		delete_region (&del_to_2);
+
+	if (to->lr == MIN_ROW && to->hr == MAX_ROW) {
+		shift_spans(&Global->wids, ov, fm->lc, fm->hc);
+		//shift_widths (ov, fm->lc, fm->hc);
+		must_repaint = 1;
+	}
+
+	if (to->lc == MIN_COL && to->hc == MAX_COL) {
+		//shift_heights (dn, fm->lr, fm->hr);
+		shift_spans(&Global->hgts, dn, fm->lr, fm->hr);
+		must_repaint = 1;
+	}
+
+	shift_outside (fm, dn, ov);
+
+	rmax = highest_row ();
+	if (rmax < fm->lr)
+		rdmax = -1;
+	else if (rmax > fm->hr)
+		rdmax = dr;
+	else
+		rdmax = rmax - fm->lr;
+	nr = (dirs[0] > 0) ? 0 : rdmax;
+	maxr = (dirs[0] > 0) ? rdmax + 1 : -1;
+	for (; nr != maxr; nr += dirs[0])
 	{
-	  /* State 2: 'from' on top */
-	  del_to_1.lr = fm->hr + 1;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = to->hr;
-	  del_to_1.hc = to->hc;
+		cmax = max_col (fm->lr + nr);
+		if (cmax < fm->lc)
+			cdmax = -1;
+		else if (cmax > fm->hc)
+			cdmax = dc;
+		else
+		{
+			cdmax = cmax - fm->lc;
+		}
+		nc = (dirs[1] > 0) ? 0 : cdmax;
+		maxc = (dirs[1] > 0) ? cdmax + 1 : -1;
+		for (; nc != maxc; nc += dirs[1])
+		{
+			CELLREF rf, cf, rt, ct;
+			CELL *cpf;
 
-	  do_2 = 0;
-	  dirs[0] = -1;
-	  dirs[1] = 1;
+			rf = fm->lr + nr;
+			cf = fm->lc + nc;
+			rt = to->lr + nr;
+			ct = to->lc + nc;
 
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc; */
+			cpf = find_cell (rf, cf);
+			cur_row = rt;
+			cur_col = ct;
+			my_cell = find_cell (cur_row, cur_col);
+			if ((!cpf || (
+							//!cpf->cell_font &&
+							((cpf->cell_flags.cell_format == 0)
+							 && (cpf->cell_flags.cell_precision == 0)
+							 && (cpf->cell_flags.cell_justify == 0)
+							 && (cpf->get_cell_type() == 0))
+							&& (cpf->cell_flags.cell_lock == 0)
+							&& !cpf->get_cell_formula()))
+					&& !my_cell)
+				continue;
+
+			if (!cpf)
+			{
+				bzero(&(my_cell->cell_flags), sizeof(my_cell->cell_flags));
+				//my_cell->cell_font = 0;
+				my_cell->cell_refs_to = 0;
+				my_cell->set_cell_formula(0);
+				my_cell->cell_cycle = 0;
+				my_cell = 0;
+				continue;
+			}
+			if (!my_cell)
+			{
+				my_cell = find_or_make_cell (cur_row, cur_col);
+				cpf = find_cell (rf, cf);
+			}
+			else
+				flush_old_value ();
+
+			my_cell->cell_flags = cpf->cell_flags;
+			//my_cell->cell_font = cpf->cell_font;
+			my_cell->cell_refs_to = cpf->cell_refs_to;
+			my_cell->set_cell_formula(cpf->get_cell_formula());
+			my_cell->cell_cycle = cpf->cell_cycle;
+			my_cell->set_c_z(cpf->get_c_z());
+
+			bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
+			//cpf->cell_font = 0;
+			cpf->cell_refs_to = 0;
+			cpf->set_cell_formula(0);
+			cpf->cell_cycle = 0;
+
+			push_cell (cur_row, cur_col);
+
+			if (!must_repaint)
+			{
+				if (cpf)
+					io_pr_cell (rf, cf, cpf);
+				if (my_cell)
+					io_pr_cell (rt, ct, my_cell);
+			}
+			my_cell = 0;
+		}
 	}
-      else if (to->lr == fm->lr && to->lc < fm->lc)
-	{
-	  /* State 3: 'from' on right */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = to->hr;
-	  del_to_1.hc = fm->lc - 1;
-
-	  do_2 = 0;
-	  dirs[0] = 1;
-	  dirs[1] = 1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=to->hc+1;
-			del_fm_1.hr=fm->hr;	del_fm_1.hc=fm->hc; */
+	if (must_repaint)
+		io_repaint ();
+	/* Perpetration of an interface change here.  If we really
+	 * need to get back to the old region, we can do it by
+	 * wrapping the move-region command in macros that set
+	 * and return to a hardy mark.  We might, however, want
+	 * to jump the moved text again, or reformat it in some
+	 * way, so the mark should travel with us.
+	 * 
+	 * to->lr and to->lc give the lowest column and row (northwest
+	 * corner) in the destination region, to->hr and to->hc five the
+	 * highest, or southeast corner.  The absolute value if their
+	 * difference tells us how far to move over and down from
+	 * northwest to mark the region just moved.  This way the new
+	 * region can be operated on as a chunk immediately
+	 *
+	 * --FB 1997.12.17
+	 */
+	if (mkrow != NON_ROW) {
+		mkrow = to->lr + abs(to->lr - to->hr);
+		mkcol = to->lc + abs(to->lc - to->hc);
 	}
-      else if (to->lr == fm->lr)
-	{
-	  /* State 4: 'from' on left */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = fm->hc + 1;
-	  del_to_1.hr = to->hr;
-	  del_to_1.hc = to->hc;
-
-	  do_2 = 0;
-	  dirs[0] = 1;
-	  dirs[1] = -1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=fm->hr;	del_fm_1.hc=to->lc-1; */
-	}
-      else if (fm->lr < to->lr && fm->lc < to->lc)
-	{
-	  /* State 5: From on topleft */
-
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = fm->hc + 1;
-	  del_to_1.hr = fm->hr;
-	  del_to_1.hc = to->hc;
-
-	  del_to_2.lr = fm->hr + 1;
-	  del_to_2.lc = to->lc;
-	  del_to_2.hr = to->hr;
-	  del_to_2.hc = to->hc;
-
-	  do_2 = 1;
-	  dirs[0] = -1;
-	  dirs[1] = -1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc;
-
-			del_fm_2.lr=to->lr;	del_fm_2.lc=fm->lc;
-			del_fm_2.hr=fm->hr;	del_fm_2.hc=to->lc-1; */
-	}
-      else if (fm->lr < to->lr)
-	{
-	  /* State 6: 'from' on topright */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = fm->hr;
-	  del_to_1.hc = fm->lc - 1;
-
-	  del_to_2.lr = fm->hr + 1;
-	  del_to_2.lc = to->lc;
-	  del_to_2.hr = to->hr;
-	  del_to_2.hc = to->hc;
-
-	  do_2 = 1;
-	  dirs[0] = -1;
-	  dirs[1] = 1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=to->lr-1;	del_fm_1.hc=fm->hc;
-
-			del_fm_2.lr=to->lr;	del_fm_2.lc=to->hc+1;
-			del_fm_2.hr=fm->hr;	del_fm_2.hc=fm->hc; */
-	}
-      else if (fm->lc < to->lc)
-	{
-	  /* State 7: 'from on bottomleft */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = fm->lr - 1;
-	  del_to_1.hc = to->hc;
-
-	  del_to_2.lr = fm->lr;
-	  del_to_2.lc = fm->hc;
-	  del_to_2.hr = to->hr;
-	  del_to_2.hc = to->hc;
-
-	  do_2 = 1;
-	  dirs[0] = 1;
-	  dirs[1] = -1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=fm->lc;
-			del_fm_1.hr=to->hr;	del_fm_1.hc=to->lc-1;
-
-			del_fm_2.lr=to->hr+1;	del_fm_2.lc=fm->lc;
-			del_fm_2.hr=to->hr+1;	del_fm_2.hc=to->lc-1; */
-	}
-      else
-	{
-	  /* State 8: 'from' on bottomright */
-	  del_to_1.lr = to->lr;
-	  del_to_1.lc = to->lc;
-	  del_to_1.hr = fm->lr - 1;
-	  del_to_1.hc = to->hc;
-
-	  del_to_2.lr = fm->lr;
-	  del_to_2.lc = to->lc;
-	  del_to_2.hr = to->hr;
-	  del_to_2.hc = fm->lc - 1;
-
-	  do_2 = 1;
-	  dirs[0] = 1;
-	  dirs[1] = 1;
-
-	  /* del_fm_1.lr=fm->lr;	del_fm_1.lc=to->hc+1;
-			del_fm_1.hr=to->hr;	del_fm_1.hc=fm->hc;
-
-			del_fm_2.lr=to->hr+1;	del_fm_2.lc=fm->lc;
-			del_fm_2.hr=fm->hr;	del_fm_2.hc=fm->hc; */
-	}
-    }
-  dn = to->hr - fm->hr;
-  ov = to->hc - fm->hc;
-
-  dr = fm->hr - fm->lr;
-  dc = fm->hc - fm->lc;
-
-  delete_region (&del_to_1);
-  if (do_2)
-    delete_region (&del_to_2);
-
-  if (to->lr == MIN_ROW && to->hr == MAX_ROW)
-    {
-      shift_widths (ov, fm->lc, fm->hc);
-      must_repaint = 1;
-    }
-
-  if (to->lc == MIN_COL && to->hc == MAX_COL)
-    {
-      shift_heights (dn, fm->lr, fm->hr);
-      must_repaint = 1;
-    }
-
-  shift_outside (fm, dn, ov);
-
-  rmax = highest_row ();
-  if (rmax < fm->lr)
-    rdmax = -1;
-  else if (rmax > fm->hr)
-    rdmax = dr;
-  else
-    rdmax = rmax - fm->lr;
-  nr = (dirs[0] > 0) ? 0 : rdmax;
-  maxr = (dirs[0] > 0) ? rdmax + 1 : -1;
-  for (; nr != maxr; nr += dirs[0])
-    {
-      cmax = max_col (fm->lr + nr);
-      if (cmax < fm->lc)
-	cdmax = -1;
-      else if (cmax > fm->hc)
-	cdmax = dc;
-      else
-	{
-	  cdmax = cmax - fm->lc;
-	}
-      nc = (dirs[1] > 0) ? 0 : cdmax;
-      maxc = (dirs[1] > 0) ? cdmax + 1 : -1;
-      for (; nc != maxc; nc += dirs[1])
-	{
-	  CELLREF rf, cf, rt, ct;
-	  CELL *cpf;
-
-	  rf = fm->lr + nr;
-	  cf = fm->lc + nc;
-	  rt = to->lr + nr;
-	  ct = to->lc + nc;
-
-	  cpf = find_cell (rf, cf);
-	  cur_row = rt;
-	  cur_col = ct;
-	  my_cell = find_cell (cur_row, cur_col);
-	  if ((!cpf || (
-					  //!cpf->cell_font &&
-		((cpf->cell_flags.cell_format == 0)
-		&& (cpf->cell_flags.cell_precision == 0)
-		&& (cpf->cell_flags.cell_justify == 0)
-		&& (cpf->get_cell_type() == 0))
-		&& (cpf->cell_flags.cell_lock == 0)
-		&& !cpf->get_cell_formula()))
-	      && !my_cell)
-	    continue;
-
-	  if (!cpf)
-	    {
-	      bzero(&(my_cell->cell_flags), sizeof(my_cell->cell_flags));
-	      //my_cell->cell_font = 0;
-	      my_cell->cell_refs_to = 0;
-	      my_cell->set_cell_formula(0);
-	      my_cell->cell_cycle = 0;
-	      my_cell = 0;
-	      continue;
-	    }
-	  if (!my_cell)
-	    {
-	      my_cell = find_or_make_cell (cur_row, cur_col);
-	      cpf = find_cell (rf, cf);
-	    }
-	  else
-	    flush_old_value ();
-
-	  my_cell->cell_flags = cpf->cell_flags;
-	  //my_cell->cell_font = cpf->cell_font;
-	  my_cell->cell_refs_to = cpf->cell_refs_to;
-	  my_cell->set_cell_formula(cpf->get_cell_formula());
-	  my_cell->cell_cycle = cpf->cell_cycle;
-	  my_cell->set_c_z(cpf->get_c_z());
-
-	  bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
-	  //cpf->cell_font = 0;
-	  cpf->cell_refs_to = 0;
-	  cpf->set_cell_formula(0);
-	  cpf->cell_cycle = 0;
-
-	  push_cell (cur_row, cur_col);
-
- 	  if (!must_repaint)
-	    {
-	      if (cpf)
-		io_pr_cell (rf, cf, cpf);
-	      if (my_cell)
-		io_pr_cell (rt, ct, my_cell);
-	    }
-	  my_cell = 0;
-	}
-    }
-  if (must_repaint)
-    io_repaint ();
-/* Perpetration of an interface change here.  If we really
- * need to get back to the old region, we can do it by
- * wrapping the move-region command in macros that set
- * and return to a hardy mark.  We might, however, want
- * to jump the moved text again, or reformat it in some
- * way, so the mark should travel with us.
- * 
- * to->lr and to->lc give the lowest column and row (northwest
- * corner) in the destination region, to->hr and to->hc five the
- * highest, or southeast corner.  The absolute value if their
- * difference tells us how far to move over and down from
- * northwest to mark the region just moved.  This way the new
- * region can be operated on as a chunk immediately
- *
- * --FB 1997.12.17
- */
-  if (mkrow != NON_ROW) {
-      mkrow = to->lr + abs(to->lr - to->hr);
-      mkcol = to->lc + abs(to->lc - to->hc);
-  }
-  goto_region (to);
-  return;
+	goto_region (to);
+	return;
 }
 
 void

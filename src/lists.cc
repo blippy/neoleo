@@ -1,7 +1,5 @@
 /*
- * $Id: lists.c,v 1.13 2000/11/22 19:33:01 danny Exp $
- *
- * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (C) 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -25,8 +23,6 @@
 
 using std::cout;
 
-#include "config.h"
-
 #include "global.h"
 #include "lists.h"
 #include "logging.h"
@@ -37,13 +33,12 @@ using std::cout;
 #ifndef _DEBUG_MALLOC_INC
 #define local_free free
 #else 
-static void
-local_free (p)
-     void * p;
+static void local_free(void* p)
 {
-  free (p);
+	free (p);
 }
 #endif /* def _DEBUG_MALLOC_INC */
+
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free local_free
 #include "obstack.h"
@@ -644,7 +639,6 @@ set_width (CELLREF col, int wid)
 struct find*
 find_span(struct list** spans, CELLREF lo, CELLREF hi)
 {
-	//return (FPTR) find_rng (&Global->wids, lo, hi, sizeof (int));
 	return (FPTR) find_rng(spans, lo, hi, sizeof (int));
 }
 
@@ -716,19 +710,8 @@ do_shift (int over, CELLREF lo, CELLREF hi, struct list **start, int buf)
 	}
 }
 
-void 
-shift_widths (int over, CELLREF lo, CELLREF hi)
-{
-	if constexpr (true) {
-		log_debug("shift_widths:over:" + std::to_string(over) + ",lo:" + std::to_string(lo) 
-				+ ",hi:" + std::to_string(hi));
-	}
-	do_shift (over, lo, hi, &Global->wids, COL_BUF);
-}
 
-
-/* Routines for dealing with the height of rows 
- */
+/* Routines for dealing with the height of rows */
 int 
 get_height (CELLREF row)
 {
@@ -783,10 +766,8 @@ get_scaled_width (CELLREF c)
 }
 
 
-
-void 
-shift_heights (int dn, CELLREF lo, CELLREF hi)
+void shift_spans (struct list** spans, int over, CELLREF lo, CELLREF hi)
 {
-	do_shift (dn, lo, hi, &Global->hgts, ROW_BUF);
+	do_shift(over, lo, hi, spans, ROW_BUF);
 }
 
