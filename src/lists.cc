@@ -66,6 +66,16 @@ using IPTR = int *;
 using LPTR = list*;
 using LLPTR = list**;
 
+struct find* alloc_find_stack()
+{
+	return (struct find *)obstack_alloc (&find_stack, sizeof (struct find));
+}
+
+void free_find_stack(struct find* f)
+{
+	obstack_free (&find_stack, f);
+}
+
 static void
 flush (struct list *ptr)
 {
@@ -219,7 +229,7 @@ find_rng (struct list **start, CELLREF lo, CELLREF hi, int ele)
 	struct list *ptr;
 	struct find *f;
 
-	f = (struct find *)obstack_alloc (&find_stack, sizeof (struct find));
+	f = alloc_find_stack();
 	f->lo = lo;
 	f->hi = hi;
 	f->ele = ele;
@@ -250,7 +260,7 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 	size_t size;
 	struct find *f;
 
-	f = (struct find *)obstack_alloc (&find_stack, sizeof (struct find));
+	f = alloc_find_stack();
 	f->lo = f->cur = lo;
 	f->hi = hi;
 	f->left = 1 + hi - lo;
@@ -379,7 +389,8 @@ fini:
 		}
 	}
 	next = f->next;
-	obstack_free (&find_stack, f);
+	//obstack_free (&find_stack, f);
+	free_find_stack(f);
 	Global->finds = next;
 	return 0;
 }
@@ -439,15 +450,13 @@ find_or_make_cell (CELLREF row, CELLREF col)
 void
 find_cells_in_range (struct rng *r)
 {
-	struct cf *newc;
-	struct list **firstcol;
 
-	newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
+	struct cf *newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
 	newc->make = 0;
 	newc->next = Global->fp;
 	Global->fp = newc;
 	newc->rows = (FPTR) find_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *));
-	firstcol = (LLPTR) next_rng (newc->rows, 0);
+	struct list **firstcol = (LLPTR) next_rng (newc->rows, 0);
 	if (firstcol)
 		newc->cols = (FPTR) find_rng (firstcol, r->lr, r->hr, sizeof (struct cell));
 	else
@@ -457,15 +466,13 @@ find_cells_in_range (struct rng *r)
 void
 make_cells_in_range (struct rng *r)
 {
-	struct cf *newc;
-	struct list **firstcol;
 
-	newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
+	struct cf *newc =  (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
 	newc->make = 1;
 	newc->next = Global->fp;
 	Global->fp = newc;
 	newc->rows = (FPTR) make_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
-	firstcol = (LLPTR) next_rng (newc->rows, 0);
+	struct list **firstcol = (LLPTR) next_rng (newc->rows, 0);
 	newc->cols = (FPTR) make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
 }
 
@@ -485,7 +492,7 @@ next_cell_in_range (void)
 			struct cf *old;
 
 			old = Global->fp->next;
-			obstack_free (&find_stack, Global->fp);
+			obstack_free(&find_stack, Global->fp);
 			Global->fp = old;
 			return 0;
 		}
@@ -514,7 +521,7 @@ next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 			struct cf *old;
 
 			old = Global->fp->next;
-			obstack_free (&find_stack, Global->fp);
+			obstack_free(&find_stack, Global->fp);
 			Global->fp = old;
 			return 0;
 		}
