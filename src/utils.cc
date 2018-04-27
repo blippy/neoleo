@@ -1054,34 +1054,23 @@ astof (char **sp)
 std::string 
 spaces(int n)
 {
-	//string result;
-	//if(n<0) return ;
 	n = std::max(0, n);
 	char sa[n+1];
 	std::fill(sa, sa+n, ' ');
 	sa[n] = '\0';
-	//cout << "*" << sa << "*\n";
-	return std::string(sa); 
+	return sa; 
 }
 
 std::string 
 pad_left(const std::string& s, int width)
 {
-	std::string res = s;
-	int times = width - res.size();
-	for(int i = 0; i < times; i++)
-		res = " " + res;
-	return res;
+	return spaces(width-s.size()) + s;
 }
 
 std::string
 pad_right(const std::string& s, int width)
 {
-	std::string res = s;
-	int times = width - s.size();
-	for(int i = 0; i < times; i++)
-		res += " ";
-	return res;
+	return s + spaces(width-s.size());
 }
 
 size_t strlen(const std::string& s)

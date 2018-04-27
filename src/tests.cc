@@ -209,6 +209,9 @@ run_regular_tests()
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
 
+	check(pad_left("hello", 7) == "  hello", "padleft");
+	check(pad_right("hello", 7) == "hello  ", "padright");
+
 	FreeGlobals();
 
 	cout << "Finished test\n";
