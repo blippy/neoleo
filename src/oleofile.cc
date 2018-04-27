@@ -777,10 +777,10 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	old_a0 = Global->a0;
 	Global->a0 = 0;
 
-	struct find* w_find = find_widths (rng->lc, rng->hc);
+	struct find* w_find = find_span(&Global->wids, rng->lc, rng->hc);
 	write_spans(fp, w_find, 'W');
 
-	struct find* h_find = find_heights (rng->lr, rng->hr);
+	struct find* h_find = find_span(&Global->hgts, rng->lr, rng->hr);
 	write_spans(fp, h_find, 'H');
 
 	oleo_fp = fp;

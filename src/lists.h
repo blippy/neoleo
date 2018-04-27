@@ -39,9 +39,7 @@ extern CELLREF highest_col (void);
 extern int get_width (CELLREF col);
 extern int get_nodef_width (CELLREF col);
 extern void set_width (CELLREF col, int wid);
-struct find*  find_widths(CELLREF lo, CELLREF hi);
-//struct find* find_span(CELLREF lo, CELLREF hi);
-//extern int next_width(struct find* w_find, CELLREF *posp);
+struct find* find_span(struct list** spans, CELLREF lo, CELLREF hi);
 int next_span(struct find* s_find, CELLREF *posp);
 extern void shift_widths (int over, CELLREF lo, CELLREF hi);
 extern int get_height (CELLREF row);
@@ -50,32 +48,30 @@ extern void set_height (CELLREF row, int hgt);
 extern void set_user_scales (double hs, double ws);
 extern int get_scaled_height (CELLREF r);
 extern int get_scaled_width (CELLREF c);
-extern struct find* find_heights(CELLREF lo, CELLREF hi);
-//extern int next_height(struct find* h_find, CELLREF *posp);
 extern void shift_heights (int dn, CELLREF lo, CELLREF hi);
 
 struct cf
-  {
-    struct cf *next;
-    struct find *rows, *cols;
-    int make;
-  };
+{
+	struct cf *next;
+	struct find *rows, *cols;
+	int make;
+};
 
 struct list
 {
-  CELLREF lo, hi;
-  struct list *next;
-  char mem[1];
+	CELLREF lo, hi;
+	struct list *next;
+	char mem[1];
 };
 
 struct find
 {
-  struct find *next;
-  CELLREF lo, hi, cur;
-  struct list **start;
-  struct list *curptr;
-  CELLREF left;
-  void *ret;
-  char fini;
-  int ele;
+	struct find *next;
+	CELLREF lo, hi, cur;
+	struct list **start;
+	struct list *curptr;
+	CELLREF left;
+	void *ret;
+	char fini;
+	int ele;
 };

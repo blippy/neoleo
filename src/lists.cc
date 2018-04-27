@@ -642,9 +642,10 @@ set_width (CELLREF col, int wid)
 }
 
 struct find*
-find_widths (CELLREF lo, CELLREF hi)
+find_span(struct list** spans, CELLREF lo, CELLREF hi)
 {
-	return (FPTR) find_rng (&Global->wids, lo, hi, sizeof (int));
+	//return (FPTR) find_rng (&Global->wids, lo, hi, sizeof (int));
+	return (FPTR) find_rng(spans, lo, hi, sizeof (int));
 }
 
 int 
@@ -781,11 +782,6 @@ get_scaled_width (CELLREF c)
 			: (int)(get_width (c) * Global->width_scale * Global->user_width_scale));
 }
 
-
-struct find* find_heights (CELLREF lo, CELLREF hi)
-{
-	return (FPTR) find_rng (&Global->hgts, lo, hi, sizeof (int));
-}
 
 
 void 
