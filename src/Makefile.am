@@ -64,7 +64,7 @@ noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh ref.h \
 		 regions.h sort.h stringo.h stub.h stubs.h \
-		 sysdef.h userpref.h utils.h window.h  \
+		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h 
 
