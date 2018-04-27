@@ -54,26 +54,10 @@ struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
 void
 set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 {
-  if (r1 <= r2)
-    {
-      r->lr = r1;
-      r->hr = r2;
-    }
-  else
-    {
-      r->lr = r2;
-      r->hr = r1;
-    }
-  if (c1 <= c2)
-    {
-      r->lc = c1;
-      r->hc = c2;
-    }
-  else
-    {
-      r->lc = c2;
-      r->hc = c1;
-    }
+	r->lr = std::min(r1, r2);
+	r->hr = std::max(r1, r2);
+	r->lc = std::min(c1, c2);
+	r->hc = std::max(c1, c2);
 }
 
 /* Flush all the cells in a region */
