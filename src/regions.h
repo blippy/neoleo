@@ -41,7 +41,6 @@ extern void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF 
 extern void delete_region (struct rng *where);
 extern void lock_region (struct rng *where, int locked);
 extern void format_region (struct rng *where, int fmt, int just);
-extern void txt_print_region (struct rng *print, FILE *fp);
 extern void move_region (struct rng *fm, struct rng *to);
 extern void copy_region (struct rng *fm, struct rng *to);
 extern void copy_values_region (struct rng *fm, struct rng *to);
