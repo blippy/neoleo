@@ -1,3 +1,4 @@
 #The following packages should be installed:
 
-sudo apt install libncurses5-dev libncurses5-dbg bison flex
+sudo apt install autoconf bison build-essential flex pkgconf
+sudo apt install libncurses5-dev libncurses5-dbg
