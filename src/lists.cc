@@ -29,20 +29,10 @@ using std::cout;
 #include "funcdef.h"
 #include "utils.h"
 
-#include "sysdef.h"
-#ifndef _DEBUG_MALLOC_INC
-#define local_free free
-#else 
-static void local_free(void* p)
-{
-	free (p);
-}
-#endif /* def _DEBUG_MALLOC_INC */
 
 #define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free local_free
+#define obstack_chunk_free free
 #include "obstack.h"
-#include "global.h"
 #include "cell.h"
 #include "ref.h"
 #include "window.h"

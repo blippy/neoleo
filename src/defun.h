@@ -433,15 +433,13 @@ DEFUN ("copy-values-in-region",
 "RCopy values in %0 to:",
 #endif
 
-DEFUN ("move-region",
-       FDmove_region, FAmove_region, to_vptr(move_region))
+DEFUN ("move-region", FDmove_region, FAmove_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
 "rMove region? ",
 "RMove region %0 to? ",
 #endif
 
-DEFUN ("move-marked-region",
-       FDmove_marked_region, FAmove_marked_region, to_vptr(move_region))
+DEFUN ("move-marked-region", FDmove_marked_region, FAmove_marked_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
 "@Move region? ",
 "RMove region %0 to? ",
