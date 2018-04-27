@@ -24,7 +24,6 @@
 #define obstack_chunk_free free
 #include "obstack.h"
 #include "funcdef.h"
-#include "sysdef.h"
 #include <iostream>
 #include <string.h>
 #include <string>

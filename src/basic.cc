@@ -25,7 +25,6 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include "sysdef.h"
 #include "basic.h"
 #include "cmd.h"
 #include "regions.h"

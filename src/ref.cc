@@ -22,18 +22,10 @@
 
 #include <stdlib.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <iostream>
 #include <map>
+#include <math.h>
 #include <string>
-//#include <vector>
 
 #include "global.h"
 #include "funcdef.h"
@@ -41,7 +33,6 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
-#include "sysdef.h"
 #include "cell.h"
 #include "eval.h"
 #include "io-abstract.h"

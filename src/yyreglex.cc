@@ -1,5 +1,6 @@
 #include <map>
 #include <iostream>
+#include <cstring>
 
 #include "errors.h"
 #include "node.h"

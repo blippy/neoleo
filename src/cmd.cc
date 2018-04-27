@@ -18,21 +18,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-static_assert(false);
-#include <dmalloc.h>
-#endif
-
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <memory>
 #include <stdarg.h>
-#include "sysdef.h"
 #include <termios.h>
 #include <malloc.h>
 #include <stdbool.h>

@@ -58,7 +58,6 @@ using namespace std::literals;
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
-#include "sysdef.h"
 
 #include "global.h"
 #include "errors.h"

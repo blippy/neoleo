@@ -29,7 +29,6 @@
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
-#include "sysdef.h"
 
 #include "funcs.h"
 #include "global.h"

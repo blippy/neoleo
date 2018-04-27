@@ -25,18 +25,9 @@
 #include <string>
 #include <stdlib.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <string.h>
 #include "funcdef.h"
 #include <stdio.h>
-#include "sysdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-generic.h"

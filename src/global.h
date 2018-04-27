@@ -19,7 +19,14 @@
 
 #include <string>
 
-#include "sysdef.h"
+#ifndef RETSIGTYPE
+#define RETSIGTYPE void
+#endif /* RETSIGTYPE */
+
+#ifndef VOIDSTAR
+#define VOIDSTAR void*
+#endif
+
 /*
  * All kinds of other global stuff
  */

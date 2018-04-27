@@ -24,22 +24,16 @@
 //#include <string>
 #include <iomanip>
 #include <locale>
+#include <math.h>
+#include <signal.h>
 #include <sstream>
 
-static char *rcsid = "$Id: ";
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
 #include <string.h>
 
 #include <stdio.h>
 #include <ctype.h>
-#include "sysdef.h"
+
+#include "config.h"
 #include "io-utils.h"
 #include "cell.h"
 #include "ref.h"
@@ -49,18 +43,12 @@ static char *rcsid = "$Id: ";
 #include "lists.h"
 #include "io-term.h"
 #include "cmd.h"
-//#include "sylk.h"
 #include "basic.h"
 #include "oleofile.h"
-//#include "sc.h"
 #include "list.h"
 #include "numeric.h"
 #include "utils.h"
 #include "logging.h"
-
-#ifdef	HAVE_TIME_H
-#include <time.h>
-#endif
 
 
 /* Routines for formatting cell values */

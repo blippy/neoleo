@@ -25,16 +25,13 @@
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
-#include "sysdef.h"
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
 #include "io-term.h"
-//#include "font.h"
 #include "global.h"
 #include "cell.h"
 #include "line.h"
-//#include "sylk.h"
 #include "lists.h"
 #include "ref.h"
 #include "regions.h"

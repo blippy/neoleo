@@ -23,25 +23,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#include <sys/stat.h>
 #include <unistd.h>
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
 
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-
-#include "sysdef.h"
 #include <stdarg.h>
 #include <fcntl.h>
 
+
 #include "cmd.h"
+#include "config.h"
 
 /* unistd.h defines _POSIX_VERSION on POSIX.1 systems.  */
 #if defined(DIRENT) || defined(_POSIX_VERSION)

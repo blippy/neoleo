@@ -18,10 +18,6 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 
 #include <sys/types.h>
 
@@ -100,7 +96,7 @@ extern struct tm * gmtime (const time_t *);
 //extern char *strdup (const char *);
 #endif
 #ifndef HAVE_STRICMP
-extern int stricmp (const char *, const char *);
+//extern int stricmp (const char *, const char *);
 #endif
 //#ifndef HAVE_STRSTR
 //extern char *strstr (const char *, const char *);
@@ -133,8 +129,3 @@ extern char *strdup ();
 #ifndef __STDC__
 #define volatile
 #endif
-#ifdef __cplusplus
-}
-#endif
-
-

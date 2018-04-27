@@ -20,15 +20,14 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <math.h>
 #include <stdlib.h>
-
 #include <stdio.h>
-
 #include <string>
 #include <map>
+
 #include "funcs.h"
 #include "parse_parse.h"
-#include "sysdef.h"
 
 
 #ifdef _DEBUG_MALLOC_INC

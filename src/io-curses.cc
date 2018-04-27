@@ -46,7 +46,6 @@ using namespace std::string_literals;
 #include <ctype.h>
 #include <signal.h>
 #undef NULL
-#include "sysdef.h"
 #include "global.h"
 #include "cell.h"
 #include "cmd.h"

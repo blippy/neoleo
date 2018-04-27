@@ -22,6 +22,7 @@
 
 #include <ctype.h>
 #include <cmath>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,7 +34,6 @@ constexpr auto pi = std::acos(-1);
 #define obstack_chunk_free free
 #include "obstack.h"
 
-#include "sysdef.h"
 #include "global.h"
 #include "cell.h"
 #include "eval.h"

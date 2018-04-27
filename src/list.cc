@@ -20,19 +20,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <string.h>
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
-#include "sysdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-generic.h"

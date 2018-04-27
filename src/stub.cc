@@ -38,6 +38,7 @@ static const char *rcsid = "$Id: stub.c,v 1.5 2000/07/22 06:13:16 danny Exp $";
 #include "global.h"
 #include "cmd.h"
 #include "stub.h"
+#include "utils.h"
 
 static void
 find_args (struct command_arg ** argv_out, int argc, struct command_frame * frame)
