@@ -22,15 +22,6 @@
 
 static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 
-#ifdef HAVE_CONFIG_H
-//#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-static_assert(false);
-#include <dmalloc.h>
-#endif
-
 #include <assert.h>
 #include <errno.h>
 #include <iostream>
@@ -49,7 +40,6 @@ static_assert(false);
 #include "cell.h"
 #include "cmd.h"
 #include "format.h"
-//#include "getopt.h"
 #include "init.h"
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
@@ -59,13 +49,13 @@ static_assert(false);
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
-
 #include "oleox.h"
 
 using std::cerr;
 using std::endl;
 
 
+#include "defuns.h"
 #include "key.h"
 #include "line.h"
 #include "lists.h"
@@ -73,27 +63,19 @@ using std::endl;
 #define obstack_chunk_free free
 #include "obstack.h"
 #include "oleofile.h"
-//#include "print.h"
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
 #include "funcs.h"
-//#include "graph.h"
-//#include "postscript.h"
-
 #include "userpref.h"
-//#include "mysql.h"
 
 
 #include "list.h"
-//#include "sc.h"
-//#include "sylk.h"
 
 #ifdef	HAVE_PANIC_SAVE
 #include "panic.h"
 #endif
 
-#include "defuns.h" // mcarter
 
 using std::cout;
 using std::endl;
@@ -125,13 +107,7 @@ fairly_std_main_loop(void)
 }
 
 
-/* Avoid needless messages to stdout. */
-//int spread_quietly = 0;
-
-
-
 /* Avoid using Displays no matter what else. (-x --no-x) */
-//bool no_x = false;
 bool no_curses = false;
 
 /* What kind of display? */
@@ -383,91 +359,90 @@ set_options (char * ptr)
 void
 read_mp_usr_fmt (char *ptr)
 {
-  int usr_n = -1;
-  int n_chrs = 0;
-  char *p;
-  char *buf[9];
-  int i;
+	int usr_n = -1;
+	int n_chrs = 0;
+	char *p;
+	char *buf[9];
+	int i;
 
-  for (i = 0; i < 9; i++)
-	  buf[i] = 0; // TODO Audit this for correctness.
-    //buf[i] = "";
-  p = ptr;
-  while (*p == ';')
-    {
-      *p++ = '\0';
-      switch (*p++)
+	for (i = 0; i < 9; i++)
+		buf[i] = 0; // TODO Audit this for correctness.
+	p = ptr;
+	while (*p == ';')
 	{
-	case 'N':
-	  usr_n = astol (&p) - 1;
-	  break;
-	case 'H':
-	  switch (*p++)
-	    {
-	    case 'P':
-	      i = 0;
-	      break;
-	    case 'N':
-	      i = 1;
-	      break;
-	    default:
-	      goto badline;
-	    }
-	  goto count_chars;
-	case 'T':
-	  switch (*p++)
-	    {
-	    case 'P':
-	      i = 2;
-	      break;
-	    case 'N':
-	      i = 3;
-	      break;
-	    default:
-	      goto badline;
-	    }
-	  goto count_chars;
+		*p++ = '\0';
+		switch (*p++)
+		{
+			case 'N':
+				usr_n = astol (&p) - 1;
+				break;
+			case 'H':
+				switch (*p++)
+				{
+					case 'P':
+						i = 0;
+						break;
+					case 'N':
+						i = 1;
+						break;
+					default:
+						goto badline;
+				}
+				goto count_chars;
+			case 'T':
+				switch (*p++)
+				{
+					case 'P':
+						i = 2;
+						break;
+					case 'N':
+						i = 3;
+						break;
+					default:
+						goto badline;
+				}
+				goto count_chars;
 
-	case 'Z':
-	  i = 4;
-	  goto count_chars;
+			case 'Z':
+				i = 4;
+				goto count_chars;
 
-	case 'C':
-	  i = 5;
-	  goto count_chars;
+			case 'C':
+				i = 5;
+				goto count_chars;
 
-	case 'D':
-	  i = 6;
-	  goto count_chars;
+			case 'D':
+				i = 6;
+				goto count_chars;
 
-	case 'P':
-	  i = 7;
-	  goto count_chars;
+			case 'P':
+				i = 7;
+				goto count_chars;
 
-	case 'S':
-	  i = 8;
-	  goto count_chars;
+			case 'S':
+				i = 8;
+				goto count_chars;
 
-	count_chars:
-	  buf[i] = p;
-	  n_chrs++;
-	  while (*p && *p != ';')
-	    {
-	      p++;
-	      n_chrs++;
-	    }
-	  break;
+count_chars:
+				buf[i] = p;
+				n_chrs++;
+				while (*p && *p != ';')
+				{
+					p++;
+					n_chrs++;
+				}
+				break;
 
-	default:
-	badline:
-	  io_error_msg ("Unknown OLEO line %s", ptr);
-	  return;
+			default:
+badline:
+				io_error_msg ("Unknown OLEO line %s", ptr);
+				return;
+		}
 	}
-    }
-  if (*p || usr_n < 0 || usr_n > 15)
-    goto badline;
+	if (*p || usr_n < 0 || usr_n > 15)
+		goto badline;
 
-  set_usr_stats (usr_n, buf);
+	set_usr_stats (usr_n, buf);
 }
 
 /* Modify this to write out *all* the options */
@@ -706,9 +681,7 @@ void _io_update_width_nothing(int col, int wid) {};
 void 
 InitializeGlobals(void)
 {
-	//Global->FileName = NULL;
 	FileSetCurrentFileName("unnamed.oleo");
-	//assert(Global->valid == 666);
 	Global->display_opened = 0;
 	Global->return_from_error = 0;
 
@@ -750,27 +723,13 @@ InitializeGlobals(void)
 	Global->auto_motion_direction = magic_down;
 	Global->sl_sep = '\t';
 
-	//Global->CurrentPrintDriver = &PostScriptPrintDriver;
-	//Global->zoom = 1.0;
-
 	Global->mouse_id = 0;
-
 	Global->oldLocale = NULL;
 
 	UserPreferences.run_load_hooks = 1;
 	/* End initialize */
 
 	__make_backups = 1;
-
-	// mcarter added:
-	//
-	/*
-	   io_recenter_all_win = _default_io_recenter_all_win;
-	   io_recenter_cur_win = _default_io_recenter_cur_win;
-	   set_curow = _default_set_curow;
-	   set_cucol = _default_set_cucol;
-	   */
-
 	io_set_window_name = _do_nothing_const_char_s;
 	io_run_main_loop = _do_nothing;
 	io_do_button = _io_do_button_nothing;
