@@ -449,9 +449,8 @@ _io_open_display (void)
   io_init_windows (LINES, COLS, 1, 2, 1, 1, 1, 1);
   // io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
   info_rows = 1;
-  print_width = columns;		/* Make ascii print width == terminal width. */
+  //print_width = columns;		/* Make ascii print width == terminal width. */
 
-  //show_main_menu();
 }
 
 void

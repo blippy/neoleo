@@ -139,7 +139,7 @@ precision_region (struct rng *where, int precision)
     }
 }
 
-unsigned int print_width;
+//unsigned int print_width;
 
 
 

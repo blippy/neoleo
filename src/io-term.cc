@@ -245,7 +245,7 @@ do_set_option (char *ptr)
   if (set_opt && !strincmp ("print ", ptr, 6))
     {
       ptr += 6;
-      print_width = astol (&ptr);
+      //print_width = astol (&ptr);
       return 0;
     }
   if (set_opt && !strincmp ("file ", ptr, 5))

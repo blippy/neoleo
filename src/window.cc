@@ -1297,7 +1297,7 @@ void
 io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
 		 int lr, int lc) 
 {
-  print_width = 80;		/* default ascii print width */
+  //print_width = 80;		/* default ascii print width */
   Global->scr_lines = sl;
   Global->scr_cols = sc;
   input_rows = ir;
