@@ -104,11 +104,7 @@ fairly_std_main_loop(void)
 }
 
 
-/* Avoid using Displays no matter what else. (-x --no-x) */
-bool no_curses = false;
-
 /* What kind of display? */
-bool using_x = false;
 bool using_curses = false;
 bool user_wants_headless = false;
 
@@ -740,76 +736,74 @@ InitializeGlobals(void)
 void
 oleo_catch_signals(void (*h)(int))
 {
-  /*
-   * These probably don't all need to be ifdef, but
-   * it is harmless.
-   */
+	/*
+	 * These probably don't all need to be ifdef, but
+	 * it is harmless.
+	 */
 #ifdef SIGCONT
-  signal (SIGCONT, continue_oleo);
+	signal (SIGCONT, continue_oleo);
 #endif
 #ifdef SIGPIPE
-  signal (SIGPIPE, h);
+	signal (SIGPIPE, h);
 #endif
 
-  /*
-   * It makes little sense to block all signals when using X
-   */
-  if (! using_x) {
+	/*
+	 * It makes little sense to block all signals when using X
+	 */
 #ifdef SIGINT
-  signal (SIGINT, h);
+	signal (SIGINT, h);
 #endif
 #ifdef SIGQUIT
-  signal (SIGQUIT, h);
+	signal (SIGQUIT, h);
 #endif
 #ifdef SIGILL
-  signal (SIGILL, h);
+	signal (SIGILL, h);
 #endif
 #ifdef SIGEMT
-  signal (SIGEMT, h);
+	signal (SIGEMT, h);
 #endif
 #ifdef SIGBUS
-  signal (SIGBUS, h);
+	signal (SIGBUS, h);
 #endif
 #ifdef SIGSEGV
-  signal (SIGSEGV, h);
+	signal (SIGSEGV, h);
 #endif
 #ifdef	SIGHUP
-  signal(SIGHUP, h);
+	signal(SIGHUP, h);
 #endif
 #ifdef	SIGTRAP
-  signal(SIGTRAP, h);
+	signal(SIGTRAP, h);
 #endif
 #ifdef	SIGABRT
-  signal(SIGABRT, h);
+	signal(SIGABRT, h);
 #endif
 #ifdef	SIGFPE
-  signal(SIGFPE, h);
+	signal(SIGFPE, h);
 #endif
 #ifdef	SIGSYS
-  signal(SIGSYS, h);
+	signal(SIGSYS, h);
 #endif
 #ifdef	SIGALRM
-  signal(SIGALRM, h);
+	signal(SIGALRM, h);
 #endif
 #ifdef	SIGTERM
-  signal(SIGTERM, h);
+	signal(SIGTERM, h);
 #endif
 #ifdef	SIGXCPU
-  signal(SIGXCPU, h);
+	signal(SIGXCPU, h);
 #endif
 #ifdef	SIGVTALRM
-  signal(SIGVTALRM, h);
+	signal(SIGVTALRM, h);
 #endif
 #ifdef	SIGPROF
-  signal(SIGPROF, h);
+	signal(SIGPROF, h);
 #endif
 #ifdef	SIGUSR1
-  signal(SIGUSR1, h);
+	signal(SIGUSR1, h);
 #endif
 #ifdef	SIGUSR2
-  signal(SIGUSR2, h);
+	signal(SIGUSR2, h);
 #endif
-  }
 }
 
 
@@ -830,21 +824,13 @@ void
 choose_display(bool force_cmd_graphics)
 {
 	using_curses = false;
-	using_x      = false;
 
 	if(force_cmd_graphics || user_wants_headless) {
 		headless_graphics();
 		return;
 	}
 
-	if(!no_curses) {
-		tty_graphics ();
-		using_curses = true;
-		return;
-	}
-
-	// if all else fails, choose headless
-	headless_graphics();
-	
+	tty_graphics ();
+	using_curses = true;
 }
 

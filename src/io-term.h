@@ -23,12 +23,9 @@
 #include <setjmp.h>
 #include <string>
 #include "global.h"
-//#include "defuns.h"
 
-extern bool using_x;
 extern bool using_curses;
 extern bool user_wants_headless;
-//extern jmp_buf error_exception;
 extern char *command_line_forth_file;
 
 
@@ -46,18 +43,6 @@ extern unsigned int saved_default_height;
 extern int default_jst;
 extern int default_fmt;
 extern int default_lock;
-
-
-// mcarter
-//extern struct cmd_func cmd_funcs[];
-/*
-struct cmd_func cmd_funcs[] =
-{
-	  { "fnord", FDfnord, FAfnord, DFfnord, fnord },
-#include "defun.h"
-	    { 0, 0, 0, 0, 0 }
-};
-*/
 
 
 /* When printing ascii output, this controls page width. */
@@ -92,14 +77,6 @@ extern int add_usr_cmds (struct cmd_func *new_cmds);
 extern int main (int argc, char **argv);
 extern void InitializeGlobals(void);
 void save_preferences();
-
-#ifndef FALSE
-#define FALSE false
-#endif /* FALSE */
-
-#ifndef TRUE
-#define TRUE true
-#endif /* TRUE */
 
 extern int option_filter;
 extern std::string option_tests_argument;
