@@ -45,6 +45,7 @@ using std::endl;
 #include "io-curses.h"
 #include "io-edit.h"
 #include "regions.h"
+#include "spans.h"
 #include "window.h"
 #include "lists.h"
 #include "tbl.h"

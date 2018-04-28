@@ -33,7 +33,7 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 obstack.cc \
 		 oleofile.cc \
 		 ref.cc regions.cc \
-		 sort.cc stringo.cc stub.cc \
+		 sort.cc spans.cc stringo.cc stub.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
@@ -63,7 +63,7 @@ noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 oleofile.h  oleox.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh ref.h \
-		 regions.h sort.h stringo.h stub.h stubs.h \
+		 regions.h sort.h spans.h stringo.h stub.h stubs.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h 

@@ -43,6 +43,7 @@
 #include "decompile.h"
 #include "userpref.h"
 #include "shell.h"
+#include "spans.h"
 #include "utils.h"
 
 using std::cout;

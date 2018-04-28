@@ -34,6 +34,7 @@
 #include "lists.h"
 #include "cell.h"
 #include "io-utils.h"
+#include "spans.h"
 #include "utils.h"
 
 /*

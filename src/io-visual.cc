@@ -20,6 +20,7 @@
 #include "lists.h"
 #include "logging.h"
 #include "ref.h"
+#include "spans.h"
 #include "utils.h"
 
 using std::cout;

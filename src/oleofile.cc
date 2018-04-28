@@ -20,11 +20,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "utils.h"
-#include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
+
+#include "funcdef.h"
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
@@ -39,6 +38,8 @@
 #include "cmd.h"
 #include "decompile.h"
 #include "lists.h"
+#include "spans.h"
+#include "utils.h"
 
 /* These functions read and write OLEO style files. */
 

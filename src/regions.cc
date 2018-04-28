@@ -24,10 +24,10 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-
 #include <string.h>
-#include "funcdef.h"
 #include <stdio.h>
+
+#include "funcdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-generic.h"
@@ -41,6 +41,7 @@
 #include "cmd.h"
 #include "sort.h"
 #include "basic.h"
+#include "spans.h"
 
 using std::cout;
 using std::endl;

@@ -20,7 +20,6 @@
 
 #include <string.h>
 
-#include "funcdef.h"
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -28,6 +27,7 @@
 
 #undef NULL
 
+#include "funcdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-utils.h"
@@ -38,6 +38,7 @@
 #include "format.h"
 #include "lists.h"
 #include "regions.h"
+#include "spans.h"
 #include "utils.h"
 #include "decompile.h"
 

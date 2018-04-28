@@ -17,7 +17,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <deque>
 #include <map>
 #include <string>
 
@@ -69,11 +68,6 @@ struct rng
 };
 
 typedef struct rng range_t;
-
-
-typedef struct span_find {
-	std::deque<std::pair<int, int>> dq;
-} span_find_t;
 
 /* A ref_fm structure contains a list of all cells that reference some
  * value.  The value can be another cell or some global (such as the system
@@ -170,7 +164,6 @@ extern unsigned char parse_cell_or_range (char **, struct rng *);
 struct var; /* in case it hasn't been declared yet */
 extern void for_all_vars (void (*)(char *, struct var *));
 
-typedef std::map<int,int> span_t; // used for the widths and heights of cells
 /*
  * Forward declarations required to get the global variable to compile
  */
@@ -178,7 +171,6 @@ struct	CursesGlobalType;
 struct	MotifGlobalType;
 struct	DatabaseGlobalType;
 
-inline span_t the_wids, the_hgts;
 /*
  * This structure is a start at cleaning up global variables that are
  * around all over.

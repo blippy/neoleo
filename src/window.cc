@@ -18,13 +18,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,6 +32,7 @@
 #include "cmd.h"
 #include "lists.h"
 #include "regions.h"
+#include "spans.h"
 #include "utils.h"
 
 /* Low level window operators. */

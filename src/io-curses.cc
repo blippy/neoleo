@@ -23,7 +23,6 @@
 
 #include <iostream>
 #include <assert.h>
-#include "funcdef.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -49,6 +48,7 @@ using namespace std::string_literals;
 #include "global.h"
 #include "cell.h"
 #include "cmd.h"
+#include "funcdef.h"
 #include "line.h"
 #include "io-curses.h"
 #include "io-generic.h"
@@ -58,6 +58,7 @@ using namespace std::string_literals;
 #include "io-utils.h"
 #include "lists.h"
 #include "regions.h"
+#include "spans.h"
 #include "window.h"
 #include "key.h"
 #include "input.h"
