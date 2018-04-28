@@ -31,10 +31,6 @@
 #include "line.h"
 #include "window.h"
 
-#ifndef VOLATILE
-#define VOLATILE volatile
-#endif
-
 EXTERN void (*io_open_display) (void);
 EXTERN void (*io_redisp) (void);	/* Refresh the existing image. */
 EXTERN void (*io_repaint) (void);	/* $$$ Recompute the image. */
