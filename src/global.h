@@ -168,7 +168,6 @@ extern void for_all_vars (void (*)(char *, struct var *));
  * Forward declarations required to get the global variable to compile
  */
 struct	CursesGlobalType;
-struct	MotifGlobalType;
 struct	DatabaseGlobalType;
 
 /*
@@ -187,14 +186,6 @@ struct OleoGlobal {
 /* This is whether the alarm should go off at all. */
 	unsigned int			alarm_active;
 
-/* Jump here on error.  This simply restarts the top 
- * level command loop.  User state should have been 
- * reset appropriately before the longjmp.
- *
- * mcarter 22-Mar-2017 I am trying to eliminate set/longjmps
- * in favour of exception handling in C++
- */
-	//jmp_buf				error_exception;
 /* From Window.c */
 	int				scr_lines, scr_cols, user_input, user_status, input,
 					status, input_rows, status_rows, label_rows, label_emcols;
