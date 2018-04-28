@@ -65,8 +65,6 @@ using std::endl;
 #include "window.h"
 #include "funcs.h"
 #include "userpref.h"
-
-
 #include "list.h"
 
 #ifdef	HAVE_PANIC_SAVE
@@ -677,24 +675,10 @@ void
 InitializeGlobals(void)
 {
 	FileSetCurrentFileName("unnamed.oleo");
-	Global->display_opened = 0;
-	Global->return_from_error = 0;
-
-	/* Initialize stuff that's now in Global */
-	Global->bkgrnd_recalc = 1;
-	Global->auto_recalc = 1;
-	Global->a0 = 0;
-	Global->topclear = 0;
-	Global->alarm_seconds = 1;
-	Global->alarm_active = 1;
 
 	/* From window.c */
-	Global->scr_lines = 24;
-	Global->scr_cols = 80;
 	user_input = 1;
 	user_status = 2;
-	Global->input = 0;
-	Global->status = 1;
 	input_rows = 1;
 	status_rows = 1;
 	default_right_border = 0;
@@ -704,27 +688,10 @@ InitializeGlobals(void)
 	wins = 0;
 	win_id = 1;
 
-	Global->sylk_a0 = 1;
-
-	Global->user_height_scale = 1.;
-	Global->user_width_scale = 1.;
-	Global->height_scale = 1.;
-	Global->width_scale = 1.;
-
-	Global->cell_font_point_size = 12;
-	Global->block_on_getch = 1;
-
-	Global->display_formula_mode = 0;
 	Global->auto_motion_direction = magic_down;
-	Global->sl_sep = '\t';
-
-	Global->mouse_id = 0;
-	Global->oldLocale = NULL;
-
-	UserPreferences.run_load_hooks = 1;
-	/* End initialize */
 
 	__make_backups = 1;
+
 	io_set_window_name = _do_nothing_const_char_s;
 	io_run_main_loop = _do_nothing;
 	io_do_button = _io_do_button_nothing;

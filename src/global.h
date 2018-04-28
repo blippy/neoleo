@@ -179,15 +179,15 @@ struct OleoGlobal {
 	int				modified;
 	CELLREF				cur_row, cur_col;
 /* User settable options */
-	int				bkgrnd_recalc, auto_recalc, a0, topclear, sylk_a0;
+	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 /* This is how frequently the alarm should go off. */
-	unsigned int			alarm_seconds;
+	unsigned int			alarm_seconds = 1;
 /* This is whether the alarm should go off at all. */
-	unsigned int			alarm_active;
+	unsigned int			alarm_active = 1;
 
 /* From Window.c */
-	int				scr_lines, scr_cols, user_input, user_status, input,
-					status, input_rows, status_rows, label_rows, label_emcols;
+	int				scr_lines = 24, scr_cols = 80, user_input, user_status, input = 0,
+					status = 1, input_rows, status_rows, label_rows, label_emcols;
 	struct info_buffer		*current_info;
 	int				info_rows, info_line, info_over;
 	int				default_right_border, default_bottom_border;
@@ -198,12 +198,11 @@ struct OleoGlobal {
 	struct CursesGlobalType		*CursesGlobal;
 
 /* From lists.c */
-	float				user_height_scale, user_width_scale,
-					height_scale, width_scale;
+	float				user_height_scale = 1.0, user_width_scale = 1.0,
+					height_scale = 1.0, width_scale = 1.0;
 
-	int				cell_font_point_size, block_on_getch;
-	char				*io_x11_display_name;
-	int				run_load_hooks, sneaky_linec;
+	int				cell_font_point_size = 12, block_on_getch = 1;
+	int				run_load_hooks = 1, sneaky_linec;
 
 
 	struct cf			*fp;
@@ -211,26 +210,16 @@ struct OleoGlobal {
 	//struct find			*w_find;
 	//struct find			*h_find;
 
-	int				display_formula_mode;
+	int				display_formula_mode = 0;
 	struct find			*finds = 0;
 
 /* Basic.c */
 	int				auto_motion_direction;
 
 /* List.c */
-	char				sl_sep;
+	char				sl_sep = '\t';
+	int				display_opened = 0;
 
-	int				display_opened;
-
-/* pcl.c */
-	int				need_formfeed;
-
-/* print.c 
-	float				zoom;
-	struct PrintDriver		*CurrentPrintDriver;
-	int				interline, TopBorderHeight, BottomBorderHeight,
-					LeftBorderWidth, RightBorderWidth;
-*/
 
 /* window.c */
 	struct mouse_event		*current_mouse, *free_mouse;
@@ -238,12 +227,8 @@ struct OleoGlobal {
 
 /* new stuff */
 	char				*encoding = 0;
-	int				return_from_error;
+	int				return_from_error = 0;
 	int				had_error;
-
-	char				*oldLocale;
-
-	/* added by mcarter: */
 	int argc;
 	char** argv;
 };
