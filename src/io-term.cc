@@ -59,9 +59,6 @@ using std::endl;
 #include "key.h"
 #include "line.h"
 #include "lists.h"
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
 #include "oleofile.h"
 #include "ref.h"
 #include "regions.h"
