@@ -151,13 +151,13 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				if (byte == IF || byte == IF_L)
 				{
 					log_debug_1("decomp:IF(_L)");
+					const char* fmt;
 					if (c_node[0]->tightness <= 1)
-						newn = n_alloc(1, "(%s) ? %s : %s", 
-								c_node[0]->string, c_node[1]->string, c_node[2]->string);
+						fmt = "(%s) ? %s : %s";
 					else
-						newn = n_alloc(1, "%s ? %s : %s", 
-								c_node[0]->string.c_str(), c_node[1]->string.c_str(), 
-								c_node[2]->string.c_str());
+						fmt = "%s ? %s : %s";
+					newn = n_alloc(1, fmt, c_node[0]->string.c_str(), 
+							c_node[1]->string.c_str(), c_node[2]->string.c_str());
 				}
 				else
 					newn = n_alloc(1000, F3, f->fn_str, 
