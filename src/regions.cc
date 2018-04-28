@@ -421,14 +421,14 @@ move_region (struct rng *fm, struct rng *to)
 		delete_region (&del_to_2);
 
 	if (to->lr == MIN_ROW && to->hr == MAX_ROW) {
-		shift_spans(&Global->wids, ov, fm->lc, fm->hc);
+		shift_spans(the_wids, ov, fm->lc, fm->hc);
 		//shift_widths (ov, fm->lc, fm->hc);
 		must_repaint = 1;
 	}
 
 	if (to->lc == MIN_COL && to->hc == MAX_COL) {
 		//shift_heights (dn, fm->lr, fm->hr);
-		shift_spans(&Global->hgts, dn, fm->lr, fm->hr);
+		shift_spans(the_hgts, dn, fm->lr, fm->hr);
 		must_repaint = 1;
 	}
 

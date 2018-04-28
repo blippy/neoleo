@@ -694,17 +694,17 @@ write_mp_windows (
   free (line.buf);
 }
 
-void write_spans(FILE* fp, struct find* s_find, char typechar)
+void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 {
 	CELLREF c;
-	unsigned short w = next_span(s_find, &c);
+	unsigned short w = next_span(s_find, c);
 	while (w)
 	{
 		CELLREF cc, ccc;
 		unsigned short ww;
 		cc = c;
 		do
-			ww = next_span(s_find, &ccc);
+			ww = next_span(s_find, ccc);
 		while (ccc == ++cc && ww == w);
 		(void) fprintf (fp, "F;%c%u %u %u\n", typechar, c, cc - 1, w - 1);
 		c = ccc;
@@ -774,10 +774,10 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	old_a0 = Global->a0;
 	Global->a0 = 0;
 
-	struct find* w_find = find_span(&Global->wids, rng->lc, rng->hc);
+	span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
 	write_spans(fp, w_find, 'W');
 
-	struct find* h_find = find_span(&Global->hgts, rng->lr, rng->hr);
+	span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
 	write_spans(fp, h_find, 'H');
 
 	oleo_fp = fp;
