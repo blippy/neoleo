@@ -76,17 +76,18 @@ typedef struct rng range_t;
  * These structures are hash-consed and shared.  The hash-cons procedure
  * will re-use a particular structure if there is only one reference to it.
  */
-  struct ref_array
-    {
-      CELLREF ref_row;
-      CELLREF ref_col;
-    };
+struct ref_array
+{
+	CELLREF ref_row;
+	CELLREF ref_col;
+};
+
 struct ref_fm
 {
-  struct ref_fm *refs_next;
-  unsigned short refs_refcnt;
-  unsigned short refs_used;
-  struct ref_array  fm_refs[1];
+	struct ref_fm *refs_next;
+	unsigned short refs_refcnt;
+	unsigned short refs_used;
+	struct ref_array  fm_refs[1];
 };
 
 /* refs_to is a vector of locations in a formula where the
@@ -94,10 +95,10 @@ struct ref_fm
  */
 struct ref_to
 {
-  unsigned short refs_refcnt;
-  struct ref_to *refs_next;
-  unsigned short refs_used;
-  unsigned char to_refs[1];
+	unsigned short refs_refcnt;
+	struct ref_to *refs_next;
+	unsigned short refs_used;
+	unsigned char to_refs[1];
 };
 
 /* These macros are used to extract/store ranges in compiled formulas. */
@@ -106,7 +107,6 @@ struct ref_to
 #define EXP_ADD_RNG		sizeof(struct rng)
 
 extern struct obstack tmp_mem;
-//extern VOIDSTAR tmp_mem_start;
 extern char * tmp_mem_start;
 
 /* Defined in io-utils.c: */
@@ -168,7 +168,6 @@ extern void for_all_vars (void (*)(char *, struct var *));
  * Forward declarations required to get the global variable to compile
  */
 struct	CursesGlobalType;
-struct	DatabaseGlobalType;
 
 /*
  * This structure is a start at cleaning up global variables that are
@@ -196,10 +195,7 @@ struct OleoGlobal {
 	struct window			*cwin, *wins;
 	int				win_id;
 
-	struct MotifGlobalType		*MotifGlobal;
 	struct CursesGlobalType		*CursesGlobal;
-	struct DatabaseGlobalType	*DatabaseGlobal;
-	struct PlotGlobalType		*PlotGlobal;
 
 /* From lists.c */
 	float				user_height_scale, user_width_scale,
@@ -252,7 +248,7 @@ struct OleoGlobal {
 	char** argv;
 };
 
-extern struct OleoGlobal *Global;
+inline struct OleoGlobal *Global = new struct OleoGlobal;
 
 /*
  * Determine which flags are set to indicate META-key

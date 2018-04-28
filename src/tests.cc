@@ -30,7 +30,6 @@ using namespace std::string_literals;
 #include "io-term.h"
 #include "io-utils.h"
 #include "cell.h"
-#include "mdi.h"
 #include "mem.h"
 #include "ref.h"
 #include "byte-compile.h"

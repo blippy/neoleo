@@ -98,25 +98,10 @@ using std::endl;
 using std::cout;
 using std::endl;
 
-//#include "neoleo_swig.h"
-
-#if	ENABLE_NLS
-extern char *gettext(char *);
-#endif
 
 // mcarter
 #define _(x) (x) // TODO get rid of this line
-//#define X_DISPLAY_MISSING
 
-/*
- * The ultimate global variable
- */
-#if 1
-struct OleoGlobal *Global = NULL;
-#else
-struct OleoGlobal	__tempGlobal,
-			*Global = &__tempGlobal;
-#endif
 
 
 /* These are the hooks used to do file-io. */

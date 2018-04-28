@@ -20,7 +20,6 @@
 #include "io-utils.h"
 #include "list.h"
 #include "logging.h"
-#include "mdi.h"
 #include "tests.h"
 #include "utils.h"
 
@@ -366,7 +365,6 @@ main(int argc, char **argv)
 	int command_line_file = 0;	/* was there one? */
 
 	init_native_language_support();
-	MdiInitialize();	/* Create initial Global structure */
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;
