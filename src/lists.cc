@@ -52,6 +52,21 @@ using IPTR = int *;
 using LPTR = list*;
 using LLPTR = list**;
 
+
+struct find
+{
+	struct find *next;
+	CELLREF lo, hi, cur;
+	struct list **start;
+	struct list *curptr;
+	CELLREF left;
+	void *ret;
+	char fini;
+	int ele;
+};
+static struct find *g_finds = 0;
+
+
 struct find* alloc_find_stack()
 {
 	return (struct find *)obstack_alloc (&find_stack, sizeof (struct find));
@@ -86,7 +101,7 @@ resync (struct list *tofree, struct list *newl, int ele)
 			&& (char *) my_cell <= tofree->mem + ele * (1 + tofree->hi - tofree->lo))
 		my_cell = (struct cell *) (newl->mem + ele * (cur_row - newl->lo));
 
-	for (findp = Global->finds; findp; findp = findp->next)
+	for (findp = g_finds; findp; findp = findp->next)
 	{
 		if (tofree == findp->curptr)
 		{
@@ -233,8 +248,8 @@ find_rng (struct list **start, CELLREF lo, CELLREF hi, int ele)
 	}
 	else
 		f->fini = 1;
-	f->next = Global->finds;
-	Global->finds = f;
+	f->next = g_finds;
+	g_finds = f;
 	return f;
 }
 
@@ -336,8 +351,8 @@ make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 #endif
 	f->curptr = ptr;
 	f->ret = ptr->mem + (f->cur - ptr->lo) * ele;
-	f->next = Global->finds;
-	Global->finds = f;
+	f->next = g_finds;
+	g_finds = f;
 	return f;
 }
 
@@ -377,7 +392,7 @@ fini:
 	next = f->next;
 	//obstack_free (&find_stack, f);
 	free_find_stack(f);
-	Global->finds = next;
+	g_finds = next;
 	return 0;
 }
 
@@ -387,8 +402,6 @@ init_cells ()
 {
 	obstack_begin (&find_stack, sizeof (struct find) * 15);
 	Global->the_cols = 0;
-	//Global->wids = 0;
-	//Global->hgts = 0;
 }
 
 
@@ -526,7 +539,7 @@ no_more_cells (void)
 	 */
 
 	old = Global->fp->next;
-	Global->finds = Global->finds->next->next;
+	g_finds = g_finds->next->next;
 	obstack_free (&find_stack, Global->fp);
 	Global->fp = old;
 }

@@ -20,7 +20,6 @@
 extern void flush_everything (void);
 struct cell * find_cell (CELLREF row, CELLREF col);
 struct cell *find_or_make_cell (CELLREF row, CELLREF col);
-
 extern void init_cells (void);
 extern void find_cells_in_range (struct rng *r);
 extern void make_cells_in_range (struct rng *r);
@@ -44,16 +43,4 @@ struct list
 	CELLREF lo, hi;
 	struct list *next;
 	char mem[1];
-};
-
-struct find
-{
-	struct find *next;
-	CELLREF lo, hi, cur;
-	struct list **start;
-	struct list *curptr;
-	CELLREF left;
-	void *ret;
-	char fini;
-	int ele;
 };

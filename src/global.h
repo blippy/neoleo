@@ -203,15 +203,12 @@ struct OleoGlobal {
 
 	int				cell_font_point_size = 12, block_on_getch = 1;
 	int				run_load_hooks = 1, sneaky_linec;
+	int				display_formula_mode = 0;
 
 
 	struct cf			*fp;
 	struct list			*the_cols;
-	//struct find			*w_find;
-	//struct find			*h_find;
 
-	int				display_formula_mode = 0;
-	struct find			*finds = 0;
 
 /* Basic.c */
 	int				auto_motion_direction;
