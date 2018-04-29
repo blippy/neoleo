@@ -446,7 +446,7 @@ move_region (struct rng *fm, struct rng *to)
 	maxr = (dirs[0] > 0) ? rdmax + 1 : -1;
 	for (; nr != maxr; nr += dirs[0])
 	{
-		cmax = max_col (fm->lr + nr);
+		cmax = max_col();
 		if (cmax < fm->lc)
 			cdmax = -1;
 		else if (cmax > fm->hc)

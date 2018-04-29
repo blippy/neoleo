@@ -28,6 +28,6 @@ extern void find_cells_in_range (struct rng *r);
 extern void make_cells_in_range (struct rng *r);
 extern void no_more_cells (void);
 extern CELLREF max_row (CELLREF col);
-extern CELLREF max_col (CELLREF row);
+CELLREF max_col();
 extern CELLREF highest_row (void);
 extern CELLREF highest_col (void);

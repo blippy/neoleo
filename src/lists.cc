@@ -561,13 +561,10 @@ max_row (CELLREF col)
 	return (*ptr)->hi;
 }
 
-CELLREF
-max_col (CELLREF row)
+CELLREF max_col()
 {
+	if (!the_cols) return MIN;
 	struct list *ptr;
-
-	if (!the_cols)
-		return MIN;
 	for (ptr = the_cols; ptr->next; ptr = ptr->next)
 		;
 	return ptr->hi;
@@ -598,13 +595,7 @@ highest_row (void)
 CELLREF 
 highest_col (void)
 {
-	struct list *ptr;
-
-	if (!the_cols)
-		return MIN;
-	for (ptr = the_cols; ptr->next; ptr = ptr->next)
-		;
-	return ptr->hi;
+	return max_col();
 }
 
 
