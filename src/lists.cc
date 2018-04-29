@@ -51,13 +51,6 @@ using IPTR = int *;
 
 
 
-struct cf
-{
-	struct cf *next;
-	struct find *rows, *cols;
-	int make;
-};
-static struct cf* g_fp;
 
 struct list
 {
@@ -453,8 +446,17 @@ find_or_make_cell (CELLREF row, CELLREF col)
 	return (cell*) make (row, v, sizeof (struct cell), ROW_BUF);
 }
 
-void
-find_cells_in_range (struct rng *r)
+////////////////////////////////////////////////////////////////////////////////////////////
+
+struct cf
+{
+	struct cf *next;
+	struct find *rows, *cols;
+	int make;
+};
+static struct cf* g_fp;
+
+void find_cells_in_range (struct rng *r)
 {
 
 	struct cf *newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
