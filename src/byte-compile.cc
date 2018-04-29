@@ -84,8 +84,6 @@ static int patches_allocated;
 static int patches_used;
 static void *fn_stack;
 static void *str_stack;
-struct obstack tmp_mem;
-char *tmp_mem_start;
 
 
 #define V (void(*)())
