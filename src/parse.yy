@@ -55,10 +55,6 @@ using namespace std::literals;
 
 #include <ctype.h>
 
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
-
 #include "global.h"
 #include "errors.h"
 #include "mem.h"
@@ -70,14 +66,8 @@ using namespace std::literals;
 int yyreglex ();
 void yyregerror (std::string_view s);
 
-//#define YYSTYPE _y_y_s_t_y_p_e
-//typedef struct node *YYSTYPE;
-//#define YYREGSTYPE struct node*
-//typedef struct node* YYREGSTYPE;
 YYREGSTYPE  parse_return;
 YYREGSTYPE make_list (YYREGSTYPE, YYREGSTYPE);
-
-extern struct obstack tmp_mem;
 
 void check_parser_called_correctly();
 
@@ -308,9 +298,13 @@ void yyerror (std::string_view s)
 		parse_error=PARSE_ERR;
 }
 
+static mem* _mem_ptr = nullptr;
+
 void* alloc_parsing_memory(size_t nbytes)
 {
-	return obstack_alloc(&tmp_mem, nbytes);
+	void* ptr = malloc(nbytes);
+	_mem_ptr->add_ptr(ptr);
+	return ptr;
 }
 
 YYREGSTYPE
@@ -342,21 +336,15 @@ void check_parser_called_correctly()
 		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
 }
 
-/* mcarter 29-Aug-2017
- * mem_ptr is never actually used, now that I've figured out the source of the
- * memory leak. However, I think I will keep it in for now,
- * as it will allow for the eventual elimination of obstack
- */
-
-static mem* _mem_ptr = nullptr;
-
 int yyparse_parse(const std::string& input, mem& yymem)
 {
 	allow_yyparse = true;	
-	instr = (char*) alloca(input.size()+1);
+	instr = (char*) malloc(input.size()+1);
+	yymem.add_ptr(instr);
 	assert(instr);
 	strcpy(instr, input.c_str());
 	_mem_ptr = &yymem;
+	_mem_ptr->auto_release();
 	int ret = yyparse();
 	allow_yyparse = false;	
 	return ret;

@@ -726,7 +726,7 @@ loop:
 
 	buf_siz = obstack_object_size (&tmp_mem);
 	ret = (char *) ck_malloc (buf_siz);
-	the_mem.add_ptr(ret);
+	//the_mem.add_ptr(ret);
 	bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
 
 	need_relax = 0;
@@ -800,6 +800,10 @@ loop:
 	return ret;
 }
 
+// mcarter 29-Apr-2018
+// caller is responsible for free'ing `char* ret'. The chances are
+// that it will be stored in the cells, and become automatically
+// reaped that way.
 char* parse_and_compile (const char *string, mem& the_mem)
 {
 	char* ret = parse_and_compile_1(string, the_mem);
