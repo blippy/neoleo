@@ -206,10 +206,6 @@ struct OleoGlobal {
 	int				display_formula_mode = 0;
 
 
-	struct cf			*fp;
-	struct list			*the_cols;
-
-
 /* Basic.c */
 	int				auto_motion_direction;
 

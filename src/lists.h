@@ -30,17 +30,3 @@ extern CELLREF max_row (CELLREF col);
 extern CELLREF max_col (CELLREF row);
 extern CELLREF highest_row (void);
 extern CELLREF highest_col (void);
-
-struct cf
-{
-	struct cf *next;
-	struct find *rows, *cols;
-	int make;
-};
-
-struct list
-{
-	CELLREF lo, hi;
-	struct list *next;
-	char mem[1];
-};

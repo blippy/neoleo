@@ -47,11 +47,28 @@ using std::cout;
 static struct obstack find_stack;
 
 
-using FPTR = find *;
 using IPTR = int *;
+
+
+
+struct cf
+{
+	struct cf *next;
+	struct find *rows, *cols;
+	int make;
+};
+static struct cf* g_fp;
+
+struct list
+{
+	CELLREF lo, hi;
+	struct list *next;
+	char mem[1];
+};
+struct list* the_cols = 0;
+
 using LPTR = list*;
 using LLPTR = list**;
-
 
 struct find
 {
@@ -65,6 +82,9 @@ struct find
 	int ele;
 };
 static struct find *g_finds = 0;
+
+
+using FPTR = find *;
 
 
 struct find* alloc_find_stack()
@@ -401,7 +421,7 @@ void
 init_cells ()
 {
 	obstack_begin (&find_stack, sizeof (struct find) * 15);
-	Global->the_cols = 0;
+	the_cols = 0;
 }
 
 
@@ -412,14 +432,14 @@ flush_everything (void)
 	int n;
 
 	flush_variables ();
-	for (ptr = Global->the_cols; ptr; ptr = nxt)
+	for (ptr = the_cols; ptr; ptr = nxt)
 	{
 		nxt = ptr->next;
 		for (n = 0; n <= ptr->hi - ptr->lo; n++)
 			flush (*(struct list **) (ptr->mem + (n * sizeof (struct list *))));
 		free (ptr);
 	}
-	Global->the_cols = 0;
+	the_cols = 0;
 	flush_spans();
 }
 
@@ -430,7 +450,7 @@ find_cell (CELLREF row, CELLREF col)
 	//	return alt_find_cell(row, col);
 	void **v;
 
-	v = (void**) find (col, Global->the_cols, sizeof (void *));
+	v = (void**) find (col, the_cols, sizeof (void *));
 	return v ? (cell*) find (row, (LPTR) *v, sizeof (struct cell)) :  0;
 }
 
@@ -439,7 +459,7 @@ find_or_make_cell (CELLREF row, CELLREF col)
 {
 	struct list **v;
 
-	v = (LLPTR) make (col, &Global->the_cols, sizeof (struct list *), COL_BUF);
+	v = (LLPTR) make (col, &the_cols, sizeof (struct list *), COL_BUF);
 	return (cell*) make (row, v, sizeof (struct cell), ROW_BUF);
 }
 
@@ -449,9 +469,9 @@ find_cells_in_range (struct rng *r)
 
 	struct cf *newc = (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
 	newc->make = 0;
-	newc->next = Global->fp;
-	Global->fp = newc;
-	newc->rows = (FPTR) find_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *));
+	newc->next = g_fp;
+	g_fp = newc;
+	newc->rows = (FPTR) find_rng (&the_cols, r->lc, r->hc, sizeof (void *));
 	struct list **firstcol = (LLPTR) next_rng (newc->rows, 0);
 	if (firstcol)
 		newc->cols = (FPTR) find_rng (firstcol, r->lr, r->hr, sizeof (struct cell));
@@ -465,9 +485,9 @@ make_cells_in_range (struct rng *r)
 
 	struct cf *newc =  (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
 	newc->make = 1;
-	newc->next = Global->fp;
-	Global->fp = newc;
-	newc->rows = (FPTR) make_rng (&Global->the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
+	newc->next = g_fp;
+	g_fp = newc;
+	newc->rows = (FPTR) make_rng (&the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
 	struct list **firstcol = (LLPTR) next_rng (newc->rows, 0);
 	newc->cols = (FPTR) make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
 }
@@ -480,21 +500,21 @@ next_cell_in_range (void)
 
 	for (;;)
 	{
-		if ((ret = (cell *) next_rng (Global->fp->cols, 0)))
+		if ((ret = (cell *) next_rng (g_fp->cols, 0)))
 			return ret;
-		new_row = next_rng (Global->fp->rows, 0);
+		new_row = next_rng (g_fp->rows, 0);
 		if (!new_row)
 		{
 			struct cf *old;
 
-			old = Global->fp->next;
-			obstack_free(&find_stack, Global->fp);
-			Global->fp = old;
+			old = g_fp->next;
+			obstack_free(&find_stack, g_fp);
+			g_fp = old;
 			return 0;
 		}
-		Global->fp->cols = Global->fp->make ? 
-			(FPTR) make_rng((LLPTR) new_row, Global->fp->cols->lo, Global->fp->cols->hi, sizeof (struct cell), ROW_BUF)
-			: (FPTR) find_rng((LLPTR)new_row, Global->fp->cols->lo, Global->fp->cols->hi, sizeof (struct cell));
+		g_fp->cols = g_fp->make ? 
+			(FPTR) make_rng((LLPTR) new_row, g_fp->cols->lo, g_fp->cols->hi, sizeof (struct cell), ROW_BUF)
+			: (FPTR) find_rng((LLPTR)new_row, g_fp->cols->lo, g_fp->cols->hi, sizeof (struct cell));
 	}
 }
 
@@ -506,24 +526,24 @@ next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 
 	for (;;)
 	{
-		if ((ret = (cell*) next_rng (Global->fp->cols, rowp)))
+		if ((ret = (cell*) next_rng (g_fp->cols, rowp)))
 		{
-			*colp = Global->fp->rows->cur - 1;
+			*colp = g_fp->rows->cur - 1;
 			return ret;
 		}
-		new_row = (LLPTR) next_rng (Global->fp->rows, colp);
+		new_row = (LLPTR) next_rng (g_fp->rows, colp);
 		if (!new_row)
 		{
 			struct cf *old;
 
-			old = Global->fp->next;
-			obstack_free(&find_stack, Global->fp);
-			Global->fp = old;
+			old = g_fp->next;
+			obstack_free(&find_stack, g_fp);
+			g_fp = old;
 			return 0;
 		}
-		Global->fp->cols = Global->fp->make ? 
-			(FPTR) make_rng (new_row, Global->fp->cols->lo, Global->fp->cols->hi, sizeof (struct cell), ROW_BUF)
-			: (FPTR) find_rng (new_row, Global->fp->cols->lo, Global->fp->cols->hi, sizeof (struct cell));
+		g_fp->cols = g_fp->make ? 
+			(FPTR) make_rng (new_row, g_fp->cols->lo, g_fp->cols->hi, sizeof (struct cell), ROW_BUF)
+			: (FPTR) find_rng (new_row, g_fp->cols->lo, g_fp->cols->hi, sizeof (struct cell));
 	}
 }
 
@@ -538,10 +558,10 @@ no_more_cells (void)
 	 * Here, we pop all those frames, and then free them at once.
 	 */
 
-	old = Global->fp->next;
+	old = g_fp->next;
 	g_finds = g_finds->next->next;
-	obstack_free (&find_stack, Global->fp);
-	Global->fp = old;
+	obstack_free (&find_stack, g_fp);
+	g_fp = old;
 }
 
 CELLREF
@@ -549,7 +569,7 @@ max_row (CELLREF col)
 {
 	struct list **ptr;
 
-	ptr = (LLPTR) find (col, Global->the_cols, sizeof (void *));
+	ptr = (LLPTR) find (col, the_cols, sizeof (void *));
 	if (!ptr || !*ptr)
 		return MIN;
 	while ((*ptr)->next)
@@ -562,9 +582,9 @@ max_col (CELLREF row)
 {
 	struct list *ptr;
 
-	if (!Global->the_cols)
+	if (!the_cols)
 		return MIN;
-	for (ptr = Global->the_cols; ptr->next; ptr = ptr->next)
+	for (ptr = the_cols; ptr->next; ptr = ptr->next)
 		;
 	return ptr->hi;
 }
@@ -576,7 +596,7 @@ highest_row (void)
 	struct list **ptr;
 	CELLREF hi = MIN;
 
-	f = find_rng (&Global->the_cols, MIN, MAX, sizeof (void *));
+	f = find_rng (&the_cols, MIN, MAX, sizeof (void *));
 	while ((ptr = (LLPTR) next_rng ((FPTR)f, 0)))
 	{
 		if (*ptr)
@@ -596,9 +616,9 @@ highest_col (void)
 {
 	struct list *ptr;
 
-	if (!Global->the_cols)
+	if (!the_cols)
 		return MIN;
-	for (ptr = Global->the_cols; ptr->next; ptr = ptr->next)
+	for (ptr = the_cols; ptr->next; ptr = ptr->next)
 		;
 	return ptr->hi;
 }
