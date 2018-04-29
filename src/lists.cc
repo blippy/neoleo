@@ -23,27 +23,27 @@
 
 using std::cout;
 
+#include "cell.h"
 #include "funcdef.h"
 #include "global.h"
-#include "lists.h"
-#include "logging.h"
-#include "spans.h"
-#include "utils.h"
-
-
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
-#include "cell.h"
-#include "ref.h"
-#include "window.h"
 #include "io-term.h"
 #include "io-abstract.h"
+#include "lists.h"
+#include "logging.h"
+#include "ref.h"
+#include "spans.h"
+#include "utils.h"
+#include "window.h"
 
 #define ROW_BUF 3
 #define COL_BUF 2
 #define MAX MAX_ROW
 #define MIN MIN_ROW
+
+
+#define obstack_chunk_alloc ck_malloc
+#define obstack_chunk_free free
+#include "obstack.h"
 static struct obstack find_stack;
 
 
