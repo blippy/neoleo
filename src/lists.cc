@@ -168,10 +168,7 @@ make (CELLREF pos, struct list **prevp, int ele, int buf)
 	lo = (pos < MIN + buf) ? MIN : pos - buf;
 	hi = (pos > MAX - buf) ? MAX : pos + buf;
 
-	if (!*prevp
-			|| ((*prevp)->hi < lo - 1
-				&& (!(*prevp)->next
-					|| (*prevp)->next->lo - 1 > hi)))
+	if (!*prevp || ((*prevp)->hi < lo - 1 && (!(*prevp)->next || (*prevp)->next->lo - 1 > hi)))
 	{
 		/* Allocate a whole new structure */
 		size = (1 + hi - lo) * ele;
@@ -410,7 +407,6 @@ fini:
 		}
 	}
 	next = f->next;
-	//obstack_free (&find_stack, f);
 	free_find_stack(f);
 	g_finds = next;
 	return 0;
@@ -446,20 +442,14 @@ flush_everything (void)
 struct cell *
 find_cell (CELLREF row, CELLREF col)
 {
-	//if(use_alt_cells)
-	//	return alt_find_cell(row, col);
-	void **v;
-
-	v = (void**) find (col, the_cols, sizeof (void *));
+	void **v = (void**) find (col, the_cols, sizeof (void *));
 	return v ? (cell*) find (row, (LPTR) *v, sizeof (struct cell)) :  0;
 }
 
 struct cell *
 find_or_make_cell (CELLREF row, CELLREF col)
 {
-	struct list **v;
-
-	v = (LLPTR) make (col, &the_cols, sizeof (struct list *), COL_BUF);
+	struct list **v  = (LLPTR) make (col, &the_cols, sizeof (struct list *), COL_BUF);
 	return (cell*) make (row, v, sizeof (struct cell), ROW_BUF);
 }
 
@@ -505,9 +495,7 @@ next_cell_in_range (void)
 		new_row = next_rng (g_fp->rows, 0);
 		if (!new_row)
 		{
-			struct cf *old;
-
-			old = g_fp->next;
+			struct cf *old  = g_fp->next;
 			obstack_free(&find_stack, g_fp);
 			g_fp = old;
 			return 0;
@@ -534,9 +522,7 @@ next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 		new_row = (LLPTR) next_rng (g_fp->rows, colp);
 		if (!new_row)
 		{
-			struct cf *old;
-
-			old = g_fp->next;
+			struct cf *old  = g_fp->next;
 			obstack_free(&find_stack, g_fp);
 			g_fp = old;
 			return 0;
@@ -550,7 +536,6 @@ next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 void
 no_more_cells (void)
 {
-	struct cf *old;
 
 	/* This relies on knowing that the obstack contains
 	 * the current find (struct cf) underneath two associated
@@ -558,7 +543,7 @@ no_more_cells (void)
 	 * Here, we pop all those frames, and then free them at once.
 	 */
 
-	old = g_fp->next;
+	struct cf *old = g_fp->next;
 	g_finds = g_finds->next->next;
 	obstack_free (&find_stack, g_fp);
 	g_fp = old;
