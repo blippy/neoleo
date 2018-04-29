@@ -23,17 +23,11 @@
 
 using std::cout;
 
-#include "cell.h"
-#include "funcdef.h"
 #include "global.h"
-#include "io-term.h"
-#include "io-abstract.h"
 #include "lists.h"
 #include "logging.h"
 #include "ref.h"
-#include "spans.h"
 #include "utils.h"
-#include "window.h"
 
 #define ROW_BUF 3
 #define COL_BUF 2
