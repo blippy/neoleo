@@ -23,11 +23,12 @@ struct cell* find_or_make_cell (CELLREF row, CELLREF col);
 struct cell* next_cell_in_range (void);
 struct cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp);
 
-extern void init_cells (void);
-extern void find_cells_in_range (struct rng *r);
-extern void make_cells_in_range (struct rng *r);
-extern void no_more_cells (void);
-extern CELLREF max_row (CELLREF col);
+void init_cells (void);
+void find_cells_in_range (struct rng *r);
+void make_cells_in_range (struct rng *r);
+void no_more_cells (void);
+
+CELLREF max_row();
 CELLREF max_col();
-extern CELLREF highest_row (void);
-extern CELLREF highest_col (void);
+CELLREF highest_row();
+CELLREF highest_col();

@@ -34,6 +34,11 @@ using std::cout;
 #define MAX MAX_ROW
 #define MIN MIN_ROW
 
+void log_debug_1(std::string s)
+{
+	if constexpr(true)
+		log_debug("DBG:lists.cc:" + s);
+}
 
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
@@ -257,8 +262,7 @@ find_rng (struct list **start, CELLREF lo, CELLREF hi, int ele)
 	return f;
 }
 
-static void *
-make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
+static FPTR make_rng (struct list **start, CELLREF lo, CELLREF hi, int ele, int buf)
 {
 	struct list **prevp;
 	struct list *ptr;
@@ -465,14 +469,17 @@ void find_cells_in_range (struct rng *r)
 void
 make_cells_in_range (struct rng *r)
 {
-
+	log_debug_1("make_cells_in_range:called");
+	
 	struct cf *newc =  (struct cf *)obstack_alloc (&find_stack, sizeof (struct cf));
 	newc->make = 1;
 	newc->next = g_fp;
+	newc->rows = 0;
 	g_fp = newc;
-	newc->rows = (FPTR) make_rng (&the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF);
+	newc->rows = make_rng (&the_cols, r->lc, r->hc, sizeof (void *), ROW_BUF); 
 	struct list **firstcol = (LLPTR) next_rng (newc->rows, 0);
-	newc->cols = (FPTR) make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
+	newc->cols = make_rng (firstcol, r->lr, r->hr, sizeof (struct cell), COL_BUF);
+	obstack_free(&find_stack, newc); // mcarter 20-Apr-2018 added
 }
 
 struct cell *
