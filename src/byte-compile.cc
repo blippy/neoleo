@@ -30,19 +30,7 @@
 #include "parse_parse.h"
 
 
-#ifdef _DEBUG_MALLOC_INC
-static_assert(false);
-static void
-local_free (p)
-     void * p;
-{
-  free (p);
-}
-#define obstack_chunk_free local_free
-#else /* ndef _DEBUG_MALLOC_INC */
 #define obstack_chunk_free free
-#endif /* ndef _DEBUG_MALLOC_INC */
-
 #define obstack_chunk_alloc ck_malloc
 #include "obstack.h"
 

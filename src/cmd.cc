@@ -34,18 +34,8 @@
 #include "logging.h"
 #include "mem.h"
 
-#ifndef _DEBUG_MALLOC_INC
-#define local_free free
-#else
-static void
-local_free (p)
-     void *p;
-{
-	free (p);
-}
-#endif /* def _DEBUG_MALLOC_INC */
 #define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free local_free
+#define obstack_chunk_free free
 #include "obstack.h"
 #include "global.h"
 #include "cmd.h"

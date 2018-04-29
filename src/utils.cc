@@ -533,8 +533,6 @@ strdup (str)
 #endif
 */
 
-#ifndef _DEBUG_MALLOC_INC
-#ifndef HAVE_STRICMP
 /*
  * stricmp - compare string s1 to s2, ignoring case
  */
@@ -571,11 +569,7 @@ stricmp (const char * s1, const char * s2)
   else
     return chr1 - chr2;
 }
-#endif
-#endif /* ndef _DEBUG_MALLOC_INC */
 
-#ifndef _DEBUG_MALLOC_INC
-#ifndef HAVE_STRINCMP
 /* strincmp - compare first N chars of strings S1 and S2 */
 int
 strincmp (const char * s1, const char * s2, size_t n)
@@ -614,8 +608,6 @@ strincmp (const char * s1, const char * s2, size_t n)
   else
     return chr1 - chr2;
 }
-#endif
-#endif /* ndef _DEBUG_MALLOC_INC */
 
 char *
 err_msg (void)
