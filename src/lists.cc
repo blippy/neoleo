@@ -414,13 +414,11 @@ init_cells ()
 }
 
 
-void 
-flush_everything (void)
+void flush_cols (void)
 {
 	struct list *ptr, *nxt;
 	int n;
 
-	flush_variables ();
 	for (ptr = the_cols; ptr; ptr = nxt)
 	{
 		nxt = ptr->next;
@@ -429,7 +427,6 @@ flush_everything (void)
 		free (ptr);
 	}
 	the_cols = 0;
-	flush_spans();
 }
 
 struct cell *

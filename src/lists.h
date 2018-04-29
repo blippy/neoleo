@@ -17,14 +17,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-extern void flush_everything (void);
-struct cell * find_cell (CELLREF row, CELLREF col);
-struct cell *find_or_make_cell (CELLREF row, CELLREF col);
+void flush_cols(void);
+struct cell* find_cell (CELLREF row, CELLREF col);
+struct cell* find_or_make_cell (CELLREF row, CELLREF col);
+struct cell* next_cell_in_range (void);
+struct cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp);
+
 extern void init_cells (void);
 extern void find_cells_in_range (struct rng *r);
 extern void make_cells_in_range (struct rng *r);
-extern struct cell * next_cell_in_range (void);
-extern struct cell * next_row_col_in_range (CELLREF *rowp, CELLREF *colp);
 extern void no_more_cells (void);
 extern CELLREF max_row (CELLREF col);
 extern CELLREF max_col (CELLREF row);

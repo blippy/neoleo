@@ -34,21 +34,23 @@
 #include <ctype.h>
 
 #include "config.h"
-#include "io-utils.h"
-#include "cell.h"
-#include "ref.h"
-#include "decompile.h"
-#include "io-generic.h"
-#include "io-abstract.h"
-#include "lists.h"
-#include "io-term.h"
-#include "cmd.h"
+
 #include "basic.h"
-#include "oleofile.h"
+#include "cell.h"
+#include "cmd.h"
+#include "decompile.h"
+#include "io-abstract.h"
+#include "io-generic.h"
+#include "io-term.h"
+#include "io-utils.h"
 #include "list.h"
-#include "numeric.h"
-#include "utils.h"
+#include "lists.h"
 #include "logging.h"
+#include "numeric.h"
+#include "oleofile.h"
+#include "ref.h"
+#include "spans.h"
+#include "utils.h"
 
 
 /* Routines for formatting cell values */
@@ -1091,26 +1093,27 @@ col_to_str (CELLREF col)
 void
 clear_spreadsheet (void)
 {
-  int n;
+	int n;
 
-  flush_everything ();
-  /* flush_widths(); */
-  flush_all_timers ();
-  for (n = 0; n < NUM_USER_FMT; n++)
-    {
-      if (u[n].p_hdr)
+	flush_cols ();
+	flush_variables ();
+	flush_spans();
+	flush_all_timers ();
+	for (n = 0; n < NUM_USER_FMT; n++)
 	{
-	  free (u[n].p_hdr);
-	  u[n].p_hdr = 0;
-	  u[n].prec = FLOAT_PRECISION;
-	  u[n].scale = 1;
+		if (u[n].p_hdr)
+		{
+			free (u[n].p_hdr);
+			u[n].p_hdr = 0;
+			u[n].prec = FLOAT_PRECISION;
+			u[n].scale = 1;
+		}
 	}
-    }
-  default_width = saved_default_width;
-  default_height = saved_default_height;
-  default_jst = base_default_jst;
-  default_fmt = FMT_GEN;
-  default_lock = LCK_UNL;
+	default_width = saved_default_width;
+	default_height = saved_default_height;
+	default_jst = base_default_jst;
+	default_fmt = FMT_GEN;
+	default_lock = LCK_UNL;
 }
 
 char *ename[] =
