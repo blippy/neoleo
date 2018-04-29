@@ -663,8 +663,7 @@ parse_and_compile(const char* string)
 	return parse_and_compile(string, the_mem);
 }
 
-char *
-parse_and_compile (const char *string, mem& the_mem)
+char* parse_and_compile_1 (const char *string, mem& the_mem)
 {
 	struct node *node;
 	const struct function *f;
@@ -684,7 +683,6 @@ parse_and_compile (const char *string, mem& the_mem)
 		ret[2] = parse_error;
 		ret[3] = ENDCOMP;
 		strcpy ((char *) &ret[4], string);
-		(void) obstack_free (&tmp_mem, tmp_mem_start);
 		return ret;
 	}
 
@@ -796,10 +794,16 @@ loop:
 		}
 	}
 
-	(void) obstack_free (&tmp_mem, tmp_mem_start);
 
 	patches_used = 0;
 
+	return ret;
+}
+
+char* parse_and_compile (const char *string, mem& the_mem)
+{
+	char* ret = parse_and_compile_1(string, the_mem);
+	if(ret) obstack_free (&tmp_mem, tmp_mem_start);
 	return ret;
 }
 
