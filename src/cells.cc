@@ -186,29 +186,30 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		case 9:
 			{
 				CELL* cell_ptr = find_cell (row, col);
+				const char* str = "null";
 				if (cell_ptr)
 					switch (GET_TYP (cell_ptr))
 					{
 						case TYP_FLT:
-							p->String = "float";
+							str = "float";
 							break;
 						case TYP_INT:
-							p->String = "integer";
+							str= "integer";
 							break;
 						case TYP_STR:
-							p->String = "string";
+							str = "string";
 							break;
 						case TYP_BOL:
-							p->String = "boolean";
+							str = "boolean";
 							break;
 						case TYP_ERR:
-							p->String = "error";
+							str = "error";
 							break;
 						default:
-							p->String = "unknown";
+							str = "unknown";
 					}
-				else
-					p->String = "null";
+				p->String = (char *) obstack_alloc (&tmp_mem, strlen(str) + 1);
+				strcpy(p->String, str);
 			}
 			break;
 		case 10:
