@@ -222,8 +222,10 @@ extern const int base_default_jst;
 int init_cells_function_count(void);
 extern void no_more_cells (void);
 
-void edit_cell_at(CELLREF row, CELLREF col, std::string new_formula);
-extern void edit_cell_at(CELLREF row, CELLREF col, const char* new_formula);
+//void edit_cell_at(CELLREF row, CELLREF col, std::string new_formula);
+//extern void edit_cell_at(CELLREF row, CELLREF col, const char* new_formula);
+void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input);
+void edit_cell(const char* input);
 void copy_this_cell_formula();
 void paste_this_cell_formula();
 

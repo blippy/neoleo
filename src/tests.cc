@@ -210,8 +210,11 @@ run_regular_tests()
 	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
 
 
+	
 	check(pad_left("hello", 7) == "  hello", "padleft");
 	check(pad_right("hello", 7) == "hello  ", "padright");
+
+
 
 	FreeGlobals();
 
@@ -222,6 +225,30 @@ run_regular_tests()
 	return all_pass;
 }
 
+bool run_alt_cells_tests()
+{
+	
+	// some wierd stuff when switching to alt cells 30-Apr-2018
+	set_cell_input(1, 1, "1+2.2");
+	cell* cp1 = find_cell(1, 1);
+	update_cell(cp1);
+	cout << "cells-01:" << "print_cell:"; // << cp1->cell_int();
+	cout << cell_value_string(1, 1, 0) << endl;
+	cout << "decomposed:" << decomp_str(1,1) << endl;
+
+	// filling out diagonally>
+	set_cell_input(2 ,1 , "99");
+	cell* cp2 = find_cell(2, 1);
+	update_cell(cp2);
+	cout << "cells-02:" << "print_cell:"; // << cp1->cell_int();
+	cout << cell_value_string(2, 1, 0) << endl;
+	cout << "decomposed:" << decomp_str(2,1) << endl;
+	cout << "at r1c2:" << cell_value_string(1, 2, 0) <<endl;
+
+	//cout << "coord(2, 1):" << to_coord(2, 1) << "\n";
+	//cout << "coord(1, 2):" << to_coord(1, 2) << "\n";
+
+}
 bool
 headless_tests()
 {
@@ -229,7 +256,7 @@ headless_tests()
 	cout << "Running tests: " << option_tests_argument << "\n";
 
 	map<string, std::function<bool()> > func_map = {
-		//{"alt-cells",	run_alt_cells_tests},
+		{"alt-cells",	run_alt_cells_tests},
 		{"alt-parse",	run_alt_parse_tests},
 		{"regular", 	run_regular_tests},
 		{"yyreglex",	yyreglex_experiment}

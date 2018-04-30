@@ -24,7 +24,7 @@ using std::endl;
 using std::map;
 using std::string;
 
-void log_debug_1(std::string msg)
+static void log_debug_1(std::string msg)
 {
 	if constexpr(true) 
 		log_debug("DBG:alt-cells.cc:" + msg);
@@ -39,7 +39,7 @@ void log_debug_1(std::string msg)
  */
 
 typedef uint32_t coord_t;
-coord_t to_coord(coord_t row, coord_t col) { return  col << 16 + row; }
+coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 

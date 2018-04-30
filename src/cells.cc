@@ -29,19 +29,22 @@
 #include <string>
 
 #include "global.h"
+
+#include "byte-compile.h"
 #include "cell.h"
+#include "cmd.h"
+#include "decompile.h"
 #include "eval.h"
 #include "errors.h"
-#include "lists.h"
 #include "format.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-term.h"
-#include "cmd.h"
+#include "lists.h"
+#include "logging.h"
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
-#include "decompile.h"
 
 using std::cout;
 
@@ -50,6 +53,13 @@ using std::cout;
 #define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
+
+static void log_debug_1(std::string msg)
+{
+	if constexpr(true)
+		log_debug("DBG:cells.cc:" + msg);
+}
+
 
 #define ERROR(x)	\
  {			\
@@ -106,6 +116,17 @@ bool
 vacuous(cell* cp)
 {
 	return (cp == nullptr) || (cp->get_cell_type() == TYP_NUL);
+}
+
+void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
+{
+	log_debug_1("set_cell_input:r:" + std::to_string(r) + ":c:" + std::to_string(c) + ":new_input:" + new_input);
+	if(new_input.size() == 0) return;
+	CELL* cp = find_or_make_cell(r, c);
+	assert(cp);
+	const auto inpt =  new_input.c_str();
+	auto bcode =  (unsigned char*) parse_and_compile(inpt); // not auto-free'd
+	cp->set_cell_formula(bcode);
 }
 
 std::string
@@ -721,6 +742,13 @@ int init_cells_function_count(void)
         return sizeof(cells_funs) / sizeof(struct function) - 1;
 }
 
+void edit_cell(const char* input)
+{
+	set_cell_input(curow, cucol, input);
+}
+
+
+/*
 void
 edit_cell_at(CELLREF row, CELLREF col, std::string new_formula)
 {
@@ -736,6 +764,7 @@ edit_cell_at(CELLREF row, CELLREF col, const char* new_formula)
 	else
 		Global->modified = 1;
 }
+*/
 
 /*
  * highest_row() and highest_col() should be expected to 
@@ -780,7 +809,8 @@ copy_this_cell_formula()
 void 
 paste_this_cell_formula()
 {	
-	edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
+	//edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
+	set_cell_input(curow, cucol, m_copied_cell_formula.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////

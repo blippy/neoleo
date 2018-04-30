@@ -230,7 +230,7 @@ insert_columnwise(T fildes)
 		}
 		if(line[0] == '#') continue;
 
-		edit_cell_at(curow, cucol, line);
+		set_cell_input(curow, cucol, line);
 		curow++;
 		
 		//cout << "You said " << line <<  (line != "." ) << endl;
@@ -274,7 +274,7 @@ insert_rowwise(T fildes)
 		}
 		if(line[0] == '#') continue;
 
-		edit_cell_at(curow, cucol, line);
+		set_cell_input(curow, cucol, line);
 		cucol++;
 		
 		//cout << "You said " << line <<  (line != "." ) << endl;

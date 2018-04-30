@@ -16,6 +16,7 @@
 
 #include "cell.h"
 #include "cmd.h"
+#include "eval.h"
 #include "io-utils.h"
 #include "lists.h"
 #include "logging.h"
@@ -228,9 +229,13 @@ show_cells(const range_t& rng)
 	for(int r=rng.lr; r<=rng.hr; ++r) {
 		cout << on_red(pad_right("R" + std::to_string(r), margin));
 		for(int c = rng.lc; c<= rng.hc ; ++c) {
-			CELL *cp = find_cell(r, c);
+			string str;
+			if(CELL *cp = find_cell(r, c); cp) {
 
-			string str = print_cell(cp);
+				//string str = print_cell(cp); // mcarter 30-Apr-2018 doesn't seem to be working any longer
+				update_cell(cp); // evaluate it
+				str = cell_value_string(r, c, 0);
+			}
 			int w = get_width(c);
 			str = pad_left(str, w);
 			str = str.substr(0, w); // truncate overlong cells

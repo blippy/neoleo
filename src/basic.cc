@@ -1215,12 +1215,13 @@ scan_cell_cursor (int magic, int count)
 
 
 
+/*
 void
 edit_cell (const char* new_formula)
 {
 	edit_cell_at(setrow, setcol, new_formula);
 }
-
+*/
 
 void
 set_region_formula (struct rng * rng, char * str)

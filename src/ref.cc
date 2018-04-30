@@ -110,17 +110,8 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 
 	std::string s2{in_string};
 	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
+
 	/*
-	int len = in_string.size();
-	char s1[len+1];
-	for(int i=0; i<len; ++i) s1[i] = in_string[i];
-	s1[len] = '\0';
-	char *string = s1;
-
-	while (*string == ' ')
-		string++;
-		*/
-
 	if(s2.size() == 0)
 	{
 		my_cell = find_cell (cur_row, cur_col);
@@ -128,9 +119,14 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 		flush_old_value ();
 		return;
 	}
+	*/
 
-	my_cell = find_or_make_cell (cur_row, cur_col);
-	flush_old_value ();
+	my_cell = find_cell (cur_row, cur_col);
+	//assert(my_cell);
+	if(my_cell) 
+		flush_old_value ();
+	else	
+		my_cell = find_or_make_cell(cur_row, cur_col);
 
 	ret = (unsigned char*) parse_and_compile (s2.c_str());
 	my_cell->set_cell_formula(ret);
