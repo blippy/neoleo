@@ -18,13 +18,15 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "lists.h"
+#ifndef USE_ALT_CELLS
+
 #include <stdlib.h>
 #include <iostream>
 
 using std::cout;
 
 #include "global.h"
-#include "lists.h"
 #include "logging.h"
 #include "ref.h"
 #include "utils.h"
@@ -658,3 +660,6 @@ do_shift (int over, CELLREF lo, CELLREF hi, struct list **start, int buf)
 	}
 }
 
+//bool run_alt_cells_tests() { return true; }
+
+#endif // USE_ALT_CELLS

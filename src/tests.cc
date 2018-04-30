@@ -10,6 +10,8 @@
 #include <vector>
 #include <map>
 
+//bool run_alt_cells_tests();
+
 using std::string;
 using std::cout;
 using std::endl;
@@ -36,7 +38,7 @@ using namespace std::string_literals;
 #include "decompile.h"
 #include "lists.h"
 #include "parse_parse.h"
-#include "alt-cells.h"
+//#include "alt-cells.h"
 #include "alt-parse.h"
 
 static bool all_pass = true; // all the checks have passed so far
@@ -94,7 +96,6 @@ test_formatting()
 	check_fmt(1.0DD,  "1.00");
 }
 
-//void check_decomp(
 void
 run_cell_formula_tests()
 {

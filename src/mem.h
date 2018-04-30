@@ -6,6 +6,7 @@
  * "it all depends"
  */
 
+#include <functional>
 #include <vector>
 
 class mem {
@@ -32,4 +33,13 @@ class strcpy_c {
 		~strcpy_c();
 	private:
 		char* null_terminated_str;
+};
+
+/* Offers a way of performing automated clearup on exit */
+class exit_c {
+	public:
+		exit_c(std::function<void()> fn) : fn(fn) {}
+		~exit_c() { fn(); }
+	private:
+		std::function<void()> fn;
 };

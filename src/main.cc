@@ -12,7 +12,6 @@
 #include "cmd.h"
 #include "config.h"
 #include "defuns.h"
-#include "experimental.h"
 #include "init.h"
 #include "io-abstract.h"
 #include "io-headless.h"
@@ -121,7 +120,6 @@ init_maps_and_macros()
 
 static bool	option_tests = false;
 
-static bool	option_experimental = false;
 std::string	option_tests_argument = "regular";
 static char	option_separator = '\t';
 static char	*option_format = NULL;
@@ -133,7 +131,6 @@ static char short_options[] = "4:VqfxHhsFSTvx";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
-	{"experimental",	0,	NULL,	'x'},
 	{"quiet",		0,	NULL,	'q'},
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
@@ -274,9 +271,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 					option_tests_argument = argv[optind++];
 				//exit(1);
 				break;
-			case 'x':
-				option_experimental = true;
-				break;
 			case '-':
 				option_filter = 1;
 				break;
@@ -369,10 +363,7 @@ main(int argc, char **argv)
 	Global->argc = argc;
 	Global->argv = argv;
 	parse_command_line(argc, argv, &ignore_init_file);
-	if(option_experimental)
-		run_experimental_mode();
-	else
-		run_nonexperimental_mode(argc, argv, ignore_init_file, command_line_file);
+	run_nonexperimental_mode(argc, argv, ignore_init_file, command_line_file);
 
 	return (0); /* Never Reached! */
 }

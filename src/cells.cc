@@ -80,7 +80,9 @@ cell::cell(void)
 cell::~cell(void)
 {
 	magic = 0x0DEFACED; // see TR06
-	//cout <<"Y";
+	if(cell_formula) free(cell_formula);
+	cell_formula = 0;
+	//cout <<"X";
 }
 
 void 
