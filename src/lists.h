@@ -18,7 +18,7 @@
  */
 
 // Toggle this on or off depending on whether you want the new version
-#define USE_ALT_CELLS
+//#define USE_ALT_CELLS
 
 #include "global.h"
 void flush_cols();
