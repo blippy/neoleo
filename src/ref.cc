@@ -370,7 +370,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	CELL *cpf;
 
 	static CELLREF non_rf, non_cf;
-	//static struct cell non_cell;
 	static cell non_cell;
 
 	if (rf == NON_ROW)
@@ -2101,7 +2100,7 @@ shift_formula (int r, int c, int dn, int ov)
 			case VAR:
 				{
 					struct var *v;
-					struct cell *tcp;
+					cell *tcp;
 
 					bcopy (&fp[1], &v, sizeof (struct var *));
 					flush_ref_fm (&(v->var_ref_fm), cur_row - dn, cur_col - ov);

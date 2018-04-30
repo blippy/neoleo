@@ -33,7 +33,7 @@ struct var * find_or_make_var(const char *string, int len);
  * When this pointer is not NULL, the variables cur_row and cur_col
  * MUST contain the (spreadsheet) address of my_cell.
  */
-extern struct cell * my_cell;
+extern cell * my_cell;
 
 extern void set_cell(CELLREF row, CELLREF col, const std::string& in_string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);

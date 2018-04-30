@@ -152,7 +152,7 @@ void find_cells_in_range (struct rng *r)
 	}
 }
 
-struct cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
+cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 {
 	log_debug_1("next_row_col_in_range:called");
 	if(m_cell_find_dq.empty()) return nullptr;
@@ -164,7 +164,7 @@ struct cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 	auto ptr = find_cell(coord);
 	return ptr;
 }
-struct cell* next_cell_in_range ()
+cell* next_cell_in_range ()
 {
 	log_debug_1("next_cell_in_range:called");
 	CELLREF r, c; // simply discarded

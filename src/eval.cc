@@ -318,7 +318,7 @@ eval_expression ( unsigned char *expr)
   CELLREF lrow, hrow, crow;
   CELLREF lcol, hcol, ccol;
 
-  struct cell *cell_ptr;
+  cell* cell_ptr;
 
   if (!expr)
     return 0;
