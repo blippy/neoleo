@@ -93,8 +93,8 @@ class cell
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
 
-		unsigned char * get_cell_formula() { return cell_formula; } ; 
-		unsigned char * set_cell_formula( unsigned char * newval) { cell_formula = newval ;  return cell_formula; } ; 
+		unsigned char* get_cell_formula(); 
+		unsigned char* set_cell_formula( unsigned char * newval);
 
 
 		void sInt(int newval); // set integer value

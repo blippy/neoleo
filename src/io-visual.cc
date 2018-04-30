@@ -229,6 +229,7 @@ show_cells(const range_t& rng)
 		cout << on_red(pad_right("R" + std::to_string(r), margin));
 		for(int c = rng.lc; c<= rng.hc ; ++c) {
 			CELL *cp = find_cell(r, c);
+
 			string str = print_cell(cp);
 			int w = get_width(c);
 			str = pad_left(str, w);

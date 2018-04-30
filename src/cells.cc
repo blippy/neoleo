@@ -77,6 +77,16 @@ cell::cell(void)
 	//cout << "X";
 }
 
+unsigned char * cell::get_cell_formula()
+{ 
+	return cell_formula; 
+}
+
+unsigned char * cell::set_cell_formula( unsigned char * newval)
+{ 
+	cell_formula = newval ;  
+	return cell_formula; 
+}
 cell::~cell(void)
 {
 	magic = 0x0DEFACED; // see TR06

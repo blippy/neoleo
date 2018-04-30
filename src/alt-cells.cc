@@ -44,7 +44,7 @@ int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
 
-typedef struct cell cell_t;
+typedef cell cell_t;
 typedef std::map<coord_t, cell_t*> cellmap_t;
 cellmap_t the_cells;
 
@@ -89,9 +89,10 @@ bool inside(int r, int c, struct rng *a_rng)
 
 void make_cells_in_range (struct rng *r)
 {
-	log_debug_1("make_cells_in_range:TODO");
-	throw 666;
-	// TODO
+	log_debug_1("make_cells_in_range");
+	for(int i = r->lr; i <= r->hr; ++i)
+	       	for(int j  = r->lc; j <= r->hc; ++j)
+			find_or_make_cell(i, j);
 }
 void no_more_cells ()
 {
@@ -143,7 +144,7 @@ static std::deque<coord_t> m_cell_find_dq;
 
 void find_cells_in_range (struct rng *r)
 {
-	log_debug_1("find_cells_in_range:TODO");
+	log_debug_1("find_cells_in_range");
 	for(auto const& a_cell: the_cells) {
 		coord_t coord = a_cell.first;
 		if(inside(get_row(coord), get_col(coord), r))
