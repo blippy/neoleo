@@ -15,6 +15,7 @@
 //#include "byte-compile.h"
 #include "cell.h"
 //#include "decompile.h"
+#include "logging.h"
 #include "mem.h"
 
 using std::cout;
@@ -28,6 +29,12 @@ typedef std::map<coord_t, cell_t*> cellmap_t;
 
 cellmap_t the_cells;
 
+
+void log_debug_1(std::string msg)
+{
+	if constexpr(true) 
+		log_debug("DBG:alt-cells.cc:" + msg);
+}
 
 coord_t to_coord(coord_t row, coord_t col) { return  row << 16 + col; }
 int col(coord_t coord) { return coord & 0xFF; }
@@ -56,11 +63,14 @@ cell_t* find_or_make_cell (CELLREF row, CELLREF col)
 }
 struct cell* next_cell_in_range ()
 {
+	log_debug_1("next_cell_in_range:TODO");
 	return nullptr; // TODO
 }
 
 struct cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
 {
+
+	log_debug_1("next_row_col_in_range:TODO");
 	return nullptr; // TODO
 }
 
@@ -70,10 +80,12 @@ void init_cells ()
 
 void find_cells_in_range (struct rng *r)
 {
+	log_debug_1("find_cells_in_range:TODO");
 	// TODO
 }
 void make_cells_in_range (struct rng *r)
 {
+	log_debug_1("make_cells_in_range:TODO");
 	// TODO
 }
 void no_more_cells ()
