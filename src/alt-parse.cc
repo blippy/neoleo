@@ -35,8 +35,9 @@
 #include <variant>
 #include <vector>
 
-#include "alt-cells.h"
+//#include "alt-cells.h"
 #include "alt-lex.h"
+#include "alt-types.h"
 #include "cmd.h"
 #include "numeric.h"
 
@@ -92,6 +93,7 @@ string str(value_t v)
 		throw std::runtime_error("#UNHANDLED:str:conversion type");
 }
 
+num_t num(value_t v) { return std::get<num_t>(v); }
 
 std::tuple<double, double> two_nums(values vs) 
 { 
@@ -255,7 +257,7 @@ blang_funcs_t blang_funcs = {
         {"*", blang_mul},
         {"-", blang_sub},
 
-	{"cell", neo_cell},
+	//{"cell", neo_cell},
 	{"cmd", neo_cmd},
 	{"gotorc", neo_gotorc},
 	{"mod", neo_mod},

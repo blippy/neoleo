@@ -17,6 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "global.h"
 void flush_cols(void);
 struct cell* find_cell (CELLREF row, CELLREF col);
 struct cell* find_or_make_cell (CELLREF row, CELLREF col);

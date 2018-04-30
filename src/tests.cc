@@ -228,7 +228,7 @@ headless_tests()
 	cout << "Running tests: " << option_tests_argument << "\n";
 
 	map<string, std::function<bool()> > func_map = {
-		{"alt-cells",	run_alt_cells_tests},
+		//{"alt-cells",	run_alt_cells_tests},
 		{"alt-parse",	run_alt_parse_tests},
 		{"regular", 	run_regular_tests},
 		{"yyreglex",	yyreglex_experiment}
