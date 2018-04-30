@@ -33,6 +33,7 @@
 
 #include "global.h"
 #include "numeric.h"
+#include "utils.h"
 
 
 union vals {
@@ -75,7 +76,7 @@ class cell
 {
 	private:
 		union vals c_z;
-		unsigned char *cell_formula = nullptr;
+		unsigned char *cell_formula = (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 
 	public:

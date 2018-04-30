@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cassert>
 #include <stdlib.h>
 #include <string.h>
 #include <string>
@@ -1068,4 +1069,10 @@ pad_right(const std::string& s, int width)
 size_t strlen(const std::string& s)
 {
 	return s.size();
+}
+char* dupe(const char* str)
+{
+	char* str1 = (char*) malloc(strlen(str)+1);
+	assert(str1);
+	return strcpy(str1, str);
 }
