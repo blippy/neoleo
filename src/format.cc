@@ -39,7 +39,7 @@
 static char *
 fmt_to_str (int format, int precision)
 {
-  char *ptr;
+  const char *ptr;
   static char buf[30];
   char nbuf[10];
 

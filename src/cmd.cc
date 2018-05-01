@@ -899,7 +899,7 @@ get_argument (char *prompt, struct prompt_style *style)
 		  set_line (&the_cmd_arg.text, macro_func_arg);
 		  {
 			  char *arg_ptr;
-			  char *error;
+			  const char *error;
 			  arg_ptr = the_cmd_arg.text.buf;
 			  error = the_cmd_arg.style->verify (&arg_ptr,
 							     &the_cmd_arg);
@@ -952,7 +952,7 @@ exit_minibuffer (void)
 	else
 	  {
 		  char *extra = the_cmd_arg.text.buf;
-		  char *error =
+		  const char* error =
 			  the_cmd_arg.style->verify (&extra, &the_cmd_arg);
 		  if (error)
 		    {

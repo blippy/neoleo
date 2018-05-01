@@ -19,6 +19,8 @@
 
 /* Interacting with command arguments. */
 
+#include <functional>
+
 /* See find_stub. */
 enum command_arg_representation
 {
@@ -36,8 +38,10 @@ struct command_arg;
 
 /* See comments in arg.c: */
 
-typedef char * (*arg_verifier) (char ** end_out, struct command_arg *);
-typedef void (*arg_destroyer) (struct command_arg *);
+//typedef const char * (*arg_verifier) (char ** end_out, struct command_arg *);
+using arg_verifier = std::function<const char*(char**, struct command_arg*)>;
+//typedef void (*arg_destroyer) (struct command_arg *);
+using arg_destroyer = std::function<const void(struct command_arg *)>;
 
 /* For every kind of prompt allowed in a FUNC_ARGS string, 
  * there exists a prompt_style that describes how that
@@ -46,34 +50,34 @@ typedef void (*arg_destroyer) (struct command_arg *);
 
 struct prompt_style
 {
-  arg_verifier verify;
-  arg_destroyer destroy;
-  enum command_arg_representation representation;
-  char * keymap;
+	arg_verifier verify;
+	arg_destroyer destroy;
+	enum command_arg_representation representation;
+	char * keymap;
 };
 
 
 
-extern char * char_verify (char ** end, struct command_arg * arg);
-extern char * symbol_verify (char ** end, struct command_arg * arg);
-extern char * word_verify (char ** end, struct command_arg * arg);
-extern void symbol_destroy (struct command_arg * arg);
-extern char * command_verify (char ** end, struct command_arg * arg);
-extern char * read_file_verify (char ** end, struct command_arg * arg);
-extern void read_file_destroy (struct command_arg * arg);
-extern char * write_file_verify (char ** end, struct command_arg * arg);
-extern void write_file_destroy (struct command_arg * arg);
-extern char * keyseq_verify (char ** end, struct command_arg * arg);
-extern char * keymap_verify (char ** end, struct command_arg * arg);
-extern char * number_verify (char ** end, struct command_arg * arg);
-extern char * double_verify (char ** end, struct command_arg * arg);
-extern char * range_verify (char ** end, struct command_arg * arg);
-extern char * string_verify (char ** end, struct command_arg * arg);
-extern char * yes_verify (char ** end, struct command_arg * arg);
-extern char * incremental_cmd_verify (char ** end, struct command_arg * arg);
-extern char * menu_verify (char ** end, struct command_arg * arg);
-extern char * format_verify (char ** end, struct command_arg * arg);
-extern char * noop_verify (char ** end, struct command_arg * arg);
+const char * char_verify (char ** end, struct command_arg * arg);
+const char * symbol_verify (char ** end, struct command_arg * arg);
+const char * word_verify (char ** end, struct command_arg * arg);
+void symbol_destroy (struct command_arg * arg);
+const char * command_verify (char ** end, struct command_arg * arg);
+const char * read_file_verify (char ** end, struct command_arg * arg);
+void read_file_destroy (struct command_arg * arg);
+const char * write_file_verify (char ** end, struct command_arg * arg);
+void write_file_destroy (struct command_arg * arg);
+const char * keyseq_verify (char ** end, struct command_arg * arg);
+const char * keymap_verify (char ** end, struct command_arg * arg);
+const char * number_verify (char ** end, struct command_arg * arg);
+const char * double_verify (char ** end, struct command_arg * arg);
+const char * range_verify (char ** end, struct command_arg * arg);
+const char * string_verify (char ** end, struct command_arg * arg);
+const char * yes_verify (char ** end, struct command_arg * arg);
+const char * incremental_cmd_verify (char ** end, struct command_arg * arg);
+const char * menu_verify (char ** end, struct command_arg * arg);
+const char * format_verify (char ** end, struct command_arg * arg);
+const char * noop_verify (char ** end, struct command_arg * arg);
 
 #ifdef DEFINE_STYLES
 #define DEFSTYLE(NAME,VER,DEST,REP,KEYMAP) \

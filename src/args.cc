@@ -53,7 +53,7 @@
  * everything after that. 
  */
 
-char *
+const char *
 char_verify (char ** end, struct command_arg * arg)
 {
   if (!**end)
@@ -74,7 +74,7 @@ char_verify (char ** end, struct command_arg * arg)
     }
 }
 
-char *
+const char *
 symbol_verify (char ** end, struct command_arg * arg)
 {
   char * e = *end;
@@ -103,7 +103,7 @@ symbol_verify (char ** end, struct command_arg * arg)
     return "Invalid symbol name.";
 }
 
-char *
+const char *
 word_verify (
      char ** end,
      struct command_arg * arg)
@@ -137,10 +137,10 @@ symbol_destroy (struct command_arg * arg)
     ck_free (arg->val.string);
 }
 
-char *
+const char *
 command_verify (char ** end, struct command_arg * arg)
 {
-  char * error = symbol_verify (end, arg);
+  const char * error = symbol_verify (end, arg);
   char * str;
   if (error)
     return error;
@@ -152,7 +152,7 @@ command_verify (char ** end, struct command_arg * arg)
     return "Not a command or macro address.";
 }
 
-char * 
+const char * 
 read_file_verify (char ** end, struct command_arg * arg)
 {
   FILE * fp = xopen_with_backup (arg->text.buf, "r");
@@ -180,7 +180,7 @@ read_file_destroy (struct command_arg * arg)
 }
 
 
-char * 
+const char * 
 write_file_verify (char ** end, struct command_arg * arg)
 {
   FILE * fp = xopen_with_backup (arg->text.buf, "w");
@@ -212,7 +212,7 @@ write_file_destroy (struct command_arg * arg)
  * interactively.
  */
 
-char *
+const char *
 keyseq_verify (char ** end, struct command_arg * arg)
 {
   *end = 0;
@@ -220,11 +220,11 @@ keyseq_verify (char ** end, struct command_arg * arg)
 }
 
 
-char *
+const char *
 keymap_verify (char ** end, struct command_arg * arg)
 {
   char * start = *end;
-  char * error = symbol_verify (end, arg);
+  const char * error = symbol_verify (end, arg);
   int id;
   if (error)
     return error;
@@ -234,7 +234,7 @@ keymap_verify (char ** end, struct command_arg * arg)
 }
 
 
-char *
+const char *
 number_verify (char ** end, struct command_arg * arg)
 {
   char * e = *end;
@@ -269,7 +269,7 @@ number_verify (char ** end, struct command_arg * arg)
 }
 
 
-char *
+const char *
 double_verify (char ** end, struct command_arg * arg)
 {
   char * e = *end;
@@ -286,7 +286,7 @@ double_verify (char ** end, struct command_arg * arg)
 }
 
 
-char * 
+const char * 
 range_verify (char ** end, struct command_arg * arg)
 {
   union command_arg_val * val = &arg->val;
@@ -297,7 +297,7 @@ range_verify (char ** end, struct command_arg * arg)
     return 0;
 }
 
-char * 
+const char * 
 string_verify (char ** end, struct command_arg * arg)
 {
   arg->val.string = arg->text.buf;
@@ -310,7 +310,7 @@ string_verify (char ** end, struct command_arg * arg)
  * operating on.  It's purpose is to allow user's
  * to abort commands. 
  */
-char * 
+const char * 
 yes_verify (char ** end, struct command_arg * arg)
 {
   if (words_imatch (end, "no"))
@@ -327,17 +327,17 @@ yes_verify (char ** end, struct command_arg * arg)
     }
 }
 
-char *
+const char *
 incremental_cmd_verify (char ** end, struct command_arg * arg)
 {
   return 0;
 }
 
 
-char *
+const char *
 menu_verify (char ** end, struct command_arg * arg)
 {
-  char * error = char_verify (end, arg);
+  const char * error = char_verify (end, arg);
   if (error)
     return error;
 
@@ -363,7 +363,7 @@ menu_verify (char ** end, struct command_arg * arg)
 }
 
 
-char *
+const char *
 format_verify (char ** end, struct command_arg * arg)
 {
   arg->val.integer = str_to_fmt (*end);
@@ -374,7 +374,7 @@ format_verify (char ** end, struct command_arg * arg)
 }
 
 
-char *
+const char *
 noop_verify (char ** end, struct command_arg * arg)
 {
   return 0;
