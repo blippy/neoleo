@@ -210,7 +210,9 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 		case 6:
 			{
 				CELL* cell_ptr = find_cell (row, col);
-				p->String = jst_to_str (cell_ptr ?  GET_JST (cell_ptr) : default_jst); 
+				const char* str = jst_to_str (cell_ptr ?  GET_JST (cell_ptr) : default_jst); 
+				p->String = (char *) obstack_alloc (&tmp_mem, strlen(str) + 1);
+				strcpy(p->String, str);
 			}
 			break;
 		case 7:

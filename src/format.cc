@@ -236,7 +236,7 @@ str_to_fmt (char *ptr)
 #endif
 }
 
-char *
+const char *
 jst_to_str (int jst)
 {
   if (jst == JST_DEF)
