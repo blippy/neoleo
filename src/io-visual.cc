@@ -233,7 +233,7 @@ show_cells(const range_t& rng)
 			if(CELL *cp = find_cell(r, c); cp) {
 
 				//string str = print_cell(cp); // mcarter 30-Apr-2018 doesn't seem to be working any longer
-				update_cell(cp); // evaluate it
+				//update_cell(cp); // evaluate it
 				str = cell_value_string(r, c, 0);
 			}
 			int w = get_width(c);
