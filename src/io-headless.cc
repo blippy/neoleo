@@ -77,18 +77,8 @@ _io_open_display(void)
 }
 
 static int m_nrow = 1;
-static void
-XXX_set_curow(int nrow)
-{
-	m_nrow = nrow;
-}
 
 static int m_ncol = 1;
-static void
-XXX_set_cucol(int ncol)
-{
-	m_ncol = ncol;
-}
 
 static void
 _io_update_status(void)

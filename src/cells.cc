@@ -121,12 +121,15 @@ vacuous(cell* cp)
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
 	log_debug_1("set_cell_input:r:" + std::to_string(r) + ":c:" + std::to_string(c) + ":new_input:" + new_input);
+	new_value(r, c, new_input.c_str());
+	/*
 	if(new_input.size() == 0) return;
 	CELL* cp = find_or_make_cell(r, c);
 	assert(cp);
 	const auto inpt =  new_input.c_str();
 	auto bcode =  (unsigned char*) parse_and_compile(cp, inpt); // not auto-free'd
 	cp->set_cell_formula(bcode);
+	*/
 }
 
 std::string
@@ -744,7 +747,13 @@ int init_cells_function_count(void)
 
 void edit_cell(const char* input)
 {
+	new_value(curow, cucol, input);
+	/*
 	set_cell_input(curow, cucol, input);
+	CELL* cp = find_cell(curow, cucol);
+	assert(cp);
+	update_cell(cp);
+	*/
 }
 
 
