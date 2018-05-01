@@ -35,10 +35,9 @@
 #include <variant>
 #include <vector>
 
-//#include "alt-cells.h"
 #include "alt-lex.h"
-#include "alt-types.h"
 #include "cmd.h"
+#include "neotypes.h"
 #include "numeric.h"
 
 using std::cout;

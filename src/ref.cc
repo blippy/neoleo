@@ -37,12 +37,11 @@
 #include "eval.h"
 #include "io-abstract.h"
 #include "io-generic.h"
-//#include "hash.h"
 #include "byte-compile.h"
 #include "parse.hh"
 #include "ref.h"
 #include "cmd.h"
-#include "lists.h"
+#include "sheet.h"
 #include "logging.h"
 
 using std::cout;

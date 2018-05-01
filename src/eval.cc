@@ -39,7 +39,7 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
-#include "lists.h"
+#include "sheet.h"
 
 #if defined(HAVE_RINT)
 extern double rint (double);

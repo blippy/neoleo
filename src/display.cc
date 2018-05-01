@@ -31,7 +31,7 @@
 
 #include <stdio.h>
 #include "display.h"
-#include "lists.h"
+#include "sheet.h"
 #include "cell.h"
 #include "io-utils.h"
 #include "spans.h"

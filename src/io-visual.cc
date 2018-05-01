@@ -18,7 +18,7 @@
 #include "cmd.h"
 #include "eval.h"
 #include "io-utils.h"
-#include "lists.h"
+#include "sheet.h"
 #include "logging.h"
 #include "ref.h"
 #include "spans.h"

@@ -19,8 +19,8 @@ CLEANFILES = $(BUILT_SOURCES)
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
-neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
-		 args.cc basic.cc  busi.cc byte-compile.cc \
+neoleo_SOURCES = alt-lex.cc alt-parse.cc \
+		 args.cc basic.cc busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc funcs.cc \
@@ -28,12 +28,12 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc io-visual.cc \
 		 key.cc \
-		 line.cc list.cc lists.cc logging.cc \
+		 line.cc list.cc logging.cc \
 		 mem.cc \
 		 obstack.cc \
 		 oleofile.cc \
 		 ref.cc regions.cc \
-		 sort.cc spans.cc stringo.cc stub.cc \
+		 sheet.cc sort.cc spans.cc stringo.cc stub.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
@@ -48,7 +48,7 @@ neoleo_SOURCES = alt-cells.cc alt-lex.cc alt-parse.cc \
 	
 
 
-noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
+noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h \
 		 args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h funcdef.h \
@@ -56,14 +56,14 @@ noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h alt-types.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-visual.h \
 		 key.h \
-		 line.h list.h lists.h logging.h \
+		 line.h list.h logging.h \
 		 mem.h \
-		 node.h  numeric.h \
+		 neotypes.h node.h  numeric.h \
 		 obstack.h \
 		 oleofile.h  oleox.h \
 		 parse.hh parse_parse.h \
 		 posixtm.hh ref.h \
-		 regions.h sort.h spans.h stringo.h stub.h stubs.h \
+		 regions.h sheet.h sort.h spans.h stringo.h stub.h stubs.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h 

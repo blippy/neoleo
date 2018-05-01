@@ -30,7 +30,7 @@
 #include "io-utils.h"
 #include "io-term.h"
 #include "cmd.h"
-#include "lists.h"
+#include "sheet.h"
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"

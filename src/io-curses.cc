@@ -56,7 +56,7 @@ using namespace std::string_literals;
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-utils.h"
-#include "lists.h"
+#include "sheet.h"
 #include "regions.h"
 #include "spans.h"
 #include "window.h"

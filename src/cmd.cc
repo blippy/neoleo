@@ -30,7 +30,7 @@
 #include <string.h>
 #include "oleox.h"
 #include "decompile.h"
-#include "lists.h"
+#include "sheet.h"
 #include "logging.h"
 #include "mem.h"
 

@@ -47,7 +47,7 @@ using std::endl;
 #include "regions.h"
 #include "spans.h"
 #include "window.h"
-#include "lists.h"
+#include "sheet.h"
 #include "tbl.h"
 
 

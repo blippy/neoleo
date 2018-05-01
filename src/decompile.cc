@@ -29,7 +29,7 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "cmd.h"
-#include "lists.h"
+#include "sheet.h"
 #include "logging.h"
 #include "utils.h"
 

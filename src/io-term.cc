@@ -58,7 +58,7 @@ using std::endl;
 #include "defuns.h"
 #include "key.h"
 #include "line.h"
-#include "lists.h"
+#include "sheet.h"
 #include "oleofile.h"
 #include "ref.h"
 #include "regions.h"

@@ -25,7 +25,7 @@
 #include "oleox.h"
 #include "io-curses.h"
 #include "io-utils.h"
-#include "lists.h"
+#include "sheet.h"
 #include "tbl.h"
 #include "utils.h"
 #include "shell.h"

@@ -36,7 +36,7 @@
 #include "io-generic.h"
 #include "cmd.h"
 #include "format.h"
-#include "lists.h"
+#include "sheet.h"
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"

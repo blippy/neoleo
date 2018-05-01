@@ -1,6 +1,3 @@
-#include "lists.h"
-#ifdef USE_ALT_CELLS
-
 #include <algorithm>
 #include <cctype>
 #include <deque>
@@ -11,13 +8,10 @@
 #include <utility>
 
 
-//#include "alt-cells.h"
-//#include "alt-parse.h"
-//#include "byte-compile.h"
 #include "cell.h"
-//#include "decompile.h"
 #include "logging.h"
 #include "mem.h"
+#include "sheet.h"
 
 using std::cout;
 using std::endl;
@@ -172,4 +166,3 @@ cell* next_cell_in_range ()
 }
 
 
-#endif // USE_ALT_CELLS

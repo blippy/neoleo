@@ -33,7 +33,7 @@
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
-#include "lists.h"
+#include "sheet.h"
 #include "ref.h"
 #include "regions.h"
 #include "io-term.h"

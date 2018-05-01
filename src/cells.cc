@@ -40,7 +40,7 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-term.h"
-#include "lists.h"
+#include "sheet.h"
 #include "logging.h"
 #include "ref.h"
 #include "spans.h"

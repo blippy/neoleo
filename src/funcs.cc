@@ -37,15 +37,10 @@
 #include "io-term.h"
 #include "basic.h"
 #include "format.h"
-//#include "print.h"
-//#include "font.h"
-//#include "io-x11.h"
 #include "io-edit.h"
 #include "regions.h"
 #include "window.h"
-//#include "font.h"
-//#include "graph.h"
-#include "lists.h"
+#include "sheet.h"
 #include "utils.h"
 
 

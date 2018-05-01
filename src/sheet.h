@@ -17,10 +17,10 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-// Toggle this on or off depending on whether you want the new version
-//#define USE_ALT_CELLS
+// MANAGE THE COLLECTION OF CELLS, WHICH WE CALL A `SHEET'
 
-#include "global.h"
+#include "neotypes.h"
+
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
 struct cell* find_or_make_cell(CELLREF row, CELLREF col);

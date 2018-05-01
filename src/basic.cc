@@ -18,14 +18,16 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <assert.h>
+#include <ctype.h>
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <iostream>
 
-#include <assert.h>
-#include <ctype.h>
+
 #include "basic.h"
+#include "byte-compile.h"
 #include "cmd.h"
 #include "regions.h"
 #include "window.h"
@@ -36,14 +38,13 @@
 #include "io-curses.h"
 #include "ref.h"
 #include "format.h"
-#include "lists.h"
 #include "io-edit.h"
 #include "eval.h"
-#include "byte-compile.h"
 #include "decompile.h"
-#include "userpref.h"
+#include "sheet.h"
 #include "shell.h"
 #include "spans.h"
+#include "userpref.h"
 #include "utils.h"
 
 using std::cout;

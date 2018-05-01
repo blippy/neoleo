@@ -20,13 +20,6 @@
 #include <map>
 #include <string>
 
-#define USE_ALT_CELLS
-#ifdef USE_ALT_CELLS
-constexpr bool using_alt_cells = true;
-#else
-constexpr bool using_alt_cells = false;
-#endif
-
 #include "obstack.h"
 
 #ifndef RETSIGTYPE

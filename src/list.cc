@@ -33,7 +33,7 @@
 #include "cmd.h"
 #include "ref.h"
 #include "utils.h"
-#include "lists.h"
+#include "sheet.h"
 
 /* This file reads/writes files containing values in separated lists,
    sl_sep is the separating character.  This isn't really a save-file
