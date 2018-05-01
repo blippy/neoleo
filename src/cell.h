@@ -28,8 +28,9 @@
    a VAR, etc may evaluate to, but which no cell can ever contain */
 
 #include <assert.h>
-#include <string>
 #include <cstdint>
+#include <string>
+#include <variant>
 
 #include "global.h"
 #include "numeric.h"
@@ -46,6 +47,16 @@ union vals {
 
 enum ValType { TYP_NUL=0, // taken to mean 'undefined'
 	TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
+
+template<typename T>
+struct Generic { 
+	Generic(const std::string& s) : s(s) {}
+	std::string s; 
+};
+
+struct Err {};
+
+using omnival_t = std::variant<std::string, num_t, Generic<Err>>;
 
 class value {
 	public:
@@ -97,23 +108,26 @@ class cell
 		union vals c_z;
 		unsigned char *cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
+		omnival_t omnival;
 
 	public:
+		unsigned short cell_cycle = 0;
+		struct ref_fm *cell_refs_from = nullptr;
+		struct ref_to *cell_refs_to = nullptr;
+
 		cell();
 		~cell();
+		void reset();
 		/* char *cell_string; */
 		struct cell_flags_s cell_flags;
 		//ValType cell_type = TYP_STR;
 		ValType get_cell_type() { return cell_flags.cell_type;}
 		void set_cell_type(ValType t) { cell_flags.cell_type = t;}
 		int get_cell_jst() { return cell_flags.cell_justify; }
-		unsigned short cell_cycle = 0;
-		//struct font_memo *cell_font;
-		struct ref_fm *cell_refs_from = nullptr;
-		struct ref_to *cell_refs_to = nullptr;
 
 		unsigned char* get_cell_formula(); 
 		unsigned char* set_cell_formula( unsigned char * newval);
+		void set_omnival(struct value* v);
 
 
 		void sInt(int newval); // set integer value
@@ -123,7 +137,7 @@ class cell
 		char * get_cell_str() { 
 			//assert(magic == 0x000FF1CE);
 			return cell_str();};
-		void set_cell_str(char* newval) { c_z.c_s = newval;};
+		void set_cell_str(char* newval);
 		long cell_int() { assert(get_cell_type() == TYP_INT); return c_z.c_l ;};
 		long get_cell_int() { 
 			//assert(magic == 0x000FF1CE);
@@ -137,7 +151,6 @@ class cell
 		void set_cell_flt(num_t newval) { c_z.c_n = newval; };
 		int cell_bol() { return c_z.c_i ;};
 		void set_cell_bol(int newval) { c_z.c_i = newval; };
-		//void set_cell_bol(int newval) { c_z.c_i = newval;};
 		vals get_c_z() { return c_z; }; // ugly compilation hack. TODO eliminate
 		void set_c_z(vals newval) { c_z = newval; } ; // TODO more ugly hackery
 };

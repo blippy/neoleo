@@ -28,6 +28,7 @@
 #include <string.h>
 #include <string>
 
+
 #include "global.h"
 
 #include "byte-compile.h"
@@ -46,7 +47,9 @@
 #include "spans.h"
 #include "utils.h"
 
+using std::cerr;
 using std::cout;
+using std::endl;
 
 #define Float	x.c_n
 #define String	x.c_s
@@ -92,16 +95,49 @@ unsigned char * cell::get_cell_formula()
 	return cell_formula; 
 }
 
+void cell::set_omnival(struct value* v)
+{
+	auto& v1 = v->x;
+	switch(v->type) {
+		case TYP_FLT:
+			omnival = v1.c_n;
+			break;	
+		case TYP_INT:
+			omnival = v1.c_i;
+			break;
+		case TYP_STR:
+			omnival = std::string(v1.c_s);
+			break;
+		case TYP_ERR:
+			omnival = Generic<Err>(v1.c_s);
+			break;
+		default:
+			cerr << "TODO:set_omnival:type:" << v->type << endl;
+			assert(false);
+	}
+	
+}
+void cell::set_cell_str(char* newval)
+{ 
+	reset();
+	c_z.c_s = newval;
+}
 unsigned char * cell::set_cell_formula( unsigned char * newval)
 { 
 	cell_formula = newval ;  
 	return cell_formula; 
 }
-cell::~cell(void)
+
+void cell::reset()
 {
-	magic = 0x0DEFACED; // see TR06
 	if(cell_formula) free(cell_formula);
 	cell_formula = 0;
+}
+
+cell::~cell()
+{
+	magic = 0x0DEFACED; // see TR06
+	cell::reset();
 	//cout <<"X";
 }
 

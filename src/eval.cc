@@ -1435,32 +1435,16 @@ update_cell(CELL *cell)
       push_refs (cell->cell_refs_from);
       return;
     }
-#if 0
-  /* Danny */ fprintf(stderr, "update_cell cycle %d, cell %d.%d was cycle %d\n",
-	current_cycle, 0, 0, cell->cell_cycle);
-#endif
-#if 0
-{ int i;
-  fprintf(stderr, "update_cell -> ");
-  if (cell->cell_refs_from) {
-    for (i=0; i<cell->cell_refs_from->refs_used; i++)
-      fprintf(stderr, "%d.%d ", cell->cell_refs_from->fm_refs[i].ref_row,
-	    cell->cell_refs_from->fm_refs[i].ref_col);
-    fprintf(stderr, "\n");
-  }
-}
-#endif
 
   cell->cell_cycle = current_cycle;
+  cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
 
   if (newv->type != GET_TYP (cell))
     {
-      if (GET_TYP (cell) == TYP_STR)
-	free (cell->cell_str());
+      if (GET_TYP (cell) == TYP_STR) free (cell->cell_str());
       SET_TYP (cell, newv->type);
       new_val = 1;
-      if (newv->type == TYP_STR)
-	newv->String = strdup (newv->String);
+      if (newv->type == TYP_STR) newv->String = strdup (newv->String);
     }
   else
     switch (newv->type)
