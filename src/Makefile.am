@@ -20,6 +20,7 @@ CLEANFILES = $(BUILT_SOURCES)
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
 neoleo_SOURCES = alt-lex.cc alt-parse.cc \
+		 defuns.cc \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
@@ -37,7 +38,6 @@ neoleo_SOURCES = alt-lex.cc alt-parse.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
-		 defuns.cc \
 		 get_date.h getdate.yy \
 		 parse.yy \
 		 posixtm.yy \
