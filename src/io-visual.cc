@@ -318,12 +318,12 @@ edit_cell_visually(int display_row)
 
 		}
 		gotoc(col);
-		set_cell_from_string(curow, cucol, formula);
 		cout << flush;
 	}
 
 	gotoc(1);
 	cleareol();
+	set_cell_from_string(curow, cucol, formula);
 	cout << flush;
 }
 
