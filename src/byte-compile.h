@@ -19,10 +19,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "cell.h"
 #include "mem.h"
 
-extern char *parse_and_compile (const char *string);
-extern char *parse_and_compile (const char *string, mem& the_mem);
+char *parse_and_compile (cell* cp, const char *string);
+char *parse_and_compile (cell* cp, const char *string, mem& the_mem);
 extern void byte_free (unsigned char *form);
 //extern int is_constant (unsigned char *);
 extern int is_constant (unsigned char *bytes);

@@ -60,6 +60,24 @@ class value {
 		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
 };
 
+constexpr auto JST_DEF = 0;
+#define JST_LFT		1
+#define JST_RGT		2
+#define JST_CNT		3
+
+#define FMT_DEF		0	/* Default */
+#define FMT_HID		1	/* Hidden */
+#define FMT_GPH		2	/* Graph */
+#define FMT_DOL		3	/* Dollar */
+#define FMT_CMA		4	/* Comma */
+#define FMT_PCT		5	/* Percent */
+#define FMT_USR		6	/* User defined */
+#define FMT_FXT		7
+#define FMT_EXP		8
+#define FMT_GEN		9
+#define	FMT_DATE	10	/* Date */
+
+#define FMT_MAX 15
 /* An actual cell structure.  These cannot be variable-length, since they are
    allocated as a variable-length array on a col structure. */
 
@@ -67,9 +85,10 @@ class value {
 	unsigned int	cell_unused:	1;	/* Was 2 */
 	unsigned int	cell_lock:	2;
 	//unsigned int	cell_type:	3;
-	ValType		cell_type:	TYP_STR;
-	unsigned int	cell_justify:	2;
-	unsigned int	cell_format:	4;	/* Was 3 */
+	//ValType		cell_type:	TYP_STR;
+	ValType		cell_type = 	TYP_NUL;
+	unsigned int	cell_justify =	JST_DEF;
+	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;
     }; 
 class cell
@@ -174,10 +193,6 @@ typedef struct var
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
-#define JST_DEF		0
-#define JST_LFT		1
-#define JST_RGT		2
-#define JST_CNT		3
 extern const int base_default_jst;
 
 /*
@@ -195,19 +210,6 @@ extern const int base_default_jst;
 
 #define FLOAT_PRECISION	11
 
-#define FMT_DEF		0	/* Default */
-#define FMT_HID		1	/* Hidden */
-#define FMT_GPH		2	/* Graph */
-#define FMT_DOL		3	/* Dollar */
-#define FMT_CMA		4	/* Comma */
-#define FMT_PCT		5	/* Percent */
-#define FMT_USR		6	/* User defined */
-#define FMT_FXT		7
-#define FMT_EXP		8
-#define FMT_GEN		9
-#define	FMT_DATE	10	/* Date */
-
-#define FMT_MAX 15
 
 /* README README README
  *

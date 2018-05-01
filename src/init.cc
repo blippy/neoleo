@@ -459,7 +459,7 @@ static char *init_cmds[] =
 
 
 
-  "set-option a0",
+  //"set-option a0",
 
   0
 

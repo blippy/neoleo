@@ -169,15 +169,6 @@ misc_memchecks()
 	get_set(1, 1, "63.36");
 	get_set(2, 1, "1 + R[-1]C");
 
-	// leaks fixed as at 28-Aug-2017
-	{
-		char str1[] =  "\"foo\"";
-		mem parser_mem;
-		parser_mem.auto_release(); // for when you want to release out of scope
-		char* ret = parse_and_compile(str1, parser_mem);
-		free(ret);
-		//parser_mem.release_all();
-	}
 }
 
 bool

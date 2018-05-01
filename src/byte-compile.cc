@@ -47,6 +47,7 @@
 #include "cell.h"
 #include "byte-compile.h"
 #include "utils.h"
+#include "ref.h"
 
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
@@ -368,7 +369,7 @@ rot_patch (int n1, int n2)
 }
 
 
-bool process_function(const struct function* f, struct node*& node, int& byte)
+bool process_function(cell* cp, const struct function* f, struct node*& node, int& byte)
 {
 	struct node *new_node;
 
@@ -468,14 +469,14 @@ bool process_function(const struct function* f, struct node*& node, int& byte)
 			break;
 
 		case C_VAR:
-			add_ref_to (obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_object_size (&tmp_mem));
 			add_var_ref (node->n_x.v_var);
 			(void) obstack_1grow (&tmp_mem, byte);
 			(void) obstack_grow (&tmp_mem, &(node->n_x.v_var), sizeof (struct var *));
 			break;
 
 		case C_CELL:
-			add_ref_to (obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_object_size (&tmp_mem));
 			add_ref (node->n_x.v_rng.lr, node->n_x.v_rng.lc);
 			(void) obstack_1grow (&tmp_mem, byte);
 			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr >> 8);
@@ -485,20 +486,20 @@ bool process_function(const struct function* f, struct node*& node, int& byte)
 				break;
 
 		case C_RANGE:
-			add_ref_to (obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_object_size (&tmp_mem));
 			add_range_ref (&(node->n_x.v_rng));
 			(void) obstack_1grow (&tmp_mem, byte);
 			(void) obstack_grow (&tmp_mem, &(node->n_x.v_rng), sizeof (struct rng));
 			break;
 
 		case C_FN0X:
-			add_ref_to (obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_object_size (&tmp_mem));
 			/* FALLTHROUGH */
 		case C_FN0:
 		case C_CONST:
 add_byte:
 			if (f->fn_comptype & C_T)
-				add_timer_ref (obstack_object_size (&tmp_mem));
+				add_timer_ref (cp, obstack_object_size (&tmp_mem));
 			(void) obstack_1grow (&tmp_mem, byte);
 			if (byte >= USR1 && byte < SKIP)
 				(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
@@ -657,13 +658,13 @@ loop:
  */
 
 char*
-parse_and_compile(const char* string)
+parse_and_compile(cell* cp, const char* string)
 {
 	mem the_mem; // we're just going to ignore the mem allocated
-	return parse_and_compile(string, the_mem);
+	return parse_and_compile(cp, string, the_mem);
 }
 
-char* parse_and_compile_1 (const char *string, mem& the_mem)
+char* parse_and_compile_1 (cell* cp, const char *string, mem& the_mem)
 {
 	struct node *node;
 	const struct function *f;
@@ -710,7 +711,7 @@ loop:
 	if (!f)
 		panic ("f is zero in byte_compile!");
 #endif
-	if(process_function(f, node, byte)) goto loop;
+	if(process_function(cp, f, node, byte)) goto loop;
 
 	node = (struct node *) pop_stack (fn_stack);
 	if (node)
@@ -804,9 +805,9 @@ loop:
 // caller is responsible for free'ing `char* ret'. The chances are
 // that it will be stored in the cells, and become automatically
 // reaped that way.
-char* parse_and_compile (const char *string, mem& the_mem)
+char* parse_and_compile (cell* cp, const char *string, mem& the_mem)
 {
-	char* ret = parse_and_compile_1(string, the_mem);
+	char* ret = parse_and_compile_1(cp, string, the_mem);
 	if(ret) obstack_free (&tmp_mem, tmp_mem_start);
 	return ret;
 }

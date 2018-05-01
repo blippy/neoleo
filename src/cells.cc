@@ -125,7 +125,7 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 	CELL* cp = find_or_make_cell(r, c);
 	assert(cp);
 	const auto inpt =  new_input.c_str();
-	auto bcode =  (unsigned char*) parse_and_compile(inpt); // not auto-free'd
+	auto bcode =  (unsigned char*) parse_and_compile(cp, inpt); // not auto-free'd
 	cp->set_cell_formula(bcode);
 }
 

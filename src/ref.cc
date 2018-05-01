@@ -128,7 +128,7 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 	else	
 		my_cell = find_or_make_cell(cur_row, cur_col);
 
-	ret = (unsigned char*) parse_and_compile (s2.c_str());
+	ret = (unsigned char*) parse_and_compile (my_cell, s2.c_str());
 	my_cell->set_cell_formula(ret);
 }
 
@@ -252,7 +252,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 	if (form)
 	{
-		auto new_bytes = (unsigned char*) parse_and_compile (form);
+		auto new_bytes = (unsigned char*) parse_and_compile (my_cell, form);
 		my_cell->set_cell_formula(new_bytes);
 	}
 
@@ -877,6 +877,8 @@ add_ref (CELLREF row, CELLREF col)
 void
 add_range_ref (struct rng *rng)
 {
+	return; // TODO FIXME
+
 	CELL *other_cell;
 	struct ref_fm *oldref, *newref;
 	struct ref_fm nonref;
@@ -890,6 +892,7 @@ add_range_ref (struct rng *rng)
 	 */
 	nonref.refs_refcnt = 1;
 	other_cell = next_cell_in_range ();
+	assert(other_cell);
 	oldref = other_cell->cell_refs_from;
 	if (oldref && oldref->refs_refcnt == 1)
 		oldref = &nonref;
@@ -1295,12 +1298,12 @@ find_to_ref (void)
 }
 
 void
-add_ref_to (int whereto)
+add_ref_to (cell* cp, int whereto)
 {
 	struct ref_to *from;
 	int n;
 
-	from = my_cell->cell_refs_to;
+	from = cp->cell_refs_to;
 	if (!from)
 	{
 		if (!to_tmp_ref)
@@ -1331,9 +1334,9 @@ add_ref_to (int whereto)
 			to_tmp_ref->to_refs[n + 1] = from->to_refs[n];
 			n++;
 		}
-		flush_ref_to (&(my_cell->cell_refs_to));
+		flush_ref_to (&(cp->cell_refs_to));
 	}
-	my_cell->cell_refs_to = find_to_ref ();
+	cp->cell_refs_to = find_to_ref ();
 }
 
 static void
@@ -2199,9 +2202,9 @@ flush_all_timers (void)
 /* Add CUR_ROW, CUR_COL to the list of active timer-cells, turning on
    the timer_active, if it isn't already */
 void
-add_timer_ref (int whereto)
+add_timer_ref (cell*cp, int whereto)
 {
-	add_ref_to (whereto);
+	add_ref_to (cp, whereto);
 	add_ref_fm (&timer_cells, cur_row, cur_col);
 	++timer_active;
 }
