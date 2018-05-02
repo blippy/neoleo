@@ -19,8 +19,14 @@ CLEANFILES = $(BUILT_SOURCES)
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
-neoleo_SOURCES = alt-lex.cc alt-parse.cc \
-		 defuns.cc \
+# Optional component: neobasic:
+#if 1
+BLANG_SRCS = blang-lex.cc blang-parse.cc
+BLANG_HDRS = blang-lex.h  blang-parse.h
+#endif
+
+neoleo_SOURCES = defuns.cc \
+		 $(BLANG_SRCS) \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cells.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
@@ -48,8 +54,8 @@ neoleo_SOURCES = alt-lex.cc alt-parse.cc \
 	
 
 
-noinst_HEADERS = alt-cells.h alt-lex.h alt-parse.h \
-		 args.h basic.h byte-compile.h busi.h cell.h \
+noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
+		 $(BLANG_HDRS) \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h funcdef.h \
 		 funcs.h global.h init.h \

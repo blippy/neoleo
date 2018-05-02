@@ -35,7 +35,7 @@ using std::endl;
 
 /* First, build arrays containing FUNC_ARG strings. */
 
-#include "alt-parse.h"
+#include "blang-parse.h"
 #include "global.h"
 #include "cmd.h"
 #include "key.h"
