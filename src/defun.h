@@ -1006,7 +1006,9 @@ DEFUN ("error-msg",
 #endif
 
 
+#ifdef BLANG	
 DEFUN ("bload", FDbload, FAbload, bload)
 #ifdef FUNC_ARG_STRINGS
 "frLoad neo-basic? ",
 #endif
+#endif // BLANG	

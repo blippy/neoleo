@@ -20,9 +20,10 @@ CLEANFILES = $(BUILT_SOURCES)
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 
 # Optional component: neobasic:
-#if 1
-BLANG_SRCS = blang-lex.cc blang-parse.cc
-BLANG_HDRS = blang-lex.h  blang-parse.h
+#if 0
+#BLANG_SRCS = blang-lex.cc blang-parse.cc
+#BLANG_HDRS = blang-lex.h  blang-parse.h
+#AM_CXXFLAGS += -DBLANG
 #endif
 
 neoleo_SOURCES = defuns.cc \

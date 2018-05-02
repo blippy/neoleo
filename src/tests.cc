@@ -25,6 +25,10 @@ using namespace std::string_literals;
 //#include <sanitizer/lsan_interface.h>
 
 
+#ifdef BLANG
+#include "blang-parse.h"
+#endif // BLANG
+
 #include "tests.h"
 #include "io-abstract.h"
 #include "basic.h"
@@ -38,7 +42,6 @@ using namespace std::string_literals;
 #include "decompile.h"
 #include "sheet.h"
 #include "parse_parse.h"
-#include "blang-parse.h"
 
 static bool all_pass = true; // all the checks have passed so far
 
@@ -247,7 +250,9 @@ headless_tests()
 
 	map<string, std::function<bool()> > func_map = {
 		{"alt-cells",	run_alt_cells_tests},
+#ifdef BLANG
 		{"alt-parse",	run_alt_parse_tests},
+#endif // BLANG
 		{"regular", 	run_regular_tests},
 		{"yyreglex",	yyreglex_experiment}
 	};
