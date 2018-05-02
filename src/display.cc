@@ -178,7 +178,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
   cd->clipped = 0;
   disp->metric (cd, disp);
   if (new_type == TYP_INT)
-    cd->numeric.integer = cp->cell_int();
+    cd->numeric.integer = cp->gInt();
   else if (new_type == TYP_FLT)
     cd->numeric.dbl = cp->cell_flt();
   else

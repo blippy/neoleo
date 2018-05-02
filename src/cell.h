@@ -62,13 +62,35 @@ class value {
 	public:
 		value();
 		~value();
-		ValType type = TYP_NUL;
+
 		union vals x;
-		long gLong() { assert(type == TYP_INT); return x.c_l; };
-		char *gString() { assert(type == TYP_STR); return x.c_s; };
+
+		ValType type = TYP_NUL;
+		ValType get_type() { return type;}
+		void set_type(ValType t) { type = t;}
+
+
 		void sInt(int newval) { type = TYP_INT; x.c_i = newval; };
+		int gInt() { return x.c_i; };
+
+		long gLong() { assert(type == TYP_INT); return x.c_l; };
 		void sLong(long newval) { type = TYP_INT; x.c_l = newval; };
+		
+		char *gString() { assert(type == TYP_STR); return x.c_s; };
 		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
+
+		char * cell_str() {  return x.c_s ;}
+		char * get_cell_str() { ; return cell_str();}
+
+		int cell_err() { return x.c_i ;};
+
+		num_t cell_flt() { return x.c_n ;};
+		void sFlt(num_t v) { type == TYP_FLT; x.c_n = v ;};
+		num_t get_cell_flt() { return x.c_n ;};
+		void set_cell_flt(num_t newval) { type == TYP_FLT; x.c_n = newval; };
+
+		union vals get_cell_value() { return x; }
+		void set_cell_value(union vals uv) { x = uv; }
 };
 
 constexpr auto JST_DEF = 0;
@@ -100,7 +122,7 @@ struct cell_flags_s {
 	unsigned int	cell_precision:	4;
 }; 
 
-class cell
+class cell : public value
 {
 	private:
 		//union vals c_z;
@@ -117,8 +139,8 @@ class cell
 		~cell();
 		void reset();
 		struct cell_flags_s cell_flags;
-		ValType get_cell_type() { return cell_flags.cell_type;}
-		void set_cell_type(ValType t) { cell_flags.cell_type = t;}
+		//ValType get_cell_type() { return cell_flags.cell_type;}
+		//void set_cell_type(ValType t) { cell_flags.cell_type = t;}
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
 		unsigned char* get_cell_formula(); 
@@ -127,28 +149,25 @@ class cell
 
 
 		void sInt(int newval); // set integer value
-		char * cell_str() { 
-			//assert(magic == 0x000FF1CE);
-			assert(get_cell_type() == TYP_STR); return c_z.c_s ;};
-		char * get_cell_str() { 
-			//assert(magic == 0x000FF1CE);
-			return cell_str();};
 		void set_cell_str(char* newval);
-		long cell_int() { assert(get_cell_type() == TYP_INT); return c_z.c_l ;};
-		long get_cell_int() { 
-			//assert(magic == 0x000FF1CE);
-			return cell_int();
-		};
-		void set_cell_int(long newval) { c_z.c_l = newval; } ; 
-		int cell_err() { return c_z.c_i ;};
-		void set_cell_err(int newval) { c_z.c_i = newval ;};
-		num_t cell_flt() { return c_z.c_n ;};
-		num_t get_cell_flt() { return c_z.c_n ;};
-		void set_cell_flt(num_t newval) { c_z.c_n = newval; };
-		int cell_bol() { return c_z.c_i ;};
-		void set_cell_bol(int newval) { c_z.c_i = newval; };
-		vals get_c_z() { return c_z; }; // ugly compilation hack. TODO eliminate
-		void set_c_z(vals newval) { c_z = newval; } ; // TODO more ugly hackery
+		//long cell_int() {  return c_z.c_l; }
+		int gErr() { return x.c_i ;};
+		void sErr(int newval) { x.c_i = newval ;};
+		//num_t cell_flt() { return c_z.c_n ;};
+		//num_t get_cell_flt() { return c_z.c_n ;};
+		//void set_cell_flt(num_t newval) { c_z.c_n = newval; };
+		int gBol() { return x.c_i ;};
+		void sBol(int newval) { x.c_i = newval; };
+
+		/* mcarter 02-May-2018 issue#37
+		 * This is a potential source of bugs, because set_c_z() does not
+		 * set the type as well. So you might be mixing up types. I encountered
+		 * this when I juiced up class cell to derive from class value, and
+		 * tried the copy-region function. set_c_z() is used in other places,
+		 * so there are likely to be other bugs lurking in the code
+		 */
+		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
+		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
 };
 
 bool vacuous(cell* cp);
@@ -197,8 +216,8 @@ typedef struct var
 #define LCK_LCK		2
 
 /* The type of a cell, or of a eval_expression() value */
-#define GET_TYP(p)	((p)->get_cell_type())
-#define SET_TYP(p,x)	((p)->set_cell_type(x))
+#define GET_TYP(p)	((p)->get_type())
+#define SET_TYP(p,x)	((p)->set_type(x))
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))

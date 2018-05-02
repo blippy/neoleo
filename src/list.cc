@@ -189,13 +189,13 @@ list_write_file (
 		  fputs (flt_to_str (cp->cell_flt()), fp);
 		  break;
 		case TYP_INT:
-		  fprintf (fp, "%ld", cp->cell_int());
+		  fprintf (fp, "%ld", (long int) cp->gInt());
 		  break;
 		case TYP_STR:
 		  fputs (cp->cell_str(), fp);
 		  break;
 		case TYP_BOL:
-		  fputs (bname[cp->cell_bol()], fp);
+		  fputs (bname[cp->gBol()], fp);
 		  break;
 		case TYP_ERR:
 		  fputs (ename[cp->cell_err()], fp);

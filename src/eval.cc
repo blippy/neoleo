@@ -1184,7 +1184,7 @@ deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
 	      if (GET_TYP (cell_ptr) == TYP_FLT)
 		add_flt (cell_ptr->cell_flt());
 	      else if (GET_TYP (cell_ptr) == TYP_INT)
-		add_int (cell_ptr->cell_int());
+		add_int (cell_ptr->gInt());
 	      else if (GET_TYP (cell_ptr) == TYP_STR)
 		{
 		  strptr = cell_ptr->cell_str();
@@ -1437,7 +1437,7 @@ update_cell(CELL *cell)
     }
 
   cell->cell_cycle = current_cycle;
-  cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
+  //cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
 
   if (newv->type != GET_TYP (cell))
     {
@@ -1456,7 +1456,7 @@ update_cell(CELL *cell)
 	new_val = newv->Float != cell->cell_flt();
 	break;
       case TYP_INT:
-	new_val = newv->Int != cell->cell_int();
+	new_val = newv->Int != cell->gInt();
 	break;
       case TYP_STR:
 	new_val = strcmp (newv->String, cell->cell_str());
@@ -1467,7 +1467,7 @@ update_cell(CELL *cell)
 	  }
 	break;
       case TYP_BOL:
-	new_val = newv->Value != cell->cell_bol();
+	new_val = newv->Value != cell->gBol();
 	break;
       case TYP_ERR:
 	new_val = newv->Value != cell->cell_err();

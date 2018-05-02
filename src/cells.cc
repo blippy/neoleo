@@ -84,10 +84,9 @@ value::~value(void)
 
 cell::cell(void)
 {
-	//constexpr c_z_size = max(sizeof(size_t), sizeof(long), sizeof(struct rng));
-	//memset(*c_z, 0, c_z_size);
-	memset(&c_z, 0, sizeof(vals));
-	//cout << "X";
+	//memset(&c_z, 0, sizeof(vals));
+	set_type(TYP_NUL);	
+	sFlt(0.0);
 }
 
 unsigned char * cell::get_cell_formula()
@@ -120,7 +119,7 @@ void cell::set_omnival(struct value* v)
 void cell::set_cell_str(char* newval)
 { 
 	reset();
-	c_z.c_s = newval;
+	x.c_s = newval;
 }
 unsigned char * cell::set_cell_formula( unsigned char * newval)
 { 
@@ -144,14 +143,15 @@ cell::~cell()
 void 
 cell::sInt(int newval)
 {
-	c_z.c_i = newval;
-	set_cell_type(TYP_INT);
+	x.c_i = newval;
+	set_type(TYP_INT);
 }
+
 
 bool 
 vacuous(cell* cp)
 {
-	return (cp == nullptr) || (cp->get_cell_type() == TYP_NUL);
+	return (cp == nullptr) || (cp->get_type() == TYP_NUL);
 }
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
@@ -355,13 +355,13 @@ do_member (struct value *p)
 	  foundit = cell_ptr->cell_flt() == (p + 1)->Float;
 	  break;
 	case TYP_INT:
-	  foundit = cell_ptr->cell_int() == (p + 1)->Int;
+	  foundit = cell_ptr->gInt() == (p + 1)->Int;
 	  break;
 	case TYP_STR:
 	  foundit = !strcmp (cell_ptr->cell_str(), (p + 1)->String);
 	  break;
 	case TYP_BOL:
-	  foundit = cell_ptr->cell_bol() == (p + 1)->Value;
+	  foundit = cell_ptr->gBol() == (p + 1)->Value;
 	  break;
 	case TYP_ERR:
 	  foundit = cell_ptr->cell_err() == (p + 1)->Value;
@@ -524,7 +524,7 @@ do_hlookup (struct value *p)
 	    goto out;
 	  break;
 	case TYP_INT:
-	  if (fltval < cell_ptr->cell_int())
+	  if (fltval < cell_ptr->gInt())
 	    goto out;
 	  break;
 	case TYP_STR:
@@ -589,7 +589,7 @@ do_vlookup (
 	    goto out;
 	  break;
 	case TYP_INT:
-	  if (fltval < cell_ptr->cell_int())
+	  if (fltval < cell_ptr->gInt())
 	    goto out;
 	  break;
 	case TYP_STR:

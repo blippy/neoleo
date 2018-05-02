@@ -318,7 +318,7 @@ print_cell (CELL * cp)
       if (cp->cell_bol < 0 || cp->cell_bol > 1)
 	panic ("Bool %d out of range", cp->cell_bol);
 #endif
-      return bname[cp->cell_bol()];
+      return bname[cp->gBol()];
     }
   if (GET_TYP (cp) == TYP_ERR) {
 #ifdef TEST
@@ -407,15 +407,15 @@ print_cell (CELL * cp)
       switch (j)
 	{
 	case FMT_GPH:
-	  if (cp->cell_int() < 0)
+	  if (cp->gInt() < 0)
 	    {
 	      j = '-';
-	      num = -(cp->cell_int());
+	      num = -(cp->gInt());
 	    }
-	  else if (cp->cell_int() >= 1)
+	  else if (cp->gInt() >= 1)
 	    {
 	      j = '+';
-	      num = (cp->cell_int());
+	      num = (cp->gInt());
 	    }
 	  else
 	    {
@@ -427,7 +427,7 @@ print_cell (CELL * cp)
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 	case FMT_DATE:
 		{
-		    time_t t = cp->cell_int();
+		    time_t t = cp->gInt();
 		    int	f = GET_PRECISION(cp);		/* Determines date format */
 		    struct tm *tmp = localtime(&t);
 
@@ -446,33 +446,33 @@ print_cell (CELL * cp)
 #endif
 
 	case FMT_USR:
-	  return pr_int (cp->cell_int(), &u[p], u[p].prec);
+	  return pr_int (cp->gInt(), &u[p], u[p].prec);
 
 	case FMT_GEN:
-	  sprintf (print_buf, "%ld", cp->cell_int());
+	  sprintf (print_buf, "%ld", cp->gInt());
 	  return print_buf;
 
 	case FMT_DOL:
-	  return pr_int (cp->cell_int(), &dol, p);
+	  return pr_int (cp->gInt(), &dol, p);
 
 	case FMT_CMA:
-	  return pr_int (cp->cell_int(), &cma, p);
+	  return pr_int (cp->gInt(), &cma, p);
 
 	case FMT_PCT:
-	  return pr_int (cp->cell_int(), &pct, p);
+	  return pr_int (cp->gInt(), &pct, p);
 
 	case FMT_FXT:
 	  if (p != FLOAT_PRECISION && p != 0)
-	    sprintf (print_buf, "%ld.%.*s", cp->cell_int(), p, zeroes);
+	    sprintf (print_buf, "%ld.%.*s", cp->gInt(), p, zeroes);
 	  else
-	    sprintf (print_buf, "%ld", cp->cell_int());
+	    sprintf (print_buf, "%ld", cp->gInt());
 	  return print_buf;
 
 	case FMT_EXP:
 	  if (p != FLOAT_PRECISION)
-	    sprintf (print_buf, "%.*e", p, (double) (cp->cell_int()));
+	    sprintf (print_buf, "%.*e", p, (double) (cp->gInt()));
 	  else
-	    sprintf (print_buf, "%e", (double) (cp->cell_int()));
+	    sprintf (print_buf, "%e", (double) (cp->gInt()));
 	  return print_buf;
 #ifdef TEST
 	default:
@@ -505,14 +505,14 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
       return flt_to_str (cp->cell_flt());
 
     case TYP_INT:
-      sprintf (print_buf, "%ld", cp->cell_int());
+      sprintf (print_buf, "%ld", cp->gInt());
       return print_buf;
 
     case TYP_STR:
       return backslash_a_string (cp->cell_str(), add_quote);
 
     case TYP_BOL:
-      return bname[cp->cell_bol()];
+      return bname[cp->gBol()];
 
     case TYP_ERR:
       return ename[cp->cell_err()];

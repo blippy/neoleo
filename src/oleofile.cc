@@ -831,11 +831,11 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				ptr = flt_to_str (cp->cell_flt());
 				break;
 			case TYP_INT:
-				sprintf (p_buf, "%ld", cp->cell_int());
+				sprintf (p_buf, "%ld", (long int) cp->gInt());
 				ptr = p_buf;
 				break;
 			case TYP_BOL:
-				ptr = bname[cp->cell_bol()];
+				ptr = bname[cp->gBol()];
 				break;
 			case TYP_ERR:
 				ptr = ename[cp->cell_err()];

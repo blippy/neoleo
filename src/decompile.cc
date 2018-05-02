@@ -606,7 +606,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 		case TYP_INT:
 			{
 				static char buf[20];
-				sprintf(buf, "%ld", cell->cell_int());
+				sprintf(buf, "%ld", (long int) cell->gInt());
 				str = buf;
 			}
 			break;
@@ -615,10 +615,10 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 			log_debug_1("decomp_formula_1:TYP_STR:"s + str);
 			break;
 		case TYP_BOL:
-			str = bname[cell->cell_bol()];
+			str = bname[cell->gBol()];
 			break;
 		case TYP_ERR:
-			str = ename[cell->cell_bol()];
+			str = ename[cell->gBol()];
 			break;
 		default:
 			panic ("Unknown type %d in decomp", GET_TYP (cell));
