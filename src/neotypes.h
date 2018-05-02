@@ -10,6 +10,7 @@
 typedef std::variant<num_t, std::string> value_t;
 typedef std::vector<value_t> values;
 
+typedef std::vector<std::string> strings;
 
 /*
 typedef struct cell_t {
