@@ -92,20 +92,18 @@ constexpr auto JST_DEF = 0;
 /* An actual cell structure.  These cannot be variable-length, since they are
    allocated as a variable-length array on a col structure. */
 
-    struct cell_flags_s {
+struct cell_flags_s {
 	unsigned int	cell_unused:	1;	/* Was 2 */
 	unsigned int	cell_lock:	2;
-	//unsigned int	cell_type:	3;
-	//ValType		cell_type:	TYP_STR;
-	ValType		cell_type = 	TYP_NUL;
 	unsigned int	cell_justify =	JST_DEF;
 	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;
-    }; 
+}; 
+
 class cell
 {
 	private:
-		union vals c_z;
+		//union vals c_z;
 		unsigned char *cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		omnival_t omnival;
@@ -118,9 +116,7 @@ class cell
 		cell();
 		~cell();
 		void reset();
-		/* char *cell_string; */
 		struct cell_flags_s cell_flags;
-		//ValType cell_type = TYP_STR;
 		ValType get_cell_type() { return cell_flags.cell_type;}
 		void set_cell_type(ValType t) { cell_flags.cell_type = t;}
 		int get_cell_jst() { return cell_flags.cell_justify; }
