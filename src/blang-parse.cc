@@ -35,7 +35,7 @@
 #include <variant>
 #include <vector>
 
-#include "alt-lex.h"
+#include "blang-lex.h"
 #include "cmd.h"
 #include "neotypes.h"
 #include "numeric.h"

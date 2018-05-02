@@ -3,7 +3,7 @@
 #include <regex>
 #include <string>
 
-#include "alt-lex.h"
+#include "blang-lex.h"
 
 using std::cout;
 using std::endl;

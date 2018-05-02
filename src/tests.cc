@@ -38,7 +38,7 @@ using namespace std::string_literals;
 #include "decompile.h"
 #include "sheet.h"
 #include "parse_parse.h"
-#include "alt-parse.h"
+#include "blang-parse.h"
 
 static bool all_pass = true; // all the checks have passed so far
 
