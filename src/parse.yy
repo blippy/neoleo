@@ -46,6 +46,7 @@
 %token	L_LE	L_NE	L_GE
 
 %{
+#include <iostream>
 #include <map>
 #include <stdexcept>
 #include <string_view>
@@ -62,6 +63,8 @@ using namespace std::literals;
 #include "eval.h"
 #include "ref.h"
 #include "parse_parse.h"
+
+using std::cout;
 
 int yyreglex ();
 void yyregerror (std::string_view s);
@@ -355,4 +358,38 @@ int yyparse_parse(const std::string& input)
 	mem yymem;
 	return yyparse_parse(input, yymem);
 }
+void FormulaParser::clear()
+{
+	parser_mem.release_all();
+	m_root = nullptr;
+	parse_error = 0;
+	parse_return =0;
+}
 
+bool  FormulaParser::parse(const std::string& text)
+{
+
+	clear();
+
+	bool ok = true;
+
+	// is the text purely whitespace?
+	bool trivial = std::all_of(text.cbegin(), text.cend(), [](int c) { return std::isspace(c) !=0;});
+	//cout << "FormulaParser::parse:trivial:"  << trivial ;
+	if(trivial) return ok;
+
+	bool ok1 = yyparse_parse(text, parser_mem) == 0;
+	bool ok2 = parse_error == 0;
+	ok  = ok1 && ok2; 
+	m_root = parse_return;
+	//cout << ":parse_error:" << parse_error << ":ok1:" << ok1 << ":ok2:" << ok2 << ":ok:" << ok << ":root:" << (void*) root() << "\n";
+	//cout << ":ok:" << ok << "\n";
+	return ok;
+}
+
+node* FormulaParser::root() { return m_root; }
+
+FormulaParser::~FormulaParser()
+{
+	clear();
+}

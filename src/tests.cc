@@ -37,6 +37,7 @@ using namespace std::string_literals;
 #include "io-utils.h"
 #include "cell.h"
 #include "mem.h"
+#include "neotypes.h"
 #include "ref.h"
 #include "byte-compile.h"
 #include "decompile.h"
@@ -132,32 +133,34 @@ void test_decomp()
 	
 }
 
-void
+void parse_text(const std::string& expr)
+{
+	FormulaParser yy;
+	cout << "Parsing:<" << expr << ">\n";
+	yy.parse(expr);
+	cout << "\n";
+}
+
+bool
 test_yyparse_parse()
 {
-	// leak fixed by introduction of mem
-	{
-		mem yymem;
-		yyparse_parse("\"foo\"", yymem);
-		yymem.release_all();
-	}
+	FormulaParser yy, yy1;
+	bool ok;
 
-	// another leak test - which passes
-	{
-		mem yymem;
-		yyparse_parse("len(\"foo\") + len(\"barzy\")", yymem);
-		yymem.release_all();
-	}
-
-	// something similar used to cause a segfault.
-	// Proper allocation is now done.
-	{
-		mem yymem;
-		yyparse_parse("1+X", yymem);
-		yymem.release_all();
-	}
-
-	cout << "PASS yyparse_parse\n";
+	auto exprs = strings { "12", "13", "13+14", 
+		"\"hello\"",
+		"",
+		"   ",
+		"  \t\t     ",
+		"     3 + 4   ",
+		"1+", 
+		"\"hello\"",
+		"\"howde doode\"",
+		"\"dangling string"
+	};
+	for(auto const& e: exprs) parse_text(e);
+	
+	cout << "Finished testing yyparse_parse\n";
 }
 
 void
@@ -178,7 +181,6 @@ run_regular_tests()
 {
 	test_formatting();
 	run_cell_formula_tests();
-	test_yyparse_parse();
 	misc_memchecks();
 
 	default_fmt = FMT_GEN;
@@ -207,6 +209,7 @@ run_regular_tests()
 	check(pad_left("hello", 7) == "  hello", "padleft");
 	check(pad_right("hello", 7) == "hello  ", "padright");
 
+	test_yyparse_parse();
 
 
 	FreeGlobals();
@@ -254,6 +257,7 @@ headless_tests()
 		{"alt-parse",	run_alt_parse_tests},
 #endif // BLANG
 		{"regular", 	run_regular_tests},
+		{"yyparse", 	test_yyparse_parse},
 		{"yyreglex",	yyreglex_experiment}
 	};
 

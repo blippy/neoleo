@@ -674,9 +674,13 @@ char* parse_and_compile_1 (cell* cp, const char *string, mem& the_mem)
 	int need_relax;
 	int byte;
 
-	parse_error = 0;
+	//parse_error = 0;
 	patches_used = 0;
-	if (yyparse_parse(string, the_mem) || parse_error)
+
+	FormulaParser yy;
+	bool ok = yy.parse(string);
+	//if (yyparse_parse(string, the_mem) || parse_error)
+	if(!ok)
 	{
 		ret = (char*) ck_malloc (strlen (string) + 5);
 		ret[0] = CONST_ERR;
@@ -687,7 +691,7 @@ char* parse_and_compile_1 (cell* cp, const char *string, mem& the_mem)
 		return ret;
 	}
 
-	node = parse_return;
+	node = yy.root();
 	if (!node)
 		return 0;
 
