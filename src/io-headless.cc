@@ -1,4 +1,3 @@
-//#define __GNU_SOURCE // we want TEMP_FAILURE_RETRY defined
 //#include <array>
 #include <assert.h>
 #include <algorithm>
@@ -13,7 +12,10 @@
 #include <vector>
 
 
+#ifdef BLANG
 #include "blang-parse.h"
+#endif
+
 #include "basic.h"
 #include "cell.h"
 #include "defuns.h"
@@ -228,8 +230,8 @@ insert_columnwise(T fildes)
 	}
 }
 
-/* run a neobasic program between .BAS and .XBAS
- */
+/* run a neobasic program between .BAS and .XBAS */
+#ifdef BLANG
 static void
 bas(int fildes)
 {
@@ -244,6 +246,7 @@ bas(int fildes)
 
 	run_neobasic(prog);
 }
+#endif // BLANG
 
 static void
 insert_rowwise(T fildes)
@@ -314,7 +317,9 @@ static void type_dsv(int fildes)
 }
 
 static map<string, function<void(T)> > func_map = {
+#ifdef BLANG
 	{".BAS", bas},
+#endif // BLANG
 	{"colours", colours},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
