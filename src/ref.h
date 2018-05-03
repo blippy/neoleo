@@ -40,7 +40,7 @@ extern char * new_value (CELLREF row, CELLREF col, const char *string);
 char* set_cell_from_string(int r,int  c, const std::string & s);
 //extern char * quote_new_value (CELLREF row, CELLREF col, char *string);
 extern char * set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value);
-extern char * read_new_value (CELLREF row, CELLREF col, char *form, char *val);
+//extern char * read_new_value (CELLREF row, CELLREF col, char *form, char *val);
 extern void move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void flush_old_value (void);
