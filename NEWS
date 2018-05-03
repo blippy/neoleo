@@ -5,6 +5,9 @@ DATE:    ONGOING
 
 * C++17 COMPILER IS NOW REQUIRED TO COMPILE SOURCES
 
+* small changes in the file format
+	May cause incompatability issues, but I'm not expecting it.
+
 * removed help system. Read the html file instead
 
 * added `neobasic', a builtin BASIC-like language

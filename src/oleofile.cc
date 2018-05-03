@@ -1,6 +1,4 @@
 /*
- * $Id: oleofile.c,v 1.26 2001/02/13 23:38:06 danny Exp $
- *
  * Copyright © 1990-2000, 2001 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -742,12 +740,12 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	int old_a0, i, fnt_map_size = 0;
 	char	*s;
 
-	(void) fprintf (fp, "# This file was created by GNU Oleo\n");
+	(void) fprintf (fp, "# This file was created by Neoleo\n");
 
 	/* All versions of the oleo file format should have a 
 	 * version cookie on the second line.
 	 */
-	(void) fprintf (fp, "# format 2.1 (requires Oleo 1.99.9 or higher)\n");
+	(void) fprintf (fp, "# format 3.0 (requires Neoleo 8.0 or higher)\n");
 
 	/* If no range given, write the entire file */
 	if (!rng)
