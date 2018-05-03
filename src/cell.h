@@ -125,7 +125,6 @@ struct cell_flags_s {
 class cell : public value
 {
 	private:
-		//union vals c_z;
 		unsigned char *cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		omnival_t omnival;
@@ -139,8 +138,6 @@ class cell : public value
 		~cell();
 		void reset();
 		struct cell_flags_s cell_flags;
-		//ValType get_cell_type() { return cell_flags.cell_type;}
-		//void set_cell_type(ValType t) { cell_flags.cell_type = t;}
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
 		unsigned char* get_cell_formula(); 
@@ -150,12 +147,8 @@ class cell : public value
 
 		void sInt(int newval); // set integer value
 		void set_cell_str(char* newval);
-		//long cell_int() {  return c_z.c_l; }
 		int gErr() { return x.c_i ;};
 		void sErr(int newval) { x.c_i = newval ;};
-		//num_t cell_flt() { return c_z.c_n ;};
-		//num_t get_cell_flt() { return c_z.c_n ;};
-		//void set_cell_flt(num_t newval) { c_z.c_n = newval; };
 		int gBol() { return x.c_i ;};
 		void sBol(int newval) { x.c_i = newval; };
 
