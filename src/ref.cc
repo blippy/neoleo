@@ -171,65 +171,6 @@ set_cell_from_string(int r,int  c, const std::string & s)
 	return new_value(r, c, str); 
 }
 
-/* This sets the cell to a constant, stored in VALUE, whose type is in TYPE */
-char *
-set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
-{
-	CELL *cp;
-	extern int default_lock;
-
-	if (type == TYP_ERR)
-		type = TYP_NUL;
-	cur_row = row;
-	cur_col = col;
-	if (type == TYP_NUL)
-	{
-		cp = find_cell (row, col);
-		if (cp && GET_TYP (cp))
-		{
-			if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-				return (char *) "cell is locked";
-			my_cell = cp;
-			flush_old_value ();
-			SET_TYP (cp, TYP_NUL);
-		}
-		my_cell = 0;
-		return 0;
-	}
-	else
-	{
-		cp = find_or_make_cell (row, col);
-		if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-			return (char *) "cell is locked";
-		my_cell = cp;
-		flush_old_value ();
-		switch (type)
-		{
-			case TYP_FLT:
-				cp->sFlt( value->c_n);
-				break;
-			case TYP_INT:
-				cp->sInt(value->c_l);
-				break;
-			case TYP_STR:
-				cp->sString(strdup (value->c_s));
-				break;
-			case TYP_BOL:
-				cp->sBol(value->c_i);
-				break;
-			case TYP_ERR:
-				cp->sErr(value->c_i);
-				break;
-			default:
-				panic ("Unknown type %d in set_new_value", GET_TYP (cp));
-		}
-		cp->set_cell_formula(0);
-	}
-	push_refs (cp->cell_refs_from);
-	io_pr_cell (row, col, cp);
-	my_cell = 0;
-	return 0;
-}
 
 
 /* This moves the contents, format, etc from RF,CF to RT,CT  RF or RT may be
