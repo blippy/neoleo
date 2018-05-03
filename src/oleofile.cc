@@ -60,94 +60,15 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	flush_old_value ();
 	SET_TYP (my_cell, TYP_NUL);
 
-	if (form)
-	{
-		auto new_bytes = (unsigned char*) parse_and_compile (my_cell, form);
-		my_cell->set_cell_formula(new_bytes);
-	}
-
-	if (val)
-	{
-		if (val[0] == '"')
-		{
-			char *sp, *nsp;
-
-			sp = val + 1;
-			while (*sp)
-				sp++;
-			if (*--sp != '"')
-			{
-				if (*sp == '\r' && sp[-1] == '"')
-					--sp;
-				else
-					panic ("Can't find \" in read_new value");
-			}
-			*sp = '\0';
-			my_cell->sString((char *) ck_malloc (sp - val));
-			nsp = my_cell->gString();
-			for (sp = val + 1; *sp;)
-				*nsp++ = *sp++;
-			*nsp++ = '\0';
-		}
-		else if (isdigit (val[0]) || val[0] == '.' || val[0] == '-' || val[0] == '+')
-		{
-			char *v;
-
-			v = val;
-			my_cell->sInt(astol (&v));
-			if (*v)
-			{
-				v = val;
-				my_cell->sFlt(astof (&v));
-				if (*v)
-					return (char *) "unknown number";
-			}
-		}
-		else if (val[0] == '#')
-		{
-			char **en;
-
-			if (!stricmp (tname, val))
-			{
-				my_cell->sBol(1);
-			}
-			else if (!stricmp (fname, val))
-			{
-				my_cell->sBol(0);
-			}
-			else if (!stricmp (iname, val))
-			{
-				my_cell->sFlt( __plinf);
-			}
-			else if (!stricmp (iname, val))
-			{
-				my_cell->sFlt(__plinf);
-			}
-			else if (!stricmp (mname, val))
-			{
-				my_cell->sFlt(__neinf);
-			}
-			else if (!stricmp (nname, val))
-			{
-				my_cell->sFlt(NAN);
-			}
-			else
-			{
-				for (en = ename; *en; en++)
-					if (!stricmp (*en, val))
-						break;
-				if (*en)
-					my_cell->sErr(en - &ename[0]);
-				else
-					my_cell->sErr(1);
-			}
-		}
-		else
-			panic ("What is a '%s'?", val);
-	}
-
+	char* text;
+	if(val) text = val;
+	if(form) text = form;
+	assert(text);
+	auto new_bytes = (unsigned char*) parse_and_compile (my_cell, text);
+	my_cell->set_cell_formula(new_bytes);
 	my_cell = 0;
 	return 0;
+
 }
 void
 oleo_read_file (FILE *fp, int ismerge)
@@ -919,9 +840,10 @@ oleo_write_file(FILE *fp, struct rng *rng)
 			crow = r;
 		}
 
-		if (cp->get_cell_formula()) {
+		unsigned char* formula_1 = cp->get_cell_formula();
+		if (formula_1 && !is_constant(formula_1)) {
 			std::string formula = decomp_str(r, c);
-			(void) fprintf (fp, "E%s", formula.c_str());
+			(void) fprintf (fp, "E%s;", formula.c_str());
 		}
 
 		switch (GET_TYP (cp)) {
@@ -930,8 +852,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				break;
 			case TYP_STR:
 				ptr = 0;
-				if (cp->get_cell_formula())
-					putc (';', fp);
+				//if (cp->get_cell_formula()) putc (';', fp);
 				(void) fprintf (fp, "K\"%s\"", cp->gString());
 				break;
 			case TYP_FLT:
@@ -953,8 +874,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 
 		if (ptr)
 		{
-			if (cp->get_cell_formula())
-				putc (';', fp);
+			//if (cp->get_cell_formula()) putc (';', fp);
 			(void) fprintf (fp, "K%s", ptr);
 		}
 		if (GET_LCK (cp) == LCK_LCK)
