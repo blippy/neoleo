@@ -84,9 +84,6 @@ value::~value(void)
 
 cell::cell(void)
 {
-	//memset(&c_z, 0, sizeof(vals));
-	set_type(TYP_NUL);	
-	sFlt(0.0);
 }
 
 unsigned char * cell::get_cell_formula()
