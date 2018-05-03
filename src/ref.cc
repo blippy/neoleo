@@ -203,8 +203,6 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 			return (char *) "cell is locked";
 		my_cell = cp;
 		flush_old_value ();
-		SET_TYP (cp, type);
-		/* cp->c_z= *value; */
 		switch (type)
 		{
 			case TYP_FLT:
@@ -222,10 +220,8 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 			case TYP_ERR:
 				cp->sErr(value->c_i);
 				break;
-				//#ifdef TEST
 			default:
 				panic ("Unknown type %d in set_new_value", GET_TYP (cp));
-				//#endif
 		}
 		cp->set_cell_formula(0);
 	}
@@ -262,7 +258,6 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 			char *sp, *nsp;
 
 			sp = val + 1;
-			SET_TYP (my_cell, TYP_STR);
 			while (*sp)
 				sp++;
 			if (*--sp != '"')
@@ -284,11 +279,9 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 			char *v;
 
 			v = val;
-			SET_TYP (my_cell, TYP_INT);
 			my_cell->sInt(astol (&v));
 			if (*v)
 			{
-				SET_TYP (my_cell, TYP_FLT);
 				v = val;
 				my_cell->sFlt(astof (&v));
 				if (*v)
@@ -301,37 +294,30 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 			if (!stricmp (tname, val))
 			{
-				SET_TYP (my_cell, TYP_BOL);
 				my_cell->sBol(1);
 			}
 			else if (!stricmp (fname, val))
 			{
-				SET_TYP (my_cell, TYP_BOL);
 				my_cell->sBol(0);
 			}
 			else if (!stricmp (iname, val))
 			{
-				SET_TYP (my_cell, TYP_FLT);
 				my_cell->sFlt( __plinf);
 			}
 			else if (!stricmp (iname, val))
 			{
-				SET_TYP (my_cell, TYP_FLT);
 				my_cell->sFlt(__plinf);
 			}
 			else if (!stricmp (mname, val))
 			{
-				SET_TYP (my_cell, TYP_FLT);
 				my_cell->sFlt(__neinf);
 			}
 			else if (!stricmp (nname, val))
 			{
-				SET_TYP (my_cell, TYP_FLT);
 				my_cell->sFlt(NAN); // mcarter __nan;
 			}
 			else
 			{
-				SET_TYP (my_cell, TYP_ERR);
 				for (en = ename; *en; en++)
 					if (!stricmp (*en, val))
 						break;
