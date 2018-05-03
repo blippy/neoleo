@@ -322,10 +322,10 @@ print_cell (CELL * cp)
     }
   if (GET_TYP (cp) == TYP_ERR) {
 #ifdef TEST
-      if (cp->cell_err > ERR_MAX || cp->cell_err < 0)
-	panic ("Error %d out of range", cp->cell_err);
+      if (cp->gErr() > ERR_MAX || cp->gErr() < 0)
+	panic ("Error %d out of range", cp->gErr());
 #endif
-      return ename[cp->cell_err()];
+      return ename[cp->gErr()];
     }
   if (GET_TYP (cp) == TYP_FLT) {
       switch (j)
@@ -515,7 +515,7 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
       return bname[cp->gBol()];
 
     case TYP_ERR:
-      return ename[cp->cell_err()];
+      return ename[cp->gErr()];
 #ifdef TEST
     default:
       panic ("unknown type %d in cell_value_string", GET_TYP (cp));

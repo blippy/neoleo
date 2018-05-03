@@ -198,7 +198,7 @@ list_write_file (
 		  fputs (bname[cp->gBol()], fp);
 		  break;
 		case TYP_ERR:
-		  fputs (ename[cp->cell_err()], fp);
+		  fputs (ename[cp->gErr()], fp);
 		  break;
 #ifdef TEST
 		default:

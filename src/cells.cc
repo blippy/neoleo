@@ -144,13 +144,14 @@ cell::~cell()
 	//cout <<"X";
 }
 
+/*
 void 
 cell::sInt(int newval)
 {
 	x.c_i = newval;
 	set_type(TYP_INT);
 }
-
+*/
 
 bool 
 vacuous(cell* cp)
@@ -368,7 +369,7 @@ do_member (struct value *p)
 	  foundit = cell_ptr->gBol() == (p + 1)->Value;
 	  break;
 	case TYP_ERR:
-	  foundit = cell_ptr->cell_err() == (p + 1)->Value;
+	  foundit = cell_ptr->gErr() == (p + 1)->Value;
 	  break;
 	default:
 	  foundit = 0;

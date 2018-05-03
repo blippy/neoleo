@@ -94,7 +94,7 @@ npv (
 	  break;
 
 	case TYP_ERR:
-	  return cell_ptr->cell_err();
+	  return cell_ptr->gErr();
 
 	default:
 	  return NON_NUMBER;
@@ -290,7 +290,7 @@ do_fmrr(struct value *p)
 	  goto out;
 	case TYP_ERR:
 	  p->type = TYP_ERR;
-	  p->Value = cell->cell_err();
+	  p->Value = cell->gErr();
 	  goto out;
       }
     }

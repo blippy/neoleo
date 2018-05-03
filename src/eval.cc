@@ -1470,7 +1470,7 @@ update_cell(CELL *cell)
 	new_val = newv->Value != cell->gBol();
 	break;
       case TYP_ERR:
-	new_val = newv->Value != cell->cell_err();
+	new_val = newv->Value != cell->gErr();
 	break;
       default:
 	new_val = 0;

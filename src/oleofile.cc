@@ -838,7 +838,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				ptr = bname[cp->gBol()];
 				break;
 			case TYP_ERR:
-				ptr = ename[cp->cell_err()];
+				ptr = ename[cp->gErr()];
 				break;
 			default:
 				ptr = 0;
