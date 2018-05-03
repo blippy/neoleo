@@ -210,10 +210,10 @@ yyreglex ()
 		else if(!stricmp(begin,iname) && (begin[4]==0 || !stricmp(begin+4,"inity")))
 			byte_value=CONST_INF;
 		else if(!stricmp(begin,mname) ||
-			!stricmp(begin,"#ninf"))
+			!stricmp(begin,"#NINF"))
 			byte_value=CONST_NINF;
 		else if(!stricmp(begin,nname) ||
-			!stricmp(begin,"#nan"))
+			!stricmp(begin,"#NAN"))
 			byte_value=CONST_NAN;
 		else {
 			for(n=1;n<=ERR_MAX;n++)

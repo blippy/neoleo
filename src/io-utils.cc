@@ -82,7 +82,7 @@ num_t neo_floor(num_t x)
 {
 	return (num_t) floor( (double)x);
 }
-char nname[] = "#NOT_A_NUMBER";
+char nname[] = "#NAN";
 char iname[] = "#INFINITY";
 char mname[] = "#MINUS_INFINITY";
 
@@ -223,6 +223,8 @@ flt_to_str (num_t val)
     return iname;
   if (val == (num_t) __neinf)
     return mname;
+  if (isnan(val))
+	  return nname;
   f = fabs (val);
   if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
     {
@@ -616,6 +618,7 @@ char *
 pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 {
 	//log_debug("pr_flt:prec:" + std::to_string(prec));
+	if(isnan(val)) return nname;
 	static char buffer[BIGFLT]; // not ideal of course
 	//char* buffer = print_buf;
 	bool neg = val < 0;
