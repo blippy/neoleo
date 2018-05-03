@@ -1425,64 +1425,64 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
-  struct value *newv;
-  int new_val;
+	struct value *newv;
+	int new_val;
 
-  newv = eval_expression (cell->get_cell_formula());
-  if (!newv)
-    {
-      push_refs (cell->cell_refs_from);
-      return;
-    }
+	newv = eval_expression (cell->get_cell_formula());
+	if (!newv)
+	{
+		push_refs (cell->cell_refs_from);
+		return;
+	}
 
-  cell->cell_cycle = current_cycle;
-  //cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
+	cell->cell_cycle = current_cycle;
+	//cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
 
-  if (newv->type != GET_TYP (cell))
-    {
-      if (GET_TYP (cell) == TYP_STR) free (cell->gString());
-      SET_TYP (cell, newv->type);
-      new_val = 1;
-      if (newv->type == TYP_STR) newv->String = strdup (newv->String);
-    }
-  else
-    switch (newv->type)
-      {
-      case 0:
-	new_val = 0;
-	break;
-      case TYP_FLT:
-	new_val = newv->Float != cell->gFlt();
-	break;
-      case TYP_INT:
-	new_val = newv->Int != cell->gInt();
-	break;
-      case TYP_STR:
-	new_val = strcmp (newv->String, cell->gString());
-	if (new_val)
-	  {
-	    free (cell->gString());
-	    newv->String = strdup (newv->String);
-	  }
-	break;
-      case TYP_BOL:
-	new_val = newv->Value != cell->gBol();
-	break;
-      case TYP_ERR:
-	new_val = newv->Value != cell->gErr();
-	break;
-      default:
-	new_val = 0;
+	if (newv->type != GET_TYP (cell))
+	{
+		if (GET_TYP (cell) == TYP_STR) free (cell->gString());
+		SET_TYP (cell, newv->type);
+		new_val = 1;
+		if (newv->type == TYP_STR) newv->String = strdup (newv->String);
+	}
+	else
+		switch (newv->type)
+		{
+			case 0:
+				new_val = 0;
+				break;
+			case TYP_FLT:
+				new_val = newv->Float != cell->gFlt();
+				break;
+			case TYP_INT:
+				new_val = newv->Int != cell->gInt();
+				break;
+			case TYP_STR:
+				new_val = strcmp (newv->String, cell->gString());
+				if (new_val)
+				{
+					free (cell->gString());
+					newv->String = strdup (newv->String);
+				}
+				break;
+			case TYP_BOL:
+				new_val = newv->Value != cell->gBol();
+				break;
+			case TYP_ERR:
+				new_val = newv->Value != cell->gErr();
+				break;
+			default:
+				new_val = 0;
 #ifdef TEST
-	panic ("Unknown type %d in update_cell", newv->type);
+				panic ("Unknown type %d in update_cell", newv->type);
 #endif
-      }
-  if (new_val)
-    {
-      cell->set_c_z(newv->x);
-      push_refs (cell->cell_refs_from);
-    }
-  (void) obstack_free (&tmp_mem, tmp_mem_start);
+		}
+	if (new_val)
+	{
+		cell->set_c_z(newv->x);
+		push_refs (cell->cell_refs_from);
+	}
+	(void) obstack_free (&tmp_mem, tmp_mem_start);
 }
 
 int
