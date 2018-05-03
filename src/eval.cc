@@ -1187,7 +1187,7 @@ deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
 		add_int (cell_ptr->gInt());
 	      else if (GET_TYP (cell_ptr) == TYP_STR)
 		{
-		  strptr = cell_ptr->cell_str();
+		  strptr = cell_ptr->gString();
 		  flt_cnt_flt = astof (&strptr);
 		  if (!*strptr)
 		    add_flt (flt_cnt_flt);
@@ -1441,7 +1441,7 @@ update_cell(CELL *cell)
 
   if (newv->type != GET_TYP (cell))
     {
-      if (GET_TYP (cell) == TYP_STR) free (cell->cell_str());
+      if (GET_TYP (cell) == TYP_STR) free (cell->gString());
       SET_TYP (cell, newv->type);
       new_val = 1;
       if (newv->type == TYP_STR) newv->String = strdup (newv->String);
@@ -1459,10 +1459,10 @@ update_cell(CELL *cell)
 	new_val = newv->Int != cell->gInt();
 	break;
       case TYP_STR:
-	new_val = strcmp (newv->String, cell->cell_str());
+	new_val = strcmp (newv->String, cell->gString());
 	if (new_val)
 	  {
-	    free (cell->cell_str());
+	    free (cell->gString());
 	    newv->String = strdup (newv->String);
 	  }
 	break;

@@ -825,7 +825,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				ptr = 0;
 				if (cp->get_cell_formula())
 					putc (';', fp);
-				(void) fprintf (fp, "K\"%s\"", cp->cell_str());
+				(void) fprintf (fp, "K\"%s\"", cp->gString());
 				break;
 			case TYP_FLT:
 				ptr = flt_to_str (cp->cell_flt());

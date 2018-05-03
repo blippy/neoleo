@@ -214,7 +214,7 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 				cp->sInt(value->c_l);
 				break;
 			case TYP_STR:
-				cp->set_cell_str(strdup (value->c_s));
+				cp->sString(strdup (value->c_s));
 				break;
 			case TYP_BOL:
 				cp->sBol(value->c_i);
@@ -273,8 +273,8 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 					panic ("Can't find \" in read_new value");
 			}
 			*sp = '\0';
-			my_cell->set_cell_str((char *) ck_malloc (sp - val));
-			nsp = my_cell->get_cell_str();
+			my_cell->sString((char *) ck_malloc (sp - val));
+			nsp = my_cell->gString();
 			for (sp = val + 1; *sp;)
 				*nsp++ = *sp++;
 			*nsp++ = '\0';
@@ -721,7 +721,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 
 	if (GET_TYP (my_cell) == TYP_STR)
-		my_cell->set_cell_str(strdup (cpf->cell_str()));
+		my_cell->sString(strdup (cpf->gString()));
 	else {
 		my_cell->type = cpf->type;
 		my_cell->set_c_z(cpf->get_c_z());
@@ -856,7 +856,7 @@ flush_old_value (void)
 		my_cell->set_cell_formula(0);
 	}
 	if (GET_TYP (my_cell) == TYP_STR)
-		free (my_cell->get_cell_str());
+		free (my_cell->gString());
 	SET_TYP (my_cell, TYP_NUL);
 }
 

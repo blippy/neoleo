@@ -192,7 +192,7 @@ list_write_file (
 		  fprintf (fp, "%ld", (long int) cp->gInt());
 		  break;
 		case TYP_STR:
-		  fputs (cp->cell_str(), fp);
+		  fputs (cp->gString(), fp);
 		  break;
 		case TYP_BOL:
 		  fputs (bname[cp->gBol()], fp);

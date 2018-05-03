@@ -311,7 +311,7 @@ print_cell (CELL * cp)
     return "";
 
   if (GET_TYP (cp) == TYP_STR)
-    return cp->cell_str();
+    return cp->gString();
 
   if (GET_TYP (cp) == TYP_BOL) {
 #ifdef TEST
@@ -509,7 +509,7 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
       return print_buf;
 
     case TYP_STR:
-      return backslash_a_string (cp->cell_str(), add_quote);
+      return backslash_a_string (cp->gString(), add_quote);
 
     case TYP_BOL:
       return bname[cp->gBol()];

@@ -116,11 +116,15 @@ void cell::set_omnival(struct value* v)
 	}
 	
 }
+
+/*
 void cell::set_cell_str(char* newval)
 { 
 	reset();
 	x.c_s = newval;
 }
+*/
+
 unsigned char * cell::set_cell_formula( unsigned char * newval)
 { 
 	cell_formula = newval ;  
@@ -358,7 +362,7 @@ do_member (struct value *p)
 	  foundit = cell_ptr->gInt() == (p + 1)->Int;
 	  break;
 	case TYP_STR:
-	  foundit = !strcmp (cell_ptr->cell_str(), (p + 1)->String);
+	  foundit = !strcmp (cell_ptr->gString(), (p + 1)->String);
 	  break;
 	case TYP_BOL:
 	  foundit = cell_ptr->gBol() == (p + 1)->Value;
@@ -399,7 +403,7 @@ do_smember (
     {
       if (((GET_TYP (cell_ptr) == 0) && (string[0] == '\0'))
 	  || (cell_ptr && (GET_TYP (cell_ptr) == TYP_STR)
-	      && strstr (string, cell_ptr->cell_str())))
+	      && strstr (string, cell_ptr->gString())))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -427,7 +431,7 @@ do_members (
     {
       if (GET_TYP (cell_ptr) != TYP_STR)
 	continue;
-      if (strstr (cell_ptr->cell_str(), string))
+      if (strstr (cell_ptr->gString(), string))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -455,7 +459,7 @@ do_pmember (
     {
       if ((GET_TYP (cell_ptr) == 0 && string[0] == '\0')
 	  || (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && 
-		  !strncmp (string, cell_ptr->cell_str(), strlen (cell_ptr->cell_str()))))
+		  !strncmp (string, cell_ptr->gString(), strlen (cell_ptr->gString()))))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -485,7 +489,7 @@ do_memberp (
     {
       if (GET_TYP (cell_ptr) != TYP_STR)
 	continue;
-      if (!strncmp (cell_ptr->cell_str(), string, tmp))
+      if (!strncmp (cell_ptr->gString(), string, tmp))
 	{
 	  no_more_cells ();
 	  p->Int = 1 + (crow - p->Rng.lr)
@@ -528,7 +532,7 @@ do_hlookup (struct value *p)
 	    goto out;
 	  break;
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str();
+	  strptr = cell_ptr->gString();
 	  f = astof (&strptr);
 	  if (!*strptr && fltval > f)
 	    goto out;
@@ -593,7 +597,7 @@ do_vlookup (
 	    goto out;
 	  break;
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str();
+	  strptr = cell_ptr->gString();
 	  f = astof (&strptr);
 	  if (!*strptr && fltval > f)
 	    goto out;
@@ -648,7 +652,7 @@ do_vlookup_str (
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_STR:
-	  if (!strcmp (key, cell_ptr->cell_str()))
+	  if (!strcmp (key, cell_ptr->gString()))
 	    goto out;
 	  break;
 	case 0:

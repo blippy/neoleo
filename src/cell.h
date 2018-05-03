@@ -79,8 +79,8 @@ class value {
 		char *gString() { assert(type == TYP_STR); return x.c_s; };
 		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
 
-		char * cell_str() {  return x.c_s ;}
-		char * get_cell_str() { ; return cell_str();}
+		//char * cell_str() {  return x.c_s ;}
+		//char * get_cell_str() { ; return cell_str();}
 
 		int cell_err() { return x.c_i ;};
 
@@ -194,12 +194,7 @@ typedef struct var
 	//char var_name[1];
 	std::string var_name;
 } var_t;
-/* Shorthand for the cell union */
-//#define cell_flt	c_z.c_n
-//#define cell_str	c_z.c_s
-//#define cell_int	c_z.c_l
-//#define cell_bol	c_z.c_i
-//#define cell_err	c_z.c_i
+
 
 #define	GET_LCK(p)	((p)->cell_flags.cell_lock)
 #define SET_LCK(p,x)	((p)->cell_flags.cell_lock = (x))

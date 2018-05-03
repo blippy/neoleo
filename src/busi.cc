@@ -85,7 +85,7 @@ npv (
 	  goto know_f;
 
 	case TYP_STR:
-	  strptr = cell_ptr->cell_str();
+	  strptr = cell_ptr->gString();
 	  f = astof (&strptr);
 	  if (*strptr)
 	    return NON_NUMBER;
@@ -277,7 +277,7 @@ do_fmrr(struct value *p)
 	  v[num] = (double) cell->gInt();
 	  break;
 	case TYP_STR: {
-	  char *cp = cell->cell_str();
+	  char *cp = cell->gString();
 	  v[num] = astof(&cp);
 	  if (!*cp)
 	    break;
