@@ -1182,7 +1182,7 @@ deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
 	  while ((cell_ptr = next_cell_in_range ()))
 	    {
 	      if (GET_TYP (cell_ptr) == TYP_FLT)
-		add_flt (cell_ptr->cell_flt());
+		add_flt (cell_ptr->gFlt());
 	      else if (GET_TYP (cell_ptr) == TYP_INT)
 		add_int (cell_ptr->gInt());
 	      else if (GET_TYP (cell_ptr) == TYP_STR)
@@ -1453,7 +1453,7 @@ update_cell(CELL *cell)
 	new_val = 0;
 	break;
       case TYP_FLT:
-	new_val = newv->Float != cell->cell_flt();
+	new_val = newv->Float != cell->gFlt();
 	break;
       case TYP_INT:
 	new_val = newv->Int != cell->gInt();

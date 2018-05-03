@@ -256,14 +256,14 @@ flt_to_str_fmt (CELL *cp)
 	if(false) { 
 		/* TODO suppressed for now */
 		double f;
-		if ((double) cp->cell_flt() == __plinf)
+		if ((double) cp->gFlt() == __plinf)
 			return iname;
-		if ((double) cp->cell_flt() == __neinf)
+		if ((double) cp->gFlt() == __neinf)
 			return mname;
-		f = fabs ( (double) cp->cell_flt());
+		f = fabs ( (double) cp->gFlt());
 		if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
 		{
-			sprintf (print_buf, "%e", (double) cp->cell_flt());
+			sprintf (print_buf, "%e", (double) cp->gFlt());
 			return print_buf;
 		}
 	}
@@ -273,9 +273,9 @@ flt_to_str_fmt (CELL *cp)
 		case FMT_FXT:
 		case FMT_DOL:
 		case FMT_PCT:
-			return pr_flt (cp->cell_flt(), &fxt, p);
+			return pr_flt (cp->gFlt(), &fxt, p);
 		default:
-			return flt_to_str (cp->cell_flt());
+			return flt_to_str (cp->gFlt());
 	}
 }
 
@@ -331,15 +331,15 @@ print_cell (CELL * cp)
       switch (j)
 	{
 	case FMT_GPH:
-	  if (cp->cell_flt() < 0)
+	  if (cp->gFlt() < 0)
 	    {
 	      j = '-';
-	      num = -(cp->cell_flt());
+	      num = -(cp->gFlt());
 	    }
-	  else if (cp->cell_flt() >= 1)
+	  else if (cp->gFlt() >= 1)
 	    {
 	      j = '+';
-	      num = (cp->cell_flt());
+	      num = (cp->gFlt());
 	    }
 	  else
 	    {
@@ -358,41 +358,41 @@ print_cell (CELL * cp)
 	  return print_buf;
 
 	case FMT_USR:
-	  return pr_flt (cp->cell_flt(), &u[p], u[p].prec);
+	  return pr_flt (cp->gFlt(), &u[p], u[p].prec);
 
 	case FMT_GEN:
 	  {
 	    double f;
 
-	    f = fabs (cp->cell_flt());
+	    f = fabs (cp->gFlt());
 
 	    if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
 	      goto handle_exp;
-	    return pr_flt (cp->cell_flt(), &fxt, p, false);
+	    return pr_flt (cp->gFlt(), &fxt, p, false);
 	  }
 
 	case FMT_DOL:
-	  return pr_flt (cp->cell_flt(), &dol, p);
+	  return pr_flt (cp->gFlt(), &dol, p);
 
 	case FMT_CMA:
-	  return pr_flt (cp->cell_flt(), &cma, p);
+	  return pr_flt (cp->gFlt(), &cma, p);
 
 	case FMT_PCT:
-	  return pr_flt (cp->cell_flt(), &pct, p);
+	  return pr_flt (cp->gFlt(), &pct, p);
 
 	case FMT_FXT:
-	  return pr_flt (cp->cell_flt(), &fxt, p);
+	  return pr_flt (cp->gFlt(), &fxt, p);
 
 	case FMT_EXP:
 	handle_exp:
-	  if ((double) cp->cell_flt() == __plinf)
+	  if ((double) cp->gFlt() == __plinf)
 	    return iname;
-	  if ((double) cp->cell_flt() == __neinf)
+	  if ((double) cp->gFlt() == __neinf)
 	    return mname;
 	  if (p == FLOAT_PRECISION)
-	    sprintf (print_buf, "%e", (double) cp->cell_flt());
+	    sprintf (print_buf, "%e", (double) cp->gFlt());
 	  else
-	    sprintf (print_buf, "%.*e", p, (double) cp->cell_flt());
+	    sprintf (print_buf, "%.*e", p, (double) cp->gFlt());
 	  return print_buf;
 #ifdef TEST
 	default:
@@ -502,7 +502,7 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
   switch (GET_TYP (cp))
     {
     case TYP_FLT:
-      return flt_to_str (cp->cell_flt());
+      return flt_to_str (cp->gFlt());
 
     case TYP_INT:
       sprintf (print_buf, "%ld", cp->gInt());
@@ -710,11 +710,11 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 	{
 	  prc = width - (strlen (ufmt->decpt) + bptr - oldp);
 	}
-      bptr = pr_flt (cp->cell_flt(), ufmt, -prc);
+      bptr = pr_flt (cp->gFlt(), ufmt, -prc);
       len = strlen (bptr);
       if (len > width && prc > 0)
 	{
-	  bptr = pr_flt (cp->cell_flt(), ufmt, -(prc - 1));
+	  bptr = pr_flt (cp->gFlt(), ufmt, -(prc - 1));
 	  len = strlen (bptr);
 	}
       if (len > width)
@@ -726,18 +726,18 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
       {
 	double f;
 
-	f = fabs (cp->cell_flt());
+	f = fabs (cp->gFlt());
 	if (f > 9.99999e99 || f < 1e-99)
 	  len = width - 7;
 	else			/* if(f>9.9999999e9 || f<1e-9) */
 	  len = width - 6;
 	/* else
 	   len=width-5; */
-	if (cp->cell_flt() < 0)
+	if (cp->gFlt() < 0)
 	  --len;
 	if (len > 0)
 	  {
-	    sprintf (oldp, "%.*e", len, (double) cp->cell_flt());
+	    sprintf (oldp, "%.*e", len, (double) cp->gFlt());
 	    len = strlen (oldp);
 	    if (len <= width)
 	      {

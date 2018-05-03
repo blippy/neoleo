@@ -828,7 +828,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 				(void) fprintf (fp, "K\"%s\"", cp->gString());
 				break;
 			case TYP_FLT:
-				ptr = flt_to_str (cp->cell_flt());
+				ptr = flt_to_str (cp->gFlt());
 				break;
 			case TYP_INT:
 				sprintf (p_buf, "%ld", (long int) cp->gInt());

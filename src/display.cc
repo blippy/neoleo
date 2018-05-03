@@ -180,7 +180,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
   if (new_type == TYP_INT)
     cd->numeric.integer = cp->gInt();
   else if (new_type == TYP_FLT)
-    cd->numeric.dbl = cp->cell_flt();
+    cd->numeric.dbl = cp->gFlt();
   else
     {
       cd->clipped = ck_savestr (cd->unclipped);

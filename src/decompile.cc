@@ -600,7 +600,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 			if (tog)
 				str = flt_to_str_fmt(cell);
 			else
-				str = flt_to_str (cell->cell_flt());
+				str = flt_to_str (cell->gFlt());
 			log_debug_1("decomp_formula_1:TYP_FLT:"s + str);
 			break;
 		case TYP_INT:

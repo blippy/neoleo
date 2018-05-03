@@ -69,7 +69,6 @@ class value {
 		ValType get_type() { return type;}
 		void set_type(ValType t) { type = t;}
 
-
 		void sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 		int gInt() { return x.c_i; };
 
@@ -79,15 +78,10 @@ class value {
 		char *gString() { assert(type == TYP_STR); return x.c_s; };
 		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
 
-		//char * cell_str() {  return x.c_s ;}
-		//char * get_cell_str() { ; return cell_str();}
-
 		int cell_err() { return x.c_i ;};
 
-		num_t cell_flt() { return x.c_n ;};
+		num_t gFlt() { return x.c_n ;};
 		void sFlt(num_t v) { type == TYP_FLT; x.c_n = v ;};
-		num_t get_cell_flt() { return x.c_n ;};
-		void set_cell_flt(num_t newval) { type == TYP_FLT; x.c_n = newval; };
 
 		union vals get_cell_value() { return x; }
 		void set_cell_value(union vals uv) { x = uv; }

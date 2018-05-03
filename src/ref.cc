@@ -208,7 +208,7 @@ set_new_value (CELLREF row, CELLREF col, ValType type, union vals *value)
 		switch (type)
 		{
 			case TYP_FLT:
-				cp->set_cell_flt( value->c_n);
+				cp->sFlt( value->c_n);
 				break;
 			case TYP_INT:
 				cp->sInt(value->c_l);
@@ -290,7 +290,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 			{
 				SET_TYP (my_cell, TYP_FLT);
 				v = val;
-				my_cell->set_cell_flt(astof (&v));
+				my_cell->sFlt(astof (&v));
 				if (*v)
 					return (char *) "unknown number";
 			}
@@ -312,22 +312,22 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 			else if (!stricmp (iname, val))
 			{
 				SET_TYP (my_cell, TYP_FLT);
-				my_cell->set_cell_flt( __plinf);
+				my_cell->sFlt( __plinf);
 			}
 			else if (!stricmp (iname, val))
 			{
 				SET_TYP (my_cell, TYP_FLT);
-				my_cell->set_cell_flt(__plinf);
+				my_cell->sFlt(__plinf);
 			}
 			else if (!stricmp (mname, val))
 			{
 				SET_TYP (my_cell, TYP_FLT);
-				my_cell->set_cell_flt(__neinf);
+				my_cell->sFlt(__neinf);
 			}
 			else if (!stricmp (nname, val))
 			{
 				SET_TYP (my_cell, TYP_FLT);
-				my_cell->set_cell_flt(NAN); // mcarter __nan;
+				my_cell->sFlt(NAN); // mcarter __nan;
 			}
 			else
 			{

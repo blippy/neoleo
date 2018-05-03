@@ -356,7 +356,7 @@ do_member (struct value *p)
 	  foundit = 1;
 	  break;
 	case TYP_FLT:
-	  foundit = cell_ptr->cell_flt() == (p + 1)->Float;
+	  foundit = cell_ptr->gFlt() == (p + 1)->Float;
 	  break;
 	case TYP_INT:
 	  foundit = cell_ptr->gInt() == (p + 1)->Int;
@@ -524,7 +524,7 @@ do_hlookup (struct value *p)
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_FLT:
-	  if (fltval < cell_ptr->cell_flt())
+	  if (fltval < cell_ptr->gFlt())
 	    goto out;
 	  break;
 	case TYP_INT:
@@ -589,7 +589,7 @@ do_vlookup (
       switch (GET_TYP (cell_ptr))
 	{
 	case TYP_FLT:
-	  if (fltval < cell_ptr->cell_flt())
+	  if (fltval < cell_ptr->gFlt())
 	    goto out;
 	  break;
 	case TYP_INT:

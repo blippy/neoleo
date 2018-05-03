@@ -186,7 +186,7 @@ list_write_file (
 	      switch (GET_TYP (cp))
 		{
 		case TYP_FLT:
-		  fputs (flt_to_str (cp->cell_flt()), fp);
+		  fputs (flt_to_str (cp->gFlt()), fp);
 		  break;
 		case TYP_INT:
 		  fprintf (fp, "%ld", (long int) cp->gInt());

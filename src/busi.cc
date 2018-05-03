@@ -81,7 +81,7 @@ npv (
 	  goto know_f;
 
 	case TYP_FLT:
-	  f = cell_ptr->cell_flt();
+	  f = cell_ptr->gFlt();
 	  goto know_f;
 
 	case TYP_STR:
@@ -271,7 +271,7 @@ do_fmrr(struct value *p)
 	  v[num] = 0.;
 	  break;
 	case TYP_FLT:
-	  v[num] = cell->cell_flt();
+	  v[num] = cell->gFlt();
 	  break;
 	case TYP_INT:
 	  v[num] = (double) cell->gInt();
