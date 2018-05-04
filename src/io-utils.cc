@@ -217,23 +217,19 @@ char* zero_specifier(char* fmt)
 char *
 flt_to_str (num_t val)
 {
-  double f;
+	if (val == (num_t) __plinf)
+		return iname;
+	if (val == (num_t) __neinf)
+		return mname;
+	if (isnan(val))
+		return nname;
 
-  if (val == (num_t) __plinf)
-    return iname;
-  if (val == (num_t) __neinf)
-    return mname;
-  if (isnan(val))
-	  return nname;
-  f = fabs (val);
-  if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
-    {
-      sprintf (print_buf, "%e", (double) val);
-      return print_buf;
-    }
-  char* result = pr_flt (val, &fxt, FLOAT_PRECISION, false);
-  //result[0] = 'X';
-  return result;
+	double f = fabs (val);
+	if (f >= 1e6 || (f > 0 && f <= 9.9999e-6)) {
+		sprintf (print_buf, "%e", (double) val);
+		return print_buf;
+	}
+	return  pr_flt (val, &fxt, FLOAT_PRECISION, false);
 }
 
 /* This is used to return a formatted float for editing.
@@ -248,28 +244,10 @@ char *
 flt_to_str_fmt (CELL *cp)
 {
 	int j = GET_FORMAT(cp);	/* Only format, not precision */
-	int p;
-
 	if (j == FMT_DEF)
 		j = default_fmt;
 
-	p = GET_PRECISION(cp);
-
-	if(false) { 
-		/* TODO suppressed for now */
-		double f;
-		if ((double) cp->gFlt() == __plinf)
-			return iname;
-		if ((double) cp->gFlt() == __neinf)
-			return mname;
-		f = fabs ( (double) cp->gFlt());
-		if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
-		{
-			sprintf (print_buf, "%e", (double) cp->gFlt());
-			return print_buf;
-		}
-	}
-
+	int p = GET_PRECISION(cp);
 	switch (j)
 	{
 		case FMT_FXT:
