@@ -675,6 +675,28 @@ do_compbal (struct value *p)
   p->Float = principal * busi_pow (1 + rate, term);
 }
 
+static void
+do_sum(struct value* p)
+{
+	struct rng* rng = &(p->Rng);
+	double res = 0;
+
+	CELL* cell_ptr;
+	find_cells_in_range (rng);
+	for(int i = 0; cell_ptr = next_cell_in_range (); i++) {
+		switch(GET_TYP(cell_ptr)) {
+			case TYP_INT:
+				res += cell_ptr->gInt();
+				break;
+			case TYP_FLT:
+				res += cell_ptr->gFlt();
+				break;
+		}
+	}
+
+	p->sFlt(res);
+}
+
 function_t busi_funs[] =
 {
   {C_FN2, X_A2, "RF", to_vptr(do_npv), "npv"},		/* 1 */
@@ -699,6 +721,7 @@ function_t busi_funs[] =
   {C_FN4, X_A4, "FFII", to_vptr(do_kprin), "kprin"},	/* 18 */
 
   {C_FN4, X_A4, "RFFF", to_vptr(do_fmrr), "fmrr"},       /* 19 */
+  {C_FN1, X_A1, "R",    to_vptr(do_sum), "suma"},
 
   {0, 0, "", 0, 0},
 };

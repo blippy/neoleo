@@ -50,24 +50,15 @@
 char *
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
-	extern double __plinf, __neinf; // mcarter , __nan;
-
-	cur_row = row;
-	cur_col = col;
-	my_cell = find_or_make_cell (cur_row, cur_col);
-	flush_old_value ();
-	SET_TYP (my_cell, TYP_NUL);
-
 	char* text;
 	if(val) text = val;
 	if(form) text = form;
 	assert(text);
-	auto new_bytes = (unsigned char*) parse_and_compile (my_cell, text);
-	my_cell->set_cell_formula(new_bytes);
+	set_cell_input(row, col, text);
 	my_cell = 0;
 	return 0;
-
 }
+
 void
 oleo_read_file (FILE *fp, int ismerge)
 {
