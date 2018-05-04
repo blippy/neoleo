@@ -51,6 +51,7 @@ neoleo_SOURCES = defuns.cc \
 		 main.cc \
 		 shell.cc \
 		 tests.cc \
+		 value.cc \
 		 yyreglex.cc
 	
 
@@ -73,7 +74,8 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 regions.h sheet.h sort.h spans.h stringo.h stub.h stubs.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
-		 tbl.h tests.h 
+		 tbl.h tests.h \
+		 value.h
 
 
 byte-compile.o : parse.hh

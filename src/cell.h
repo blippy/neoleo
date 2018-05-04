@@ -35,20 +35,9 @@
 #include "global.h"
 #include "numeric.h"
 #include "utils.h"
+#include "value.h"
 
 
-union vals {
-	num_t c_n;
-	char *c_s;
-	long c_l;
-	int c_i;
-	int c_err;
-	bool c_b;
-	struct rng c_r;
-};
-
-enum ValType { TYP_NUL=0, // taken to mean 'undefined'
-	TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
 template<typename T>
 struct Generic { 
@@ -60,35 +49,6 @@ struct Err {};
 
 using omnival_t = std::variant<std::string, num_t, Generic<Err>>;
 
-class value {
-	public:
-		value();
-		~value();
-
-		union vals x;
-
-		ValType type = TYP_NUL;
-		ValType get_type() { return type;}
-		void set_type(ValType t) { type = t;}
-
-		int gInt() { return x.c_i; };
-		void sInt(int newval) { type = TYP_INT; x.c_i = newval; };
-
-		long gLong() { assert(type == TYP_INT); return x.c_l; };
-		void sLong(long newval) { type = TYP_INT; x.c_l = newval; };
-		
-		char *gString() { assert(type == TYP_STR); return x.c_s; };
-		void sString(char* newval) { type = TYP_STR; x.c_s = newval;};
-
-		num_t gFlt() { return x.c_n ;};
-		void sFlt(num_t v) { type = TYP_FLT; x.c_n = v ;};
-
-		int gErr() { return x.c_err ;};
-		void sErr(int newval) { type = TYP_ERR ; x.c_err = newval ;};
-
-		int gBol() { return x.c_b ;};
-		void sBol(int newval) { type = TYP_BOL; x.c_b = newval; };
-};
 
 constexpr auto JST_DEF = 0;
 #define JST_LFT		1
