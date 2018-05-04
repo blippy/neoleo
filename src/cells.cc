@@ -114,13 +114,6 @@ void cell::set_omnival(struct value* v)
 	
 }
 
-/*
-void cell::set_cell_str(char* newval)
-{ 
-	reset();
-	x.c_s = newval;
-}
-*/
 
 unsigned char * cell::set_cell_formula( unsigned char * newval)
 { 
@@ -141,14 +134,6 @@ cell::~cell()
 	//cout <<"X";
 }
 
-/*
-void 
-cell::sInt(int newval)
-{
-	x.c_i = newval;
-	set_type(TYP_INT);
-}
-*/
 
 bool 
 vacuous(cell* cp)
@@ -158,16 +143,8 @@ vacuous(cell* cp)
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
-	log_debug_1("set_cell_input:r:" + std::to_string(r) + ":c:" + std::to_string(c) + ":new_input:" + new_input);
+	//log_debug_1("set_cell_input:r:" + std::to_string(r) + ":c:" + std::to_string(c) + ":new_input:" + new_input);
 	new_value(r, c, new_input.c_str());
-	/*
-	if(new_input.size() == 0) return;
-	CELL* cp = find_or_make_cell(r, c);
-	assert(cp);
-	const auto inpt =  new_input.c_str();
-	auto bcode =  (unsigned char*) parse_and_compile(cp, inpt); // not auto-free'd
-	cp->set_cell_formula(bcode);
-	*/
 }
 
 std::string
@@ -315,21 +292,15 @@ cell_mc ( long row, long col, char *dowhat, struct value *p)
 static void
 do_curcell (struct value *p)
 {
-  int tmp;
-
-  tmp = cell_mc (curow, cucol, p->String, p);
-  if (tmp)
-    ERROR (tmp);
+	int tmp  = cell_mc (curow, cucol, p->String, p);
+	if (tmp) ERROR (tmp);
 }
 
 static void
 do_my (value *p)
 {
-  int tmp;
-
-  tmp = cell_mc (cur_row, cur_col, p->String, p);
-  if (tmp)
-    ERROR (tmp);
+	int tmp  = cell_mc (cur_row, cur_col, p->String, p);
+	if (tmp) ERROR (tmp);
 }
 
 /* Note that the second argument may be *anything* including ERROR.  If it is
@@ -338,360 +309,346 @@ do_my (value *p)
 static void
 do_member (struct value *p)
 {
-  CELLREF crow;
-  CELLREF ccol;
-  int foundit;
-  CELL *cell_ptr;
+	CELLREF crow;
+	CELLREF ccol;
+	int foundit;
+	CELL *cell_ptr;
 
-  find_cells_in_range (&(p->Rng));
-  while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-    {
-      if (GET_TYP (cell_ptr) != (p + 1)->type)
-	continue;
-      switch ((p + 1)->type)
+	find_cells_in_range (&(p->Rng));
+	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
 	{
-	case 0:
-	  foundit = 1;
-	  break;
-	case TYP_FLT:
-	  foundit = cell_ptr->gFlt() == (p + 1)->Float;
-	  break;
-	case TYP_INT:
-	  foundit = cell_ptr->gInt() == (p + 1)->Int;
-	  break;
-	case TYP_STR:
-	  foundit = !strcmp (cell_ptr->gString(), (p + 1)->String);
-	  break;
-	case TYP_BOL:
-	  foundit = cell_ptr->gBol() == (p + 1)->Value;
-	  break;
-	case TYP_ERR:
-	  foundit = cell_ptr->gErr() == (p + 1)->Value;
-	  break;
-	default:
-	  foundit = 0;
+		if (GET_TYP (cell_ptr) != (p + 1)->type)
+			continue;
+		switch ((p + 1)->type)
+		{
+			case 0:
+				foundit = 1;
+				break;
+			case TYP_FLT:
+				foundit = cell_ptr->gFlt() == (p + 1)->Float;
+				break;
+			case TYP_INT:
+				foundit = cell_ptr->gInt() == (p + 1)->Int;
+				break;
+			case TYP_STR:
+				foundit = !strcmp (cell_ptr->gString(), (p + 1)->String);
+				break;
+			case TYP_BOL:
+				foundit = cell_ptr->gBol() == (p + 1)->Value;
+				break;
+			case TYP_ERR:
+				foundit = cell_ptr->gErr() == (p + 1)->Value;
+				break;
+			default:
+				foundit = 0;
 #ifdef TEST
-	  panic ("Unknown type (%d) in member", (p + 1)->type);
+				panic ("Unknown type (%d) in member", (p + 1)->type);
 #endif
+		}
+		if (foundit)
+		{
+			no_more_cells ();
+			p->Int = 1 + crow - p->Rng.lr + (ccol - p->Rng.lc) * (1 + p->Rng.hr - p->Rng.lr);
+			p->type = TYP_INT;
+			return;
+		}
 	}
-      if (foundit)
-	{
-	  no_more_cells ();
-	  p->Int = 1 + crow - p->Rng.lr + (ccol - p->Rng.lc) * (1 + p->Rng.hr - p->Rng.lr);
-	  p->type = TYP_INT;
-	  return;
-	}
-    }
-  p->Int = 0L;
-  p->type = TYP_INT;
+	p->Int = 0L;
+	p->type = TYP_INT;
 }
 
 static void
-do_smember (
-     struct value *p)
+do_smember (struct value *p)
 {
-  CELLREF crow;
-  CELLREF ccol;
-  CELL *cell_ptr;
-  char *string;
+	CELLREF crow;
+	CELLREF ccol;
+	CELL *cell_ptr;
+	char *string;
 
-  string = (p + 1)->String;
-  find_cells_in_range (&(p->Rng));
-  while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-    {
-      if (((GET_TYP (cell_ptr) == 0) && (string[0] == '\0'))
-	  || (cell_ptr && (GET_TYP (cell_ptr) == TYP_STR)
-	      && strstr (string, cell_ptr->gString())))
+	string = (p + 1)->String;
+	find_cells_in_range (&(p->Rng));
+	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
 	{
-	  no_more_cells ();
-	  p->Int = 1 + (crow - p->Rng.lr)
-	    + (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-	  p->type = TYP_INT;
-	  return;
+		if (((GET_TYP (cell_ptr) == 0) && (string[0] == '\0'))
+				|| (cell_ptr && (GET_TYP (cell_ptr) == TYP_STR)
+					&& strstr (string, cell_ptr->gString())))
+		{
+			no_more_cells ();
+			p->Int = 1 + (crow - p->Rng.lr)
+				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
+			p->type = TYP_INT;
+			return;
+		}
 	}
-    }
-  p->Int = 0L;
-  p->type = TYP_INT;
+	p->Int = 0L;
+	p->type = TYP_INT;
 }
 
 static void
-do_members (
-     struct value *p)
+do_members (struct value *p)
 {
-  CELLREF crow;
-  CELLREF ccol;
-  CELL *cell_ptr;
-  char *string;
+	CELLREF crow;
+	CELLREF ccol;
+	CELL *cell_ptr;
+	char *string;
 
-  string = (p + 1)->String;
-  find_cells_in_range (&(p->Rng));
-  while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-    {
-      if (GET_TYP (cell_ptr) != TYP_STR)
-	continue;
-      if (strstr (cell_ptr->gString(), string))
+	string = (p + 1)->String;
+	find_cells_in_range (&(p->Rng));
+	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
 	{
-	  no_more_cells ();
-	  p->Int = 1 + (crow - p->Rng.lr)
-	    + (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-	  p->type = TYP_INT;
-	  return;
+		if (GET_TYP (cell_ptr) != TYP_STR)
+			continue;
+		if (strstr (cell_ptr->gString(), string))
+		{
+			no_more_cells ();
+			p->Int = 1 + (crow - p->Rng.lr)
+				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
+			p->type = TYP_INT;
+			return;
+		}
 	}
-    }
-  p->Int = 0L;
-  p->type = TYP_INT;
+	p->Int = 0L;
+	p->type = TYP_INT;
 }
 
 static void
-do_pmember (
-     struct value *p)
+do_pmember (struct value *p)
 {
-  CELLREF crow;
-  CELLREF ccol;
-  CELL *cell_ptr;
-  char *string;
+	CELLREF crow;
+	CELLREF ccol;
+	CELL *cell_ptr;
+	char *string;
 
-  string = (p + 1)->String;
-  find_cells_in_range (&(p->Rng));
-  while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-    {
-      if ((GET_TYP (cell_ptr) == 0 && string[0] == '\0')
-	  || (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && 
-		  !strncmp (string, cell_ptr->gString(), strlen (cell_ptr->gString()))))
+	string = (p + 1)->String;
+	find_cells_in_range (&(p->Rng));
+	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
 	{
-	  no_more_cells ();
-	  p->Int = 1 + (crow - p->Rng.lr)
-	    + (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-	  p->type = TYP_INT;
-	  return;
+		if ((GET_TYP (cell_ptr) == 0 && string[0] == '\0')
+				|| (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && 
+					!strncmp (string, cell_ptr->gString(), strlen (cell_ptr->gString()))))
+		{
+			no_more_cells ();
+			p->Int = 1 + (crow - p->Rng.lr)
+				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
+			p->type = TYP_INT;
+			return;
+		}
 	}
-    }
-  p->Int = 0L;
-  p->type = TYP_INT;
+	p->Int = 0L;
+	p->type = TYP_INT;
 }
 
 static void
-do_memberp (
-     struct value *p)
+do_memberp (struct value *p)
 {
-  CELLREF crow;
-  CELLREF ccol;
-  CELL *cell_ptr;
-  int tmp;
-  char *string;
+	CELLREF crow;
+	CELLREF ccol;
+	CELL *cell_ptr;
+	int tmp;
+	char *string;
 
-  string = (p + 1)->String;
-  find_cells_in_range (&(p->Rng));
-  tmp = strlen (string);
-  while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-    {
-      if (GET_TYP (cell_ptr) != TYP_STR)
-	continue;
-      if (!strncmp (cell_ptr->gString(), string, tmp))
+	string = (p + 1)->String;
+	find_cells_in_range (&(p->Rng));
+	tmp = strlen (string);
+	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
 	{
-	  no_more_cells ();
-	  p->Int = 1 + (crow - p->Rng.lr)
-	    + (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-	  p->type = TYP_INT;
-	  return;
+		if (GET_TYP (cell_ptr) != TYP_STR)
+			continue;
+		if (!strncmp (cell_ptr->gString(), string, tmp))
+		{
+			no_more_cells ();
+			p->Int = 1 + (crow - p->Rng.lr)
+				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
+			p->type = TYP_INT;
+			return;
+		}
 	}
-    }
-  p->Int = 0L;
-  p->type = TYP_INT;
+	p->Int = 0L;
+	p->type = TYP_INT;
 }
 
 static void
 do_hlookup (struct value *p)
 {
+	struct rng *rng = &((p)->Rng);
+	num_t fltval = (p + 1)->Float;
+	long offset = (p + 2)->Int;
 
-  struct rng *rng = &((p)->Rng);
-  num_t fltval = (p + 1)->Float;
-  long offset = (p + 2)->Int;
+	CELL *cell_ptr;
+	num_t f;
+	CELLREF col;
+	CELLREF row;
+	char *strptr;
 
-  CELL *cell_ptr;
-  num_t f;
-  CELLREF col;
-  CELLREF row;
-  char *strptr;
-
-  row = rng->lr;
-  for (col = rng->lc; col <= rng->hc; col++)
-    {
-      if (!(cell_ptr = find_cell (row, col)))
-	ERROR (NON_NUMBER);
-      switch (GET_TYP (cell_ptr))
+	row = rng->lr;
+	for (col = rng->lc; col <= rng->hc; col++)
 	{
-	case TYP_FLT:
-	  if (fltval < cell_ptr->gFlt())
-	    goto out;
-	  break;
-	case TYP_INT:
-	  if (fltval < cell_ptr->gInt())
-	    goto out;
-	  break;
-	case TYP_STR:
-	  strptr = cell_ptr->gString();
-	  f = astof (&strptr);
-	  if (!*strptr && fltval > f)
-	    goto out;
-	  else
-	    ERROR (NON_NUMBER);
-	case 0:
-	case TYP_BOL:
-	case TYP_ERR:
-	default:
-	  ERROR (NON_NUMBER);
+		if (!(cell_ptr = find_cell (row, col)))
+			ERROR (NON_NUMBER);
+		switch (GET_TYP (cell_ptr))
+		{
+			case TYP_FLT:
+				if (fltval < cell_ptr->gFlt())
+					goto out;
+				break;
+			case TYP_INT:
+				if (fltval < cell_ptr->gInt())
+					goto out;
+				break;
+			case TYP_STR:
+				strptr = cell_ptr->gString();
+				f = astof (&strptr);
+				if (!*strptr && fltval > f)
+					goto out;
+				else
+					ERROR (NON_NUMBER);
+			case 0:
+			case TYP_BOL:
+			case TYP_ERR:
+			default:
+				ERROR (NON_NUMBER);
+		}
 	}
-    }
 out:
-  if (col == rng->lc)
-    ERROR (OUT_OF_RANGE);
-  --col;
-  row = rng->lr + offset;
-  if (row > rng->hr)
-    ERROR (OUT_OF_RANGE);
-  cell_ptr = find_cell (row, col);
-  if (!cell_ptr)
-    {
-      p->type = TYP_NUL;
-      p->Int = 0;
-    }
-  else
-    {
-      p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->get_c_z();
-    }
+	if (col == rng->lc)
+		ERROR (OUT_OF_RANGE);
+	--col;
+	row = rng->lr + offset;
+	if (row > rng->hr)
+		ERROR (OUT_OF_RANGE);
+	cell_ptr = find_cell (row, col);
+	if (!cell_ptr)
+	{
+		p->type = TYP_NUL;
+		p->Int = 0;
+	}
+	else
+	{
+		p->type = GET_TYP (cell_ptr);
+		p->x = cell_ptr->get_c_z();
+	}
 }
 
 static void
-do_vlookup (
-     struct value *p)
+do_vlookup (struct value *p)
 {
+	struct rng *rng = &((p)->Rng);
+	num_t fltval = (p + 1)->Float;
+	long offset = (p + 2)->Int;
 
-  struct rng *rng = &((p)->Rng);
-  num_t fltval = (p + 1)->Float;
-  long offset = (p + 2)->Int;
+	CELL *cell_ptr;
+	num_t f;
+	CELLREF col;
+	CELLREF row;
+	char *strptr;
 
-  CELL *cell_ptr;
-  //double f;
-  num_t f;
-  CELLREF col;
-  CELLREF row;
-  char *strptr;
-
-  col = rng->lc;
-  for (row = rng->lr; row <= rng->hr; row++)
-    {
-      if (!(cell_ptr = find_cell (row, col)))
-	ERROR (NON_NUMBER);
-      switch (GET_TYP (cell_ptr))
+	col = rng->lc;
+	for (row = rng->lr; row <= rng->hr; row++)
 	{
-	case TYP_FLT:
-	  if (fltval < cell_ptr->gFlt())
-	    goto out;
-	  break;
-	case TYP_INT:
-	  if (fltval < cell_ptr->gInt())
-	    goto out;
-	  break;
-	case TYP_STR:
-	  strptr = cell_ptr->gString();
-	  f = astof (&strptr);
-	  if (!*strptr && fltval > f)
-	    goto out;
-	  else
-	    ERROR (NON_NUMBER);
-	case 0:
-	case TYP_BOL:
-	case TYP_ERR:
-	default:
-	  ERROR (NON_NUMBER);
+		if (!(cell_ptr = find_cell (row, col)))
+			ERROR (NON_NUMBER);
+		switch (GET_TYP (cell_ptr))
+		{
+			case TYP_FLT:
+				if (fltval < cell_ptr->gFlt())
+					goto out;
+				break;
+			case TYP_INT:
+				if (fltval < cell_ptr->gInt())
+					goto out;
+				break;
+			case TYP_STR:
+				strptr = cell_ptr->gString();
+				f = astof (&strptr);
+				if (!*strptr && fltval > f)
+					goto out;
+				else
+					ERROR (NON_NUMBER);
+			case 0:
+			case TYP_BOL:
+			case TYP_ERR:
+			default:
+				ERROR (NON_NUMBER);
+		}
 	}
-    }
 out:
-  if (row == rng->lr)
-    ERROR (OUT_OF_RANGE);
-  --row;
-  col = rng->lc + offset;
-  if (col > rng->hc)
-    ERROR (OUT_OF_RANGE);
+	if (row == rng->lr)
+		ERROR (OUT_OF_RANGE);
+	--row;
+	col = rng->lc + offset;
+	if (col > rng->hc)
+		ERROR (OUT_OF_RANGE);
 
-  cell_ptr = find_cell (row, col);
-  if (!cell_ptr)
-    {
-      p->type = TYP_NUL;
-      p->Int = 0;
-    }
-  else
-    {
-      p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->get_c_z();
-    }
+	cell_ptr = find_cell (row, col);
+	if (!cell_ptr)
+	{
+		p->type = TYP_NUL;
+		p->Int = 0;
+	}
+	else
+	{
+		p->type = GET_TYP (cell_ptr);
+		p->x = cell_ptr->get_c_z();
+	}
 }
 
 static void
-do_vlookup_str (
-     struct value *p)
+do_vlookup_str (struct value *p)
 {
+	struct rng *rng = &((p)->Rng);
+	char * key = (p + 1)->String;
+	long offset = (p + 2)->Int;
 
-  struct rng *rng = &((p)->Rng);
-  char * key = (p + 1)->String;
-  long offset = (p + 2)->Int;
+	CELL *cell_ptr;
+	CELLREF col;
+	CELLREF row;
 
-  CELL *cell_ptr;
-  CELLREF col;
-  CELLREF row;
-
-  col = rng->lc;
-  for (row = rng->lr; row <= rng->hr; row++)
-    {
-      if (!(cell_ptr = find_cell (row, col)))
-	ERROR (NON_NUMBER);
-      switch (GET_TYP (cell_ptr))
+	col = rng->lc;
+	for (row = rng->lr; row <= rng->hr; row++)
 	{
-	case TYP_STR:
-	  if (!strcmp (key, cell_ptr->gString()))
-	    goto out;
-	  break;
-	case 0:
-	case TYP_FLT:
-	case TYP_INT:
-	case TYP_BOL:
-	case TYP_ERR:
-	default:
-	  ERROR (NON_NUMBER);
+		if (!(cell_ptr = find_cell (row, col)))
+			ERROR (NON_NUMBER);
+		switch (GET_TYP (cell_ptr))
+		{
+			case TYP_STR:
+				if (!strcmp (key, cell_ptr->gString()))
+					goto out;
+				break;
+			case 0:
+			case TYP_FLT:
+			case TYP_INT:
+			case TYP_BOL:
+			case TYP_ERR:
+			default:
+				ERROR (NON_NUMBER);
+		}
 	}
-    }
 out:
-  if (row > rng->hr)
-    ERROR (OUT_OF_RANGE);
-  col = rng->lc + offset;
-  if (col > rng->hc)
-    ERROR (OUT_OF_RANGE);
+	if (row > rng->hr)
+		ERROR (OUT_OF_RANGE);
+	col = rng->lc + offset;
+	if (col > rng->hc)
+		ERROR (OUT_OF_RANGE);
 
-  cell_ptr = find_cell (row, col);
-  if (!cell_ptr)
-    {
-      p->type = TYP_NUL;
-      p->Int = 0;
-    }
-  else
-    {
-      p->type = GET_TYP (cell_ptr);
-      p->x = cell_ptr->get_c_z();
-    }
+	cell_ptr = find_cell (row, col);
+	if (!cell_ptr)
+	{
+		p->type = TYP_NUL;
+		p->Int = 0;
+	}
+	else
+	{
+		p->type = GET_TYP (cell_ptr);
+		p->x = cell_ptr->get_c_z();
+	}
 }
 
 
 static void
-do_cell (
-     struct value *p)
+do_cell (struct value *p)
 {
-  int tmp;
-
-  tmp = cell_mc (p->Int, (p + 1)->Int, (p + 2)->String, p);
-  if (tmp)
-    ERROR (tmp);
+	int tmp; cell_mc (p->Int, (p + 1)->Int, (p + 2)->String, p);
+	if (tmp) ERROR (tmp);
 }
 
 /* While writing the macro loader, I found a need for a function
@@ -708,43 +665,43 @@ do_cell (
 static void
 do_varval (struct value *p)
 {
-  int tmp;
-  int vr;
-  int vc;
-  struct var * v;
+	int tmp;
+	int vr;
+	int vc;
+	struct var * v;
 
-  v = find_var ((p+1)->String, strlen((p+1)->String));
+	v = find_var ((p+1)->String, strlen((p+1)->String));
 
-  if (!v || v->var_flags == VAR_UNDEF) {
-    p->type = TYP_STR;
-    p->String = (p+1)->String;
-  } else {
-    switch(p->Int) {
-      case 0:
-        vr = v->v_rng.lr;
-        vc = v->v_rng.lc;
-        break;
-      case 1:
-        vr = v->v_rng.lr;
-        vc = v->v_rng.hc;
-        break;
-      case 2:
-        vr = v->v_rng.hr;
-        vc = v->v_rng.hc;
-        break;
-      case 3:
-        vr = v->v_rng.hr;
-        vc = v->v_rng.lc;
-        break;
-      default:
-        ERROR(OUT_OF_RANGE);
-        return;
-    }
-    p->String = (p+2)->String;
-    tmp = cell_mc (vr, vc, p->String, p);
-    if (tmp)
-      ERROR (tmp);
-  }
+	if (!v || v->var_flags == VAR_UNDEF) {
+		p->type = TYP_STR;
+		p->String = (p+1)->String;
+	} else {
+		switch(p->Int) {
+			case 0:
+				vr = v->v_rng.lr;
+				vc = v->v_rng.lc;
+				break;
+			case 1:
+				vr = v->v_rng.lr;
+				vc = v->v_rng.hc;
+				break;
+			case 2:
+				vr = v->v_rng.hr;
+				vc = v->v_rng.hc;
+				break;
+			case 3:
+				vr = v->v_rng.hr;
+				vc = v->v_rng.lc;
+				break;
+			default:
+				ERROR(OUT_OF_RANGE);
+				return;
+		}
+		p->String = (p+2)->String;
+		tmp = cell_mc (vr, vc, p->String, p);
+		if (tmp)
+			ERROR (tmp);
+	}
 }
 
 #define S (char *)
@@ -760,7 +717,7 @@ do_button(struct value *p)
 
 struct function cells_funs[] =
 {
-  {C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
+	{C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
   {C_FN1 | C_T, X_A1, "S", T do_my, S "my"},
   {C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
   {C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
@@ -788,32 +745,9 @@ int init_cells_function_count(void)
 void edit_cell(const char* input)
 {
 	new_value(curow, cucol, input);
-	/*
-	set_cell_input(curow, cucol, input);
-	CELL* cp = find_cell(curow, cucol);
-	assert(cp);
-	update_cell(cp);
-	*/
 }
 
 
-/*
-void
-edit_cell_at(CELLREF row, CELLREF col, std::string new_formula)
-{
-	edit_cell_at(row, col, new_formula.c_str());
-}
-void
-edit_cell_at(CELLREF row, CELLREF col, const char* new_formula)
-{
-	char * fail;
-	fail = new_value (row, col, new_formula);
-	if (fail)
-		io_error_msg (fail);
-	else
-		Global->modified = 1;
-}
-*/
 
 /*
  * highest_row() and highest_col() should be expected to 
