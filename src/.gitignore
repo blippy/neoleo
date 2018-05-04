@@ -5,3 +5,7 @@ parse.cc
 parse.hh
 posixtm.cc
 posixtm.hh
+
+*.gcda
+*.gcno
+*.gcov

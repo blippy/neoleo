@@ -1,0 +1,23 @@
+TR07: coverage testing
+===========================================================================
+2018-05-05
+
+
+Compile and link using the flag `--coverage'
+
+Run the program as usual. This will create a bunch of files of files in
+the `src' directory.
+
+`cd src' directory
+
+To obtain coverage info on a particular file, e.g. `decompile.cc', run:
+	gcov decompile.cc
+This creates the file decompile.cc.gcov
+
+Inspect coverage using `less decompile.cc.gcov'. Interpreting it:
+https://gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html
+Simply, the columns are:
+1. Number of executions. `-:' means unexcutable code, `#####' means
+unexecuted code
+2. line number
+3. Code

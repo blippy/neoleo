@@ -1,4 +1,5 @@
 # permissive flag is set due to pesky obstack
+COV = --coverage
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
 AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -fpermissive
@@ -6,6 +7,7 @@ AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -Wformat -Wformat-security
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += -Wfatal-errors
+AM_CXXFLAGS += $(COV)
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
@@ -18,6 +20,7 @@ CLEANFILES = $(BUILT_SOURCES)
 
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
+neoleo_LDFLAGS = $(COV)
 
 # Optional component: neobasic:
 #if 0

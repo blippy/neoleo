@@ -1,6 +1,11 @@
 TR01: Formatting of cell values.
 TR02: command creation.
-TR03: Tcl/swig - OBSOLETE
-TR04: atlast Forth subsystem - OBSOLETE
+
 TR05: Legacy Oleo
 TR06: Magic numbers
+TR07: coverage testing
+
+
+OBSOLETE:
+TR03: Tcl/swig - OBSOLETE
+TR04: atlast Forth subsystem - OBSOLETE

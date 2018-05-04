@@ -581,50 +581,31 @@ decomp_str(const CELLREF r, const CELLREF c)
 const char *
 decomp(const CELLREF r, const CELLREF c, CELL *cell)
 {
-	const char *tmp = decomp_formula (r, c, cell, 0);
-	return tmp;
+	return decomp_formula (r, c, cell, 0);
 }
 
 
 const std::string
 decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
-	std::string str;
-
 	extern char *bname[];
 	switch (GET_TYP (cell)) {
 		case 0:
 			return "";
-			break;
 		case TYP_FLT:
-			if (tog)
-				str = flt_to_str_fmt(cell);
-			else
-				str = flt_to_str (cell->gFlt());
-			log_debug_1("decomp_formula_1:TYP_FLT:"s + str);
-			break;
+			if (tog) return flt_to_str_fmt(cell);
+			return flt_to_str (cell->gFlt());
 		case TYP_INT:
-			{
-				static char buf[20];
-				sprintf(buf, "%ld", (long int) cell->gInt());
-				str = buf;
-			}
-			break;
+			return std::to_string(cell->gInt());
 		case TYP_STR:
-			str = backslash_a_string (cell->gString(), 1);
-			log_debug_1("decomp_formula_1:TYP_STR:"s + str);
-			break;
+			return backslash_a_string (cell->gString(), 1);
 		case TYP_BOL:
-			str = bname[cell->gBol()];
-			break;
+			return bname[cell->gBol()];
 		case TYP_ERR:
-			str = ename[cell->gBol()];
-			break;
+			return ename[cell->gBol()];
 		default:
 			panic ("Unknown type %d in decomp", GET_TYP (cell));
-
 	}
-	return str;
 }
 
 const char *
