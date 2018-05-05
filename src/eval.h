@@ -95,22 +95,22 @@
 #define F_NOW		59
 
 /* 40 - 65 one-operand functions */
-#define F_ABS		60
-#define F_ACOS		61
-#define F_ASIN		62
-#define F_ATAN		63
+//#define F_ABS		60
+//#define F_ACOS		61
+//#define F_ASIN		62
+//#define F_ATAN		63
 #define F_CEIL		64
 #define F_INT		65
 #define F_FLOOR		66
-#define F_COS		67
-#define F_DTR		68
+//#define F_COS		67
+//#define F_DTR		68
 #define F_EXP		69
-#define F_LOG		70
-#define F_LOG10		71
-#define F_RTD		72
-#define F_SIN		73
-#define F_SQRT		74
-#define F_TAN		75
+//#define F_LOG		70
+//#define F_LOG10		71
+//#define F_RTD		72
+//#define F_SIN		73
+//#define F_SQRT		74
+//#define F_TAN		75
 #define F_CTIME		76
 #define F_NEG		77
 #define F_NOT		78

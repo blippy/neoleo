@@ -616,27 +616,12 @@ eval_expression ( unsigned char *expr)
 
 			case F_NOW:
 				p->type = TYP_INT;
-				//p->Int = time ((VOIDSTAR) 0);
 				p->Int = time (nullptr);
 				break;
 
 				/* Single operand instrs */
-			case F_ABS:
-			case F_ACOS:
-			case F_ASIN:
-			case F_ATAN:
 			case F_CEIL:
-			case F_COS:
-			case F_DTR:
-			case F_EXP:
 			case F_FLOOR:
-			case F_INT:
-			case F_LOG:
-			case F_LOG10:
-			case F_RTD:
-			case F_SIN:
-			case F_SQRT:
-			case F_TAN:
 				{
 					double (*funp1) (double);
 					funp1 = (double (*)(double)) (f->fn_fun);
