@@ -1250,29 +1250,6 @@ init_mouse (void)
 
 static int mouse_location (CELLREF *cr, CELLREF *cc, struct mouse_event *ev);
 
-int 
-enqueue_mouse_event (int r, int c, int button, int downp)
-{
-  struct mouse_event *m = Global->free_mouse;
-  if (m->next == Global->current_mouse)
-    {
-      m->next =
-	(struct mouse_event *) ck_malloc (sizeof (struct mouse_event));
-      m->next->prev = m;
-      m->next->next = Global->current_mouse;
-      Global->current_mouse->prev = m->next;
-      m->seq = Global->mouse_id++;
-      if (m->seq > 255)
-	panic ("Too many mouse events enqueued.");
-    }
-  Global->free_mouse = m->next;
-  m->row = r;
-  m->col = c;
-  m->button = button;
-  m->downp = downp;
-  m->location = mouse_location (&m->r, &m->c, m);
-  return m->seq;
-}
 
 void 
 dequeue_mouse_event (struct mouse_event *out, int seq)

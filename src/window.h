@@ -19,14 +19,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#ifndef WINDOWH
-//#define WINDOWH
-
-
-#ifdef __cplusplus
-//extern "C" {
-#endif
-
 
 #include "cell.h"
 #include "line.h"
@@ -187,13 +179,6 @@ extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
 extern void io_write_window_config (struct line * out);
 extern void io_read_window_config (char * line);
-extern int enqueue_mouse_event (int r, int c, int button, int downp);
 extern void dequeue_mouse_event (struct mouse_event *out, int seq);
 extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
 		 int lr, int lc) ;
-
-#ifdef __cplusplus
-//}
-#endif
-
-//#endif
