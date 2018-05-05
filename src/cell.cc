@@ -699,15 +699,6 @@ do_varval (struct value *p)
 
 #define S (char *)
 #define T (void (*)())
-static void
-do_button(struct value *p)
-{
-	io_do_button(cur_row, cur_col, p->String, (p+1)->String);
-
-	p->type = TYP_STR;
-	p->String = (p+1)->String;
-}
-
 struct function cells_funs[] =
 {
 	{C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
@@ -725,7 +716,6 @@ struct function cells_funs[] =
   {C_FN3, X_A3, "RFI", T do_vlookup, S "vlookup"},
   {C_FN3, X_A3, "RSI", T do_vlookup_str, S "vlookup_str"},
 
-  {C_FN2,	X_A2,	"SS",	T do_button,	S "button" },
 
   {0, 0, "", 0, 0},
 };
