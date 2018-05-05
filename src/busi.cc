@@ -20,6 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
 #include <math.h>
 
 #include "funcdef.h"
@@ -31,6 +32,9 @@
 #include "busi.h"
 #include "utils.h"
 #include "sheet.h"
+
+using std::cout;
+using std::endl;
 
 //#define Float	x.c_n
 //#define String	x.c_s
@@ -695,6 +699,17 @@ do_sum(struct value* p)
 	double res = 0;
 
 	CELL* cell_ptr;
+	for(auto cell_ptr: get_cells_in_range(rng)) {
+		switch(GET_TYP(cell_ptr)) {
+			case TYP_INT:
+				res += cell_ptr->gInt();
+				break;
+			case TYP_FLT:
+				res += cell_ptr->gFlt();
+				break;
+		}
+	}
+	/*
 	find_cells_in_range (rng);
 	for(int i = 0; cell_ptr = next_cell_in_range (); i++) {
 		switch(GET_TYP(cell_ptr)) {
@@ -706,6 +721,7 @@ do_sum(struct value* p)
 				break;
 		}
 	}
+	*/
 
 	p->sFlt(res);
 }

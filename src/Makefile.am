@@ -33,7 +33,7 @@ neoleo_LDFLAGS = $(COV)
 neoleo_SOURCES = defuns.cc \
 		 $(BLANG_SRCS) \
 		 args.cc basic.cc busi.cc byte-compile.cc \
-                 cells.cc cmd.cc \
+                 cell.cc cmd.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc funcs.cc \
 		 init.cc input.cc \
