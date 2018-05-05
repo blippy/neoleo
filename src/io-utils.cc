@@ -429,7 +429,7 @@ handle_exp:
 				return pr_int (cp->gInt(), &u[p], u[p].prec);
 
 			case FMT_GEN:
-				sprintf (print_buf, "%ld", cp->gInt());
+				sprintf (print_buf, "%ld", (long) cp->gInt());
 				return print_buf;
 
 			case FMT_DOL:
@@ -443,9 +443,9 @@ handle_exp:
 
 			case FMT_FXT:
 				if (p != FLOAT_PRECISION && p != 0)
-					sprintf (print_buf, "%ld.%.*s", cp->gInt(), p, zeroes);
+					sprintf (print_buf, "%ld.%.*s", (long) cp->gInt(), p, zeroes);
 				else
-					sprintf (print_buf, "%ld", cp->gInt());
+					sprintf (print_buf, "%ld", (long) cp->gInt());
 				return print_buf;
 
 			case FMT_EXP:
@@ -485,7 +485,7 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
       return flt_to_str (cp->gFlt());
 
     case TYP_INT:
-      sprintf (print_buf, "%ld", cp->gInt());
+      sprintf (print_buf, "%ld", (long) cp->gInt());
       return print_buf;
 
     case TYP_STR:
