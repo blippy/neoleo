@@ -377,7 +377,8 @@ eval_expression ( unsigned char *expr)
 			curstack -= (numarg - 1);
 			for (xt = 0; xt < numarg; xt++)
 			{
-				switch (f->fn_argt[xt <= 3 ? xt : 3])
+				char arg_type =f->fn_argt[xt <= 3 ? xt : 3];
+				switch (arg_type)
 				{
 					/* A is for anything */
 					/* Any non-range value */
