@@ -70,16 +70,11 @@ EXTERN void (*io_erase) (int len);
 EXTERN void (*io_insert) (int len);
 EXTERN void (*io_over) (const char *, int len);
 
-#ifdef HAVE_X
-int io_col_to_input_pos (int col);
-#endif
 
 /* Cell values */
 EXTERN void (*io_hide_cell_cursor) (void);
 EXTERN void (*io_display_cell_cursor) (void);
-EXTERN void (*io_pr_cell_win) (struct window *,
-			       CELLREF, CELLREF,
-			       CELL *);
+EXTERN void (*io_pr_cell_win) (struct window *, CELLREF, CELLREF, CELL *);
 
 /* The terminal's cursor may be in the current cell or the input area. */
 EXTERN void (*io_cellize_cursor) (void);
