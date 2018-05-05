@@ -137,14 +137,14 @@
 #define F_FILE		91
 
 /* 115 - 122 area functions */
-#define AREA_SUM	92
-#define AREA_PROD	93
-#define AREA_AVG	94
-#define AREA_STD	95
-#define AREA_MAX	96
-#define AREA_MIN	97
-#define AREA_CNT	98
-#define AREA_VAR	99
+//#define AREA_SUM	92
+//#define AREA_PROD	93
+//#define AREA_AVG	94
+//#define AREA_STD	95
+//#define AREA_MAX	96
+//#define AREA_MIN	97
+//#define AREA_CNT	98
+//#define AREA_VAR	99
 
 #define USR1		100	/* User defined function */
 /* Followed by function # */

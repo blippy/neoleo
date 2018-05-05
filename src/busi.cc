@@ -734,7 +734,7 @@ function_t busi_funs[] =
   {C_FN4, X_A4, "FFII", to_vptr(do_kprin), "kprin"},	/* 18 */
 
   {C_FN4, X_A4, "RFFF", to_vptr(do_fmrr), "fmrr"},       /* 19 */
-  {C_FN1, X_A1, "R",    to_vptr(do_sum), "suma"},
+  {C_FN1, X_A1, "R",    to_vptr(do_sum), "sum"},
 
   {0, 0, "", 0, 0},
 };

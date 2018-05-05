@@ -51,9 +51,9 @@ extern long random (void);
 extern int n_usr_funs;
 
 //double to_int ();
-static int deal_area ( unsigned char cmd, unsigned char num_args, struct value *p);
-static void add_int (long value);
-static void add_flt (double value);
+//static int deal_area ( unsigned char cmd, unsigned char num_args, struct value *p);
+//static void add_int (long value);
+//static void add_flt (double value);
 RETSIGTYPE math_sig ( int sig);
 
 int fls (long);
@@ -259,11 +259,11 @@ int overflow;
 void
 init_eval ()
 {
-  stackmax = 20;
-  stack = (struct value *) ck_malloc (stackmax * sizeof (struct value));
-  curstack = 0;
-  current_cycle = 1;
-  (void) signal (SIGFPE, math_sig);
+	stackmax = 20;
+	stack = (struct value *) ck_malloc (stackmax * sizeof (struct value));
+	curstack = 0;
+	current_cycle = 1;
+	(void) signal (SIGFPE, math_sig);
 }
 
 /* This huge function takes a byte-compiled expression and executes it. */
@@ -1044,20 +1044,6 @@ eval_expression ( unsigned char *expr)
 					p->String = (char*) obstack_finish (&tmp_mem);
 					break;
 				}
-
-			case AREA_SUM:
-			case AREA_PROD:
-			case AREA_AVG:
-			case AREA_STD:
-			case AREA_MAX:
-			case AREA_MIN:
-			case AREA_CNT:
-			case AREA_VAR:
-				tmp = deal_area (byte, numarg, p);
-				if (tmp)
-					ERROR (tmp);
-				break;
-
 				/* This is now a fallthrough for all the USRmumble codes */
 			case USR1:
 			default:
@@ -1109,251 +1095,7 @@ static double sqr_flt_tmp;
 
 static unsigned char area_cmd;
 
-static int
-deal_area ( unsigned char cmd, unsigned char num_args, struct value *p)
-{
-	double flt_cnt_flt;
-	CELL *cell_ptr;
-	char *strptr;
 
-	area_cmd = cmd;
-	cnt_flt = 0;
-	cnt_int = 0;
-	for (; num_args--;)
-	{
-		switch (p[num_args].type)
-		{
-			case TYP_INT:
-				add_int (p[num_args].Int);
-				break;
-
-			case TYP_FLT:
-				add_flt (p[num_args].Float);
-				break;
-
-			case TYP_STR:
-				strptr = p[num_args].String;
-				flt_cnt_flt = astof (&strptr);
-				if (*strptr)
-					return NON_NUMBER;
-				add_flt (flt_cnt_flt);
-				break;
-
-			case TYP_RNG:
-				find_cells_in_range (&(p[num_args].Rng));
-				while ((cell_ptr = next_cell_in_range ()))
-				{
-					if (GET_TYP (cell_ptr) == TYP_FLT)
-						add_flt (cell_ptr->gFlt());
-					else if (GET_TYP (cell_ptr) == TYP_INT)
-						add_int (cell_ptr->gInt());
-					else if (GET_TYP (cell_ptr) == TYP_STR)
-					{
-						strptr = cell_ptr->gString();
-						flt_cnt_flt = astof (&strptr);
-						if (!*strptr)
-							add_flt (flt_cnt_flt);
-					}
-				}
-				break;
-
-			case 0:
-				break;
-
-			case TYP_ERR:
-				return p[num_args].Value;
-
-			default:
-				return NON_NUMBER;
-		}
-	}
-	if (!cnt_flt && !cnt_int && area_cmd != AREA_CNT)
-		return NO_VALUES;
-
-	switch (area_cmd)
-	{
-		case AREA_SUM:
-			if (cnt_flt && cnt_int)
-			{
-				flt_tmp += (double) int_tmp;
-				cnt_int = 0;
-			}
-			break;
-		case AREA_PROD:
-			if (cnt_flt && cnt_int)
-			{
-				flt_tmp *= (double) int_tmp;
-				cnt_int = 0;
-			}
-			break;
-		case AREA_AVG:
-			if (cnt_flt && cnt_int)
-			{
-				flt_tmp += (double) int_tmp;
-				flt_tmp /= (double) ((cnt_flt + cnt_int));
-				cnt_int = 0;
-			}
-			else if (cnt_flt)
-				flt_tmp /= (double) cnt_flt;
-			else
-			{
-				flt_tmp = (double) int_tmp / (double) cnt_int;
-				cnt_int = 0;
-			}
-			break;
-		case AREA_STD:
-			if (cnt_int && cnt_flt)
-			{
-				flt_tmp += (double) int_tmp;
-				sqr_flt_tmp += (double) sqr_int_tmp;
-				cnt_flt += cnt_int;
-				cnt_int = 0;
-			}
-			else if (cnt_int)
-			{
-				flt_tmp = (double) int_tmp;
-				sqr_flt_tmp = (double) sqr_int_tmp;
-				cnt_flt = cnt_int;
-				cnt_int = 0;
-			}
-			flt_cnt_flt = (double) cnt_flt;
-			flt_tmp = sqrt (((flt_cnt_flt * sqr_flt_tmp) -
-						(flt_tmp * flt_tmp)) /
-					(flt_cnt_flt * (flt_cnt_flt - 1)));
-			break;
-		case AREA_VAR:
-			if (cnt_int && cnt_flt)
-			{
-				flt_tmp += (double) int_tmp;
-				sqr_flt_tmp += (double) sqr_int_tmp;
-				cnt_flt += cnt_int;
-				cnt_int = 0;
-			}
-			else if (cnt_int)
-			{
-				flt_tmp = (double) int_tmp;
-				sqr_flt_tmp = (double) sqr_int_tmp;
-				cnt_flt = cnt_int;
-				cnt_int = 0;
-			}
-			flt_cnt_flt = (double) cnt_flt;
-			flt_tmp = ((flt_cnt_flt * sqr_flt_tmp) -
-					(flt_tmp * flt_tmp)) /
-				(flt_cnt_flt * flt_cnt_flt);
-			break;
-
-		case AREA_MAX:
-			if (cnt_flt && cnt_int && flt_tmp > (double) int_tmp)
-				cnt_int = 0;
-			break;
-
-		case AREA_MIN:
-			if (cnt_flt && cnt_int && flt_tmp < (double) int_tmp)
-				cnt_int = 0;
-			break;
-
-		case AREA_CNT:
-			int_tmp = cnt_int + cnt_flt;
-			cnt_int = 1;
-			break;
-
-#ifdef TEST
-		default:
-			panic ("Unknown AREA command %d", area_cmd);
-#endif
-	}
-	if (cnt_int)
-	{
-		p->type = TYP_INT;
-		p->Int = int_tmp;
-	}
-	else
-	{
-		p->type = TYP_FLT;
-		p->Float = flt_tmp;
-	}
-	return 0;
-}
-
-static void
-add_flt (double value)
-{
-	if (cnt_flt++ == 0)
-	{
-		flt_tmp = value;
-		sqr_flt_tmp = value * value;
-		return;
-	}
-
-	switch (area_cmd)
-	{
-		case AREA_STD:
-		case AREA_VAR:
-			sqr_flt_tmp += value * value;
-			/* Fall through */
-		case AREA_SUM:
-		case AREA_AVG:
-			flt_tmp += value;
-			return;
-		case AREA_PROD:
-			flt_tmp *= value;
-			return;
-		case AREA_MAX:
-			if (flt_tmp < value)
-				flt_tmp = value;
-			return;
-		case AREA_MIN:
-			if (flt_tmp > value)
-				flt_tmp = value;
-			return;
-		case AREA_CNT:
-			return;
-#ifdef TEST
-		default:
-			panic ("Unknown area command %d in add_flt(%g)", area_cmd, value);
-#endif
-	}
-}
-
-static void
-add_int (long value)
-{
-	if (cnt_int++ == 0)
-	{
-		int_tmp = value;
-		sqr_int_tmp = value * value;
-		return;
-	}
-
-	switch (area_cmd)
-	{
-		case AREA_STD:
-		case AREA_VAR:
-			sqr_int_tmp += value * value;
-			/* Fall through */
-		case AREA_SUM:
-		case AREA_AVG:
-			int_tmp += value;
-			return;
-		case AREA_PROD:
-			int_tmp *= value;
-			return;
-		case AREA_MAX:
-			if (int_tmp < value)
-				int_tmp = value;
-			return;
-		case AREA_MIN:
-			if (int_tmp > value)
-				int_tmp = value;
-			return;
-		case AREA_CNT:
-			return;
-#ifdef TEST
-		default:
-			panic ("Unknown Area command %d in add_int(%ld)", area_cmd, value);
-#endif
-	}
-}
 
 double
 dtr (double x)
