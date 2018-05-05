@@ -3,6 +3,29 @@
 ValType value::get_type() { return type;}
 void value::set_type(ValType t) { type = t;}
 
+void value::sValue(value& newval)
+{
+	type = newval.type;
+	switch(type) {
+		case TYP_NUL:
+			break;
+		case TYP_INT:
+			sInt(newval.gInt());
+			break;
+		//case TYP_FLT:
+		//	sFlt(newval.gFlt());
+			break;
+		case TYP_BOL:
+			sBol(newval.gBol());
+			break;
+		case TYP_ERR:
+			sErr(newval.gErr());
+		default:
+			// strings are going to be a pest
+			assert(false);
+	}
+}
+
 int value::gInt() { return x.c_i; };
 void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 

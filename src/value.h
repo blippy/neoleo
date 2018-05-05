@@ -28,13 +28,16 @@ class value {
 		ValType get_type();
 		void set_type(ValType t);
 
+		//void sValue(value& newval);
+		void sValue(value& newval);
+
 		int gInt();
 		void sInt(int newval);
 
 		long gLong();
 		void sLong(long newval);
 		
-		 char *gString();
+		char *gString();
 		void sString(char* newval);
 
 		num_t gFlt();

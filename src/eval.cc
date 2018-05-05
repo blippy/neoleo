@@ -707,7 +707,6 @@ eval_expression ( unsigned char *expr)
 			case MOD:
 			case PROD:
 			case SUM:
-
 				if (p->type != (p + 1)->type)
 				{
 					if (p->type == TYP_INT)
