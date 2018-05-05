@@ -33,7 +33,13 @@ void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 //void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
 		
 char *value::gString() { assert(type == TYP_STR); return x.c_s; };
-void value::sString(char* newval) { type = TYP_STR; x.c_s = newval;};
+
+void value::sString(char* newval) 
+{ 
+	//free_string();
+	type = TYP_STR; 
+	x.c_s = newval;
+}
 
 num_t value::gFlt() { return x.c_n ;};
 void value::sFlt(num_t v) { type = TYP_FLT; x.c_n = v ;};
@@ -43,3 +49,21 @@ void value::sErr(int newval) { type = TYP_ERR ; x.c_err = newval ;};
 
 int value::gBol() { return x.c_b ;};
 void value::sBol(int newval) { type = TYP_BOL; x.c_b = newval; };
+
+void value::free_string()
+{
+	if(type != TYP_STR || gString() == nullptr) return;
+	free(gString());
+	type = TYP_NUL;
+	memset(&x, 0, sizeof(union vals));
+}
+
+
+value::value()
+{
+}
+
+value::~value()
+{
+	free_string();
+}

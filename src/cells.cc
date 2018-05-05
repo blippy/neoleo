@@ -71,18 +71,7 @@ static void log_debug_1(std::string msg)
 	return;		\
  }
 
-
-value::value(void)
-{
-//	cout << "X";
-}
-
-value::~value(void)
-{
-//	cout << "Y";
-}
-
-cell::cell(void)
+cell::cell()
 {
 }
 
