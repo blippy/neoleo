@@ -56,6 +56,7 @@ extern void add_timer_ref (cell* cp, int whereto);
 extern void init_refs (void);
 extern void push_refs (struct ref_fm *ref);
 extern void push_cell (CELLREF row, CELLREF col);
+void push_cell(cell* cp);
 extern int eval_next_cell (void);
 extern char * old_new_var_value (char *v_name, int v_namelen, char *v_newval);
 extern char * new_var_value (char *v_name, int v_namelen, struct rng *tmp_rng);

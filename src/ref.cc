@@ -705,7 +705,7 @@ void
 add_range_ref (struct rng *rng)
 {
 	return; // TODO FIXME
-
+#if 0
 	CELL *other_cell;
 	struct ref_fm *oldref, *newref;
 	struct ref_fm nonref;
@@ -756,6 +756,7 @@ add_range_ref (struct rng *rng)
 	   oldref->refs_refcnt=1;
 	   flush_fm_ref(oldref);
 	   } */
+#endif
 }
 
 static void
@@ -2091,6 +2092,16 @@ push_refs (struct ref_fm *ref)
    for most people.
  */
 static void cell_buffer_contents (FILE *fp);
+
+void push_cell(coord_t coord)
+{
+	CELLREF row = get_row(coord);
+	CELLREF col = get_col(coord);
+}
+void push_cell(cell* cp)
+{
+	push_cell(cp->coord);
+}
 
 void
 push_cell (CELLREF row, CELLREF col)

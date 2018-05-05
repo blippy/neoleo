@@ -461,6 +461,8 @@ recalculate (int all)
       all.hr = MAX_ROW;
       all.lc = MIN_COL;
       all.hc = MAX_COL;
+
+      /*
       find_cells_in_range (&all);
       while (next_row_col_in_range (&row, &col)) {
 #if 0
@@ -468,6 +470,10 @@ recalculate (int all)
 #endif
 	push_cell (row, col);
       }
+      */
+      for(auto cp:get_cells_in_range(&all))
+	      push_cell(cp);
+
     }
   while (eval_next_cell ())
     ;

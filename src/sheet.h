@@ -43,6 +43,9 @@ celldeq_t get_cells_in_range(struct rng *r);
 void make_cells_in_range(struct rng *r);
 void no_more_cells();
 
+coord_t to_coord(coord_t row, coord_t col);
+int get_col(coord_t coord);
+int get_row(coord_t coord);
 CELLREF max_row();
 CELLREF max_col();
 CELLREF highest_row();
