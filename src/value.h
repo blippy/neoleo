@@ -45,6 +45,8 @@ class value {
 
 		int gBol();
 		void sBol(int newval);
+
+		struct rng gRng() { return x.c_r; }
 	public:
 		union vals x;
 };

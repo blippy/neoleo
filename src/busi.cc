@@ -33,7 +33,7 @@
 #include "sheet.h"
 
 //#define Float	x.c_n
-#define String	x.c_s
+//#define String	x.c_s
 //#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
@@ -55,10 +55,7 @@ busi_pow(num_t x, num_t y)
 
 
 static int
-npv (
-     struct rng *rng,
-     num_t rate,
-     num_t *putres)
+npv ( struct rng *rng, num_t rate, num_t *putres)
 {
   num_t npv;
   int i;
@@ -128,7 +125,8 @@ static void
 do_npv ( struct value *p)
 {
 	num_t putres = p->gFlt();
-  int tmp =  npv (&(p->Rng), (p + 1)->gFlt(), &putres);
+	struct rng a_rng = p->gRng();
+  int tmp =  npv (&a_rng, (p + 1)->gFlt(), &putres);
   p->sFlt(putres);
   if (tmp)
     {
