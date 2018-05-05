@@ -34,7 +34,7 @@
 
 #define Float	x.c_n
 #define String	x.c_s
-#define Int	x.c_l
+//#define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
 
@@ -439,8 +439,8 @@ do_ddb (
 {
   double cost = (p)->Float;
   double salvage = (p + 1)->Float;
-  long life = (p + 2)->Int;
-  long period = (p + 3)->Int;
+  long life = (p + 2)->gInt();
+  long period = (p + 3)->gInt();
 
   double bookval, tmp;
   long n;
@@ -536,8 +536,8 @@ do_balance (
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
-  long term = (p + 2)->Int;
-  long period = (p + 3)->Int;
+  long term = (p + 2)->gInt();
+  long period = (p + 3)->gInt();
 
   double tmp_pmt, int_part;
   long num;
@@ -569,8 +569,8 @@ do_paidint (
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
-  long term = (p + 2)->Int;
-  long period = (p + 3)->Int;
+  long term = (p + 2)->gInt();
+  long period = (p + 3)->gInt();
 
   double tmp_pmt, int_part, retval;
   long num;
@@ -604,8 +604,8 @@ do_kint (
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
-  long term = (p + 2)->Int;
-  long period = (p + 3)->Int;
+  long term = (p + 2)->gInt();
+  long period = (p + 3)->gInt();
 
   double tmp_pmt, int_part = 0;
   long num;
@@ -638,8 +638,8 @@ do_kprin (
 {
   double principal = (p)->Float;
   double rate = (p + 1)->Float;
-  long term = (p + 2)->Int;
-  long period = (p + 3)->Int;
+  long term = (p + 2)->gInt();
+  long period = (p + 3)->gInt();
   double tmp_pmt, int_part = 0;
   long num;
 
