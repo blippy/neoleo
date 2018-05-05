@@ -482,11 +482,13 @@ DEFUN ("clear-spreadsheet",
 
 /* Sorting Commands */
 
+#if 0	
 DEFUN ("sort-region", FDsort_region_cmd, FAsort_region_cmd,
         to_vptr(sort_region_cmd))
 #ifdef FUNC_ARG_STRINGS
 "SSort region? ",
 #endif
+#endif	
 
 /* Commands For Setting Cell Attributes. */
 
