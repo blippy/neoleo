@@ -272,199 +272,199 @@ long_to_str (long val)
 char *
 print_cell (CELL * cp)
 {
-  int j;
-  int p;
-  long num;
-  static char zeroes[] = "000000000000000";
+	int j;
+	int p;
+	long num;
+	static char zeroes[] = "000000000000000";
 
-  if (!cp)
-    return "";
+	if (!cp)
+		return "";
 
-  j = GET_FORMAT (cp);
+	j = GET_FORMAT (cp);
 
-  p = GET_PRECISION (cp);
-  if (j == FMT_DEF) {
-    j = default_fmt;
-    p = default_prc;
-  }
-  if (j == FMT_HID || GET_TYP (cp) == 0)
-    return "";
-
-  if (GET_TYP (cp) == TYP_STR)
-    return cp->gString();
-
-  if (GET_TYP (cp) == TYP_BOL) {
-#ifdef TEST
-      if (cp->cell_bol < 0 || cp->cell_bol > 1)
-	panic ("Bool %d out of range", cp->cell_bol);
-#endif
-      return bname[cp->gBol()];
-    }
-  if (GET_TYP (cp) == TYP_ERR) {
-#ifdef TEST
-      if (cp->gErr() > ERR_MAX || cp->gErr() < 0)
-	panic ("Error %d out of range", cp->gErr());
-#endif
-      return ename[cp->gErr()];
-    }
-  if (GET_TYP (cp) == TYP_FLT) {
-      switch (j)
-	{
-	case FMT_GPH:
-	  if (cp->gFlt() < 0)
-	    {
-	      j = '-';
-	      num = -(cp->gFlt());
-	    }
-	  else if (cp->gFlt() >= 1)
-	    {
-	      j = '+';
-	      num = (cp->gFlt());
-	    }
-	  else
-	    {
-	      j = '0';
-	      num = 1;
-	    }
-	graph:
-	  if (num >= sizeof (print_buf))
-	    {
-	      io_error_msg ("Cannot graph %d '%c'", p, j);
-	      num = sizeof (print_buf) - 1;
-	    }
-	  print_buf[num] = '\0';
-	  while (--num >= 0)
-	    print_buf[num] = j;
-	  return print_buf;
-
-	case FMT_USR:
-	  return pr_flt (cp->gFlt(), &u[p], u[p].prec);
-
-	case FMT_GEN:
-	  {
-	    double f;
-
-	    f = fabs (cp->gFlt());
-
-	    if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
-	      goto handle_exp;
-	    return pr_flt (cp->gFlt(), &fxt, p, false);
-	  }
-
-	case FMT_DOL:
-	  return pr_flt (cp->gFlt(), &dol, p);
-
-	case FMT_CMA:
-	  return pr_flt (cp->gFlt(), &cma, p);
-
-	case FMT_PCT:
-	  return pr_flt (cp->gFlt(), &pct, p);
-
-	case FMT_FXT:
-	  return pr_flt (cp->gFlt(), &fxt, p);
-
-	case FMT_EXP:
-	handle_exp:
-	  if ((double) cp->gFlt() == __plinf)
-	    return iname;
-	  if ((double) cp->gFlt() == __neinf)
-	    return mname;
-	  if (p == FLOAT_PRECISION)
-	    sprintf (print_buf, "%e", (double) cp->gFlt());
-	  else
-	    sprintf (print_buf, "%.*e", p, (double) cp->gFlt());
-	  return print_buf;
-#ifdef TEST
-	default:
-	  panic ("Unknown format %d", j);
-	  return 0;
-#endif
+	p = GET_PRECISION (cp);
+	if (j == FMT_DEF) {
+		j = default_fmt;
+		p = default_prc;
 	}
-    }
+	if (j == FMT_HID || GET_TYP (cp) == 0)
+		return "";
 
-  if (GET_TYP (cp) == TYP_INT) {
-      p = GET_PRECISION (cp);
-      switch (j)
-	{
-	case FMT_GPH:
-	  if (cp->gInt() < 0)
-	    {
-	      j = '-';
-	      num = -(cp->gInt());
-	    }
-	  else if (cp->gInt() >= 1)
-	    {
-	      j = '+';
-	      num = (cp->gInt());
-	    }
-	  else
-	    {
-	      j = '0';
-	      num = 1;
-	    }
-	  goto graph;
+	if (GET_TYP (cp) == TYP_STR)
+		return cp->gString();
+
+	if (GET_TYP (cp) == TYP_BOL) {
+#ifdef TEST
+		if (cp->cell_bol < 0 || cp->cell_bol > 1)
+			panic ("Bool %d out of range", cp->cell_bol);
+#endif
+		return bname[cp->gBol()];
+	}
+	if (GET_TYP (cp) == TYP_ERR) {
+#ifdef TEST
+		if (cp->gErr() > ERR_MAX || cp->gErr() < 0)
+			panic ("Error %d out of range", cp->gErr());
+#endif
+		return ename[cp->gErr()];
+	}
+	if (GET_TYP (cp) == TYP_FLT) {
+		switch (j)
+		{
+			case FMT_GPH:
+				if (cp->gFlt() < 0)
+				{
+					j = '-';
+					num = -(cp->gFlt());
+				}
+				else if (cp->gFlt() >= 1)
+				{
+					j = '+';
+					num = (cp->gFlt());
+				}
+				else
+				{
+					j = '0';
+					num = 1;
+				}
+graph:
+				if (num >= sizeof (print_buf))
+				{
+					io_error_msg ("Cannot graph %d '%c'", p, j);
+					num = sizeof (print_buf) - 1;
+				}
+				print_buf[num] = '\0';
+				while (--num >= 0)
+					print_buf[num] = j;
+				return print_buf;
+
+			case FMT_USR:
+				return pr_flt (cp->gFlt(), &u[p], u[p].prec);
+
+			case FMT_GEN:
+				{
+					double f;
+
+					f = fabs (cp->gFlt());
+
+					if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
+						goto handle_exp;
+					return pr_flt (cp->gFlt(), &fxt, p, false);
+				}
+
+			case FMT_DOL:
+				return pr_flt (cp->gFlt(), &dol, p);
+
+			case FMT_CMA:
+				return pr_flt (cp->gFlt(), &cma, p);
+
+			case FMT_PCT:
+				return pr_flt (cp->gFlt(), &pct, p);
+
+			case FMT_FXT:
+				return pr_flt (cp->gFlt(), &fxt, p);
+
+			case FMT_EXP:
+handle_exp:
+				if ((double) cp->gFlt() == __plinf)
+					return iname;
+				if ((double) cp->gFlt() == __neinf)
+					return mname;
+				if (p == FLOAT_PRECISION)
+					sprintf (print_buf, "%e", (double) cp->gFlt());
+				else
+					sprintf (print_buf, "%.*e", p, (double) cp->gFlt());
+				return print_buf;
+#ifdef TEST
+			default:
+				panic ("Unknown format %d", j);
+				return 0;
+#endif
+		}
+	}
+
+	if (GET_TYP (cp) == TYP_INT) {
+		p = GET_PRECISION (cp);
+		switch (j)
+		{
+			case FMT_GPH:
+				if (cp->gInt() < 0)
+				{
+					j = '-';
+					num = -(cp->gInt());
+				}
+				else if (cp->gInt() >= 1)
+				{
+					j = '+';
+					num = (cp->gInt());
+				}
+				else
+				{
+					j = '0';
+					num = 1;
+				}
+				goto graph;
 
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
-	case FMT_DATE:
-		{
-		    time_t t = cp->gInt();
-		    int	f = GET_PRECISION(cp);		/* Determines date format */
-		    struct tm *tmp = localtime(&t);
+			case FMT_DATE:
+				{
+					time_t t = cp->gInt();
+					int	f = GET_PRECISION(cp);		/* Determines date format */
+					struct tm *tmp = localtime(&t);
 
 #ifdef	HAVE_STRFTIME
-		    (void)strftime(print_buf, sizeof(print_buf),
-			date_formats[f], tmp);
+					(void)strftime(print_buf, sizeof(print_buf),
+							date_formats[f], tmp);
 #else
-		    sprintf(print_buf,
-			"%04d/%02d/%02d",
-			tmp->tm_year + 1900,
-			tmp->tm_mon + 1,
-			tmp->tm_mday);
+					sprintf(print_buf,
+							"%04d/%02d/%02d",
+							tmp->tm_year + 1900,
+							tmp->tm_mon + 1,
+							tmp->tm_mday);
 #endif
-		    return print_buf;
+					return print_buf;
+				}
+#endif
+
+			case FMT_USR:
+				return pr_int (cp->gInt(), &u[p], u[p].prec);
+
+			case FMT_GEN:
+				sprintf (print_buf, "%ld", cp->gInt());
+				return print_buf;
+
+			case FMT_DOL:
+				return pr_int (cp->gInt(), &dol, p);
+
+			case FMT_CMA:
+				return pr_int (cp->gInt(), &cma, p);
+
+			case FMT_PCT:
+				return pr_int (cp->gInt(), &pct, p);
+
+			case FMT_FXT:
+				if (p != FLOAT_PRECISION && p != 0)
+					sprintf (print_buf, "%ld.%.*s", cp->gInt(), p, zeroes);
+				else
+					sprintf (print_buf, "%ld", cp->gInt());
+				return print_buf;
+
+			case FMT_EXP:
+				if (p != FLOAT_PRECISION)
+					sprintf (print_buf, "%.*e", p, (double) (cp->gInt()));
+				else
+					sprintf (print_buf, "%e", (double) (cp->gInt()));
+				return print_buf;
+#ifdef TEST
+			default:
+				panic ("Unknown format %d", j);
+				return 0;
+#endif
 		}
-#endif
-
-	case FMT_USR:
-	  return pr_int (cp->gInt(), &u[p], u[p].prec);
-
-	case FMT_GEN:
-	  sprintf (print_buf, "%ld", cp->gInt());
-	  return print_buf;
-
-	case FMT_DOL:
-	  return pr_int (cp->gInt(), &dol, p);
-
-	case FMT_CMA:
-	  return pr_int (cp->gInt(), &cma, p);
-
-	case FMT_PCT:
-	  return pr_int (cp->gInt(), &pct, p);
-
-	case FMT_FXT:
-	  if (p != FLOAT_PRECISION && p != 0)
-	    sprintf (print_buf, "%ld.%.*s", cp->gInt(), p, zeroes);
-	  else
-	    sprintf (print_buf, "%ld", cp->gInt());
-	  return print_buf;
-
-	case FMT_EXP:
-	  if (p != FLOAT_PRECISION)
-	    sprintf (print_buf, "%.*e", p, (double) (cp->gInt()));
-	  else
-	    sprintf (print_buf, "%e", (double) (cp->gInt()));
-	  return print_buf;
-#ifdef TEST
-	default:
-	  panic ("Unknown format %d", j);
-	  return 0;
-#endif
 	}
-    }
 #ifdef TEST
-  panic ("Unknown cell type %d", GET_TYP (cp));
+	panic ("Unknown cell type %d", GET_TYP (cp));
 #endif
-  return 0;
+	return 0;
 }
 
 /* Return the value of ROW,COL in a human-readable fashion
