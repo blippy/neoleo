@@ -20,9 +20,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
 #include "funcdef.h"
 #include <iostream>
 #include <string.h>
@@ -148,153 +145,6 @@ get_cell_formula_at(int r, int c)
 	return res;
 }
 
-
-static int
-cell_mc ( long row, long col, char *dowhat, struct value *p)
-{
-	struct func
-	{
-		const char *name;
-		ValType typ;
-	};
-
-	static struct func cell_funs[] =
-	{
-		{"row", TYP_INT},		// 0
-		{"column", TYP_INT},	// 1 
-		{"width", TYP_INT},		// 2 
-		{"lock", TYP_STR},		// 3 
-		{"protection", TYP_STR},	// 4 
-		{"justify", TYP_STR},	// 5 
-		{"alignment", TYP_STR},	// 6 
-		{"fmt", TYP_STR},		// 7 
-		{"format", TYP_STR},	// 8 
-		{"type", TYP_STR},		// 9
-		{"formula", TYP_STR},	// 10
-		{"value", TYP_NUL},		// 11 - TODO are we sure TYP_NUL is the correct type?
-		{0, TYP_NUL}
-	};
-
-	struct func *func;
-	struct func *f1;
-	int n;
-
-	n = strlen (dowhat) - 1;
-	f1 = 0;
-	for (func = cell_funs; func->name; func++)
-		if (func->name[0] == dowhat[0]
-				&& (n == 0 || !strincmp (&(func->name[1]), &dowhat[1], n)))
-		{
-			if (f1)
-				return BAD_INPUT;
-			f1 = func;
-		}
-	if (!f1)
-		return BAD_INPUT;
-	p->type = f1->typ;
-	switch (f1 - cell_funs)
-	{
-		case 0:
-			p->Int = row;
-			break;
-		case 1:
-			p->Int = col;
-			break;
-		case 2:
-			p->Int = get_width (col);
-			break;
-		case 3:
-		case 4:
-			{
-				static char slock[] = "locked";
-				static char sulock[] = "unlocked";
-				CELL* cell_ptr = find_cell (row, col);
-				p->String = ( (cell_ptr ? GET_LCK (cell_ptr) : default_lock)
-						? slock
-						: sulock);
-			}
-			break;
-		case 5:
-		case 6:
-			{
-				CELL* cell_ptr = find_cell (row, col);
-				const char* str = jst_to_str (cell_ptr ?  GET_JST (cell_ptr) : default_jst); 
-				p->String = (char *) obstack_alloc (&tmp_mem, strlen(str) + 1);
-				strcpy(p->String, str);
-			}
-			break;
-		case 7:
-		case 8:
-			p->String = cell_format_string(find_cell(row, col));
-			break;      
-		case 9:
-			{
-				CELL* cell_ptr = find_cell (row, col);
-				const char* str = "null";
-				if (cell_ptr)
-					switch (GET_TYP (cell_ptr))
-					{
-						case TYP_FLT:
-							str = "float";
-							break;
-						case TYP_INT:
-							str= "integer";
-							break;
-						case TYP_STR:
-							str = "string";
-							break;
-						case TYP_BOL:
-							str = "boolean";
-							break;
-						case TYP_ERR:
-							str = "error";
-							break;
-						default:
-							str = "unknown";
-					}
-				p->String = (char *) obstack_alloc (&tmp_mem, strlen(str) + 1);
-				strcpy(p->String, str);
-			}
-			break;
-		case 10:
-			{
-				std::string formula = decomp_str(row, col);
-				p->String = (char *) obstack_alloc (&tmp_mem, formula.size() + 1);
-				strcpy(p->String, formula.c_str());
-				break;
-			}
-		case 11:
-			{
-				CELL* cell_ptr = find_cell (row, col);
-				if (cell_ptr)
-				{
-					p->type = GET_TYP (cell_ptr);
-					p->x = cell_ptr->get_c_z();
-				}
-				else
-					p->type = TYP_NUL;
-			}
-			break;
-		default:
-			return BAD_INPUT;
-	}
-	return 0;
-}
-
-
-static void
-do_curcell (struct value *p)
-{
-	int tmp  = cell_mc (curow, cucol, p->String, p);
-	if (tmp) ERROR (tmp);
-}
-
-static void
-do_my (value *p)
-{
-	int tmp  = cell_mc (cur_row, cur_col, p->String, p);
-	if (tmp) ERROR (tmp);
-}
 
 /* Note that the second argument may be *anything* including ERROR.  If it is
    error, we find the first occurence of that ERROR in the range */
@@ -637,74 +487,14 @@ out:
 }
 
 
-static void
-do_cell (struct value *p)
-{
-	int tmp; cell_mc (p->Int, (p + 1)->Int, (p + 2)->String, p);
-	if (tmp) ERROR (tmp);
-}
-
-/* While writing the macro loader, I found a need for a function
- * that could report back on whether or not a variable was defined.
- * The function below does that and more.  It accepts an integer
- * and two strings as arguments.  The integer specifies a corner;
- * 0 for NW, 1 for NE, 2 for SE and 3 for SW.  The first string
- * argument should specify a variable name.  The second should
- * specify one of the elements accepted by cell().  If the
- * variable has not been defined, this reports back its bare
- * name as a string.
- */
-
-static void
-do_varval (struct value *p)
-{
-	int tmp;
-	int vr;
-	int vc;
-	struct var * v;
-
-	v = find_var ((p+1)->String, strlen((p+1)->String));
-
-	if (!v || v->var_flags == VAR_UNDEF) {
-		p->type = TYP_STR;
-		p->String = (p+1)->String;
-	} else {
-		switch(p->Int) {
-			case 0:
-				vr = v->v_rng.lr;
-				vc = v->v_rng.lc;
-				break;
-			case 1:
-				vr = v->v_rng.lr;
-				vc = v->v_rng.hc;
-				break;
-			case 2:
-				vr = v->v_rng.hr;
-				vc = v->v_rng.hc;
-				break;
-			case 3:
-				vr = v->v_rng.hr;
-				vc = v->v_rng.lc;
-				break;
-			default:
-				ERROR(OUT_OF_RANGE);
-				return;
-		}
-		p->String = (p+2)->String;
-		tmp = cell_mc (vr, vc, p->String, p);
-		if (tmp)
-			ERROR (tmp);
-	}
-}
-
 #define S (char *)
 #define T (void (*)())
 struct function cells_funs[] =
 {
-	{C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
-  {C_FN1 | C_T, X_A1, "S", T do_my, S "my"},
-  {C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
-  {C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
+	//{C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
+  //{C_FN1 | C_T, X_A1, "S", T do_my, S "my"},
+  //{C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
+  //{C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
 
   {C_FN2, X_A2, "RA", T do_member, S "member"},
   {C_FN2, X_A2, "RS", T do_smember, S "smember"},
