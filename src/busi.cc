@@ -35,7 +35,7 @@
 //#define Float	x.c_n
 //#define String	x.c_s
 //#define Int	x.c_l
-#define Value	x.c_i
+//#define Value	x.c_i
 //#define Rng	x.c_r
 
 static double
@@ -130,8 +130,9 @@ do_npv ( struct value *p)
   p->sFlt(putres);
   if (tmp)
     {
-      p->Value = tmp;
-      p->type = TYP_ERR;
+	    p->sErr(tmp);
+      //p->Value = tmp;
+      //p->type = TYP_ERR;
     }
   else
     p->type = TYP_FLT;
@@ -157,14 +158,16 @@ do_irr (struct value *p)
       tmp = npv (&a_rng, mint, &minr);
       if (tmp)
 	{
-	  p->Value = tmp;
-	  p->type = TYP_ERR;
+		p->sErr(tmp);
+	  //p->Value = tmp;
+	  //p->type = TYP_ERR;
 	  return;
 	}
       if (++i == 40)
         {
-	  p->Value = BAD_INPUT;
-	  p->type = TYP_ERR;
+	  //p->Value = BAD_INPUT;
+	  //p->type = TYP_ERR;
+	  p->sErr(BAD_INPUT);
 	  return;
 	}
     }
@@ -175,14 +178,16 @@ do_irr (struct value *p)
       tmp = npv (&a_rng, maxt, &maxr);
       if (tmp)
 	{
-	  p->Value = tmp;
-	  p->type = TYP_ERR;
+	  //p->Value = tmp;
+	  //p->type = TYP_ERR;
+	  p->sErr(tmp);
 	  return;
 	}
       if (++i == 40)
         {
-	  p->Value = BAD_INPUT;
-	  p->type = TYP_ERR;
+	  //p->Value = BAD_INPUT;
+	  //p->type = TYP_ERR;
+	  p->sErr(BAD_INPUT);
 	  return;
 	}
     }
@@ -191,15 +196,17 @@ do_irr (struct value *p)
     {
       if (i == 40)
 	{
-	  p->Value = BAD_INPUT;
-	  p->type = TYP_ERR;
+	  //p->Value = BAD_INPUT;
+	  //p->type = TYP_ERR;
+	  p->sErr(BAD_INPUT);
 	  return;
 	}
       tmp = npv (&a_rng, try1, &res);
       if (tmp)
 	{
-	  p->Value = tmp;
-	  p->type = TYP_ERR;
+	  //p->Value = tmp;
+	  //p->type = TYP_ERR;
+	  p->sErr(tmp);
 	  return;
 	}
       if (fabs (res * 1000000.0) < 1)
@@ -284,12 +291,13 @@ do_fmrr(struct value *p)
 	}
 	default:
 	case TYP_BOL:
-	  p->type = TYP_ERR;
-	  p->Value = NON_NUMBER;
+	  //p->type = TYP_ERR;
+	  //p->Value = NON_NUMBER;
+	  p->sErr(NON_NUMBER);
 	  goto out;
 	case TYP_ERR:
-	  p->type = TYP_ERR;
-	  p->Value = cell->gErr();
+	  //p->type = TYP_ERR;
+	  p->sErr(cell->gErr());
 	  goto out;
       }
     }
@@ -396,8 +404,9 @@ do_sln (
 
   if (life < 1)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
   p->sFlt((cost - salvage) / life);
@@ -415,8 +424,9 @@ do_syd ( struct value *p)
 
   if (period < 1 || life < 1)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
   if (period > life)
@@ -442,8 +452,9 @@ do_ddb (
 
   if (period < 1 || period > life || life < 1)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
   bookval = cost;
@@ -537,8 +548,9 @@ do_balance ( struct value *p)
 
   if (term < period)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
   tmp_pmt = pmt (principal, rate, (double) term);
@@ -547,8 +559,9 @@ do_balance ( struct value *p)
       int_part = rate * principal;
       if (int_part > tmp_pmt)
 	{
-	  p->Value = OUT_OF_RANGE;
-	  p->type = TYP_ERR;
+	  //p->Value = OUT_OF_RANGE;
+	  //p->type = TYP_ERR;
+	  p->sErr(OUT_OF_RANGE);
 	  return;
 	}
       principal -= tmp_pmt - int_part;
@@ -570,8 +583,9 @@ do_paidint (
 
   if (term < period)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
   tmp_pmt = pmt (principal, rate, (double) term);
@@ -581,8 +595,9 @@ do_paidint (
       int_part = rate * principal;
       if (int_part > tmp_pmt)
 	{
-	  p->Value = OUT_OF_RANGE;
-	  p->type = TYP_ERR;
+	  //p->Value = OUT_OF_RANGE;
+	  //p->type = TYP_ERR;
+	  p->sErr(OUT_OF_RANGE);
 	  return;
 	}
       principal -= tmp_pmt - int_part;
@@ -605,8 +620,9 @@ do_kint (
 
   if (term < period)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+      p->sErr(OUT_OF_RANGE);
       return;
     }
 
@@ -616,8 +632,9 @@ do_kint (
       int_part = rate * principal;
       if (int_part > tmp_pmt)
 	{
-	  p->Value = OUT_OF_RANGE;
-	  p->type = TYP_ERR;
+	  //p->Value = OUT_OF_RANGE;
+	  //p->type = TYP_ERR;
+	  p->sErr(OUT_OF_RANGE);
 	  return;
 	}
       principal -= tmp_pmt - int_part;
@@ -638,8 +655,9 @@ do_kprin (
 
   if (term < period)
     {
-      p->Value = OUT_OF_RANGE;
-      p->type = TYP_ERR;
+      //p->Value = OUT_OF_RANGE;
+      //p->type = TYP_ERR;
+	  p->sErr(OUT_OF_RANGE);
       return;
     }
 
@@ -649,8 +667,9 @@ do_kprin (
       int_part = rate * principal;
       if (int_part > tmp_pmt)
 	{
-	  p->Value = OUT_OF_RANGE;
-	  p->type = TYP_ERR;
+	  //p->Value = OUT_OF_RANGE;
+	  //p->type = TYP_ERR;
+	  p->sErr(OUT_OF_RANGE);
 	  return;
 	}
       principal -= tmp_pmt - int_part;
