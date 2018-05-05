@@ -35,6 +35,7 @@
 #include "obstack.h"
 
 #include "global.h"
+#include "byte-compile.h"
 #include "node.h"
 #include "eval.h"
 #include "ref.h"

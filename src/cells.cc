@@ -71,7 +71,11 @@ static void log_debug_1(std::string msg)
 	return;		\
  }
 
-cell::cell()
+cell::cell(){
+       	cell(0);
+}
+
+cell::cell(coord_t coord) :coord(coord)
 {
 }
 

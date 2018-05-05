@@ -8,6 +8,7 @@
 #include <utility>
 
 
+#include "neotypes.h"
 #include "cell.h"
 #include "logging.h"
 #include "mem.h"
@@ -32,14 +33,11 @@ static void log_debug_1(std::string msg)
  * the need to do some other sort ... unless you want row order, of course
  */
 
-typedef uint32_t coord_t;
 coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
 
-typedef cell cell_t;
-typedef std::map<coord_t, cell_t*> cellmap_t;
 cellmap_t the_cells;
 
 
@@ -134,6 +132,17 @@ bool run_alt_cells_tests()
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
+celldeq_t get_cells_in_range(struct rng *r)
+{
+	celldeq_t res;
+	for(auto const& a_cell: the_cells) {
+		coord_t coord = a_cell.first;
+		if(inside(get_row(coord), get_col(coord), r))
+			res.push_back(a_cell.second);
+	}
+	return res;
+	
+}
 static std::deque<coord_t> m_cell_find_dq;
 
 void find_cells_in_range (struct rng *r)

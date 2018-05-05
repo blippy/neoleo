@@ -19,6 +19,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+//typedef uint32_t coord_t;
+
+#include "neotypes.h"
 #include "cell.h"
 #include "mem.h"
 

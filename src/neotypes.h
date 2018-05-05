@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cctype>
 #include <memory>
+#include <cstdint>
+#include <cstdlib>
 #include <string>
 #include <variant>
 #include <vector>
@@ -12,9 +15,6 @@ typedef std::vector<value_t> values;
 
 typedef std::vector<std::string> strings;
 
-/*
-typedef struct cell_t {
-	std::string user_text;
-	//base_ptr ast; // abstract syntax tree of the user_text
-} cell_t;
-*/
+class cell;
+typedef cell cell_t;
+typedef uint32_t coord_t; // definition cell location

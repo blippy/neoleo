@@ -20,6 +20,12 @@
  * along with Oleo; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
+#include <cstdint>
+typedef uint32_t coord_t;
+//using coord_t = uint32_t;
+
+#include "neotypes.h"
 #include "cell.h"
 #include "utils.h"
 

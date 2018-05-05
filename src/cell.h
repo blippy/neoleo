@@ -30,8 +30,12 @@
 #include <string>
 #include <variant>
 
+typedef uint32_t coord_t;
+//using coord_t = uint32_t;
+#include "neotypes.h"
 #include "global.h"
 #include "numeric.h"
+//#include "sheet.h"
 #include "utils.h"
 #include "value.h"
 
@@ -88,8 +92,10 @@ class cell : public value
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
+		coord_t coord;
 
 		cell();
+		cell(coord_t coord);
 		~cell();
 		void reset();
 		struct cell_flags_s cell_flags;
@@ -117,6 +123,7 @@ std::string get_cell_formula_at(int r, int c);
 
 
 typedef cell CELL;
+typedef cell cell_t;
 
 #define VAR_UNDEF 1
 #define VAR_CELL 2

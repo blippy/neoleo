@@ -19,7 +19,16 @@
 
 // MANAGE THE COLLECTION OF CELLS, WHICH WE CALL A `SHEET'
 
+//class cell;
+
+#include <deque>
+
+#include "cell.h"
 #include "neotypes.h"
+
+typedef std::map<coord_t, cell_t*> cellmap_t;
+
+typedef std::deque<cell_t*> celldeq_t;
 
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
@@ -28,7 +37,9 @@ struct cell* next_cell_in_range();
 struct cell* next_row_col_in_range(CELLREF *rowp, CELLREF *colp);
 
 void init_cells();
-void find_cells_in_range(struct rng *r);
+celldeq_t get_cells_in_range(struct rng *r);
+
+void find_cells_in_range(struct rng *r); [[deprecated("get_cells_in_range() is better")]]
 void make_cells_in_range(struct rng *r);
 void no_more_cells();
 
