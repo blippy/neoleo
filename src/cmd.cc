@@ -1583,41 +1583,23 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				 * I don't know what I'm breaking by uncommenting this.
 				 * Danny 18/7/2000.
 				 */
-				if (*prompt != '@'
-						&& !mark_is_set)
+				if (*prompt != '@' && !mark_is_set)
 				{
 					/* Default to current cell */
 					mkrow = curow;
 					mkcol = cucol;
 				}
 #endif
-				if ((*prompt != 'R'
-							&& interactive_mode_1
-							&& mark_is_set)
-						|| *prompt == '@')
+				if ((*prompt != 'R' && interactive_mode_1 && mark_is_set) || *prompt == '@')
 				{
-					the_cmd_arg.val.
-						range.lr =
-						MIN (mkrow,
-								curow);
-					the_cmd_arg.val.
-						range.hr =
-						MAX (mkrow,
-								curow);
-					the_cmd_arg.val.
-						range.lc =
-						MIN (mkcol,
-								cucol);
-					the_cmd_arg.val.
-						range.hc =
-						MAX (mkcol,
-								cucol);
+					the_cmd_arg.val.range.lr = MIN (mkrow, curow);
+					the_cmd_arg.val.range.hr = MAX (mkrow, curow);
+					the_cmd_arg.val.range.lc = MIN (mkcol, cucol);
+					the_cmd_arg.val.range.hc = MAX (mkcol, cucol);
 					mkrow = NON_ROW;
 					mkcol = NON_COL;
 					io_update_status ();
-					if (*prompt == '@'
-							&&
-							interactive_mode_1)
+					if (*prompt == '@' && interactive_mode_1)
 					{
 						++prompt;
 						if (get_argument (prompt, &range_style))
@@ -1627,33 +1609,22 @@ bool turd_1(bool interactive_mode, bool iscmd)
 								 range_name
 								 (&the_cmd_arg.val.range));
 						}
-						//goto new_cycle;
 						return true;	// state machine
 					}
 					else
 					{	/* (Noninteractive mode and @) or r */
 						++prompt;
-						the_cmd_arg.is_set
-							= 1;
-						the_cmd_arg.do_prompt
-							= 1;
-						the_cmd_arg.style
-							=
-							&range_style;
-						init_arg_text
-							(&the_cmd_arg,
-							 range_name
-							 (&the_cmd_arg.val.range));
+						the_cmd_arg.is_set = 1;
+						the_cmd_arg.do_prompt = 1;
+						the_cmd_arg.style = &range_style;
+						init_arg_text (&the_cmd_arg, range_name (&the_cmd_arg.val.range));
 					}
 					goto next_arg;
 				}
 				else
 				{	/* R */
 					++prompt;
-					if (get_argument
-							(prompt,
-							 &range_style))
-						//goto new_cycle;
+					if (get_argument (prompt, &range_style))
 						return true;	// state machine
 					goto next_arg;
 				}
@@ -1662,10 +1633,7 @@ bool turd_1(bool interactive_mode, bool iscmd)
 			{
 				{
 					++prompt;
-					if (get_argument
-							(prompt,
-							 &string_style))
-						//goto new_cycle;
+					if (get_argument (prompt, &string_style))
 						return true;	// state machine
 					goto next_arg;
 				}
@@ -1676,10 +1644,7 @@ bool turd_1(bool interactive_mode, bool iscmd)
 					++prompt;
 					if (*prompt == '\'')
 						++prompt;
-					if (get_argument
-							(prompt,
-							 &symbol_style))
-						//goto new_cycle;
+					if (get_argument (prompt, &symbol_style))
 						return true;	// state machine
 					goto next_arg;
 				}
@@ -1687,11 +1652,8 @@ bool turd_1(bool interactive_mode, bool iscmd)
 		case 'V':
 			{
 				++prompt;
-				the_cmd_arg.inc_cmd =
-					io_shift_cell_cursor;
-				if (get_argument
-						(prompt, &inc_cmd_style))
-					//goto new_cycle;
+				the_cmd_arg.inc_cmd = io_shift_cell_cursor;
+				if (get_argument (prompt, &inc_cmd_style))
 					return true;	// state machine
 				goto next_arg;
 			}
@@ -1701,10 +1663,7 @@ bool turd_1(bool interactive_mode, bool iscmd)
 					++prompt;
 					if (*prompt == '\'')
 						++prompt;
-					if (get_argument
-							(prompt,
-							 &word_style))
-						//goto new_cycle;
+					if (get_argument (prompt, &word_style))
 						return true;	// state machine
 					goto next_arg;
 				}
@@ -1713,25 +1672,19 @@ bool turd_1(bool interactive_mode, bool iscmd)
 			{
 				++prompt;
 
-				init_arg_text (&the_cmd_arg,
-						prompt);
-				the_cmd_arg.val.integer =
-					astol (&prompt);
+				init_arg_text (&the_cmd_arg, prompt);
+				the_cmd_arg.val.integer = astol (&prompt);
 				the_cmd_arg.is_set = 1;
 				the_cmd_arg.do_prompt = 0;
-				the_cmd_arg.style =
-					&int_constant_style;
+				the_cmd_arg.style = &int_constant_style;
 				goto next_arg;
 			}
 		case '=':
 			{
 				++prompt;
-				the_cmd_arg.expanded_prompt =
-					expand_prompt (prompt);
-				init_arg_text (&the_cmd_arg,
-						the_cmd_arg.expanded_prompt);
-				the_cmd_arg.val.string =
-					the_cmd_arg.expanded_prompt;
+				the_cmd_arg.expanded_prompt = expand_prompt (prompt);
+				init_arg_text (&the_cmd_arg, the_cmd_arg.expanded_prompt);
+				the_cmd_arg.val.string = the_cmd_arg.expanded_prompt;
 				the_cmd_arg.is_set = 1;
 				the_cmd_arg.do_prompt = 0;
 				the_cmd_arg.style =
@@ -1741,47 +1694,31 @@ bool turd_1(bool interactive_mode, bool iscmd)
 		case '.':
 			{
 				++prompt;
-				the_cmd_arg.val.range.lr =
-					curow;
-				the_cmd_arg.val.range.lc =
-					cucol;
+				the_cmd_arg.val.range.lr = curow;
+				the_cmd_arg.val.range.lc = cucol;
 				if (*prompt == '\'')
 				{
-					the_cmd_arg.val.
-						range.hr =
-						curow;
-					the_cmd_arg.val.
-						range.hc =
-						cucol;
+					the_cmd_arg.val.range.hr = curow;
+					the_cmd_arg.val.range.hc = cucol;
 				}
 				else
 				{
-					the_cmd_arg.val.
-						range.hr =
-						mkrow;
-					the_cmd_arg.val.
-						range.hc =
-						mkcol;
+					the_cmd_arg.val.range.hr = mkrow;
+					the_cmd_arg.val.range.hc = mkcol;
 				}
 				the_cmd_arg.is_set = 1;
 				the_cmd_arg.do_prompt = 0;
-				init_arg_text (&the_cmd_arg,
-						range_name
-						(&the_cmd_arg.val.
-						 range));
-				the_cmd_arg.style =
-					&range_constant_style;
+				init_arg_text (&the_cmd_arg, range_name (&the_cmd_arg.val.  range));
+				the_cmd_arg.style = &range_constant_style;
 				goto next_arg;
 			}
 		case '[':
 			{
 				++prompt;
-				while (*prompt
-						&& (*prompt != ']'))
+				while (*prompt && (*prompt != ']'))
 					if (*prompt != '\\')
 						++prompt;
-					else
-					{
+					else {
 						++prompt;
 						if (*prompt)
 							++prompt;
@@ -1789,17 +1726,14 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				if (*prompt == ']')
 					++prompt;
 
-				if (get_argument
-						(prompt, &menu_style))
-					//goto new_cycle;
+				if (get_argument (prompt, &menu_style))
 					return true;	// state machine
 				goto next_arg;
 			}
 		case '$':
 			{
 				/* Edit a cell's formula. */
-				CELL *cp = find_cell (curow,
-						cucol);
+				CELL *cp = find_cell (curow, cucol);
 				int do_init;
 				++prompt;
 				if (*prompt == '\'')
@@ -1809,38 +1743,24 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				}
 				else
 					do_init = 1;
-				if (((!cp
-								|| GET_LCK (cp) ==
-								LCK_DEF)
-							&& (default_lock ==
-								LCK_LCK)) || (cp
-								&&
-								GET_LCK
-								(cp) ==
-								LCK_LCK))
+				if (((!cp || GET_LCK (cp) == LCK_DEF) && (default_lock == LCK_LCK)) 
+						|| (cp && GET_LCK (cp) == LCK_LCK))
 				{
-					io_error_msg
-						("Cell %s is locked",
-						 cell_name
-						 (curow,
-						  cucol));
-					pop_unfinished_command
-						();
-					//goto new_cycle;
+					io_error_msg ("Cell %s is locked", cell_name (curow, cucol));
+					pop_unfinished_command ();
 					return true;	// state machine
 				}
-				the_cmd_frame->prev->_setrow =
-					curow;
-				the_cmd_frame->prev->_setcol =
-					cucol;
+				the_cmd_frame->prev->_setrow = curow;
+				the_cmd_frame->prev->_setcol = cucol;
 				if (get_argument (prompt, &formula_style)) {
 					if (do_init) {
+						int tog = 1;
 						if (rmac && !iscmd)
-							init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 0));
-						else
-							init_arg_text (&the_cmd_arg, decomp_formula (curow, cucol, cp, 1));
+							tog = 0;
+						const char* frm = decomp_formula (curow, cucol, cp, tog);
+						init_arg_text (&the_cmd_arg, frm);
 					}
-					log_debug("cmd.cc:point a");
+					//log_debug("cmd.cc:point a");
 					return true;	// state machine
 				}
 				goto next_arg;
@@ -1848,10 +1768,8 @@ bool turd_1(bool interactive_mode, bool iscmd)
 
 		default:
 			{
-				io_error_msg
-					("Interaction-string error!!!");
+				io_error_msg ("Interaction-string error!!!");
 				pop_unfinished_command ();
-				//goto new_cycle;
 				return true;	// state machine
 			}
 	}
@@ -2267,12 +2185,6 @@ execute_command(const char *instr)
 	// kludge to ensure we can pass in a const string
 	strcpy_c mem(instr);
 	char *str = mem.data();
-	//mem a_mem(true);
-	//char *str = (char*) malloc(1+strlen(instr));
-	//a_mem.add_ptr(str);
-	//strcpy(str, instr);
-
-
 	int iscmd = 0;
 	char *ptr = str;
 	char *run;		/* The first string to execute. */
@@ -2497,15 +2409,10 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 				{
 					struct rng rng;
 					char *str;
-					rng.lr = rng.hr =
-						the_cmd_frame->
-						prev->_setrow;
-					rng.lc = rng.hc =
-						the_cmd_frame->
-						prev->_setcol;
+					rng.lr = rng.hr = the_cmd_frame-> prev->_setrow;
+					rng.lc = rng.hc = the_cmd_frame-> prev->_setcol;
 					str = range_name (&rng);
-					catn_line (&expanded, str,
-							strlen (str));
+					catn_line (&expanded, str, strlen (str));
 					++src_pos;
 					break;
 				}
@@ -2513,15 +2420,10 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 				{
 					struct rng rng;
 					char *str;
-					rng.lr = rng.hr =
-						the_cmd_frame->
-						prev->_curow;
-					rng.lc = rng.hc =
-						the_cmd_frame->
-						prev->_cucol;
+					rng.lr = rng.hr = the_cmd_frame-> prev->_curow;
+					rng.lc = rng.hc = the_cmd_frame-> prev->_cucol;
 					str = range_name (&rng);
-					catn_line (&expanded, str,
-							strlen (str));
+					catn_line (&expanded, str, strlen (str));
 					++src_pos;
 					break;
 				}
@@ -2537,11 +2439,8 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 			case '9':
 				{
 					int argn = *src_pos - '0';
-					if ((cmd_argc > argn)
-							&& the_cmd_frame->
-							argv[argn].is_set
-							&& the_cmd_frame->
-							argv[argn].text.buf)
+					if ((cmd_argc > argn) && the_cmd_frame-> argv[argn].is_set 
+							&& the_cmd_frame-> argv[argn].text.buf)
 						catn_line (&expanded,
 								the_cmd_frame->argv
 								[argn].text.
@@ -2551,8 +2450,7 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 								 [argn].text.
 								 buf));
 					else
-						catn_line (&expanded,
-								"????", 4);
+						catn_line (&expanded, "????", 4);
 					++src_pos;
 					break;
 				}
@@ -2576,15 +2474,14 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 char *
 expand_prompt (char *str)
 {
-	if (!str || !index (str, '%')) {
-		//return ck_savestr (str);
+	if (!str || !index (str, '%')) 
 		return str;
-	} else {
-		struct line expanded;
-		init_line (&expanded);
-		inner_prompt_expansion(str, expanded);
-		return expanded.buf;
-	}
+
+	struct line expanded;
+	init_line (&expanded);
+	inner_prompt_expansion(str, expanded);
+	return expanded.buf;
+	
 }
 
 void expand_prompt(char *str, struct line& line)
@@ -2592,10 +2489,7 @@ void expand_prompt(char *str, struct line& line)
 	if (!str || !index (str, '%')) {
 		set_line(&line, str);
 	} else {
-		//struct line expanded;
-		//init_line (&expanded);
 		inner_prompt_expansion(str, line);
-		//return expanded.buf;
 	}
 }
 
