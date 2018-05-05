@@ -256,6 +256,57 @@ int overflow;
 		p->x=cp->get_c_z();			\
 	}
 
+num_t as_flt(struct value* v)
+{
+	switch(v->get_type()) {
+		case TYP_INT:
+			return v->gInt();
+		case TYP_FLT:
+			return v->gFlt();
+		default:
+			assert(false); // TODO inprove
+	}
+}
+
+void do_math_binop(int op, struct value* p1, struct value* p2)
+{
+	num_t v1 = as_flt(p1);
+	num_t v2 = as_flt(p2);
+	num_t v3;
+
+	switch(op) {
+		case DIFF:
+			v3 = v1 -v2;
+			break;
+		case DIV:
+			v3 = v1 / v2;
+			break;
+		case MOD:
+			v3 = (long) v1 % (long) v2;
+			break;
+		case PROD:
+			v3 = v1 * v2;
+			break;
+		case SUM:
+			v3 = v1 + v2;
+			break;
+		default:
+			assert(false);
+	}
+
+       //	= std::plus<double>(v1, v2);
+
+	ValType t = TYP_INT;
+	if(std::nearbyint(v3) != v3) t = TYP_FLT;
+	if(p1->get_type() == TYP_FLT || p2->get_type() == TYP_FLT) t = TYP_FLT;
+
+	if(t == TYP_FLT) 
+		p1->sFlt(v3);
+	else
+		p1->sInt(v3);
+
+}
+
 void
 init_eval ()
 {
@@ -707,6 +758,8 @@ eval_expression ( unsigned char *expr)
 			case MOD:
 			case PROD:
 			case SUM:
+				do_math_binop(byte, p, p+1);
+				break;
 				if (p->type != (p + 1)->type)
 				{
 					if (p->type == TYP_INT)
