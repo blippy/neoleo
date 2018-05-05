@@ -106,6 +106,7 @@ int overflow;
 		goto next_byte; \
 	}
 
+#define ERROR1(cause) { throw cause;}
 #define TO_FLT(val)	\
 	if((val)->type==TYP_FLT) \
 		; \
@@ -117,14 +118,14 @@ int overflow;
 		strptr=(val)->String; \
 		(val)->Float=astof(&strptr); \
 		if(*strptr) \
-			ERROR(NON_NUMBER); \
+			ERROR1(NON_NUMBER); \
 	} else if((val)->type==TYP_ERR) {\
-		ERROR((val)->Value); \
+		ERROR1((val)->Value); \
 	} else if((val)->type==0) { \
 		(val)->type=TYP_FLT; \
 		(val)->Float=0.0; \
 	} else \
-		ERROR(NON_NUMBER);
+		ERROR1(NON_NUMBER);
 
 #define TO_INT(val)	\
 	if((val)->type==TYP_INT) \
@@ -137,14 +138,14 @@ int overflow;
 		strptr=(val)->String; \
 		(val)->Int=astol(&strptr); \
 		if(*strptr) \
-			ERROR(NON_NUMBER); \
+			ERROR1(NON_NUMBER); \
 	} else if((val)->type==TYP_ERR) {\
-		ERROR((val)->Value); \
+		ERROR1((val)->Value); \
 	} else if((val)->type==0) { \
 		(val)->type=TYP_INT; \
 		(val)->Int=0; \
 	} else \
-		ERROR(NON_NUMBER);
+		ERROR1(NON_NUMBER);
 
 #define TO_NUM(val)	\
 	if((val)->type==TYP_INT || (val)->type==TYP_FLT) \
@@ -154,14 +155,14 @@ int overflow;
 		strptr=(val)->String; \
 		(val)->Float=astof(&strptr); \
 		if(*strptr) \
-			ERROR(NON_NUMBER); \
+			ERROR1(NON_NUMBER); \
 	} else if((val)->type==TYP_ERR) {\
-		ERROR((val)->Value); \
+		ERROR1((val)->Value); \
 	} else if((val)->type==0) { \
 		(val)->type=TYP_INT; \
 		(val)->Int=0; \
 	} else \
-		ERROR(NON_NUMBER);
+		ERROR1(NON_NUMBER);
 
 #define TO_STR(val)	\
 	if((val)->type==TYP_STR)	\
@@ -179,35 +180,35 @@ int overflow;
 		(val)->String=(char*) obstack_finish(&tmp_mem);	\
 		(val)->type=TYP_STR;			\
 	} else if((val)->type==TYP_ERR) {		\
-		ERROR((val)->Value);	\
+		ERROR1((val)->Value);	\
 	} else if((val)->type==0) {	\
 		(val)->type=TYP_STR;	\
 		(val)->String=(char*) obstack_alloc(&tmp_mem,1); \
 		(val)->String[0]='\0'; \
 	} else \
-		ERROR(NON_STRING);
+		ERROR1(NON_STRING);
 
 #define TO_BOL(val)	\
 	if((val)->type==TYP_BOL)	\
 		;	\
 	else if((val)->type==TYP_ERR) {	\
-		ERROR((val)->Value);	\
+		ERROR1((val)->Value);	\
 	} else	\
-		ERROR(NON_BOOL);
+		ERROR1(NON_BOOL);
 
 
 #define TO_RNG(val) \
 	if((val)->type==TYP_RNG) \
 		; \
 	else if((val)->type==TYP_ERR) {\
-		ERROR((val)->Value); \
+		ERROR1((val)->Value); \
 	} else \
-		ERROR(NON_RANGE);
+		ERROR1(NON_RANGE);
 
 
 #define TO_ANY(val) \
 	if((val)->type==TYP_RNG) \
-		ERROR(BAD_INPUT); \
+		ERROR1(BAD_INPUT); 
 
 #define PUSH_ANY(cp)				\
 	if(!cp || !GET_TYP(cp)) {		\
@@ -269,6 +270,52 @@ void do_math_binop(int op, struct value* p1, struct value* p2)
 
 }
 
+void fill_argument(char arg_type, struct value* p)
+{
+	char* strptr;
+	switch (arg_type) {
+		/* A is for anything */
+		/* Any non-range value */
+		case 'A':
+			TO_ANY (p);
+			break;
+			/* B is for boolean */
+		case 'B':
+			TO_BOL (p);
+			break;
+			/* D is for Don't check */
+		case 'D':
+			break;
+			/* E is for Everything */
+		case 'E':
+			break;
+			/* F is for Float */
+		case 'F':
+			TO_FLT (p);
+			break;
+			/* I is for Int */
+		case 'I':
+			TO_INT (p);
+			break;
+			/* N is for Number (int or float) */
+		case 'N':
+			TO_NUM (p);
+			break;
+			/* R is for Range */
+		case 'R':
+			TO_RNG (p);
+			break;
+			/* S is for String */
+		case 'S':
+			TO_STR (p);
+			break;
+#ifdef TEST
+		default:
+			io_error_msg ("YIKE!  Unknown argtype for Fun %u  arg #%u", byte, xt);
+			break;
+#endif
+	}
+}
 void
 init_eval ()
 {
@@ -378,49 +425,16 @@ eval_expression ( unsigned char *expr)
 			for (xt = 0; xt < numarg; xt++)
 			{
 				char arg_type =f->fn_argt[xt <= 3 ? xt : 3];
-				switch (arg_type)
-				{
-					/* A is for anything */
-					/* Any non-range value */
-					case 'A':
-						TO_ANY (p + xt);
-						break;
-						/* B is for boolean */
-					case 'B':
-						TO_BOL (p + xt);
-						break;
-						/* D is for Don't check */
-					case 'D':
-						break;
-						/* E is for Everything */
-					case 'E':
-						break;
-						/* F is for Float */
-					case 'F':
-						TO_FLT (p + xt);
-						break;
-						/* I is for Int */
-					case 'I':
-						TO_INT (p + xt);
-						break;
-						/* N is for Number (int or float) */
-					case 'N':
-						TO_NUM (p + xt);
-						break;
-						/* R is for Range */
-					case 'R':
-						TO_RNG (p + xt);
-						break;
-						/* S is for String */
-					case 'S':
-						TO_STR (p + xt);
-						break;
-#ifdef TEST
-					default:
-						io_error_msg ("YIKE!  Unknown argtype for Fun %u  arg #%u", byte, xt);
-						break;
-#endif
+				try {
+					fill_argument(arg_type, p+xt);
+				} catch (int e) {
+					//assert(false);
+					//p->type = TYP_ERR;
+					//p->Value = e;
+					p->sErr(e);
+					goto next_byte;
 				}
+
 			}
 		}
 
