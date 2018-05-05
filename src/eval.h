@@ -140,7 +140,7 @@ typedef uint32_t coord_t;
 /* 110 - 114 N-input functions */
 #define F_ONEOF		90
 
-#define F_FILE		91
+//#define F_FILE		91
 
 /* 115 - 122 area functions */
 //#define AREA_SUM	92

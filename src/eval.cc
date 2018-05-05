@@ -925,49 +925,6 @@ eval_expression ( unsigned char *expr)
 				p[0] = p[tmp];
 				break;
 
-			case F_FILE:
-				{
-					FILE *fp;
-					char buf[128];
-					int num;
-
-					if (numarg < 1)
-						ERROR (NO_VALUES);
-					fp = fopen (p->String, "r");
-					if (!fp)
-						ERROR (BAD_INPUT);
-					switch (numarg)
-					{
-						case 2:
-							fseek (fp, (p + 1)->Int, 0);
-							/* Fallthrough */
-
-						case 1:
-							while ((num = fread (buf, sizeof (char), sizeof (buf), fp)) > 0)
-								(void) obstack_grow (&tmp_mem, buf, num);
-							break;
-
-						case 3:
-							fseek (fp, (p + 1)->Int, 0);
-							for (;;)
-							{
-								num = ((p + 2)->Int < sizeof (buf)) ? (p + 2)->Int : sizeof (buf);
-								(p + 2)->Int -= num;
-								num = fread (buf, sizeof (char), num, fp);
-								(void) obstack_grow (&tmp_mem, buf, num);
-								if (num == 0 || (p + 2)->Int == 0)
-									break;
-							}
-							break;
-
-						default:
-							ERROR (BAD_INPUT);
-					}
-					fclose (fp);
-					(void) obstack_1grow (&tmp_mem, 0);
-					p->String = (char*) obstack_finish (&tmp_mem);
-					break;
-				}
 				/* This is now a fallthrough for all the USRmumble codes */
 			case USR1:
 			default:
