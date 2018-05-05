@@ -91,44 +91,6 @@ static num_t exp10_arr[] =
   1E25, 1E26, 1E27, 1E28, 1E29
 };
 
-/* Various math conversions with error checking */
-#define I_ADD(i1,i2) {	itmp=(i1)+(i2);					\
-			if((i1>0)==(i2>0) && (itmp>0)!=(i1>0)) {	\
-				p->Float=(double)(i1)+(double)(i2);	\
-				p->type=TYP_FLT;			\
-			} else						\
-				p->Int=itmp;	}
-
-#define I_SUB(i1,i2) {	itmp=(i1)-(i2);					\
-			if(((i1)<0)==((i2)>0) && ((itmp)>0)!=((i2)<0)) {\
-				p->Float=(double)(i1)-(double)(i2);	\
-				p->type=TYP_FLT;			\
-			} else						\
-				p->Int=itmp;	}
-
-#define I_DIV(i1,i2) {	ftmp=(double)(i1)/(double)(i2);			\
-			/* ... */;					\
-			p->Float=ftmp;					\
-			p->type=TYP_FLT;	}
-
-#define I_MOD(i1,i2) {itmp=(i1)%(i2);/* ... */;p->Int=itmp;}
-
-#define I_MUL(i1,i2) {	if(fls(i1)+fls(i2)>32) {			\
-				p->Float=(double)(i1)*(double)(i2);	\
-				p->type=TYP_FLT;			\
-			} else						\
-				p->Int=(i1)*(i2);	}
-
-#define F_ADD(f1,f2) {	ftmp=(f1)+(f2);/* ... */;p->Float=ftmp;	}
-
-#define F_SUB(f1,f2) {	ftmp=(f1)-(f2);/* ... */;p->Float=ftmp;}
-
-#define F_DIV(f1,f2) {	ftmp=(f1)/(f2);/* ... */;p->Float=ftmp;}
-
-#define F_MOD(f1,f2) {	itmp=(long)(f1)%(long)(f2);/* ... */;p->Int=itmp;p->type=TYP_INT;}
-
-#define F_MUL(f1,f2) {	ftmp=(f1)*(f2);/* ... */;p->Float=ftmp;}
-
 double ftmp;
 long itmp;
 int overflow;
@@ -760,81 +722,6 @@ eval_expression ( unsigned char *expr)
 			case SUM:
 				do_math_binop(byte, p, p+1);
 				break;
-				if (p->type != (p + 1)->type)
-				{
-					if (p->type == TYP_INT)
-					{
-						p->type = TYP_FLT;
-						p->Float = (double) p->Int;
-					}
-					if ((p + 1)->type == TYP_INT)
-					{
-						(p + 1)->type = TYP_FLT;
-						(p + 1)->Float = (double) ((p + 1)->Int);
-					}
-				}
-				if (p->type == TYP_INT)
-				{
-					switch (byte)
-					{
-						case DIFF:
-							I_SUB (p->Int, (p + 1)->Int);
-							break;
-						case DIV:
-							if ((p + 1)->Int == 0)
-								ERROR (DIV_ZERO);
-							I_DIV (p->Int, (p + 1)->Int);
-							break;
-						case MOD:
-							if ((p + 1)->Int == 0)
-								ERROR (DIV_ZERO);
-							I_MOD (p->Int, (p + 1)->Int);
-							break;
-						case PROD:
-							I_MUL (p->Int, (p + 1)->Int);
-							break;
-						case SUM:
-							I_ADD (p->Int, (p + 1)->Int);
-							break;
-#ifdef TEST
-						default:
-							panic ("Evaluator confused by byte-value %d", byte);
-#endif
-					}
-				}
-				else
-				{
-					switch (byte)
-					{
-						case DIFF:
-							F_SUB (p->Float, (p + 1)->Float);
-							break;
-						case DIV:
-							if ((p + 1)->Float == 0)
-								ERROR (DIV_ZERO);
-							F_DIV (p->Float, (p + 1)->Float);
-							break;
-						case MOD:
-							if ((p + 1)->Float == 0)
-								ERROR (DIV_ZERO);
-							F_MOD (p->Float, (p + 1)->Float);
-							break;
-						case PROD:
-							F_MUL (p->Float, (p + 1)->Float);
-							break;
-						case SUM:
-							F_ADD (p->Float, (p + 1)->Float);
-							break;
-#ifdef TEST
-						default:
-							panic ("Unknown operation %d", byte);
-#endif
-					}
-				}
-				if (overflow)
-					ERROR (OUT_OF_RANGE);
-				break;
-
 			case EQUAL:
 			case NOTEQUAL:
 
