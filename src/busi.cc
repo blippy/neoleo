@@ -32,7 +32,7 @@
 #include "utils.h"
 #include "sheet.h"
 
-#define Float	x.c_n
+//#define Float	x.c_n
 #define String	x.c_s
 //#define Int	x.c_l
 #define Value	x.c_i
@@ -106,10 +106,9 @@ npv (
 }
 
 static void
-do_pmt (
-     struct value *p)
+do_pmt ( struct value *p)
 {
-  p->Float = pmt (p->Float, (p + 1)->Float, (p + 2)->Float);
+  p->sFlt(pmt (p->gFlt(), (p + 1)->gFlt(), (p + 2)->gFlt()));
 }
 
 static void
@@ -118,19 +117,19 @@ do_pv (
 {
   double payment, interest, term;
 
-  payment = p[0].Float;
-  interest = p[1].Float;
-  term = p[2].Float;
+  payment = p[0].gFlt();
+  interest = p[1].gFlt();
+  term = p[2].gFlt();
 
-  p->Float = payment * ((1 - pow (1 + interest, -term)) / interest);
+  p->sFlt(payment * ((1 - pow (1 + interest, -term)) / interest));
 }
 
 static void
 do_npv ( struct value *p)
 {
-  int tmp;
-
-  tmp = npv (&(p->Rng), (p + 1)->Float, &(p->Float));
+	num_t putres = p->gFlt();
+  int tmp =  npv (&(p->Rng), (p + 1)->gFlt(), &putres);
+  p->sFlt(putres);
   if (tmp)
     {
       p->Value = tmp;
@@ -188,7 +187,7 @@ do_irr (struct value *p)
 	  return;
 	}
     }
-  try1 = (p + 1)->Float;
+  try1 = (p + 1)->gFlt();
   for (i = 0;; i++)
     {
       if (i == 40)
@@ -237,7 +236,7 @@ do_irr (struct value *p)
       else
 	try1 = (maxt + mint) / 2;
     }
-  p->Float = try1;
+  p->sFlt(try1);
   p->type = TYP_FLT;
 }
 
@@ -252,9 +251,9 @@ static void
 do_fmrr(struct value *p)
 {
     struct rng *rng = &p[0].Rng;
-    double safe_rate = p[1].Float;
-    double reinv_rate = p[2].Float;
-    double reinv_min = p[3].Float;
+    double safe_rate = p[1].gFlt();
+    double reinv_rate = p[2].gFlt();
+    double reinv_min = p[3].gFlt();
     double *v;
     int i, j, num;
     CELL *cell;
@@ -341,62 +340,59 @@ do_fmrr(struct value *p)
 #endif
     /* now only v[0] and v[num-1] are nonzero, what is rate to connect them? */
     p->type = TYP_FLT;
-    p->Float = pow(v[num-1] / -v[0], 1./(double)(num-1)) - 1.;
+    p->sFlt(pow(v[num-1] / -v[0], 1./(double)(num-1)) - 1.0);
   out:
     ck_free(v);
 }
 
 static void
-do_fv (
-     struct value *p)
+do_fv ( struct value *p)
 {
-  double payment = p->Float;
-  double interest = (p + 1)->Float;
-  double term = (p + 2)->Float;
+  double payment = p->gFlt();
+  double interest = (p + 1)->gFlt();
+  double term = (p + 2)->gFlt();
 
-  p->Float = payment * (pow(1 + interest, term) - 1) / interest;
+  p->sFlt(payment * (pow(1 + interest, term) - 1) / interest);
 }
 
 static void
-do_rate (
-     struct value *p)
+do_rate ( struct value *p)
 {
-  double future = p->Float;
-  double present = (p + 1)->Float;
-  double term = (p + 2)->Float;
+  double future = p->gFlt();
+  double present = (p + 1)->gFlt();
+  double term = (p + 2)->gFlt();
 
-  p->Float = pow (future / present, 1 / term) - 1;
+  p->sFlt(pow (future / present, 1 / term) - 1);
 }
 
 static void
-do_term (
-     struct value *p)
+do_term ( struct value *p)
 {
-  double payment = p->Float;
-  double interest = (p + 1)->Float;
-  double future = (p + 2)->Float;
+  double payment = p->gFlt();
+  double interest = (p + 1)->gFlt();
+  double future = (p + 2)->gFlt();
 
-  p->Float = log (1 + future * (interest / payment)) / log (1 + interest);
+  p->sFlt(log (1 + future * (interest / payment)) / log (1 + interest));
 }
 
 static void
 do_cterm (
      struct value *p)
 {
-  double interest = (p)->Float;
-  double future = (p + 1)->Float;
-  double present = (p + 2)->Float;
+  double interest = (p)->gFlt();
+  double future = (p + 1)->gFlt();
+  double present = (p + 2)->gFlt();
 
-  p->Float = log (future / present) / log (1 + interest);
+  p->sFlt(log (future / present) / log (1 + interest));
 }
 
 static void
 do_sln (
      struct value *p)
 {
-  double cost = (p)->Float;
-  double salvage = (p + 1)->Float;
-  double life = (p + 2)->Float;
+  double cost = (p)->gFlt();
+  double salvage = (p + 1)->gFlt();
+  double life = (p + 2)->gFlt();
 
   if (life < 1)
     {
@@ -404,19 +400,18 @@ do_sln (
       p->type = TYP_ERR;
       return;
     }
-  p->Float = (cost - salvage) / life;
+  p->sFlt((cost - salvage) / life);
 }
 
 static void
-do_syd (
-     struct value *p)
+do_syd ( struct value *p)
 {
   double cost, salvage, life, period;
 
-  cost = p->Float;
-  salvage = (p + 1)->Float;
-  life = (p + 2)->Float;
-  period = (p + 3)->Float;
+  cost = p->gFlt();
+  salvage = (p + 1)->gFlt();
+  life = (p + 2)->gFlt();
+  period = (p + 3)->gFlt();
 
   if (period < 1 || life < 1)
     {
@@ -425,11 +420,11 @@ do_syd (
       return;
     }
   if (period > life)
-    p->Float = 0;
+    p->sFlt(0);
   else if (period == life)
-    p->Float = salvage;
+    p->sFlt(salvage);
   else
-    p->Float = ((cost - salvage) * (life - period + 1)) / (life * ((life + 1) / 2));
+    p->sFlt(((cost - salvage) * (life - period + 1)) / (life * ((life + 1) / 2)));
 }
 
 
@@ -437,8 +432,8 @@ static void
 do_ddb (
      struct value *p)
 {
-  double cost = (p)->Float;
-  double salvage = (p + 1)->Float;
+  double cost = (p)->gFlt();
+  double salvage = (p + 1)->gFlt();
   long life = (p + 2)->gInt();
   long period = (p + 3)->gInt();
 
@@ -463,16 +458,16 @@ do_ddb (
 	  bookval = salvage;
 	}
     }
-  p->Float = tmp;
+  p->sFlt(tmp);
 }
 
 static void
 do_anrate (
      struct value *p)
 {
-  double in_pmt = (p)->Float;
-  double present = (p + 1)->Float;
-  double term = (p + 2)->Float;
+  double in_pmt = (p)->gFlt();
+  double present = (p + 1)->gFlt();
+  double term = (p + 2)->gFlt();
 
   double tr_lo, tr_hi;
   double mytry;
@@ -481,7 +476,7 @@ do_anrate (
 
   if (in_pmt * term == present)
     {
-      p->Float = 0.0;
+      p->sFlt(0.0);
       return;
     }
   if (in_pmt * term < present)
@@ -515,27 +510,25 @@ do_anrate (
       else
 	break;
     }
-  p->Float = mytry;
+  p->sFlt(mytry);
 }
 
 static void
-do_anterm (
-     struct value *p)
+do_anterm ( struct value *p)
 {
-  double payment = (p)->Float;
-  double principal = (p + 1)->Float;
-  double rate = (p + 2)->Float;
+  double payment = (p)->gFlt();
+  double principal = (p + 1)->gFlt();
+  double rate = (p + 2)->gFlt();
 
-  p->Float = (-log (1 - principal * (rate / payment))) / log (1 + rate);
+  p->sFlt((-log (1 - principal * (rate / payment))) / log (1 + rate));
 }
 
 
 static void
-do_balance (
-     struct value *p)
+do_balance ( struct value *p)
 {
-  double principal = (p)->Float;
-  double rate = (p + 1)->Float;
+  double principal = (p)->gFlt();
+  double rate = (p + 1)->gFlt();
   long term = (p + 2)->gInt();
   long period = (p + 3)->gInt();
 
@@ -560,15 +553,15 @@ do_balance (
 	}
       principal -= tmp_pmt - int_part;
     }
-  p->Float = principal;
+  p->sFlt(principal);
 }
 
 static void
 do_paidint (
      struct value *p)
 {
-  double principal = (p)->Float;
-  double rate = (p + 1)->Float;
+  double principal = (p)->gFlt();
+  double rate = (p + 1)->gFlt();
   long term = (p + 2)->gInt();
   long period = (p + 3)->gInt();
 
@@ -595,15 +588,15 @@ do_paidint (
       principal -= tmp_pmt - int_part;
       retval += int_part;
     }
-  p->Float = retval;
+  p->sFlt(retval);
 }
 
 static void
 do_kint (
      struct value *p)
 {
-  double principal = (p)->Float;
-  double rate = (p + 1)->Float;
+  double principal = (p)->gFlt();
+  double rate = (p + 1)->gFlt();
   long term = (p + 2)->gInt();
   long period = (p + 3)->gInt();
 
@@ -629,15 +622,15 @@ do_kint (
 	}
       principal -= tmp_pmt - int_part;
     }
-  p->Float = int_part;
+  p->sFlt(int_part);
 }
 
 static void
 do_kprin (
      struct value *p)
 {
-  double principal = (p)->Float;
-  double rate = (p + 1)->Float;
+  double principal = (p)->gFlt();
+  double rate = (p + 1)->gFlt();
   long term = (p + 2)->gInt();
   long period = (p + 3)->gInt();
   double tmp_pmt, int_part = 0;
@@ -662,17 +655,17 @@ do_kprin (
 	}
       principal -= tmp_pmt - int_part;
     }
-  p->Float = tmp_pmt - int_part;
+  p->sFlt(tmp_pmt - int_part);
 }
 
 static void
 do_compbal (struct value *p)
 {
-  num_t principal = (p)->Float;
-  num_t rate = (p + 1)->Float;
-  num_t term = (p + 2)->Float;
+  num_t principal = (p)->gFlt();
+  num_t rate = (p + 1)->gFlt();
+  num_t term = (p + 2)->gFlt();
 
-  p->Float = principal * busi_pow (1 + rate, term);
+  p->sFlt(principal * busi_pow (1 + rate, term));
 }
 
 static void
