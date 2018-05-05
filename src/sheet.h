@@ -33,13 +33,13 @@ typedef std::deque<cell_t*> celldeq_t;
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
 struct cell* find_or_make_cell(CELLREF row, CELLREF col);
-struct cell* next_cell_in_range();
-struct cell* next_row_col_in_range(CELLREF *rowp, CELLREF *colp);
+[[deprecated("get_cells_in_range() is better")]] struct cell* next_cell_in_range();
+[[deprecated("get_cells_in_range() is better")]] struct cell* next_row_col_in_range(CELLREF *rowp, CELLREF *colp);
 
 void init_cells();
 celldeq_t get_cells_in_range(struct rng *r);
 
-void find_cells_in_range(struct rng *r); [[deprecated("get_cells_in_range() is better")]]
+[[deprecated("get_cells_in_range() is better")]] void find_cells_in_range(struct rng *r);
 void make_cells_in_range(struct rng *r);
 void no_more_cells();
 

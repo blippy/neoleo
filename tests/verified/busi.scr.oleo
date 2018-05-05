@@ -42,8 +42,6 @@ C;c6;r1;K"npv - expect 14.61759259259"
 C;r2;Enpv(r1:4c5, 0.2);K14.6176
 C;r3;K"irr - expect 0.26881012107"
 C;r4;Eirr(r1:4c5, 0.1);K0.26881
-C;r5;K"fmrr -expect 0.22970563134"
-C;r6;Efmrr(r1:4c5, 0.05, 0.06, 2);K0.229706
 O;status 2
-W;N1;A7 6;C7 0 7;Ostandout
+W;N1;A5 6;C7 0 7;Ostandout
 E

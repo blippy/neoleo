@@ -61,49 +61,48 @@ busi_pow(num_t x, num_t y)
 static int
 npv ( struct rng *rng, num_t rate, num_t *putres)
 {
-  num_t npv;
-  int i;
-  //double f;
-  num_t f;
-  CELL *cell_ptr;
-  char *strptr;
+	num_t npv = 0;
+	int i = 0;;
+	num_t f;
+	CELL *cell_ptr;
+	char *strptr;
 
-  find_cells_in_range (rng);
-  for (i = 0, npv = 0.0; (cell_ptr = next_cell_in_range ()); i++)
-    {
-      switch (GET_TYP (cell_ptr))
-	{
-	case 0:
-	  f = 0.0;
-	  goto know_f;
+	//find_cells_in_range (rng);
+	for(auto cell_ptr: get_cells_in_range(rng)) {
+		switch (GET_TYP (cell_ptr))
+		{
+			case 0:
+				f = 0.0;
+				goto know_f;
 
-	case TYP_INT:
-	  f = (double) (cell_ptr->gInt());
-	  goto know_f;
+			case TYP_INT:
+				f = (double) (cell_ptr->gInt());
+				goto know_f;
 
-	case TYP_FLT:
-	  f = cell_ptr->gFlt();
-	  goto know_f;
+			case TYP_FLT:
+				f = cell_ptr->gFlt();
+				goto know_f;
 
-	case TYP_STR:
-	  strptr = cell_ptr->gString();
-	  f = astof (&strptr);
-	  if (*strptr)
-	    return NON_NUMBER;
-	know_f:
-	  npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
-	  break;
+			case TYP_STR:
+				strptr = cell_ptr->gString();
+				f = astof (&strptr);
+				if (*strptr)
+					return NON_NUMBER;
+know_f:
+				npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
+				break;
 
-	case TYP_ERR:
-	  return cell_ptr->gErr();
+			case TYP_ERR:
+				return cell_ptr->gErr();
 
-	default:
-	  return NON_NUMBER;
+			default:
+				return NON_NUMBER;
+		}
+		i++;
 	}
-    }
 
-  *putres = npv;
-  return 0;
+	*putres = npv;
+	return 0;
 }
 
 static void
@@ -257,6 +256,8 @@ do_irr (struct value *p)
  *
  * Args: range, safe rate, reinvestment rate, reinvestment minimum
  */
+
+#if 0
 static void
 do_fmrr(struct value *p)
 {
@@ -356,6 +357,7 @@ do_fmrr(struct value *p)
   out:
     ck_free(v);
 }
+#endif
 
 static void
 do_fv ( struct value *p)
@@ -749,7 +751,7 @@ function_t busi_funs[] =
   {C_FN4, X_A4, "FFII", to_vptr(do_kint), "kint"},	/* 17 */
   {C_FN4, X_A4, "FFII", to_vptr(do_kprin), "kprin"},	/* 18 */
 
-  {C_FN4, X_A4, "RFFF", to_vptr(do_fmrr), "fmrr"},       /* 19 */
+  //{C_FN4, X_A4, "RFFF", to_vptr(do_fmrr), "fmrr"},       /* 19 */
   {C_FN1, X_A1, "R",    to_vptr(do_sum), "sum"},
 
   {0, 0, "", 0, 0},

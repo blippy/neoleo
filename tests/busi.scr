@@ -54,8 +54,6 @@ i
 npv(r1c5:r4c5, 0.2)
 "irr - expect 0.26881012107"
 irr(r1c5:r4c5, 0.1)
-"fmrr -expect 0.22970563134"
-fmrr(r1c5:r4c5, 0.05, 0.06, 2)
 .
 
 w
