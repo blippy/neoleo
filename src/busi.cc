@@ -36,7 +36,7 @@
 //#define String	x.c_s
 //#define Int	x.c_l
 #define Value	x.c_i
-#define Rng	x.c_r
+//#define Rng	x.c_r
 
 static double
 pmt (
@@ -146,6 +146,7 @@ do_irr (struct value *p)
   num_t  minr, maxr;
   num_t i;
   num_t tmp;
+  struct rng a_rng = p->gRng();
 
   minr = maxr = 0;
   mint = maxt = .1;  /* avoid divide by 0 in npv */
@@ -153,7 +154,7 @@ do_irr (struct value *p)
   while (minr >= 0)
     {
       mint += 1;
-      tmp = npv (&(p->Rng), mint, &minr);
+      tmp = npv (&a_rng, mint, &minr);
       if (tmp)
 	{
 	  p->Value = tmp;
@@ -171,7 +172,7 @@ do_irr (struct value *p)
   while (maxr <= 0)
     {
       maxt -= 1;
-      tmp = npv (&(p->Rng), maxt, &maxr);
+      tmp = npv (&a_rng, maxt, &maxr);
       if (tmp)
 	{
 	  p->Value = tmp;
@@ -194,7 +195,7 @@ do_irr (struct value *p)
 	  p->type = TYP_ERR;
 	  return;
 	}
-      tmp = npv (&(p->Rng), try1, &res);
+      tmp = npv (&a_rng, try1, &res);
       if (tmp)
 	{
 	  p->Value = tmp;
@@ -248,7 +249,8 @@ do_irr (struct value *p)
 static void
 do_fmrr(struct value *p)
 {
-    struct rng *rng = &p[0].Rng;
+    struct rng rng1 = p->gRng();
+    struct rng* rng = &rng1;
     double safe_rate = p[1].gFlt();
     double reinv_rate = p[2].gFlt();
     double reinv_min = p[3].gFlt();
@@ -669,7 +671,8 @@ do_compbal (struct value *p)
 static void
 do_sum(struct value* p)
 {
-	struct rng* rng = &(p->Rng);
+	struct rng rng1 = p->gRng();
+	struct rng* rng = &rng1;
 	double res = 0;
 
 	CELL* cell_ptr;
