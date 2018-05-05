@@ -57,15 +57,6 @@ static void add_flt (double value);
 RETSIGTYPE math_sig ( int sig);
 
 int fls (long);
-#ifdef SMALLEVAL
-int __to_flt (struct value *);
-int __to_int (struct value *);
-int __to_num (struct value *);
-int __to_str (struct value *);
-int __to_bol (struct value *);
-int __to_rng (struct value *);
-#endif
-
 
 #define Float	x.c_n
 #define String	x.c_s
@@ -153,33 +144,6 @@ int overflow;
 		goto next_byte; \
 	}
 
-#ifdef SMALLEVAL
-
-#define TO_FLT(val)			\
-	if((tmp=__to_flt(val))!=0)	\
-		ERROR(tmp);
-
-#define TO_INT(val)			\
-	if((tmp=__to_int(val))!=0)	\
-		ERROR(tmp);
-
-#define TO_NUM(val)			\
-	if((tmp=__to_num(val))!=0)	\
-		ERROR(tmp);
-
-#define TO_STR(val)			\
-	if((tmp=__to_str(val))!=0)	\
-		ERROR(tmp);
-
-#define TO_BOL(val)			\
-	if((tmp=__to_bol(val))!=0)	\
-		ERROR(tmp);
-
-#define TO_RNG(val)			\
-	if((tmp=__to_rng(val))!=0)	\
-		ERROR(tmp);
-
-#else
 #define TO_FLT(val)	\
 	if((val)->type==TYP_FLT) \
 		; \
@@ -278,7 +242,6 @@ int overflow;
 	} else \
 		ERROR(NON_RANGE);
 
-#endif
 
 #define TO_ANY(val) \
 	if((val)->type==TYP_RNG) \
