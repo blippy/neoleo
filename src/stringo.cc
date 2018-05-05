@@ -88,7 +88,7 @@ wrapfunc(std::function<std::string(struct value*)> func)
 static std::string do_repeat(struct value* p)
 {
 	char* str = p->gString();
-	long num  = (p+1)->gLong();
+	long num  = (p+1)->gInt();
 	if(num<0) throw OUT_OF_RANGE;
 	std::string res;
 	while(num--) res += str;
@@ -106,7 +106,7 @@ do_len(struct value * p)
 
 	for(ret=0,ptr=p->gString();*ptr;ret++,ptr++)
 		;
-	p->sLong(ret);
+	p->sInt(ret);
 	//p->type=TYP_INT;
 }
 
@@ -196,8 +196,8 @@ static void
 do_mid(struct value * p)
 {
 	char *str = p->gString();
-	long from = (p+1)->gLong()-1;
-	long len =  (p+2)->gLong();
+	long from = (p+1)->gInt()-1;
+	long len =  (p+2)->gInt();
 
 	char	*ptr1;
 	int tmp;
@@ -220,8 +220,8 @@ do_mid(struct value * p)
 static void
 do_substr(struct value * p)
 {
-	long off1 = (p  )->gLong();
-	long off2 = (p+1)->gLong();
+	long off1 = (p  )->gInt();
+	long off2 = (p+1)->gInt();
 	char *str = (p+2)->gString();
 
 	char	*ptr1,	*ptr2;
@@ -251,7 +251,7 @@ do_strstr(struct value * p)
 {
 	char *strptr	= p->gString();
 	char *str1	= (p+1)->gString();
-	long off	= (p+2)->gLong();
+	long off	= (p+2)->gInt();
 	//char *ret;
 
 	if(off<1 || strlen(strptr)<=off-1)
@@ -259,7 +259,7 @@ do_strstr(struct value * p)
 	//ret=(char *)strstr(strptr+off-1,str1);
 	char *loc = strstr(strptr+off-1,str1);
 	size_t pos = loc ? 1 + loc - strptr : 0;
-	p->sLong(pos);
+	p->sInt(pos);
 }
 
 
@@ -287,8 +287,8 @@ static void do_concata_1(struct value* p) { wrapfunc(do_concata)(p); }
 static std::string do_edit(struct value* p)
 {
 	std::string s1 = p->gString();
-	int pos = (p+1)->gLong() -1;
-	int len = (p+2)->gLong() - pos;
+	int pos = (p+1)->gInt() -1;
+	int len = (p+2)->gInt() - pos;
 	return s1.erase(pos, len);
 }
 static void do_edit_1(struct value*p) { wrapfunc(do_edit)(p);}

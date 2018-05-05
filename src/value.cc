@@ -29,10 +29,10 @@ void value::sValue(value& newval)
 int value::gInt() { return x.c_i; };
 void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 
-long value::gLong() { assert(type == TYP_INT); return x.c_l; };
-void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
+//long value::gLong() { assert(type == TYP_INT); return x.c_l; };
+//void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
 		
- char *value::gString() { assert(type == TYP_STR); return x.c_s; };
+char *value::gString() { assert(type == TYP_STR); return x.c_s; };
 void value::sString(char* newval) { type = TYP_STR; x.c_s = newval;};
 
 num_t value::gFlt() { return x.c_n ;};

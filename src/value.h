@@ -34,8 +34,8 @@ class value {
 		int gInt();
 		void sInt(int newval);
 
-		long gLong();
-		void sLong(long newval);
+		//long gLong();
+		//void sLong(long newval);
 		
 		char *gString();
 		void sString(char* newval);
