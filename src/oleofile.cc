@@ -722,12 +722,15 @@ void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 
 void write_cells(FILE* fp)
 {
-	CELLREF r, c;
 	CELLREF crow = 0, ccol = 0;
-	//struct rng
-	find_cells_in_range (&all_rng);
-	while (CELL* cp = next_row_col_in_range (&r, &c))
+	//find_cells_in_range (&all_rng);
+	//while (CELL* cp = next_row_col_in_range (&r, &c))
+	for(CELL* cp: get_cells_in_range(&all_rng))
 	{
+		coord_t coord = cp->coord;
+		CELLREF r = get_row(coord);
+		CELLREF c = get_col(coord);
+
 		char *ptr;
 		int f1, j1;
 		char p_buf[40];
