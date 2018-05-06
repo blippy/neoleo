@@ -669,36 +669,6 @@ last_filled_row (CELLREF col)
     }
   return bestr;
 }
-
-static CELLREF
-max_filled_row (void)
-{
-  CELLREF max_r = highest_row ();
-  while (max_r != MIN_ROW)
-    {
-      CELLREF c = first_filled_col (max_r);
-      if (c != NON_COL)
-	break;
-      --max_r;
-    }
-  return max_r;
-}
-
-
-static CELLREF
-max_filled_col (void)
-{
-  CELLREF max_c = highest_col ();
-  while (max_c != MIN_COL)
-    {
-      CELLREF r = first_filled_row (max_c);
-      if (r != NON_COL)
-	break;
-      --max_c;
-    }
-  return max_c;
-}
-
 static void 
 mk_for_extreme (struct rng * rng)
 {
