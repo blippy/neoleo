@@ -78,24 +78,21 @@ extern int debug;
 #endif
 
 /* Functions for dealing exclusively with variables */
-//struct hash_control *the_vars;
 std::map<std::string, struct var>the_vars_1;
 
 
 /* For the fifo-buffer */
-struct pos
-  {
-    CELLREF row;
-    CELLREF col;
-  };
+struct pos {
+	CELLREF row;
+	CELLREF col;
+};
 
-struct cell_buf
-  {
-    unsigned int size;
-    struct pos *buf;
-    struct pos *push_to_here;
-    struct pos *pop_frm_here;
-  };
+struct cell_buf {
+	unsigned int size;
+	struct pos *buf;
+	struct pos *push_to_here;
+	struct pos *pop_frm_here;
+};
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
@@ -109,16 +106,6 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 
 	std::string s2{in_string};
 	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
-
-	/*
-	if(s2.size() == 0)
-	{
-		my_cell = find_cell (cur_row, cur_col);
-		if (!my_cell) return;
-		flush_old_value ();
-		return;
-	}
-	*/
 
 	my_cell = find_cell (cur_row, cur_col);
 	//assert(my_cell);
@@ -445,15 +432,6 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 		if (len > 0) {
 			unsigned char* formula = (unsigned char*) ck_malloc (len);
 			bcopy (my_cell->get_cell_formula(), formula, len);
-			/*
-			for(size_t i =0; i < len; ++i){
-				// next line can cause read access violation. Fix TBD 
-				unsigned char c = my_cell->get_cell_formula()[i];
-				formula[i] = c;
-			}
-			*/
-			//bcopy (my_cell->get_cell_formula(), cpf->get_cell_formula(), len);
-			//cpf->set_cell_formula( (unsigned char *) ck_malloc (len));
 			cpf->set_cell_formula((unsigned char*) formula);
 		} else {
 			cpf->set_cell_formula(nullptr); 
@@ -811,13 +789,8 @@ flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 	}
 }
 
-#ifdef __TURBOC__
-#define FM_HASH_NUM 51
-#define TO_HASH_NUM 13
-#else
 #define FM_HASH_NUM 503
 #define TO_HASH_NUM 29
-#endif
 #ifdef TEST
 static int fm_misses = 0;
 static int to_misses = 0;
@@ -1047,37 +1020,6 @@ flush_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
 	flush_fm_ref (from);
 }
 
-#ifdef TEST
-
-void
-dbg_print_ref_fm (rf)
-     struct ref_fm *rf;
-{
-	int nr;
-	char *bufp;
-	extern char *print_buf;
-
-	if (rf)
-	{
-		io_text_line ("fm %p: refcnt %u  next %p  used %u",
-				rf, rf->refs_refcnt, rf->refs_next, rf->refs_used);
-		for (nr = 0, bufp = print_buf; nr < rf->refs_used; nr++)
-		{
-			(void) sprintf (bufp, " %s", cell_name (rf->fm_refs[nr].ref_row, rf->fm_refs[nr].ref_col));
-			if (nr % 10 == 9)
-			{
-				io_text_line (print_buf);
-				bufp = print_buf;
-			}
-			else
-				bufp += strlen (bufp);
-		}
-		if (nr % 10)
-			io_text_line (print_buf);
-	}
-}
-
-#endif
 
 static struct ref_to *
 find_to_ref (void)
@@ -1218,97 +1160,6 @@ flush_ref_to (struct ref_to **where)
 	}
 }
 
-#ifdef TEST
-void
-dbg_print_ref_to (rt, form)
-     struct ref_to *rt;
-     unsigned char *form;
-{
-	int nr;
-	char *bufp;
-	extern char *print_buf;
-
-	if (rt)
-	{
-		io_text_line ("to %p: refcnt %u  next %p  used %u",
-				rt, rt->refs_refcnt, rt->refs_next, rt->refs_used);
-		for (nr = 0, bufp = print_buf; nr < rt->refs_used; nr++)
-		{
-			(void) sprintf (bufp, " %3d (%#4x)", rt->to_refs[nr], form[rt->to_refs[nr]]);
-			if (nr % 7 == 6)
-			{
-				io_text_line (print_buf);
-				bufp = print_buf;
-			}
-			else
-				bufp += strlen (bufp);
-		}
-		if (nr % 7)
-			io_text_line (print_buf);
-	}
-}
-
-void
-ref_stats ()
-{
-	int n;
-	int cur;
-	struct ref_fm *rf;
-	struct ref_to *rt;
-
-	int rf_max = 0;
-	int rf_num = 0;
-	int rf_shared = 0;
-	int rf_saved = 0;
-	int rf_zero = 0;
-
-	int rt_max = 0;
-	int rt_num = 0;
-	int rt_shared = 0;
-	int rt_saved = 0;
-	int rt_zero = 0;
-
-	for (n = 0; n < FM_HASH_NUM; n++)
-	{
-		cur = 0;
-		for (rf = fm_list[n]; rf; rf = rf->refs_next)
-		{
-			if (rf->refs_refcnt == 0)
-				rf_zero++;
-			if (rf->refs_refcnt > 1)
-			{
-				rf_shared++;
-				rf_saved += rf->refs_refcnt - 1;
-			}
-			rf_num++;
-			cur++;
-		}
-		if (cur > rf_max)
-			rf_max = cur;
-	}
-	for (n = 0; n < TO_HASH_NUM; n++)
-	{
-		cur = 0;
-		for (rt = to_list[n]; rt; rt = rt->refs_next)
-		{
-			if (rt->refs_refcnt == 0)
-				rt_zero++;
-			if (rt->refs_refcnt > 1)
-			{
-				rt_shared++;
-				rt_saved += rt->refs_refcnt - 1;
-			}
-			rt_num++;
-			cur++;
-		}
-		if (cur > rt_max)
-			rt_max = cur;
-	}
-	io_text_line ("from: %d refs, max_length %d, shared %d, saved %d, zero_ref %d, missed %d\n", rf_num, rf_max, rf_shared, rf_saved, rf_zero, fm_misses);
-	io_text_line ("to: %d refs, max_length %d, shared %d, saved %d, zero_ref %d, missed %d\n", rt_num, rt_max, rt_shared, rt_saved, rt_zero, to_misses);
-}
-
-#endif
 
 /* ------------- Routines for dealing with moving cells -------------------- */
 
@@ -2441,39 +2292,6 @@ find_or_make_var(const char *string, int len)
 	new_var.var_name = varname;
 	the_vars_1[varname] = new_var;
 	return find_var_1(varname.c_str());
-
-	/*
-	int ch;
-
-	ch = string[len];
-	string[len] = '\0';
-
-	ret = find_var_1( string);
-	if (ret)
-	{
-		string[len] = ch;
-		return ret;
-	}
-
-	ret = new var_t;
-	ret->var_name = string;
-	*/
-	/*
-	ret = (struct var *) ck_malloc (sizeof (struct var) + len);
-	bcopy (string, ret->var_name, len + 1);
-	ret->var_flags = VAR_UNDEF;
-	ret->v_rng.lr = 0;
-	ret->v_rng.lc = 0;
-	ret->v_rng.hr = 0;
-	ret->v_rng.hc = 0;
-	ret->var_ref_fm = 0;
-	*/
-	//hash_insert (the_vars, ret->var_name, (char *)ret);
-	/*
-	the_vars_1[ret->var_name] = ret;
-	string[len] = ch;
-	return ret;
-	*/
 }
 
 /* Like find-or-make-var except returns 0 if it doesn't exist */
@@ -2517,13 +2335,6 @@ add_var_ref (void * vvar)
     }
 }
 
-/*
-static void
-flush_var (char *name, struct var *var)
-{
-  free (var);
-}
-*/
 
 /* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
    associated with each variable.  Note that this does not get rid of
@@ -2533,9 +2344,5 @@ flush_var (char *name, struct var *var)
 void
 flush_variables (void)
 {
-	log_debug("flush_variables called");
-	//for_all_vars (flush_var);
-	//hash_die (the_vars);
-	//the_vars = hash_new ();
 	the_vars_1.clear();
 }
