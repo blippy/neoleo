@@ -720,78 +720,13 @@ void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 	}
 }
 
-void
-oleo_write_file(FILE *fp, struct rng *rng)
+void write_cells(FILE* fp)
 {
-	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
 	CELLREF r, c;
-	CELL *cp;
 	CELLREF crow = 0, ccol = 0;
-	unsigned short w;
-	/* struct var *var; */
-	int old_a0, i, fnt_map_size = 0;
-	char	*s;
-
-	(void) fprintf (fp, "# This file was created by Neoleo\n");
-
-	/* All versions of the oleo file format should have a 
-	 * version cookie on the second line.
-	 */
-	(void) fprintf (fp, "# format 3.0 (requires Neoleo 8.0 or higher)\n");
-
-	int n;
-	int fmts;
-	char *data[9];
-
-	rng = &all_rng;
-
-	(void) fprintf (fp, "F;D%s%c%u\n",
-			oleo_fmt_to_str (default_fmt, default_prc),
-			jst_to_chr (default_jst),
-			default_width);
-
-	fmts = usr_set_fmts ();
-	for (n = 0; n < 16; n++)
-	{
-		if (fmts & (1 << n))
-		{
-			get_usr_stats (n, data);
-			fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
-			if (data[0][0])
-				fprintf (fp, ";HP%s", data[0]);
-			if (data[1][0])
-				fprintf (fp, ";HN%s", data[1]);
-			if (data[2][0])
-				fprintf (fp, ";TP%s", data[2]);
-			if (data[3][0])
-				fprintf (fp, ";TN%s", data[3]);
-			if (data[4][0])
-				fprintf (fp, ";Z%s", data[4]);
-			if (data[5][0])
-				fprintf (fp, ";C%s", data[5]);
-			if (data[6])
-				fprintf (fp, ";D%s", data[6]);
-			putc ('\n', fp);
-		}
-	}
-	write_mp_options (fp);
-
-
-	old_a0 = Global->a0;
-	Global->a0 = 0;
-
-	span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
-	write_spans(fp, w_find, 'W');
-
-	span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
-	write_spans(fp, h_find, 'H');
-
-	oleo_fp = fp;
-	oleo_rng = rng;
-	for_all_vars (oleo_write_var);
-
-	find_cells_in_range (rng);
-	while ((cp = next_row_col_in_range (&r, &c)))
+	//struct rng
+	find_cells_in_range (&all_rng);
+	while (CELL* cp = next_row_col_in_range (&r, &c))
 	{
 		char *ptr;
 		int f1, j1;
@@ -869,6 +804,76 @@ oleo_write_file(FILE *fp, struct rng *rng)
 
 		putc ('\n', fp);
 	}
+}
+
+void
+oleo_write_file(FILE *fp, struct rng *rng)
+{
+	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
+	unsigned short w;
+	/* struct var *var; */
+	int old_a0, i, fnt_map_size = 0;
+	char	*s;
+
+	(void) fprintf (fp, "# This file was created by Neoleo\n");
+
+	/* All versions of the oleo file format should have a 
+	 * version cookie on the second line.
+	 */
+	(void) fprintf (fp, "# format 3.0 (requires Neoleo 8.0 or higher)\n");
+
+	int n;
+	int fmts;
+	char *data[9];
+
+	rng = &all_rng;
+
+	(void) fprintf (fp, "F;D%s%c%u\n",
+			oleo_fmt_to_str (default_fmt, default_prc),
+			jst_to_chr (default_jst),
+			default_width);
+
+	fmts = usr_set_fmts ();
+	for (n = 0; n < 16; n++)
+	{
+		if (fmts & (1 << n))
+		{
+			get_usr_stats (n, data);
+			fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
+			if (data[0][0])
+				fprintf (fp, ";HP%s", data[0]);
+			if (data[1][0])
+				fprintf (fp, ";HN%s", data[1]);
+			if (data[2][0])
+				fprintf (fp, ";TP%s", data[2]);
+			if (data[3][0])
+				fprintf (fp, ";TN%s", data[3]);
+			if (data[4][0])
+				fprintf (fp, ";Z%s", data[4]);
+			if (data[5][0])
+				fprintf (fp, ";C%s", data[5]);
+			if (data[6])
+				fprintf (fp, ";D%s", data[6]);
+			putc ('\n', fp);
+		}
+	}
+	write_mp_options (fp);
+
+
+	old_a0 = Global->a0;
+	Global->a0 = 0;
+
+	span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
+	write_spans(fp, w_find, 'W');
+
+	span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
+	write_spans(fp, h_find, 'H');
+
+	oleo_fp = fp;
+	oleo_rng = rng;
+	for_all_vars (oleo_write_var);
+
+	write_cells(fp);
 
 	write_mp_windows (fp);
 	(void) fprintf (fp, "E\n");
