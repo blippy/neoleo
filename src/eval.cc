@@ -196,27 +196,34 @@ void TO_STR(struct value* val)
 		ERROR1(NON_STRING);
 }
 
-#define TO_BOL(val)	\
-	if((val)->type==TYP_BOL)	\
-		;	\
-	else if((val)->type==TYP_ERR) {	\
-		ERROR1((val)->Value);	\
-	} else	\
+void TO_BOL(struct value* val)	
+{
+	if((val)->type==TYP_BOL)	
+		;	
+	else if((val)->type==TYP_ERR) {	
+		ERROR1((val)->Value);	
+	} else	
 		ERROR1(NON_BOOL);
+}
 
 
-#define TO_RNG(val) \
-	if((val)->type==TYP_RNG) \
-		; \
-	else if((val)->type==TYP_ERR) {\
-		ERROR1((val)->Value); \
-	} else \
+void TO_RNG(struct value* val) 
+{
+	if((val)->type==TYP_RNG) 
+		; 
+	else if((val)->type==TYP_ERR) {
+		ERROR1((val)->Value); 
+	} else 
 		ERROR1(NON_RANGE);
+}
 
 
-#define TO_ANY(val) \
-	if((val)->type==TYP_RNG) \
+void TO_ANY(struct value* val) 
+{
+	if((val)->type==TYP_RNG) 
 		ERROR1(BAD_INPUT); 
+}
+
 
 #define PUSH_ANY(cp)				\
 	if(!cp || !GET_TYP(cp)) {		\
