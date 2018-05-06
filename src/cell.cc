@@ -146,169 +146,10 @@ get_cell_formula_at(int r, int c)
 }
 
 
-/* Note that the second argument may be *anything* including ERROR.  If it is
-   error, we find the first occurence of that ERROR in the range */
 
-static void
-do_member (struct value *p)
-{
-	CELLREF crow;
-	CELLREF ccol;
-	int foundit;
-	CELL *cell_ptr;
 
-	find_cells_in_range (&(p->Rng));
-	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-	{
-		if (GET_TYP (cell_ptr) != (p + 1)->type)
-			continue;
-		switch ((p + 1)->type)
-		{
-			case 0:
-				foundit = 1;
-				break;
-			case TYP_FLT:
-				foundit = cell_ptr->gFlt() == (p + 1)->Float;
-				break;
-			case TYP_INT:
-				foundit = cell_ptr->gInt() == (p + 1)->Int;
-				break;
-			case TYP_STR:
-				foundit = !strcmp (cell_ptr->gString(), (p + 1)->String);
-				break;
-			case TYP_BOL:
-				foundit = cell_ptr->gBol() == (p + 1)->Value;
-				break;
-			case TYP_ERR:
-				foundit = cell_ptr->gErr() == (p + 1)->Value;
-				break;
-			default:
-				foundit = 0;
-#ifdef TEST
-				panic ("Unknown type (%d) in member", (p + 1)->type);
-#endif
-		}
-		if (foundit)
-		{
-			no_more_cells ();
-			p->Int = 1 + crow - p->Rng.lr + (ccol - p->Rng.lc) * (1 + p->Rng.hr - p->Rng.lr);
-			p->type = TYP_INT;
-			return;
-		}
-	}
-	p->Int = 0L;
-	p->type = TYP_INT;
-}
 
-static void
-do_smember (struct value *p)
-{
-	CELLREF crow;
-	CELLREF ccol;
-	CELL *cell_ptr;
-	char *string;
 
-	string = (p + 1)->String;
-	find_cells_in_range (&(p->Rng));
-	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-	{
-		if (((GET_TYP (cell_ptr) == 0) && (string[0] == '\0'))
-				|| (cell_ptr && (GET_TYP (cell_ptr) == TYP_STR)
-					&& strstr (string, cell_ptr->gString())))
-		{
-			no_more_cells ();
-			p->Int = 1 + (crow - p->Rng.lr)
-				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-			p->type = TYP_INT;
-			return;
-		}
-	}
-	p->Int = 0L;
-	p->type = TYP_INT;
-}
-
-static void
-do_members (struct value *p)
-{
-	CELLREF crow;
-	CELLREF ccol;
-	CELL *cell_ptr;
-	char *string;
-
-	string = (p + 1)->String;
-	find_cells_in_range (&(p->Rng));
-	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-	{
-		if (GET_TYP (cell_ptr) != TYP_STR)
-			continue;
-		if (strstr (cell_ptr->gString(), string))
-		{
-			no_more_cells ();
-			p->Int = 1 + (crow - p->Rng.lr)
-				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-			p->type = TYP_INT;
-			return;
-		}
-	}
-	p->Int = 0L;
-	p->type = TYP_INT;
-}
-
-static void
-do_pmember (struct value *p)
-{
-	CELLREF crow;
-	CELLREF ccol;
-	CELL *cell_ptr;
-	char *string;
-
-	string = (p + 1)->String;
-	find_cells_in_range (&(p->Rng));
-	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-	{
-		if ((GET_TYP (cell_ptr) == 0 && string[0] == '\0')
-				|| (cell_ptr && GET_TYP (cell_ptr) == TYP_STR && 
-					!strncmp (string, cell_ptr->gString(), strlen (cell_ptr->gString()))))
-		{
-			no_more_cells ();
-			p->Int = 1 + (crow - p->Rng.lr)
-				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-			p->type = TYP_INT;
-			return;
-		}
-	}
-	p->Int = 0L;
-	p->type = TYP_INT;
-}
-
-static void
-do_memberp (struct value *p)
-{
-	CELLREF crow;
-	CELLREF ccol;
-	CELL *cell_ptr;
-	int tmp;
-	char *string;
-
-	string = (p + 1)->String;
-	find_cells_in_range (&(p->Rng));
-	tmp = strlen (string);
-	while ((cell_ptr = next_row_col_in_range (&crow, &ccol)))
-	{
-		if (GET_TYP (cell_ptr) != TYP_STR)
-			continue;
-		if (!strncmp (cell_ptr->gString(), string, tmp))
-		{
-			no_more_cells ();
-			p->Int = 1 + (crow - p->Rng.lr)
-				+ (ccol - p->Rng.lc) * (1 + (p->Rng.hr - p->Rng.lr));
-			p->type = TYP_INT;
-			return;
-		}
-	}
-	p->Int = 0L;
-	p->type = TYP_INT;
-}
 
 static void
 do_hlookup (struct value *p)
@@ -496,11 +337,11 @@ struct function cells_funs[] =
   //{C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
   //{C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
 
-  {C_FN2, X_A2, "RA", T do_member, S "member"},
-  {C_FN2, X_A2, "RS", T do_smember, S "smember"},
-  {C_FN2, X_A2, "RS", T do_members, S "members"},
-  {C_FN2, X_A2, "RS", T do_pmember, S "pmember"},
-  {C_FN2, X_A2, "RS", T do_memberp, S "memberp"},
+  //{C_FN2, X_A2, "RA", T do_member, S "member"},
+  //{C_FN2, X_A2, "RS", T do_smember, S "smember"},
+  //{C_FN2, X_A2, "RS", T do_members, S "members"},
+  //{C_FN2, X_A2, "RS", T do_pmember, S "pmember"},
+  //{C_FN2, X_A2, "RS", T do_memberp, S "memberp"},
 
   {C_FN3, X_A3, "RFI", T do_hlookup, S "hlookup"},
   {C_FN3, X_A3, "RFI", T do_vlookup, S "vlookup"},
