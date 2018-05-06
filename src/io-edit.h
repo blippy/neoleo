@@ -44,7 +44,6 @@ extern void insert_cell_expression (void);
 extern void insert_other_cell_expression (struct rng * rng);
 extern void insert_cell_value(void);
 extern void insert_other_cell_value (struct rng * rng);
-extern void insert_rel_ref(void);
 extern void insert_abs_ref(int x);
 extern void insert_cell_attr (struct rng * rng, char * attr);
 extern void insert_usr_fmt_part (int fmt, int stat);

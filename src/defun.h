@@ -657,8 +657,6 @@ DEFUN ("insert-other-cell-value",
 "RInsert value from? ",
 #endif
 
-DEFUN_3 ("insert-rel-ref", FDinsert_rel_ref, insert_rel_ref)
-
 DEFUN ("insert-abs-ref", FDinsert_abs_ref,
   FAinsert_abs_ref, insert_abs_ref)
 #ifdef FUNC_ARG_STRINGS

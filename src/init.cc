@@ -292,7 +292,6 @@ static char *init_cmds[] =
   "bind-key read-string kill-line ^k",
   "bind-key meta-read-string insert-cell-expression e",
   "bind-key meta-read-string insert-cell-value v",
-  "bind-key meta-read-string insert-rel-ref r",
   "bind-key meta-read-string insert-abs-ref a",
   "bind-key meta-read-string toggle-overwrite o",
   "",
