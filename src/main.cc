@@ -29,15 +29,6 @@ using std::endl;
 using std::string;
 using std::vector;
 
-void
-init_native_language_support()
-{
-#if 0	/* ENABLE_NLS */ // mcarter
-	setlocale(LC_ALL, "");
-	bindtextdomain(PACKAGE, LOCALEDIR);
-	textdomain(PACKAGE);
-#endif
-}
 
 /* A bland signal handler. */
 static RETSIGTYPE
@@ -326,7 +317,6 @@ main(int argc, char **argv)
 	int ignore_init_file = 0;
 	int command_line_file = 0;	/* was there one? */
 
-	init_native_language_support();
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;
