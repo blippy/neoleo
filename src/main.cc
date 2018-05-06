@@ -29,9 +29,6 @@ using std::endl;
 using std::string;
 using std::vector;
 
-#define _(x) (x) // TODO get rid of this line
-
-
 void
 init_native_language_support()
 {
@@ -93,7 +90,7 @@ read_init_files()
 				+ " near line "
 				+ std::to_string(Global->sneaky_linec)
 				+ "\n";
-			const char *m = _(msg.c_str());
+			const char *m = msg.c_str();
 			fprintf(stderr, "%s", m);
 			io_info_msg(m);
 		}
@@ -110,7 +107,7 @@ init_maps_and_macros()
 		init_named_macro_strings ();
                 run_init_cmds ();
 	} catch (OleoJmp& e) {
-		fprintf (stderr, _("Error in the builtin init scripts (a bug!).\n"));
+		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
                 io_close_display(69);
                 exit (69);
 	}
@@ -145,26 +142,17 @@ static struct option long_options[] =
 void
 print_version()
 {
-	printf(_("%s %s\n"), PACKAGE_NAME, VERSION);
-	printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
-	printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), PACKAGE_NAME);
-	printf(_("You may redistribute copies of %s\n"), PACKAGE);
-	printf(_("under the terms of the GNU General Public License.\n"));
-	printf(_("For more information about these matters, "));
-	printf(_("see the files named COPYING.\n"));
+	printf("%s %s\n", PACKAGE_NAME, VERSION);
+	printf("Copyright © 1992-2000 Free Software Foundation, Inc.\n");
+	printf("%s comes with ABSOLUTELY NO WARRANTY.\n", PACKAGE_NAME);
+	printf("You may redistribute copies of %s\n", PACKAGE);
+	printf("under the terms of the GNU General Public License.\n");
+	printf("For more information about these matters, ");
+	printf("see the files named COPYING.\n");
 	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
 	printf("Auxval: %s\n", (char *)getauxval(AT_EXECFN));
 	printf("Exe: %s\n", Global->argv[0]);
 	printf("Datadir: %s/neoleo\n", DATADIR);
-
-	/*
-	char resolved_path[PATH_MAX];
-	if( realpath(Global->argv[0], resolved_path) ==0) 
-		fprintf (stderr, "realpath failed: %s\n", strerror (errno));
-	else
-		printf("Realpath: %s \n", resolved_path);
-		*/
-	// will probably call exit after printing this
 }
 
 
@@ -173,24 +161,23 @@ static void
 show_usage (void)
 {
 
-  printf(_("This is %s %s\n\n"), PACKAGE, VERSION);
+	printf("This is %s %s\n\n", PACKAGE, VERSION);
+	printf("Usage: %s [OPTION]... [FILE]...\n", PACKAGE);
 
-  printf(_("\
-Usage: %s [OPTION]... [FILE]...\n\
-"), PACKAGE);
-  printf(_("\
-\n\
-  -H, --headless           run without all toolkits\n\
-  -h, --help               display this help and exit\n\
-  -V, --version            output version information and exit\n\
-  -q, --quiet              do not display startup messages\n\
-  -f, --ignore-init-file   ignore settings defined in init file\n\
-  -T, --tests [x]          run test suite x\n\
-  -F x, --format x	   set default file type to x (oleo, list, sc  ...)\n\
-  --filter		   read file from stdin, write to stdout on exit\n\
-\n\
-Report bugs to <bug-oleo@gnu.org>.\n\
-"));
+const char* usage = R"(
+  -H, --headless           run without all toolkits
+  -h, --help               display this help and exit
+  -V, --version            output version information and exit
+  -q, --quiet              do not display startup messages
+  -f, --ignore-init-file   ignore settings defined in init file
+  -T, --tests [x]          run test suite x
+  -F x, --format x	   set default file type to x (oleo, list, sc  ...)
+  --filter		   read file from stdin, write to stdout on exit
+
+Report bugs to https://github.com/blippy/neoleo/issues
+)";
+
+	printf("%s", usage);
 }
 
 
@@ -307,8 +294,8 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 			try {
 				read_file_and_run_hooks (fp, 0, argv[optind]);
 			} catch (OleoJmp& e) {
-				fprintf (stderr, _(", error occured reading '%s'\n"), argv[optind]);
-				io_info_msg(_(", error occured reading '%s'\n"), argv[optind]);
+				fprintf (stderr, ", error occured reading '%s'\n", argv[optind]);
+				io_info_msg(", error occured reading '%s'\n", argv[optind]);
 			} 
 			fclose (fp);
 		}
