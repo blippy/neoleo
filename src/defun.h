@@ -115,13 +115,6 @@ DEFUN ("goto-region", FDgoto_region, FAgoto_region, to_vptr(goto_region))
 "RGoto region? ",
 #endif
 
-DEFUN_3 ("upper-left", FDupper_left, to_vptr(upper_left))
-
-DEFUN_3 ("lower-left", FDlower_left, to_vptr(lower_left))
-
-DEFUN_3 ("upper-right", FDupper_right, to_vptr(upper_right))
-
-DEFUN_3 ("lower-right", FDlower_right, to_vptr(lower_right))
 
 DEFUN ("exchange-point-and-mark", FDexchange_point_and_mark,
        FAexchange_point_and_mark, to_vptr(exchange_point_and_mark))

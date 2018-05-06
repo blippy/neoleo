@@ -713,47 +713,6 @@ mk_for_extreme (struct rng * rng)
       rng->hr = curow;
     }
 }
-
-void
-upper_left (void)
-{
-  struct rng rng;
-  rng.lr = MIN_ROW;
-  rng.lc = MIN_COL;
-  mk_for_extreme (&rng);
-  goto_region (&rng);
-}
-
-void
-lower_left (void)
-{
-  struct rng rng;
-  rng.lr = max_filled_row ();
-  rng.lc = MIN_COL;
-  mk_for_extreme (&rng);
-  goto_region (&rng);
-}
-
-void
-upper_right (void)
-{
-  struct rng rng;
-  rng.lr = MIN_ROW;
-  rng.lc = max_filled_col ();
-  mk_for_extreme (&rng);
-  goto_region (&rng);
-}
-
-void
-lower_right (void)
-{
-  struct rng rng;
-  rng.lr = max_filled_row ();
-  rng.lc = max_filled_col ();
-  mk_for_extreme (&rng);
-  goto_region (&rng);
-}
-
 void
 mark_cell_cmd (int popmk)
 {
