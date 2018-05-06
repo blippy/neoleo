@@ -723,6 +723,7 @@ void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 void
 oleo_write_file(FILE *fp, struct rng *rng)
 {
+	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
 	CELLREF r, c;
 	CELL *cp;
 	CELLREF crow = 0, ccol = 0;
@@ -738,46 +739,43 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	 */
 	(void) fprintf (fp, "# format 3.0 (requires Neoleo 8.0 or higher)\n");
 
-	/* If no range given, write the entire file */
-	if (!rng)
+	int n;
+	int fmts;
+	char *data[9];
+
+	rng = &all_rng;
+
+	(void) fprintf (fp, "F;D%s%c%u\n",
+			oleo_fmt_to_str (default_fmt, default_prc),
+			jst_to_chr (default_jst),
+			default_width);
+
+	fmts = usr_set_fmts ();
+	for (n = 0; n < 16; n++)
 	{
-		int n;
-		int fmts;
-		char *data[9];
-
-		rng = &all_rng;
-
-		(void) fprintf (fp, "F;D%s%c%u\n",
-				oleo_fmt_to_str (default_fmt, default_prc),
-				jst_to_chr (default_jst),
-				default_width);
-
-		fmts = usr_set_fmts ();
-		for (n = 0; n < 16; n++)
+		if (fmts & (1 << n))
 		{
-			if (fmts & (1 << n))
-			{
-				get_usr_stats (n, data);
-				fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
-				if (data[0][0])
-					fprintf (fp, ";HP%s", data[0]);
-				if (data[1][0])
-					fprintf (fp, ";HN%s", data[1]);
-				if (data[2][0])
-					fprintf (fp, ";TP%s", data[2]);
-				if (data[3][0])
-					fprintf (fp, ";TN%s", data[3]);
-				if (data[4][0])
-					fprintf (fp, ";Z%s", data[4]);
-				if (data[5][0])
-					fprintf (fp, ";C%s", data[5]);
-				if (data[6])
-					fprintf (fp, ";D%s", data[6]);
-				putc ('\n', fp);
-			}
+			get_usr_stats (n, data);
+			fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
+			if (data[0][0])
+				fprintf (fp, ";HP%s", data[0]);
+			if (data[1][0])
+				fprintf (fp, ";HN%s", data[1]);
+			if (data[2][0])
+				fprintf (fp, ";TP%s", data[2]);
+			if (data[3][0])
+				fprintf (fp, ";TN%s", data[3]);
+			if (data[4][0])
+				fprintf (fp, ";Z%s", data[4]);
+			if (data[5][0])
+				fprintf (fp, ";C%s", data[5]);
+			if (data[6])
+				fprintf (fp, ";D%s", data[6]);
+			putc ('\n', fp);
 		}
-		write_mp_options (fp);
 	}
+	write_mp_options (fp);
+
 
 	old_a0 = Global->a0;
 	Global->a0 = 0;
@@ -872,11 +870,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 		putc ('\n', fp);
 	}
 
-	if (rng == &all_rng)
-		write_mp_windows (fp);
-
-	/* Database stuff */
-	/* End of writing */
+	write_mp_windows (fp);
 	(void) fprintf (fp, "E\n");
 	Global->a0 = old_a0;
 }
