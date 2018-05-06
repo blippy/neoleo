@@ -1,7 +1,5 @@
 /*
- * $Id: regions.c,v 1.16 2000/08/10 21:02:51 danny Exp $
- *
- * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (C) 1990, 1992, 1993 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -65,82 +63,79 @@ set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 void
 delete_region (struct rng *where)
 {
-  CELLREF rr, cc;
-  CELL *pp;
+	CELLREF rr, cc;
+	CELL *pp;
 
-  Global->modified = 1;
+	Global->modified = 1;
 
-  find_cells_in_range (where);
-  while ((pp = next_row_col_in_range (&rr, &cc)))
-    {
-      if (!pp->get_cell_formula() && !GET_TYP (pp))
+	find_cells_in_range (where);
+	while ((pp = next_row_col_in_range (&rr, &cc)))
 	{
-	  bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-	  //pp->cell_font = 0;
-	  continue;
+		if (!pp->get_cell_formula() && !GET_TYP (pp))
+		{
+			bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
+			//pp->cell_font = 0;
+			continue;
+		}
+		cur_row = rr;
+		cur_col = cc;
+		my_cell = pp;
+		flush_old_value ();
+		pp->set_cell_formula(0);
+		bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
+		//pp->cell_font = 0;
+		push_refs (pp->cell_refs_from);
+		io_pr_cell (rr, cc, pp);
 	}
-      cur_row = rr;
-      cur_col = cc;
-      my_cell = pp;
-      flush_old_value ();
-      pp->set_cell_formula(0);
-      bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-      //pp->cell_font = 0;
-      push_refs (pp->cell_refs_from);
-      io_pr_cell (rr, cc, pp);
-    }
-  my_cell = 0;
+	my_cell = 0;
 }
 
 /* Turn on/off the locked bits in a region */
 void
 lock_region (struct rng *where, int locked)
 {
-  CELL *cp;
+	CELL *cp;
 
-  Global->modified = 1;
-  make_cells_in_range (where);
-  while ((cp = next_cell_in_range ()))
-    SET_LCK (cp, locked);
+	Global->modified = 1;
+	make_cells_in_range (where);
+	while ((cp = next_cell_in_range ()))
+		SET_LCK (cp, locked);
 }
 
 void
 format_region (struct rng *where, int fmt, int just)
 {
-  CELL *cp;
-  CELLREF rr, cc;
+	CELL *cp;
+	CELLREF rr, cc;
 
-  Global->modified = 1;
-  make_cells_in_range (where);
-  while ((cp = next_row_col_in_range (&rr, &cc)))
-    {
-      if (fmt != -1) {
-	SET_FORMAT (cp, fmt);	/* Only the format, not the precision !! */
-      }
-      if (just != -1)
-	SET_JST (cp, just);
-      io_pr_cell (rr, cc, cp);
-    }
+	Global->modified = 1;
+	make_cells_in_range (where);
+	while ((cp = next_row_col_in_range (&rr, &cc)))
+	{
+		if (fmt != -1) {
+			SET_FORMAT (cp, fmt);	/* Only the format, not the precision !! */
+		}
+		if (just != -1)
+			SET_JST (cp, just);
+		io_pr_cell (rr, cc, cp);
+	}
 }
 
 void
 precision_region (struct rng *where, int precision)
 {
-  CELL *cp;
-  CELLREF rr, cc;
+	CELL *cp;
+	CELLREF rr, cc;
 
-  Global->modified = 1;
-  make_cells_in_range (where);
-  while ((cp = next_row_col_in_range (&rr, &cc)))
-    {
-      if (precision != -1)
-	SET_PRECISION (cp, precision);
-      io_pr_cell (rr, cc, cp);
-    }
+	Global->modified = 1;
+	make_cells_in_range (where);
+	while ((cp = next_row_col_in_range (&rr, &cc)))
+	{
+		if (precision != -1)
+			SET_PRECISION (cp, precision);
+		io_pr_cell (rr, cc, cp);
+	}
 }
-
-//unsigned int print_width;
-
 
 
 /*
@@ -157,65 +152,65 @@ precision_region (struct rng *where, int precision)
 static int
 set_to_region (struct rng *fm, struct rng *to)
 {
-  /* Delta {row,col} {from,to} */
-  int drf, dcf;
-  int drt, dct;
-  int ret = 2;
+	/* Delta {row,col} {from,to} */
+	int drf, dcf;
+	int drt, dct;
+	int ret = 2;
 
-  drf = fm->hr - fm->lr;
-  drt = to->hr - to->lr;
-  if (drt == 0)
-    {
-      if (to->lr > MAX_ROW - drf)
+	drf = fm->hr - fm->lr;
+	drt = to->hr - to->lr;
+	if (drt == 0)
 	{
-	  io_error_msg ("The range won't fit this far down!");
-	  return 0;
+		if (to->lr > MAX_ROW - drf)
+		{
+			io_error_msg ("The range won't fit this far down!");
+			return 0;
+		}
+		to->hr = to->lr + drf;
 	}
-      to->hr = to->lr + drf;
-    }
-  else if (drf != drt)
-    {
-      if ((drt + 1) % (drf + 1) == 0)
-	ret = 1;
-      else
+	else if (drf != drt)
 	{
-	  io_error_msg ("Rows %u:%u and %u:%u don't fit", fm->lr, fm->hr, to->lr, to->hr);
-	  return 0;
+		if ((drt + 1) % (drf + 1) == 0)
+			ret = 1;
+		else
+		{
+			io_error_msg ("Rows %u:%u and %u:%u don't fit", fm->lr, fm->hr, to->lr, to->hr);
+			return 0;
+		}
 	}
-    }
-  dcf = fm->hc - fm->lc;
-  dct = to->hc - to->lc;
-  if (dct == 0)
-    {
-      if (to->lc > MAX_COL - dcf)
+	dcf = fm->hc - fm->lc;
+	dct = to->hc - to->lc;
+	if (dct == 0)
 	{
-	  io_error_msg ("The range won't fit this far over!");
-	  return 0;
+		if (to->lc > MAX_COL - dcf)
+		{
+			io_error_msg ("The range won't fit this far over!");
+			return 0;
+		}
+		to->hc = to->lc + dcf;
 	}
-      to->hc = to->lc + dcf;
-    }
-  else if (dcf != dct)
-    {
-      if ((dct + 1) % (dcf + 1) == 0)
-	ret = 1;
-      else
+	else if (dcf != dct)
 	{
-	  io_error_msg ("Cols %u:%u and %u:%u don't fit", fm->lc, fm->hc, to->lc, to->hc);
-	  return 0;
+		if ((dct + 1) % (dcf + 1) == 0)
+			ret = 1;
+		else
+		{
+			io_error_msg ("Cols %u:%u and %u:%u don't fit", fm->lc, fm->hc, to->lc, to->hc);
+			return 0;
+		}
 	}
-    }
 
-  if (fm->lr == to->lr && fm->lc == to->lc)
-    {
-      io_error_msg ("Regions are in the same place");
-      return 0;
-    }
+	if (fm->lr == to->lr && fm->lc == to->lc)
+	{
+		io_error_msg ("Regions are in the same place");
+		return 0;
+	}
 
-  if (((fm->lr <= to->lr && to->lr <= fm->hr) || (fm->lr <= to->hr && to->hr <= fm->hr))
-      && ((fm->lc <= to->lc && to->lc <= fm->hc) || (fm->lc <= to->hc && to->hc <= fm->hc)))
-    return -1;
-  Global->modified = 1;
-  return ret;
+	if (((fm->lr <= to->lr && to->lr <= fm->hr) || (fm->lr <= to->hr && to->hr <= fm->hr))
+			&& ((fm->lc <= to->lc && to->lc <= fm->hc) || (fm->lc <= to->hc && to->hc <= fm->hc)))
+		return -1;
+	Global->modified = 1;
+	return ret;
 }
 
 /* This is only complicated because it must deal with overlap, and it wants
@@ -554,28 +549,28 @@ move_region (struct rng *fm, struct rng *to)
 void
 copy_region (struct rng *fm, struct rng *to)
 {
-  CELLREF rf, rt, cf, ct;
+	CELLREF rf, rt, cf, ct;
 
-  if (set_to_region (fm, to) < 1)
-    return;
+	if (set_to_region (fm, to) < 1)
+		return;
 
-  for (rf = fm->lr, rt = to->lr; (rt > 0) && (rt <= to->hr); rt++, rf++)
-    {
-      for (cf = fm->lc, ct = to->lc; (ct > 0) && (ct <= to->hc); ct++, cf++)
+	for (rf = fm->lr, rt = to->lr; (rt > 0) && (rt <= to->hr); rt++, rf++)
 	{
-	  copy_cell (rf, cf, rt, ct);
+		for (cf = fm->lc, ct = to->lc; (ct > 0) && (ct <= to->hc); ct++, cf++)
+		{
+			copy_cell (rf, cf, rt, ct);
 
-	  if (cf == fm->hc)
-	    cf = fm->lc - 1;
+			if (cf == fm->hc)
+				cf = fm->lc - 1;
+		}
+		if (rf == fm->hr)
+			rf = fm->lr - 1;
 	}
-      if (rf == fm->hr)
-	rf = fm->lr - 1;
-    }
-  if (mkrow != NON_ROW) {
-      mkrow = to->lr + abs(to->lr - to->hr);
-      mkcol = to->lc + abs(to->lc - to->hc);
-  }
-  goto_region (to);
+	if (mkrow != NON_ROW) {
+		mkrow = to->lr + abs(to->lr - to->hr);
+		mkcol = to->lc + abs(to->lc - to->hc);
+	}
+	goto_region (to);
 }
 
 /* This sets the cell to a constant, stored in VALUE, whose type is in TYPE */
@@ -681,9 +676,3 @@ int sort_keys_alloc;
 int sort_keys_num = 0;
 
 static int srdiff, erdiff, scdiff, ecdiff;
-
-#ifdef TEST
-extern int debug;
-#endif
-
-
