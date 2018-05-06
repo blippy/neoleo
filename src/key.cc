@@ -229,9 +229,12 @@ bind_or_unbind_set (char * keymap, char * command, char * keyset)
     }
 }
 
+//using CCC = const_cast<char*>;
+//using CCC =char*;
+
 void unbind_set (char *keymap, char *keyset)
 {
-  char *command = "0";
+  char *command = const_cast<char*>("0");
   bind_or_unbind_set (keymap, command, keyset);
 }
 
