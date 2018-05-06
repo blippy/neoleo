@@ -127,25 +127,27 @@ int overflow;
 	} else \
 		ERROR1(NON_NUMBER);
 
-#define TO_INT(val)	\
-	if((val)->type==TYP_INT) \
-		; \
-	else if((val)->type==TYP_FLT) { \
-		(val)->type=TYP_INT; \
-		(val)->Int=(long)(val)->Float; \
-	} else if((val)->type==TYP_STR) { \
-		(val)->type=TYP_INT; \
-		strptr=(val)->String; \
-		(val)->Int=astol(&strptr); \
-		if(*strptr) \
-			ERROR1(NON_NUMBER); \
-	} else if((val)->type==TYP_ERR) {\
-		ERROR1((val)->Value); \
-	} else if((val)->type==0) { \
-		(val)->type=TYP_INT; \
-		(val)->Int=0; \
-	} else \
+void  TO_INT(struct value* val)	
+{	
+	if((val)->type==TYP_INT) 
+		; 
+	else if((val)->type==TYP_FLT) { 
+		(val)->type=TYP_INT; 
+		(val)->Int=(long)(val)->Float; 
+	} else if((val)->type==TYP_STR) { 
+		(val)->type=TYP_INT; 
+		char* strptr=(val)->String; 
+		(val)->Int=astol(&strptr); 
+		if(*strptr) 
+			ERROR1(NON_NUMBER); 
+	} else if((val)->type==TYP_ERR) {
+		ERROR1((val)->Value); 
+	} else if((val)->type==0) { 
+		(val)->type=TYP_INT; 
+		(val)->Int=0; 
+	} else 
 		ERROR1(NON_NUMBER);
+}
 
 #define TO_NUM(val)	\
 	if((val)->type==TYP_INT || (val)->type==TYP_FLT) \
