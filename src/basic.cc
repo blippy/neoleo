@@ -571,32 +571,6 @@ exchange_point_and_mark (int clrmk)
 }
 
 static CELLREF
-first_filled_col (CELLREF row)
-{
-  struct rng rng;
-  CELLREF r;
-  CELLREF c;
-  rng.lr = row;
-  rng.hr = row;
-  rng.lc = MIN_COL;
-  rng.hc = MAX_COL;
-  find_cells_in_range (&rng);
-  while (1)
-    {
-      CELL * cp;
-      cp = next_row_col_in_range (&r, &c);
-      if (!cp)
-	break;
-      if (GET_TYP(cp))
-	{
-	  no_more_cells ();
-	  return c;
-	}
-    }
-  return NON_COL;
-}
-
-static CELLREF
 last_filled_col (CELLREF row)
 {
   struct rng rng;
