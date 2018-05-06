@@ -151,22 +151,24 @@ void  TO_INT(struct value* val)
 		ERROR1(NON_NUMBER);
 }
 
-#define TO_NUM(val)	\
-	if((val)->type==TYP_INT || (val)->type==TYP_FLT) \
-		; \
-	else if((val)->type==TYP_STR) { \
-		(val)->type=TYP_FLT; \
-		strptr=(val)->String; \
-		(val)->Float=astof(&strptr); \
-		if(*strptr) \
-			ERROR1(NON_NUMBER); \
-	} else if((val)->type==TYP_ERR) {\
-		ERROR1((val)->Value); \
-	} else if((val)->type==0) { \
-		(val)->type=TYP_INT; \
-		(val)->Int=0; \
-	} else \
+void TO_NUM(struct value* val)
+{
+	if((val)->type==TYP_INT || (val)->type==TYP_FLT) 
+		; 
+	else if((val)->type==TYP_STR) { 
+		(val)->type=TYP_FLT; 
+		char* strptr=(val)->String; 
+		(val)->Float=astof(&strptr); 
+		if(*strptr) 
+			ERROR1(NON_NUMBER); 
+	} else if((val)->type==TYP_ERR) {
+		ERROR1((val)->Value); 
+	} else if((val)->type==0) { 
+		(val)->type=TYP_INT; 
+		(val)->Int=0; 
+	} else 
 		ERROR1(NON_NUMBER);
+}
 
 #define TO_STR(val)	\
 	if((val)->type==TYP_STR)	\
@@ -223,6 +225,7 @@ void  TO_INT(struct value* val)
 		p->x=cp->get_c_z();			\
 	}
 
+// should probably use one of TO_NUM(), or something like that.
 num_t as_flt(struct value* v)
 {
 	switch(v->get_type()) {
@@ -231,7 +234,7 @@ num_t as_flt(struct value* v)
 		case TYP_FLT:
 			return v->gFlt();
 		default:
-			assert(false); // TODO inprove
+			assert(false); // TODO improve
 	}
 }
 
