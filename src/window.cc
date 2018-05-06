@@ -1243,12 +1243,11 @@ init_mouse (void)
 	Global->free_mouse->prev = Global->free_mouse;
 }
 
-static int mouse_location (CELLREF *cr, CELLREF *cc, struct mouse_event *ev);
-
 
 void 
 dequeue_mouse_event (struct mouse_event *out, int seq)
 {
+	assert(false); // added mcater 06_may-2018
 	Global->free_mouse->seq = seq;
 	while (Global->current_mouse->seq != seq)
 		Global->current_mouse = Global->current_mouse->next;
@@ -1297,39 +1296,4 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc)
 	init_mouse ();
 }
 
-static int 
-mouse_location (CELLREF *cr, CELLREF *cc, struct mouse_event *ev)
-{
-	int n;
-	if (ev->row >= Global->input && ev->row <= Global->input + input_rows)
-		return MOUSE_ON_INPUT;
-	if (user_status && ev->row >= Global->status
-			&& ev->row <= Global->status + status_rows)
-		return MOUSE_ON_STATUS;
-	for (n = 0; n < nwin; ++n)
-	{
-		struct window *w = &wins[n];
-		if (ev->row >= w->win_down
-				&& ev->row < w->win_down + w->numr
-				&& ev->col < w->win_over + w->numc
-				&& ev->col >= w->win_over)
-		{
-			int row_off = ev->row - w->win_down;
-			int col_off = ev->col - w->win_over;
-			int rh = 0;
-			int cw = 0;
-			CELLREF c, r;
-			for (c = w->screen.lc; c <= w->screen.hc; ++c)
-				if ((cw += get_scaled_width (c)) > col_off)
-					break;
-			*cc = c;
-			for (r = w->screen.lr; r <= w->screen.hr; ++r)
-				if ((rh += get_scaled_height (r)) > row_off)
-					break;
-			*cr = r;
-			return n;
-		}
-	}
-	return MOUSE_ON_EDGE;
-}
 
