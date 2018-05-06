@@ -196,7 +196,6 @@ static char *init_cmds[] =
   "bind-key meta scan-right f",
   "",
   "bind-key main beginning-of-row ^a",
-  "bind-key main end-of-row ^e",
   "bind-key meta beginning-of-col ^a",
   "bind-key meta end-of-col ^e",
   "",

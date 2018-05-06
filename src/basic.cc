@@ -570,29 +570,6 @@ exchange_point_and_mark (int clrmk)
     }
 }
 
-static CELLREF
-last_filled_col (CELLREF row)
-{
-  struct rng rng;
-  CELLREF r;
-  CELLREF c;
-  CELLREF bestc = MIN_COL;
-  rng.lr = row;
-  rng.hr = row;
-  rng.lc = MIN_COL;
-  rng.hc = MAX_COL;
-  find_cells_in_range (&rng);
-  while (1)
-    {
-      CELL * cp;
-      cp = next_row_col_in_range (&r, &c);
-      if (!cp)
-	break;
-      if (GET_TYP(cp))
-	bestc = c;
-    }
-  return bestc;
-}
 
 static CELLREF
 first_filled_row (CELLREF col)
@@ -910,16 +887,6 @@ beginning_of_row (int count)
   goto_region (&rng);
 }
 
-void
-end_of_row (int count)
-{
-  struct rng rng;
-  rng.lr = extreme_cmd_orth_motion (count, curow);
-  rng.lc = last_filled_col (rng.lr);
-  rng.hr = mkrow;
-  rng.hc = mkcol;
-  goto_region (&rng);
-}
 
 void
 beginning_of_col (int count)

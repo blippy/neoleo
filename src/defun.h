@@ -229,10 +229,6 @@ DEFUN ("beginning-of-col",
 "p",
 #endif
 
-DEFUN ("end-of-row", FDend_of_row, FAend_of_row, to_vptr(end_of_row))
-#ifdef FUNC_ARG_STRINGS
-"p",
-#endif
 
 DEFUN ("end-of-col", FDend_of_col, FAend_of_col, to_vptr(end_of_col))
 #ifdef FUNC_ARG_STRINGS
