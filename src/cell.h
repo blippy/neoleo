@@ -94,7 +94,7 @@ class cell : public value
 		struct ref_to *cell_refs_to = nullptr;
 		coord_t coord;
 
-		cell();
+		//cell();
 		cell(coord_t coord);
 		~cell();
 		void reset();

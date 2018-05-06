@@ -59,8 +59,10 @@ cell_t* find_cell (coord_t coord)
 	auto it = the_cells.find(coord);
 	if(it == the_cells.end())
 		return nullptr;
-	else
-		return it->second;
+
+	CELL* cp = it->second;
+	assert(cp->coord == coord); // Had you moved/copied a cell without updating its coords?
+	return cp;
 }
 cell_t* find_cell (CELLREF r, CELLREF c) { return find_cell(to_coord(r, c)); }
 
@@ -68,7 +70,7 @@ cell_t* find_or_make_cell (coord_t coord)
 {
 	cell_t* ptr = find_cell(coord);
 	if(ptr) return ptr;	
-	ptr = new cell_t;
+	ptr = new cell_t(coord);
 	the_cells[coord] = ptr;
 	return ptr;
 }

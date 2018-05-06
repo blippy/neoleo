@@ -189,7 +189,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	CELL *cpf;
 
 	static CELLREF non_rf, non_cf;
-	static cell non_cell;
+	static cell non_cell(0);
 
 	if (rf == NON_ROW)
 	{

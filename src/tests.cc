@@ -102,7 +102,7 @@ test_formatting()
 void
 run_cell_formula_tests()
 {
-	CELL c1, c2;
+	CELL c1(0), c2(0);
 	//c2.
 	c1 = c2;
 	// TODO much expansion required
