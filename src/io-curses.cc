@@ -156,7 +156,7 @@ test_curses_suspension()
 static int
 curses_metric (char * str, int len)
 {
-  return len;
+	return len;
 }
 
 static struct input_view input_view
@@ -165,51 +165,51 @@ static struct input_view input_view
 static void
 _io_redraw_input (void)
 {
-  int pos;
-  int row = (input_view.current_info ? 0 : Global->input);
+	int pos;
+	int row = (input_view.current_info ? 0 : Global->input);
 
-  if (input_view.info_redraw_needed)
-    {
-      input_view.info_redraw_needed = 0;
-      io_repaint ();
-      return;
-    }
-
-  if (input_view.redraw_needed == NO_REDRAW)
-    return;
-
-  if (input_view.redraw_needed == FULL_REDRAW)
-    {
-      /* Redraw	the prompt. */ 
-      move (row, 0);
-      if (input_view.expanded_keymap_prompt)
+	if (input_view.info_redraw_needed)
 	{
-	  addstr (input_view.expanded_keymap_prompt);
-	  clrtoeol ();
-	  input_view.redraw_needed = NO_REDRAW;
-	  return;
+		input_view.info_redraw_needed = 0;
+		io_repaint ();
+		return;
 	}
-      if (input_view.prompt_wid)
-	addstr (input_view.prompt);
-      pos = input_view.visibility_begin;
-    }
-  else
-    {
-      pos = input_view.redraw_needed;
-      move (row,
-	    input_view.prompt_wid + pos - input_view.visibility_begin);
-    }
-    
-  if (   input_view.input_area
-      && (input_view.visibility_end >= input_view.visibility_begin)
-      && (input_view.visibility_begin < strlen (input_view.input_area->buf)))
-    {
-      int x;
-      for (x = pos; x <= input_view.visibility_end; ++x)
-	addch (input_view.input_area->buf[x]);
-    }
-  clrtoeol ();
-  input_view.redraw_needed = NO_REDRAW;
+
+	if (input_view.redraw_needed == NO_REDRAW)
+		return;
+
+	if (input_view.redraw_needed == FULL_REDRAW)
+	{
+		/* Redraw	the prompt. */ 
+		move (row, 0);
+		if (input_view.expanded_keymap_prompt)
+		{
+			addstr (input_view.expanded_keymap_prompt);
+			clrtoeol ();
+			input_view.redraw_needed = NO_REDRAW;
+			return;
+		}
+		if (input_view.prompt_wid)
+			addstr (input_view.prompt);
+		pos = input_view.visibility_begin;
+	}
+	else
+	{
+		pos = input_view.redraw_needed;
+		move (row,
+				input_view.prompt_wid + pos - input_view.visibility_begin);
+	}
+
+	if (   input_view.input_area
+			&& (input_view.visibility_end >= input_view.visibility_begin)
+			&& (input_view.visibility_begin < strlen (input_view.input_area->buf)))
+	{
+		int x;
+		for (x = pos; x <= input_view.visibility_end; ++x)
+			addch (input_view.input_area->buf[x]);
+	}
+	clrtoeol ();
+	input_view.redraw_needed = NO_REDRAW;
 }
 
 
@@ -219,111 +219,111 @@ _io_redraw_input (void)
 static void
 _io_fix_input (void)
 {
-  iv_fix_input (&input_view);
+	iv_fix_input (&input_view);
 }
 
 static void
 _io_move_cursor (void)
 {
-  iv_move_cursor (&input_view);
+	iv_move_cursor (&input_view);
 }
 
 static void
 _io_erase (int len)
 {
-  iv_erase (&input_view, len);
+	iv_erase (&input_view, len);
 }
 
 static void
 _io_insert (int len)
 {
-  iv_insert (&input_view, len);
+	iv_insert (&input_view, len);
 }
 	   
 static void
 _io_over (const char * str, int len)
 {
-  iv_over (&input_view, len);
+	iv_over (&input_view, len);
 }
 
 static void 
 _io_display_cell_cursor (void)
 {
-  int cell_cursor_row;
-  int cell_cursor_col;
-  int cc;
-  int rr;
-  int cwid;
-  int n;
-  int x, y;
+	int cell_cursor_row;
+	int cell_cursor_col;
+	int cc;
+	int rr;
+	int cwid;
+	int n;
+	int x, y;
 
-  if (input_view.current_info)
-    return;
+	if (input_view.current_info)
+		return;
 
-  if (   (curow < cwin->screen.lr)
-      || (cucol < cwin->screen.lc)
-      || (curow > cwin->screen.hr)
-      || (cucol > cwin->screen.hc))
-    return;
+	if (   (curow < cwin->screen.lr)
+			|| (cucol < cwin->screen.lc)
+			|| (curow > cwin->screen.hr)
+			|| (cucol > cwin->screen.hc))
+		return;
 
-  getyx (stdscr, y, x);
-  cell_cursor_col = cwin->win_over;
-  for (cc = cwin->screen.lc; cc < cucol; cc++)
-    cell_cursor_col += get_width (cc);
-  cell_cursor_row = cwin->win_down;
-  for (rr = cwin->screen.lr; rr < curow; rr++)
-    cell_cursor_row += get_height (rr);
-  cwid = get_width (cucol);
-  if (cwid > cwin->numc)
-    cwid = cwin->numc;
-  move (cell_cursor_row, cell_cursor_col);
-  standout ();
-  for (n = cwid; n; n--)
+	getyx (stdscr, y, x);
+	cell_cursor_col = cwin->win_over;
+	for (cc = cwin->screen.lc; cc < cucol; cc++)
+		cell_cursor_col += get_width (cc);
+	cell_cursor_row = cwin->win_down;
+	for (rr = cwin->screen.lr; rr < curow; rr++)
+		cell_cursor_row += get_height (rr);
+	cwid = get_width (cucol);
+	if (cwid > cwin->numc)
+		cwid = cwin->numc;
+	move (cell_cursor_row, cell_cursor_col);
+	standout ();
+	for (n = cwid; n; n--)
 #ifdef A_STANDOUT
-    addch (inch () | A_STANDOUT);
+		addch (inch () | A_STANDOUT);
 #else
-    addch (inch ());
+	addch (inch ());
 #endif
-  standend ();
-  move (y, x);
+	standend ();
+	move (y, x);
 }
 
 static void 
 _io_hide_cell_cursor (void)
 {
-  int cc;
-  int rr;
-  int cell_cursor_row;
-  int cell_cursor_col;
-  int cwid;
-  int n;
-  int x, y;
+	int cc;
+	int rr;
+	int cell_cursor_row;
+	int cell_cursor_col;
+	int cwid;
+	int n;
+	int x, y;
 
-  if (input_view.current_info)
-    return;
-  if (   (curow < cwin->screen.lr)
-      || (cucol < cwin->screen.lc)
-      || (curow > cwin->screen.hr)
-      || (cucol > cwin->screen.hc))
-    return;
-  getyx (stdscr, y, x);
-  cell_cursor_col = cwin->win_over;
-  for (cc = cwin->screen.lc; cc < cucol; cc++)
-    cell_cursor_col += get_width (cc);
-  cell_cursor_row = cwin->win_down;
-  for (rr = cwin->screen.lr; rr < curow; rr++)
-    cell_cursor_row += get_height (rr);
-  cwid = get_width (cucol);
-  if (cwid > cwin->numc)
-    cwid = cwin->numc;
-  move (cell_cursor_row, cell_cursor_col);
-  for (n = cwid; n; n--)
+	if (input_view.current_info)
+		return;
+	if (   (curow < cwin->screen.lr)
+			|| (cucol < cwin->screen.lc)
+			|| (curow > cwin->screen.hr)
+			|| (cucol > cwin->screen.hc))
+		return;
+	getyx (stdscr, y, x);
+	cell_cursor_col = cwin->win_over;
+	for (cc = cwin->screen.lc; cc < cucol; cc++)
+		cell_cursor_col += get_width (cc);
+	cell_cursor_row = cwin->win_down;
+	for (rr = cwin->screen.lr; rr < curow; rr++)
+		cell_cursor_row += get_height (rr);
+	cwid = get_width (cucol);
+	if (cwid > cwin->numc)
+		cwid = cwin->numc;
+	move (cell_cursor_row, cell_cursor_col);
+	for (n = cwid; n; n--)
 #ifdef A_STANDOUT
-    addch (inch () & ~A_STANDOUT);
+		addch (inch () & ~A_STANDOUT);
 #else
-    addch (inch ());
+	addch (inch ());
 #endif
-  move (y, x);
+	move (y, x);
 }
 
 /* Functions, etc for dealing with cell contents being displayed
@@ -332,124 +332,123 @@ _io_hide_cell_cursor (void)
 struct s { CELLREF row, clo, chi; } ;
 struct slops
 {
-  int s_alloc, s_used;
-  struct s s_b[1];
+	int s_alloc, s_used;
+	struct s s_b[1];
 };
 
 static void 
 flush_slops (VOIDSTAR where)
 {
-  struct slops *s;
+	struct slops *s;
 
-  s = (slops *) where;
-  if (s)
-    s->s_used = 0;
+	s = (slops *) where;
+	if (s)
+		s->s_used = 0;
 }
 
 static int 
 find_slop (VOIDSTAR where, CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 {
-  int n;
-  struct slops *s;
+	int n;
+	struct slops *s;
 
-  s = (slops*) where;
-  if (!s)
-    return 0;
-  for (n = 0; n < s->s_used; n++)
-    {
-      if (s->s_b[n].row == r && s->s_b[n].clo <= c && s->s_b[n].chi >= c)
+	s = (slops*) where;
+	if (!s)
+		return 0;
+	for (n = 0; n < s->s_used; n++)
 	{
-	  *cclp = s->s_b[n].clo;
-	  *cchp = s->s_b[n].chi;
-	  return 1;
+		if (s->s_b[n].row == r && s->s_b[n].clo <= c && s->s_b[n].chi >= c)
+		{
+			*cclp = s->s_b[n].clo;
+			*cchp = s->s_b[n].chi;
+			return 1;
+		}
 	}
-    }
-  return 0;
+	return 0;
 }
 
 static void 
 kill_slop (VOIDSTAR where, CELLREF r, CELLREF clo, CELLREF chi)
 {
-  int n;
-  struct slops *s;
+	int n;
+	struct slops *s;
 
-  s = (slops *) where;
-  for (n = 0; n < s->s_used; n++)
-    {
-      if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
+	s = (slops *) where;
+	for (n = 0; n < s->s_used; n++)
 	{
-	  --(s->s_used);
-	  s->s_b[n] = s->s_b[s->s_used];
-	  return;
+		if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
+		{
+			--(s->s_used);
+			s->s_b[n] = s->s_b[s->s_used];
+			return;
+		}
 	}
-    }
 }
 
 static void 
 set_slop (VOIDSTAR *wherep, CELLREF r, CELLREF clo, CELLREF chi)
 {
-  int n;
-  struct slops **sp;
+	int n;
+	struct slops **sp;
 
-  sp = (struct slops **) wherep;
-  if (!*sp)
-    {
-      (*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
-      (*sp)->s_alloc = 2;
-      (*sp)->s_used = 1;
-      n = 0;
-    }
-  else
-    {
-      n = (*sp)->s_used++;
-      if ((*sp)->s_alloc == n)
+	sp = (struct slops **) wherep;
+	if (!*sp)
 	{
-	  (*sp)->s_alloc = n * 2;
-	  (*sp) = (slops*) ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
+		(*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
+		(*sp)->s_alloc = 2;
+		(*sp)->s_used = 1;
+		n = 0;
 	}
-    }
-  (*sp)->s_b[n].row = r;
-  (*sp)->s_b[n].clo = clo;
-  (*sp)->s_b[n].chi = chi;
+	else
+	{
+		n = (*sp)->s_used++;
+		if ((*sp)->s_alloc == n)
+		{
+			(*sp)->s_alloc = n * 2;
+			(*sp) = (slops*) ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
+		}
+	}
+	(*sp)->s_b[n].row = r;
+	(*sp)->s_b[n].clo = clo;
+	(*sp)->s_b[n].chi = chi;
 }
 
 static void 
-change_slop (VOIDSTAR where,
-	     CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
+change_slop (VOIDSTAR where, CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
 {
-  int n;
-  struct slops *s;
+	int n;
+	struct slops *s;
 
-  s = (slops*)where;
-  for (n = 0; n < s->s_used; n++)
-    {
-      if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
+	s = (slops*)where;
+	for (n = 0; n < s->s_used; n++)
 	{
-	  s->s_b[n].clo = lo;
-	  s->s_b[n].chi = hi;
-	  return;
+		if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
+		{
+			s->s_b[n].clo = lo;
+			s->s_b[n].chi = hi;
+			return;
+		}
 	}
-    }
 }
 
 static void 
 _io_open_display (void)
 {
-  initscr ();
-  scrollok (stdscr, 0);
+	initscr ();
+	scrollok (stdscr, 0);
 #ifdef HAVE_CBREAK
-  cbreak ();
+	cbreak ();
 #else
-  crmode ();
+	crmode ();
 #endif
-  raw ();
-  noecho ();
-  nonl ();
-  /* Must be after initscr() */
-  io_init_windows (LINES, COLS, 1, 2, 1, 1, 1, 1);
-  // io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
-  info_rows = 1;
-  //print_width = columns;		/* Make ascii print width == terminal width. */
+	raw ();
+	noecho ();
+	nonl ();
+	/* Must be after initscr() */
+	io_init_windows (LINES, COLS, 1, 2, 1, 1, 1, 1);
+	// io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
+	info_rows = 1;
+	//print_width = columns;		/* Make ascii print width == terminal width. */
 
 }
 
@@ -457,13 +456,13 @@ void
 cont_curses(void)
 {
 #ifdef HAVE_CBREAK
-  cbreak ();
+	cbreak ();
 #else
-  crmode ();
+	crmode ();
 #endif
-  raw ();
-  noecho ();
-  nonl ();
+	raw ();
+	noecho ();
+	nonl ();
 }
 
 
@@ -471,14 +470,14 @@ void
 stop_curses(void)
 {
 #ifdef HAVE_CBREAK
-  nocbreak ();
+	nocbreak ();
 #else
-  nocrmode ();
+	nocrmode ();
 #endif
-  noraw ();
-  echo ();
-  nl ();
-  io_redisp ();
+	noraw ();
+	echo ();
+	nl ();
+	io_redisp ();
 }
 
 static void 
@@ -494,122 +493,122 @@ _io_inputize_cursor (void)
 static void 
 _io_redisp (void)
 {
-  if (!term_cursor_claimed)
-    {
-      _io_redraw_input ();
-      if (!(input_view.current_info || input_active ||
-	    input_view.expanded_keymap_prompt))
-	move_cursor_to (cwin, curow, cucol, 0);
-      else
-	move ((input_view.current_info ? 0 : Global->input), 
-	      input_view.prompt_wid + input_view.input_cursor -
-	      input_view.visibility_begin); 
-    }
-  {
-    struct rng * rng = &cwin->screen;
-    if (   (curow > rng->hr)
-	|| (curow < rng->lr)
-	|| (cucol > rng->hc)
-	|| (cucol < rng->lc))
-      io_recenter_cur_win ();
-  }
-  refresh ();
+	if (!term_cursor_claimed)
+	{
+		_io_redraw_input ();
+		if (!(input_view.current_info || input_active ||
+					input_view.expanded_keymap_prompt))
+			move_cursor_to (cwin, curow, cucol, 0);
+		else
+			move ((input_view.current_info ? 0 : Global->input), 
+					input_view.prompt_wid + input_view.input_cursor -
+					input_view.visibility_begin); 
+	}
+	{
+		struct rng * rng = &cwin->screen;
+		if (   (curow > rng->hr)
+				|| (curow < rng->lr)
+				|| (cucol > rng->hc)
+				|| (cucol < rng->lc))
+			io_recenter_cur_win ();
+	}
+	refresh ();
 }
 
 static void 
 _io_repaint_win (struct window *win)
 {
-  io_repaint ();
+	io_repaint ();
 }
 
 static void 
 _io_repaint (void)
 {
-  CELLREF cc, rr;
-  int n, n1;
-  CELL *cp;
-  struct window *win;
+	CELLREF cc, rr;
+	int n, n1;
+	CELL *cp;
+	struct window *win;
 
-  clear ();
-  io_fix_input ();
-  redrew++;
- 
-  // basically, this functionality just shouldn't exist
-  if(input_view.current_info)
-	 return;
+	clear ();
+	io_fix_input ();
+	redrew++;
 
-  for (win = wins; win < &wins[nwin]; win++)
-    {
-      if (win->lh_wid)
+	// basically, this functionality just shouldn't exist
+	if(input_view.current_info)
+		return;
+
+	for (win = wins; win < &wins[nwin]; win++)
 	{
-	  move (win->win_down - 1, win->win_over - win->lh_wid);
-	  printw ("#%*d ", win->lh_wid - 2, 1 + win - wins);
-	  if (win->flags & WIN_EDGE_REV)
-	    standout ();
-	  cc = win->screen.lc;
-	  do
-	    {
-	      n = get_width (cc);
-	      if (n > win->numc)
-		n = win->numc;
-	      if (n > 1)
+		if (win->lh_wid)
 		{
-		  char *ptr;
-		  char buf[30];
+			move (win->win_down - 1, win->win_over - win->lh_wid);
+			printw ("#%*d ", win->lh_wid - 2, 1 + win - wins);
+			if (win->flags & WIN_EDGE_REV)
+				standout ();
+			cc = win->screen.lc;
+			do
+			{
+				n = get_width (cc);
+				if (n > win->numc)
+					n = win->numc;
+				if (n > 1)
+				{
+					char *ptr;
+					char buf[30];
 
-		  if (Global->a0)
-		    ptr = col_to_str (cc);
-		  else
-		    {
-		      sprintf (buf, "C%u", cc);
-		      ptr = buf;
-		    }
-		  --n;
-		  n1 = strlen (ptr);
-		  if (n < n1)
-		    printw ("%.*s ", n, "###############");
-		  else
-		    {
-		      n1 = (n - n1) / 2;
-		      printw ("%*s%-*s ", n1, "", n - n1, ptr);
-		    }
+					if (Global->a0)
+						ptr = col_to_str (cc);
+					else
+					{
+						sprintf (buf, "C%u", cc);
+						ptr = buf;
+					}
+					--n;
+					n1 = strlen (ptr);
+					if (n < n1)
+						printw ("%.*s ", n, "###############");
+					else
+					{
+						n1 = (n - n1) / 2;
+						printw ("%*s%-*s ", n1, "", n - n1, ptr);
+					}
+				}
+				else if (n == 1)
+					addstr ("#");
+			}
+			while (cc++ < win->screen.hc);
+
+			rr = win->screen.lr;
+			n = win->win_down;
+			do
+			{
+				n1 = get_height (rr);
+				if (n1)
+				{
+					move (n, win->win_over - win->lh_wid);
+					if (Global->a0)
+						printw ("%-*d ", win->lh_wid - 1, rr);
+					else
+						printw ("R%-*d", win->lh_wid - 1, rr);
+					n += n1;
+				}
+			}
+			while (rr++ < win->screen.hr);
+
+			if (win->flags & WIN_EDGE_REV)
+				standend ();
 		}
-	      else if (n == 1)
-		addstr ("#");
-	    }
-	  while (cc++ < win->screen.hc);
-
-	  rr = win->screen.lr;
-	  n = win->win_down;
-	  do
-	    {
-	      n1 = get_height (rr);
-	      if (n1)
-		{
-		  move (n, win->win_over - win->lh_wid);
-		  if (Global->a0)
-		    printw ("%-*d ", win->lh_wid - 1, rr);
-		  else
-		    printw ("R%-*d", win->lh_wid - 1, rr);
-		  n += n1;
-		}
-	    }
-	  while (rr++ < win->screen.hr);
-
-	  if (win->flags & WIN_EDGE_REV)
-	    standend ();
+		flush_slops (win->win_slops);
+		find_cells_in_range (&(win->screen));
+		while ((cp = next_row_col_in_range (&rr, &cc)))
+			if (GET_TYP (cp))
+				io_pr_cell_win (win, rr, cc, cp);
 	}
-      flush_slops (win->win_slops);
-      find_cells_in_range (&(win->screen));
-      while ((cp = next_row_col_in_range (&rr, &cc)))
-	if (GET_TYP (cp))
-	  io_pr_cell_win (win, rr, cc, cp);
-    }
-  if (!(cp = find_cell (curow, cucol)) || !GET_TYP (cp))
-    io_display_cell_cursor ();
-  input_view.redraw_needed = FULL_REDRAW;
-  _io_redraw_input ();
-  io_update_status ();
+	if (!(cp = find_cell (curow, cucol)) || !GET_TYP (cp))
+		io_display_cell_cursor ();
+	input_view.redraw_needed = FULL_REDRAW;
+	_io_redraw_input ();
+	io_update_status ();
 }
 
 static void 
@@ -626,34 +625,34 @@ _io_close_display (int e)
 static int 
 _io_input_avail (void)
 {
-  return (FD_ISSET (0, &read_pending_fd_set)
-	  || FD_ISSET (0, &exception_pending_fd_set));
+	return (FD_ISSET (0, &read_pending_fd_set)
+			|| FD_ISSET (0, &exception_pending_fd_set));
 }
 
 static void 
 _curses_io_scan_for_input (int block)
 {
-  /* This function only exists because X kbd events don't generate
-   * SIGIO. Under curses, the SIGIO hander does the work of this
-   * function.
-   * Attempt to have the curses mode be somewhat responsive even in
-   * the presence of an endless loop by explicitly looking for events
-   * here.
-   */
-  struct timeval tv;
+	/* This function only exists because X kbd events don't generate
+	 * SIGIO. Under curses, the SIGIO hander does the work of this
+	 * function.
+	 * Attempt to have the curses mode be somewhat responsive even in
+	 * the presence of an endless loop by explicitly looking for events
+	 * here.
+	 */
+	struct timeval tv;
 
-  tv.tv_sec = 0;
-  tv.tv_usec = 1000;
-  block_until_excitement(&tv);
+	tv.tv_sec = 0;
+	tv.tv_usec = 1000;
+	block_until_excitement(&tv);
 }
 
 static void 
 _io_wait_for_input (void)
 {
 	// mcarter 
-  //pause ();
-  int ch = getch();
-  ungetch(ch);
+	//pause ();
+	int ch = getch();
+	ungetch(ch);
 }
 
 static int 
@@ -715,7 +714,7 @@ hit:
 static void 
 _io_nodelay (int delayp)
 {
-  panic ("Trying to curses nodelay on a system with SIGIO.");
+	panic ("Trying to curses nodelay on a system with SIGIO.");
 }
 
 #else
@@ -723,7 +722,7 @@ _io_nodelay (int delayp)
 static void 
 _io_nodelay (int delayp)
 {
-  nodelay (stdscr, delayp);
+	nodelay (stdscr, delayp);
 }
 
 #endif
@@ -759,42 +758,42 @@ static void
 _io_bell (void)
 {
 #ifndef HAVE_GETCAP
-  putchar ('\007');
+	putchar ('\007');
 #else
-  static char *vb;
-  static int called = 0;
+	static char *vb;
+	static int called = 0;
 
-  if (!called)
-    {
-      called++;
-      vb = getcap ("vb");
-    }
-  if (vb)
-    {
-      local_puts (vb);
-    }
-  else
-    {
-      local_putchar ('\007');
-    }
+	if (!called)
+	{
+		called++;
+		vb = getcap ("vb");
+	}
+	if (vb)
+	{
+		local_puts (vb);
+	}
+	else
+	{
+		local_putchar ('\007');
+	}
 #endif
 }
 
 static void
 move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 {
-  int cc;
-  int cell_cursor_col;
-  int rr;
-  int cell_cursor_row;
-  
-  cell_cursor_col = win->win_over;
-  for (cc = win->screen.lc; cc < c; cc++)
-    cell_cursor_col += get_width (cc);
-  cell_cursor_row = win->win_down + dn;
-  for (rr = win->screen.lr; rr < r; rr++)
-    cell_cursor_row += get_height (rr);
-  move (cell_cursor_row, cell_cursor_col);
+	int cc;
+	int cell_cursor_col;
+	int rr;
+	int cell_cursor_row;
+
+	cell_cursor_col = win->win_over;
+	for (cc = win->screen.lc; cc < c; cc++)
+		cell_cursor_col += get_width (cc);
+	cell_cursor_row = win->win_down + dn;
+	for (rr = win->screen.lr; rr < r; rr++)
+		cell_cursor_row += get_height (rr);
+	move (cell_cursor_row, cell_cursor_col);
 }
 
 static void
@@ -873,25 +872,25 @@ extern int auto_recalc;
 static void
 _io_clear_input_before (void)
 {
-  textout = 0;
-  if (Global->topclear == 2)
-    {
-      move (Global->input, 0);
-      clrtoeol ();
-      Global->topclear = 0;
-    }
-  move (0, 0);
+	textout = 0;
+	if (Global->topclear == 2)
+	{
+		move (Global->input, 0);
+		clrtoeol ();
+		Global->topclear = 0;
+	}
+	move (0, 0);
 }
 
 static void
 _io_clear_input_after (void)
 {
-  if (Global->topclear)
-    {
-      move (Global->input, 0);
-      clrtoeol ();
-      Global->topclear = 0;
-    }
+	if (Global->topclear)
+	{
+		move (Global->input, 0);
+		clrtoeol ();
+		Global->topclear = 0;
+	}
 }
 
 
@@ -1092,7 +1091,7 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 static void
 _io_flush (void)
 {
-  refresh ();
+	refresh ();
 }
 
 void
@@ -1110,9 +1109,9 @@ show_curses_view()
 {
 	_io_open_display();
 	//redraw_info();
-	      input_view.redraw_needed = FULL_REDRAW;
-     _io_redraw_input ();
-//_io_redisp();
+	input_view.redraw_needed = FULL_REDRAW;
+	_io_redraw_input ();
+	//_io_redisp();
 	sleep(2);
 	_io_close_display(0);
 }
@@ -1121,38 +1120,38 @@ show_curses_view()
 void
 tty_graphics (void)
 {
-  FD_SET (0, &read_fd_set);
-  FD_SET (0, &exception_fd_set);
-  io_command_loop = _io_command_loop;
-  io_open_display = _io_open_display;
-  io_redisp = _io_redisp;
-  io_repaint = _io_repaint;
-  io_repaint_win = _io_repaint_win;
-  io_close_display = _io_close_display;
-  io_input_avail = _io_input_avail;
-  io_scan_for_input = _curses_io_scan_for_input;
-  io_wait_for_input = _io_wait_for_input;
-  io_read_kbd = _io_read_kbd;
-  io_nodelay = _io_nodelay;
-  io_getch = _io_getch;
-  io_bell = _io_bell;
-  io_get_chr = _io_get_chr;
-  io_update_status = _io_update_status;
-  io_fix_input = _io_fix_input;
-  io_move_cursor = _io_move_cursor;
-  io_erase = _io_erase;
-  io_insert = _io_insert;
-  io_over = _io_over;
-  io_flush = _io_flush;
-  io_clear_input_before = _io_clear_input_before;
-  io_clear_input_after = _io_clear_input_after;
-  io_pr_cell_win = _io_pr_cell_win;
-  io_hide_cell_cursor = _io_hide_cell_cursor;
-  io_cellize_cursor = _io_cellize_cursor;
-  io_inputize_cursor = _io_inputize_cursor;
-  io_display_cell_cursor = _io_display_cell_cursor;
+	FD_SET (0, &read_fd_set);
+	FD_SET (0, &exception_fd_set);
+	io_command_loop = _io_command_loop;
+	io_open_display = _io_open_display;
+	io_redisp = _io_redisp;
+	io_repaint = _io_repaint;
+	io_repaint_win = _io_repaint_win;
+	io_close_display = _io_close_display;
+	io_input_avail = _io_input_avail;
+	io_scan_for_input = _curses_io_scan_for_input;
+	io_wait_for_input = _io_wait_for_input;
+	io_read_kbd = _io_read_kbd;
+	io_nodelay = _io_nodelay;
+	io_getch = _io_getch;
+	io_bell = _io_bell;
+	io_get_chr = _io_get_chr;
+	io_update_status = _io_update_status;
+	io_fix_input = _io_fix_input;
+	io_move_cursor = _io_move_cursor;
+	io_erase = _io_erase;
+	io_insert = _io_insert;
+	io_over = _io_over;
+	io_flush = _io_flush;
+	io_clear_input_before = _io_clear_input_before;
+	io_clear_input_after = _io_clear_input_after;
+	io_pr_cell_win = _io_pr_cell_win;
+	io_hide_cell_cursor = _io_hide_cell_cursor;
+	io_cellize_cursor = _io_cellize_cursor;
+	io_inputize_cursor = _io_inputize_cursor;
+	io_display_cell_cursor = _io_display_cell_cursor;
 
-  // added by mcarter:
-  //io_run_main_loop = _io_run_curses_main_loop;
-  io_run_main_loop = fairly_std_main_loop;
+	// added by mcarter:
+	//io_run_main_loop = _io_run_curses_main_loop;
+	io_run_main_loop = fairly_std_main_loop;
 }
