@@ -753,14 +753,11 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 void
 io_redo_region (struct rng * rng)
 {
-	CELL * cp;
-	CELLREF r, c;
-	find_cells_in_range (rng);
-	cp = next_row_col_in_range (&r, &c);
-	while (cp)
+	for(CELL* cp:get_cells_in_range(rng))
 	{
+		CELLREF r, c;
+		decoord(cp, r, c);
 		io_pr_cell (r, c, cp);
-		cp = next_row_col_in_range (&r, &c);
 	}
 }
 
