@@ -170,29 +170,31 @@ void TO_NUM(struct value* val)
 		ERROR1(NON_NUMBER);
 }
 
-#define TO_STR(val)	\
-	if((val)->type==TYP_STR)	\
-		;	\
-	else if((val)->type==TYP_INT) {	\
-		char *s;	\
-		(val)->type=TYP_STR;	\
-		s=(char*) obstack_alloc(&tmp_mem,30); \
-		sprintf(s,"%ld",(val)->Int); \
-		(val)->String=s;	\
-	} else if((val)->type==TYP_FLT) {		\
-		char *s;				\
-		s=flt_to_str((val)->Float);		\
-		(void)obstack_grow(&tmp_mem,s,strlen(s)+1); \
-		(val)->String=(char*) obstack_finish(&tmp_mem);	\
-		(val)->type=TYP_STR;			\
-	} else if((val)->type==TYP_ERR) {		\
-		ERROR1((val)->Value);	\
-	} else if((val)->type==0) {	\
-		(val)->type=TYP_STR;	\
-		(val)->String=(char*) obstack_alloc(&tmp_mem,1); \
-		(val)->String[0]='\0'; \
-	} else \
+void TO_STR(struct value* val)
+{
+	if((val)->type==TYP_STR)	
+		;	
+	else if((val)->type==TYP_INT) {	
+		char *s;	
+		(val)->type=TYP_STR;	
+		s=(char*) obstack_alloc(&tmp_mem,30); 
+		sprintf(s,"%ld",(val)->Int); 
+		(val)->String=s;	
+	} else if((val)->type==TYP_FLT) {		
+		char *s;				
+		s=flt_to_str((val)->Float);		
+		(void)obstack_grow(&tmp_mem,s,strlen(s)+1); 
+		(val)->String=(char*) obstack_finish(&tmp_mem);	
+		(val)->type=TYP_STR;			
+	} else if((val)->type==TYP_ERR) {		
+		ERROR1((val)->Value);	
+	} else if((val)->type==0) {	
+		(val)->type=TYP_STR;	
+		(val)->String=(char*) obstack_alloc(&tmp_mem,1); 
+		(val)->String[0]='\0'; 
+	} else 
 		ERROR1(NON_STRING);
+}
 
 #define TO_BOL(val)	\
 	if((val)->type==TYP_BOL)	\
