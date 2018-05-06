@@ -41,7 +41,7 @@ neoleo_SOURCES = defuns.cc \
 		 io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc io-visual.cc \
 		 key.cc \
-		 line.cc list.cc logging.cc \
+		 line.cc logging.cc \
 		 mem.cc \
 		 obstack.cc \
 		 oleofile.cc \
@@ -69,7 +69,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-visual.h \
 		 key.h \
-		 line.h list.h logging.h \
+		 line.h logging.h \
 		 mem.h \
 		 neotypes.h node.h  numeric.h \
 		 obstack.h \

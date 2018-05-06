@@ -43,7 +43,6 @@
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
-#include "list.h"
 #include "sheet.h"
 #include "logging.h"
 #include "numeric.h"
@@ -1234,8 +1233,6 @@ write_file_generic_2(FILE *fp, struct rng *rng, char *format)
 	} else if (!stricmp ("panic", format)) {
 		panic_write_file(fp, rng);
 #endif
-	} else if (!stricmp ("list", format)) {
-		list_write_file(fp, rng);
 	} else {
 		return -1;
 	}
@@ -1272,11 +1269,6 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 	} else if (stricmp ("panic", format) == 0) {
 		panic_read_file(fp, ismerge);
 #endif
-	} else if (stricmp ("list", format) == 0) {
-		list_read_file(fp, ismerge);
-	} else if (stricmp("csv", format) == 0) {
-		list_set_separator(',');
-		list_read_file(fp, ismerge);
 	} else if (stricmp("dbf", format) == 0) {
 		io_error_msg ("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
 		return -1;

@@ -17,7 +17,6 @@
 #include "io-headless.h"
 #include "io-term.h"
 #include "io-utils.h"
-#include "list.h"
 #include "logging.h"
 #include "tests.h"
 #include "utils.h"
@@ -135,8 +134,6 @@ static struct option long_options[] =
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
-	{"separator",		1,	NULL,	's'},
-	{"space",		0,	NULL,	'S'},
 	{"format",		1,	NULL,	'F'},
 	{"filter",		0,	NULL,	'-'},
 	{"tests",		optional_argument,	NULL,	'T'},
@@ -188,8 +185,6 @@ Usage: %s [OPTION]... [FILE]...\n\
   -V, --version            output version information and exit\n\
   -q, --quiet              do not display startup messages\n\
   -f, --ignore-init-file   ignore settings defined in init file\n\
-  -s x, --separator x	   set separator for 'list' file type to x\n\
-  -S, --space		   set separator for 'list' file type to a space\n\
   -T, --tests [x]          run test suite x\n\
   -F x, --format x	   set default file type to x (oleo, list, sc  ...)\n\
   --filter		   read file from stdin, write to stdout on exit\n\
@@ -238,18 +233,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 			case 'h':
 				show_usage ();
 				exit (0);
-				break;
-			case 's':
-				option_separator = argv[optind][0];
-#if 0
-				fprintf(stderr, PACKAGE " set list file separator to %c\n", option_separator);
-#endif
-				optind++;
-				list_set_separator(option_separator);
-				break;
-			case 'S':
-				option_separator = ' ';
-				list_set_separator(option_separator);
 				break;
 			case 'F':
 #if 0

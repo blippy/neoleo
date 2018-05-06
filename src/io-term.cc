@@ -65,7 +65,6 @@ using std::endl;
 #include "window.h"
 #include "funcs.h"
 #include "userpref.h"
-#include "list.h"
 
 #ifdef	HAVE_PANIC_SAVE
 #include "panic.h"
@@ -267,18 +266,6 @@ do_set_option (char *ptr)
 	  //show_file_opts = panic_show_options;
 	}
 #endif
-      else if (!stricmp ("list", ptr))
-	{
-	  read_file = list_read_file;
-	  write_file = list_write_file;
-	  set_file_opts = list_set_options;
-	  //show_file_opts = list_show_options;
-	  /*if (ptr[4])
-	    {
-	    ptr+=4;
-	    sl_sep=string_to_char(&ptr);
-	    } */
-	}
       else
 	io_error_msg ("Unknown file format %s", ptr);
       return 0;
