@@ -59,7 +59,7 @@ static char *pr_int (long, struct user_fmt *, int);
 /* Constants */
 char *bname[] =
 {
-  "#FALSE", "#TRUE"
+  CCC("#FALSE"), CCC("#TRUE")
 };
 
 char numb_oflo[] = "########################################";
@@ -148,45 +148,42 @@ char print_buf[BIGFLT + 20];
 
 /* Variables */
 
+constexpr char* DOT() { return CCC("."); }
+
 struct user_fmt dol =
-{ "dollar", "$", "($", 0, ")", "$0", ",", ".", FLOAT_PRECISION, 1};
+{ CCC("dollar"), CCC("$"), CCC("$"), 0, CCC(")"), CCC("$0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
 
 struct user_fmt cma =
-{ "comma", 0, "(", 0, ")", "0", ",", ".", FLOAT_PRECISION, 1};
+{ CCC("comma"), 0, CCC("("), 0, CCC(")"), CCC("0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
 
 struct user_fmt pct =
-#if 0
-{ "percent", 0, "-", "%", "%", "0%", 0, ".", 3, 100};
-#else
-{ "percent", 0, "-", "%", "%", "0%", 0, ".", FLOAT_PRECISION, 100};
-#endif
+{ CCC("percent"), 0, CCC("-"), CCC("%"), CCC("%"), CCC("0%"), 0, DOT(), FLOAT_PRECISION, 100};
 
-/* issue #6/TR01: zero now uses default "D", rather than "0"*/
+// issue #6/TR01: zero now uses default "D", rather than "0"
 struct user_fmt fxt =
-{ "fixed", 0, "-", 0, 0, "D", 0, ".", FLOAT_PRECISION, 1};
-
+{ CCC("fixed"), 0, CCC("-"), 0, 0, CCC("D"), 0, DOT(), FLOAT_PRECISION, 1};
 
 
 
 #define NUM_USER_FMT (16)
 struct user_fmt u[NUM_USER_FMT] =
 {
-  {"user1", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user2", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user3", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user4", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user5", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user6", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user7", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user8", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user9", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user10", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user11", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user12", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user13", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user14", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user15", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
-  {"user16", 0, "-", 0, 0, "0", 0, ".", FLOAT_PRECISION, 1},
+  {CCC("user1"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user2"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user3"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user4"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user5"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user6"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user7"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user8"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user9"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user10"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user11"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user12"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user13"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user14"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user15"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
+  {CCC("user16"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
 };
 
 
@@ -205,7 +202,7 @@ bool use_specified_zero_p(const T val, const char* fmt)
 /* deduce the zero specifier from the fmt */
 char* zero_specifier(char* fmt)
 {
-	if(!fmt) return "";
+	if(!fmt) return CCC("");
 	if(fmt[0] == 'S') fmt++; 
 	return fmt;
 }
@@ -277,7 +274,7 @@ print_cell (CELL * cp)
 	static char zeroes[] = "000000000000000";
 
 	if (!cp)
-		return "";
+		return CCC("");
 
 	j = GET_FORMAT (cp);
 
@@ -287,7 +284,7 @@ print_cell (CELL * cp)
 		p = default_prc;
 	}
 	if (j == FMT_HID || GET_TYP (cp) == 0)
-		return "";
+		return CCC("");
 
 	if (GET_TYP (cp) == TYP_STR)
 		return cp->gString();
@@ -875,7 +872,7 @@ get_usr_stats (int usr_num, char **usr_buf)
   usr_buf[5] = u[usr_num].comma ? u[usr_num].comma : NullStr;
   usr_buf[6] = u[usr_num].decpt ? u[usr_num].decpt : NullStr;
   if (u[usr_num].prec == 15)
-    usr_buf[7] = "float";
+    usr_buf[7] = CCC("float");
   else
     {
       sprintf (buf1, "%u", u[usr_num].prec);
@@ -1096,15 +1093,16 @@ clear_spreadsheet (void)
 	default_lock = LCK_UNL;
 }
 
-char *ename[] =
+
+char *ename[] = 
 {
-  "#WHAT?",
-  "#ERROR", "#BAD_INPUT", "#NON_NUMBER", "#NON_STRING",
-  "#NON_BOOL", "#NON_RANGE", "#OUT_OF_RANGE", "#NO_VALUES",
-  "#DIV_BY_ZERO", "#BAD_NAME", "#NOT_AVAIL", "#PARSE_ERROR",
-  "#NEED_OPEN", "#NEED_CLOSE", "#NEED_QUOTE", "#UNK_CHAR",
-  "#UNK_FUNC",
-  0
+	CCC("#WHAT?"),
+	CCC("#ERROR"), CCC("#BAD_INPUT"), CCC("#NON_NUMBER"), CCC("#NON_STRING"),
+	CCC("#NON_BOOL"), CCC("#NON_RANGE"), CCC("#OUT_OF_RANGE"), CCC("#NO_VALUES"),
+	CCC("#DIV_BY_ZERO"), CCC("#BAD_NAME"), CCC("#NOT_AVAIL"), CCC("#PARSE_ERROR"),
+	CCC("#NEED_OPEN"), CCC("#NEED_CLOSE"), CCC("#NEED_QUOTE"), CCC("#UNK_CHAR"),
+	CCC("#UNK_FUNC"),
+	CCC(0)
 };
 
 char tname[] = "#TRUE";
@@ -1187,7 +1185,7 @@ prompt_len (char *prompt)
 int
 says_default (char *str)
 {
-  char *key = "ault";
+  char *key = CCC("ault");
   if (strincmp (str, "def", 3))
     return 0;
   str += 3;

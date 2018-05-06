@@ -30,6 +30,13 @@
 #define VOIDSTAR void*
 #endif
 
+/* mcarter 06-May-2018
+ * Ugly hack to stop:
+ * warning: ISO C++ forbids converting a string constant to ¿char*¿ [-Wwrite-strings]
+ */
+constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
+
+
 /*
  * All kinds of other global stuff
  */
