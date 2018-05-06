@@ -107,25 +107,27 @@ int overflow;
 	}
 
 #define ERROR1(cause) { throw cause;}
-#define TO_FLT(val)	\
-	if((val)->type==TYP_FLT) \
-		; \
-	else if((val)->type==TYP_INT) { \
-		(val)->type=TYP_FLT; \
-		(val)->Float=(double)(val)->Int; \
-	} else if((val)->type==TYP_STR) { \
-		(val)->type=TYP_FLT; \
-		strptr=(val)->String; \
-		(val)->Float=astof(&strptr); \
-		if(*strptr) \
-			ERROR1(NON_NUMBER); \
-	} else if((val)->type==TYP_ERR) {\
-		ERROR1((val)->Value); \
-	} else if((val)->type==0) { \
-		(val)->type=TYP_FLT; \
-		(val)->Float=0.0; \
-	} else \
+void TO_FLT(struct value* val)
+{	
+	if((val)->type==TYP_FLT) 
+		; 
+	else if((val)->type==TYP_INT) { 
+		(val)->type=TYP_FLT; 
+		(val)->Float=(double)(val)->Int; 
+	} else if((val)->type==TYP_STR) { 
+		(val)->type=TYP_FLT; 
+		char* strptr=(val)->String; 
+		(val)->Float=astof(&strptr); 
+		if(*strptr) 
+			ERROR1(NON_NUMBER); 
+	} else if((val)->type==TYP_ERR) {
+		ERROR1((val)->Value); 
+	} else if((val)->type==0) { 
+		(val)->type=TYP_FLT; 
+		(val)->Float=0.0; 
+	} else 
 		ERROR1(NON_NUMBER);
+}
 
 void  TO_INT(struct value* val)	
 {	
