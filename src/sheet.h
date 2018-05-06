@@ -30,6 +30,7 @@ typedef std::map<coord_t, cell_t*> cellmap_t;
 
 typedef std::deque<cell_t*> celldeq_t;
 
+void decoord(CELL* cp, CELLREF& r, CELLREF& c);
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
 struct cell* find_or_make_cell(CELLREF row, CELLREF col);

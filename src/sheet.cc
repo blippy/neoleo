@@ -45,6 +45,14 @@ int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
 
+void decoord(CELL* cp, CELLREF& r, CELLREF& c)
+{
+	coord_t coord = cp->coord;
+	r = get_row(coord);
+	c = get_col(coord);
+
+}
+
 cellmap_t the_cells;
 
 

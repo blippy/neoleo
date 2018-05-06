@@ -599,10 +599,13 @@ _io_repaint (void)
 				standend ();
 		}
 		flush_slops (win->win_slops);
-		find_cells_in_range (&(win->screen));
-		while ((cp = next_row_col_in_range (&rr, &cc)))
+		//find_cells_in_range (&(win->screen));
+		//while ((cp = next_row_col_in_range (&rr, &cc)))
+		for(CELL* cp: get_cells_in_range(&(win->screen))) {
+			decoord(cp, rr, cc);
 			if (GET_TYP (cp))
-				io_pr_cell_win (win, rr, cc, cp);
+				io_pr_cell_win(win, rr, cc, cp);
+		}
 	}
 	if (!(cp = find_cell (curow, cucol)) || !GET_TYP (cp))
 		io_display_cell_cursor ();
