@@ -21,17 +21,8 @@
 
 #include <stdlib.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include <string.h>
 
-//#include "proto.h"
 #include "init.h"
 #include "global.h"
 #include "io-term.h"
@@ -158,11 +149,8 @@ static char *init_cmds[] =
   "name-macro-string right-cell-and-edit \\",
   "{exit-minibuffer}{right-cell}{edit-cell}",
   "",
-  //"create-keymap edit-ansi generic-ansi",
   "create-keymap edit-ansi universal",
   "bind-key edit-ansi delete-char 3",
-  //"bind-key edit-ansi up-cell-and-edit A",
-  //"bind-key edit-ansi down-cell-and-edit B",
   "bind-key edit-ansi forward-char C",
   "bind-key edit-ansi backward-char D",
   "bind-key edit-ansi end-of-line F",
@@ -170,10 +158,6 @@ static char *init_cmds[] =
   "",
   "create-keymap meta-edit-ansi universal",
   "bind-key edit-ansi meta-edit-ansi ^[",
-  //"bind-key meta-edit-ansi up-cell-and-edit A",
-  //"bind-key meta-edit-ansi down-cell-and-edit B",
-  //"bind-key meta-edit-ansi right-cell-and-edit C",
-  //"bind-key meta-edit-ansi left-cell-and-edit D",
   "",
   "bind-key trolx goto-cell j",
   "bind-key meta goto-region j",
@@ -184,7 +168,6 @@ static char *init_cmds[] =
   "",
   "# Scrolling commands.",
   "bind-key meta scroll-up v",
-  //"bind-key main scroll-down ^V", // mcarter issue19 remove this as a default binding
   "bind-key trolx scroll-right >",
   "bind-key trolx scroll-left <",
   "",
@@ -222,7 +205,6 @@ static char *init_cmds[] =
   "",
   "bind-key meta copy-region c",
   "bind-key meta copy-values-in-region ^c",
-  //"bind-key meta move-region m",
   "bind-key main insert-row ^o",
   "bind-key meta insert-col o",
   "bind-key main delete-row ^k",
@@ -294,10 +276,6 @@ static char *init_cmds[] =
   "create-keymap trolx-read-string generic-trolx",
   "",
   "bind-key read-string exit-minibuffer \\015", // return key
-  //"bind-set read-string self-insert-command \\ -~",
-  //"bind-set read-string self-insert-command ¡-ÿ",
-  //"unbind-key meta-read-string A",
-  //"UnBind-key meta-read-string B",
   "bind-key read-string meta-read-string ^[",
   "bind-set read-string self-insert-command \\ -~",
   "bind-set read-string self-insert-command ¡-ÿ",
@@ -405,39 +383,33 @@ static char *init_cmds[] =
   "",
   "bind-key set-cell-attr	set-cell-alignment	a",
   "bind-key set-cell-attr	set-cell-format		f",
-  //"bind-key set-cell-attr	set-cell-font		o",
   "bind-key set-cell-attr	set-cell-protection	p",
   "bind-key set-cell-attr	set-cell-height		h",
   "bind-key set-cell-attr	set-cell-width		w",
   "bind-key set-cell-attr	set-cell-alignment	A",
   "bind-key set-cell-attr	set-cell-format		F",
-  //"bind-key set-cell-attr	set-cell-font		O",
   "bind-key set-cell-attr	set-cell-protection	P",
   "bind-key set-cell-attr	set-cell-height		H",
   "bind-key set-cell-attr	set-cell-width		W",
   "",
   "bind-key set-region-attr	set-region-alignment		a",
   "bind-key set-region-attr	set-region-format		f",
-  //"bind-key set-region-attr	set-region-font			o",
   "bind-key set-region-attr	set-region-protection		p",
   "bind-key set-region-attr	set-region-height		h",
   "bind-key set-region-attr	set-region-width		w",
   "bind-key set-region-attr	set-region-alignment		A",
   "bind-key set-region-attr	set-region-format		F",
-  //"bind-key set-region-attr	set-region-font			O",
   "bind-key set-region-attr	set-region-protection		P",
   "bind-key set-region-attr	set-region-height		H",
   "bind-key set-region-attr	set-region-width		W",
   "",
   "bind-key set-default-attr	set-default-alignment		a",
   "bind-key set-default-attr	set-default-format		f",
-  //"bind-key set-default-attr	set-default-font		o",
   "bind-key set-default-attr	set-default-protection		p",
   "bind-key set-default-attr	set-default-height		h",
   "bind-key set-default-attr	set-default-width		w",
   "bind-key set-default-attr	set-default-alignment		A",
   "bind-key set-default-attr	set-default-format		F",
-  //"bind-key set-default-attr	set-default-font		O",
   "bind-key set-default-attr	set-default-protection		P",
   "bind-key set-default-attr	set-default-height		H",
   "bind-key set-default-attr	set-default-width		W",
