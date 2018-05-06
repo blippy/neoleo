@@ -180,7 +180,6 @@ static char *init_cmds[] =
   "",
   "bind-key main beginning-of-row ^a",
   "bind-key meta beginning-of-col ^a",
-  "bind-key meta end-of-col ^e",
   "",
   "# Macros",
   "bind-key generic-trolx start-entering-macro (",

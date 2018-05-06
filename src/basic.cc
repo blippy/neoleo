@@ -571,55 +571,7 @@ exchange_point_and_mark (int clrmk)
 }
 
 
-static CELLREF
-first_filled_row (CELLREF col)
-{
-  struct rng rng;
-  CELLREF r;
-  CELLREF c;
-  CELL * cp;
-  rng.lr = MIN_ROW;
-  rng.hr = MAX_ROW;
-  rng.lc = col;
-  rng.hc = col;
-  find_cells_in_range (&rng);
-  while (1)
-    {
-      cp = next_row_col_in_range (&r, &c);
-      if (!cp)
-	break;
-      if (GET_TYP(cp))
-	{
-	  no_more_cells ();
-	  return r;
-	}
-    }
-  return NON_ROW;
-}
 
-static CELLREF
-last_filled_row (CELLREF col)
-{
-  struct rng rng;
-  CELLREF r;
-  CELLREF c;
-  CELLREF bestr = MIN_ROW;
-  CELL * cp;
-  rng.lr = MIN_ROW;
-  rng.hr = MAX_ROW;
-  rng.lc = col;
-  rng.hc = col;
-  find_cells_in_range (&rng);
-  while (1)
-    {
-      cp = next_row_col_in_range (&r, &c);
-      if (!cp)
-	break;
-      if (GET_TYP(cp))
-	bestr = r;
-    }
-  return bestr;
-}
 static void 
 mk_for_extreme (struct rng * rng)
 {
@@ -898,18 +850,6 @@ beginning_of_col (int count)
   rng.hc = mkcol;
   goto_region (&rng);
 }
-
-void
-end_of_col (int count)
-{
-  struct rng rng;
-  rng.lc = extreme_cmd_orth_motion (count, cucol);
-  rng.lr = last_filled_row (rng.lc);
-  rng.hr = mkrow;
-  rng.hc = mkcol;
-  goto_region (&rng);
-}
-
 
 static void
 skip_empties (CELLREF * rout, CELLREF * cout, int magic)

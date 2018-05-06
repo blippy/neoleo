@@ -229,12 +229,6 @@ DEFUN ("beginning-of-col",
 "p",
 #endif
 
-
-DEFUN ("end-of-col", FDend_of_col, FAend_of_col, to_vptr(end_of_col))
-#ifdef FUNC_ARG_STRINGS
-"p",
-#endif
-
 DEFUN_3 ("recenter-window", FDrecenter_window, to_vptr(recenter_window))
 
 DEFUN_3 ("redraw-screen", FDredraw_screen, to_vptr(redraw_screen))
