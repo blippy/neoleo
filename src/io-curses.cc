@@ -599,8 +599,6 @@ _io_repaint (void)
 				standend ();
 		}
 		flush_slops (win->win_slops);
-		//find_cells_in_range (&(win->screen));
-		//while ((cp = next_row_col_in_range (&rr, &cc)))
 		for(CELL* cp: get_cells_in_range(&(win->screen))) {
 			decoord(cp, rr, cc);
 			if (GET_TYP (cp))
@@ -652,8 +650,6 @@ _curses_io_scan_for_input (int block)
 static void 
 _io_wait_for_input (void)
 {
-	// mcarter 
-	//pause ();
 	int ch = getch();
 	ungetch(ch);
 }

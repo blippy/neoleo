@@ -723,8 +723,6 @@ void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 void write_cells(FILE* fp)
 {
 	CELLREF crow = 0, ccol = 0;
-	//find_cells_in_range (&all_rng);
-	//while (CELL* cp = next_row_col_in_range (&r, &c))
 	for(CELL* cp: get_cells_in_range(&all_rng))
 	{
 		coord_t coord = cp->coord;

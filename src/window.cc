@@ -753,15 +753,15 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 void
 io_redo_region (struct rng * rng)
 {
-  CELL * cp;
-  CELLREF r, c;
-  find_cells_in_range (rng);
-  cp = next_row_col_in_range (&r, &c);
-  while (cp)
-    {
-      io_pr_cell (r, c, cp);
-      cp = next_row_col_in_range (&r, &c);
-    }
+	CELL * cp;
+	CELLREF r, c;
+	find_cells_in_range (rng);
+	cp = next_row_col_in_range (&r, &c);
+	while (cp)
+	{
+		io_pr_cell (r, c, cp);
+		cp = next_row_col_in_range (&r, &c);
+	}
 }
 
 /* Create a new window by splitting the current one. */

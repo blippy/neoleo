@@ -67,7 +67,6 @@ npv ( struct rng *rng, num_t rate, num_t *putres)
 	CELL *cell_ptr;
 	char *strptr;
 
-	//find_cells_in_range (rng);
 	for(auto cell_ptr: get_cells_in_range(rng)) {
 		switch (GET_TYP (cell_ptr))
 		{
@@ -249,115 +248,6 @@ do_irr (struct value *p)
   p->type = TYP_FLT;
 }
 
-/*
- * Financial management rate of return.  Many advanteges over simple
- * IRR:  single-valued solution, accounts for re-investment and sources
- * of extra outlays.
- *
- * Args: range, safe rate, reinvestment rate, reinvestment minimum
- */
-
-#if 0
-static void
-do_fmrr(struct value *p)
-{
-    struct rng rng1 = p->gRng();
-    struct rng* rng = &rng1;
-    double safe_rate = p[1].gFlt();
-    double reinv_rate = p[2].gFlt();
-    double reinv_min = p[3].gFlt();
-    double *v;
-    int i, j, num;
-    CELL *cell;
-
-    /* count them */
-    find_cells_in_range(rng);
-    for (num=0; next_cell_in_range(); num++) ;
-    v = (double *) ck_malloc(num * sizeof(double));
-    /* now fill */
-    find_cells_in_range(rng);
-    for (num=0; (cell = next_cell_in_range()); num++) {
-      switch (GET_TYP(cell)) {
-        case 0:
-	  v[num] = 0.;
-	  break;
-	case TYP_FLT:
-	  v[num] = cell->gFlt();
-	  break;
-	case TYP_INT:
-	  v[num] = (double) cell->gInt();
-	  break;
-	case TYP_STR: {
-	  char *cp = cell->gString();
-	  v[num] = astof(&cp);
-	  if (!*cp)
-	    break;
-	  /* fall through */
-	}
-	default:
-	case TYP_BOL:
-	  //p->type = TYP_ERR;
-	  //p->Value = NON_NUMBER;
-	  p->sErr(NON_NUMBER);
-	  goto out;
-	case TYP_ERR:
-	  //p->type = TYP_ERR;
-	  p->sErr(cell->gErr());
-	  goto out;
-      }
-    }
-#if 0
-    /* debug */
-    fprintf(stderr, "init\n\r");
-    for (i=0; i<num; i++)
-	fprintf(stderr, "%d: %f\n\r", i, v[i]);
-#endif
-    /* pull back negative values to most recent positive at safe rate */
-    for (i=num-1; i>0; i--)
-	while (v[i] < 0.) {
-	    for (j=i-1; j>0; j--)
-		if (v[j] > 0.) {
-		    double amt = -v[i];
-		    if (amt > v[j])
-			amt = v[j];
-		    v[i] += amt;
-		    amt /= pow(1. + safe_rate, (double)(i-j));
-		    v[j] -= amt;
-		    break;
-		}
-	    if (j == 0) {  /* leftover falls into initial investment */
-		v[0] -= -v[i] / pow(1. + safe_rate, (double)i);
-		v[i] = 0.;
-	    }
-	}
-#if 0
-    /* debug */
-    fprintf(stderr, "bwd\n\r");
-    for (i=0; i<num; i++)
-	fprintf(stderr, "%d: %f\n\r", i, v[i]);
-#endif
-    /* push forward accumulations at reinvestment rate, as long as over min */
-    for (i=1; i<num-1; i++)
-	if (v[i]) {
-	    if (v[i] >= reinv_min) {
-		v[num-1] += v[i] * pow(1. + reinv_rate, (double)(num-1-i));
-		v[i] = 0.;
-	    } else
-		v[i+1] += v[i] * (1. + safe_rate);
-	}
-#if 0
-    /* debug */
-    fprintf(stderr, "fwd\n\r");
-    for (i=0; i<num; i++)
-	fprintf(stderr, "%d: %f\n\r", i, v[i]);
-#endif
-    /* now only v[0] and v[num-1] are nonzero, what is rate to connect them? */
-    p->type = TYP_FLT;
-    p->sFlt(pow(v[num-1] / -v[0], 1./(double)(num-1)) - 1.0);
-  out:
-    ck_free(v);
-}
-#endif
 
 static void
 do_fv ( struct value *p)
@@ -711,20 +601,6 @@ do_sum(struct value* p)
 				break;
 		}
 	}
-	/*
-	find_cells_in_range (rng);
-	for(int i = 0; cell_ptr = next_cell_in_range (); i++) {
-		switch(GET_TYP(cell_ptr)) {
-			case TYP_INT:
-				res += cell_ptr->gInt();
-				break;
-			case TYP_FLT:
-				res += cell_ptr->gFlt();
-				break;
-		}
-	}
-	*/
-
 	p->sFlt(res);
 }
 
