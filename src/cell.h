@@ -119,6 +119,7 @@ class cell : public value
 		 */
 		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
 		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
+		value get_value() { value v; v.set_type(get_type()); v.x = x; return v; }
 };
 
 bool vacuous(cell* cp);

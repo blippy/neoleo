@@ -1360,3 +1360,32 @@ void OleoUserPrefEncoding(char *s)
 	for (; *p && isspace(*p); p++) ;
 	OleoSetEncoding(p);
 }
+
+std::string stringify_value_file_style(value* val)
+{
+	std::stringstream ss;
+	switch(val->get_type()) {
+		case TYP_NUL:
+			ss << "";
+			break;
+		case TYP_STR:
+			ss <<  '"' <<  val->gString() << '"';
+			break;
+		case TYP_FLT:
+			ss << flt_to_str(val->gFlt());
+			break;
+		case TYP_INT:
+			ss << val->gInt();
+			break;
+		case TYP_BOL:
+			ss << bname[val->gBol()];
+			break;
+		case TYP_ERR:
+			ss << ename[val->gErr()];
+			break;
+		default:
+			assert(false);
+	}
+	return ss.str();
+
+}
