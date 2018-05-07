@@ -69,6 +69,7 @@ int get_row(CELL* cp)
 void decoord(CELL* cp, CELLREF& r, CELLREF& c)
 {
 	coord_t coord = cp->coord;
+	assert(coord);
 	r = get_row(coord);
 	c = get_col(coord);
 
@@ -83,18 +84,38 @@ void flush_cols()
 {
 }
 
+
+int binary_cell_search(int l, int r, coord_t target)
+{
+	if(r >= l) {
+		int mid = l + (r - l)/2;
+		if(the_cells[mid]->coord == target)
+			return mid;
+		if(the_cells[mid]->coord > target)
+			return binary_cell_search(l, mid-1, target);
+		return binary_cell_search(mid+1, r, target);
+	}
+	return -1;
+}	
+
 /* mcarter 07-May-2018
  * Implementation of find_cell() assumes the cells are sorted
  * as std::lower_bound() likely performs a binary search
  */
 cell_t* find_cell (coord_t coord)
 {
-	static auto cmp = [](CELL* a, const coord_t coord) { return a->coord < coord; };
-	auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord, cmp);
-	if(it == the_cells.end())
+	//static auto cmp = [](CELL* a, const coord_t coord) { return a->coord < coord; };
+	//auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord, cmp);
+	//auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord);
+	//auto it = std::binary_search(the_cells.begin(), the_cells.end(), coord);
+	int idx = binary_cell_search(0, the_cells.size() -1, coord);
+	if(idx == -1)
 		return nullptr;
-	//cout << "Found something" << endl;
-	return *it;
+	//if(it == the_cells.end())
+	//	return nullptr;
+	//cout << "Found something:coord:r" << get_row(coord) << ":" << get_col(coord) << endl;
+	//return *it;
+	return the_cells[idx];
 
 	/*
 	auto it = the_cells.find(coord);
