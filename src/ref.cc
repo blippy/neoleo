@@ -746,21 +746,25 @@ flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 	/* This is horribly inefficient:  Simply referencing a cell makes
 	   it appear.  On the other hand, there is no other easy way to deal
 	   with the references to the cells (That I know of, anyway) */
-	find_cells_in_range (rng);
+	//find_cells_in_range (rng);
+	celldeq_t cells_in_range = get_cells_in_range(rng);
 	/* Be efficient:  If cells in the range currently have the same
 	   references, they'll have the same references afterward, so just
 	   adjust the refcounts */
 	nonref.refs_refcnt = 1;
-	other_cell = next_cell_in_range ();
+	//other_cell = next_cell_in_range ();
+	other_cell = cells_in_range.front();
 	if (!other_cell)
 		return;
+	cells_in_range.pop_front();
 	oldref = other_cell->cell_refs_from;
 	if (oldref && oldref->refs_refcnt == 1)
 		oldref = &nonref;
 
 	flush_ref_fm (&(other_cell->cell_refs_from), rr, cc);
 	newref = other_cell->cell_refs_from;
-	while ((other_cell = next_cell_in_range ()))
+	//while ((other_cell = next_cell_in_range ()))
+	for(CELL* other_cell:cells_in_range)
 	{
 		if (other_cell->cell_refs_from == oldref)
 		{

@@ -139,12 +139,6 @@ void delete_all_cells()
 exit_c exit_cells(delete_all_cells);
 
 
-/*
-bool run_alt_cells_tests()
-{ 
-	return true; 
-}
-*/
 
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
@@ -160,35 +154,4 @@ celldeq_t get_cells_in_range(struct rng *r)
 	return res;
 	
 }
-static std::deque<coord_t> m_cell_find_dq;
-
-void find_cells_in_range (struct rng *r)
-{
-	log_debug_1("find_cells_in_range");
-	for(auto const& a_cell: the_cells) {
-		coord_t coord = a_cell.first;
-		if(inside(get_row(coord), get_col(coord), r))
-			m_cell_find_dq.push_back(coord);
-	}
-}
-
-cell* next_row_col_in_range (CELLREF *rowp, CELLREF *colp)
-{
-	log_debug_1("next_row_col_in_range:called");
-	if(m_cell_find_dq.empty()) return nullptr;
-	coord_t coord = m_cell_find_dq.front();
-	m_cell_find_dq.pop_front();
-	*rowp = get_row(coord);
-	*colp = get_col(coord);
-	// not especially efficient, as we could use m_cell_find_dq to store the cell, too
-	auto ptr = find_cell(coord);
-	return ptr;
-}
-cell* next_cell_in_range ()
-{
-	log_debug_1("next_cell_in_range:called");
-	CELLREF r, c; // simply discarded
-	return next_row_col_in_range(&r, &c);
-}
-
 
