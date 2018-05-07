@@ -18,7 +18,6 @@
 
 #include <ctype.h>
 #include <cmath>
-//#include <limits>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -718,6 +717,8 @@ void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 	}
 }
 
+
+
 void write_cells(FILE* fp)
 {
 	CELLREF crow = 0, ccol = 0;
@@ -767,37 +768,12 @@ void write_cells(FILE* fp)
 			(void) fprintf (fp, "E%s;", formula.c_str());
 		}
 
-		switch (GET_TYP (cp)) {
-			case 0:
-				ptr = 0;
-				break;
-			case TYP_STR:
-				ptr = 0;
-				//if (cp->get_cell_formula()) putc (';', fp);
-				(void) fprintf (fp, "K\"%s\"", cp->gString());
-				break;
-			case TYP_FLT:
-				ptr = flt_to_str (cp->gFlt());
-				break;
-			case TYP_INT:
-				sprintf (p_buf, "%ld", (long int) cp->gInt());
-				ptr = p_buf;
-				break;
-			case TYP_BOL:
-				ptr = bname[cp->gBol()];
-				break;
-			case TYP_ERR:
-				ptr = ename[cp->gErr()];
-				break;
-			default:
-				ptr = 0;
-		}
+		value val = cp->get_value();
+		std::string strval = stringify_value_file_style(&val);
+		//std::string strval = stringify_value_file_style(cp->value::value);
+		if(GET_TYP(cp) != TYP_NUL)
+			fprintf(fp, "K%s", strval.c_str());
 
-		if (ptr)
-		{
-			//if (cp->get_cell_formula()) putc (';', fp);
-			(void) fprintf (fp, "K%s", ptr);
-		}
 		if (GET_LCK (cp) == LCK_LCK)
 			(void) fprintf (fp, ";P");
 
