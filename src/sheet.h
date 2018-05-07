@@ -26,7 +26,7 @@
 #include "cell.h"
 #include "neotypes.h"
 
-typedef std::map<coord_t, cell_t*> cellmap_t;
+//typedef std::map<coord_t, cell_t*> cellmap_t;
 
 typedef std::deque<cell_t*> celldeq_t;
 
@@ -45,8 +45,11 @@ void no_more_cells();
 coord_t to_coord(coord_t row, coord_t col);
 int get_col(coord_t coord);
 int get_row(coord_t coord);
+int get_col(CELL* cp);
+int get_row(CELL* cp);
 CELLREF max_row();
 CELLREF max_col();
 CELLREF highest_row();
 CELLREF highest_col();
 
+void dump_sheet();

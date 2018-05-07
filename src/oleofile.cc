@@ -725,7 +725,9 @@ void write_cells(FILE* fp)
 	{
 		coord_t coord = cp->coord;
 		CELLREF r = get_row(coord);
+		assert(r>0);
 		CELLREF c = get_col(coord);
+		assert(c>0);
 
 		char *ptr;
 		int f1, j1;

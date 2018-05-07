@@ -126,6 +126,17 @@ cell::~cell()
 	//cout <<"X";
 }
 
+/*
+CELLREF get_row()
+{
+	return coord.get_row();
+}
+
+CELLREF get_col()
+{
+	return coord.get_col();
+}
+*/
 
 bool 
 vacuous(cell* cp)

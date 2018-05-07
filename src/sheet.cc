@@ -13,6 +13,8 @@
 #include <map>
 #include <tuple>
 #include <utility>
+#include <vector>
+
 
 
 #include "neotypes.h"
@@ -25,6 +27,9 @@ using std::cout;
 using std::endl;
 using std::map;
 using std::string;
+
+//typedef std::map<coord_t, cell_t*> cellmap_t;
+typedef std::vector<cell_t*> cellmap_t;
 
 static void log_debug_1(std::string msg)
 {
@@ -44,6 +49,21 @@ coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
+int get_col(CELL* cp) 
+{ 
+	//coord_t coord; 
+	CELLREF r,c;
+	decoord(cp, r, c); 
+	return c;
+}
+int get_row(CELL* cp)
+{ 
+	//coord_t coord; 
+	CELLREF r,c;
+	decoord(cp, r, c); 
+	return r;
+}
+
 
 void decoord(CELL* cp, CELLREF& r, CELLREF& c)
 {
@@ -62,8 +82,20 @@ void flush_cols()
 {
 }
 
+/* mcarter 07-May-2018
+ * Implementation of find_cell() assumes the cells are sorted
+ * as std::lower_bound() likely performs a binary search
+ */
 cell_t* find_cell (coord_t coord)
 {
+	static auto cmp = [](CELL* a, const coord_t coord) { return a->coord < coord; };
+	auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord, cmp);
+	if(it == the_cells.end())
+		return nullptr;
+	//cout << "Found something" << endl;
+	return *it;
+
+	/*
 	auto it = the_cells.find(coord);
 	if(it == the_cells.end())
 		return nullptr;
@@ -71,6 +103,7 @@ cell_t* find_cell (coord_t coord)
 	CELL* cp = it->second;
 	assert(cp->coord == coord); // Had you moved/copied a cell without updating its coords?
 	return cp;
+	*/
 }
 cell_t* find_cell (CELLREF r, CELLREF c) { return find_cell(to_coord(r, c)); }
 
@@ -79,7 +112,15 @@ cell_t* find_or_make_cell (coord_t coord)
 	cell_t* ptr = find_cell(coord);
 	if(ptr) return ptr;	
 	ptr = new cell_t(coord);
-	the_cells[coord] = ptr;
+
+	/* mcarter 07-May-2018
+	 * It would be more efficient to use std::lower_bound() to find the appropriate
+	 * insertion point, rather than just adding it on the back and calling sort()
+	 */
+	the_cells.push_back(ptr);
+	static auto compare_cell = [](CELL* a, CELL* b) { return a->coord < b->coord; };
+	std::sort(the_cells.begin(), the_cells.end(), compare_cell);
+
 	return ptr;
 }
 cell_t* find_or_make_cell (CELLREF row, CELLREF col) { return find_or_make_cell(to_coord(row, col)); }
@@ -89,9 +130,9 @@ void init_cells ()
 {
 }
 
-bool inside(int val, int lo, int hi) { return (lo <= val) && (val <= hi) ; }
+bool inside(int val, int lo, int hi) { return (lo <= val) && (val <= hi) ; } //definition
 
-bool inside(int r, int c, struct rng *a_rng) 
+bool inside(int r, int c, struct rng *a_rng) //definition 
 { 
 	return inside(r, a_rng->lr, a_rng->hr) && inside(c, a_rng->lc,a_rng->hc);
 }
@@ -110,16 +151,25 @@ void no_more_cells ()
 CELLREF max_row()
 {
 	int hi = 1;
-	for(auto const& c : the_cells)
-		hi = std::max(hi, get_row(c.first));
+	//for(auto const& c : the_cells)
+	//	hi = std::max(hi, get_row(c.first));
+	for(CELL* cp : the_cells) {
+		int n = get_row(cp->coord);
+		hi = std::max(hi, n);
+		//hi = std::max(hi, cp->get_col());
+	}
 	return hi;
-	//return std::reduce(the_cells.begin(), the_cells.end(), 1, std::max);
 }
 CELLREF max_col()
 {
+	//CELLREF hi = std::reduce(the_cells.begin(), the_cells.end(), , 1);
 	int hi = 1;
-	for(auto const& c : the_cells)
-		hi = std::max(hi, get_col(c.first));
+	for(CELL* cp : the_cells) {
+		int n = get_col(cp->coord);
+		hi = std::max(hi, n);
+		//hi = std::max(hi, cp->get_col());
+	}
+
 	return hi;
 }
 
@@ -129,27 +179,45 @@ CELLREF highest_col() { return max_col(); }
 
 void delete_all_cells()
 {
-	for(auto& [k, v] : the_cells)
-		delete v;
+	for(auto c:the_cells)
+		delete c;
 	the_cells.clear();
 
 }
 
 
+bool inside(CELL* cp, range_t* a_rng)
+{
+	CELLREF r, c;
+	decoord(cp, r, c);
+	return inside(r, c, a_rng); 
+}
+
 exit_c exit_cells(delete_all_cells);
 
 
+void dump_sheet()
+{
+	cout << "--- dump_sheet:begin ---\n";
+	for(CELL* cp:the_cells) {
+		cout << "Row: " << get_row(cp) << "\n";
+		cout << "Col: " << get_col(cp) << "\n";
+		cout << "Val: " << TO_STR() << "\n";
+		cout << "\n";
+	}
+	cout << "--- dump_sheet:end ---\n";
+}
 
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
-celldeq_t get_cells_in_range(struct rng *r)
+celldeq_t get_cells_in_range(struct rng *a_rng) // definition
 {
 	celldeq_t res;
 	for(auto const& a_cell: the_cells) {
-		coord_t coord = a_cell.first;
-		if(inside(get_row(coord), get_col(coord), r))
-			res.push_back(a_cell.second);
+		//coord_t coord = a_cell.first;
+		if(inside(a_cell, a_rng))
+			res.push_back(a_cell);
 	}
 	return res;
 	
