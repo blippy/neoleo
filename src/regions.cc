@@ -19,6 +19,7 @@
  */
 
 
+#include <functional>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -63,29 +64,24 @@ set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 void
 delete_region (struct rng *where)
 {
-	CELLREF rr, cc;
-	CELL *pp;
-
 	Global->modified = 1;
-
-	find_cells_in_range (where);
-	while ((pp = next_row_col_in_range (&rr, &cc)))
+	for(CELL* pp:get_cells_in_range(where))
 	{
+		CELLREF r, c;
+		decoord(pp, r, c);
 		if (!pp->get_cell_formula() && !GET_TYP (pp))
 		{
 			bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-			//pp->cell_font = 0;
 			continue;
 		}
-		cur_row = rr;
-		cur_col = cc;
+		cur_row = r;
+		cur_col = c;
 		my_cell = pp;
 		flush_old_value ();
 		pp->set_cell_formula(0);
 		bzero(&(pp->cell_flags), sizeof(pp->cell_flags));
-		//pp->cell_font = 0;
 		push_refs (pp->cell_refs_from);
-		io_pr_cell (rr, cc, pp);
+		io_pr_cell(r, c, pp);
 	}
 	my_cell = 0;
 }
@@ -94,47 +90,49 @@ delete_region (struct rng *where)
 void
 lock_region (struct rng *where, int locked)
 {
-	CELL *cp;
-
 	Global->modified = 1;
 	make_cells_in_range (where);
-	while ((cp = next_cell_in_range ()))
+	for(CELL* cp:get_cells_in_range(where))
 		SET_LCK (cp, locked);
 }
 
+void change_region(struct rng* a_rng, std::function<void(CELL*)> fn)
+{
+
+	Global->modified = 1;
+	make_cells_in_range (a_rng);
+	for(CELL* cp:get_cells_in_range(a_rng))
+	{
+		CELLREF r, c;
+		decoord(cp, r, c);
+		fn(cp);
+		io_pr_cell (r, c, cp);		
+	}
+}
 void
 format_region (struct rng *where, int fmt, int just)
 {
-	CELL *cp;
-	CELLREF rr, cc;
-
-	Global->modified = 1;
-	make_cells_in_range (where);
-	while ((cp = next_row_col_in_range (&rr, &cc)))
-	{
-		if (fmt != -1) {
+	auto fn = [=](CELL* cp) {
+		if (fmt != -1) 
 			SET_FORMAT (cp, fmt);	/* Only the format, not the precision !! */
-		}
 		if (just != -1)
 			SET_JST (cp, just);
-		io_pr_cell (rr, cc, cp);
-	}
+	};
+
+	change_region(where, fn);
+
 }
+
 
 void
 precision_region (struct rng *where, int precision)
 {
-	CELL *cp;
-	CELLREF rr, cc;
-
-	Global->modified = 1;
-	make_cells_in_range (where);
-	while ((cp = next_row_col_in_range (&rr, &cc)))
-	{
+	auto fn = [=](CELL* cp) {
 		if (precision != -1)
 			SET_PRECISION (cp, precision);
-		io_pr_cell (rr, cc, cp);
-	}
+	};
+
+	change_region(where, fn);
 }
 
 
