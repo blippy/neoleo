@@ -249,6 +249,13 @@ bas(int fildes)
 #endif // BLANG
 
 static void
+hless_dump_sheet(T fildes)
+{
+	extern void dump_sheet();
+	dump_sheet();
+}
+
+static void
 insert_rowwise(T fildes)
 {
 	std::string line;
@@ -321,6 +328,7 @@ static map<string, function<void(T)> > func_map = {
 	{".BAS", bas},
 #endif // BLANG
 	{"colours", colours},
+	{"dump-sheet", hless_dump_sheet},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},

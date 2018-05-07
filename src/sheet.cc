@@ -19,6 +19,7 @@
 
 #include "neotypes.h"
 #include "cell.h"
+#include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
 #include "sheet.h"
@@ -200,9 +201,10 @@ void dump_sheet()
 {
 	cout << "--- dump_sheet:begin ---\n";
 	for(CELL* cp:the_cells) {
-		cout << "Row: " << get_row(cp) << "\n";
 		cout << "Col: " << get_col(cp) << "\n";
-		cout << "Val: " << TO_STR() << "\n";
+		cout << "Row: " << get_row(cp) << "\n";
+		value val = cp->get_value();
+		cout << "Val: " << stringify_value_file_style(&val) << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";
