@@ -353,12 +353,11 @@ oleo_read_file (FILE *fp, int ismerge)
 						rng.hr = mx_row;
 						rng.hc = czcol;
 						make_cells_in_range (&rng);
-						while ((cp = next_cell_in_range ()))
+						for(CELL* cp:get_cells_in_range(&rng))
 						{
 							SET_FORMAT (cp, fmt);
 							SET_PRECISION(cp, prc);
 							SET_JST (cp, jst);
-							//if (font_spec_in_format) cp->cell_font = fnt;
 						}
 						break;
 					case 4:
@@ -367,11 +366,10 @@ oleo_read_file (FILE *fp, int ismerge)
 						rng.hr = czrow;
 						rng.hc = mx_col;
 						make_cells_in_range (&rng);
-						while ((cp = next_cell_in_range ()))
+						for(CELL* cp:get_cells_in_range(&rng))
 						{
 							SET_FORMAT (cp, fmt);
 							SET_JST (cp, jst);
-							// if (font_spec_in_format) cp->cell_font = fnt;
 						}
 						break;
 					default:
