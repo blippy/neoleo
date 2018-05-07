@@ -1302,10 +1302,10 @@ shift_outside (struct rng *fm, int dn, int ov)
 	if (!moving)
 		moving = (char *) init_stack ();
 
-	find_cells_in_range (fm);
-
-	while ((cp = next_row_col_in_range (&rr, &cc)))
+	//find_cells_in_range (fm);
+	for(CELL* cp:get_cells_in_range(fm)) //  (&rr, &cc)))
 	{
+		decoord(cp, rr,cc);
 		/* cp/rr/cc is a cell in FM. */
 
 		/* First, adjust references FROM the region */
