@@ -19,13 +19,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "neotypes.h"
+//#include "neotypes.h"
 #include "cell.h"
 #include "mem.h"
 
 char *parse_and_compile (cell* cp, const char *string);
 char *parse_and_compile (cell* cp, const char *string, mem& the_mem);
 extern void byte_free (unsigned char *form);
-extern int is_constant (unsigned char *bytes);
+extern int is_constant (const unsigned char *bytes);
 
 

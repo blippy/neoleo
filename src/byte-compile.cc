@@ -831,7 +831,7 @@ byte_free (unsigned char *form)
    is a constant, we can free it, and never try to recompute its value.
    This returns non-zero if the expression is constant.*/
 int
-is_constant (unsigned char *bytes)
+is_constant (const unsigned char *bytes)
 {
   /* It's constant, but it's already been dealt with.
 	   Pretend it isn't. */
