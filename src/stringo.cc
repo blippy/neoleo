@@ -101,13 +101,7 @@ static void do_repeat_1(struct value* p) { wrapfunc(do_repeat)(p); }
 static void
 do_len(struct value * p)
 {
-	long ret;
-	char *ptr;
-
-	for(ret=0,ptr=p->gString();*ptr;ret++,ptr++)
-		;
-	p->sInt(ret);
-	//p->type=TYP_INT;
+	p->sInt(strlen(p->gString()));
 }
 
 
