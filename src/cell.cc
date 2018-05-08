@@ -61,12 +61,6 @@ static void log_debug_1(std::string msg)
 }
 
 
-#define ERROR(x)	\
- {			\
-	p->Value=x;	\
-	p->type=TYP_ERR;\
-	return;		\
- }
 
 /*
 cell::cell(){
@@ -164,202 +158,14 @@ get_cell_formula_at(int r, int c)
 
 
 
-static void
-do_hlookup (struct value *p)
-{
-	struct rng *rng = &((p)->Rng);
-	num_t fltval = (p + 1)->Float;
-	long offset = (p + 2)->Int;
 
-	CELL *cell_ptr;
-	num_t f;
-	CELLREF col;
-	CELLREF row;
-	char *strptr;
 
-	row = rng->lr;
-	for (col = rng->lc; col <= rng->hc; col++)
-	{
-		if (!(cell_ptr = find_cell (row, col)))
-			ERROR (NON_NUMBER);
-		switch (GET_TYP (cell_ptr))
-		{
-			case TYP_FLT:
-				if (fltval < cell_ptr->gFlt())
-					goto out;
-				break;
-			case TYP_INT:
-				if (fltval < cell_ptr->gInt())
-					goto out;
-				break;
-			case TYP_STR:
-				strptr = cell_ptr->gString();
-				f = astof (&strptr);
-				if (!*strptr && fltval > f)
-					goto out;
-				else
-					ERROR (NON_NUMBER);
-			case 0:
-			case TYP_BOL:
-			case TYP_ERR:
-			default:
-				ERROR (NON_NUMBER);
-		}
-	}
-out:
-	if (col == rng->lc)
-		ERROR (OUT_OF_RANGE);
-	--col;
-	row = rng->lr + offset;
-	if (row > rng->hr)
-		ERROR (OUT_OF_RANGE);
-	cell_ptr = find_cell (row, col);
-	if (!cell_ptr)
-	{
-		p->type = TYP_NUL;
-		p->Int = 0;
-	}
-	else
-	{
-		p->type = GET_TYP (cell_ptr);
-		p->x = cell_ptr->get_c_z();
-	}
-}
-
-static void
-do_vlookup (struct value *p)
-{
-	struct rng *rng = &((p)->Rng);
-	num_t fltval = (p + 1)->Float;
-	long offset = (p + 2)->Int;
-
-	CELL *cell_ptr;
-	num_t f;
-	CELLREF col;
-	CELLREF row;
-	char *strptr;
-
-	col = rng->lc;
-	for (row = rng->lr; row <= rng->hr; row++)
-	{
-		if (!(cell_ptr = find_cell (row, col)))
-			ERROR (NON_NUMBER);
-		switch (GET_TYP (cell_ptr))
-		{
-			case TYP_FLT:
-				if (fltval < cell_ptr->gFlt())
-					goto out;
-				break;
-			case TYP_INT:
-				if (fltval < cell_ptr->gInt())
-					goto out;
-				break;
-			case TYP_STR:
-				strptr = cell_ptr->gString();
-				f = astof (&strptr);
-				if (!*strptr && fltval > f)
-					goto out;
-				else
-					ERROR (NON_NUMBER);
-			case 0:
-			case TYP_BOL:
-			case TYP_ERR:
-			default:
-				ERROR (NON_NUMBER);
-		}
-	}
-out:
-	if (row == rng->lr)
-		ERROR (OUT_OF_RANGE);
-	--row;
-	col = rng->lc + offset;
-	if (col > rng->hc)
-		ERROR (OUT_OF_RANGE);
-
-	cell_ptr = find_cell (row, col);
-	if (!cell_ptr)
-	{
-		p->type = TYP_NUL;
-		p->Int = 0;
-	}
-	else
-	{
-		p->type = GET_TYP (cell_ptr);
-		p->x = cell_ptr->get_c_z();
-	}
-}
-
-static void
-do_vlookup_str (struct value *p)
-{
-	struct rng *rng = &((p)->Rng);
-	char * key = (p + 1)->String;
-	long offset = (p + 2)->Int;
-
-	CELL *cell_ptr;
-	CELLREF col;
-	CELLREF row;
-
-	col = rng->lc;
-	for (row = rng->lr; row <= rng->hr; row++)
-	{
-		if (!(cell_ptr = find_cell (row, col)))
-			ERROR (NON_NUMBER);
-		switch (GET_TYP (cell_ptr))
-		{
-			case TYP_STR:
-				if (!strcmp (key, cell_ptr->gString()))
-					goto out;
-				break;
-			case 0:
-			case TYP_FLT:
-			case TYP_INT:
-			case TYP_BOL:
-			case TYP_ERR:
-			default:
-				ERROR (NON_NUMBER);
-		}
-	}
-out:
-	if (row > rng->hr)
-		ERROR (OUT_OF_RANGE);
-	col = rng->lc + offset;
-	if (col > rng->hc)
-		ERROR (OUT_OF_RANGE);
-
-	cell_ptr = find_cell (row, col);
-	if (!cell_ptr)
-	{
-		p->type = TYP_NUL;
-		p->Int = 0;
-	}
-	else
-	{
-		p->type = GET_TYP (cell_ptr);
-		p->x = cell_ptr->get_c_z();
-	}
-}
 
 
 #define S (char *)
 #define T (void (*)())
 struct function cells_funs[] =
 {
-	//{C_FN1 | C_T, X_A1, "S", T do_curcell, S "curcell"},
-  //{C_FN1 | C_T, X_A1, "S", T do_my, S "my"},
-  //{C_FN3 | C_T, X_A3, "IIS", T do_cell, S "cell"},
-  //{C_FN3 | C_T, X_A3, "ISS", T do_varval, S "varval"},
-
-  //{C_FN2, X_A2, "RA", T do_member, S "member"},
-  //{C_FN2, X_A2, "RS", T do_smember, S "smember"},
-  //{C_FN2, X_A2, "RS", T do_members, S "members"},
-  //{C_FN2, X_A2, "RS", T do_pmember, S "pmember"},
-  //{C_FN2, X_A2, "RS", T do_memberp, S "memberp"},
-
-  {C_FN3, X_A3, "RFI", T do_hlookup, S "hlookup"},
-  {C_FN3, X_A3, "RFI", T do_vlookup, S "vlookup"},
-  {C_FN3, X_A3, "RSI", T do_vlookup_str, S "vlookup_str"},
-
 
   {0, 0, "", 0, 0},
 };
