@@ -115,13 +115,6 @@ DEFUN ("goto-region", FDgoto_region, FAgoto_region, to_vptr(goto_region))
 "RGoto region? ",
 #endif
 
-
-DEFUN ("exchange-point-and-mark", FDexchange_point_and_mark,
-       FAexchange_point_and_mark, to_vptr(exchange_point_and_mark))
-#ifdef FUNC_ARG_STRINGS
-"p?",
-#endif
-
 DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, to_vptr(mark_cell_cmd))
 #ifdef FUNC_ARG_STRINGS
 "p?",

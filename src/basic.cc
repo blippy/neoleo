@@ -539,28 +539,6 @@ goto_cell (struct rng * rng)
   goto_region (rng);
 }
 
-void
-exchange_point_and_mark (int clrmk)
-{
-  struct rng rng;
-  if (clrmk)
-    {
-      rng.lr = curow;
-      rng.lc = cucol;
-      rng.hr = NON_ROW;
-      rng.hc = NON_COL;
-      goto_region (&rng);
-    }
-  else if (mkrow != NON_ROW)
-    {
-      rng.lr = mkrow;
-      rng.lc = mkcol;
-      rng.hr = curow;
-      rng.hc = cucol;
-      goto_region (&rng);
-    }
-}
-
 
 
 static void 

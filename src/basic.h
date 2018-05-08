@@ -74,7 +74,6 @@ extern void shift_cell_cursor (int dir, int repeat);
 extern void scroll_cell_cursor (int dir, int repeat);
 extern void goto_region (struct rng *r);
 extern void goto_cell (struct rng * rng);
-extern void exchange_point_and_mark (int clrmk);
 extern void upper_left (void);
 extern void lower_left (void);
 extern void upper_right (void);
