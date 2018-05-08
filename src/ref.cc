@@ -1886,7 +1886,7 @@ static struct cell_buf cell_buffer;
 void
 init_refs (void)
 {
-	log_debug("init_refs called");
+	//log_debug("init_refs called");
 	cell_buffer.size = FIFO_START;
 	cell_buffer.buf = (struct pos *) ck_malloc (cell_buffer.size * sizeof (struct pos));
 	bzero (cell_buffer.buf, cell_buffer.size * sizeof (struct pos));
@@ -2244,7 +2244,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 void
 for_all_vars (void (*func) (char *, struct var *))
 {
-	log_debug("for_all_vars called");
+	//log_debug("for_all_vars called");
 	//hash_apply (the_vars, (char* (*)(char*, char*)) func);
 	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {
 		auto s1{it->first};
