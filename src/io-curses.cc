@@ -729,7 +729,8 @@ _io_nodelay (int delayp)
 static int 
 _io_getch (void) // TODO seems to never be called
 {
-	log_debug("io-curses.cc:_io_getch() called. I thought it was never called.");
+	assert(false); // I think this function is never called.
+	//log_debug("io-curses.cc:_io_getch() called. I thought it was never called.");
 	char ch;
 	auto v = io_read_kbd (&ch, 1);
 	int res = v == 1 ? ch : EOF;
@@ -739,7 +740,7 @@ _io_getch (void) // TODO seems to never be called
 static int 
 _io_get_chr (char *prompt) // TODO seems to never be called
 {
-	log_debug("io-curses.cc:_io_get_chr() called. I thought it was never called.");
+	//log_debug("io-curses.cc:_io_get_chr() called. I thought it was never called.");
 	int x;
 	mvaddstr (Global->input, 0, prompt);
 	clrtoeol ();
@@ -834,7 +835,7 @@ _io_update_status (void)
 	}
 
 	std::string dec = decomp_str(curow, cucol);
-	log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
+	//log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
 
 	ptr = cell_value_string (curow, cucol, 1);
 	plen = strlen (ptr);
@@ -1078,7 +1079,7 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	{
 		move_cursor_to (win, r, c, 1);
 		std::string formula = decomp_str(r, c);
-		log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
+		//log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}
 	if (glowing)

@@ -2289,7 +2289,7 @@ find_or_make_var(const char *string, int len)
 struct var *
 find_var (char *string, int len)
 {
-	log_debug("find_var called");
+	//log_debug("find_var called");
 	int ch;
 	struct var *ret;
 
