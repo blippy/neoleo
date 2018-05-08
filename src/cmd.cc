@@ -324,13 +324,6 @@ stop_entering_macro (void)
 	free (making_macro_start);
 }
 
-void
-store_last_macro (struct rng *rng)
-{
-	union vals z;
-	z.c_s = (char *) last_macro;
-	set_new_value (rng->lr, rng->lc, TYP_STR, &z);
-}
 
 /* Scheduling 
  *

@@ -402,12 +402,6 @@ DEFUN ("copy-row", FDcopy_row, FAcopy_row, copy_row)
 "nSource row? ",
 #endif
 	
-DEFUN ("copy-values-in-region",
-       FDcopy_values_region, FAcopy_values_region, to_vptr(copy_values_region))
-#ifdef FUNC_ARG_STRINGS
-"rCopy values in region? ",
-"RCopy values in %0 to:",
-#endif
 
 DEFUN ("move-region", FDmove_region, FAmove_region, to_vptr(move_region))
 #ifdef FUNC_ARG_STRINGS
@@ -694,10 +688,6 @@ DEFUN ("call-last-kbd-macro", FDcall_last_kbd_macro,
 
 DEFUN_3 ("end-macro", FDend_macro, end_macro)
 
-DEFUN ("store-last-macro", FDstore_last_macro, FAstore_last_macro, store_last_macro)
-#ifdef FUNC_ARG_STRINGS
-"rStore at? ",
-#endif
 
 DEFUN ("run-string-as-macro",
        FDrun_string_as_macro, FArun_string_as_macro, run_string_as_macro)
