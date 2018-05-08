@@ -138,11 +138,6 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	if (my_cell)
 	{
 		update_cell (my_cell);
-		if (is_constant (my_cell->get_cell_formula()))
-		{
-			byte_free (my_cell->get_cell_formula());
-			my_cell->set_cell_formula(0);
-		}
 		io_pr_cell (row, col, my_cell);
 		my_cell = 0;
 	}

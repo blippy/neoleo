@@ -83,7 +83,7 @@ n_alloc (int tightness, const char *fmt, ...)
 	pr_node_t* ret = new pr_node_t;
 	ret->tightness = tightness;
 	ret->string = buffer;
-	log_debug_1("n_alloc:"s + ret->string);
+	//log_debug_1("n_alloc:"s + ret->string);
 	return ret;
 }
 
@@ -150,7 +150,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 				expr += jumpto;
 				if (byte == IF || byte == IF_L)
 				{
-					log_debug_1("decomp:IF(_L)");
+					//log_debug_1("decomp:IF(_L)");
 					const char* fmt;
 					if (c_node[0]->tightness <= 1)
 						fmt = "(%s) ? %s : %s";
@@ -190,7 +190,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 			{
 				std::string str = std::string(backslash_a_string ((char *) expr + jumpto, 2));
 				newn = n_alloc(1000, "%s", str.c_str());
-				log_debug_1("decomp:C_STR:"s + newn->string);
+				//log_debug_1("decomp:C_STR:"s + newn->string);
 			}
 			break;
 
@@ -257,7 +257,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 					newn = n_alloc(1000, str, num1, num2);
 				}
 			}
-			log_debug_1("decomp:C_CELL:"s + newn->string);
+			//log_debug_1("decomp:C_CELL:"s + newn->string);
 			break;
 
 		case C_RANGE:
@@ -355,7 +355,7 @@ void decompile_comp(struct function*& f, struct pr_node*& newn,
 		case C_FN0X:
 		case C_FN0 | C_T:
 			newn = n_alloc(1000, F0, f->fn_str);
-			log_debug_1("decomp:C_FN?:"s + newn->string);
+			//log_debug_1("decomp:C_FN?:"s + newn->string);
 			break;
 
 		case C_FN1:
@@ -400,7 +400,7 @@ do_infix:
 
 			n_free (c_node[0]);
 			n_free (c_node[1]);
-			log_debug_1("decomp:C_INF:"s + newn->string);
+			//log_debug_1("decomp:C_INF:"s + newn->string);
 			break;
 
 		case C_FN2:
@@ -418,7 +418,7 @@ do_fn2:
 			n_free (c_node[0]);
 			n_free (c_node[1]);
 			n_free (c_node[2]);
-			log_debug_1("decomp:C_FN3:"s + newn->string);
+			//log_debug_1("decomp:C_FN3:"s + newn->string);
 			break;
 
 		case C_FNN:
@@ -467,14 +467,14 @@ do_fn2:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_flt, sizeof (num_t));
 			expr += sizeof (num_t);
 			newn = n_alloc(1000, f->fn_str, (double) tmp_flt); 
-			log_debug_1("decomp:C_FLT:"s + newn->string);
+			//log_debug_1("decomp:C_FLT:"s + newn->string);
 			break;
 
 		case C_INT:
 			bcopy ((VOIDSTAR) expr, (VOIDSTAR) & tmp_lng, sizeof (long));
 			expr += sizeof (long);
 			newn = n_alloc(1000, f->fn_str, tmp_lng);
-			log_debug_1("decomp:C_INT:"s + newn->string);
+			//log_debug_1("decomp:C_INT:"s + newn->string);
 			break;
 
 		case C_VAR:
@@ -566,14 +566,12 @@ decomp_str(const CELLREF r, const CELLREF c)
 {
 
 	std::string res;
-	//save_decomp = nullptr;
 	CELL *cp = find_cell(r, c);
 	if(cp != nullptr) {
 		const char *tmp = decomp(r, c, cp);
 		if(tmp) res = std::string(tmp);
 	}
-	log_debug_1("decomp_str:res:"s + res);
-	//decomp_free();
+	//log_debug_1("decomp_str:res:"s + res);
 	return res;
 }
 
@@ -623,7 +621,7 @@ decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 		save_decomp.string = n->string;
 		delete n;
 	}
-	log_debug_1("decomp_formula:return:"s + save_decomp.string);
+	//log_debug_1("decomp_formula:return:"s + save_decomp.string);
 	return save_decomp.string.c_str();
 }
 
