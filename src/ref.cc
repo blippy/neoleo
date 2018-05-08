@@ -149,14 +149,6 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	return 0;
 }
 
-char *
-set_cell_from_string(int r,int  c, const std::string & s)
-{
-	std::vector<char> v(s.begin(), s.end());
-	v.push_back(0);
-	char *str = &v[0];
-	return new_value(r, c, str); 
-}
 
 
 

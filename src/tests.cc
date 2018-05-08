@@ -59,29 +59,6 @@ check(bool ok, std::string msg)
 
 
 
-
-
-void FreeGlobals()
-{
-	/* TODO - make more accassable - neoleo doesn't seem
-	 * to clean up after itself.
-	 *
-	 * This functionality is far from complete */
-	FileCloseCurrentFile();
-}
-
-
-void get_set(int r, int c, const string& s)
-{
-	set_cell_from_string(r, c, s);
-	printf("Formula at (%d,%d) is:", r, c);
-	cout << get_cell_formula_at(r,c) << "\n";
-	recalculate(1);
-	printf("Cell value at (%d,%d) is:%s\n", r, c, cell_value_string(r,c, 0));
-	puts("");
-}
-
-
 void
 check_fmt(num_t v, const std::string& s)
 {
@@ -99,39 +76,8 @@ test_formatting()
 	check_fmt(1.0DD,  "1.00");
 }
 
-void
-run_cell_formula_tests()
-{
-	CELL c1(0), c2(0);
-	//c2.
-	c1 = c2;
-	// TODO much expansion required
 
-	string s1 = "r4c4 + 1";
-	set_cell_from_string(5, 6, "r4c4 + 1");
-	check(decomp_str(5, 6) == s1, "cellfrm-01");
-	//decomp_free();
 
-}
-
-void decomp_n(int i, std::string s)
-{
-	cout << "decomp-" << i << "\n";
-	set_cell_from_string(1, 1, s);
-	cout << decomp_str(1,1) << "\n";
-}
-
-void test_decomp()
-{
-	decomp_n(1, "\"hello world\""s);
-
-	set_cell_from_string(2, 1, "41");
-	decomp_n(2, "1+r2c1"s);
-	
-	decomp_n(3, "concata(\"foo\", \"bar\")"s);
-	decomp_n(4, "12.3"s);
-	
-}
 
 void parse_text(const std::string& expr)
 {
@@ -163,90 +109,25 @@ test_yyparse_parse()
 	cout << "Finished testing yyparse_parse\n";
 }
 
-void
-misc_memchecks()
-{
-	// note that you need to have the sanitizer on to see if everything is OK
-	
-	// these seem OK as at 28-Aug-2017
-	get_set(1, 1, "1.1+2");
-	get_set(1, 1, "1.1+2.2");
-	get_set(1, 1, "63.36");
-	get_set(2, 1, "1 + R[-1]C");
-
-}
 
 bool
 run_regular_tests()
 {
 	test_formatting();
-	run_cell_formula_tests();
-	misc_memchecks();
 
-	default_fmt = FMT_GEN;
-	set_cell_from_string(2, 2, "23.3");
-	CELL *cp = find_cell(2, 2);
-	assert(cp);
-	cout << "23.3=" << print_cell(cp) << "," << flt_to_str_fmt(cp) << "=\n";
-
-
-
-	// Fixed a bug in undeclared variable names
-	// This will barf if run under an address sanitizer
-	get_set(1, 1, "foo"); 
-	cout << "PASS: undeclared variable name\n";
-
-
-	//printf("Test atof(63.36):%f\n", atof("63.36"));
-
-	puts(pr_flt(1163.36DL, &fxt, FLOAT_PRECISION));
-	puts(pr_flt(-1163.36DL, &fxt, FLOAT_PRECISION));
-	puts(pr_flt(2688.9DL, &fxt, FLOAT_PRECISION));
-	puts(pr_flt(3575.06DD, &fxt, FLOAT_PRECISION));
-
-
-	
 	check(pad_left("hello", 7) == "  hello", "padleft");
 	check(pad_right("hello", 7) == "hello  ", "padright");
 
 	test_yyparse_parse();
-
-
-	FreeGlobals();
-
 	cout << "Finished test\n";
-
-	//__lsan_do_leak_check();
-	test_decomp();
 	return all_pass;
 }
 
 bool run_cell_tests()
 {
-	
-
-	// some wierd stuff when switching to alt cells 30-Apr-2018
-	set_cell_input(1, 1, "1+2.2");
-	cell* cp1 = find_cell(1, 1);
-	update_cell(cp1);
-	cout << "cells-01:" << "print_cell:"; // << cp1->cell_int();
-	cout << cell_value_string(1, 1, 0) << endl;
-	cout << "decomposed:" << decomp_str(1,1) << endl;
-
-	// filling out diagonally>
-	set_cell_input(2 ,1 , "99");
-	cell* cp2 = find_cell(2, 1);
-	update_cell(cp2);
-	cout << "cells-02:" << "print_cell:"; // << cp1->cell_int();
-	cout << cell_value_string(2, 1, 0) << endl;
-	cout << "decomposed:" << decomp_str(2,1) << endl;
-	cout << "at r1c2:" << cell_value_string(1, 2, 0) <<endl;
-
 	CELL* cp3 = find_or_make_cell(1,1);
 
 	dump_sheet();
-	//cout << "coord(2, 1):" << to_coord(2, 1) << "\n";
-	//cout << "coord(1, 2):" << to_coord(1, 2) << "\n";
 	return true;
 
 }

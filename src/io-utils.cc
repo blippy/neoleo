@@ -1318,7 +1318,6 @@ FileSetCurrentFileName(const char *s)
 {
 	FileCloseCurrentFile();
 	if(!s) return;
-	//Global->FileName = strdup(s);
 	_FileName = s;
 }
 
@@ -1329,11 +1328,6 @@ std::string FileGetCurrentFileName()
 
 void FileCloseCurrentFile(void)
 {
-	/*
-	if (Global->FileName)
-		free(Global->FileName);
-	Global->FileName = NULL;
-	*/
 	_FileName =  "";
 }
 

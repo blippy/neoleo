@@ -37,7 +37,6 @@ extern cell * my_cell;
 
 extern void set_cell(CELLREF row, CELLREF col, const std::string& in_string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
-char* set_cell_from_string(int r,int  c, const std::string & s);
 extern void move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void flush_old_value (void);

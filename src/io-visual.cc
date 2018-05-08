@@ -324,7 +324,7 @@ edit_cell_visually(int display_row)
 	gotoc(1);
 	cleareol();
 	cout << flush;
-	set_cell_from_string(curow, cucol, formula);
+	set_cell_input(curow, cucol, formula);
 }
 
 std::string
