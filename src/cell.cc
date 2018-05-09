@@ -48,12 +48,6 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-#define Float	x.c_n
-#define String	x.c_s
-#define Int	x.c_l
-#define Value	x.c_i
-#define Rng	x.c_r
-
 static void log_debug_1(std::string msg)
 {
 	if constexpr(true)
