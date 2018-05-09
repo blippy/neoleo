@@ -40,9 +40,7 @@
 #include "sheet.h"
 
 
-#define Float	x.c_n
 #define Value	x.c_i
-#define Rng	x.c_r
 
 #define ERROR(x)	\
  {			\
