@@ -306,6 +306,7 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 
 	io_recenter_cur_win ();
 	Global->display_opened = 1;
+	Global->modified = 0;
 	io_run_main_loop();
 }
 

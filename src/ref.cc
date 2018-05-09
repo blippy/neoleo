@@ -141,6 +141,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
 		io_pr_cell (row, col, my_cell);
 		my_cell = 0;
 	}
+	Global->modified = 1;
 	return 0;
 }
 
