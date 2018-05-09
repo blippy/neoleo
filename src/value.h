@@ -46,7 +46,7 @@ class value {
 		int gErr();
 		void sErr(int newval);
 
-		int gBol();
+		int gBol() const;
 		void sBol(int newval);
 
 		struct rng gRng() { return x.c_r; }

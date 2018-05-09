@@ -47,7 +47,7 @@ void value::sFlt(num_t v) { type = TYP_FLT; x.c_n = v ;};
 int value::gErr() { return x.c_err ;};
 void value::sErr(int newval) { type = TYP_ERR ; x.c_err = newval ;};
 
-int value::gBol() { return x.c_b ;};
+int value::gBol() const { return x.c_b ;};
 void value::sBol(int newval) { type = TYP_BOL; x.c_b = newval; };
 
 void value::free_string()
