@@ -1750,8 +1750,8 @@ bool turd_1(bool interactive_mode, bool iscmd)
 						int tog = 1;
 						if (rmac && !iscmd)
 							tog = 0;
-						const char* frm = decomp_formula (curow, cucol, cp, tog);
-						init_arg_text (&the_cmd_arg, frm);
+						std::string frm = decomp_formula (curow, cucol, cp, tog);
+						init_arg_text (&the_cmd_arg, frm.c_str());
 					}
 					//log_debug("cmd.cc:point a");
 					return true;	// state machine

@@ -1,6 +1,4 @@
 /*
- * $Id: decompile.c,v 1.15 2000/08/10 21:02:50 danny Exp $
- *
  * Copyright © 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
@@ -35,7 +33,7 @@
 
 using namespace std::string_literals;
 
-const char * decomp(const CELLREF r, const CELLREF c, CELL *cell);
+//std::string decomp(const CELLREF r, const CELLREF c, CELL *cell);
 
 using CPTR = char*;
 
@@ -562,25 +560,22 @@ byte_decompile ( unsigned char *expr)
 
 
 std::string
-decomp_str(const CELLREF r, const CELLREF c)
-{
-
-	std::string res;
-	CELL *cp = find_cell(r, c);
-	if(cp != nullptr) {
-		const char *tmp = decomp(r, c, cp);
-		if(tmp) res = std::string(tmp);
-	}
-	//log_debug_1("decomp_str:res:"s + res);
-	return res;
-}
-
-
-const char *
 decomp(const CELLREF r, const CELLREF c, CELL *cell)
 {
 	return decomp_formula (r, c, cell, 0);
 }
+
+std::string
+decomp_str(const CELLREF r, const CELLREF c)
+{
+	std::string res;
+	CELL *cp = find_cell(r, c);
+	if(cp == nullptr)
+		return res;
+	return decomp(r, c, cp);
+}
+
+
 
 
 const std::string
@@ -606,7 +601,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 	}
 }
 
-const char *
+std::string
 decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
 	if(!cell) return "";
