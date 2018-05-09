@@ -43,7 +43,7 @@ class value {
 		num_t gFlt() const;
 		void sFlt(num_t v);
 
-		int gErr();
+		int gErr() const;
 		void sErr(int newval);
 
 		int gBol() const;
