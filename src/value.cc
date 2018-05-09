@@ -55,7 +55,8 @@ void value::free_string()
 	if(type != TYP_STR || gString() == nullptr) return;
 	free(gString());
 	type = TYP_NUL;
-	memset(&x, 0, sizeof(union vals));
+	x.c_s = nullptr;
+	//memset(&x, 0, sizeof(union vals));
 }
 
 
