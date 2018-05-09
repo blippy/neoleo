@@ -34,12 +34,6 @@
 
 time_t posixtime (char *s);
 
-/*
-#define Float	x.c_d
-#define Value	x.c_i
-#define Rng	x.c_r
-*/
-#define String	x.c_s
 #define Int	x.c_l
 
 /* These functions simply provide convenient syntax for expressing intervals 
@@ -82,7 +76,7 @@ dt_time_to_s (long t)
   return t % 60;
 }
 
-
+
 
 /* These relate time values to calendar dates using localtime, gmtime, 
  * strftime, mktime, etc.
@@ -112,7 +106,7 @@ dt_ymd (long y, long mo, long d)
 }
 
 
-
+
 
 #define TM_ACCESS(FN,FIELD,TMFN)			\
 static long						\
@@ -148,7 +142,7 @@ TM_ACCESS_GMT (dt_gmt_isdst, tm_isdst)
 TM_ACCESS_GMT (dt_gmt_yday, tm_yday)
 TM_ACCESS_GMT (dt_gmt_wday, tm_wday)
 
-
+
 
 static char *
 dt_strftime (char * format, long clk)
@@ -170,7 +164,7 @@ dt_strftime (char * format, long clk)
   return buf;
 }
 
-
+
 
 static long
 dt_get_date (char * date)
@@ -184,7 +178,7 @@ dt_posix_date (char * date)
   return posixtime (date);
 }
 
-
+
 
 static void
 l_l (
@@ -215,7 +209,7 @@ l_s (
      long (*fn)(char *),
      struct value * p)
 {
-  p[0].Int = fn (p[0].String);
+  p[0].Int = fn (p[0].gString());
   p[0].type = TYP_INT;
 }
 
@@ -257,7 +251,7 @@ void
 do_strftime (
      struct value * p)
 {
-  p[0].String = dt_strftime (p[0].String, p[1].Int);
+  p[0].sString(dt_strftime (p[0].gString(), p[1].Int));
 }
 
 
