@@ -1,6 +1,6 @@
 #include "value.h"
 
-ValType value::get_type() { return type;}
+ValType value::get_type() const { return type;}
 void value::set_type(ValType t) { type = t;}
 
 void value::sValue(value& newval)

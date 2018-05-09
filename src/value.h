@@ -25,7 +25,7 @@ class value {
 
 
 		ValType type = TYP_NUL;
-		ValType get_type();
+		ValType get_type() const;
 		void set_type(ValType t);
 
 		//void sValue(value& newval);
