@@ -40,7 +40,7 @@ class value {
 		char *gString();
 		void sString(char* newval);
 
-		num_t gFlt();
+		num_t gFlt() const;
 		void sFlt(num_t v);
 
 		int gErr();

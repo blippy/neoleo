@@ -41,7 +41,7 @@ void value::sString(char* newval)
 	x.c_s = newval;
 }
 
-num_t value::gFlt() { return x.c_n ;};
+num_t value::gFlt() const { return x.c_n ;};
 void value::sFlt(num_t v) { type = TYP_FLT; x.c_n = v ;};
 
 int value::gErr() { return x.c_err ;};
