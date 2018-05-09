@@ -26,7 +26,7 @@ void value::sValue(value& newval)
 	}
 }
 
-int value::gInt() { return x.c_i; };
+int value::gInt() const { return x.c_i; };
 void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 
 //long value::gLong() { assert(type == TYP_INT); return x.c_l; };

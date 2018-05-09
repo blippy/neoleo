@@ -31,7 +31,7 @@ class value {
 		//void sValue(value& newval);
 		void sValue(value& newval);
 
-		int gInt();
+		int gInt() const;
 		void sInt(int newval);
 
 		//long gLong();
