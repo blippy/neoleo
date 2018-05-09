@@ -185,7 +185,7 @@ struct	CursesGlobalType;
 struct OleoGlobal {
 	int				valid = 1;
 	std::string			FileName;	/* current_file in io-utils.c */
-	int				modified;
+	int				modified = 0;
 	CELLREF				cur_row, cur_col;
 /* User settable options */
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
