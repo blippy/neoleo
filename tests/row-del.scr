@@ -1,0 +1,15 @@
+# test insert-row
+
+set-option noa0
+
+i
+1
+2
+3
+.
+
+goto-cell r2c1
+delete-row
+
+w
+q

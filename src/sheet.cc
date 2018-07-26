@@ -231,18 +231,33 @@ void dump_sheet()
 	cout << "--- dump_sheet:end ---\n";
 }
 
-void insert_row_above(coord_t row)
+void bump_row(CELLREF row, int increment)
 {
 	for(CELL* cp : the_cells) {
 		CELLREF r, c;
 		decoord(cp, r, c);		
 		if(r < row) continue;
-		coord_t coord = to_coord(r+1, c);
+		coord_t coord = to_coord(r+increment, c);
 		cp->coord = coord;
 	}
 	Global->modified = 1;
 }
 
+void insert_row_above(coord_t row)
+{
+	bump_row(row, +1);
+}
+
+void delete_sheet_row(coord_t row)
+{
+	// remove the cells for the row to delete
+	the_cells.erase(std::remove_if(the_cells.begin(), the_cells.end(), 
+				[&](CELL* cp) { return get_row(cp) == row; }),
+			the_cells.end());
+
+	// rename the rows below
+	bump_row(row, -1);
+}
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 

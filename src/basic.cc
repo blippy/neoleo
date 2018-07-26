@@ -115,26 +115,6 @@ insert_row (int repeat)
 {
 	insert_row_above(curow);
 	io_repaint();
-	return;
-
-	/*
-	struct rng from;
-	struct rng to;
-	if ((repeat > (MAX_ROW - curow)) || (repeat < 0))
-	{
-		io_error_msg ("insert-row: prefix argument out of range.");
-		return;
-	}
-	from.lc = MIN_COL;
-	from.hc = MAX_COL;
-	from.lr = curow;
-	from.hr = MAX_ROW - repeat;
-	to.lc = MIN_COL;
-	to.hc = MIN_COL;
-	to.lr = curow + repeat;
-	to.hr = curow + repeat;
-	move_region (&from, &to);
-	*/
 }
 
 void
@@ -161,6 +141,10 @@ insert_col (int repeat)
 void
 delete_row (int repeat)
 {
+	delete_sheet_row(curow);
+	io_repaint();
+
+	/*
 	struct rng from;
 	struct rng to;
 	if ((repeat < 0) || (repeat > (MAX_ROW - curow + 1)))
@@ -177,6 +161,7 @@ delete_row (int repeat)
 	to.lr = curow;
 	to.hr = curow;
 	move_region (&from, &to);
+	*/
 }
 
 void
