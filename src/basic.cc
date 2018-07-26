@@ -113,6 +113,11 @@ noop (void)
 void
 insert_row (int repeat)
 {
+	insert_row_above(curow);
+	io_repaint();
+	return;
+
+	/*
 	struct rng from;
 	struct rng to;
 	if ((repeat > (MAX_ROW - curow)) || (repeat < 0))
@@ -129,6 +134,7 @@ insert_row (int repeat)
 	to.lr = curow + repeat;
 	to.hr = curow + repeat;
 	move_region (&from, &to);
+	*/
 }
 
 void

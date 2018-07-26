@@ -52,4 +52,6 @@ CELLREF max_col();
 CELLREF highest_row();
 CELLREF highest_col();
 
+void insert_row_above(coord_t row);
+
 void dump_sheet();

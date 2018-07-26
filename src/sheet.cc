@@ -231,6 +231,18 @@ void dump_sheet()
 	cout << "--- dump_sheet:end ---\n";
 }
 
+void insert_row_above(coord_t row)
+{
+	for(CELL* cp : the_cells) {
+		CELLREF r, c;
+		decoord(cp, r, c);		
+		if(r < row) continue;
+		coord_t coord = to_coord(r+1, c);
+		cp->coord = coord;
+	}
+	Global->modified = 1;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
