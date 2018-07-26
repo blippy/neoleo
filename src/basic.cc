@@ -113,22 +113,22 @@ noop (void)
 void
 insert_row (int repeat)
 {
-  struct rng from;
-  struct rng to;
-  if ((repeat > (MAX_ROW - curow)) || (repeat < 0))
-    {
-      io_error_msg ("insert-row: prefix argument out of range.");
-      return;
-    }
-  from.lc = MIN_COL;
-  from.hc = MAX_COL;
-  from.lr = curow;
-  from.hr = MAX_ROW - repeat;
-  to.lc = MIN_COL;
-  to.hc = MIN_COL;
-  to.lr = curow + repeat;
-  to.hr = curow + repeat;
-  move_region (&from, &to);
+	struct rng from;
+	struct rng to;
+	if ((repeat > (MAX_ROW - curow)) || (repeat < 0))
+	{
+		io_error_msg ("insert-row: prefix argument out of range.");
+		return;
+	}
+	from.lc = MIN_COL;
+	from.hc = MAX_COL;
+	from.lr = curow;
+	from.hr = MAX_ROW - repeat;
+	to.lc = MIN_COL;
+	to.hc = MIN_COL;
+	to.lr = curow + repeat;
+	to.hr = curow + repeat;
+	move_region (&from, &to);
 }
 
 void
