@@ -81,6 +81,7 @@ static void log_debug_1(std::string msg)
 		log_debug("io-curses.cc:"s + msg);
 }
 
+
 void
 show_main_menu()
 {
@@ -431,9 +432,35 @@ change_slop (VOIDSTAR where, CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CE
 	}
 }
 
-static void 
-_io_open_display (void)
+class curses_display {
+	public:
+		curses_display();
+		void activate();
+		~curses_display();
+		void cdstandout();
+	private:
+		bool m_activated = false;
+};
+
+static curses_display s_display;
+
+static void _io_open_display() { s_display.activate(); }
+
+curses_display::curses_display()
 {
+}
+
+
+curses_display::~curses_display()
+{
+	puts("TODO Calling curses_display::~curses_display()");
+
+}
+
+void curses_display::activate()
+{
+	if(m_activated) return;
+	m_activated = true;
 	initscr ();
 	scrollok (stdscr, 0);
 #ifdef HAVE_CBREAK
@@ -451,6 +478,13 @@ _io_open_display (void)
 	//print_width = columns;		/* Make ascii print width == terminal width. */
 
 }
+
+void curses_display::cdstandout()
+{
+	this->activate(); // ASAN complains otherwise
+	standout(); 
+}
+
 
 void
 cont_curses(void)
@@ -544,7 +578,7 @@ _io_repaint (void)
 			move (win->win_down - 1, win->win_over - win->lh_wid);
 			printw ("#%*d ", win->lh_wid - 2, 1 + win - wins);
 			if (win->flags & WIN_EDGE_REV)
-				standout ();
+				s_display.cdstandout();
 			cc = win->screen.lc;
 			do
 			{
