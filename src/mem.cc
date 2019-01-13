@@ -9,7 +9,7 @@ mem::mem(bool auto_release)
 	_release_on_destruction = auto_release;
 }
 
-void*
+void
 mem::add_ptr(void* ptr)
 {
 	ptrs.push_back(ptr);

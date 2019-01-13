@@ -13,7 +13,7 @@ class mem {
 	public:
 		mem() {}
 		mem(bool auto_release);
-		void* add_ptr(void* ptr);
+		void add_ptr(void* ptr);
 		void auto_release(); // destructor releases everything
 		void release_all();
 		~mem();

@@ -598,6 +598,7 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 			return ename[cell->gBol()];
 		default:
 			panic ("Unknown type %d in decomp", GET_TYP (cell));
+			return "PANIC";
 	}
 }
 

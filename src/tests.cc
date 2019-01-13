@@ -91,7 +91,6 @@ bool
 test_yyparse_parse()
 {
 	FormulaParser yy, yy1;
-	bool ok;
 
 	auto exprs = strings { "12", "13", "13+14", 
 		"\"hello\"",
@@ -107,6 +106,7 @@ test_yyparse_parse()
 	for(auto const& e: exprs) parse_text(e);
 	
 	cout << "Finished testing yyparse_parse\n";
+	return true;
 }
 
 
