@@ -179,7 +179,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 					&& (non_cell.get_type() == 0))
 				&& (non_cell.cell_flags.cell_lock == 0)
 				&& !non_cell.get_cell_formula() 
-				//&& !non_cell.cell_font
 			)
 			return;
 		else
@@ -212,13 +211,11 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 			non_cell.cell_refs_to = cpf->cell_refs_to;
 			non_cell.set_cell_formula(cpf->get_cell_formula());
 			non_cell.cell_cycle = cpf->cell_cycle;
-			//non_cell.cell_font = cpf->cell_font;
 			non_cell.set_c_z(cpf->get_c_z());
 			bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
 			cpf->cell_refs_to = 0;
 			cpf->set_cell_formula(0);
 			cpf->cell_cycle = 0;
-			//cpf->cell_font = 0;
 		}
 		return;
 	}
@@ -232,7 +229,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 				  && (non_cell.cell_flags.cell_justify == 0)
 				  && (non_cell.get_type() == 0))
 				 && (non_cell.cell_flags.cell_lock == 0)
-				 //&& !cpf->cell_formula && !cpf->cell_font))
 	   ))
 	   && !my_cell)
 	   return;
@@ -251,7 +247,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	my_cell->cell_refs_to = cpf->cell_refs_to;
 	my_cell->set_cell_formula(cpf->get_cell_formula());
 	my_cell->cell_cycle = cpf->cell_cycle;
-	//my_cell->cell_font = cpf->cell_font;
 	my_cell->set_c_z(cpf->get_c_z());
 
 	bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
@@ -279,12 +274,10 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 	CELLREF trr, tcc;
 	struct rng trng;
 	function_t *f;
-	//size_t len;
 	struct var *v;
 	CELL *tcp;
 
 	fp = cpf->get_cell_formula();
-	//hi = 0;
 	if (!moving)
 		moving = (char*)init_stack ();
 	while ((byte = *fp++) != ENDCOMP)
@@ -500,7 +493,6 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 	my_cell->cell_flags = cpf->cell_flags;
 	my_cell->cell_cycle = cpf->cell_cycle;
-	//my_cell->cell_font = cpf->cell_font;
 	my_cell->cell_refs_to = cpf->cell_refs_to;
 
 	if (my_cell->cell_refs_to)
@@ -737,7 +729,6 @@ flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 	   references, they'll have the same references afterward, so just
 	   adjust the refcounts */
 	nonref.refs_refcnt = 1;
-	//other_cell = next_cell_in_range ();
 	other_cell = cells_in_range.front();
 	if (!other_cell)
 		return;
@@ -748,7 +739,6 @@ flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 
 	flush_ref_fm (&(other_cell->cell_refs_from), rr, cc);
 	newref = other_cell->cell_refs_from;
-	//while ((other_cell = next_cell_in_range ()))
 	for(CELL* other_cell:cells_in_range)
 	{
 		if (other_cell->cell_refs_from == oldref)
@@ -1673,7 +1663,6 @@ shift_outside (struct rng *fm, int dn, int ov)
 #endif
 	}
 	for_all_vars (finish_shift_var);
-	/* flush_stack(moving); */
 }
 
 /* The formula in cell my_cell has moved by DN down and OV over, adjust
@@ -2058,7 +2047,6 @@ eval_next_cell (void)
 
 	cur_row = cell_buffer.pop_frm_here->row;
 	cur_col = cell_buffer.pop_frm_here->col;
-	/* printf("eval_next_cell %d %d\n", cur_row, cur_col); */
 	cell_buffer.pop_frm_here++;
 	if (cell_buffer.pop_frm_here == cell_buffer.buf + cell_buffer.size)
 		cell_buffer.pop_frm_here = cell_buffer.buf;
@@ -2105,7 +2093,6 @@ cell_buffer_contents (FILE *fp)
 				break;
 		}
 	}
-	/* fprintf (fp, "End of buffer\r\n"); */
 }
 
 #endif
@@ -2243,7 +2230,6 @@ void
 for_all_vars (void (*func) (char *, struct var *))
 {
 	//log_debug("for_all_vars called");
-	//hash_apply (the_vars, (char* (*)(char*, char*)) func);
 	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {
 		auto s1{it->first};
 		strcpy_c s2(s1.c_str());
@@ -2254,7 +2240,6 @@ for_all_vars (void (*func) (char *, struct var *))
 
 struct var *find_var_1(const char* str)
 {
-	//return (struct var*) hash_find(the_vars, str);
 	auto it = the_vars_1.find(str);
 	if(it != the_vars_1.end())
 		return &(it ->second);
