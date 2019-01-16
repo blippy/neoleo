@@ -453,7 +453,7 @@ curses_display::curses_display()
 
 curses_display::~curses_display()
 {
-	puts("TODO Calling curses_display::~curses_display()");
+	log_debug("TODO Calling curses_display::~curses_display()");
 
 }
 
