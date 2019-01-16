@@ -101,8 +101,8 @@ int overflow;
  */
 #define ERROR(cause)		\
 	{			\
-		p->type=TYP_ERR;\
-		p->Value=cause; \
+		value_ptr->type=TYP_ERR;\
+		value_ptr->Value=cause; \
 		goto next_byte; \
 	}
 
@@ -225,13 +225,24 @@ void TO_ANY(struct value* val)
 }
 
 
-#define PUSH_ANY(cp)				\
+void PUSH_ANY(struct value* value_ptr, cell* cp)
+{
+	if(!cp || !GET_TYP(cp)) {		
+		value_ptr->type=TYP_NUL;			
+		value_ptr->Int=0;			
+	} else {				
+		value_ptr->type=GET_TYP(cp);		
+		value_ptr->x=cp->get_c_z();			
+	}
+}
+
+#define PUSH_ANY_XXX(cp)				\
 	if(!cp || !GET_TYP(cp)) {		\
-		p->type=TYP_NUL;			\
-		p->Int=0;			\
+		value_ptr->type=TYP_NUL;			\
+		value_ptr->Int=0;			\
 	} else {				\
-		p->type=GET_TYP(cp);		\
-		p->x=cp->get_c_z();			\
+		value_ptr>type=GET_TYP(cp);		\
+		value_ptr->x=cp->get_c_z();			\
 	}
 
 // should probably use one of TO_NUM(), or something like that.
@@ -350,7 +361,7 @@ eval_expression ( unsigned char *expr)
 	unsigned numarg;
 	unsigned jumpto;
 	function_t *f;
-	struct value *p;
+	struct value *value_ptr = 0;
 	char *strptr;
 	int tmp;
 
@@ -363,7 +374,7 @@ eval_expression ( unsigned char *expr)
 		return 0;
 	jumpto = 0;
 	numarg = 0;
-	p = 0;
+	//p = 0;
 	curstack = 0;
 	while ((byte = *expr++) != ENDCOMP)
 	{
@@ -401,7 +412,7 @@ eval_expression ( unsigned char *expr)
 					stackmax *= 2;
 					stack = (struct value *) ck_realloc (stack, sizeof (struct value) * stackmax);
 				}
-				p = &stack[curstack];
+				value_ptr = &stack[curstack];
 				curstack++;
 				break;
 
@@ -423,7 +434,7 @@ eval_expression ( unsigned char *expr)
 				break;
 			default:
 				numarg = 0;
-				p = 0;
+				value_ptr = 0;
 #ifdef TEST
 				panic ("Unknown arg_num %d", f->fn_argn);
 #endif
@@ -436,18 +447,15 @@ eval_expression ( unsigned char *expr)
 			if (curstack < numarg)
 				panic ("Only %u values on stack, not %u", curstack, numarg);
 #endif
-			p = &stack[curstack - numarg];
+			value_ptr = &stack[curstack - numarg];
 			curstack -= (numarg - 1);
 			for (xt = 0; xt < numarg; xt++)
 			{
 				char arg_type =f->fn_argt[xt <= 3 ? xt : 3];
 				try {
-					fill_argument(arg_type, p+xt);
+					fill_argument(arg_type, value_ptr+xt);
 				} catch (int e) {
-					//assert(false);
-					//p->type = TYP_ERR;
-					//p->Value = e;
-					p->sErr(e);
+					value_ptr->sErr(e);
 					goto next_byte;
 				}
 
@@ -460,12 +468,12 @@ eval_expression ( unsigned char *expr)
 			case F_IF_L:
 			case IF:
 			case F_IF:
-				if (p->type != TYP_BOL)
+				if (value_ptr->type != TYP_BOL)
 				{
-					if (p->type != TYP_ERR)
+					if (value_ptr->type != TYP_ERR)
 					{
-						p->type = TYP_ERR;
-						p->Value = NON_BOOL;
+						value_ptr->type = TYP_ERR;
+						value_ptr->Value = NON_BOOL;
 					}
 					expr += jumpto;
 					if (expr[-2] != SKIP)
@@ -475,7 +483,7 @@ eval_expression ( unsigned char *expr)
 					expr += jumpto;	/* Skip both branches of the if */
 
 				}
-				else if (p->Value == 0)
+				else if (value_ptr->Value == 0)
 				{
 					expr += jumpto;
 					--curstack;
@@ -492,15 +500,15 @@ eval_expression ( unsigned char *expr)
 
 			case AND_L:
 			case AND:
-				if (p->type == TYP_ERR)
+				if (value_ptr->type == TYP_ERR)
 					expr += jumpto;
-				else if (p->type != TYP_BOL)
+				else if (value_ptr->type != TYP_BOL)
 				{
-					p->type = TYP_ERR;
-					p->Value = NON_BOOL;
+					value_ptr->type = TYP_ERR;
+					value_ptr->Value = NON_BOOL;
 					expr += jumpto;
 				}
-				else if (p->Value == 0)
+				else if (value_ptr->Value == 0)
 					expr += jumpto;
 				else
 					--curstack;
@@ -508,49 +516,51 @@ eval_expression ( unsigned char *expr)
 
 			case OR_L:
 			case OR:
-				if (p->type == TYP_ERR)
+				if (value_ptr->type == TYP_ERR)
 					expr += jumpto;
-				else if (p->type != TYP_BOL)
+				else if (value_ptr->type != TYP_BOL)
 				{
-					p->type = TYP_ERR;
-					p->Value = NON_BOOL;
+					value_ptr->type = TYP_ERR;
+					value_ptr->Value = NON_BOOL;
 					expr += jumpto;
 				}
-				else if (p->Value)
+				else if (value_ptr->Value)
 					expr += jumpto;
 				else
 					--curstack;
 				break;
 
 			case CONST_FLT:
-				p->type = TYP_FLT;
-				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(p->Float)), sizeof (double));
+				value_ptr->type = TYP_FLT;
+				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), 
+						sizeof (double));
 				expr += sizeof (double);
 				break;
 
 			case CONST_INT:
-				p->type = TYP_INT;
-				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(p->Int)), sizeof (long));
+				value_ptr->type = TYP_INT;
+				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), 
+						sizeof (long));
 				expr += sizeof (long);
 				break;
 
 			case CONST_STR:
 			case CONST_STR_L:
-				p->type = TYP_STR;
-				p->String = (char *) expr + jumpto;
+				value_ptr->type = TYP_STR;
+				value_ptr->String = (char *) expr + jumpto;
 				break;
 
 			case CONST_ERR:
-				p->type = TYP_ERR;
-				p->Value = *expr++;
+				value_ptr->type = TYP_ERR;
+				value_ptr->Value = *expr++;
 				/* expr+=sizeof(char *); */
 				break;
 
 			case CONST_INF:
 			case CONST_NINF:
 			case CONST_NAN:
-				p->type = TYP_FLT;
-				p->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
+				value_ptr->type = TYP_FLT;
+				value_ptr->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
 				break;
 
 			case VAR:
@@ -562,25 +572,25 @@ eval_expression ( unsigned char *expr)
 					switch (varp->var_flags)
 					{
 						case VAR_UNDEF:
-							p->type = TYP_ERR;
-							p->Value = BAD_NAME;
+							value_ptr->type = TYP_ERR;
+							value_ptr->Value = BAD_NAME;
 							break;
 
 						case VAR_CELL:
 							cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
-							PUSH_ANY (cell_ptr);
+							PUSH_ANY(value_ptr, cell_ptr);
 							break;
 
 						case VAR_RANGE:
 							if (varp->v_rng.lr == varp->v_rng.hr && varp->v_rng.lc == varp->v_rng.hc)
 							{
 								cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
-								PUSH_ANY (cell_ptr);
+								PUSH_ANY(value_ptr, cell_ptr);
 							}
 							else
 							{
-								p->type = TYP_RNG;
-								p->Rng = varp->v_rng;
+								value_ptr->type = TYP_RNG;
+								value_ptr->Rng = varp->v_rng;
 							}
 							break;
 #ifdef TEST
@@ -603,7 +613,7 @@ eval_expression ( unsigned char *expr)
 					tocol = GET_COL (expr);
 					expr += EXP_ADD;
 					cell_ptr = find_cell ((CELLREF) torow, (CELLREF) tocol);
-					PUSH_ANY (cell_ptr);
+					PUSH_ANY(value_ptr, cell_ptr);
 				}
 				break;
 
@@ -623,31 +633,31 @@ eval_expression ( unsigned char *expr)
 			case RANGE | LCREL:
 			case RANGE | LCREL | HCREL:
 			case RANGE | HCREL:
-				p->type = TYP_RNG;
-				GET_RNG (expr, &(p->Rng));
+				value_ptr->type = TYP_RNG;
+				GET_RNG (expr, &(value_ptr->Rng));
 				expr += EXP_ADD_RNG;
 				break;
 
 			case F_TRUE:
 			case F_FALSE:
-				p->type = TYP_BOL;
-				p->Value = (byte == F_TRUE);
+				value_ptr->type = TYP_BOL;
+				value_ptr->Value = (byte == F_TRUE);
 				break;
 
 			case F_PI:
-				p->type = TYP_FLT;
-				p->Float = pi;
+				value_ptr->type = TYP_FLT;
+				value_ptr->Float = pi;
 				break;
 
 			case F_ROW:
 			case F_COL:
-				p->type = TYP_INT;
-				p->Int = ((byte == F_ROW) ? cur_row : cur_col);
+				value_ptr->type = TYP_INT;
+				value_ptr->Int = ((byte == F_ROW) ? cur_row : cur_col);
 				break;
 
 			case F_NOW:
-				p->type = TYP_INT;
-				p->Int = time (nullptr);
+				value_ptr->type = TYP_INT;
+				value_ptr->Int = time (nullptr);
 				break;
 
 				/* Single operand instrs */
@@ -657,64 +667,66 @@ eval_expression ( unsigned char *expr)
 					double (*funp1) (double);
 					funp1 = (double (*)(double)) (f->fn_fun);
 
-					p->Float = (*funp1) (p->Float);
-					if (p->Float != p->Float)
+					value_ptr->Float = (*funp1) (value_ptr->Float);
+					if (value_ptr->Float != value_ptr->Float)
 						ERROR (OUT_OF_RANGE);
 				}
 				break;
 
 			case F_CTIME:
-				p->type = TYP_STR;
-				strptr = ctime ((time_t*) &p->Int);
-				p->String = (char*) obstack_alloc (&tmp_mem, 25);
-				strncpy (p->String, strptr, 24);
-				p->String[24] = '\0';
+				value_ptr->type = TYP_STR;
+				strptr = ctime ((time_t*) &value_ptr->Int);
+				value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
+				strncpy (value_ptr->String, strptr, 24);
+				value_ptr->String[24] = '\0';
 				break;
 
 			case NEGATE:
 			case F_NEG:
-				if (p->type == TYP_ERR)
+				if (value_ptr->type == TYP_ERR)
 					break;
-				if (p->type == TYP_INT)
-					p->Int = -(p->Int);
-				else if (p->type == TYP_FLT)
-					p->Float = -(p->Float);
+				if (value_ptr->type == TYP_INT)
+					value_ptr->Int = -(value_ptr->Int);
+				else if (value_ptr->type == TYP_FLT)
+					value_ptr->Float = -(value_ptr->Float);
 				else
 					ERROR (NON_NUMBER);
 				break;
 
 			case F_RND:
-				p->Int = (random () % (p->Int)) + 1;
+				value_ptr->Int = (random () % (value_ptr->Int)) + 1;
 				break;
 
 			case NOT:
 			case F_NOT:
-				p->Value = !(p->Value);
+				value_ptr->Value = !(value_ptr->Value);
 				break;
 
 			case F_ISERR:
-				p->Value = (p->type == TYP_ERR);
-				p->type = TYP_BOL;
+				value_ptr->Value = (value_ptr->type == TYP_ERR);
+				value_ptr->type = TYP_BOL;
 				break;
 
 			case F_ISNUM:
-				if (p->type == TYP_FLT || p->type == TYP_INT)
-					p->Value = 1;
-				else if (p->type == TYP_STR)
+				if (value_ptr->type == TYP_FLT || value_ptr->type == TYP_INT)
+					value_ptr->Value = 1;
+				else if (value_ptr->type == TYP_STR)
 				{
-					strptr = p->String;
+					strptr = value_ptr->String;
 					(void) astof (&strptr);
-					p->Value = (*strptr == '\0');
+					value_ptr->Value = (*strptr == '\0');
 				}
 				else
-					p->Value = 0;
-				p->type = TYP_BOL;
+					value_ptr->Value = 0;
+				value_ptr->type = TYP_BOL;
 				break;
 
 			case F_ROWS:
 			case F_COLS:
-				p->type = TYP_INT;
-				p->Int = 1 + (byte == F_ROWS ? (p->Rng.hr - p->Rng.lr) : (p->Rng.hc - p->Rng.lc));
+				value_ptr->type = TYP_INT;
+				value_ptr->Int = 1 + (byte == F_ROWS ? 
+						(value_ptr->Rng.hr - value_ptr->Rng.lr) 
+						: (value_ptr->Rng.hc - value_ptr->Rng.lc));
 				break;
 
 				/* Two operand cmds */
@@ -725,8 +737,9 @@ eval_expression ( unsigned char *expr)
 					double (*funp2) (double, double);
 					funp2 = (double (*)(double, double)) (f->fn_fun);
 
-					p->Float = (*funp2) (p->Float, (p + 1)->Float);
-					if (p->Float != p->Float)
+					value_ptr->Float = (*funp2) (value_ptr->Float, 
+							(value_ptr + 1)->Float);
+					if (value_ptr->Float != value_ptr->Float)
 						ERROR (OUT_OF_RANGE);
 				}
 				break;
@@ -736,7 +749,7 @@ eval_expression ( unsigned char *expr)
 			case MOD:
 			case PROD:
 			case SUM:
-				do_math_binop(byte, p, p+1);
+				do_math_binop(byte, value_ptr, value_ptr+1);
 				break;
 			case EQUAL:
 			case NOTEQUAL:
@@ -745,153 +758,153 @@ eval_expression ( unsigned char *expr)
 			case GREATER:
 			case LESS:
 			case LESSEQ:
-				if (p->type == TYP_ERR)
+				if (value_ptr->type == TYP_ERR)
 					break;
-				if ((p + 1)->type == TYP_ERR)
-					ERROR ((p + 1)->Value);
+				if ((value_ptr + 1)->type == TYP_ERR)
+					ERROR ((value_ptr + 1)->Value);
 
-				if (p->type == TYP_BOL || (p + 1)->type == TYP_BOL)
+				if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
 				{
-					if (p->type != (p + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
+					if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
 						ERROR (BAD_INPUT);
 					if (byte == EQUAL)
-						p->Value = p->Value == (p + 1)->Value;
+						value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
 					else
-						p->Value = p->Value != (p + 1)->Value;
+						value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
 					break;
 				}
-				if (p->type != (p + 1)->type)
+				if (value_ptr->type != (value_ptr + 1)->type)
 				{
-					if (p->type == 0)
+					if (value_ptr->type == 0)
 					{
-						if ((p + 1)->type == TYP_STR)
+						if ((value_ptr + 1)->type == TYP_STR)
 						{
-							p->type = TYP_STR;
-							p->String = "";
+							value_ptr->type = TYP_STR;
+							value_ptr->String = "";
 						}
-						else if ((p + 1)->type == TYP_INT)
+						else if ((value_ptr + 1)->type == TYP_INT)
 						{
-							p->type = TYP_INT;
-							p->Int = 0;
+							value_ptr->type = TYP_INT;
+							value_ptr->Int = 0;
 						}
 						else
 						{
-							p->type = TYP_FLT;
-							p->Float = 0.0;
+							value_ptr->type = TYP_FLT;
+							value_ptr->Float = 0.0;
 						}
 					}
-					else if ((p + 1)->type == 0)
+					else if ((value_ptr + 1)->type == 0)
 					{
-						if (p->type == TYP_STR)
+						if (value_ptr->type == TYP_STR)
 						{
-							(p + 1)->type = TYP_STR;
-							(p + 1)->String = "";
+							(value_ptr + 1)->type = TYP_STR;
+							(value_ptr + 1)->String = "";
 						}
-						else if (p->type == TYP_INT)
+						else if (value_ptr->type == TYP_INT)
 						{
-							(p + 1)->type = TYP_INT;
-							(p + 1)->Int = 0;
+							(value_ptr + 1)->type = TYP_INT;
+							(value_ptr + 1)->Int = 0;
 						}
 						else
 						{
-							(p + 1)->type = TYP_FLT;
-							(p + 1)->Float = 0.0;
+							(value_ptr + 1)->type = TYP_FLT;
+							(value_ptr + 1)->Float = 0.0;
 						}
 					}
-					else if (p->type == TYP_STR)
+					else if (value_ptr->type == TYP_STR)
 					{
-						strptr = p->String;
-						if ((p + 1)->type == TYP_INT)
+						strptr = value_ptr->String;
+						if ((value_ptr + 1)->type == TYP_INT)
 						{
-							p->type = TYP_INT;
-							p->Int = astol (&strptr);
+							value_ptr->type = TYP_INT;
+							value_ptr->Int = astol (&strptr);
 						}
 						else
 						{
-							p->type = TYP_FLT;
-							p->Float = astof (&strptr);
+							value_ptr->type = TYP_FLT;
+							value_ptr->Float = astof (&strptr);
 						}
 						if (*strptr)
 						{
-							p->type = TYP_BOL;
-							p->Value = (byte == NOTEQUAL);
+							value_ptr->type = TYP_BOL;
+							value_ptr->Value = (byte == NOTEQUAL);
 							break;
 						}
 					}
-					else if ((p + 1)->type == TYP_STR)
+					else if ((value_ptr + 1)->type == TYP_STR)
 					{
-						strptr = (p + 1)->String;
-						if (p->type == TYP_INT)
-							(p + 1)->Int = astol (&strptr);
+						strptr = (value_ptr + 1)->String;
+						if (value_ptr->type == TYP_INT)
+							(value_ptr + 1)->Int = astol (&strptr);
 						else
-							(p + 1)->Float = astof (&strptr);
+							(value_ptr + 1)->Float = astof (&strptr);
 						if (*strptr)
 						{
-							p->type = TYP_BOL;
-							p->Value = (byte == NOTEQUAL);
+							value_ptr->type = TYP_BOL;
+							value_ptr->Value = (byte == NOTEQUAL);
 							break;
 						}
 
 						/* If we get here, one is INT, and the other
 						   is FLT  Make them both FLT */
 					}
-					else if (p->type == TYP_INT)
+					else if (value_ptr->type == TYP_INT)
 					{
-						p->type = TYP_FLT;
-						p->Float = (double) p->Int;
+						value_ptr->type = TYP_FLT;
+						value_ptr->Float = (double) value_ptr->Int;
 					}
 					else
-						(p + 1)->Float = (double) (p + 1)->Int;
+						(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
 				}
-				if (p->type == TYP_STR)
-					tmp = strcmp (p->String, (p + 1)->String);
-				else if (p->type == TYP_FLT)
-					tmp = (p->Float < (p + 1)->Float) ? -1 : ((p->Float > (p + 1)->Float) ? 1 : 0);
-				else if (p->type == TYP_INT)
-					tmp = (p->Int < (p + 1)->Int ? -1 : ((p->Int > (p + 1)->Int) ? 1 : 0));
-				else if (p->type == 0)
+				if (value_ptr->type == TYP_STR)
+					tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
+				else if (value_ptr->type == TYP_FLT)
+					tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
+				else if (value_ptr->type == TYP_INT)
+					tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
+				else if (value_ptr->type == 0)
 					tmp = 0;
 				else
 				{
 					tmp = 0;
-					panic ("Bad type value %d", p->type);
+					panic ("Bad type value %d", value_ptr->type);
 				}
-				p->type = TYP_BOL;
+				value_ptr->type = TYP_BOL;
 				if (tmp < 0)
-					p->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
+					value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
 				else if (tmp == 0)
-					p->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
+					value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
 				else
-					p->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
+					value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
 				break;
 
 			case F_FIXED:
-				tmp = (p + 1)->Int;
+				tmp = (value_ptr + 1)->Int;
 				if (tmp < -29 || tmp > 29)
 					ERROR (OUT_OF_RANGE);
 				if (tmp < 0) {
-					num_t f1 = (p->Float) / exp10_arr[-tmp];
+					num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
 					num_t f2 = rintn(f1);
 					//num f3 = f2 * exp10_arr[-tmp];
-					p->Float = rintn (f2) * exp10_arr[-tmp];
+					value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
 				} else {
-					p->Float = rintn ((p->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
+					value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
 				}
 				break;
 
 			case F_IFERR:
-				if (p->type == TYP_ERR)
-					*p = *(p + 1);
+				if (value_ptr->type == TYP_ERR)
+					*value_ptr = *(value_ptr + 1);
 				break;
 
 			case F_INDEX:
-				tmp = (p + 1)->Int - 1;
+				tmp = (value_ptr + 1)->Int - 1;
 				if (tmp < 0)
 					ERROR (OUT_OF_RANGE);
-				lrow = p->Rng.lr;
-				lcol = p->Rng.lc;
-				hrow = p->Rng.hr;
-				hcol = p->Rng.hc;
+				lrow = value_ptr->Rng.lr;
+				lcol = value_ptr->Rng.lc;
+				hrow = value_ptr->Rng.hr;
+				hcol = value_ptr->Rng.hc;
 				if (lrow != hrow && lcol != hcol)
 				{
 					int dex;
@@ -917,20 +930,20 @@ eval_expression ( unsigned char *expr)
 					lcol += tmp;
 				}
 				cell_ptr = find_cell (lrow, lcol);
-				PUSH_ANY (cell_ptr);
+				PUSH_ANY(value_ptr, cell_ptr);
 				break;
 
 			case F_INDEX2:
-				crow = (p + 1)->Int - 1;
-				ccol = (p + 2)->Int - 1;
-				lrow = p->Rng.lr;
-				lcol = p->Rng.lc;
-				hrow = p->Rng.hr;
-				hcol = p->Rng.hc;
+				crow = (value_ptr + 1)->Int - 1;
+				ccol = (value_ptr + 2)->Int - 1;
+				lrow = value_ptr->Rng.lr;
+				lcol = value_ptr->Rng.lc;
+				hrow = value_ptr->Rng.hr;
+				hcol = value_ptr->Rng.hc;
 				if (crow > (hrow - lrow) || ccol > (hcol - lcol)) 
 					ERROR (OUT_OF_RANGE);
 				cell_ptr = find_cell (lrow + crow, lcol + ccol);
-				PUSH_ANY (cell_ptr);
+				PUSH_ANY(value_ptr, cell_ptr);
 				break;
 
 				/* case F_PRINTF:
@@ -938,22 +951,22 @@ eval_expression ( unsigned char *expr)
 				   break; */
 
 			case CONCAT:
-				strptr = (char *) obstack_alloc (&tmp_mem, strlen (p->String) + strlen ((p + 1)->String) + 1);
-				strcpy (strptr, p->String);
-				strcat (strptr, (p + 1)->String);
-				p->String = strptr;
+				strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
+				strcpy (strptr, value_ptr->String);
+				strcat (strptr, (value_ptr + 1)->String);
+				value_ptr->String = strptr;
 				break;
 
 			case F_ONEOF:
 				if (numarg < 2)
 					ERROR (NO_VALUES);
 				--numarg;
-				tmp = p->Int;
+				tmp = value_ptr->Int;
 				if (tmp < 1 || tmp > numarg)
 					ERROR (OUT_OF_RANGE);
 				/* Can never happen? */
-				TO_ANY (p + tmp);
-				p[0] = p[tmp];
+				TO_ANY (value_ptr + tmp);
+				value_ptr[0] = value_ptr[tmp];
 				break;
 
 				/* This is now a fallthrough for all the USRmumble codes */
@@ -963,13 +976,13 @@ eval_expression ( unsigned char *expr)
 				{
 					void (*funp) (int, struct value *);
 					funp = (void (*)(int, struct value *)) f->fn_fun;
-					(*funp) (numarg, p);
+					(*funp) (numarg, value_ptr);
 				}
 				else
 				{
 					void (*funp) (struct value *);
 					funp = (void (*)(struct value *)) f->fn_fun;
-					(*funp) (p);
+					(*funp) (value_ptr);
 				}
 				break;
 
