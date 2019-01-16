@@ -355,11 +355,13 @@ init_eval ()
 
 /* This huge function takes a byte-compiled expression and executes it. */
 struct value *
-eval_expression ( unsigned char *expr)
+eval_expression (unsigned char *expr)
 {
+	if (!expr) return 0;
+
 	unsigned char byte;
-	unsigned numarg;
-	unsigned jumpto;
+	unsigned numarg = 0;
+	unsigned jumpto = 0;
 	function_t *f;
 	struct value *value_ptr = 0;
 	char *strptr;
@@ -370,11 +372,6 @@ eval_expression ( unsigned char *expr)
 
 	cell* cell_ptr;
 
-	if (!expr)
-		return 0;
-	jumpto = 0;
-	numarg = 0;
-	//p = 0;
 	curstack = 0;
 	while ((byte = *expr++) != ENDCOMP)
 	{
