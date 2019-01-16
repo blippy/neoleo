@@ -19,7 +19,7 @@ static void noa0_number(char **ptr, int *r, int current);
 
 /* This table contains a list of the infix single-char functions */
 unsigned char fnin[] = {
-	SUM, DIFF, DIV, PROD, MOD, /* AND, OR, */ POW, EQUAL, IF, CONCAT, 0
+	SUM, DIFF, DIV, PROD, MOD, POW, EQUAL, IF, CONCAT, 0
 };
 
 
