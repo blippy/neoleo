@@ -475,21 +475,18 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 void
 copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 {
-	CELL *cpf;
-
-	cpf = find_cell (rf, cf);
+	CELL *cpf = find_cell (rf, cf);
 	cur_row = rt;
 	cur_col = ct;
 	my_cell = find_cell (cur_row, cur_col);
-	if ((!cpf ||
-				(((cpf->cell_flags.cell_format == 0)
-				  && (cpf->cell_flags.cell_precision == 0)
-				  && (cpf->cell_flags.cell_justify == 0)
-				  && (cpf->get_type() == 0))
-				 && (cpf->cell_flags.cell_lock == 0)
-				 //&& !cpf->cell_formula && !cpf->cell_font)) && !my_cell)
+	if(!cpf) return;
+	if (((((cpf->cell_flags.cell_format == 0)
+						&& (cpf->cell_flags.cell_precision == 0)
+						&& (cpf->cell_flags.cell_justify == 0)
+						&& (cpf->get_type() == 0))
+					&& (cpf->cell_flags.cell_lock == 0)
 					&& !cpf->get_cell_formula() )) && !my_cell)
-					return;
+		return;
 	if (!my_cell)
 	{
 		my_cell = find_or_make_cell (cur_row, cur_col);
