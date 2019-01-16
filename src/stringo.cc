@@ -288,7 +288,7 @@ static void do_edit_1(struct value*p) { wrapfunc(do_edit)(p);}
 
 
 
-struct function string_funs[] = {
+function_t string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" }, 
 { C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" }, 
 
@@ -308,5 +308,5 @@ struct function string_funs[] = {
 
 int init_string_function_count(void) 
 {
-        return sizeof(string_funs) / sizeof(struct function) - 1;
+        return sizeof(string_funs) / sizeof(function_t) - 1;
 }

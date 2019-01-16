@@ -349,7 +349,7 @@ eval_expression ( unsigned char *expr)
 	unsigned char byte;
 	unsigned numarg;
 	unsigned jumpto;
-	struct function *f;
+	function_t *f;
 	struct value *p;
 	char *strptr;
 	int tmp;

@@ -23,14 +23,14 @@ unsigned char fnin[] = {
 };
 
 
-std::map<std::string,function*> parse_hash_1;
+std::map<std::string,function_t*> parse_hash_1;
 
-void add_parse_hash(const char* name, function* func)
+void add_parse_hash(const char* name, function_t* func)
 {
 	parse_hash_1[name] = func;
 }
 
-function* find_func(char* name)
+function_t* find_func(char* name)
 {
 	auto it = parse_hash_1.find(name);
 	if(it != parse_hash_1.end())
@@ -51,7 +51,7 @@ yyreglex ()
 
 	/* unsigned char *ptr; */
 	int nn;
-	struct function *fp;
+	function_t *fp;
 	int tmp_ch;
 
 #ifdef TEST

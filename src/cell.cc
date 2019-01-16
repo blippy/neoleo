@@ -158,7 +158,7 @@ get_cell_formula_at(int r, int c)
 
 #define S (char *)
 #define T (void (*)())
-struct function cells_funs[] =
+function_t cells_funs[] =
 {
 
   {0, 0, "", 0, 0},
@@ -166,7 +166,7 @@ struct function cells_funs[] =
 
 int init_cells_function_count(void) 
 {
-        return sizeof(cells_funs) / sizeof(struct function) - 1;
+        return sizeof(cells_funs) / sizeof(function_t) - 1;
 }
 
 void edit_cell(const char* input)

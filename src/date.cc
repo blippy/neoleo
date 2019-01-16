@@ -258,7 +258,7 @@ do_strftime (
 using vptr = void (*) (); // cast to a function that takes no args, and returns no result
 //using vptr = reinterpret_cast<void(*) ()>(); // 
 
-struct function date_funs[] =
+function_t date_funs[] =
 {
   {C_FN3, X_A3, "III", (vptr) do_hms_to_time, "hms_to_time"},		/* 1 */
   {C_FN4, X_A4, "IIII", (vptr) do_dhms_to_time, "dhms_to_time"},	/* 2 */
@@ -294,5 +294,5 @@ struct function date_funs[] =
 
 int init_date_function_count(void)
 {
-	return sizeof(date_funs) / sizeof(struct function) - 1;
+	return sizeof(date_funs) / sizeof(function_t) - 1;
 }

@@ -278,7 +278,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 	unsigned char byte;
 	CELLREF trr, tcc;
 	struct rng trng;
-	struct function *f;
+	function_t *f;
 	//size_t len;
 	struct var *v;
 	CELL *tcp;
@@ -385,7 +385,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 
 			default:
 				{
-					struct function *fun;
+					function_t *fun;
 
 					if (byte >= SKIP)
 						break;
@@ -611,7 +611,7 @@ flush_old_value (void)
 
 				default:
 					{
-						struct function *fun;
+						function_t *fun;
 
 						if (byte < USR1)
 							fun = &the_funs[byte];
@@ -1455,7 +1455,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 
 					default:
 						{
-							struct function *fun;
+							function_t *fun;
 
 							if (*fp < USR1)
 								fun = &the_funs[*fp];
@@ -1628,7 +1628,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 						continue;
 #ifdef TEST
 					default:
-						{ struct function *fun; if (*ffp < USR1) fun =
+						{ function_t *fun; if (*ffp < USR1) fun =
 							&the_funs[*ffp]; else if (*ffp >= SKIP) fun = 0, panic
 								("SKIP? in shift_outside()"); else fun =
 								&usr_funs[*ffp][ffp[1]];
@@ -1807,7 +1807,7 @@ shift_formula (int r, int c, int dn, int ov)
 
 			default:
 				{
-					struct function *fun;
+					function_t *fun;
 
 					if (*fp < USR1)
 						fun = &the_funs[*fp];

@@ -53,10 +53,10 @@
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
 
-extern struct function date_funs[];
-extern struct function busi_funs[];
-extern struct function string_funs[];
-extern struct function cells_funs[];
+extern function_t date_funs[];
+extern function_t busi_funs[];
+extern function_t string_funs[];
+extern function_t cells_funs[];
 
 extern char *instr;
 extern int parse_error;
@@ -96,7 +96,7 @@ double tan1(double x) { return tan(x); }
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
  */
-struct function the_funs[] =
+function_t the_funs[] =
 {
   {0, X_A0, "", 0, S "<END>"},
   {0, X_A0, "", 0, S "<DUMMY1>"},
@@ -219,7 +219,7 @@ struct function the_funs[] =
 /*
  * This is the place where you can add extra functions
  */
-static struct function *__usr_funs[] =
+static function_t *__usr_funs[] =
 {
 	date_funs,
 	busi_funs,
@@ -260,10 +260,10 @@ int n_usr_funs = sizeof(init_function_counts) / sizeof(init_function_count);
  */
 int *usr_n_funs = NULL;
 
-struct function **usr_funs = __usr_funs;
+function_t **usr_funs = __usr_funs;
 
 /* ... A whole huge empty space, then ... */
-struct function skip_funs[] =
+function_t skip_funs[] =
 {
   {C_SKIP, X_A0 | X_J, "", 0,  (char *)"<Skip %u>"},
   {C_SKIP, X_A0 | X_JL,  "", 0,  (char *)"<SkipL %u>"},
@@ -271,7 +271,7 @@ struct function skip_funs[] =
 
 
 
-void init_bcode_func(const char* name, function* funcs)
+void init_bcode_func(const char* name, function_t* funcs)
 {
 	add_parse_hash(name, funcs);
 }
@@ -370,7 +370,7 @@ rot_patch (int n1, int n2)
 }
 
 
-bool process_function(cell* cp, const struct function* f, struct node*& node, int& byte)
+bool process_function(cell* cp, const function_t *f, struct node*& node, int& byte)
 {
 	struct node *new_node;
 
@@ -668,7 +668,7 @@ parse_and_compile(cell* cp, const char* string)
 char* parse_and_compile_1 (cell* cp, const char *string, mem& the_mem)
 {
 	struct node *node;
-	const struct function *f;
+	const function_t *f;
 	char *ret;
 	int n;
 	unsigned buf_siz;

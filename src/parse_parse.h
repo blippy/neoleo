@@ -10,7 +10,7 @@ inline int parse_error = 0;
 #define YYREGSTYPE struct node*
 
 //int yyparse_parse(const std::string& input, mem& yymem);
-void add_parse_hash(const char* name, function* func);
+void add_parse_hash(const char* name, function_t* func);
 void* alloc_parsing_memory(size_t nbytes);
 
 /* This turns user input for a cell into a parse tree */

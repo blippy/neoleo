@@ -158,7 +158,7 @@ typedef uint32_t coord_t;
 #define SKIP		254
 #define SKIP_L		255
 
-typedef struct function
+typedef struct // function
 {
 	/* See C_mumble below.  This is used when byte-compiling,
 	   and decompiling */
@@ -186,11 +186,11 @@ typedef struct function
 	const char *fn_str;
 } function_t;
 
-extern struct function the_funs[];
+extern function_t the_funs[];
 extern int n_usr_funs;
-extern struct function **usr_funs;
+extern function_t **usr_funs;
 extern int *usr_n_funs;
-extern struct function skip_funs[];
+extern function_t skip_funs[];
 
 /* Magic numbers for byte-compiling and decompiling expressions */
 /* These need only be distinct (and have x|C_T be distinct too!) */

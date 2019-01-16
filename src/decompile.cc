@@ -95,7 +95,7 @@ static pr_node_t* byte_decompile(unsigned char *expr);
  * Everything is still monstrous, mind.
  * Note that this function call byte_decompile() - so there is recursion
  */
-void decompile_comp(struct function*& f, struct pr_node*& newn,  
+void decompile_comp(function_t*& f, struct pr_node*& newn,  
 		unsigned char* &expr,   
 		unsigned jumpto, unsigned char &byte, 
 		struct pr_node **&c_node)
@@ -504,7 +504,7 @@ byte_decompile ( unsigned char *expr)
 	struct pr_node *newn = 0;
 	while(*expr) {
 		unsigned char byte = *expr++;
-		struct function *f;
+		function_t *f;
 		long tmp_lng;
 		if (byte < USR1)
 			f = &the_funs[byte];

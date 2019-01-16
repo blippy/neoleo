@@ -620,6 +620,6 @@ function_t busi_funs[] =
 
 int init_busi_function_count(void) 
 {
-        return sizeof(busi_funs) / sizeof(struct function) - 1;
+        return sizeof(busi_funs) / sizeof(function_t) - 1;
 }
 
