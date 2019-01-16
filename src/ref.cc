@@ -96,7 +96,7 @@ struct cell_buf {
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
-void
+	void
 set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 {
 	unsigned char *ret;
@@ -122,8 +122,8 @@ extern int default_lock;
 
 /* new_value() calls set_cell, but refuses to change locked cells, and
    updates and prints the results.  It returns an error msg on error. . .
- */
-char *
+   */
+	char *
 new_value (CELLREF row, CELLREF col, const char *string)
 {
 	CELL *cp;
@@ -156,9 +156,9 @@ new_value (CELLREF row, CELLREF col, const char *string)
    Also note that move_cell does not call move_outside, which may or may not
    be a bug. . .  Move_cell is only called as part of sorting, which is why
    we may *not* want to call move_outside. . .
- */
+   */
 
-void
+	void
 move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 {
 	CELL *cpf;
@@ -229,9 +229,9 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 				  && (non_cell.cell_flags.cell_justify == 0)
 				  && (non_cell.get_type() == 0))
 				 && (non_cell.cell_flags.cell_lock == 0)
-	   ))
-	   && !my_cell)
-	   return;
+				))
+			&& !my_cell)
+		return;
 	if (!my_cell)
 	{
 		my_cell = find_or_make_cell (cur_row, cur_col);
@@ -465,7 +465,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 }
 
 /* Used only in regions.c for copy_region. */
-void
+	void
 copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 {
 	CELL *cpf = find_cell (rf, cf);
@@ -521,7 +521,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 /* Take away the value of CP.  This means getting rid of all the references
  * to it, etc.
  */
-void
+	void
 flush_old_value (void)
 {
 	struct ref_to *ref;
@@ -644,7 +644,7 @@ flush_old_value (void)
 
 /* Record in the argument cell that cur_row/col depends on it. */
 
-void
+	void
 add_ref (CELLREF row, CELLREF col)
 {
 	CELL *other_cell;
@@ -656,7 +656,7 @@ add_ref (CELLREF row, CELLREF col)
 /* like add_ref, except over a range of arguments and with memory
  * management weirdness. 
  */
-void
+	void
 add_range_ref (struct rng *rng)
 {
 	return; // TODO FIXME
@@ -714,7 +714,7 @@ add_range_ref (struct rng *rng)
 #endif
 }
 
-static void
+	static void
 flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 {
 	CELL *other_cell;
@@ -783,7 +783,7 @@ static struct ref_to *to_list[TO_HASH_NUM];
 static struct ref_to *to_tmp_ref;
 static unsigned to_tmp_ref_alloc;
 
-void
+	void
 flush_refs (void)
 {
 	int n;
@@ -810,7 +810,7 @@ flush_refs (void)
 	}
 }
 
-static struct ref_fm *
+	static struct ref_fm *
 find_fm_ref (void)
 {
 	struct ref_fm *tmp;
@@ -854,7 +854,7 @@ find_fm_ref (void)
 	return tmp;
 }
 
-static void 
+	static void 
 flush_fm_ref (struct ref_fm *old)
 {
 	struct ref_fm *tmp;
@@ -903,7 +903,7 @@ flush_fm_ref (struct ref_fm *old)
 /* This adds a from reference to a cells reference list.
  * Note that the ref_fm structures themselves are hash-consed.
  */
-static void
+	static void
 add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
 {
 	struct ref_fm *from;
@@ -952,7 +952,7 @@ add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
 		flush_fm_ref (from);
 }
 
-static void
+	static void
 flush_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
 {
 	struct ref_fm *from;
@@ -1000,7 +1000,7 @@ flush_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
 }
 
 
-static struct ref_to *
+	static struct ref_to *
 find_to_ref (void)
 {
 	struct ref_to *tmp;
@@ -1046,7 +1046,7 @@ find_to_ref (void)
 	return tmp;
 }
 
-void
+	void
 add_ref_to (cell* cp, int whereto)
 {
 	struct ref_to *from;
@@ -1088,7 +1088,7 @@ add_ref_to (cell* cp, int whereto)
 	cp->cell_refs_to = find_to_ref ();
 }
 
-static void
+	static void
 flush_ref_to (struct ref_to **where)
 {
 	struct ref_to *tmp;
@@ -1151,7 +1151,7 @@ static int shift_dn;
  * After calling this function, one must also call 
  * finish_shift_var to install the new CELL_REF_FM links.
  */
-static void 
+	static void 
 start_shift_var (char *name, struct var *v)
 {
 	int n;
@@ -1213,7 +1213,7 @@ start_shift_var (char *name, struct var *v)
 }
 
 
-static void 
+	static void 
 finish_shift_var (char *name, struct var *v)
 {
 	int n;
@@ -1247,7 +1247,7 @@ finish_shift_var (char *name, struct var *v)
  * 
  * Variables and references to variables are also shifted.
  */
-void
+	void
 shift_outside (struct rng *fm, int dn, int ov)
 {
 	CELL *cp;
@@ -1667,7 +1667,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 
 /* The formula in cell my_cell has moved by DN down and OV over, adjust
    everything so it'll still work */
-void
+	void
 shift_formula (int r, int c, int dn, int ov)
 {
 	int n;
@@ -1826,7 +1826,7 @@ shift_formula (int r, int c, int dn, int ov)
 /* This function is called when the alarm has gone off (but not from inside
  * the signal handler!). It schedules timer_cells->fm_refs for recalc. 
  */
-void
+	void
 cell_alarm (void)
 {
 	int n;
@@ -1845,7 +1845,7 @@ cell_alarm (void)
 }
 
 /* All the timer_cells are going away, 'cuz everything is going away. . . */
-void
+	void
 flush_all_timers (void)
 {
 	if (timer_active)
@@ -1858,7 +1858,7 @@ flush_all_timers (void)
 
 /* Add CUR_ROW, CUR_COL to the list of active timer-cells, turning on
    the timer_active, if it isn't already */
-void
+	void
 add_timer_ref (cell*cp, int whereto)
 {
 	add_ref_to (cp, whereto);
@@ -1870,7 +1870,7 @@ add_timer_ref (cell*cp, int whereto)
 static struct cell_buf cell_buffer;
 
 /* Start up the FIFO of cells to update */
-void
+	void
 init_refs (void)
 {
 	//log_debug("init_refs called");
@@ -1884,7 +1884,7 @@ init_refs (void)
 
 /* Push the cells in REF onto the FIFO.  This calls push_cell to do the
    actual work. . . */
-void
+	void
 push_refs (struct ref_fm *ref)
 {
 	int n;
@@ -1919,7 +1919,7 @@ push_refs (struct ref_fm *ref)
    This does not implement best-order recalculation, since there may be
    intersecting branches in the dependency tree, however, it's close enough
    for most people.
- */
+   */
 static void cell_buffer_contents (FILE *fp);
 
 void push_cell(coord_t coord)
@@ -1932,7 +1932,7 @@ void push_cell(cell* cp)
 	push_cell(cp->coord);
 }
 
-void
+	void
 push_cell (CELLREF row, CELLREF col)
 {
 	struct pos *dup;
@@ -2036,7 +2036,7 @@ push_cell (CELLREF row, CELLREF col)
    This returns 0 if there are no more cells to update, or if it gets
    an error. */
 
-int
+	int
 eval_next_cell (void)
 {
 	CELL *cp;
@@ -2073,7 +2073,7 @@ eval_next_cell (void)
 }
 
 #if 1
-static void
+	static void
 cell_buffer_contents (FILE *fp)
 {
 	struct pos *ptr;
@@ -2107,7 +2107,7 @@ cell_buffer_contents (FILE *fp)
  * since the '@' argument type now required by set-var will
  * only recognize a valid region.
  */
-char *
+	char *
 old_new_var_value (char *v_name, int v_namelen, char *v_newval)
 {
 	struct var *var;
@@ -2178,7 +2178,7 @@ old_new_var_value (char *v_name, int v_namelen, char *v_newval)
  * This might also be changed to use add_range_ref()?
  */
 
-char *
+	char *
 new_var_value (char *v_name, int v_namelen, struct rng *rng)
 {
 	struct var *var;
@@ -2226,7 +2226,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 	return 0;
 }
 
-void
+	void
 for_all_vars (void (*func) (char *, struct var *))
 {
 	//log_debug("for_all_vars called");
@@ -2250,8 +2250,8 @@ struct var *find_var_1(const char* str)
 /* Find a variable in the list of variables, or create it if it doesn't
    exist.  Takes a name and a length so the name doesn't have to be
    null-terminated
- */
-struct var *
+   */
+	struct var *
 find_or_make_var(const char *string, int len)
 {
 	log_debug("find_or_make_var called");
@@ -2269,7 +2269,7 @@ find_or_make_var(const char *string, int len)
 }
 
 /* Like find-or-make-var except returns 0 if it doesn't exist */
-struct var *
+	struct var *
 find_var (char *string, int len)
 {
 	//log_debug("find_var called");
@@ -2286,27 +2286,27 @@ find_var (char *string, int len)
 /* This adds a reference from CUR_ROW,CUR_COL to the variable VAR
    It calls add_ref or add_range_ref to have the cell(s) in VAR be
    referenced by CUR_ROW,CUR_COL
- */
-void
+   */
+	void
 add_var_ref (void * vvar)
 {
-  struct var *var = (struct var *)vvar;
-  add_ref_fm (&(var->var_ref_fm), cur_row, cur_col);
-  switch (var->var_flags)
-    {
-    case VAR_UNDEF:
-      break;
-    case VAR_CELL:
-      add_ref (var->v_rng.lr, var->v_rng.lc);
-      break;
-    case VAR_RANGE:
-      add_range_ref (&(var->v_rng));
-      break;
+	struct var *var = (struct var *)vvar;
+	add_ref_fm (&(var->var_ref_fm), cur_row, cur_col);
+	switch (var->var_flags)
+	{
+		case VAR_UNDEF:
+			break;
+		case VAR_CELL:
+			add_ref (var->v_rng.lr, var->v_rng.lc);
+			break;
+		case VAR_RANGE:
+			add_range_ref (&(var->v_rng));
+			break;
 #ifdef TEST
-    default:
-      panic ("Unknown var type %d in add_var_ref", var->var_flags);
+		default:
+			panic ("Unknown var type %d in add_var_ref", var->var_flags);
 #endif
-    }
+	}
 }
 
 
@@ -2314,8 +2314,8 @@ add_var_ref (void * vvar)
    associated with each variable.  Note that this does not get rid of
    the struct var *s in cell expressions, so it can only be used when all
    the cells are being freed also
- */
-void
+   */
+	void
 flush_variables (void)
 {
 	the_vars_1.clear();
