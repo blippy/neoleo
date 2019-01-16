@@ -162,7 +162,6 @@ extern void add_range_ref (struct rng *);
 //extern void add_timer_ref (int);
 //extern void add_ref_to (int);
 
-extern void push_refs (struct ref_fm *);
 extern void no_more_cells (void);
 
 extern char *range_name (struct rng *);

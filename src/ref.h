@@ -60,3 +60,4 @@ extern void for_all_vars (void (*func) (char *, struct var *));
 extern struct var * find_var (char *string, int len);
 extern void add_var_ref (void * vvar);
 extern void flush_variables (void);
+void push_refs (cell *cp);

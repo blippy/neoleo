@@ -188,9 +188,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell->cell_refs_to = non_cell.cell_refs_to;
 		my_cell->set_cell_formula(non_cell.get_cell_formula());
 		my_cell->cell_cycle = non_cell.cell_cycle;
-		//my_cell->cell_font = non_cell.cell_font;
 		my_cell->set_c_z(non_cell.get_c_z());
-		push_refs (my_cell->cell_refs_from);
+		push_refs(my_cell);
 		if (my_cell->cell_refs_to)
 			shift_formula (cur_row, cur_col, rt - non_rf, ct - non_cf);
 		my_cell = 0;
@@ -252,9 +251,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	cpf->cell_refs_to = 0;
 	cpf->set_cell_formula(0);
 	cpf->cell_cycle = 0;
-	//cpf->cell_font = 0;
 
-	push_refs (my_cell->cell_refs_from);
+	push_refs(my_cell);
 	if (my_cell->cell_refs_to)
 		shift_formula (cur_row, cur_col, rt - rf, ct - cf);
 	my_cell = 0;
@@ -513,7 +511,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 	io_pr_cell (cur_row, cur_col, my_cell);
 
-	push_refs (my_cell->cell_refs_from);
+	push_refs(my_cell);
 	my_cell = 0;
 }
 
@@ -1883,9 +1881,10 @@ init_refs (void)
 
 /* Push the cells in REF onto the FIFO.  This calls push_cell to do the
    actual work. . . */
-	void
-push_refs (struct ref_fm *ref)
+void push_refs (cell *cp)
 {
+	if(!cp) return;
+	struct ref_fm *ref = cp->cell_refs_from;
 	int n;
 
 	if (!ref || !ref->refs_used)

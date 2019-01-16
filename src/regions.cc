@@ -41,6 +41,7 @@
 #include "sort.h"
 #include "basic.h"
 #include "spans.h"
+//#include "ref.h"
 
 using std::cout;
 using std::endl;
@@ -80,7 +81,7 @@ delete_region (struct rng *where)
 		flush_old_value ();
 		pp->set_cell_formula(0);
 		pp->clear_flags();
-		push_refs (pp->cell_refs_from);
+		push_refs(pp);
 		io_pr_cell(r, c, pp);
 	}
 	my_cell = 0;

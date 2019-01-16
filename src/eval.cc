@@ -39,6 +39,7 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
+#include "ref.h"
 #include "sheet.h"
 
 #if defined(HAVE_RINT)
@@ -1058,7 +1059,7 @@ update_cell(CELL *cell)
 	newv = eval_expression (cell->get_cell_formula());
 	if (!newv)
 	{
-		push_refs (cell->cell_refs_from);
+		push_refs(cell);
 		return;
 	}
 
@@ -1107,7 +1108,7 @@ update_cell(CELL *cell)
 	if (new_val)
 	{
 		cell->set_c_z(newv->x);
-		push_refs (cell->cell_refs_from);
+		push_refs(cell);
 	}
 	(void) obstack_free (&tmp_mem, tmp_mem_start);
 }
