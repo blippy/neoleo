@@ -79,6 +79,13 @@ struct cell_flags_s {
 	unsigned int	cell_justify =	JST_DEF;
 	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;
+	void clear() { 
+		cell_unused = 0;
+		cell_lock = 0;
+		cell_justify = 0;
+		cell_format = 0;
+		cell_precision = 0;
+	}
 }; 
 
 class cell : public value
@@ -102,6 +109,7 @@ class cell : public value
 		~cell();
 		void reset();
 		struct cell_flags_s cell_flags;
+		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
 		unsigned char* get_cell_formula(); 

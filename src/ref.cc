@@ -203,16 +203,15 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	{
 		non_rf = rf;
 		non_cf = cf;
-		if (!cpf)
-			bzero (&non_cell, sizeof (non_cell));
-		else
-		{
+		if (!cpf) {
+			non_cell.clear_flags();
+		} else {
 			non_cell.cell_flags = cpf->cell_flags;
 			non_cell.cell_refs_to = cpf->cell_refs_to;
 			non_cell.set_cell_formula(cpf->get_cell_formula());
 			non_cell.cell_cycle = cpf->cell_cycle;
 			non_cell.set_c_z(cpf->get_c_z());
-			bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
+			cpf->clear_flags();
 			cpf->cell_refs_to = 0;
 			cpf->set_cell_formula(0);
 			cpf->cell_cycle = 0;
@@ -249,7 +248,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	my_cell->cell_cycle = cpf->cell_cycle;
 	my_cell->set_c_z(cpf->get_c_z());
 
-	bzero(&(cpf->cell_flags), sizeof(cpf->cell_flags));
+	cpf->clear_flags();
 	cpf->cell_refs_to = 0;
 	cpf->set_cell_formula(0);
 	cpf->cell_cycle = 0;

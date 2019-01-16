@@ -107,6 +107,12 @@ void cell::reset()
 	cell_formula = 0;
 }
 
+void cell::clear_flags()
+{
+	//bzero((void*) this->cell_flags, sizeof(this->cell_flags));
+	this->cell_flags.clear();
+}
+
 cell::~cell()
 {
 	magic = 0x0DEFACED; // see TR06
