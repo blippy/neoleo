@@ -30,6 +30,7 @@
 #include "eval.h"
 #include "errors.h"
 #include "busi.h"
+#include "logging.h"
 #include "utils.h"
 #include "sheet.h"
 
@@ -569,6 +570,7 @@ do_compbal (struct value *p)
 static void
 do_sum(struct value* p)
 {
+	log_debug("busi.cc:do_sum called");
 	struct rng rng1 = p->gRng();
 	struct rng* rng = &rng1;
 	double res = 0;
