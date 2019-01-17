@@ -488,14 +488,13 @@ do_fn2:
 }
 
 static pr_node_t*
-byte_decompile ( unsigned char *expr)
+byte_decompile (formula_t expr)
 {
 	static struct pr_node **c_node;
 	static int line_alloc;
 	static pr_node_t** the_line;
 	if (!the_line)
 	{
-		//the_line = (struct pr_node **) ck_malloc (20 * sizeof (struct pr_node *));
 		the_line = new pr_node_t*[20];
 		line_alloc = 20;
 		c_node = the_line;

@@ -25,8 +25,9 @@
    (or a location to evaluate to:  This includes c_r, which
    a VAR, etc may evaluate to, but which no cell can ever contain */
 
-#include <assert.h>
+#include <cassert>
 #include <cstdint>
+#include <cstddef>
 #include <string>
 #include <variant>
 
@@ -88,10 +89,13 @@ struct cell_flags_s {
 	}
 }; 
 
+typedef unsigned char* formula_t;
+//typedef std::byte* formula_t;
+
 class cell : public value
 {
 	private:
-		unsigned char *cell_formula = nullptr; // (unsigned char*) dupe("");
+		formula_t cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		omnival_t omnival;
 
@@ -112,8 +116,8 @@ class cell : public value
 		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
-		unsigned char* get_cell_formula(); 
-		unsigned char* set_cell_formula( unsigned char * newval);
+		formula_t get_cell_formula(); 
+		formula_t set_cell_formula(formula_t newval);
 		void set_omnival(struct value* v);
 
 

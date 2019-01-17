@@ -66,7 +66,7 @@ cell::cell(coord_t coord) :coord(coord)
 {
 }
 
-unsigned char * cell::get_cell_formula()
+formula_t cell::get_cell_formula()
 { 
 	return cell_formula; 
 }
@@ -95,7 +95,7 @@ void cell::set_omnival(struct value* v)
 }
 
 
-unsigned char * cell::set_cell_formula( unsigned char * newval)
+formula_t cell::set_cell_formula(formula_t newval)
 { 
 	cell_formula = newval ;  
 	return cell_formula; 
