@@ -173,13 +173,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell = find_cell (cur_row, cur_col);
 		if (my_cell)
 			flush_old_value ();
-		else if (((non_cell.cell_flags.cell_format == 0)
-					&& (non_cell.cell_flags.cell_precision == 0)
-					&& (non_cell.cell_flags.cell_justify == 0)
-					&& (non_cell.get_type() == 0))
-				&& (non_cell.cell_flags.cell_lock == 0)
-				&& !non_cell.get_cell_formula() 
-			)
+		else if (non_cell.zeroed_1() && !non_cell.get_cell_formula())
 			return;
 		else
 			my_cell = find_or_make_cell (cur_row, cur_col);
@@ -213,14 +207,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	cur_row = rt;
 	cur_col = ct;
 	my_cell = find_cell (cur_row, cur_col);
-	if ((!cpf ||
-				(((non_cell.cell_flags.cell_format == 0)
-				  && (non_cell.cell_flags.cell_precision == 0)
-				  && (non_cell.cell_flags.cell_justify == 0)
-				  && (non_cell.get_type() == 0))
-				 && (non_cell.cell_flags.cell_lock == 0)
-				))
-			&& !my_cell)
+	if ((!cpf || cpf->zeroed_1()) && !my_cell)
 		return;
 	if (!my_cell)
 	{
@@ -455,12 +442,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	cur_col = ct;
 	my_cell = find_cell (cur_row, cur_col);
 	if(!cpf) return;
-	if (((((cpf->cell_flags.cell_format == 0)
-						&& (cpf->cell_flags.cell_precision == 0)
-						&& (cpf->cell_flags.cell_justify == 0)
-						&& (cpf->get_type() == 0))
-					&& (cpf->cell_flags.cell_lock == 0)
-					&& !cpf->get_cell_formula() )) && !my_cell)
+	if (cpf->zeroed_1() && !cpf->get_cell_formula() && !my_cell)
 		return;
 	if (!my_cell)
 	{
