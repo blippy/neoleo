@@ -19,15 +19,9 @@ if [ -n "${SAN}" ]; then
 fi
 source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
-#if [ "x$ID" = "xraspbian" ]; then
-#	SAN=
-#fi	
-#if [ "x$OS" = "xWindows_NT" ]; then
-#	SAN=
-#fi
-#if [ "x$ID" = "xslackware" ]; then
-#	SAN=
-#fi
+if [[ ":Windows_NT:raspbian:slackware:" = *:$ID:* ]]; then
+	SAN=
+fi
 
 
 #SAN=--with-asan 
@@ -35,8 +29,8 @@ if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
 OPTS="$DBG $GPROF $SAN "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
-#./configure $OPTS  --prefix=$HOME/.local
+#./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
+./configure $OPTS  --prefix=$HOME/.local
 
 
 
