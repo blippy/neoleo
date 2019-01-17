@@ -64,7 +64,24 @@
 #ifndef _IOSTRG
 #define _IOSTRG 0
 #endif
-
+
+
+// very useful function!
+// https://stackoverflow.com/questions/15106102/how-to-use-c-stdostream-with-printf-like-formatting
+std::string format(const std::string& format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    size_t len = std::vsnprintf(NULL, 0, format.c_str(), args);
+    va_end(args);
+    std::vector<char> vec(len + 1);
+    va_start(args, format);
+    std::vsnprintf(&vec[0], len + 1, format.c_str(), args);
+    va_end(args);
+    return &vec[0];
+}
+
+
 extern int sys_nerr;
 
 struct id

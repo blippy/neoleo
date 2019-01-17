@@ -2351,7 +2351,7 @@ io_error_msg (const char *str, ...)
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
 
-	char buf2[1000];
+	char buf2[1020];
 	sprintf (buf2, "display-msg %s", buf);
 	recover_from_error ();
 
@@ -2372,7 +2372,7 @@ io_info_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];
-	char buf2[1000];
+	char buf2[1020];
 
 	va_start (foo, str);
 	vsprintf (buf, str, foo);

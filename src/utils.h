@@ -26,6 +26,7 @@
 #include "global.h"
 #include "numeric.h"	
 
+std::string format(const std::string& format, ...);
 extern char *argv_name;
 extern int __make_backups;
 extern int __backup_by_copying;
