@@ -273,3 +273,11 @@ celldeq_t get_cells_in_range(struct rng *a_rng) // definition
 	
 }
 
+cell* take_front(celldeq_t & cd)
+{
+	if(cd.size() ==0) return nullptr;
+	cell *cp = cd.front();
+	cd.pop_front();
+	return cp;
+}
+

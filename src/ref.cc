@@ -620,11 +620,8 @@ add_ref (CELLREF row, CELLREF col)
 /* like add_ref, except over a range of arguments and with memory
  * management weirdness. 
  */
-	void
-add_range_ref (struct rng *rng)
+void add_range_ref (struct rng *rng)
 {
-	return; // TODO FIXME
-#if 0
 	CELL *other_cell;
 	struct ref_fm *oldref, *newref;
 	struct ref_fm nonref;
@@ -637,15 +634,18 @@ add_range_ref (struct rng *rng)
 	 * adjust the refcounts
 	 */
 	nonref.refs_refcnt = 1;
-	other_cell = next_cell_in_range ();
-	assert(other_cell);
+	celldeq_t cells_in_range = get_cells_in_range(rng);
+	//other_cell = next_cell_in_range ();
+	other_cell = take_front(cells_in_range);
+	//assert(other_cell);
 	oldref = other_cell->cell_refs_from;
 	if (oldref && oldref->refs_refcnt == 1)
 		oldref = &nonref;
 
 	add_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
 	newref = other_cell->cell_refs_from;
-	while ((other_cell = next_cell_in_range ()))
+	//while ((other_cell = next_cell_in_range ()))
+	while(other_cell = take_front(cells_in_range))
 	{
 		if (other_cell->cell_refs_from == oldref)
 		{
@@ -675,7 +675,6 @@ add_range_ref (struct rng *rng)
 	   oldref->refs_refcnt=1;
 	   flush_fm_ref(oldref);
 	   } */
-#endif
 }
 
 	static void

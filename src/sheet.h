@@ -38,6 +38,7 @@ struct cell* find_or_make_cell(CELLREF row, CELLREF col);
 
 void init_cells();
 celldeq_t get_cells_in_range(struct rng *r);
+cell* take_front(celldeq_t & cd);
 
 void make_cells_in_range(struct rng *r);
 void no_more_cells();
