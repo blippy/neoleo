@@ -120,17 +120,15 @@ cell::~cell()
 	//cout <<"X";
 }
 
-/*
-CELLREF get_row()
-{
-	return coord.get_row();
-}
 
-CELLREF get_col()
+void copy_cell_stuff (cell* src, cell* dest)
 {
-	return coord.get_col();
+	dest->cell_flags = src->cell_flags;
+	dest->cell_refs_to = src->cell_refs_to;
+	dest->set_cell_formula(src->get_cell_formula());
+	dest->cell_cycle = src->cell_cycle;
+	dest->set_c_z(src->get_c_z());
 }
-*/
 
 bool 
 vacuous(cell* cp)

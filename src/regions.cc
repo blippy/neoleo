@@ -493,11 +493,7 @@ move_region (struct rng *fm, struct rng *to)
 			else
 				flush_old_value ();
 
-			my_cell->cell_flags = cpf->cell_flags;
-			my_cell->cell_refs_to = cpf->cell_refs_to;
-			my_cell->set_cell_formula(cpf->get_cell_formula());
-			my_cell->cell_cycle = cpf->cell_cycle;
-			my_cell->set_c_z(cpf->get_c_z());
+			copy_cell_stuff(cpf, my_cell);
 
 			cpf->clear_flags();
 			cpf->cell_refs_to = 0;

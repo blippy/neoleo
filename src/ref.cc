@@ -184,11 +184,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		else
 			my_cell = find_or_make_cell (cur_row, cur_col);
 
-		my_cell->cell_flags = non_cell.cell_flags;
-		my_cell->cell_refs_to = non_cell.cell_refs_to;
-		my_cell->set_cell_formula(non_cell.get_cell_formula());
-		my_cell->cell_cycle = non_cell.cell_cycle;
-		my_cell->set_c_z(non_cell.get_c_z());
+		copy_cell_stuff(&non_cell, my_cell);
 		push_refs(my_cell);
 		if (my_cell->cell_refs_to)
 			shift_formula (cur_row, cur_col, rt - non_rf, ct - non_cf);
@@ -205,11 +201,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		if (!cpf) {
 			non_cell.clear_flags();
 		} else {
-			non_cell.cell_flags = cpf->cell_flags;
-			non_cell.cell_refs_to = cpf->cell_refs_to;
-			non_cell.set_cell_formula(cpf->get_cell_formula());
-			non_cell.cell_cycle = cpf->cell_cycle;
-			non_cell.set_c_z(cpf->get_c_z());
+			copy_cell_stuff(cpf, &non_cell);
 			cpf->clear_flags();
 			cpf->cell_refs_to = 0;
 			cpf->set_cell_formula(0);
@@ -241,12 +233,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	if (!cpf)
 		return;
 
-	my_cell->cell_flags = cpf->cell_flags;
-	my_cell->cell_refs_to = cpf->cell_refs_to;
-	my_cell->set_cell_formula(cpf->get_cell_formula());
-	my_cell->cell_cycle = cpf->cell_cycle;
-	my_cell->set_c_z(cpf->get_c_z());
-
+	copy_cell_stuff(cpf, my_cell);
 	cpf->clear_flags();
 	cpf->cell_refs_to = 0;
 	cpf->set_cell_formula(0);
@@ -406,7 +393,6 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 		//cout << "len = " << len << endl;
 		assert(len >=0);
 		my_cell->set_cell_formula(cpf->get_cell_formula());
-		//cpf->set_cell_formula( (unsigned char *) ck_malloc (hi - cpf->get_cell_formula()));
 		if (len > 0) {
 			unsigned char* formula = (unsigned char*) ck_malloc (len);
 			bcopy (my_cell->get_cell_formula(), formula, len);
