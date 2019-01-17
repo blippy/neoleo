@@ -107,6 +107,11 @@ void cell::reset()
 	cell_formula = 0;
 }
 
+void cell::clear_formula()
+{
+	cell_formula = nullptr;
+}
+
 void cell::clear_flags()
 {
 	//bzero((void*) this->cell_flags, sizeof(this->cell_flags));

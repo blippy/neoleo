@@ -204,7 +204,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 			copy_cell_stuff(cpf, &non_cell);
 			cpf->clear_flags();
 			cpf->cell_refs_to = 0;
-			cpf->set_cell_formula(0);
+			cpf->clear_formula();
 			cpf->cell_cycle = 0;
 		}
 		return;
@@ -236,7 +236,7 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	copy_cell_stuff(cpf, my_cell);
 	cpf->clear_flags();
 	cpf->cell_refs_to = 0;
-	cpf->set_cell_formula(0);
+	cpf->clear_formula();
 	cpf->cell_cycle = 0;
 
 	push_refs(my_cell);
@@ -390,7 +390,6 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 
 	{ // attempt to refactor for issue#17
 		size_t len = hi - cpf->get_cell_formula();
-		//cout << "len = " << len << endl;
 		assert(len >=0);
 		my_cell->set_cell_formula(cpf->get_cell_formula());
 		if (len > 0) {
@@ -398,7 +397,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 			bcopy (my_cell->get_cell_formula(), formula, len);
 			cpf->set_cell_formula((unsigned char*) formula);
 		} else {
-			cpf->set_cell_formula(nullptr); 
+			cpf->clear_formula(); 
 		}
 	}
 	while ((fp = (unsigned char*) pop_stack (moving)))
@@ -492,7 +491,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	if (cpf->get_cell_formula()) {
 		copy_cell_formula(cpf, rf, cf, rt, ct);
 	} else {
-		my_cell->set_cell_formula(0);
+		my_cell->clear_formula();
 	}
 
 	io_pr_cell (cur_row, cur_col, my_cell);
@@ -615,7 +614,7 @@ flush_old_value (void)
 	if (my_cell->get_cell_formula())
 	{
 		byte_free (my_cell->get_cell_formula());
-		my_cell->set_cell_formula(0);
+		my_cell->clear_formula();
 	}
 	if (GET_TYP (my_cell) == TYP_STR)
 		free (my_cell->gString());

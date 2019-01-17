@@ -118,6 +118,7 @@ class cell : public value
 
 		formula_t get_cell_formula(); 
 		formula_t set_cell_formula(formula_t newval);
+		void clear_formula();
 		void set_omnival(struct value* v);
 
 

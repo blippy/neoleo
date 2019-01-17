@@ -79,7 +79,7 @@ delete_region (struct rng *where)
 		cur_col = c;
 		my_cell = pp;
 		flush_old_value ();
-		pp->set_cell_formula(0);
+		pp->clear_formula();
 		pp->clear_flags();
 		push_refs(pp);
 		io_pr_cell(r, c, pp);
@@ -480,7 +480,7 @@ move_region (struct rng *fm, struct rng *to)
 			{
 				my_cell->clear_flags();
 				my_cell->cell_refs_to = 0;
-				my_cell->set_cell_formula(0);
+				my_cell->clear_formula();
 				my_cell->cell_cycle = 0;
 				my_cell = 0;
 				continue;
@@ -497,7 +497,7 @@ move_region (struct rng *fm, struct rng *to)
 
 			cpf->clear_flags();
 			cpf->cell_refs_to = 0;
-			cpf->set_cell_formula(0);
+			cpf->clear_formula();
 			cpf->cell_cycle = 0;
 
 			push_cell (cur_row, cur_col);
