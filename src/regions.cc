@@ -465,15 +465,7 @@ move_region (struct rng *fm, struct rng *to)
 			cur_row = rt;
 			cur_col = ct;
 			my_cell = find_cell (cur_row, cur_col);
-			if ((!cpf || (
-							//!cpf->cell_font &&
-							((cpf->cell_flags.cell_format == 0)
-							 && (cpf->cell_flags.cell_precision == 0)
-							 && (cpf->cell_flags.cell_justify == 0)
-							 && (cpf->get_type() == 0))
-							&& (cpf->cell_flags.cell_lock == 0)
-							&& !cpf->get_cell_formula()))
-					&& !my_cell)
+			if ((!cpf || cpf->zeroed_1() && !cpf->get_cell_formula()) && !my_cell)
 				continue;
 
 			if (!cpf)
