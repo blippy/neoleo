@@ -36,9 +36,9 @@ typedef void (*alarm_fn)(void);
 
 struct alarm_entry
 {
-  alarm_fn fn;
-  int freq;			/* in seconds. */
-  time_t last_time;
+	alarm_fn fn;
+	int freq;			/* in seconds. */
+	time_t last_time;
 };
 
 #define	SPECIAL_CODE_A	0x80 + 'a'
@@ -61,47 +61,47 @@ typedef struct input_stream* input_stream_ptr;
 
 struct input_stream
 {
-  /* The currently executing macro. */
-  struct macro *_rmac = 0;
+	/* The currently executing macro. */
+	struct macro *_rmac = 0;
 
-  unsigned char * _last_macro = 0;		/* The last anonymous macro. */
+	unsigned char * _last_macro = 0;		/* The last anonymous macro. */
 
-  /* If a macro is being exectuted, arguments to a command
-   * are read from this string.
-   */
-  char *_func_arg = 0;
+	/* If a macro is being exectuted, arguments to a command
+	 * are read from this string.
+	 */
+	char *_func_arg = 0;
 
-  /* Call stack for macros. */
-  struct obstack _macro_stack;
+	/* Call stack for macros. */
+	struct obstack _macro_stack;
 
-  /* The macro being recorded, if any. */
-  unsigned char *_macro = 0;
-  unsigned char *_macro_start = 0;
-  unsigned int _macro_size = 0;
+	/* The macro being recorded, if any. */
+	unsigned char *_macro = 0;
+	unsigned char *_macro_start = 0;
+	unsigned int _macro_size = 0;
 
-  /* If this input stream was created only to execute a macro, 
-   * this will point to the input_stream it suspended.
-   * The purpose of this stack is to give command_loop the ability to
-   * execute exactly one macro and then return.
-   *
-   * Note that within an input stream there is another macro stack. 
-   * That stack is used internally to command_loop.
-   */
-  input_stream_ptr prev_stream = 0;
+	/* If this input stream was created only to execute a macro, 
+	 * this will point to the input_stream it suspended.
+	 * The purpose of this stack is to give command_loop the ability to
+	 * execute exactly one macro and then return.
+	 *
+	 * Note that within an input stream there is another macro stack. 
+	 * That stack is used internally to command_loop.
+	 */
+	input_stream_ptr prev_stream = 0;
 
-  int _pushed_back_char = -1;
+	int _pushed_back_char = -1;
 };
 
 struct macro
 {
-  struct macro *mac_prev;
-  unsigned char *mac_exe;
-  CELLREF mac_row, mac_col;
-  struct rng mac_rng;
+	struct macro *mac_prev;
+	unsigned char *mac_exe;
+	CELLREF mac_row, mac_col;
+	struct rng mac_rng;
 
-  int count;			/* Repeat count for this macro. */
-  unsigned char * mac_start;	/* Beginning the current cell's string (as */
-				/* copied to the macro stack). */
+	int count;			/* Repeat count for this macro. */
+	unsigned char * mac_start;	/* Beginning the current cell's string (as */
+	/* copied to the macro stack). */
 };
 
 /* When a key is bound to a range, that range is stored here and 
@@ -122,13 +122,13 @@ extern int bound_macro_vec;
  */ 
 union command_arg_val
 {
-  char character;
-  FILE * fp;
-  int integer;
-  double floating;
-  struct key_sequence key;	/* Passed as (struct keyseq *). */
-  struct rng range;		/* Passed as (struct rng *). */
-  char * string;
+	char character;
+	FILE * fp;
+	int integer;
+	double floating;
+	struct key_sequence key;	/* Passed as (struct keyseq *). */
+	struct rng range;		/* Passed as (struct rng *). */
+	char * string;
 };
 
 
@@ -138,29 +138,29 @@ typedef void (*direction_function) (int magic, int repeat);
 
 typedef struct command_arg
 {
-  int do_prompt = 0;		/* If true, the user gets to edit this. */
-  int is_set = 0;		/* If true, a valid value is stored here. */
-  struct prompt_style* style = 0;	/* The editting mode for this argument. */
-  char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
-  char * prompt = 0;		/* Unexpanded prompt */
-  char * expanded_prompt = 0;
+	int do_prompt = 0;		/* If true, the user gets to edit this. */
+	int is_set = 0;		/* If true, a valid value is stored here. */
+	struct prompt_style* style = 0;	/* The editting mode for this argument. */
+	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
+	char * prompt = 0;		/* Unexpanded prompt */
+	char * expanded_prompt = 0;
 
-  struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
-				/* prompting for this argument. */
-  int info_line = 0;		/* First line visible in prompt_info */
+	struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
+	/* prompting for this argument. */
+	int info_line = 0;		/* First line visible in prompt_info */
 
-  struct line text;		/* A buffer for the user to edit this value. */
-  int cursor = 0;			/* cursor position of this buffer. */
-  int overwrite = 0;		/* Is overwrite mode on? */
+	struct line text;		/* A buffer for the user to edit this value. */
+	int cursor = 0;			/* cursor position of this buffer. */
+	int overwrite = 0;		/* Is overwrite mode on? */
 
-  /* For incremental commands. */
-  direction_function inc_cmd = 0;
+	/* For incremental commands. */
+	direction_function inc_cmd = 0;
 
-  /* For reading a character with timeout. */
-  int timeout_seconds = 0;
+	/* For reading a character with timeout. */
+	int timeout_seconds = 0;
 
-  /* The value as it will be passed to the cmd function. */
-  union command_arg_val val;
+	/* The value as it will be passed to the cmd function. */
+	union command_arg_val val;
 } command_arg_t;
 
 #define MAX_COMMAND_ARGS	10
@@ -170,69 +170,69 @@ typedef struct command_arg
 
 struct command_frame 
 {
-  /* If `recursive' edits are enabled, there can be more than one of these. */
-  struct command_frame * next;
-  struct command_frame * prev;
+	/* If `recursive' edits are enabled, there can be more than one of these. */
+	struct command_frame * next;
+	struct command_frame * prev;
 
-  input_stream_ptr input;
-  
-  /* The cell being editted (if any). */
-  CELLREF _setrow;
-  CELLREF _setcol;
-  
-  /* The current cell and the mark. */
-  long	buf1;
-  CELLREF _curow;
-  long	buf2;
-  CELLREF _cucol;
-  long	buf3;
-  CELLREF _mkrow;
-  long	buf4;
-  CELLREF _mkcol;
-  long	buf5;
+	input_stream_ptr input;
 
-  /* What passes for a window configuration, for now. */
-  /* 
-   * When the input area is active, it appears to be just another window,
-   * reachable by other-window.  These values must be maintained by any
-   * implementation of io_get_line.
-   */
-  int _window_after_input;	/* Id of the window prior to the input area. */
-  int _input_active;	/* Bool: is the input area selected? */
+	/* The cell being editted (if any). */
+	CELLREF _setrow;
+	CELLREF _setcol;
 
-  
-  /* The current top level keymap. */
-  int top_keymap;
-  
-  /* Current position in the keymaps. */
-  int _cur_keymap;
+	/* The current cell and the mark. */
+	long	buf1;
+	CELLREF _curow;
+	long	buf2;
+	CELLREF _cucol;
+	long	buf3;
+	CELLREF _mkrow;
+	long	buf4;
+	CELLREF _mkcol;
+	long	buf5;
 
-  int saved_cur_keymap;		/* used when building a prefix arg */
-  
-  /* The about-to-begin executing command (if any). */
-  struct cmd_func *_cur_cmd;
-  short _cur_vector;
+	/* What passes for a window configuration, for now. */
+	/* 
+	 * When the input area is active, it appears to be just another window,
+	 * reachable by other-window.  These values must be maintained by any
+	 * implementation of io_get_line.
+	 */
+	int _window_after_input;	/* Id of the window prior to the input area. */
+	int _input_active;	/* Bool: is the input area selected? */
 
-  /* The last character processed .*/
-  int _cur_chr;
 
-  /* The prefix argument */
-  int _how_many;
-  struct line _raw_prefix;
+	/* The current top level keymap. */
+	int top_keymap;
 
-  /* This becomes true if the user is ever prompted for arguments
-   * for this frame.
-   */
-  int complex_to_user; 
+	/* Current position in the keymaps. */
+	int _cur_keymap;
 
-  int _cmd_argc;
-  int _cur_arg;
-  struct cmd_func * cmd;
+	int saved_cur_keymap;		/* used when building a prefix arg */
 
-  /* The arguments to the current function. 
-   * This is used only if the current function prompts for arguments.
-   */
-  struct command_arg argv[MAX_COMMAND_ARGS];
+	/* The about-to-begin executing command (if any). */
+	struct cmd_func *_cur_cmd;
+	short _cur_vector;
+
+	/* The last character processed .*/
+	int _cur_chr;
+
+	/* The prefix argument */
+	int _how_many;
+	struct line _raw_prefix;
+
+	/* This becomes true if the user is ever prompted for arguments
+	 * for this frame.
+	 */
+	int complex_to_user; 
+
+	int _cmd_argc;
+	int _cur_arg;
+	struct cmd_func * cmd;
+
+	/* The arguments to the current function. 
+	 * This is used only if the current function prompts for arguments.
+	 */
+	struct command_arg argv[MAX_COMMAND_ARGS];
 };
 
 /* When a command is executing, this points to the frame it should operate
@@ -314,8 +314,8 @@ typedef void (*select_hook_fn) ();
 
 struct select_hook
 {
-  select_hook_fn hook_fn;
-  void * jrandom;
+	select_hook_fn hook_fn;
+	void * jrandom;
 };
 
 extern struct select_hook file_read_hooks[SELECT_SET_SIZE];

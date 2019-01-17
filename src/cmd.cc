@@ -774,23 +774,16 @@ free_cmd_frame (struct command_frame *frame)
 		remove_cmd_frame (frame);
 
 	free_line (&frame->_raw_prefix);
-	if (frame->cmd)
-	  {
-		  int argc;
-		  for (argc = 0; argc < frame->_cmd_argc; ++argc)
-		    {
-			    if (frame->argv[argc].is_set
-				&& frame->argv[argc].style->destroy)
-				    frame->argv[argc].style->
-					    destroy (&frame->argv[argc]);
-			    free_line (&frame->argv[argc].text);
-			    if (frame->argv[argc].expanded_prompt &&
-				(frame->argv[argc].expanded_prompt !=
-				 frame->argv[argc].prompt))
-				    free (frame->argv[argc].expanded_prompt);
-		    }
+	if (frame->cmd) {
+		int argc;
+		for (argc = 0; argc < frame->_cmd_argc; ++argc) {
+			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
+				frame->argv[argc].style->destroy (&frame->argv[argc]);
+			free_line (&frame->argv[argc].text);
+			if (frame->argv[argc].expanded_prompt && (frame->argv[argc].expanded_prompt != frame->argv[argc].prompt))
+				free (frame->argv[argc].expanded_prompt);
+		}
 	  }
-	//ck_free (frame);
 	delete frame;
 }
 
