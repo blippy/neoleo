@@ -120,20 +120,9 @@ double ftmp;
 long itmp;
 int overflow;
 
-/* You may ask:  Why not jsut put the value in stack[0] and goto break_out
-   The answer is that ERROR is a valid input type for several operators, so
-   we want to work if we're feeding an error into one of these operators. . .
- */
-/*
-#define ERROR(cause)		\
-	{			\
-		value_ptr->type=TYP_ERR;\
-		value_ptr->Value=cause; \
-		goto next_byte; \
-	}
-*/
 
-#define ERROR1(cause) { throw cause;}
+void ERROR1 (int cause) { throw cause;}
+
 void TO_FLT(struct value* val)
 {	
 	if((val)->type==TYP_FLT) 
@@ -850,12 +839,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				(*funp) (value_ptr);
 			}
 			break;
-
-			/* #ifdef TEST
-			   default:
-			   panic("Unknown byte-value %d",byte);
-			   break;
-#endif */
 	}
 }
 /* This huge function takes a byte-compiled expression and executes it. */
