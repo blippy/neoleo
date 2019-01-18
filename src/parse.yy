@@ -52,8 +52,6 @@
 #include <string_view>
 using namespace std::literals;
 
-#include "funcdef.h"
-
 #include <ctype.h>
 
 #include "global.h"

@@ -27,7 +27,6 @@
 
 #undef NULL
 
-#include "funcdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-utils.h"

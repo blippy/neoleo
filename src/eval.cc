@@ -27,8 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "funcdef.h"
-
 constexpr auto pi = std::acos(-1);
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free

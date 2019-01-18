@@ -63,7 +63,7 @@ neoleo_SOURCES = defuns.cc \
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 $(BLANG_HDRS) \
 		 cmd.h date.h decompile.h defun.h defuns.h display.h \
-		 errors.h eval.h format.h funcdef.h \
+		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-visual.h \

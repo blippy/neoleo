@@ -23,7 +23,6 @@
 #include <iostream>
 #include <math.h>
 
-#include "funcdef.h"
 #include "funcs.h"
 #include "global.h"
 #include "cell.h"

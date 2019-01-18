@@ -22,7 +22,6 @@
 
 #include <string>
 #include <stdio.h>
-#include "funcdef.h"
 #include "global.h"
 #include "numeric.h"	
 

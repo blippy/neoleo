@@ -28,7 +28,6 @@
 #include <string>
 
 #include "global.h"
-#include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>

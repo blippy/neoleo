@@ -26,7 +26,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "funcdef.h"
 #include "global.h"
 #include "cell.h"
 #include "io-generic.h"

@@ -48,7 +48,6 @@ using namespace std::string_literals;
 #include "global.h"
 #include "cell.h"
 #include "cmd.h"
-#include "funcdef.h"
 #include "line.h"
 #include "io-curses.h"
 #include "io-generic.h"

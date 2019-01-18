@@ -25,7 +25,6 @@
 #include <functional>
 #include <string.h>
 #include <ctype.h>
-#include "funcdef.h"
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
