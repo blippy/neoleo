@@ -49,6 +49,30 @@ extern long random (void);
 #define rint(x) (((x)<0) ? ceil((x)-.5) : floor((x)+.5))
 #endif
 
+// TODO probably belongs in oleox.h
+class ValErr : public std::exception
+{
+	public:
+	       ValErr() {}
+	       ValErr(const int n) : n(n) {}
+
+	       virtual const char* what() const throw()
+	       {
+		       return std::to_string(n).c_str();
+	       }
+	private:
+	       int n = 0;
+};
+
+void throw_valerr(int n, struct value* vp)
+{
+	vp->type = TYP_ERR;
+	//vp->Value = n;
+	vp->x.c_i = n;
+	throw ValErr(n);
+}
+
+
 extern int n_usr_funs;
 
 //double to_int ();
@@ -100,12 +124,14 @@ int overflow;
    The answer is that ERROR is a valid input type for several operators, so
    we want to work if we're feeding an error into one of these operators. . .
  */
+/*
 #define ERROR(cause)		\
 	{			\
 		value_ptr->type=TYP_ERR;\
 		value_ptr->Value=cause; \
 		goto next_byte; \
 	}
+*/
 
 #define ERROR1(cause) { throw cause;}
 void TO_FLT(struct value* val)
@@ -346,6 +372,492 @@ init_eval ()
 	(void) signal (SIGFPE, math_sig);
 }
 
+// refactored out of eval_expression()
+// Maybe contains too many parameters, but it will do as a first cut
+void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
+		struct value *value_ptr, unsigned &jumpto, unsigned char *&expr,
+		function_t *f)
+{
+	cell* cell_ptr;
+	char *strptr;
+	//struct value *value_ptr = 0;
+	switch (byte) {
+		case IF_L:
+		case F_IF_L:
+		case IF:
+		case F_IF:
+			if (value_ptr->type != TYP_BOL)
+			{
+				if (value_ptr->type != TYP_ERR)
+				{
+					value_ptr->type = TYP_ERR;
+					value_ptr->Value = NON_BOOL;
+				}
+				expr += jumpto;
+				if (expr[-2] != SKIP)
+					jumpto = expr[-1] + (((unsigned) expr[-2]) << 8);
+				else
+					jumpto = expr[-1];
+				expr += jumpto;	/* Skip both branches of the if */
+
+			}
+			else if (value_ptr->Value == 0)
+			{
+				expr += jumpto;
+				--curstack;
+			}
+			else
+				--curstack;
+			break;
+
+		case SKIP_L:
+		case SKIP:
+			--curstack;
+			expr += jumpto;
+			break;
+
+		case AND_L:
+		case AND:
+			if (value_ptr->type == TYP_ERR)
+				expr += jumpto;
+			else if (value_ptr->type != TYP_BOL)
+			{
+				value_ptr->type = TYP_ERR;
+				value_ptr->Value = NON_BOOL;
+				expr += jumpto;
+			}
+			else if (value_ptr->Value == 0)
+				expr += jumpto;
+			else
+				--curstack;
+			break;
+
+		case OR_L:
+		case OR:
+			if (value_ptr->type == TYP_ERR)
+				expr += jumpto;
+			else if (value_ptr->type != TYP_BOL)
+			{
+				value_ptr->type = TYP_ERR;
+				value_ptr->Value = NON_BOOL;
+				expr += jumpto;
+			}
+			else if (value_ptr->Value)
+				expr += jumpto;
+			else
+				--curstack;
+			break;
+
+		case CONST_FLT:
+			value_ptr->type = TYP_FLT;
+			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), 
+					sizeof (double));
+			expr += sizeof (double);
+			break;
+
+		case CONST_INT:
+			value_ptr->type = TYP_INT;
+			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), 
+					sizeof (long));
+			expr += sizeof (long);
+			break;
+
+		case CONST_STR:
+		case CONST_STR_L:
+			value_ptr->type = TYP_STR;
+			value_ptr->String = (char *) expr + jumpto;
+			break;
+
+		case CONST_ERR:
+			value_ptr->type = TYP_ERR;
+			value_ptr->Value = *expr++;
+			/* expr+=sizeof(char *); */
+			break;
+
+		case CONST_INF:
+		case CONST_NINF:
+		case CONST_NAN:
+			value_ptr->type = TYP_FLT;
+			value_ptr->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
+			break;
+
+		case VAR:
+			{
+				struct var *varp;
+
+				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&varp), sizeof (struct var *));
+				expr += sizeof (struct var *);
+				switch (varp->var_flags)
+				{
+					case VAR_UNDEF:
+						value_ptr->type = TYP_ERR;
+						value_ptr->Value = BAD_NAME;
+						break;
+
+					case VAR_CELL:
+						cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
+						PUSH_ANY(value_ptr, cell_ptr);
+						break;
+
+					case VAR_RANGE:
+						if (varp->v_rng.lr == varp->v_rng.hr && varp->v_rng.lc == varp->v_rng.hc)
+						{
+							cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
+							PUSH_ANY(value_ptr, cell_ptr);
+						}
+						else
+						{
+							value_ptr->type = TYP_RNG;
+							value_ptr->Rng = varp->v_rng;
+						}
+						break;
+#ifdef TEST
+					default:
+						panic ("Unknown var type %d", varp->var_flags);
+#endif
+				}
+			}
+			break;
+
+			/* Cell refs */
+		case R_CELL:
+		case R_CELL | COLREL:
+		case R_CELL | ROWREL:
+		case R_CELL | ROWREL | COLREL:
+			{
+				CELLREF torow, tocol;
+
+				torow = GET_ROW (expr);
+				tocol = GET_COL (expr);
+				expr += EXP_ADD;
+				cell_ptr = find_cell ((CELLREF) torow, (CELLREF) tocol);
+				PUSH_ANY(value_ptr, cell_ptr);
+			}
+			break;
+
+		case RANGE:
+		case RANGE | LRREL:
+		case RANGE | LRREL | LCREL:
+		case RANGE | LRREL | LCREL | HCREL:
+		case RANGE | LRREL | HCREL:
+		case RANGE | LRREL | HRREL:
+		case RANGE | LRREL | HRREL | LCREL:
+		case RANGE | LRREL | HRREL | LCREL | HCREL:
+		case RANGE | LRREL | HRREL | HCREL:
+		case RANGE | HRREL:
+		case RANGE | HRREL | LCREL:
+		case RANGE | HRREL | LCREL | HCREL:
+		case RANGE | HRREL | HCREL:
+		case RANGE | LCREL:
+		case RANGE | LCREL | HCREL:
+		case RANGE | HCREL:
+			value_ptr->type = TYP_RNG;
+			GET_RNG (expr, &(value_ptr->Rng));
+			expr += EXP_ADD_RNG;
+			break;
+
+		case F_TRUE:
+		case F_FALSE:
+			value_ptr->type = TYP_BOL;
+			value_ptr->Value = (byte == F_TRUE);
+			break;
+
+		case F_PI:
+			value_ptr->type = TYP_FLT;
+			value_ptr->Float = pi;
+			break;
+
+		case F_ROW:
+		case F_COL:
+			value_ptr->type = TYP_INT;
+			value_ptr->Int = ((byte == F_ROW) ? cur_row : cur_col);
+			break;
+
+		case F_NOW:
+			value_ptr->type = TYP_INT;
+			value_ptr->Int = time (nullptr);
+			break;
+
+			/* Single operand instrs */
+		case F_CEIL:
+		case F_FLOOR:
+			{
+				double (*funp1) (double);
+				funp1 = (double (*)(double)) (f->fn_fun);
+
+				value_ptr->Float = (*funp1) (value_ptr->Float);
+			}
+			break;
+
+		case F_CTIME:
+			value_ptr->type = TYP_STR;
+			strptr = ctime ((time_t*) &value_ptr->Int);
+			value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
+			strncpy (value_ptr->String, strptr, 24);
+			value_ptr->String[24] = '\0';
+			break;
+
+		case NEGATE:
+		case F_NEG:
+			if (value_ptr->type == TYP_ERR)
+				break;
+			if (value_ptr->type == TYP_INT)
+				value_ptr->Int = -(value_ptr->Int);
+			else if (value_ptr->type == TYP_FLT)
+				value_ptr->Float = -(value_ptr->Float);
+			else
+				throw_valerr(NON_NUMBER, value_ptr);
+			break;
+
+		case F_RND:
+			value_ptr->Int = (random () % (value_ptr->Int)) + 1;
+			break;
+
+		case NOT:
+		case F_NOT:
+			value_ptr->Value = !(value_ptr->Value);
+			break;
+
+		case F_ISERR:
+			value_ptr->Value = (value_ptr->type == TYP_ERR);
+			value_ptr->type = TYP_BOL;
+			break;
+
+		case F_ISNUM:
+			if (value_ptr->type == TYP_FLT || value_ptr->type == TYP_INT)
+				value_ptr->Value = 1;
+			else if (value_ptr->type == TYP_STR)
+			{
+				strptr = value_ptr->String;
+				(void) astof (&strptr);
+				value_ptr->Value = (*strptr == '\0');
+			}
+			else
+				value_ptr->Value = 0;
+			value_ptr->type = TYP_BOL;
+			break;
+
+		case F_ROWS:
+		case F_COLS:
+			value_ptr->type = TYP_INT;
+			value_ptr->Int = 1 + (byte == F_ROWS ? 
+					(value_ptr->Rng.hr - value_ptr->Rng.lr) 
+					: (value_ptr->Rng.hc - value_ptr->Rng.lc));
+			break;
+
+			/* Two operand cmds */
+		case F_ATAN2:
+		case F_HYPOT:
+		case POW:
+			{
+				double (*funp2) (double, double);
+				funp2 = (double (*)(double, double)) (f->fn_fun);
+
+				value_ptr->Float = (*funp2) (value_ptr->Float, 
+						(value_ptr + 1)->Float);
+				if (value_ptr->Float != value_ptr->Float)
+					throw_valerr(OUT_OF_RANGE, value_ptr);
+			}
+			break;
+
+		case DIFF:
+		case DIV:
+		case MOD:
+		case PROD:
+		case SUM:
+			do_math_binop(byte, value_ptr, value_ptr+1);
+			break;
+		case EQUAL:
+		case NOTEQUAL:
+
+		case GREATEQ:
+		case GREATER:
+		case LESS:
+		case LESSEQ:
+			if (value_ptr->type == TYP_ERR)
+				break;
+			if ((value_ptr + 1)->type == TYP_ERR)
+				throw_valerr((value_ptr + 1)->Value, value_ptr);
+
+			if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
+			{
+				if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
+					throw_valerr(BAD_INPUT, value_ptr);
+				if (byte == EQUAL)
+					value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
+				else
+					value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
+				break;
+			}
+			if (value_ptr->type != (value_ptr + 1)->type)
+			{
+				if (value_ptr->type == 0)
+				{
+					if ((value_ptr + 1)->type == TYP_STR)
+					{
+						value_ptr->type = TYP_STR;
+						value_ptr->String = "";
+					}
+					else if ((value_ptr + 1)->type == TYP_INT)
+					{
+						value_ptr->type = TYP_INT;
+						value_ptr->Int = 0;
+					}
+					else
+					{
+						value_ptr->type = TYP_FLT;
+						value_ptr->Float = 0.0;
+					}
+				}
+				else if ((value_ptr + 1)->type == 0)
+				{
+					if (value_ptr->type == TYP_STR)
+					{
+						(value_ptr + 1)->type = TYP_STR;
+						(value_ptr + 1)->String = "";
+					}
+					else if (value_ptr->type == TYP_INT)
+					{
+						(value_ptr + 1)->type = TYP_INT;
+						(value_ptr + 1)->Int = 0;
+					}
+					else
+					{
+						(value_ptr + 1)->type = TYP_FLT;
+						(value_ptr + 1)->Float = 0.0;
+					}
+				}
+				else if (value_ptr->type == TYP_STR)
+				{
+					strptr = value_ptr->String;
+					if ((value_ptr + 1)->type == TYP_INT)
+					{
+						value_ptr->type = TYP_INT;
+						value_ptr->Int = astol (&strptr);
+					}
+					else
+					{
+						value_ptr->type = TYP_FLT;
+						value_ptr->Float = astof (&strptr);
+					}
+					if (*strptr)
+					{
+						value_ptr->type = TYP_BOL;
+						value_ptr->Value = (byte == NOTEQUAL);
+						break;
+					}
+				}
+				else if ((value_ptr + 1)->type == TYP_STR)
+				{
+					strptr = (value_ptr + 1)->String;
+					if (value_ptr->type == TYP_INT)
+						(value_ptr + 1)->Int = astol (&strptr);
+					else
+						(value_ptr + 1)->Float = astof (&strptr);
+					if (*strptr)
+					{
+						value_ptr->type = TYP_BOL;
+						value_ptr->Value = (byte == NOTEQUAL);
+						break;
+					}
+
+					/* If we get here, one is INT, and the other
+					   is FLT  Make them both FLT */
+				}
+				else if (value_ptr->type == TYP_INT)
+				{
+					value_ptr->type = TYP_FLT;
+					value_ptr->Float = (double) value_ptr->Int;
+				}
+				else
+					(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
+			}
+			if (value_ptr->type == TYP_STR)
+				tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
+			else if (value_ptr->type == TYP_FLT)
+				tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
+			else if (value_ptr->type == TYP_INT)
+				tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
+			else if (value_ptr->type == 0)
+				tmp = 0;
+			else
+			{
+				tmp = 0;
+				panic ("Bad type value %d", value_ptr->type);
+			}
+			value_ptr->type = TYP_BOL;
+			if (tmp < 0)
+				value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
+			else if (tmp == 0)
+				value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
+			else
+				value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
+			break;
+
+		case F_FIXED:
+			tmp = (value_ptr + 1)->Int;
+			if (tmp < -29 || tmp > 29)
+				throw_valerr(OUT_OF_RANGE, value_ptr);
+			if (tmp < 0) {
+				num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
+				num_t f2 = rintn(f1);
+				//num f3 = f2 * exp10_arr[-tmp];
+				value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
+			} else {
+				value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
+			}
+			break;
+
+		case F_IFERR:
+			if (value_ptr->type == TYP_ERR)
+				*value_ptr = *(value_ptr + 1);
+			break;
+
+
+
+		case CONCAT:
+			strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
+			strcpy (strptr, value_ptr->String);
+			strcat (strptr, (value_ptr + 1)->String);
+			value_ptr->String = strptr;
+			break;
+
+		case F_ONEOF:
+			if (numarg < 2)
+				throw_valerr(NO_VALUES, value_ptr);
+			--numarg;
+			tmp = value_ptr->Int;
+			if (tmp < 1 || tmp > numarg)
+				throw_valerr(OUT_OF_RANGE, value_ptr);
+			/* Can never happen? */
+			TO_ANY (value_ptr + tmp);
+			value_ptr[0] = value_ptr[tmp];
+			break;
+
+			/* This is now a fallthrough for all the USRmumble codes */
+		case USR1:
+		default:
+			if ((f->fn_argn & X_ARGS) == X_AN)
+			{
+				void (*funp) (int, struct value *);
+				funp = (void (*)(int, struct value *)) f->fn_fun;
+				(*funp) (numarg, value_ptr);
+			}
+			else
+			{
+				void (*funp) (struct value *);
+				funp = (void (*)(struct value *)) f->fn_fun;
+				(*funp) (value_ptr);
+			}
+			break;
+
+			/* #ifdef TEST
+			   default:
+			   panic("Unknown byte-value %d",byte);
+			   break;
+#endif */
+	}
+}
 /* This huge function takes a byte-compiled expression and executes it. */
 struct value *
 eval_expression (unsigned char *expr)
@@ -357,13 +869,13 @@ eval_expression (unsigned char *expr)
 	unsigned jumpto = 0;
 	function_t *f;
 	struct value *value_ptr = 0;
-	char *strptr;
+	//char *strptr;
 	int tmp;
 
 	CELLREF lrow, hrow, crow;
 	CELLREF lcol, hcol, ccol;
 
-	cell* cell_ptr;
+	//cell* cell_ptr;
 
 	curstack = 0;
 	while ((byte = *expr++) != ENDCOMP)
@@ -452,487 +964,11 @@ eval_expression (unsigned char *expr)
 			}
 		}
 
-		switch (byte)
-		{
-			case IF_L:
-			case F_IF_L:
-			case IF:
-			case F_IF:
-				if (value_ptr->type != TYP_BOL)
-				{
-					if (value_ptr->type != TYP_ERR)
-					{
-						value_ptr->type = TYP_ERR;
-						value_ptr->Value = NON_BOOL;
-					}
-					expr += jumpto;
-					if (expr[-2] != SKIP)
-						jumpto = expr[-1] + (((unsigned) expr[-2]) << 8);
-					else
-						jumpto = expr[-1];
-					expr += jumpto;	/* Skip both branches of the if */
-
-				}
-				else if (value_ptr->Value == 0)
-				{
-					expr += jumpto;
-					--curstack;
-				}
-				else
-					--curstack;
-				break;
-
-			case SKIP_L:
-			case SKIP:
-				--curstack;
-				expr += jumpto;
-				break;
-
-			case AND_L:
-			case AND:
-				if (value_ptr->type == TYP_ERR)
-					expr += jumpto;
-				else if (value_ptr->type != TYP_BOL)
-				{
-					value_ptr->type = TYP_ERR;
-					value_ptr->Value = NON_BOOL;
-					expr += jumpto;
-				}
-				else if (value_ptr->Value == 0)
-					expr += jumpto;
-				else
-					--curstack;
-				break;
-
-			case OR_L:
-			case OR:
-				if (value_ptr->type == TYP_ERR)
-					expr += jumpto;
-				else if (value_ptr->type != TYP_BOL)
-				{
-					value_ptr->type = TYP_ERR;
-					value_ptr->Value = NON_BOOL;
-					expr += jumpto;
-				}
-				else if (value_ptr->Value)
-					expr += jumpto;
-				else
-					--curstack;
-				break;
-
-			case CONST_FLT:
-				value_ptr->type = TYP_FLT;
-				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), 
-						sizeof (double));
-				expr += sizeof (double);
-				break;
-
-			case CONST_INT:
-				value_ptr->type = TYP_INT;
-				bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), 
-						sizeof (long));
-				expr += sizeof (long);
-				break;
-
-			case CONST_STR:
-			case CONST_STR_L:
-				value_ptr->type = TYP_STR;
-				value_ptr->String = (char *) expr + jumpto;
-				break;
-
-			case CONST_ERR:
-				value_ptr->type = TYP_ERR;
-				value_ptr->Value = *expr++;
-				/* expr+=sizeof(char *); */
-				break;
-
-			case CONST_INF:
-			case CONST_NINF:
-			case CONST_NAN:
-				value_ptr->type = TYP_FLT;
-				value_ptr->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
-				break;
-
-			case VAR:
-				{
-					struct var *varp;
-
-					bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&varp), sizeof (struct var *));
-					expr += sizeof (struct var *);
-					switch (varp->var_flags)
-					{
-						case VAR_UNDEF:
-							value_ptr->type = TYP_ERR;
-							value_ptr->Value = BAD_NAME;
-							break;
-
-						case VAR_CELL:
-							cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
-							PUSH_ANY(value_ptr, cell_ptr);
-							break;
-
-						case VAR_RANGE:
-							if (varp->v_rng.lr == varp->v_rng.hr && varp->v_rng.lc == varp->v_rng.hc)
-							{
-								cell_ptr = find_cell (varp->v_rng.lr, varp->v_rng.lc);
-								PUSH_ANY(value_ptr, cell_ptr);
-							}
-							else
-							{
-								value_ptr->type = TYP_RNG;
-								value_ptr->Rng = varp->v_rng;
-							}
-							break;
-#ifdef TEST
-						default:
-							panic ("Unknown var type %d", varp->var_flags);
-#endif
-					}
-				}
-				break;
-
-				/* Cell refs */
-			case R_CELL:
-			case R_CELL | COLREL:
-			case R_CELL | ROWREL:
-			case R_CELL | ROWREL | COLREL:
-				{
-					CELLREF torow, tocol;
-
-					torow = GET_ROW (expr);
-					tocol = GET_COL (expr);
-					expr += EXP_ADD;
-					cell_ptr = find_cell ((CELLREF) torow, (CELLREF) tocol);
-					PUSH_ANY(value_ptr, cell_ptr);
-				}
-				break;
-
-			case RANGE:
-			case RANGE | LRREL:
-			case RANGE | LRREL | LCREL:
-			case RANGE | LRREL | LCREL | HCREL:
-			case RANGE | LRREL | HCREL:
-			case RANGE | LRREL | HRREL:
-			case RANGE | LRREL | HRREL | LCREL:
-			case RANGE | LRREL | HRREL | LCREL | HCREL:
-			case RANGE | LRREL | HRREL | HCREL:
-			case RANGE | HRREL:
-			case RANGE | HRREL | LCREL:
-			case RANGE | HRREL | LCREL | HCREL:
-			case RANGE | HRREL | HCREL:
-			case RANGE | LCREL:
-			case RANGE | LCREL | HCREL:
-			case RANGE | HCREL:
-				value_ptr->type = TYP_RNG;
-				GET_RNG (expr, &(value_ptr->Rng));
-				expr += EXP_ADD_RNG;
-				break;
-
-			case F_TRUE:
-			case F_FALSE:
-				value_ptr->type = TYP_BOL;
-				value_ptr->Value = (byte == F_TRUE);
-				break;
-
-			case F_PI:
-				value_ptr->type = TYP_FLT;
-				value_ptr->Float = pi;
-				break;
-
-			case F_ROW:
-			case F_COL:
-				value_ptr->type = TYP_INT;
-				value_ptr->Int = ((byte == F_ROW) ? cur_row : cur_col);
-				break;
-
-			case F_NOW:
-				value_ptr->type = TYP_INT;
-				value_ptr->Int = time (nullptr);
-				break;
-
-				/* Single operand instrs */
-			case F_CEIL:
-			case F_FLOOR:
-				{
-					double (*funp1) (double);
-					funp1 = (double (*)(double)) (f->fn_fun);
-
-					value_ptr->Float = (*funp1) (value_ptr->Float);
-					if (value_ptr->Float != value_ptr->Float)
-						ERROR (OUT_OF_RANGE);
-				}
-				break;
-
-			case F_CTIME:
-				value_ptr->type = TYP_STR;
-				strptr = ctime ((time_t*) &value_ptr->Int);
-				value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
-				strncpy (value_ptr->String, strptr, 24);
-				value_ptr->String[24] = '\0';
-				break;
-
-			case NEGATE:
-			case F_NEG:
-				if (value_ptr->type == TYP_ERR)
-					break;
-				if (value_ptr->type == TYP_INT)
-					value_ptr->Int = -(value_ptr->Int);
-				else if (value_ptr->type == TYP_FLT)
-					value_ptr->Float = -(value_ptr->Float);
-				else
-					ERROR (NON_NUMBER);
-				break;
-
-			case F_RND:
-				value_ptr->Int = (random () % (value_ptr->Int)) + 1;
-				break;
-
-			case NOT:
-			case F_NOT:
-				value_ptr->Value = !(value_ptr->Value);
-				break;
-
-			case F_ISERR:
-				value_ptr->Value = (value_ptr->type == TYP_ERR);
-				value_ptr->type = TYP_BOL;
-				break;
-
-			case F_ISNUM:
-				if (value_ptr->type == TYP_FLT || value_ptr->type == TYP_INT)
-					value_ptr->Value = 1;
-				else if (value_ptr->type == TYP_STR)
-				{
-					strptr = value_ptr->String;
-					(void) astof (&strptr);
-					value_ptr->Value = (*strptr == '\0');
-				}
-				else
-					value_ptr->Value = 0;
-				value_ptr->type = TYP_BOL;
-				break;
-
-			case F_ROWS:
-			case F_COLS:
-				value_ptr->type = TYP_INT;
-				value_ptr->Int = 1 + (byte == F_ROWS ? 
-						(value_ptr->Rng.hr - value_ptr->Rng.lr) 
-						: (value_ptr->Rng.hc - value_ptr->Rng.lc));
-				break;
-
-				/* Two operand cmds */
-			case F_ATAN2:
-			case F_HYPOT:
-			case POW:
-				{
-					double (*funp2) (double, double);
-					funp2 = (double (*)(double, double)) (f->fn_fun);
-
-					value_ptr->Float = (*funp2) (value_ptr->Float, 
-							(value_ptr + 1)->Float);
-					if (value_ptr->Float != value_ptr->Float)
-						ERROR (OUT_OF_RANGE);
-				}
-				break;
-
-			case DIFF:
-			case DIV:
-			case MOD:
-			case PROD:
-			case SUM:
-				do_math_binop(byte, value_ptr, value_ptr+1);
-				break;
-			case EQUAL:
-			case NOTEQUAL:
-
-			case GREATEQ:
-			case GREATER:
-			case LESS:
-			case LESSEQ:
-				if (value_ptr->type == TYP_ERR)
-					break;
-				if ((value_ptr + 1)->type == TYP_ERR)
-					ERROR ((value_ptr + 1)->Value);
-
-				if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
-				{
-					if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
-						ERROR (BAD_INPUT);
-					if (byte == EQUAL)
-						value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
-					else
-						value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
-					break;
-				}
-				if (value_ptr->type != (value_ptr + 1)->type)
-				{
-					if (value_ptr->type == 0)
-					{
-						if ((value_ptr + 1)->type == TYP_STR)
-						{
-							value_ptr->type = TYP_STR;
-							value_ptr->String = "";
-						}
-						else if ((value_ptr + 1)->type == TYP_INT)
-						{
-							value_ptr->type = TYP_INT;
-							value_ptr->Int = 0;
-						}
-						else
-						{
-							value_ptr->type = TYP_FLT;
-							value_ptr->Float = 0.0;
-						}
-					}
-					else if ((value_ptr + 1)->type == 0)
-					{
-						if (value_ptr->type == TYP_STR)
-						{
-							(value_ptr + 1)->type = TYP_STR;
-							(value_ptr + 1)->String = "";
-						}
-						else if (value_ptr->type == TYP_INT)
-						{
-							(value_ptr + 1)->type = TYP_INT;
-							(value_ptr + 1)->Int = 0;
-						}
-						else
-						{
-							(value_ptr + 1)->type = TYP_FLT;
-							(value_ptr + 1)->Float = 0.0;
-						}
-					}
-					else if (value_ptr->type == TYP_STR)
-					{
-						strptr = value_ptr->String;
-						if ((value_ptr + 1)->type == TYP_INT)
-						{
-							value_ptr->type = TYP_INT;
-							value_ptr->Int = astol (&strptr);
-						}
-						else
-						{
-							value_ptr->type = TYP_FLT;
-							value_ptr->Float = astof (&strptr);
-						}
-						if (*strptr)
-						{
-							value_ptr->type = TYP_BOL;
-							value_ptr->Value = (byte == NOTEQUAL);
-							break;
-						}
-					}
-					else if ((value_ptr + 1)->type == TYP_STR)
-					{
-						strptr = (value_ptr + 1)->String;
-						if (value_ptr->type == TYP_INT)
-							(value_ptr + 1)->Int = astol (&strptr);
-						else
-							(value_ptr + 1)->Float = astof (&strptr);
-						if (*strptr)
-						{
-							value_ptr->type = TYP_BOL;
-							value_ptr->Value = (byte == NOTEQUAL);
-							break;
-						}
-
-						/* If we get here, one is INT, and the other
-						   is FLT  Make them both FLT */
-					}
-					else if (value_ptr->type == TYP_INT)
-					{
-						value_ptr->type = TYP_FLT;
-						value_ptr->Float = (double) value_ptr->Int;
-					}
-					else
-						(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
-				}
-				if (value_ptr->type == TYP_STR)
-					tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
-				else if (value_ptr->type == TYP_FLT)
-					tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
-				else if (value_ptr->type == TYP_INT)
-					tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
-				else if (value_ptr->type == 0)
-					tmp = 0;
-				else
-				{
-					tmp = 0;
-					panic ("Bad type value %d", value_ptr->type);
-				}
-				value_ptr->type = TYP_BOL;
-				if (tmp < 0)
-					value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
-				else if (tmp == 0)
-					value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
-				else
-					value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
-				break;
-
-			case F_FIXED:
-				tmp = (value_ptr + 1)->Int;
-				if (tmp < -29 || tmp > 29)
-					ERROR (OUT_OF_RANGE);
-				if (tmp < 0) {
-					num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
-					num_t f2 = rintn(f1);
-					//num f3 = f2 * exp10_arr[-tmp];
-					value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
-				} else {
-					value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
-				}
-				break;
-
-			case F_IFERR:
-				if (value_ptr->type == TYP_ERR)
-					*value_ptr = *(value_ptr + 1);
-				break;
-
-
-
-			case CONCAT:
-				strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
-				strcpy (strptr, value_ptr->String);
-				strcat (strptr, (value_ptr + 1)->String);
-				value_ptr->String = strptr;
-				break;
-
-			case F_ONEOF:
-				if (numarg < 2)
-					ERROR (NO_VALUES);
-				--numarg;
-				tmp = value_ptr->Int;
-				if (tmp < 1 || tmp > numarg)
-					ERROR (OUT_OF_RANGE);
-				/* Can never happen? */
-				TO_ANY (value_ptr + tmp);
-				value_ptr[0] = value_ptr[tmp];
-				break;
-
-				/* This is now a fallthrough for all the USRmumble codes */
-			case USR1:
-			default:
-				if ((f->fn_argn & X_ARGS) == X_AN)
-				{
-					void (*funp) (int, struct value *);
-					funp = (void (*)(int, struct value *)) f->fn_fun;
-					(*funp) (numarg, value_ptr);
-				}
-				else
-				{
-					void (*funp) (struct value *);
-					funp = (void (*)(struct value *)) f->fn_fun;
-					(*funp) (value_ptr);
-				}
-				break;
-
-				/* #ifdef TEST
-				   default:
-				   panic("Unknown byte-value %d",byte);
-				   break;
-#endif */
+		try {
+			switch_by_byte(byte, numarg, tmp, value_ptr, jumpto, expr, f);
+		} catch (ValErr& e) {
+			goto next_byte;
 		}
-		/* Goto next-byte is the equiv of a multi-level break, which
-		   C doesn't allow. */
 next_byte:
 		;
 	}
