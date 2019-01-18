@@ -26,7 +26,6 @@
 
 extern bool using_curses;
 extern bool user_wants_headless;
-extern char *command_line_forth_file;
 
 
 /* Cell size paramaters. */
