@@ -237,14 +237,6 @@ void PUSH_ANY(struct value* value_ptr, cell* cp)
 	}
 }
 
-#define PUSH_ANY_XXX(cp)				\
-	if(!cp || !GET_TYP(cp)) {		\
-		value_ptr->type=TYP_NUL;			\
-		value_ptr->Int=0;			\
-	} else {				\
-		value_ptr>type=GET_TYP(cp);		\
-		value_ptr->x=cp->get_c_z();			\
-	}
 
 // should probably use one of TO_NUM(), or something like that.
 num_t as_flt(struct value* v)
