@@ -887,58 +887,7 @@ eval_expression (unsigned char *expr)
 					*value_ptr = *(value_ptr + 1);
 				break;
 
-			case F_INDEX:
-				tmp = (value_ptr + 1)->Int - 1;
-				if (tmp < 0)
-					ERROR (OUT_OF_RANGE);
-				lrow = value_ptr->Rng.lr;
-				lcol = value_ptr->Rng.lc;
-				hrow = value_ptr->Rng.hr;
-				hcol = value_ptr->Rng.hc;
-				if (lrow != hrow && lcol != hcol)
-				{
-					int dex;
 
-					dex = 1 + hrow - lrow;
-					if (tmp >= dex * (1 + hcol - lcol))
-						ERROR (OUT_OF_RANGE);
-					crow = tmp % dex;
-					ccol = tmp / dex;
-					lrow += crow;
-					lcol += ccol;
-				}
-				else if (lrow != hrow)
-				{
-					if (tmp > (hrow - lrow))
-						ERROR (OUT_OF_RANGE);
-					lrow += tmp;
-				}
-				else
-				{
-					if (tmp > (hcol - lcol))
-						ERROR (OUT_OF_RANGE);
-					lcol += tmp;
-				}
-				cell_ptr = find_cell (lrow, lcol);
-				PUSH_ANY(value_ptr, cell_ptr);
-				break;
-
-			case F_INDEX2:
-				crow = (value_ptr + 1)->Int - 1;
-				ccol = (value_ptr + 2)->Int - 1;
-				lrow = value_ptr->Rng.lr;
-				lcol = value_ptr->Rng.lc;
-				hrow = value_ptr->Rng.hr;
-				hcol = value_ptr->Rng.hc;
-				if (crow > (hrow - lrow) || ccol > (hcol - lcol)) 
-					ERROR (OUT_OF_RANGE);
-				cell_ptr = find_cell (lrow + crow, lcol + ccol);
-				PUSH_ANY(value_ptr, cell_ptr);
-				break;
-
-				/* case F_PRINTF:
-				   panic("no printf yet");
-				   break; */
 
 			case CONCAT:
 				strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);

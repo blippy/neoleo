@@ -126,22 +126,6 @@ exp:	  L_CONST
 		$1->n_x.v_subs[1]=$5;
 		$$=$1; }
 
-	/* JF:  These should be FN2R, but I'm hacking this for SYLNK */
-	| L_FN2R '(' L_RANGE ',' exp ',' exp ')' {
-		if($1->comp_value!=F_INDEX)
-			parse_error=PARSE_ERR;
-		$1->comp_value=F_INDEX2;
-		$1->n_x.v_subs[0]=make_list($3,$5);
-		$1->n_x.v_subs[1]=$7;
-		$$=$1; }
-	| L_FN2R '(' L_VAR ',' exp ',' exp ')' {
-		if($1->comp_value!=F_INDEX)
-			parse_error=PARSE_ERR;
-		$1->comp_value=F_INDEX2;
-		$1->n_x.v_subs[0]=make_list($3,$5);
-		$1->n_x.v_subs[1]=$7;
-		$$=$1; }
-
 	| L_FN3R '(' L_RANGE ',' exp ',' exp ')' {
 		($1)->n_x.v_subs[0]=make_list($3,$5);
  		($1)->n_x.v_subs[1]=$7;
