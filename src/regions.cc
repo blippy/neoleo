@@ -37,10 +37,8 @@
 #include "io-term.h"
 #include "window.h"
 #include "cmd.h"
-#include "sort.h"
 #include "basic.h"
 #include "spans.h"
-//#include "ref.h"
 
 using std::cout;
 using std::endl;
@@ -568,10 +566,3 @@ copy_row(int rf)
 	copy_region(&rngf, &rngt);
 }
 
-struct rng sort_rng;
-struct rng sort_ele;
-struct cmp *sort_keys;
-int sort_keys_alloc;
-int sort_keys_num = 0;
-
-static int srdiff, erdiff, scdiff, ecdiff;
