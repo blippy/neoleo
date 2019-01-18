@@ -1019,16 +1019,13 @@ update_cell(CELL *cell)
 	cell->cell_cycle = current_cycle;
 	//cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
 
-	if (newv->type != GET_TYP (cell))
-	{
+	if (newv->type != GET_TYP (cell)) {
 		if (GET_TYP (cell) == TYP_STR) free (cell->gString());
 		SET_TYP (cell, newv->type);
 		new_val = 1;
 		if (newv->type == TYP_STR) newv->String = strdup (newv->String);
-	}
-	else
-		switch (newv->type)
-		{
+	} else {
+		switch (newv->type) {
 			case 0:
 				new_val = 0;
 				break;
@@ -1058,6 +1055,8 @@ update_cell(CELL *cell)
 				panic ("Unknown type %d in update_cell", newv->type);
 #endif
 		}
+	}
+
 	if (new_val)
 	{
 		cell->set_c_z(newv->x);
