@@ -75,13 +75,8 @@ void throw_valerr(int n, struct value* vp)
 
 extern int n_usr_funs;
 
-//double to_int ();
-//static int deal_area ( unsigned char cmd, unsigned char num_args, struct value *p);
-//static void add_int (long value);
-//static void add_flt (double value);
 RETSIGTYPE math_sig ( int sig);
 
-int fls (long);
 
 #define Float	x.c_n
 #define String	x.c_s
@@ -1073,37 +1068,4 @@ update_cell(CELL *cell)
 	(void) obstack_free (&tmp_mem, tmp_mem_start);
 }
 
-int
-fls (long a_num)
-{
-	int ret = 1;
-
-	if (!a_num)
-		return 0;
-	if (a_num < 0)
-		a_num = -a_num;
-	if (a_num & 0xffff0000)
-	{
-		ret += 16;
-		a_num = (a_num >> 16) & 0xffff;
-	}
-	if (a_num & 0xff00)
-	{
-		ret += 8;
-		a_num >>= 8;
-	}
-	if (a_num & 0xf0)
-	{
-		ret += 4;
-		a_num >>= 4;
-	}
-	if (a_num & 0x0c)
-	{
-		ret += 2;
-		a_num >>= 2;
-	}
-	if (a_num & 2)
-		ret++;
-	return ret;
-}
 
