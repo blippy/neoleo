@@ -354,6 +354,131 @@ init_eval ()
 	(void) signal (SIGFPE, math_sig);
 }
 
+void compare_values(const unsigned byte, struct value *value_ptr)
+{
+	int tmp;
+	char *strptr;
+
+	if (value_ptr->type == TYP_ERR)
+		return;
+	if ((value_ptr + 1)->type == TYP_ERR)
+		throw_valerr((value_ptr + 1)->Value, value_ptr);
+
+	if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
+	{
+		if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
+			throw_valerr(BAD_INPUT, value_ptr);
+		if (byte == EQUAL)
+			value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
+		else
+			value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
+		return;
+	}
+	if (value_ptr->type != (value_ptr + 1)->type)
+	{
+		if (value_ptr->type == 0)
+		{
+			if ((value_ptr + 1)->type == TYP_STR)
+			{
+				value_ptr->type = TYP_STR;
+				value_ptr->String = "";
+			}
+			else if ((value_ptr + 1)->type == TYP_INT)
+			{
+				value_ptr->type = TYP_INT;
+				value_ptr->Int = 0;
+			}
+			else
+			{
+				value_ptr->type = TYP_FLT;
+				value_ptr->Float = 0.0;
+			}
+		}
+		else if ((value_ptr + 1)->type == 0)
+		{
+			if (value_ptr->type == TYP_STR)
+			{
+				(value_ptr + 1)->type = TYP_STR;
+				(value_ptr + 1)->String = "";
+			}
+			else if (value_ptr->type == TYP_INT)
+			{
+				(value_ptr + 1)->type = TYP_INT;
+				(value_ptr + 1)->Int = 0;
+			}
+			else
+			{
+				(value_ptr + 1)->type = TYP_FLT;
+				(value_ptr + 1)->Float = 0.0;
+			}
+		}
+		else if (value_ptr->type == TYP_STR)
+		{
+			strptr = value_ptr->String;
+			if ((value_ptr + 1)->type == TYP_INT)
+			{
+				value_ptr->type = TYP_INT;
+				value_ptr->Int = astol (&strptr);
+			}
+			else
+			{
+				value_ptr->type = TYP_FLT;
+				value_ptr->Float = astof (&strptr);
+			}
+			if (*strptr)
+			{
+				value_ptr->type = TYP_BOL;
+				value_ptr->Value = (byte == NOTEQUAL);
+				return;
+			}
+		}
+		else if ((value_ptr + 1)->type == TYP_STR)
+		{
+			strptr = (value_ptr + 1)->String;
+			if (value_ptr->type == TYP_INT)
+				(value_ptr + 1)->Int = astol (&strptr);
+			else
+				(value_ptr + 1)->Float = astof (&strptr);
+			if (*strptr)
+			{
+				value_ptr->type = TYP_BOL;
+				value_ptr->Value = (byte == NOTEQUAL);
+				return;
+			}
+
+			/* If we get here, one is INT, and the other
+			   is FLT  Make them both FLT */
+		}
+		else if (value_ptr->type == TYP_INT)
+		{
+			value_ptr->type = TYP_FLT;
+			value_ptr->Float = (double) value_ptr->Int;
+		}
+		else
+			(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
+	}
+	if (value_ptr->type == TYP_STR)
+		tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
+	else if (value_ptr->type == TYP_FLT)
+		tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
+	else if (value_ptr->type == TYP_INT)
+		tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
+	else if (value_ptr->type == 0)
+		tmp = 0;
+	else
+	{
+		tmp = 0;
+		panic ("Bad type value %d", value_ptr->type);
+	}
+	value_ptr->type = TYP_BOL;
+	if (tmp < 0)
+		value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
+	else if (tmp == 0)
+		value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
+	else
+		value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
+}
+
 // refactored out of eval_expression()
 // Maybe contains too many parameters, but it will do as a first cut
 void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
@@ -649,131 +774,14 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case SUM:
 			do_math_binop(byte, value_ptr, value_ptr+1);
 			break;
+
 		case EQUAL:
 		case NOTEQUAL:
-
 		case GREATEQ:
 		case GREATER:
 		case LESS:
 		case LESSEQ:
-			if (value_ptr->type == TYP_ERR)
-				break;
-			if ((value_ptr + 1)->type == TYP_ERR)
-				throw_valerr((value_ptr + 1)->Value, value_ptr);
-
-			if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
-			{
-				if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
-					throw_valerr(BAD_INPUT, value_ptr);
-				if (byte == EQUAL)
-					value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
-				else
-					value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
-				break;
-			}
-			if (value_ptr->type != (value_ptr + 1)->type)
-			{
-				if (value_ptr->type == 0)
-				{
-					if ((value_ptr + 1)->type == TYP_STR)
-					{
-						value_ptr->type = TYP_STR;
-						value_ptr->String = "";
-					}
-					else if ((value_ptr + 1)->type == TYP_INT)
-					{
-						value_ptr->type = TYP_INT;
-						value_ptr->Int = 0;
-					}
-					else
-					{
-						value_ptr->type = TYP_FLT;
-						value_ptr->Float = 0.0;
-					}
-				}
-				else if ((value_ptr + 1)->type == 0)
-				{
-					if (value_ptr->type == TYP_STR)
-					{
-						(value_ptr + 1)->type = TYP_STR;
-						(value_ptr + 1)->String = "";
-					}
-					else if (value_ptr->type == TYP_INT)
-					{
-						(value_ptr + 1)->type = TYP_INT;
-						(value_ptr + 1)->Int = 0;
-					}
-					else
-					{
-						(value_ptr + 1)->type = TYP_FLT;
-						(value_ptr + 1)->Float = 0.0;
-					}
-				}
-				else if (value_ptr->type == TYP_STR)
-				{
-					strptr = value_ptr->String;
-					if ((value_ptr + 1)->type == TYP_INT)
-					{
-						value_ptr->type = TYP_INT;
-						value_ptr->Int = astol (&strptr);
-					}
-					else
-					{
-						value_ptr->type = TYP_FLT;
-						value_ptr->Float = astof (&strptr);
-					}
-					if (*strptr)
-					{
-						value_ptr->type = TYP_BOL;
-						value_ptr->Value = (byte == NOTEQUAL);
-						break;
-					}
-				}
-				else if ((value_ptr + 1)->type == TYP_STR)
-				{
-					strptr = (value_ptr + 1)->String;
-					if (value_ptr->type == TYP_INT)
-						(value_ptr + 1)->Int = astol (&strptr);
-					else
-						(value_ptr + 1)->Float = astof (&strptr);
-					if (*strptr)
-					{
-						value_ptr->type = TYP_BOL;
-						value_ptr->Value = (byte == NOTEQUAL);
-						break;
-					}
-
-					/* If we get here, one is INT, and the other
-					   is FLT  Make them both FLT */
-				}
-				else if (value_ptr->type == TYP_INT)
-				{
-					value_ptr->type = TYP_FLT;
-					value_ptr->Float = (double) value_ptr->Int;
-				}
-				else
-					(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
-			}
-			if (value_ptr->type == TYP_STR)
-				tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
-			else if (value_ptr->type == TYP_FLT)
-				tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
-			else if (value_ptr->type == TYP_INT)
-				tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
-			else if (value_ptr->type == 0)
-				tmp = 0;
-			else
-			{
-				tmp = 0;
-				panic ("Bad type value %d", value_ptr->type);
-			}
-			value_ptr->type = TYP_BOL;
-			if (tmp < 0)
-				value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
-			else if (tmp == 0)
-				value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
-			else
-				value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
+			compare_values(byte, value_ptr);
 			break;
 
 		case F_FIXED:

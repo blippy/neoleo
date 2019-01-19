@@ -1,5 +1,5 @@
 # permissive flag is set due to pesky obstack
-#COV = --coverage
+COV = --coverage
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
 AM_CXXFLAGS += -Werror # activate to make warnings abort the compile
 AM_CXXFLAGS += -std=c++17
@@ -9,6 +9,7 @@ AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const cha
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 #AM_CXXFLAGS += -Wfatal-errors 
 AM_CXXFLAGS += $(COV)
+#AM_CXXFLAGS += $(CODE_COVERAGE_CXXFLAGS)
 
 YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
@@ -22,6 +23,7 @@ CLEANFILES = $(BUILT_SOURCES)
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
 neoleo_LDADD = @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 neoleo_LDFLAGS = $(COV)
+#neoleo_LIBS= $(CODE_COVERAGE_LIBS)
 
 # Optional component: neobasic:
 #if 0

@@ -7,7 +7,8 @@ if [ ! -f configure ]; then
 	autoreconf -iv
 fi
 
-#COV="--coverage"
+#COV=--coverage
+#COV=--enable-code-coverage
 DBG=--with-debug
 #GPROF=--with-gprof
 
@@ -26,11 +27,12 @@ fi
 
 #SAN=--with-asan 
 
-OPTS="$DBG $GPROF $SAN "
+OPTS="$DBG $GPROF $SAN $COV "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
 #./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
-./configure $OPTS  --prefix=$HOME/.local
+#./configure $OPTS  --prefix=$HOME/.local
+./configure $OPTS "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
 
 
 
