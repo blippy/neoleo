@@ -5,7 +5,7 @@ DATE:    ONGOING
 
 * C++17 COMPILER IS NOW REQUIRED
 
-* removed function oneof(). Pfft, who needs it.
+* Functions removed: hypot, oneof. Pfft, who needs them.
 
 * small changes in the file format
 	May cause incompatability issues, but I'm not expecting it.

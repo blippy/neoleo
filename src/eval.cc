@@ -754,7 +754,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 			/* Two operand cmds */
 		case F_ATAN2:
-		case F_HYPOT:
 		case POW:
 			{
 				double (*funp2) (double, double);

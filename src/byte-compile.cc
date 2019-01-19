@@ -193,11 +193,6 @@ function_t the_funs[] =
   {C_FN1, X_A1, "R", 0, S "rows"},
   {C_FN1, X_A1, "R", 0, S "cols"},
   {C_FN2, X_A2, "FF", V atan2_1, S "atan2"},
-#ifdef HAVE_HYPOT
-  {C_FN2, X_A2, "FF", V hypot, S "hypot"},
-#else
-  {C_FN2, X_A2, "FF", 0, S "*&%$%*"},
-#endif
   {C_FN2, X_A2, "FI", 0, S "fixed"},
   {C_FN2, X_A2, "AA", 0, S "iferr"},
   {C_FN2, X_A2, "RI", 0,  S "index"},

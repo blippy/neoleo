@@ -128,7 +128,6 @@ typedef uint32_t coord_t;
 
 /* 75 - 98 Two-operand functions */
 #define F_ATAN2		84
-#define F_HYPOT		85
 #define F_FIXED		86
 #define F_IFERR		87
 
