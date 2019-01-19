@@ -32,13 +32,20 @@ void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 //long value::gLong() { assert(type == TYP_INT); return x.c_l; };
 //void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
 		
-char *value::gString() { assert(type == TYP_STR); return x.c_s; };
+char *value::gString()
+{ 
+	assert(type == TYP_STR); 
+	char* str = strdup(x.c_s);
+	assert(str);
+	return str; 
+}
 
 void value::sString(char* newval) 
 { 
 	//free_string();
 	type = TYP_STR; 
-	x.c_s = newval;
+	x.c_s = strdup(newval);
+	assert(x.c_s);
 }
 
 num_t value::gFlt() const { return x.c_n ;};

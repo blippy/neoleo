@@ -639,6 +639,10 @@ decomp_free (void)
 const char *
 backslash_a_string (char *string, int add_quote)
 {
+// TODO causes crashing at 19-Jan-2019
+#if 0	
+	return string;
+#else
 	char		*pf, *pt;
 	unsigned char	ch;
 	int		size, len;
@@ -699,5 +703,6 @@ backslash_a_string (char *string, int add_quote)
 		return cbuf;
 	}
 	return string;
+#endif
 }
 

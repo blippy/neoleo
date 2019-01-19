@@ -463,7 +463,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 
 	if (GET_TYP (my_cell) == TYP_STR)
-		my_cell->sString(strdup (cpf->gString()));
+		my_cell->sString(cpf->gString());
 	else {
 		my_cell->type = cpf->type;
 		my_cell->set_c_z(cpf->get_c_z());
@@ -597,8 +597,6 @@ flush_old_value (void)
 		byte_free (my_cell->get_cell_formula());
 		my_cell->clear_formula();
 	}
-	if (GET_TYP (my_cell) == TYP_STR)
-		free (my_cell->gString());
 	SET_TYP (my_cell, TYP_NUL);
 }
 
