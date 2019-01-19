@@ -38,6 +38,7 @@
 #include "byte-compile.h"
 #include "node.h"
 #include "eval.h"
+#include "logging.h"
 #include "ref.h"
 #include "sort.h"
 #include "busi.h"
@@ -49,6 +50,8 @@
 #include "byte-compile.h"
 #include "utils.h"
 #include "ref.h"
+
+using namespace std::string_literals;
 
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
@@ -207,6 +210,7 @@ function_t the_funs[] =
   {C_FNN, X_AN, "EEEE", 0, S "min"},
   {C_FNN, X_AN, "EEEE", 0, S "count"},
   {C_FNN, X_AN, "EEEE", 0, S "var"},
+  0
 
 };
 
@@ -287,10 +291,14 @@ init_mem ()
 	init_bcode_func(the_funs[AND].fn_str, &the_funs[AND]);
 	init_bcode_func(the_funs[OR].fn_str, &the_funs[OR]);
 	for (n = F_PI; n < USR1; n++) {
-		const char* fn_name = the_funs[n].fn_str;
+		auto f = the_funs[n];
+		if(f.fn_comptype==0) break;
+		const char* fn_name = f.fn_str;
+		log_debug("adding function: "s + fn_name);
 		if(fn_name)
 			init_bcode_func(fn_name, &the_funs[n]);
 	}
+	log_debug("finished adding byte-compile functions"s);
 
 	for (n = 0; n < n_usr_funs; n++)
 	{
