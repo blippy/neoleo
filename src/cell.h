@@ -42,16 +42,6 @@ typedef uint32_t coord_t;
 
 
 
-template<typename T>
-struct Generic { 
-	Generic(const std::string& s) : s(s) {}
-	std::string s; 
-};
-
-struct Err {};
-
-using omnival_t = std::variant<std::string, num_t, Generic<Err>>;
-
 
 constexpr auto JST_DEF = 0;
 #define JST_LFT		1
@@ -97,7 +87,6 @@ class cell : public value
 	private:
 		formula_t cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
-		omnival_t omnival;
 
 	public:
 		unsigned short cell_cycle = 0;
