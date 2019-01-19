@@ -80,21 +80,8 @@ static void *str_stack;
 
 
 #define V (void(*)())
-double acos1(double x) { return acos(x); }
-double asin1(double x) { return asin(x); }
-double atan1(double x) { return atan(x); }
-double atan2_1(double x, double y) { return atan2(x, y); }
-double ceil1(double x) { return ceil(x); }
-double cos1(double x) { return cos(x);}
-double exp1(double x) { return exp(x) ; }
 double fabs1(double x) { return  fabs(x); }
-double floor1(double x) { return  floor(x); }
-double log1(double x) { return log(x); }
-double log10_1(double x) { return log10(x); }
 double pow1(double x, double y) { return pow(x, y); }
-double sin1(double x) { return sin(x); }
-double sqrt1(double x) { return sqrt(x); }
-double tan1(double x) { return tan(x); }
 
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
@@ -171,21 +158,9 @@ function_t the_funs[] =
   {C_FN0 | C_T, X_A0, "", 0, S "now"},
 
   {C_FN1, X_A1, "F", V fabs1, S "abs"},
-  {C_FN1, X_A1, "F", V acos1, S "acos"},
-  {C_FN1, X_A1, "F", V asin1, S "asin"},
-  {C_FN1, X_A1, "F", V atan1, S "atan"},
-  {C_FN1, X_A1, "F", V ceil1, S "ceil"},
   {C_FN1, X_A1, "F", V to_int, S "int"},
-  {C_FN1, X_A1, "F", V floor1, S "floor"},
-  {C_FN1, X_A1, "F", V cos1, S "cos"},
   {C_FN1, X_A1, "F", V dtr, S "dtr"},
-  {C_FN1, X_A1, "F", V exp1, S "exp"},
-  {C_FN1, X_A1, "F", V log1, S "log"},
-  {C_FN1, X_A1, "F", V log10_1, S "log10"},
   {C_FN1, X_A1, "F", V rtd, S "rtd"},
-  {C_FN1, X_A1, "F", V sin1, S "sin"},
-  {C_FN1, X_A1, "F", V sqrt1, S "sqrt"},
-  {C_FN1, X_A1, "F", V tan1, S "tan"},
   {C_FN1, X_A1, "I", 0, S "ctime"},
   {C_FN1, X_A1, "A", 0, S "negate"},
   {C_FN1, X_A1, "A", 0, S "not"},
@@ -195,11 +170,8 @@ function_t the_funs[] =
   {C_FN1 | C_T, X_A1, "I", 0, S "rnd"},
   {C_FN1, X_A1, "R", 0, S "rows"},
   {C_FN1, X_A1, "R", 0, S "cols"},
-  {C_FN2, X_A2, "FF", V atan2_1, S "atan2"},
   {C_FN2, X_A2, "FI", 0, S "fixed"},
   {C_FN2, X_A2, "AA", 0, S "iferr"},
-  {C_FN2, X_A2, "RI", 0,  S "index"},
-  {C_FN3, X_A3, "RII", 0, S "index"},
 
   {C_FNN, X_AN, "SIIA", 0, S "file"},
   {C_FNN, X_AN, "EEEE", 0, S "sum"},

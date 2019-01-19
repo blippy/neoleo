@@ -66,7 +66,7 @@ constexpr auto JST_DEF = 0;
 
 struct cell_flags_s {
 	unsigned int	cell_unused:	1;	/* Was 2 */
-	unsigned int	cell_lock:	2;
+	unsigned int	cell_lock = 	0;
 	unsigned int	cell_justify =	JST_DEF;
 	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;
@@ -97,7 +97,6 @@ class cell : public value
 		CELLREF get_row();
 		CELLREF get_col();
 
-		//cell();
 		cell(coord_t coord);
 		~cell();
 		void reset();
@@ -109,6 +108,7 @@ class cell : public value
 		formula_t set_cell_formula(formula_t newval);
 		void clear_formula();
 		bool zeroed_1();
+		bool locked() const;
 
 
 

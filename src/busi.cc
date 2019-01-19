@@ -135,8 +135,6 @@ do_npv ( struct value *p)
   if (tmp)
     {
 	    p->sErr(tmp);
-      //p->Value = tmp;
-      //p->type = TYP_ERR;
     }
   else
     p->type = TYP_FLT;
@@ -163,14 +161,10 @@ do_irr (struct value *p)
 		if (tmp)
 		{
 			p->sErr(tmp);
-			//p->Value = tmp;
-			//p->type = TYP_ERR;
 			return;
 		}
 		if (++i == 40)
 		{
-			//p->Value = BAD_INPUT;
-			//p->type = TYP_ERR;
 			p->sErr(BAD_INPUT);
 			return;
 		}
@@ -546,8 +540,6 @@ do_kprin ( struct value *p)
 
 	if (term < period)
 	{
-		//p->Value = OUT_OF_RANGE;
-		//p->type = TYP_ERR;
 		p->sErr(OUT_OF_RANGE);
 		return;
 	}
@@ -576,6 +568,15 @@ do_compbal (struct value *p)
 	num_t term = (p + 2)->gFlt();
 
 	p->sFlt(principal * busi_pow (1 + rate, term));
+}
+
+static void do_ceil(struct value *p)
+{
+	p->sInt(ceil(p->gFlt()));
+}
+static void do_floor(struct value *p)
+{
+	p->sInt(floor(p->gFlt()));
 }
 
 static void
@@ -623,8 +624,9 @@ function_t busi_funs[] =
   {C_FN4, X_A4, "FFII", to_vptr(do_kint), "kint"},	/* 17 */
   {C_FN4, X_A4, "FFII", to_vptr(do_kprin), "kprin"},	/* 18 */
 
-  //{C_FN4, X_A4, "RFFF", to_vptr(do_fmrr), "fmrr"},       /* 19 */
   {C_FN1, X_A1, "R",    to_vptr(do_sum), "sum"},
+  {C_FN1, X_A1, "F",    to_vptr(do_floor), "floor"},
+  {C_FN1, X_A1, "F",    to_vptr(do_ceil), "ceil"},
 
   {0, 0, "", 0, 0},
 };

@@ -84,6 +84,10 @@ value cell::get_value()
 }
 
 
+bool cell::locked() const
+{
+	return cell_flags.cell_lock;
+}
 
 formula_t cell::set_cell_formula(formula_t newval)
 { 

@@ -686,16 +686,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 			/* Single operand instrs */
-		case F_CEIL:
-		case F_FLOOR:
-			{
-				double (*funp1) (double);
-				funp1 = (double (*)(double)) (f->fn_fun);
-
-				value_ptr->Float = (*funp1) (value_ptr->Float);
-			}
-			break;
-
 		case F_CTIME:
 			value_ptr->type = TYP_STR;
 			strptr = ctime ((time_t*) &value_ptr->Int);
@@ -753,7 +743,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 			/* Two operand cmds */
-		case F_ATAN2:
 		case POW:
 			{
 				double (*funp2) (double, double);

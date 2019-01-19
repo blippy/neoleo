@@ -774,13 +774,7 @@ void write_cells(FILE* fp)
 		if(GET_TYP(cp) != TYP_NUL)
 			fprintf(fp, "K%s", strval.c_str());
 
-		/* TODO mcarter 2019-01-16 there seems to be a leak somewhere
-		 * that causes the assumption of a lock
-		
-
-		if (GET_LCK (cp) == LCK_LCK)
-			(void) fprintf (fp, ";P");
-			*/
+		if(cp->locked()) fprintf (fp, ";P");
 
 		putc ('\n', fp);
 	}
