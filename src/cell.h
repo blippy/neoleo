@@ -119,7 +119,6 @@ class cell : public value
 		formula_t get_cell_formula(); 
 		formula_t set_cell_formula(formula_t newval);
 		void clear_formula();
-		void set_omnival(struct value* v);
 		bool zeroed_1();
 
 
@@ -133,7 +132,7 @@ class cell : public value
 		 */
 		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
 		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
-		value get_value() { value v; v.set_type(get_type()); v.x = x; return v; }
+		value get_value();
 };
 
 bool vacuous(cell* cp);

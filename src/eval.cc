@@ -1013,10 +1013,8 @@ update_cell(CELL *cell)
 	}
 
 	cell->cell_cycle = current_cycle;
-	//cell->set_omnival(newv); // The rest of this function should be redundant after this functionality has been set up properly
-
 	if (newv->type != GET_TYP (cell)) {
-		if (GET_TYP (cell) == TYP_STR) free (cell->gString());
+		//if (GET_TYP (cell) == TYP_STR) free (cell->gString());
 		SET_TYP (cell, newv->type);
 		new_val = 1;
 		if (newv->type == TYP_STR) newv->String = strdup (newv->String);
@@ -1035,7 +1033,6 @@ update_cell(CELL *cell)
 				new_val = strcmp (newv->String, cell->gString());
 				if (new_val)
 				{
-					free (cell->gString());
 					newv->String = strdup (newv->String);
 				}
 				break;

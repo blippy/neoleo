@@ -27,6 +27,7 @@
 #include "eval.h"
 #include "errors.h"
 #include "date.h"
+#include "mem.h"
 #include "utils.h"
 #include "posixtm.hh"
 #include "get_date.h"
@@ -204,12 +205,12 @@ l_llll (
 }
 
 static void
-l_s (
-     long (*fn)(char *),
-     struct value * p)
+l_s ( long (*fn)(char *), struct value * p)
 {
-  p[0].Int = fn (p[0].gString());
-  p[0].type = TYP_INT;
+	strcpy_c s{p[0].gString()};
+	p[0].Int = fn(s.data());
+	p[0].type = TYP_INT;
+	//free(s);
 }
 
 
@@ -247,10 +248,10 @@ CALLER(do_posix_date, dt_posix_date, l_s)
 
 
 void
-do_strftime (
-     struct value * p)
+do_strftime ( struct value * p)
 {
-  p[0].sString(dt_strftime (p[0].gString(), p[1].Int));
+	strcpy_c s{p[0].gString()};
+	p[0].sString(dt_strftime (s.data(), p[1].Int));
 }
 
 

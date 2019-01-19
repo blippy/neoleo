@@ -70,28 +70,19 @@ formula_t cell::get_cell_formula()
 	return cell_formula; 
 }
 
-void cell::set_omnival(struct value* v)
-{
-	auto& v1 = v->x;
-	switch(v->type) {
-		case TYP_FLT:
-			omnival = v1.c_n;
-			break;	
-		case TYP_INT:
-			omnival = v1.c_i;
-			break;
-		case TYP_STR:
-			omnival = std::string(v1.c_s);
-			break;
-		case TYP_ERR:
-			omnival = Generic<Err>(v1.c_s);
-			break;
-		default:
-			cerr << "TODO:set_omnival:type:" << v->type << endl;
-			assert(false);
+value cell::get_value()
+{ 
+	value v; 
+	v.set_type(get_type()); 
+	if(get_type() == TYP_STR) {
+		const char* s = x.c_s;
+		v.x.c_s = strdup(s);
+	} else {
+		v.x = x; 
 	}
-	
+	return v; 
 }
+
 
 
 formula_t cell::set_cell_formula(formula_t newval)

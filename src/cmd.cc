@@ -2173,7 +2173,7 @@ execute_command(const char *instr)
 	char *str = mem.data();
 	int iscmd = 0;
 	char *ptr = str;
-	char *run;		/* The first string to execute. */
+	const char *run;		/* The first string to execute. */
 	/* The address of the macro to execute.  If the user typed a 
 	 * command name and not a range name, then this range will be
 	 * set to a one cell region.

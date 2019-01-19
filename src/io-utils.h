@@ -36,7 +36,7 @@ extern void init_infinity (void);
 extern char * flt_to_str (num_t val);
 extern char * flt_to_str_fmt (CELL *cp);
 extern char * long_to_str (long val);
-extern char * print_cell (CELL *cp);
+extern std::string print_cell (CELL *cp);
 extern const char * cell_value_string (CELLREF row, CELLREF col, int add_quote);
 extern char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
 extern void set_usr_stats (int usr_n, char **usr_buf);

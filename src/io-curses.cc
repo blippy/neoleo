@@ -55,6 +55,7 @@ using namespace std::string_literals;
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-utils.h"
+#include "mem.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
@@ -954,7 +955,8 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 
 	getyx (stdscr, yy, xx);
 	glowing = (r == curow && c == cucol && win == cwin);
-	ptr = print_cell (cp);
+	strcpy_c str{print_cell(cp).c_str()};
+	ptr = str.data();
 	move_cursor_to (win, r, c, 0);
 	if (glowing)
 		standout ();

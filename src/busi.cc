@@ -48,6 +48,18 @@ busi_pow(num_t x, num_t y)
 	return (num_t) pow( (double) x, (double) y );
 }
 
+double to_double(const char* strptr, bool &ok)
+{
+	double d;
+	ok = true;
+	size_t idx;
+	try { 
+		d = std::stod(strptr, &idx);
+	} catch(...) {
+		ok = false;
+	}
+	return d;
+}
 
 static int
 npv ( struct rng *rng, num_t rate, num_t *putres)
@@ -56,7 +68,8 @@ npv ( struct rng *rng, num_t rate, num_t *putres)
 	int i = 0;;
 	num_t f;
 	CELL *cell_ptr;
-	char *strptr;
+	const char *strptr;
+	bool ok;
 
 	for(auto cell_ptr: get_cells_in_range(rng)) {
 		switch (GET_TYP (cell_ptr))
@@ -75,9 +88,8 @@ npv ( struct rng *rng, num_t rate, num_t *putres)
 
 			case TYP_STR:
 				strptr = cell_ptr->gString();
-				f = astof (&strptr);
-				if (*strptr)
-					return NON_NUMBER;
+				f = to_double(strptr, ok);
+				if (!ok) return NON_NUMBER;
 know_f:
 				npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
 				break;

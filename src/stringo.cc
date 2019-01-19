@@ -34,6 +34,7 @@
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
+#include "mem.h"
 #include "stringo.h"
 #include "io-utils.h"
 #include "sheet.h"
@@ -82,17 +83,6 @@ wrapfunc(std::function<std::string(struct value*)> func)
 
 
 
-static std::string do_repeat(struct value* p)
-{
-	char* str = p->gString();
-	long num  = (p+1)->gInt();
-	if(num<0) throw OUT_OF_RANGE;
-	std::string res;
-	while(num--) res += str;
-	return res;
-}
-static void do_repeat_1(struct value* p) { wrapfunc(do_repeat)(p); }
-
 
 
 static void
@@ -103,57 +93,6 @@ do_len(struct value * p)
 
 
 
-static void
-do_up_str(struct value * p)
-{
-	char *s1,*s2;
-	char *strptr;
-
-	strptr=alloc_value_str(p);
-	for(s1=strptr,s2=p->gString();*s2;s2++)
-		*s1++ = (islower(*s2) ? toupper(*s2) : *s2);
-	*s1=0;
-	p->sString(strptr);
-}
-
-
-
-static void
-do_dn_str(struct value * p)
-{
-	char *s1,*s2;
-	char *strptr;
-
-	strptr=alloc_value_str(p);
-	for(s1=strptr,s2=p->gString();*s2;s2++)
-		*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
-	*s1=0;
-	p->sString(strptr);
-}
-
-
-
-static void
-do_cp_str(struct value * p)
-{
-	char *strptr;
-	char *s1,*s2;
-	int wstart=1;
-
-	strptr=alloc_value_str(p);
-	for(s1=strptr,s2=p->gString();*s2;s2++) {
-		if(!isalpha(*s2)) {
-			wstart=1;
-			*s1++= *s2;
-		} else if(wstart) {
-			*s1++ = (islower(*s2) ? toupper(*s2) : *s2);
-			wstart=0;
-		} else
-			*s1++ = (isupper(*s2) ? tolower(*s2) : *s2);
-	}
-	*s1=0;
-	p->sString(strptr);
-}
 
 
 
@@ -164,8 +103,9 @@ do_trim_str(struct value * p)
 	int sstart=0;
 	char *strptr;
 
+	strcpy_c s2c{p->gString()};
 	strptr=alloc_value_str(p);
-	for(s1=strptr,s2=p->gString();*s2;s2++) {
+	for(s1=strptr,s2=s2c.data();*s2;s2++) {
 		if(!isascii(*s2) || !isprint(*s2))
 			continue;
 		if(*s2==' ') {
@@ -186,7 +126,7 @@ do_trim_str(struct value * p)
 static void
 do_mid(struct value * p)
 {
-	char *str = p->gString();
+	const char *str = p->gString();
 	long from = (p+1)->gInt()-1;
 	long len =  (p+2)->gInt();
 
@@ -208,50 +148,8 @@ do_mid(struct value * p)
 }
 
 
-static void
-do_substr(struct value * p)
-{
-	long off1 = (p  )->gInt();
-	long off2 = (p+1)->gInt();
-	char *str = (p+2)->gString();
-
-	char	*ptr1,	*ptr2;
-	int tmp;
-	char *ret;
-
-	tmp=strlen(str);
-	if(off1==0 || tmp < ((off1<0) ? -off1 : off1) ||
-	   off2==0 || tmp < ((off2<0) ? -off2 : off2))
-		ERROR(OUT_OF_RANGE);
-	ptr1=str + (off1>0 ? off1-1 : tmp+(off1));
-	ptr2=str + (off2>0 ? off2-1 : tmp+(off2));
-
-	if(ptr1>ptr2)
-		ERROR(OUT_OF_RANGE);
-	tmp=(ptr2-ptr1)+1;
-	ret=(char *)obstack_alloc(&tmp_mem,tmp+1);
-	strncpy(ret,ptr1,tmp);
-	ret[tmp]=0;
-	p->sString(ret);
-}
 
 
-
-static void
-do_strstr(struct value * p)
-{
-	char *strptr	= p->gString();
-	char *str1	= (p+1)->gString();
-	long off	= (p+2)->gInt();
-	//char *ret;
-
-	if(off<1 || strlen(strptr)<=off-1)
-		ERROR(OUT_OF_RANGE);
-	//ret=(char *)strstr(strptr+off-1,str1);
-	char *loc = strstr(strptr+off-1,str1);
-	size_t pos = loc ? 1 + loc - strptr : 0;
-	p->sInt(pos);
-}
 
 
 
@@ -289,15 +187,8 @@ static void do_edit_1(struct value*p) { wrapfunc(do_edit)(p);}
 
 function_t string_funs[] = {
 { C_FN1,	X_A1,	"S",    to_vptr(do_len),	"len" }, 
-{ C_FN3,	X_A3,	"SSI",  to_vptr(do_strstr),	"find" }, 
-
-{ C_FN1,	X_A1,	"S",    to_vptr(do_up_str),	"strupr" }, 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_dn_str),	"strlwr" }, 
-{ C_FN1,	X_A1,	"S",    to_vptr(do_cp_str),	"strcap" }, 
 { C_FN1,	X_A1,	"S",    to_vptr(do_trim_str),	"trim" }, 
-{ C_FN3,	X_A3,	"IIS",  to_vptr(do_substr),	"substr" }, 
 { C_FN3,	X_A3,	"SII",  to_vptr(do_mid),	"mid" }, 
-{ C_FN2,	X_A2,	"SI",   to_vptr(do_repeat_1),	"repeat" }, 
 { C_FN3,	X_A3,	"SII", to_vptr(do_edit_1),	"edit" }, 
 { C_FN0,        X_A0,   "",    to_vptr(do_version_1),    "version" },
 { C_FN2,        X_A2,   "SS",    to_vptr(do_concata_1),    "concata" },

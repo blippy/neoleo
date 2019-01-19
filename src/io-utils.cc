@@ -43,6 +43,7 @@
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
+#include "mem.h"
 #include "sheet.h"
 #include "logging.h"
 #include "numeric.h"
@@ -265,8 +266,7 @@ long_to_str (long val)
 /* create the human-readable version of the contents of a cell
    This scribbles on print-buf bigtime */
 
-char *
-print_cell (CELL * cp)
+std::string print_cell (CELL * cp)
 {
 	int j;
 	int p;
@@ -485,7 +485,10 @@ cell_value_string (CELLREF row, CELLREF col, int add_quote)
       return print_buf;
 
     case TYP_STR:
-      return backslash_a_string (cp->gString(), add_quote);
+      {
+	      strcpy_c s{cp->gString()};
+	      return backslash_a_string (s.data(), add_quote);
+      }
 
     case TYP_BOL:
       return bname[cp->gBol()];

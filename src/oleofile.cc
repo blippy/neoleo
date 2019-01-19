@@ -771,11 +771,10 @@ void write_cells(FILE* fp)
 
 		value val = cp->get_value();
 		std::string strval = stringify_value_file_style(&val);
-		//std::string strval = stringify_value_file_style(cp->value::value);
 		if(GET_TYP(cp) != TYP_NUL)
 			fprintf(fp, "K%s", strval.c_str());
 
-		/* TODO mcarter 2-19-01-16 there seems to be a leak somewhere
+		/* TODO mcarter 2019-01-16 there seems to be a leak somewhere
 		 * that causes the assumption of a lock
 		
 

@@ -37,6 +37,7 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "byte-compile.h"
+#include "mem.h"
 #include "parse.hh"
 #include "ref.h"
 #include "cmd.h"
@@ -462,9 +463,10 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell->cell_refs_to->refs_refcnt++;
 
 
-	if (GET_TYP (my_cell) == TYP_STR)
-		my_cell->sString(cpf->gString());
-	else {
+	if (GET_TYP (my_cell) == TYP_STR) {
+		strcpy_c s{cpf->gString()};
+		my_cell->sString(s.data());
+	} else {
 		my_cell->type = cpf->type;
 		my_cell->set_c_z(cpf->get_c_z());
 	}

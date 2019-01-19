@@ -27,6 +27,7 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "cmd.h"
+#include "mem.h"
 #include "sheet.h"
 #include "logging.h"
 #include "utils.h"
@@ -590,7 +591,10 @@ decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 		case TYP_INT:
 			return std::to_string(cell->gInt());
 		case TYP_STR:
-			return backslash_a_string (cell->gString(), 1);
+			{
+				strcpy_c s{cell->gString()};
+				return backslash_a_string (s.data(), 1);
+			}
 		case TYP_BOL:
 			return bname[cell->gBol()];
 		case TYP_ERR:

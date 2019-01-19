@@ -32,10 +32,10 @@ void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 //long value::gLong() { assert(type == TYP_INT); return x.c_l; };
 //void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
 		
-char *value::gString()
+const char *value::gString()
 { 
 	assert(type == TYP_STR); 
-	char* str = strdup(x.c_s);
+	const char* str = x.c_s;
 	assert(str);
 	return str; 
 }
@@ -59,11 +59,10 @@ void value::sBol(int newval) { type = TYP_BOL; x.c_b = newval; };
 
 void value::free_string()
 {
-	if(type != TYP_STR || gString() == nullptr) return;
-	free(gString());
+	if(type != TYP_STR) return;
 	type = TYP_NUL;
+	if(x.c_s != nullptr) free(x.c_s);
 	x.c_s = nullptr;
-	//memset(&x, 0, sizeof(union vals));
 }
 
 
