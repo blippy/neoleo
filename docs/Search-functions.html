@@ -99,14 +99,6 @@ search for an <em>initial</em> string <var>str</var> of the cells in <var>rng</v
 in <var>rng</var>.  The second form returns the cell in <var>rng</var> that is
 <var>rowoffset</var> rows and <var>coloffset</var> columns from the upper left.
 </p></dd>
-<dt><code>oneof(<var>choice</var>, <var>val1</var>, ...)</code></dt>
-<dd><a name="index-oneof"></a>
-<p>Case expression.  Returns <var>val1</var> if <var>choice</var> is 1, the next
-value if 2, etc.  If <var>choice</var> is not a valid integer in the
-appropriate range, <code>#OUT_OF_RANGE</code> is returned.  If no value
-arguments are supplied, <code>#NO_VALUES</code> is returned.  Note that
-arguments must be values; ranges are not allowed.
-</p></dd>
 </dl>
 
 <p>These functions are used to index into a table of entries:

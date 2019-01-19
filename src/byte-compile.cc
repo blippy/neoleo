@@ -202,7 +202,6 @@ function_t the_funs[] =
   {C_FN2, X_A2, "AA", 0, S "iferr"},
   {C_FN2, X_A2, "RI", 0,  S "index"},
   {C_FN3, X_A3, "RII", 0, S "index"},
-  {C_FNN, X_AN, "IAAA", 0, S "oneof"},
 
   {C_FNN, X_AN, "SIIA", 0, S "file"},
   {C_FNN, X_AN, "EEEE", 0, S "sum"},
@@ -292,23 +291,16 @@ init_mem ()
 	init_bcode_func(the_funs[F_IF].fn_str, &the_funs[F_IF]);
 	init_bcode_func(the_funs[AND].fn_str, &the_funs[AND]);
 	init_bcode_func(the_funs[OR].fn_str, &the_funs[OR]);
-	for (n = F_PI; n < USR1; n++)
-		init_bcode_func(the_funs[n].fn_str, &the_funs[n]);
+	for (n = F_PI; n < USR1; n++) {
+		const char* fn_name = the_funs[n].fn_str;
+		if(fn_name)
+			init_bcode_func(fn_name, &the_funs[n]);
+	}
 
 	for (n = 0; n < n_usr_funs; n++)
 	{
-		int nn;
-
-		for (nn = 0; usr_funs[n][nn].fn_str; nn++)
+		for (int nn = 0; usr_funs[n][nn].fn_str; nn++)
 			init_bcode_func(usr_funs[n][nn].fn_str,  &usr_funs[n][nn]);
-#ifdef TEST
-		if (usr_n_funs[n] != nn)
-		{
-			fprintf (stderr, "Usr_n_funs[%d]%d!=%d", n, usr_n_funs[n], nn);
-			usr_n_funs[n] = nn;
-
-		}
-#endif
 	}
 
 	fn_stack = init_stack ();

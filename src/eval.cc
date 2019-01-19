@@ -812,17 +812,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			value_ptr->String = strptr;
 			break;
 
-		case F_ONEOF:
-			if (numarg < 2)
-				throw_valerr(NO_VALUES, value_ptr);
-			--numarg;
-			tmp = value_ptr->Int;
-			if (tmp < 1 || tmp > numarg)
-				throw_valerr(OUT_OF_RANGE, value_ptr);
-			/* Can never happen? */
-			TO_ANY (value_ptr + tmp);
-			value_ptr[0] = value_ptr[tmp];
-			break;
 
 			/* This is now a fallthrough for all the USRmumble codes */
 		case USR1:

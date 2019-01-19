@@ -3,16 +3,14 @@ VERSION: 8.0.0
 STATUS:  DEV
 DATE:    ONGOING
 
-* C++17 COMPILER IS NOW REQUIRED TO COMPILE SOURCES
+* C++17 COMPILER IS NOW REQUIRED
+
+* removed function oneof(). Pfft, who needs it.
 
 * small changes in the file format
 	May cause incompatability issues, but I'm not expecting it.
 
 * removed help system. Read the html file instead
-
-* added `neobasic', a builtin BASIC-like language
-
-* added .BAS and .XBAS to headless mode to allow embedding of neobasic
 
 * added command test-curses-suspension
 
