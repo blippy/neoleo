@@ -27,14 +27,6 @@ static const char *rcsid = "$Id: stub.c,v 1.5 2000/07/22 06:13:16 danny Exp $";
  * constructed by the function COMMAND_LOOP.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
 #include "global.h"
 #include "cmd.h"
 #include "stub.h"
