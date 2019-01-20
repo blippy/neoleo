@@ -709,25 +709,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			value_ptr->Value = !(value_ptr->Value);
 			break;
 
-		case F_ISERR:
-			value_ptr->Value = (value_ptr->type == TYP_ERR);
-			value_ptr->type = TYP_BOL;
-			break;
-
-		case F_ISNUM:
-			if (value_ptr->type == TYP_FLT || value_ptr->type == TYP_INT)
-				value_ptr->Value = 1;
-			else if (value_ptr->type == TYP_STR)
-			{
-				strptr = value_ptr->String;
-				(void) astof (&strptr);
-				value_ptr->Value = (*strptr == '\0');
-			}
-			else
-				value_ptr->Value = 0;
-			value_ptr->type = TYP_BOL;
-			break;
-
 		case F_ROWS:
 		case F_COLS:
 			value_ptr->type = TYP_INT;

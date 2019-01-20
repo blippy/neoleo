@@ -23,7 +23,6 @@
 
 #include <cstdint>
 typedef uint32_t coord_t;
-//using coord_t = uint32_t;
 
 #include "neotypes.h"
 #include "cell.h"
@@ -105,8 +104,6 @@ typedef uint32_t coord_t;
 #define F_EXP		69
 #define F_NEG		77
 #define F_NOT		78
-#define F_ISERR		79
-#define F_ISNUM		80
 #define F_RND		81
 #define F_ROWS		82
 #define F_COLS		83
@@ -115,10 +112,8 @@ typedef uint32_t coord_t;
 #define F_FIXED		86
 #define F_IFERR		87
 
-#define F_INDEX		88
 
 /* 100 - 106 Three input functions */
-#define F_INDEX2	89
 
 /* 110 - 114 N-input functions */
 

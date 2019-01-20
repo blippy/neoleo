@@ -163,8 +163,6 @@ function_t the_funs[] =
   {C_FN1, X_A1, "F", V rtd, S "rtd"},
   {C_FN1, X_A1, "A", 0, S "negate"},
   {C_FN1, X_A1, "A", 0, S "not"},
-  {C_FN1, X_A1, "A", 0, S "iserr"},
-  {C_FN1, X_A1, "A", 0, S "isnum"},
 
   {C_FN1 | C_T, X_A1, "I", 0, S "rnd"},
   {C_FN1, X_A1, "R", 0, S "rows"},

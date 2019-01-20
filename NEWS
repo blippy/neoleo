@@ -5,7 +5,12 @@ DATE:    ONGOING
 
 * C++17 COMPILER IS NOW REQUIRED
 
-* Functions removed: trig functions, oneof, index, index2. Pfft, who needs them.
+* many functions removed. I've adopted the policy that if I don't use them
+personally, then I'll get rid of them. This greatly alleviates the
+maintenance nightmare. If anyone finds that a needed function is deleted
+then let me know, and I'll reinstate it. It's an ongoing process to try
+to move functions from 'core' to 'user'. 'core' functions are a bit
+tedious to deal with.
 
 * small changes in the file format
 	May cause incompatability issues, but I'm not expecting it.
