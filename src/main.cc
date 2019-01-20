@@ -122,7 +122,6 @@ static struct option long_options[] =
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
-	{"format",		1,	NULL,	'F'},
 	{"filter",		0,	NULL,	'-'},
 	{"tests",		optional_argument,	NULL,	'T'},
 	{"version",		0,	NULL,	'v'},
@@ -162,7 +161,6 @@ const char* usage = R"(
   -q, --quiet              do not display startup messages
   -f, --ignore-init-file   ignore settings defined in init file
   -T, --tests [x]          run test suite x
-  -F x, --format x	   set default file type to x (oleo, list, sc  ...)
   --filter		   read file from stdin, write to stdout on exit
 
 Report bugs to https://github.com/blippy/neoleo/issues
@@ -183,15 +181,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 		if (opt == EOF)
 			break;
 
-#if 0
-		if (opt)
-			fprintf(stderr, PACKAGE " option %c\n", opt);
-		else {
-			fprintf(stderr, PACKAGE " optind %d option %s strange ...\n",
-					optind, argv[optind]);
-		}
-#endif
-
 		switch (opt)
 		{
 			case 'v':
@@ -199,9 +188,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 				print_version();
 				exit (0);
 				break;
-			//case 'q':
-			//	spread_quietly = 1;
-			//	break;
 			case 'f':
 				*ignore_init_file = 1;
 				break;
@@ -211,15 +197,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 			case 'h':
 				show_usage ();
 				exit (0);
-				break;
-			case 'F':
-#if 0
-				fprintf(stderr, "F: optind %d argv[optind] '%s' optopt %d %c\n",
-						optind, argv[optind], optopt, optopt);
-#endif
-				option_format = argv[optind];
-				file_set_default_format(option_format);
-				optind++;
 				break;
 			case 'T':
 				option_tests = true;

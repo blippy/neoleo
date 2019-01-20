@@ -19,8 +19,6 @@ tedious to deal with.
 
 * added command test-curses-suspension
 
-* added command line option -x for experimental feature
-
 
 ===========================================================================
 VERSION: 7.0.0
