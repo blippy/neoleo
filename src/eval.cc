@@ -966,6 +966,7 @@ update_cell(CELL *cell)
 	if (newv->type != GET_TYP (cell)) {
 		SET_TYP (cell, newv->type);
 		new_val = 1;
+		// TODO mcarter 2019-01-20 seems highly suspicious, and leaky:
 		if (newv->type == TYP_STR) newv->String = strdup (newv->String);
 	} else {
 		switch (newv->type) {
@@ -982,7 +983,7 @@ update_cell(CELL *cell)
 				new_val = strcmp (newv->String, cell->gString());
 				if (new_val)
 				{
-					newv->String = strdup (newv->String);
+					newv->String = strdup (newv->String); // TODO seems leaky
 				}
 				break;
 			case TYP_BOL:
