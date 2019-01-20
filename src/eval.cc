@@ -997,7 +997,6 @@ update_cell(CELL *cell)
 
 	cell->cell_cycle = current_cycle;
 	if (newv->type != GET_TYP (cell)) {
-		//if (GET_TYP (cell) == TYP_STR) free (cell->gString());
 		SET_TYP (cell, newv->type);
 		new_val = 1;
 		if (newv->type == TYP_STR) newv->String = strdup (newv->String);

@@ -1,0 +1,9 @@
+# test of concata() function
+# a good place to look for memory leaks
+
+i
+concata("foo", "bar")
+.
+w
+q
+
