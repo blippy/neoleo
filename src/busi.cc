@@ -584,15 +584,9 @@ static void do_ctime(struct value *p)
 {
 	//char str[25];
 	time_t tim = p->gInt();
-	//std::string str{ctime(&tim)};
 	strcpy_c s1(ctime(&tim));
 	s1.data()[24] = 0;
-	//str[24] = 0;
 	p->sString(s1.data());
-	//value_ptr->type = TYP_STR;
-	//value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
-	//strncpy (value_ptr->String, strptr, 24);
-	//value_ptr->String[24] = '\0';
 }
 
 
