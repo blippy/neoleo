@@ -7,7 +7,7 @@ if [ ! -f configure ]; then
 	autoreconf -iv
 fi
 
-#COV=--coverage
+COV=--with-coverage
 #COV=--enable-code-coverage
 DBG=--with-debug
 #GPROF=--with-gprof
@@ -20,8 +20,9 @@ if [ -n "${SAN}" ]; then
 fi
 source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
-if [[ ":Windows_NT:raspbian:slackware:" = *:$ID:* ]]; then
+if [[ ":Windows_NT:raspbian:slackware:" = *:$ID:* ]]; then	
 	SAN=
+	COV=
 fi
 
 
