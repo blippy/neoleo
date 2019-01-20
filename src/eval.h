@@ -216,6 +216,3 @@ extern function_t skip_funs[];
 #define X_JL	0x10
 
 extern void update_cell (CELL *);
-extern double rtd (double);
-extern double dtr (double);
-extern double to_int (double);

@@ -931,26 +931,6 @@ static double sqr_flt_tmp;
 
 static unsigned char area_cmd;
 
-
-
-double
-dtr (double x)
-{
-	return x * (M_PI / (double) 180.0);
-}
-
-double
-rtd (double x)
-{
-	return x * (180.0 / (double) M_PI);
-}
-
-double
-to_int (double x)
-{
-	return (x < 0 ? ceil (x) : floor (x));
-}
-
 /* Various methods of dealing with arithmatic overflow.  They don't work well.
    Someone should really convince this thing to properly deal with it.
  */

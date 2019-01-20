@@ -158,9 +158,6 @@ function_t the_funs[] =
   {C_FN0 | C_T, X_A0, "", 0, S "now"},
 
   {C_FN1, X_A1, "F", V fabs1, S "abs"},
-  {C_FN1, X_A1, "F", V to_int, S "int"},
-  {C_FN1, X_A1, "F", V dtr, S "dtr"},
-  {C_FN1, X_A1, "F", V rtd, S "rtd"},
   {C_FN1, X_A1, "A", 0, S "negate"},
   {C_FN1, X_A1, "A", 0, S "not"},
 
