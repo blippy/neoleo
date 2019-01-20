@@ -360,6 +360,12 @@ void compare_values(const unsigned byte, struct value *value_ptr)
 	int tmp;
 	char *strptr;
 
+	struct value *v0 = value_ptr;
+	struct value *v1 = value_ptr+1;
+	auto t0 = v0->type, t1 = v1->type;
+
+	assert(byte == NOTEQUAL || byte == LESS || byte == LESSEQ || byte == EQUAL ||
+			byte == GREATEQ || byte == NOTEQUAL || byte == GREATER);
 	if (value_ptr->type == TYP_ERR)
 		return;
 	if ((value_ptr + 1)->type == TYP_ERR)
@@ -471,13 +477,13 @@ void compare_values(const unsigned byte, struct value *value_ptr)
 		tmp = 0;
 		panic ("Bad type value %d", value_ptr->type);
 	}
-	value_ptr->type = TYP_BOL;
+	//value_ptr->type = TYP_BOL;
 	if (tmp < 0)
-		value_ptr->Value = (byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
+		value_ptr->sBol(byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
 	else if (tmp == 0)
-		value_ptr->Value = (byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
+		value_ptr->sBol(byte == EQUAL || byte == GREATEQ || byte == LESSEQ);
 	else
-		value_ptr->Value = (byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
+		value_ptr->sBol(byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
 }
 
 // refactored out of eval_expression()

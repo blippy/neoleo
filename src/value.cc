@@ -49,7 +49,13 @@ void value::sString(const char* newval)
 }
 
 num_t value::gFlt() const { return x.c_n ;};
-void value::sFlt(num_t v) { type = TYP_FLT; x.c_n = v ;};
+
+void value::sFlt(num_t v) 
+{
+	free_string();	
+	type = TYP_FLT; 
+	x.c_n = v ;
+}
 
 int value::gErr() const { return x.c_err ;};
 void value::sErr(int newval) { type = TYP_ERR ; x.c_err = newval ;};

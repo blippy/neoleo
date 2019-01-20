@@ -573,11 +573,11 @@ do_compbal (struct value *p)
 
 static void do_ceil(struct value *p)
 {
-	p->sInt(ceil(p->gFlt()));
+	p->sFlt(ceil(p->gFlt()));
 }
 static void do_floor(struct value *p)
 {
-	p->sInt(floor(p->gFlt()));
+	p->sFlt(floor(p->gFlt()));
 }
 
 static void do_ctime(struct value *p)
