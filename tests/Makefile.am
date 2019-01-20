@@ -17,7 +17,7 @@ AM_TESTS_ENVIRONMENT = \
 #BLANGS = neobasic01.sh neobasic02.sh neobasic03.sh
 
 # NB Supressing cpreg-01.src for now due to issue#17
-TESTS = busi.scr cellspans.scr cpreg-02.scr cpreg-03.scr \
+TESTS = busi.scr cellspans.scr cpreg-02.scr cpreg-03.scr ctime.scr \
 	decompile-01.scr \
 	floor.scr \
 	inbuilt-tests.sh \

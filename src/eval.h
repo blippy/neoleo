@@ -103,7 +103,6 @@ typedef uint32_t coord_t;
 /* 40 - 65 one-operand functions */
 #define F_INT		65
 #define F_EXP		69
-#define F_CTIME		76
 #define F_NEG		77
 #define F_NOT		78
 #define F_ISERR		79

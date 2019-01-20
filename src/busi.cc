@@ -30,6 +30,7 @@
 #include "errors.h"
 #include "busi.h"
 #include "logging.h"
+#include "mem.h"
 #include "utils.h"
 #include "sheet.h"
 
@@ -579,6 +580,22 @@ static void do_floor(struct value *p)
 	p->sInt(floor(p->gFlt()));
 }
 
+static void do_ctime(struct value *p)
+{
+	//char str[25];
+	time_t tim = p->gInt();
+	//std::string str{ctime(&tim)};
+	strcpy_c s1(ctime(&tim));
+	s1.data()[24] = 0;
+	//str[24] = 0;
+	p->sString(s1.data());
+	//value_ptr->type = TYP_STR;
+	//value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
+	//strncpy (value_ptr->String, strptr, 24);
+	//value_ptr->String[24] = '\0';
+}
+
+
 static void
 do_sum(struct value* p)
 {
@@ -627,7 +644,7 @@ function_t busi_funs[] =
   {C_FN1, X_A1, "R",    to_vptr(do_sum), "sum"},
   {C_FN1, X_A1, "F",    to_vptr(do_floor), "floor"},
   {C_FN1, X_A1, "F",    to_vptr(do_ceil), "ceil"},
-
+  {C_FN1, X_A1, "I",    to_vptr(do_ctime), "ctime"},
   {0, 0, "", 0, 0},
 };
 

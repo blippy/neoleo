@@ -161,7 +161,6 @@ function_t the_funs[] =
   {C_FN1, X_A1, "F", V to_int, S "int"},
   {C_FN1, X_A1, "F", V dtr, S "dtr"},
   {C_FN1, X_A1, "F", V rtd, S "rtd"},
-  {C_FN1, X_A1, "I", 0, S "ctime"},
   {C_FN1, X_A1, "A", 0, S "negate"},
   {C_FN1, X_A1, "A", 0, S "not"},
   {C_FN1, X_A1, "A", 0, S "iserr"},

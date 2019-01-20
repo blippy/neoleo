@@ -1,0 +1,8 @@
+# see if a segfault happens with ctime()
+
+i
+ctime(3)
+.
+w
+q
+

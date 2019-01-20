@@ -37,6 +37,7 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
+#include "mem.h"
 #include "ref.h"
 #include "sheet.h"
 
@@ -685,14 +686,7 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			value_ptr->Int = time (nullptr);
 			break;
 
-			/* Single operand instrs */
-		case F_CTIME:
-			value_ptr->type = TYP_STR;
-			strptr = ctime ((time_t*) &value_ptr->Int);
-			value_ptr->String = (char*) obstack_alloc (&tmp_mem, 25);
-			strncpy (value_ptr->String, strptr, 24);
-			value_ptr->String[24] = '\0';
-			break;
+			/* Single operand instrs */			
 
 		case NEGATE:
 		case F_NEG:
