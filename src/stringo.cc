@@ -69,9 +69,10 @@ wrapfunc(std::function<std::string(struct value*)> func)
 	auto fn = [=](struct value* p) { 
 		try {
 			std::string s = func(p);
-			char* ret = alloc_tmp_mem(s.size()+1);		
-			strcpy(ret,  s.c_str());
-			p->sString(ret);
+			//char* ret = alloc_tmp_mem(s.size()+1);		
+			//strcpy(ret,  s.c_str());
+			//p->sString(ret);
+			p->sString(s.c_str());
 		} catch (int e) {
 			p->Value = e;
 			p->type = TYP_ERR;

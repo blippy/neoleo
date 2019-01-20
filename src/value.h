@@ -34,7 +34,7 @@ class value {
 		void sInt(int newval);
 
 		const char *gString();
-		void sString(char* newval);
+		void sString(const char* newval);
 
 		num_t gFlt() const;
 		void sFlt(num_t v);

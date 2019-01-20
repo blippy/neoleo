@@ -40,9 +40,9 @@ const char *value::gString()
 	return str; 
 }
 
-void value::sString(char* newval) 
+void value::sString(const char* newval) 
 { 
-	//free_string();
+	//free_string(); // TODO I think that this should actually be called
 	type = TYP_STR; 
 	x.c_s = strdup(newval);
 	assert(x.c_s);
