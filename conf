@@ -7,33 +7,21 @@ if [ ! -f configure ]; then
 	autoreconf -iv
 fi
 
-COV=--with-coverage
-#COV=--enable-code-coverage
-DBG=--with-debug
-#GPROF=--with-gprof
 
-# SANITIZER
-SAN=--with-asan
-if [ -n "${SAN}" ]; then
-	echo "Configuring with sanitizer"
-       	SANXX="-no-pie" # workaround a Linux kernel/ASAN wonk as at 23-Aug-2017
-fi
 source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
-if [[ ":Windows_NT:raspbian:slackware:" = *:$ID:* ]]; then	
-	SAN=
-	COV=
-fi
+case "$ID" in
+	ubuntu) OPTS="--with-debug --with-coverage --with-gprof" ;;
+	*) ;;
+esac
 
+#if [[ ":Windows_NT:raspbian:slackware:" = *:$ID:* ]]; then	
+#	SAN=
+#	COV=
+#fi
 
-#SAN=--with-asan 
-
-OPTS="$DBG $GPROF $SAN $COV "
+#OPTS="$DBG $GPROF $SAN $COV "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-#./configure $OPTS "CXXFLAGS= $SANXX" --prefix=$HOME/.local
-#./configure $OPTS  --prefix=$HOME/.local
-./configure $OPTS "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
-
-
+./configure $OPTS  --prefix=$HOME/.local
 
