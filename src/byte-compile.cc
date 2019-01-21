@@ -260,11 +260,9 @@ init_mem ()
 		auto f = the_funs[n];
 		if(f.fn_comptype==0) break;
 		const char* fn_name = f.fn_str;
-		log_debug("adding function: "s + fn_name);
 		if(fn_name)
 			init_bcode_func(fn_name, &the_funs[n]);
 	}
-	log_debug("finished adding byte-compile functions"s);
 
 	for (n = 0; n < n_usr_funs; n++)
 	{

@@ -35,7 +35,7 @@ typedef std::vector<cell_t*> cellmap_t;
 static void log_debug_1(std::string msg)
 {
 	if constexpr(true) 
-		log_debug("DBG:alt-cells.cc:" + msg);
+		log_debug("DBG:sheet.cc:" + msg);
 }
 
 /* mcarter 30-Apr-2018
@@ -161,7 +161,6 @@ bool inside(int r, int c, struct rng *a_rng) //definition
 
 void make_cells_in_range (struct rng *r)
 {
-	log_debug_1("make_cells_in_range");
 	for(int i = r->lr; i <= r->hr; ++i)
 	       	for(int j  = r->lc; j <= r->hc; ++j)
 			find_or_make_cell(i, j);
