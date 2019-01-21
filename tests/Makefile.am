@@ -24,7 +24,8 @@ TESTS = busi.scr cellspans.scr concata.scr cpreg-02.scr cpreg-03.scr ctime.scr \
 	issue16.scr issue17.scr issue18.scr issue19.scr \
 	$(BLANGS) \
 	nohead-01.scr nohead-02.scr \
-	issue25.sh ref01.sh row-ins.scr row-del.scr
+	issue25.sh ref01.sh row-del.scr row-ins.scr
+
 
 TEST_EXTENSIONS = .scr
 #SCR_LOG_COMPILER = ./script.sh

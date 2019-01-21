@@ -1,7 +1,7 @@
 ===========================================================================
 VERSION: 8.0.0
-STATUS:  DEV
-DATE:    ONGOING
+STATUS:  RELEASED
+DATE:   2019-01-21
 
 * C++17 COMPILER IS NOW REQUIRED
 
