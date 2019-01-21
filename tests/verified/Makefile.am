@@ -6,7 +6,6 @@ EXTRA_DIST = busi.scr.oleo \
 	ctime.scr.oleo \
 	decompile-01.scr.oleo \
 	floor.scr.oleo \
-	inbuilt-tests \
 	issue16.scr.oleo \
 	issue17.scr.oleo \
 	issue18.scr.oleo \
