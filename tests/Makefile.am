@@ -13,7 +13,6 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = busi.scr cellspans.scr concata.scr cpreg-02.scr cpreg-03.scr ctime.scr \
 	decompile-01.scr \
 	floor.scr \
-	inbuilt-tests.sh \
 	issue16.scr issue17.scr issue18.scr issue19.scr \
 	$(BLANGS) \
 	nohead-01.scr nohead-02.scr \
