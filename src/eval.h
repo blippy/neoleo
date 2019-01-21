@@ -104,7 +104,6 @@ typedef uint32_t coord_t;
 #define F_EXP		69
 #define F_NEG		77
 #define F_NOT		78
-#define F_RND		81
 #define F_ROWS		82
 #define F_COLS		83
 

@@ -702,10 +702,6 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				throw_valerr(NON_NUMBER, value_ptr);
 			break;
 
-		case F_RND:
-			value_ptr->Int = (random () % (value_ptr->Int)) + 1;
-			break;
-
 		case NOT:
 		case F_NOT:
 			value_ptr->Value = !(value_ptr->Value);
