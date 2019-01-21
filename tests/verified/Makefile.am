@@ -13,6 +13,5 @@ EXTRA_DIST = busi.scr.oleo \
 	issue25.rep \
 	nohead-01.scr.oleo \
 	nohead-02.scr.oleo \
-	ref01.oleo \
 	row-del.scr.oleo \
 	row-ins.scr.oleo
