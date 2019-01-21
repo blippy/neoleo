@@ -1,11 +1,4 @@
 # To run the tests: `make check'
-#EXTRA_DIST = inbuilt-tests.sh ref.sh
-#bin_SCRIPTS = . tests/test-suite.sh
-#AM_TESTS_ENVIRONMENT = . ./.test-suite.sh
-#AM_TESTS_FD_REDIRECT = 9>&2
-
-# Suppressed bugs that I can't be bothered to fix.
-FAILS = read.sh
 
 AM_TESTS_ENVIRONMENT = \
 	export ASRCDIR=$(abs_srcdir); \
