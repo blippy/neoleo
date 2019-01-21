@@ -144,7 +144,7 @@ test_curses_suspension()
 	scr_dump(filename);
 	//clear();
 	endwin();
-	system("man man");
+	(void) system("man man");
 	reset_prog_mode();
 	scr_restore(filename);
 	refresh();
