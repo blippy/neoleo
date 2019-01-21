@@ -1,7 +1,11 @@
 # permissive flag is set due to pesky obstack
 #COV = --coverage
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
-AM_CXXFLAGS += -Werror # activate to make warnings abort the compile
+
+# For some reason I have to turn this off in an actual build for AUR
+#AM_CXXFLAGS += -Werror # activate to make warnings abort the compile
+
+
 AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -fpermissive
 AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
