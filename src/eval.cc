@@ -392,31 +392,27 @@ void compare_values(const unsigned byte, struct value *value_ptr)
 			}
 			else if ((value_ptr + 1)->type == TYP_INT)
 			{
-				value_ptr->type = TYP_INT;
-				value_ptr->Int = 0;
+				value_ptr->sInt(0);
 			}
 			else
 			{
-				value_ptr->type = TYP_FLT;
-				value_ptr->Float = 0.0;
+				value_ptr->sFlt(0.0);
 			}
 		}
 		else if ((value_ptr + 1)->type == 0)
 		{
 			if (value_ptr->type == TYP_STR)
-			{
+			{				
 				(value_ptr + 1)->type = TYP_STR;
 				(value_ptr + 1)->String = "";
 			}
 			else if (value_ptr->type == TYP_INT)
 			{
-				(value_ptr + 1)->type = TYP_INT;
-				(value_ptr + 1)->Int = 0;
+				(value_ptr+1)->sInt(0);
 			}
 			else
 			{
-				(value_ptr + 1)->type = TYP_FLT;
-				(value_ptr + 1)->Float = 0.0;
+				(value_ptr+1)->sFlt(0.0);
 			}
 		}
 		else if (value_ptr->type == TYP_STR)
