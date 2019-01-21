@@ -549,15 +549,6 @@ byte_decompile (formula_t expr)
 	return newn;
 }
 
-/* Actual entry points to this file */
-/* decomp(row, col, cell) returns a string that can be byte_compiled to create
-   cell->formula  decomp_free() frees up the allocated string */
-/* Have moved decomp(row, col, cell) to decomp_formula(row, col, cell, tog).
- * Alias decomp(row, col, cell) behaves exactly as command described
- * in the comment aboce.  the new int tog argument, if true, can be
- * used to turn on formatted editing.
- */
-
 
 std::string
 decomp(const CELLREF r, const CELLREF c, CELL *cell)
@@ -624,13 +615,6 @@ decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 	return save_decomp.string.c_str();
 }
 
-
-void
-decomp_free (void)
-{
-	//if(save_decomp) delete save_decomp;
-	save_decomp.string = ""; // admittedly this will hang around until program exits
-}
 
 /*
  * This takes a string and returns a backslashed form suitable for printing.
