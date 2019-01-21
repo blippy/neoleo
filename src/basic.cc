@@ -576,45 +576,6 @@ unmark_cmd (void)
 	io_update_status ();
 }
 
-void
-save_mark_to_cell (struct rng * rng)
-{
-	CELLREF row, col;
-	char * error;
-	struct rng r;
-
-	row = rng->lr;
-	col = rng->lc;
-
-	if (mkrow != NON_ROW )
-		set_rng (&r, mkrow, mkcol, mkrow, mkcol);
-	else
-		set_rng (&r, curow, cucol, curow, cucol);
-	error = new_value (row, col, backslash_a_string(range_name(&r), 1));
-	if (!error)
-		Global->modified = 1;
-	else
-		io_error_msg (error);
-}
-
-void
-save_point_to_cell (struct rng * rng)
-{
-	CELLREF row, col;
-	char * error;
-	struct rng r;
-
-	row = rng->lr;
-	col = rng->lc;
-
-	set_rng (&r, curow, cucol, curow, cucol);
-
-	error = new_value (row, col, backslash_a_string(range_name(&r), 1));
-	if (!error)
-		Global->modified = 1;
-	else
-		io_error_msg (error);
-}
 
 /* This is a bit kludgey. Input line editting has its own event loop (grr!),
  * and all of its state is private.  These mouse commands can't entirely

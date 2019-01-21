@@ -122,20 +122,6 @@ DEFUN ("mark-cell", FDmark_cell_cmd, FAmark_cell_cmd, to_vptr(mark_cell_cmd))
 
 DEFUN_3 ("clear-mark", FDclear_mark, unmark_cmd)
 
-DEFUN ("save-mark-to-cell", FDsave_mark_to_cell,
-	FAsave_mark_to_cell,
-	to_vptr(save_mark_to_cell))
-#ifdef FUNC_ARG_STRINGS
-"RSave mark to cell? ",
-#endif
-
-DEFUN ("save-point-to-cell", FDsave_point_to_cell,
-	FAsave_point_to_cell,
-	to_vptr(save_point_to_cell))
-#ifdef FUNC_ARG_STRINGS
-"RSave point to cell? ",
-#endif
-
 DEFUN ("scroll-up", FDscroll_up, FAscroll_up, to_vptr(scroll_cell_cursor))
 #ifdef FUNC_ARG_STRINGS
 "+#0",
