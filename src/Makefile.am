@@ -2,8 +2,7 @@
 #COV = --coverage
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
 
-# For some reason I have to turn this off in an actual build for AUR
-#AM_CXXFLAGS += -Werror # activate to make warnings abort the compile
+AM_CXXFLAGS += -Werror # activate to make warnings abort the compile
 
 
 AM_CXXFLAGS += -std=c++17
