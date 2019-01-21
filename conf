@@ -11,7 +11,7 @@ fi
 source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
 case "$ID" in
-	ubuntu) OPTS="--with-debug --with-coverage --with-gprof" ;;
+	ubuntu) OPTS="--with-debug --with-coverage --with-asan" ;;
 	*) ;;
 esac
 
@@ -20,6 +20,7 @@ esac
 #	COV=
 #fi
 
+#GPPOF=--with-prof
 #OPTS="$DBG $GPROF $SAN $COV "
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
