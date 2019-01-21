@@ -1,8 +1,12 @@
 EXTRA_DIST = busi.scr.oleo \
+	     cellspans.scr.oleo \
+	     concata.scr.oleo \
 	cpreg-02.scr.oleo \
 	cpreg-03.scr.oleo \
+	ctime.scr.oleo \
 	decompile-01.scr.oleo \
 	floor.scr.oleo \
+	inbuilt-tests \
 	issue16.scr.oleo \
 	issue17.scr.oleo \
 	issue18.scr.oleo \
@@ -11,4 +15,5 @@ EXTRA_DIST = busi.scr.oleo \
 	nohead-01.scr.oleo \
 	nohead-02.scr.oleo \
 	ref01.oleo \
-	stringo.scr.oleo
+	row-del.scr.oleo \
+	row-ins.scr.oleo
