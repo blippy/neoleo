@@ -20,7 +20,8 @@ YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
 
 bin_PROGRAMS = neoleo 
-
+man1_MANS = neoleo.1
+dist_man_MANS = neoleo.1
 
 BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh 
 CLEANFILES = $(BUILT_SOURCES)
