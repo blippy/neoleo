@@ -222,11 +222,9 @@ exp:	  L_CONST
 	| '-' exp %prec NEG {
 		if($2->comp_value==CONST_FLT) {
 			$2->n_x.v_float= -($2->n_x.v_float);
-			/* free($1); */
 			$$=$2;
 		} else if($2->comp_value==CONST_INT) {
 			$2->n_x.v_int= -($2->n_x.v_int);
-			/* free($1); */
 			$$=$2;
 		} else {
 			$1->comp_value = NEGATE;
