@@ -49,3 +49,14 @@ strcpy_c::~strcpy_c()
 {
 	free(null_terminated_str);
 }
+
+void free_nonempty(void **ptr)
+{
+       if(*ptr) free(*ptr);
+       *ptr = nullptr;
+}
+
+void free_nonempty_str(char** ptr)
+{
+	free_nonempty((void**) ptr);
+}
