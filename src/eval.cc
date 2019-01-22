@@ -83,7 +83,7 @@ RETSIGTYPE math_sig ( int sig);
 #define Value	x.c_i
 #define Rng	x.c_r
 
-static struct value *stack;
+static struct value *eval_stack;
 static int stackmax;
 static int curstack;
 
@@ -350,7 +350,7 @@ void
 init_eval ()
 {
 	stackmax = 20;
-	stack = (struct value *) ck_malloc (stackmax * sizeof (struct value));
+	eval_stack = (struct value *) ck_malloc (stackmax * sizeof (struct value));
 	curstack = 0;
 	current_cycle = 1;
 	(void) signal (SIGFPE, math_sig);
@@ -846,9 +846,9 @@ eval_expression (unsigned char *expr)
 				if (curstack == stackmax)
 				{
 					stackmax *= 2;
-					stack = (struct value *) ck_realloc (stack, sizeof (struct value) * stackmax);
+					eval_stack = (struct value *) ck_realloc (eval_stack, sizeof (struct value) * stackmax);
 				}
-				value_ptr = &stack[curstack];
+				value_ptr = &eval_stack[curstack];
 				curstack++;
 				break;
 
@@ -883,7 +883,7 @@ eval_expression (unsigned char *expr)
 			if (curstack < numarg)
 				panic ("Only %u values on stack, not %u", curstack, numarg);
 #endif
-			value_ptr = &stack[curstack - numarg];
+			value_ptr = &eval_stack[curstack - numarg];
 			curstack -= (numarg - 1);
 			for (xt = 0; xt < numarg; xt++)
 			{
@@ -910,7 +910,7 @@ next_byte:
 	if (curstack != 1)
 		io_error_msg ("%d values on stack", curstack);
 #endif
-	return stack;
+	return eval_stack;
 }
 
 /* These helper functions were split out so that eval_expression would compile
@@ -935,8 +935,8 @@ static unsigned char area_cmd;
 RETSIGTYPE
 math_sig ( int sig)
 {
-	stack[curstack].type = TYP_ERR;
-	stack[curstack].Value = BAD_INPUT;
+	eval_stack[curstack].type = TYP_ERR;
+	eval_stack[curstack].Value = BAD_INPUT;
 }
 
 
