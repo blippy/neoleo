@@ -46,4 +46,5 @@ class exit_c {
 
 void free_nonempty(void **ptr);
 void free_nonempty_str(char **ptr);
+void free_nonempty_str(unsigned char **ptr);
 

@@ -97,8 +97,9 @@ formula_t cell::set_cell_formula(formula_t newval)
 
 void cell::reset()
 {
-	if(cell_formula) free(cell_formula);
-	cell_formula = 0;
+	free_nonempty_str(&cell_formula);
+	//if(cell_formula) free(cell_formula);
+	//cell_formula = 0;
 }
 
 void cell::clear_formula()

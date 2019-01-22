@@ -60,3 +60,8 @@ void free_nonempty_str(char** ptr)
 {
 	free_nonempty((void**) ptr);
 }
+
+void free_nonempty_str(unsigned char** ptr)
+{
+	free_nonempty((void**) ptr);
+}
