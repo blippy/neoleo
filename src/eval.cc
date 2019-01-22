@@ -260,7 +260,7 @@ num_t as_flt(struct value* v)
 	}
 }
 
-void do_math_binop(int op, struct value* p1, struct value* p2)
+static void do_math_binop(int op, struct value* p1, struct value* p2)
 {
 	num_t v1 = as_flt(p1);
 	num_t v2 = as_flt(p2);
@@ -345,6 +345,7 @@ void fill_argument(char arg_type, struct value* p)
 #endif
 	}
 }
+
 void
 init_eval ()
 {
@@ -355,7 +356,7 @@ init_eval ()
 	(void) signal (SIGFPE, math_sig);
 }
 
-void compare_values(const unsigned byte, struct value *value_ptr)
+static void compare_values(const unsigned byte, struct value *value_ptr)
 {
 	int tmp;
 	char *strptr;
@@ -482,9 +483,8 @@ void compare_values(const unsigned byte, struct value *value_ptr)
 		value_ptr->sBol(byte == NOTEQUAL || byte == GREATER || byte == GREATEQ);
 }
 
-// refactored out of eval_expression()
 // Maybe contains too many parameters, but it will do as a first cut
-void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
+static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
 		struct value *value_ptr, unsigned &jumpto, unsigned char *&expr,
 		function_t *f)
 {
@@ -793,7 +793,7 @@ void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 	}
 }
 /* This huge function takes a byte-compiled expression and executes it. */
-struct value *
+static struct value *
 eval_expression (unsigned char *expr)
 {
 	if (!expr) return 0;
