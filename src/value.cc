@@ -1,3 +1,4 @@
+#include "mem.h"
 #include "value.h"
 
 ValType value::get_type() const { return type;}
@@ -67,8 +68,9 @@ void value::free_string()
 {
 	if(type != TYP_STR) return;
 	type = TYP_NUL;
-	if(x.c_s != nullptr) free(x.c_s);
-	x.c_s = nullptr;
+	free_nonempty_str(&x.c_s);
+	//if(x.c_s != nullptr) free(x.c_s);
+	//x.c_s = nullptr;
 }
 
 
