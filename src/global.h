@@ -71,10 +71,7 @@ typedef unsigned short CELLREF;
 #define EXP_ADD			sizeof(CELLREF)*2
 
 /* Struct rng is used to describe a region of cells */
-struct rng
-{
-  CELLREF lr, lc, hr, hc;
-};
+typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
 
 typedef struct rng range_t;
 

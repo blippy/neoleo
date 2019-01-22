@@ -1102,6 +1102,21 @@ set_region_alignment (struct rng * rng, int align)
 		io_error_msg ("Unknown Justify '%s'", char_to_string (align));
 }
 
+static void set_cell_alignment(char align)
+{
+	rng_t rng = {curow, cucol, curow, cucol};
+	set_region_alignment(&rng, align);
+}
+
+void set_cell_alignment_left()
+{
+	set_cell_alignment('L');
+}
+void set_cell_alignment_right()
+{
+	set_cell_alignment('R');
+}
+
 /*
  * Lacking more knowledge of Oleo internals, we're hacking this thing to
  *	clean up the mess concerning the mixup of format and precision.

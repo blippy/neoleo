@@ -524,6 +524,12 @@ DEFUN ("set-cell-protection",
 "[dpu][D]efault  [P]rotect  [U]nprotect? ",
 #endif
 
+DEFUN_3("set-cell-alignment-left",
+       FDset_cell_alignment_left, to_vptr(set_cell_alignment_left))
+
+DEFUN_3("set-cell-alignment-right",
+       FDset_cell_alignment_right, to_vptr(set_cell_alignment_right))
+
 DEFUN ("set-cell-alignment",
        FDset_cell_alignment, FAset_cell_alignment, to_vptr(set_region_alignment))
 #ifdef FUNC_ARG_STRINGS
