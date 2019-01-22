@@ -1,7 +1,14 @@
 ===========================================================================
+VERSION: 9.0.0
+STATUS:  DEV
+DATE:    ONGOING
+
+* Fixed C-l, C-r, cell alignment
+
+===========================================================================
 VERSION: 8.0.0
 STATUS:  RELEASED
-DATE:   2019-01-21
+DATE:    2019-01-21
 
 * C++17 COMPILER IS NOW REQUIRED
 
