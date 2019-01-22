@@ -193,8 +193,9 @@ void TO_STR(struct value* val, mem& eval_mem)
 		(val)->String=s;	
 	} else if((val)->type==TYP_FLT) {		
 		char *s=flt_to_str((val)->Float);		
-		eval_mem.gimme(strlen(s)+1);
-		eval_mem.add_ptr(s);
+		char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
+		strcpy(s1, s);
+		//eval_mem.add_ptr(s);
 		//(void)obstack_grow(&tmp_mem,s,strlen(s)+1); 
 		//(val)->String=(char*) obstack_finish(&tmp_mem);	
 		(val)->type=TYP_STR;			

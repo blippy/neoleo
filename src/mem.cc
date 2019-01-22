@@ -31,6 +31,7 @@ void* mem::gimme(size_t n)
 {
 	void* ptr = malloc(n);
 	assert(ptr);
+	add_ptr(ptr);
 	return ptr;
 }
 
