@@ -27,6 +27,13 @@ mem::release_all()
 	ptrs = {};
 }
 
+void* mem::gimme(size_t n)
+{
+	void* ptr = malloc(n);
+	assert(ptr);
+	return ptr;
+}
+
 mem::~mem()
 {
 	if(_release_on_destruction)

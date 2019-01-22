@@ -28,9 +28,9 @@
 #include <string.h>
 
 constexpr auto pi = std::acos(-1);
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
+//#define obstack_chunk_alloc ck_malloc
+//#define obstack_chunk_free free
+//#include "obstack.h"
 
 #include "global.h"
 #include "cell.h"
@@ -180,28 +180,32 @@ void TO_NUM(struct value* val)
 		ERROR1(NON_NUMBER);
 }
 
-void TO_STR(struct value* val)
+void TO_STR(struct value* val, mem& eval_mem)
 {
 	if((val)->type==TYP_STR)	
 		;	
 	else if((val)->type==TYP_INT) {	
-		char *s;	
+		//char *s;	
 		(val)->type=TYP_STR;	
-		s=(char*) obstack_alloc(&tmp_mem,30); 
+		//s=(char*) obstack_alloc(&tmp_mem,30); 
+		char* s = (char*) eval_mem.gimme(30);
 		sprintf(s,"%ld",(val)->Int); 
 		(val)->String=s;	
 	} else if((val)->type==TYP_FLT) {		
-		char *s;				
-		s=flt_to_str((val)->Float);		
-		(void)obstack_grow(&tmp_mem,s,strlen(s)+1); 
-		(val)->String=(char*) obstack_finish(&tmp_mem);	
+		char *s=flt_to_str((val)->Float);		
+		eval_mem.gimme(strlen(s)+1);
+		eval_mem.add_ptr(s);
+		//(void)obstack_grow(&tmp_mem,s,strlen(s)+1); 
+		//(val)->String=(char*) obstack_finish(&tmp_mem);	
 		(val)->type=TYP_STR;			
 	} else if((val)->type==TYP_ERR) {		
 		ERROR1((val)->Value);	
 	} else if((val)->type==0) {	
 		(val)->type=TYP_STR;	
-		(val)->String=(char*) obstack_alloc(&tmp_mem,1); 
-		(val)->String[0]='\0'; 
+		val->String = (char*) eval_mem.gimme(1);
+		val->String[0] = '\0';
+		//(val)->String=(char*) obstack_alloc(&tmp_mem,1); 
+		//(val)->String[0]='\0'; 
 	} else 
 		ERROR1(NON_STRING);
 }
@@ -299,7 +303,7 @@ static void do_math_binop(int op, struct value* p1, struct value* p2)
 
 }
 
-void fill_argument(char arg_type, struct value* p)
+void fill_argument(char arg_type, struct value* p, mem& eval_mem)
 {
 	char* strptr;
 	switch (arg_type) {
@@ -336,7 +340,7 @@ void fill_argument(char arg_type, struct value* p)
 			break;
 			/* S is for String */
 		case 'S':
-			TO_STR (p);
+			TO_STR (p, eval_mem);
 			break;
 #ifdef TEST
 		default:
@@ -486,7 +490,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 // Maybe contains too many parameters, but it will do as a first cut
 static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
 		struct value *value_ptr, unsigned &jumpto, unsigned char *&expr,
-		function_t *f)
+		function_t *f, mem& eval_mem)
 {
 	cell* cell_ptr;
 	char *strptr;
@@ -767,7 +771,8 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 
 		case CONCAT:
-			strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
+			//strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
+			strptr = (char*) eval_mem.gimme(strlen(value_ptr->String) + strlen((value_ptr + 1)->String +1));
 			strcpy (strptr, value_ptr->String);
 			strcat (strptr, (value_ptr + 1)->String);
 			value_ptr->String = strptr;
@@ -794,7 +799,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 }
 /* This huge function takes a byte-compiled expression and executes it. */
 static struct value *
-eval_expression (unsigned char *expr)
+eval_expression (unsigned char *expr, mem& eval_mem)
 {
 	if (!expr) return 0;
 
@@ -889,7 +894,7 @@ eval_expression (unsigned char *expr)
 			{
 				char arg_type =f->fn_argt[xt <= 3 ? xt : 3];
 				try {
-					fill_argument(arg_type, value_ptr+xt);
+					fill_argument(arg_type, value_ptr+xt, eval_mem);
 				} catch (int e) {
 					value_ptr->sErr(e);
 					goto next_byte;
@@ -899,7 +904,7 @@ eval_expression (unsigned char *expr)
 		}
 
 		try {
-			switch_by_byte(byte, numarg, tmp, value_ptr, jumpto, expr, f);
+			switch_by_byte(byte, numarg, tmp, value_ptr, jumpto, expr, f, eval_mem);
 		} catch (ValErr& e) {
 			goto next_byte;
 		}
@@ -944,10 +949,11 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
+	mem eval_mem(true);
 	struct value *newv;
 	int new_val;
 
-	newv = eval_expression (cell->get_cell_formula());
+	newv = eval_expression (cell->get_cell_formula(), eval_mem);
 	if (!newv)
 	{
 		push_refs(cell);
@@ -997,7 +1003,7 @@ update_cell(CELL *cell)
 		cell->set_c_z(newv->x);
 		push_refs(cell);
 	}
-	(void) obstack_free (&tmp_mem, tmp_mem_start);
+	//(void) obstack_free (&tmp_mem, tmp_mem_start);
 }
 
 

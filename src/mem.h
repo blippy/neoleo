@@ -16,6 +16,7 @@ class mem {
 		void add_ptr(void* ptr);
 		void auto_release(); // destructor releases everything
 		void release_all();
+		void* gimme(size_t n);
 		~mem();
 
 
