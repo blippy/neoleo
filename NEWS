@@ -5,6 +5,8 @@ DATE:    ONGOING
 
 * Fixed C-l, C-r, cell alignment
 
+* Eliminated the creation of backup files
+
 ===========================================================================
 VERSION: 8.0.0
 STATUS:  RELEASED

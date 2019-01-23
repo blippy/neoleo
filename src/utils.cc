@@ -113,68 +113,6 @@ panic (const char *s,...)
 	exit (2);
 }
 
-/* Given a file name, come up with a backup file name. . . */
-	char *
-backup_file_name (char *file_name)
-{
-	//char *dir_name;
-	char *dir_end;
-
-	DIR *dir;
-	struct dirent *dp;
-	int len;
-	int max_fnum;
-	int cur_fnum;
-
-	char *tmp_ptr;
-
-	char *return_value;
-
-	dir_end = (char *)rindex (file_name, '/');
-	const char* dir_name = dir_end? file_name : ".";
-	if (dir_end)
-	{
-		file_name = dir_end + 1;
-		*dir_end = '\0';
-	}
-	len = strlen (file_name);
-
-	dir = opendir (dir_name);
-	if (dir == 0)
-	{
-		if (dir_end)
-			*dir_end = '/';
-		return (char *) 0;
-	}
-
-	max_fnum = 0;
-	while ((dp = readdir (dir)))
-	{
-		if (!dp->d_ino
-				|| NLENGTH (dp) <= len
-				|| strncmp (dp->d_name, file_name, len)
-				|| dp->d_name[len] != '.'
-				|| dp->d_name[len + 1] != '~'
-				|| dp->d_name[NLENGTH(dp) - 1] != '~')
-			continue;
-
-		tmp_ptr = &(dp->d_name[len + 2]);
-		for (cur_fnum = 0; isdigit (*tmp_ptr); tmp_ptr++)
-			cur_fnum = cur_fnum * 10 + *tmp_ptr - '0';
-		if (tmp_ptr != &(dp->d_name[NLENGTH(dp) - 1]) || cur_fnum < max_fnum)
-			continue;
-		max_fnum = cur_fnum;
-	}
-	closedir (dir);
-	max_fnum++;
-	return_value = (char *) malloc (strlen (dir_name) + len + 12);
-	if (!return_value)
-		return (char *) 0;
-	sprintf (return_value, "%s/%s.~%d~", dir_name, file_name, max_fnum);
-	if (dir_end)
-		*dir_end = '/';
-	return return_value;
-}
 
 
 	const char *
@@ -254,77 +192,12 @@ xopen (
 }
 
 /* Open a file, creating a backup file if needed. . . */
+// mcarter 2019-01-23 Eliminate the backup functionality
 	FILE *
 fopen_with_backup (char *name, const char *mode)
 {
-	char *newname;
-	struct stat stat_buf;
-	int old_file = 0;
-
-	old_file = (stat (name, &stat_buf) >= 0);
-
-	if (__make_backups && *mode == 'w' && access (name, F_OK) == 0)
-	{
-		newname = backup_file_name (name);
-		if (!newname)
-			return (FILE *) 0;
-		if (__backup_by_copying)
-		{
-			FILE *c_in, *c_out;
-			int n_read;
-			char buf[4096];
-			c_in = fopen (name, "r");
-			if (!c_in)
-				return 0;
-			c_out = fopen (newname, "w");
-			{
-				int fd;
-				if (!old_file || (stat (name, &stat_buf) < 0))
-				{
-					fclose (c_in);
-					return 0;
-				}
-				fd = creat (newname, stat_buf.st_mode);
-				if (fd < 0)
-				{
-					fclose (c_in);
-					return 0;
-				}
-				chmod (newname, stat_buf.st_mode);
-				c_out = fdopen (fd, "w");
-				if (!c_out)
-				{
-					fclose (c_in);
-					close (fd);
-					return 0;
-				}
-			}
-			while ((n_read = fread (buf, 1, sizeof (buf), c_in)) > 0)
-				if (fwrite (buf, 1, n_read, c_out) != n_read)
-				{
-					fclose (c_in);
-					fclose (c_out);
-					return (FILE *) 0;
-				}
-			if (fclose (c_in) == EOF || fclose (c_out) == EOF)
-				return (FILE *) 0;
-		}
-		else
-#if defined(HAVE_RENAME)
-			if (rename (name, newname) < 0)
-#else
-				if (link (name, newname) || unlink (name))
-#endif
-					return (FILE *) 0;
-		free (newname);
-	}
-
-	{
-		FILE * ret = fopen (name, mode);
-		if (ret && old_file)
-			chmod (name, stat_buf.st_mode);
-		return ret;
-	}
+	FILE * ret = fopen (name, mode);
+	return ret;
 }
 
 /* Open a file or a pipe, creating a backup file if it's a file */
