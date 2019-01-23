@@ -10,6 +10,10 @@ VERSION: 8.0.0
 STATUS:  RELEASED
 DATE:    2019-01-21
 
+NEARLY EVERYONE SHOULD DOWNLOAD THE FILE "neoleo-x,y,z,tar,gz" INSTEAD OF 
+THE ONES LABELLED "Source code". THE FORMER IS A GNU-STANDARD RELEASE 
+TARBALL, THE LATTER ONES ARE JUST ARCHIVES OF THE REPO.
+
 * C++17 COMPILER IS NOW REQUIRED
 
 * many functions removed. I've adopted the policy that if I don't use them
@@ -42,7 +46,7 @@ DATE:    2017-12-04
 
 * removed support for sylk and sc files
 
-* RFE#29 done: quite using C-q
+* RFE#29 done: quit using C-q
 
 * REF#28 done: set default format to general.float
 
