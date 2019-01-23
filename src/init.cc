@@ -193,7 +193,6 @@ static char *init_cmds[] =
   "",
   "# Files",
   "",
-  "bind-key generic-trolx save-spreadsheet ^s",
   "bind-key trolx find-alternate-spreadsheet ^v",
   "bind-key trolx merge-spreadsheet i",
   "",

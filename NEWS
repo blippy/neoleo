@@ -7,6 +7,8 @@ DATE:    ONGOING
 
 * Eliminated the creation of backup files
 
+* Removed keybinding C-x C-s for save-spreadsheet. Use C-s instead.
+
 ===========================================================================
 VERSION: 8.0.0
 STATUS:  RELEASED
