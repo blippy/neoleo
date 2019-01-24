@@ -31,7 +31,7 @@
 #include "funcs.h"
 #include "parse_parse.h"
 
-#define USE_OBSTACK 1
+//#define USE_OBSTACK 1
 
 #ifdef USE_OBSTACK
 //#if(use_obstack) {
@@ -103,7 +103,7 @@ class obsmem {
 			auto d1 = (std::byte*) data;
 			for(int i =0; i< size; ++i)
 				ptr[sz+1+i] = (std::byte) d1[i];
-			sizes[sizes.size()-1] = sz+1;
+			sizes[sizes.size()-1] += size;
 
 		}
 
@@ -112,7 +112,7 @@ class obsmem {
 		}
 
 		char* alloc(int n) {
-			auto ptr = malloc(n);
+			auto ptr = malloc(n ==0? 1 : n); // I don't like the idea of malloc() returning NULL is n==0
 			assert(ptr);
 			ptrs.push_back(ptr);
 			sizes.push_back(n);
@@ -124,6 +124,16 @@ class obsmem {
 		}
 
 		void* finish() { return ptrs.back(); }
+
+
+		void free_mem() {
+			sizes.clear();
+			for(auto p: ptrs)
+				free(p);
+			ptrs.clear();
+		}
+
+		~obsmem() { this->free_mem(); }
 
 
 	private:
@@ -193,6 +203,14 @@ void* obstack_mc_finish()
 #endif
 }
 
+void obstack_mc_free(void *mem_start)
+{
+#ifdef USE_OBSTACK
+	obstack_free(&tmp_mem, mem_start);
+#else
+	bcomp_obsmem.free_mem();
+#endif
+}
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
  */
@@ -881,7 +899,7 @@ loop:
 char* parse_and_compile (cell* cp, const char *string, mem& the_mem)
 {
 	char* ret = parse_and_compile_1(cp, string, the_mem);
-	if(ret) obstack_free (&tmp_mem, tmp_mem_start);
+	if(ret) obstack_mc_free(tmp_mem_start);
 	return ret;
 }
 
