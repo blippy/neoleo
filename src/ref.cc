@@ -596,7 +596,7 @@ flush_old_value (void)
 	}
 	if (my_cell->get_cell_formula())
 	{
-		byte_free (my_cell->get_cell_formula());
+		free(my_cell->get_cell_formula());
 		my_cell->clear_formula();
 	}
 	SET_TYP (my_cell, TYP_NUL);

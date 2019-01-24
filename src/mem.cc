@@ -73,3 +73,63 @@ void free_nonempty_str(unsigned char** ptr)
 {
 	free_nonempty((void**) ptr);
 }
+
+
+obsmem::obsmem() 
+{ 
+	this->alloc(0); // get the ball rolling.
+}
+
+void obsmem::grow(void* data, int size)
+{
+	assert(!ptrs.empty());
+	int sz = sizes[sizes.size()-1];
+	std::byte* ptr = (std::byte*) realloc(ptrs[ptrs.size() -1], std::max(sz+size,1));
+	assert(ptr);
+	ptrs[ptrs.size() -1] = ptr;
+	auto d1 = (std::byte*) data;
+	bcopy(d1, ptr+sz, size);
+	sizes[sizes.size()-1] += size;
+
+}
+
+void obsmem::grow1(char c)
+{
+	grow(&c, 1);
+}
+
+char* obsmem::alloc(int n)
+{
+	auto ptr = malloc(n ==0? 1 : n); // I don't like the idea of malloc() returning NULL is n==0
+	assert(ptr);
+	ptrs.push_back(ptr);
+	sizes.push_back(n);
+	return (char*) ptr;
+}
+
+int obsmem::size()
+{
+	return sizes[sizes.size()-1];
+}
+
+void* obsmem::finish()
+{
+	auto ptr = ptrs[ptrs.size() -1];			
+	this->alloc(0);
+	return ptr;
+}
+
+
+void obsmem::free_mem()
+{
+	// TODO should probably do something here
+}
+
+obsmem::~obsmem() 
+{ 
+	sizes.clear();
+	for(auto p: ptrs)
+		if(p) free(p);
+	ptrs.clear();
+}
+

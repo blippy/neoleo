@@ -49,3 +49,21 @@ void free_nonempty(void **ptr);
 void free_nonempty_str(char **ptr);
 void free_nonempty_str(unsigned char **ptr);
 
+
+// doesn't work without crashing
+class obsmem {
+	public:
+		obsmem();
+		void grow(void* data, int size);
+		void grow1(char c);
+		char* alloc(int n);
+		int size();
+		void* finish();
+		void free_mem();
+		~obsmem();
+	private:
+		std::vector<void*> ptrs;
+		std::vector<int> sizes;
+
+
+};

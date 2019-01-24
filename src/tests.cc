@@ -131,6 +131,23 @@ bool run_cell_tests()
 	return true;
 
 }
+
+bool run_obsmem_tests()
+{
+	cout << "Running obsmem tests\n";
+
+	obsmem m;
+	cout <<"Should say hello world\n";
+	char* s1 = "hello";
+	char* s2 = "world";
+	m.grow(s1, strlen(s1));
+	m.grow1(' ');
+	m.grow(s2, strlen(s2));
+	m.grow1(0);
+	puts((char*) m.finish());
+	return true;
+}
+
 bool
 headless_tests()
 {
@@ -139,6 +156,7 @@ headless_tests()
 
 	map<string, std::function<bool()> > func_map = {
 		{"cells",	run_cell_tests},
+		{"obsmem",	run_obsmem_tests},
 #ifdef BLANG
 		{"alt-parse",	run_alt_parse_tests},
 #endif // BLANG

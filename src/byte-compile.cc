@@ -92,64 +92,6 @@ static void *str_stack;
 double fabs1(double x) { return  fabs(x); }
 double pow1(double x, double y) { return pow(x, y); }
 
-// A fairly clumsy attempt to replace obstack
-class obsmem {
-	public:
-		obsmem() { 
-			this->alloc(0); // get the ball rolling.
-		}
-
-		void grow(void* data, int size) {
-			int sz = sizes.back();
-			std::byte* ptr = (std::byte*) realloc(ptrs.back(), sz+size);
-			assert(ptr);
-			ptrs[ptrs.size() -1] = ptr;
-			auto d1 = (std::byte*) data;
-			for(int i =0; i< size; ++i)
-				ptr[sz+1+i] = (std::byte) d1[i];
-			sizes[sizes.size()-1] += size;
-
-		}
-
-		void grow1(char c) {
-			grow(&c, 1);
-		}
-
-		char* alloc(int n) {
-			auto ptr = malloc(n ==0? 1 : n); // I don't like the idea of malloc() returning NULL is n==0
-			assert(ptr);
-			ptrs.push_back(ptr);
-			sizes.push_back(n);
-			return (char*) ptr;
-		}
-
-		int size() {
-			return sizes.back();
-		}
-
-		void* finish() { 
-			auto ptr = ptrs.back();
-			this->alloc(0);
-			return ptr;
-		}
-
-
-		void free_mem() {
-			sizes.clear();
-			for(auto p: ptrs)
-				free(p);
-			ptrs.clear();
-		}
-
-		~obsmem() { this->free_mem(); }
-
-
-	private:
-		std::vector<void*> ptrs;
-		std::vector<int> sizes;
-
-
-};
 
 #ifndef USE_OBSTACK
 	obsmem bcomp_obsmem;
@@ -911,15 +853,6 @@ char* parse_and_compile (cell* cp, const char *string, mem& the_mem)
 	return ret;
 }
 
-/* Back when strings stored a char*, they needed to be freed when a
-   byte-compiled expression was freed.  Now that they're appended to the end,
-   they don't need to be specially freed anymore.
- */
-void
-byte_free (unsigned char *form)
-{
-  free (form);
-}
 
 /* This tries to tell if a byte-compiled expression is a constant.  If it
    is a constant, we can free it, and never try to recompute its value.
