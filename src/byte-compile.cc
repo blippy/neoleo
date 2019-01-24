@@ -23,7 +23,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstddef>
 #include <string>
+#include <stack>
 #include <map>
 
 #include "funcs.h"
@@ -82,6 +84,45 @@ static void *str_stack;
 #define V (void(*)())
 double fabs1(double x) { return  fabs(x); }
 double pow1(double x, double y) { return pow(x, y); }
+
+// A fairly clumsy attempt to replace obstack
+class obsmem {
+	public:
+		void grow(void* data, int size) {
+			int sz = sizes.back();
+			std::byte* ptr = (std::byte*) realloc(ptrs.back(), sz+size);
+			assert(ptr);
+			ptrs[ptrs.size() -1] = ptr;
+			auto d1 = (std::byte*) data;
+			for(int i =0; i< size; ++i)
+				ptr[sz+1+i] = (std::byte) d1[i];
+			sizes[sizes.size()-1] = sz+1;
+
+		}
+
+		void grow1(char c) {
+			grow(&c, 1);
+		}
+
+		char* alloc(int n) {
+			auto ptr = malloc(n);
+			assert(ptr);
+			ptrs.push_back(ptr);
+			sizes.push_back(n);
+			return (char*) ptr;
+		}
+
+		int size() {
+			return sizes.back();
+		}
+
+
+	private:
+		std::vector<void*> ptrs;
+		std::vector<int> sizes;
+
+
+};
 
 // wrappers around obstack, planning its eventual demise
 char * obstack_mc_alloc(int n)
