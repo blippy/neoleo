@@ -31,10 +31,17 @@
 #include "funcs.h"
 #include "parse_parse.h"
 
+#define USE_OBSTACK 1
 
+#ifdef USE_OBSTACK
+//#if(use_obstack) {
 #define obstack_chunk_free free
 #define obstack_chunk_alloc ck_malloc
 #include "obstack.h"
+//}
+#else
+#undef tmp_mem
+#endif
 
 #include "global.h"
 #include "byte-compile.h"
@@ -116,6 +123,8 @@ class obsmem {
 			return sizes.back();
 		}
 
+		void* finish() { return ptrs.back(); }
+
 
 	private:
 		std::vector<void*> ptrs;
@@ -124,28 +133,65 @@ class obsmem {
 
 };
 
+#ifndef USE_OBSTACK
+	obsmem bcomp_obsmem;
+#endif
+
 // wrappers around obstack, planning its eventual demise
+
+	
+void obstack_mc_begin(int n)
+{
+#ifdef USE_OBSTACK
+	obstack_begin(&tmp_mem, n);
+#endif
+}
+
 char * obstack_mc_alloc(int n)
 {
+#ifdef USE_OBSTACK
 	return (char *) obstack_alloc(&tmp_mem, n);
+#else
+	return bcomp_obsmem.alloc(n);
+#endif
 }
 
 void obstack_mc_grow(void* data, int size)
 {
+#ifdef USE_OBSTACK
 	obstack_grow(&tmp_mem, data, size);
+#else
+	bcomp_obsmem.grow(data, size);
+#endif
 }
 
 void obstack_mc_1grow(char c)
 {
+#ifdef USE_OBSTACK
 	obstack_1grow(&tmp_mem, c);
+#else
+	bcomp_obsmem.grow1(c);
+#endif
 }
 
 
 int obstack_mc_object_size()
 {
+#ifdef USE_OBSTACK
 	return obstack_object_size(&tmp_mem);
+#else
+	return bcomp_obsmem.size();
+#endif
 }
 
+void* obstack_mc_finish()
+{
+#ifdef USE_OBSTACK
+	return obstack_finish(&tmp_mem);
+#else
+	return bcomp_obsmem.finish();
+#endif
+}
 
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
@@ -335,7 +381,7 @@ init_mem ()
 
 	fn_stack = init_stack ();
 	str_stack = init_stack ();
-	obstack_begin (&tmp_mem, 400);
+	obstack_mc_begin(400);
 	tmp_mem_start =  obstack_mc_alloc(0);
 }
 
@@ -755,7 +801,7 @@ loop:
 	buf_siz = obstack_mc_object_size();
 	ret = (char *) ck_malloc (buf_siz);
 	//the_mem.add_ptr(ret);
-	bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
+	bcopy (obstack_mc_finish(), ret, buf_siz);
 
 	need_relax = 0;
 	for (n = 0; n < patches_used; n++)
