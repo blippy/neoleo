@@ -25,6 +25,8 @@ either `Alt` or `ESC`.
 
 Other highly useful commands:
 
+| Key   | Purpose                              |
+| ----- | ------------------------------------ |
 | C-o   | insert row above                     |
 | C-k   | delete row                           |
 | M-k   | delete column                        |
@@ -77,5 +79,6 @@ may have some bearing on users, so they may be advised to read them.
 ## Links
 
 *  bug-oleo archives: http://lists.gnu.org/archive/html/bug-oleo/
+*  html documentation: https://blippy.github.io/neoleo/
 *  Freshcode announcement: http://freshcode.club/projects/neoleo
 *  papoanaya has a version of oleo on github: https://github.com/papoanaya/oleo
