@@ -95,6 +95,10 @@ double pow1(double x, double y) { return pow(x, y); }
 // A fairly clumsy attempt to replace obstack
 class obsmem {
 	public:
+		obsmem() { 
+			this->alloc(0); // get the ball rolling.
+		}
+
 		void grow(void* data, int size) {
 			int sz = sizes.back();
 			std::byte* ptr = (std::byte*) realloc(ptrs.back(), sz+size);
@@ -123,7 +127,11 @@ class obsmem {
 			return sizes.back();
 		}
 
-		void* finish() { return ptrs.back(); }
+		void* finish() { 
+			auto ptr = ptrs.back();
+			this->alloc(0);
+			return ptr;
+		}
 
 
 		void free_mem() {
