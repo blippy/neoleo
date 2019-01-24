@@ -23,6 +23,14 @@ either `Alt` or `ESC`.
 | C-s   | save document                        |
 | C-v   | paste cell formula from clipboard    |
 
+Other highly useful commands:
+
+| C-o   | insert row above                     |
+| C-k   | delete row                           |
+| M-k   | delete column                        |
+| M-o   | insert column to the left            |
+
+
 ## Documents and examples
 
 Documentation is available [online](https://blippy.github.io/neoleo/).
