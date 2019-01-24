@@ -83,6 +83,29 @@ static void *str_stack;
 double fabs1(double x) { return  fabs(x); }
 double pow1(double x, double y) { return pow(x, y); }
 
+// wrappers around obstack, planning its eventual demise
+char * obstack_mc_alloc(int n)
+{
+	return (char *) obstack_alloc(&tmp_mem, n);
+}
+
+void obstack_mc_grow(void* data, int size)
+{
+	obstack_grow(&tmp_mem, data, size);
+}
+
+void obstack_mc_1grow(char c)
+{
+	obstack_1grow(&tmp_mem, c);
+}
+
+
+int obstack_mc_object_size()
+{
+	return obstack_object_size(&tmp_mem);
+}
+
+
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
  */
@@ -272,7 +295,7 @@ init_mem ()
 	fn_stack = init_stack ();
 	str_stack = init_stack ();
 	obstack_begin (&tmp_mem, 400);
-	tmp_mem_start = (char *) obstack_alloc (&tmp_mem, 0);
+	tmp_mem_start =  obstack_mc_alloc(0);
 }
 
 /* Stash away a backpatch for future editing. */
@@ -350,9 +373,9 @@ bool process_function(cell* cp, const function_t *f, struct node*& node, int& by
 					goto loop;
 				}
 				/* Put out IF, null-byte to backpatch */
-				(void) obstack_1grow (&tmp_mem, byte);
-				node->add_byte = obstack_object_size (&tmp_mem);
-				(void) obstack_1grow (&tmp_mem, 0);
+				obstack_mc_1grow(byte);
+				node->add_byte = obstack_mc_object_size();
+				obstack_mc_1grow(0);
 
 				/* put out true-code */
 				push_stack (fn_stack, node);
@@ -364,10 +387,10 @@ bool process_function(cell* cp, const function_t *f, struct node*& node, int& by
 			if (node->n_x.v_subs[1])
 			{
 
-				(void) obstack_1grow (&tmp_mem, (char)SKIP);
-				(void) obstack_1grow (&tmp_mem, 0);
-				add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-				node->add_byte = obstack_object_size (&tmp_mem) - 1;
+				obstack_mc_1grow((char)SKIP);
+				obstack_mc_1grow(0);
+				add_backpatch (node->add_byte, obstack_mc_object_size());
+				node->add_byte = obstack_mc_object_size() - 1;
 
 				push_stack (fn_stack, node);
 				new_node = node->n_x.v_subs[1];
@@ -375,7 +398,7 @@ bool process_function(cell* cp, const function_t *f, struct node*& node, int& by
 				node = new_node;
 				goto loop;
 			}
-			add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+			add_backpatch (node->add_byte, obstack_mc_object_size());
 			break;
 
 		case C_ANDOR:
@@ -389,79 +412,79 @@ bool process_function(cell* cp, const function_t *f, struct node*& node, int& by
 			}
 			if (node->n_x.v_subs[1])
 			{
-				(void) obstack_1grow (&tmp_mem, byte);
-				node->add_byte = obstack_object_size (&tmp_mem);
-				(void) obstack_1grow (&tmp_mem, 0);	/* for backpatching */
+				obstack_mc_1grow(byte);
+				node->add_byte = obstack_mc_object_size();
+				obstack_mc_1grow(0);	/* for backpatching */
 				push_stack (fn_stack, node);
 				new_node = node->n_x.v_subs[1];
 				node->n_x.v_subs[1] = 0;
 				node = new_node;
 				goto loop;
 			}
-			add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
+			add_backpatch (node->add_byte, obstack_mc_object_size());
 			break;
 
 		case C_ERR:
-			(void) obstack_1grow (&tmp_mem, byte);
-			node->add_byte = obstack_object_size (&tmp_mem);
-			(void) obstack_1grow (&tmp_mem, 0);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_int);
+			obstack_mc_1grow(byte);
+			node->add_byte = obstack_mc_object_size();
+			obstack_mc_1grow(0);
+			obstack_mc_1grow(node->n_x.v_int);
 			node->n_x.v_string = ename[node->n_x.v_int];
 			push_stack (str_stack, node);
 			break;
 
 		case C_FLT:
-			(void) obstack_1grow (&tmp_mem, byte);
-			(void) obstack_grow (&tmp_mem, &(node->n_x.v_float), sizeof (num_t));
+			obstack_mc_1grow(byte);
+			obstack_mc_grow(&(node->n_x.v_float), sizeof (num_t));
 			break;
 
 		case C_INT:
-			(void) obstack_1grow (&tmp_mem, byte);
-			(void) obstack_grow (&tmp_mem, &(node->n_x.v_int), sizeof (long));
+			obstack_mc_1grow(byte);
+			obstack_mc_grow(&(node->n_x.v_int), sizeof (long));
 			break;
 
 		case C_STR:
-			(void) obstack_1grow (&tmp_mem, byte);
-			node->add_byte = obstack_object_size (&tmp_mem);
-			(void) obstack_1grow (&tmp_mem, 0);
+			obstack_mc_1grow(byte);
+			node->add_byte = obstack_mc_object_size();
+			obstack_mc_1grow(0);
 			push_stack (str_stack, node);
 			break;
 
 		case C_VAR:
-			add_ref_to (cp, obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_mc_object_size());
 			add_var_ref (node->n_x.v_var);
-			(void) obstack_1grow (&tmp_mem, byte);
-			(void) obstack_grow (&tmp_mem, &(node->n_x.v_var), sizeof (struct var *));
+			obstack_mc_1grow(byte);
+			obstack_mc_grow(&(node->n_x.v_var), sizeof (struct var *));
 			break;
 
 		case C_CELL:
-			add_ref_to (cp, obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_mc_object_size());
 			add_ref (node->n_x.v_rng.lr, node->n_x.v_rng.lc);
-			(void) obstack_1grow (&tmp_mem, byte);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr >> 8);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lr);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc >> 8);
-			(void) obstack_1grow (&tmp_mem, node->n_x.v_rng.lc);
-				break;
+			obstack_mc_1grow(byte);
+			obstack_mc_1grow(node->n_x.v_rng.lr >> 8);
+			obstack_mc_1grow(node->n_x.v_rng.lr);
+			obstack_mc_1grow(node->n_x.v_rng.lc >> 8);
+			obstack_mc_1grow(node->n_x.v_rng.lc);
+		       	break;
 
 		case C_RANGE:
-			add_ref_to (cp, obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_mc_object_size());
 			add_range_ref (&(node->n_x.v_rng));
-			(void) obstack_1grow (&tmp_mem, byte);
-			(void) obstack_grow (&tmp_mem, &(node->n_x.v_rng), sizeof (struct rng));
+			obstack_mc_1grow(byte);
+			obstack_mc_grow(&(node->n_x.v_rng), sizeof (struct rng));
 			break;
 
 		case C_FN0X:
-			add_ref_to (cp, obstack_object_size (&tmp_mem));
+			add_ref_to (cp, obstack_mc_object_size());
 			/* FALLTHROUGH */
 		case C_FN0:
 		case C_CONST:
 add_byte:
 			if (f->fn_comptype & C_T)
-				add_timer_ref (cp, obstack_object_size (&tmp_mem));
-			(void) obstack_1grow (&tmp_mem, byte);
+				add_timer_ref (cp, obstack_mc_object_size());
+			obstack_mc_1grow(byte);
 			if (byte >= USR1 && byte < SKIP)
-				(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
+				obstack_mc_1grow((int) node->sub_value);
 			break;
 
 		case C_FN1:
@@ -571,10 +594,10 @@ add_byte:
 				new_node->n_x.v_subs[1] = 0;
 				goto loop;
 			}
-			(void) obstack_1grow (&tmp_mem, byte);
+			obstack_mc_1grow(byte);
 			if (byte >= USR1 && byte < SKIP)
-				(void) obstack_1grow (&tmp_mem, (int) node->sub_value);
-			(void) obstack_1grow (&tmp_mem, node->add_byte);
+				obstack_mc_1grow((int) node->sub_value);
+			obstack_mc_1grow(node->add_byte);
 			break;
 
 		default:
@@ -680,15 +703,15 @@ loop:
 	if (node)
 		goto loop;
 
-	(void) obstack_1grow (&tmp_mem, 0);
+	obstack_mc_1grow(0);
 
 	while (node = (struct node *) pop_stack (str_stack))
 	{
-		add_backpatch (node->add_byte, obstack_object_size (&tmp_mem));
-		(void) obstack_grow (&tmp_mem, node->n_x.v_string, strlen (node->n_x.v_string) + 1);
+		add_backpatch (node->add_byte, obstack_mc_object_size());
+		obstack_mc_grow(node->n_x.v_string, strlen (node->n_x.v_string) + 1);
 	}
 
-	buf_siz = obstack_object_size (&tmp_mem);
+	buf_siz = obstack_mc_object_size();
 	ret = (char *) ck_malloc (buf_siz);
 	//the_mem.add_ptr(ret);
 	bcopy (obstack_finish (&tmp_mem), ret, buf_siz);
