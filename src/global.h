@@ -20,7 +20,9 @@
 #include <map>
 #include <string>
 
-#include "obstack.h"
+//#include "obstack.h"
+//inline  struct obstack tmp_mem;
+//inline char * tmp_mem_start = 0;
 
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
@@ -112,8 +114,6 @@ struct ref_to
 #define PUT_RNG(name,putit)	bcopy((VOIDSTAR)(putit),(VOIDSTAR)(name),sizeof(struct rng))
 #define EXP_ADD_RNG		sizeof(struct rng)
 
-inline  struct obstack tmp_mem;
-inline char * tmp_mem_start = 0;
 
 /* Defined in io-utils.c: */
 #define ERR_MAX		17

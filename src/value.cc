@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "mem.h"
 #include "value.h"
 

@@ -23,6 +23,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <cstddef>
 #include <string>
 #include <stack>
@@ -34,11 +35,9 @@
 //#define USE_OBSTACK 1
 
 #ifdef USE_OBSTACK
-//#if(use_obstack) {
 #define obstack_chunk_free free
 #define obstack_chunk_alloc ck_malloc
 #include "obstack.h"
-//}
 #else
 #undef tmp_mem
 #endif
@@ -161,6 +160,14 @@ void obstack_mc_free(void *mem_start)
 	bcomp_obsmem.free_mem();
 #endif
 }
+
+void obstack_mc_free_all()
+{
+#ifndef USE_OBSTACK
+	bcomp_obsmem.reset();
+#endif
+}
+
 #define S (char *)
 /* These have to go in some file or other, so it is stuck in here (for now).
  */
@@ -350,7 +357,11 @@ init_mem ()
 	fn_stack = init_stack ();
 	str_stack = init_stack ();
 	obstack_mc_begin(400);
+#ifdef USE_OBSTACK
 	tmp_mem_start =  obstack_mc_alloc(0);
+#else
+	obstack_mc_alloc(0);
+#endif
 }
 
 /* Stash away a backpatch for future editing. */
@@ -849,7 +860,11 @@ loop:
 char* parse_and_compile (cell* cp, const char *string, mem& the_mem)
 {
 	char* ret = parse_and_compile_1(cp, string, the_mem);
+#ifdef USE_OBSTACK
 	if(ret) obstack_mc_free(tmp_mem_start);
+#else
+	if(ret) obstack_mc_free_all();
+#endif
 	return ret;
 }
 

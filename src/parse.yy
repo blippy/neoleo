@@ -53,6 +53,7 @@
 using namespace std::literals;
 
 #include <ctype.h>
+#include <string.h>
 
 #include "global.h"
 #include "errors.h"

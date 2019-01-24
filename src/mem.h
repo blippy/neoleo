@@ -60,10 +60,9 @@ class obsmem {
 		int size();
 		void* finish();
 		void free_mem();
+		void reset();
 		~obsmem();
 	private:
 		std::vector<void*> ptrs;
 		std::vector<int> sizes;
-
-
 };

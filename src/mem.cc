@@ -75,9 +75,14 @@ void free_nonempty_str(unsigned char** ptr)
 }
 
 
+static void obsmem_reinit(obsmem* obj)
+{
+	obj->alloc(0);
+}
+
 obsmem::obsmem() 
 { 
-	this->alloc(0); // get the ball rolling.
+	obsmem_reinit(this);
 }
 
 void obsmem::grow(void* data, int size)
@@ -123,6 +128,16 @@ void* obsmem::finish()
 void obsmem::free_mem()
 {
 	// TODO should probably do something here
+}
+
+void obsmem::reset()
+{
+	sizes.clear();
+	for(auto p: ptrs)
+		if(p) free(p);
+	ptrs.clear();
+	obsmem_reinit(this);
+
 }
 
 obsmem::~obsmem() 
