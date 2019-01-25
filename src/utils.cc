@@ -116,8 +116,7 @@ panic (const char *s,...)
 
 
 	const char *
-__fp_name (
-		FILE *fp)
+__fp_name (FILE *fp)
 {
 	int n;
 
@@ -130,10 +129,7 @@ __fp_name (
 }
 
 	void
-__set_fp (
-		FILE *fp,
-		const char *name,
-		int flag)
+__set_fp ( FILE *fp, const char *name, int flag)
 {
 	if (__id_s == 0)
 	{
@@ -168,9 +164,7 @@ __set_fp (
 
 /* Open a file or a pipe */
 	FILE *
-xopen (
-		const char *name,
-		const char *mode)
+xopen ( const char *name, const char *mode)
 {
 	int flag = 0;
 	FILE *ret;
@@ -227,8 +221,7 @@ xopen_with_backup (char *name, const char *mode)
 
 /* Close something opened with xopen. . . */
 	int
-xclose (
-		FILE *fp)
+xclose ( FILE *fp)
 {
 	int ret;
 	int n;
@@ -249,8 +242,7 @@ xclose (
 
 /* Fclose or panic */
 	void
-ck_fclose (
-		FILE *stream)
+ck_fclose ( FILE *stream)
 {
 	if (fclose (stream) == EOF)
 		panic ("Couldn't close %s", __fp_name (stream));
@@ -258,8 +250,7 @@ ck_fclose (
 
 /* fopen or panic */
 void *
-ck_malloc( 
-		size_t size)
+ck_malloc( size_t size)
 {
 	void *ret;
 
@@ -358,8 +349,7 @@ init_stack ()
 }
 
 	void
-flush_stack (
-		void *bb)
+flush_stack ( void *bb)
 {
 	struct stack *b;
 
@@ -372,9 +362,7 @@ flush_stack (
 }
 
 	void
-push_stack (
-		void *bb,
-		void *add)
+push_stack ( void *bb, void *add)
 {
 	struct stack *b;
 
@@ -388,8 +376,7 @@ push_stack (
 }
 
 	void *
-pop_stack (
-		void *bb)
+pop_stack ( void *bb)
 {
 	struct stack *b;
 
@@ -400,8 +387,7 @@ pop_stack (
 }
 
 	int
-size_stack (
-		void *bb)
+size_stack ( void *bb)
 {
 	struct stack *b;
 
