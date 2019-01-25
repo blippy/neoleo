@@ -151,6 +151,9 @@ input_stream_ptr make_input_stream()
 */
 
 input_stream_ptr the_input_stream = nullptr;
+//struct input_stream the_default_input_stream;
+//void delete_the_input_stream() { if(the_input_stream) delete the_input_stream; }
+//exit_c exit_the_input_stream(delete_the_input_stream);
 
 void debug_input_stream(const char* str, struct input_stream *isp)
 {
@@ -174,13 +177,10 @@ input_stream::~input_stream()
 static input_stream_ptr
 default_input_stream (void)
 {
-	if (!the_input_stream)
-		the_input_stream = new input_stream();
+	if (!the_input_stream) the_input_stream = new input_stream();
 	return the_input_stream;
 }
 
-
-//struct input_stream the_input_stream;
 
 /* This constructs an input stream that reads from a macro but never
  * from a keyboard.  EXECUTE_CMD uses this.
@@ -725,10 +725,8 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->next = new_cf;
 	new_cf->prev = new_cf;
 
-	new_cf->input = (rng
-			 ? macro_only_input_stream (rng, first_line, len,
-						    new_cf) :
-			 default_input_stream ());
+	new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : default_input_stream ());
+	//new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : &the_default_input_stream);
 
 	new_cf->_setrow = NON_ROW;
 	new_cf->_setcol = NON_COL;
