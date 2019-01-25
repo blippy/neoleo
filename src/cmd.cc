@@ -103,10 +103,6 @@ enum state_codes
 };
 
 
-#undef MIN
-#undef MAX
-#define MIN(A,B) ((A) < (B) ? (A) : (B))
-#define MAX(A,B) ((A) > (B) ? (A) : (B))
 
 /* Bogus mapping from KEY->CODE to ranges.  This is how bound
  * macros are represented.
@@ -1633,10 +1629,10 @@ bool turd_1(bool interactive_mode, bool iscmd)
 #endif
 				if ((*prompt != 'R' && interactive_mode_1 && mark_is_set) || *prompt == '@')
 				{
-					the_cmd_arg.val.range.lr = MIN (mkrow, curow);
-					the_cmd_arg.val.range.hr = MAX (mkrow, curow);
-					the_cmd_arg.val.range.lc = MIN (mkcol, cucol);
-					the_cmd_arg.val.range.hc = MAX (mkcol, cucol);
+					the_cmd_arg.val.range.lr = std::min(mkrow, curow);
+					the_cmd_arg.val.range.hr = std::max(mkrow, curow);
+					the_cmd_arg.val.range.lc = std::min(mkcol, cucol);
+					the_cmd_arg.val.range.hc = std::max(mkcol, cucol);
 					mkrow = NON_ROW;
 					mkcol = NON_COL;
 					io_update_status ();
