@@ -35,6 +35,7 @@
 #include "io-generic.h"
 #include "cmd.h"
 #include "format.h"
+#include "mem.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
@@ -445,9 +446,10 @@ insert_cell_value(void)
 		return;
 	else
 	{
-		const char * in_str;
-		in_str = cell_value_string (curow, cucol, 0);
-		put_string (in_str, strlen(in_str));
+		//const char * in_str = cell_value_string (curow, cucol, 0);
+		//put_string (in_str, strlen(in_str));
+		strcpy_c in_str{cell_value_string(curow, cucol, 0)};
+		put_string(in_str.data(), strlen(in_str.data()));
 	}
 }
 
@@ -462,9 +464,10 @@ insert_other_cell_value(struct rng * rng)
 		return;
 	else
 	{
-		const char * in_str;
-		in_str = cell_value_string (rng->lr, rng->lc, 0);
-		put_string (in_str, strlen(in_str));
+		//const char * in_str; in_str = cell_value_string (rng->lr, rng->lc, 0);
+		//put_string (in_str, strlen(in_str));
+		strcpy_c in_str{cell_value_string(rng->lr, rng->lc, 0)};
+		put_string(in_str.data(), strlen(in_str.data()));		
 	}
 }
 

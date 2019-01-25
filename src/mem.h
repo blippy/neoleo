@@ -30,6 +30,7 @@ class mem {
 class strcpy_c {
 	public:
 		strcpy_c(const char* str);
+		strcpy_c(const std::string& str);
 		char* data() const;
 		~strcpy_c();
 	private:

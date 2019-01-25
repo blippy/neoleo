@@ -533,7 +533,7 @@ write_a_var (char *name, struct var *v)
 	r = v->v_rng.lr;
 	c = v->v_rng.lc;
 	if (v->var_flags == VAR_CELL)
-		fprintf (write_variable_fp, "%s=%s\n", v->var_name.c_str(), cell_value_string (r, c, 1));
+		fprintf (write_variable_fp, "%s=%s\n", v->var_name.c_str(), cell_value_string (r, c, 1).c_str());
 }
 
 void

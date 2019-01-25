@@ -871,7 +871,11 @@ _io_update_status (void)
 	std::string dec = decomp_str(curow, cucol);
 	//log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
 
-	ptr = cell_value_string (curow, cucol, 1);
+
+	//ptr = cell_value_string (curow, cucol, 1);
+	strcpy_c cvs(cell_value_string(curow, cucol, 1).c_str());
+	ptr = cvs.data();
+
 	plen = strlen (ptr);
 
 	int dlen = dec.size();

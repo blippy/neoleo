@@ -467,8 +467,8 @@ handle_exp:
  * In particular, strings are \\ed, and if add_quote is true,
  * they will have "" around them.
  */
-	const char *
-cell_value_string (CELLREF row, CELLREF col, int add_quote)
+
+std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 {
 	CELL *cp;
 
