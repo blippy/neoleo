@@ -28,9 +28,6 @@
 #include <string.h>
 
 constexpr auto pi = std::acos(-1);
-//#define obstack_chunk_alloc ck_malloc
-//#define obstack_chunk_free free
-//#include "obstack.h"
 
 #include "global.h"
 #include "cell.h"
@@ -41,12 +38,6 @@ constexpr auto pi = std::acos(-1);
 #include "ref.h"
 #include "sheet.h"
 
-#if defined(HAVE_RINT)
-extern double rint (double);
-extern long random (void);
-#else
-#define rint(x) (((x)<0) ? ceil((x)-.5) : floor((x)+.5))
-#endif
 
 // TODO probably belongs in oleox.h
 class ValErr : public std::exception
@@ -185,9 +176,7 @@ void TO_STR(struct value* val, mem& eval_mem)
 	if((val)->type==TYP_STR)	
 		;	
 	else if((val)->type==TYP_INT) {	
-		//char *s;	
 		(val)->type=TYP_STR;	
-		//s=(char*) obstack_alloc(&tmp_mem,30); 
 		char* s = (char*) eval_mem.gimme(30);
 		sprintf(s,"%ld",(val)->Int); 
 		(val)->String=s;	
@@ -195,9 +184,6 @@ void TO_STR(struct value* val, mem& eval_mem)
 		char *s=flt_to_str((val)->Float);		
 		char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
 		strcpy(s1, s);
-		//eval_mem.add_ptr(s);
-		//(void)obstack_grow(&tmp_mem,s,strlen(s)+1); 
-		//(val)->String=(char*) obstack_finish(&tmp_mem);	
 		(val)->type=TYP_STR;			
 	} else if((val)->type==TYP_ERR) {		
 		ERROR1((val)->Value);	
@@ -205,8 +191,6 @@ void TO_STR(struct value* val, mem& eval_mem)
 		(val)->type=TYP_STR;	
 		val->String = (char*) eval_mem.gimme(1);
 		val->String[0] = '\0';
-		//(val)->String=(char*) obstack_alloc(&tmp_mem,1); 
-		//(val)->String[0]='\0'; 
 	} else 
 		ERROR1(NON_STRING);
 }
