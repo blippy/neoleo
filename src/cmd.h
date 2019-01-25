@@ -26,7 +26,13 @@
  * hold the user's interaction state .
  */
 #include "global.h"
+
+#define USE_CMD_OBSTACK
+#ifdef USE_CMD_OBSTACK
 #include "obstack.h"
+typedef struct obstack cmd_obstack_t;
+#endif
+
 #include "line.h"
 #include "key.h"
 #include "args.h"
@@ -72,7 +78,7 @@ struct input_stream
 	char *_func_arg = 0;
 
 	/* Call stack for macros. */
-	struct obstack _macro_stack;
+	cmd_obstack_t _macro_stack;
 
 	/* The macro being recorded, if any. */
 	unsigned char *_macro = 0;

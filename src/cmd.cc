@@ -49,19 +49,39 @@
 #include "utils.h"
 
 ///// obstack stuff begin
-
-#undef USE_OBSTACK
-#define USE_OBSTACK 1
+// inherits USE_CMD_OBSTACK (or not) from cmd.h
+//#undef USE_OBSTACK
+//#define USE_OBSTACK 1
 #define obstack_chunk_alloc ck_malloc
 #define obstack_chunk_free free
 #include "obstack.h"
 
-static obstack* s_obstack;
-void obstack_mc_init(obstack* ptr)
+//static obstack* s_obstack;
+void obstack_mc_init(cmd_obstack_t* ptr)
 {
 	obstack_init(ptr);
-	s_obstack = ptr;
 }
+
+void* obstack_mc_alloc(cmd_obstack_t* ptr, int size)
+{
+	return obstack_alloc(ptr, size);
+}
+
+void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
+{
+	obstack_grow(ptr, data, size);
+}
+
+void* obstack_mc_finish(cmd_obstack_t* ptr)
+{
+	return obstack_finish(ptr);
+}
+
+void obstack_mc_free(cmd_obstack_t* ptr, void* mem_start)
+{
+	obstack_free(ptr, mem_start);
+}
+
 ///// obstack stuff end
 
 /* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
@@ -149,14 +169,14 @@ static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
 	input_stream_ptr ret = make_input_stream();
-	ret->_rmac = (struct macro *) obstack_alloc (&ret->_macro_stack, sizeof (struct macro));
+	ret->_rmac = (struct macro *) obstack_mc_alloc(&ret->_macro_stack, sizeof (struct macro));
 	ret->_rmac->mac_prev = 0;
 	ret->_rmac->mac_rng = *rng;
 	ret->_rmac->mac_row = rng->lr;
 	ret->_rmac->mac_col = rng->lc;
-	(void) obstack_grow (&ret->_macro_stack, first_line, len);
-	(void) obstack_grow (&ret->_macro_stack, "", 1);
-	ret->_rmac->mac_start = ret->_rmac->mac_exe = (unsigned char *) obstack_finish (&ret->_macro_stack);
+	obstack_mc_grow(&ret->_macro_stack, first_line, len);
+	obstack_mc_grow(&ret->_macro_stack, "", 1);
+	ret->_rmac->mac_start = ret->_rmac->mac_exe = (unsigned char *) obstack_mc_finish (&ret->_macro_stack);
 	ret->prev_stream = frame->input;
 	{
 		input_stream_ptr key = frame->input;
@@ -176,7 +196,7 @@ free_input_stream (input_stream_ptr stream)
 		free (stream->_macro_start);
 	if (stream->_last_macro)
 		free (stream->_last_macro);
-	obstack_free (&stream->_macro_stack, 0);
+	obstack_mc_free (&stream->_macro_stack, 0);
 	//free(stream);
 	delete stream;
 }
@@ -228,15 +248,13 @@ bound_macro (int num)
 	if (!cp || GET_TYP (cp) != TYP_STR || cp->gString()[0] == '\0')
 		return;
 	old = rmac;
-	rmac = (struct macro *) obstack_alloc (&macro_stack,
-					       sizeof (struct macro));
+	rmac = (struct macro *) obstack_mc_alloc (&macro_stack, sizeof (struct macro));
 	rmac->mac_prev = old;
 	rmac->mac_rng = bound_macros[num];
 	rmac->mac_row = bound_macros[num].lr;
 	rmac->mac_col = bound_macros[num].lc;
-	obstack_grow (&macro_stack, cp->gString(), 1 + strlen (cp->gString()));
-	rmac->mac_start = rmac->mac_exe =
-		(unsigned char *) obstack_finish (&macro_stack);
+	obstack_mc_grow (&macro_stack, cp->gString(), 1 + strlen (cp->gString()));
+	rmac->mac_start = rmac->mac_exe = (unsigned char *) obstack_mc_finish (&macro_stack);
 }
 
 void
@@ -284,7 +302,7 @@ end_macro (void)
 	    && (rmac->mac_col == rmac->mac_rng.hc))
 	  {
 		  old = rmac->mac_prev;
-		  obstack_free (&macro_stack, rmac);
+		  obstack_mc_free(&macro_stack, rmac);
 		  rmac = old;
 	  }
 	else
@@ -303,16 +321,16 @@ end_macro (void)
 		      || cp->gString()[0] == '\0')
 		    {
 			    old = rmac->mac_prev;
-			    obstack_free (&macro_stack, rmac);
+			    obstack_mc_free (&macro_stack, rmac);
 			    rmac = old;
 		    }
 		  else
 		    {
-			    obstack_grow (&macro_stack, cp->gString(),
+			    obstack_mc_grow(&macro_stack, cp->gString(),
 					  1 + strlen (cp->gString()));
 			    rmac->mac_exe =
 				    (unsigned char *)
-				    obstack_finish (&macro_stack);
+				    obstack_mc_finish(&macro_stack);
 		    }
 	  }
 }
@@ -848,8 +866,8 @@ recover_from_error (void)
 			free (stream->_macro_start);
 		if (stream->_last_macro)
 			free (stream->_last_macro);
-		obstack_free (&stream->_macro_stack, 0);
-		obstack_init (&stream->_macro_stack);
+		obstack_mc_free (&stream->_macro_stack, 0);
+		obstack_mc_init (&stream->_macro_stack);
 		stream->_rmac = 0;
 		stream->_func_arg = 0;
 		stream->_macro = stream->_macro_start = stream->_last_macro =
