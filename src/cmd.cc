@@ -34,9 +34,8 @@
 #include "logging.h"
 #include "mem.h"
 
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
+
+
 #include "global.h"
 #include "cmd.h"
 #include "io-term.h"
@@ -48,6 +47,22 @@
 #include "ref.h"
 #include "key.h"
 #include "utils.h"
+
+///// obstack stuff begin
+
+#undef USE_OBSTACK
+#define USE_OBSTACK 1
+#define obstack_chunk_alloc ck_malloc
+#define obstack_chunk_free free
+#include "obstack.h"
+
+static obstack* s_obstack;
+void obstack_mc_init(obstack* ptr)
+{
+	obstack_init(ptr);
+	s_obstack = ptr;
+}
+///// obstack stuff end
 
 /* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
  * unwind the disaster using state machines. An implementation of state 
@@ -108,7 +123,8 @@ input_stream_ptr make_input_stream()
 { 
 	//auto ptr = (input_stream_ptr) ck_malloc(sizeof(struct input_stream));
 	auto ptr = new input_stream();
-	obstack_init (&ptr->_macro_stack);
+	obstack_mc_init(&ptr->_macro_stack);
+	//obstack_mc_init();
 	return ptr;
 }
 

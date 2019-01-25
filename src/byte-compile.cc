@@ -32,6 +32,7 @@
 #include "funcs.h"
 #include "parse_parse.h"
 
+#undef USE_OBSTACK
 //#define USE_OBSTACK 1
 
 #ifdef USE_OBSTACK
