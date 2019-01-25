@@ -141,15 +141,14 @@ int ioerror = 0;
 
 /* The current stream from which commands are being read. */
 
+/*
 input_stream_ptr make_input_stream() 
 { 
-	//auto ptr = (input_stream_ptr) ck_malloc(sizeof(struct input_stream));
 	auto ptr = new input_stream();
 	obstack_mc_init(&ptr->_macro_stack);
-	//obstack_mc_init();
 	return ptr;
 }
-
+*/
 
 input_stream_ptr the_input_stream = nullptr;
 
@@ -164,6 +163,7 @@ void debug_input_stream(const char* str, struct input_stream *isp)
 input_stream::input_stream()
 {
 	debug_input_stream("ctor", this);
+	obstack_mc_init(&(this->_macro_stack));
 }
 
 input_stream::~input_stream()
@@ -175,7 +175,7 @@ static input_stream_ptr
 default_input_stream (void)
 {
 	if (!the_input_stream)
-		the_input_stream = make_input_stream();
+		the_input_stream = new input_stream();
 	return the_input_stream;
 }
 
@@ -190,7 +190,8 @@ default_input_stream (void)
 static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
-	input_stream_ptr ret = make_input_stream();
+	//input_stream_ptr ret = make_input_stream();
+	input_stream_ptr ret = new input_stream();
 	ret->_rmac = (struct macro *) obstack_mc_alloc(&ret->_macro_stack, sizeof (struct macro));
 	ret->_rmac->mac_prev = 0;
 	ret->_rmac->mac_rng = *rng;
