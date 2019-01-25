@@ -48,6 +48,8 @@
 #include "key.h"
 #include "utils.h"
 
+using namespace std::literals::string_literals;
+
 ///// obstack stuff begin
 // inherits USE_CMD_OBSTACK (or not) from cmd.h
 //#undef USE_OBSTACK
@@ -148,8 +150,26 @@ input_stream_ptr make_input_stream()
 	return ptr;
 }
 
+
 input_stream_ptr the_input_stream = nullptr;
 
+void debug_input_stream(const char* str, struct input_stream *isp)
+{
+	if constexpr(true) {
+		char str1[50];
+		sprintf(str1, "cmd.cc:input_stream :%s:%p", str, isp);
+		log_debug(str1);
+	}
+}
+input_stream::input_stream()
+{
+	debug_input_stream("ctor", this);
+}
+
+input_stream::~input_stream()
+{
+	debug_input_stream("dtor", this);
+}
 
 static input_stream_ptr
 default_input_stream (void)
@@ -159,6 +179,8 @@ default_input_stream (void)
 	return the_input_stream;
 }
 
+
+//struct input_stream the_input_stream;
 
 /* This constructs an input stream that reads from a macro but never
  * from a keyboard.  EXECUTE_CMD uses this.

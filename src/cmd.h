@@ -96,6 +96,8 @@ struct input_stream
 	input_stream_ptr prev_stream = 0;
 
 	int _pushed_back_char = -1;
+	input_stream();
+	~input_stream();
 };
 
 struct macro
