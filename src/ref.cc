@@ -26,6 +26,7 @@
 #include <map>
 #include <math.h>
 #include <string>
+#include <string.h>
 
 #include "global.h"
 #include <stdio.h>

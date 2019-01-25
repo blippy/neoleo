@@ -22,14 +22,8 @@
  * This file contains descriptions of all the interactive functions 
  * built into oleo. 
  */
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
-
+#include <string.h>
 
 #include "global.h"
 #include "cmd.h"

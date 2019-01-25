@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <string.h>
 #include <string>
 #include <sys/ioctl.h>
 #include <term.h>

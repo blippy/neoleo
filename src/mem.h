@@ -54,6 +54,7 @@ void free_nonempty_str(unsigned char **ptr);
 class obsmem {
 	public:
 		obsmem();
+		//void grow(const void* data, int size);
 		void grow(void* data, int size);
 		void grow1(char c);
 		char* alloc(int n);
@@ -61,6 +62,7 @@ class obsmem {
 		void* finish();
 		void free_mem();
 		void reset();
+		void free_from(void* obj);
 		~obsmem();
 	private:
 		std::vector<void*> ptrs;

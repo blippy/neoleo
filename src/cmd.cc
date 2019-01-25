@@ -61,27 +61,50 @@ using namespace std::literals::string_literals;
 //static obstack* s_obstack;
 void obstack_mc_init(cmd_obstack_t* ptr)
 {
+#ifdef USE_CMD_OBSTACK
 	obstack_init(ptr);
+#else
+	// I don't think I have to do anything
+	//ptr->init();
+	
+#endif
 }
 
 void* obstack_mc_alloc(cmd_obstack_t* ptr, int size)
 {
+#ifdef USE_CMD_OBSTACK
 	return obstack_alloc(ptr, size);
+#else
+	return ptr->alloc(size);
+#endif
 }
 
 void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
 {
+#ifdef USE_CMD_OBSTACK
 	obstack_grow(ptr, data, size);
+#else
+	strcpy_c data1{(const char*) data};
+	ptr->grow(data1.data(), size);
+#endif
 }
 
 void* obstack_mc_finish(cmd_obstack_t* ptr)
 {
+#ifdef USE_CMD_OBSTACK
 	return obstack_finish(ptr);
+#else
+	return ptr->finish();
+#endif
 }
 
 void obstack_mc_free(cmd_obstack_t* ptr, void* mem_start)
 {
+#ifdef USE_CMD_OBSTACK
 	obstack_free(ptr, mem_start);
+#else
+	ptr->free_from(mem_start);
+#endif
 }
 
 ///// obstack stuff end

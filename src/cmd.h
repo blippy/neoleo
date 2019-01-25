@@ -31,6 +31,9 @@
 #ifdef USE_CMD_OBSTACK
 #include "obstack.h"
 typedef struct obstack cmd_obstack_t;
+#else
+#include "mem.h"
+typedef obsmem cmd_obstack_t;
 #endif
 
 #include "line.h"

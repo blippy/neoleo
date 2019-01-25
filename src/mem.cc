@@ -85,6 +85,7 @@ obsmem::obsmem()
 	obsmem_reinit(this);
 }
 
+//void obsmem::grow(const void* data, int size)
 void obsmem::grow(void* data, int size)
 {
 	assert(!ptrs.empty());
@@ -95,7 +96,6 @@ void obsmem::grow(void* data, int size)
 	auto d1 = (std::byte*) data;
 	bcopy(d1, ptr+sz, size);
 	sizes[sizes.size()-1] += size;
-
 }
 
 void obsmem::grow1(char c)
@@ -124,6 +124,26 @@ void* obsmem::finish()
 	return ptr;
 }
 
+
+void obsmem::free_from(void* obj)
+{
+	/*
+	if(obj == nullptr) {
+		reset();
+		return;
+	}
+	*/
+	for(int i = ptrs.size()-1 ; i>=0; --i) {
+		auto ptr = ptrs[i];
+		ptrs.pop_back();
+		sizes.pop_back();
+		if(ptr == obj) break;
+	}
+	//if(obj == nullptr)
+	//	obsmem_reinit(this);
+
+
+}
 
 void obsmem::free_mem()
 {
