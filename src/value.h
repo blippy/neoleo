@@ -35,6 +35,7 @@ class value {
 
 		const char *gString();
 		void sString(const char* newval);
+		void sString(const std::string&  newval);
 
 		num_t gFlt() const;
 		void sFlt(num_t v);

@@ -51,6 +51,11 @@ void value::sString(const char* newval)
 	assert(x.c_s);
 }
 
+void value::sString(const std::string&  newval)
+{
+	sString(newval.c_str());
+}
+
 num_t value::gFlt() const { return x.c_n ;};
 
 void value::sFlt(num_t v) 

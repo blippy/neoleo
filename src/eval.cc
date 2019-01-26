@@ -756,11 +756,16 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 
 		case CONCAT:
-			//strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
-			strptr = (char*) eval_mem.gimme(strlen(value_ptr->String) + strlen((value_ptr + 1)->String +1));
-			strcpy (strptr, value_ptr->String);
-			strcat (strptr, (value_ptr + 1)->String);
-			value_ptr->String = strptr;
+			{
+				//strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
+				//strptr = (char*) eval_mem.gimme(strlen(value_ptr->String) + strlen((value_ptr + 1)->String +1));
+				//strcpy (strptr, value_ptr->String);
+				//strcat (strptr, (value_ptr + 1)->String);
+				std::string s{value_ptr->gString()};
+				s+= (value_ptr+1)->gString();
+				//value_ptr->String = strptr;
+				value_ptr->sString(s);
+			}
 			break;
 
 
