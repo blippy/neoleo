@@ -1,7 +1,7 @@
 /*
  * $Header: /cvs/oleo/src/eval.c,v 1.12 2001/02/13 23:38:05 danny Exp $
  *
- * Copyright © 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (C) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -181,20 +181,22 @@ void TO_NUM(struct value* val)
 		ERROR1(NON_NUMBER);
 }
 
-void TO_STR(struct value* val, mem& eval_mem)
+void TO_STR(struct value* val)
 {
 	if((val)->type==TYP_STR)	
 		;	
 	else if((val)->type==TYP_INT) {	
-		(val)->type=TYP_STR;	
-		char* s = (char*) eval_mem.gimme(30);
-		sprintf(s,"%ld",(val)->Int); 
-		(val)->sString(s);	
+		//(val)->type=TYP_STR;	
+		//char* s = (char*) eval_mem.gimme(30);
+		//sprintf(s,"%ld",(val)->Int); 
+		//(val)->sString(s);	
+		val->sString(format("%ld", val->gInt()));
 	} else if((val)->type==TYP_FLT) {		
-		char *s=flt_to_str((val)->Float);		
-		char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
-		strcpy(s1, s);
-		(val)->type=TYP_STR;			
+		//char *s=flt_to_str((val)->Float);		
+		//char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
+		//strcpy(s1, s);		
+		//(val)->type=TYP_STR;
+		val->sString(flt_to_str(val->gFlt()));
 	} else if((val)->type==TYP_ERR) {		
 		ERROR1((val)->Value);	
 	} else if((val)->type==0) {	
@@ -336,7 +338,7 @@ void fill_argument(char arg_type, struct value* p, mem& eval_mem)
 			break;
 			/* S is for String */
 		case 'S':
-			TO_STR (p, eval_mem);
+			TO_STR(p);
 			break;
 #ifdef TEST
 		default:
