@@ -89,7 +89,8 @@ static void obsmem_reinit(obsmem* obj)
 
 obsmem::obsmem() 
 { 
-	obsmem_reinit(this);
+	//obsmem_reinit(this);
+	this->reset();
 }
 
 //void obsmem::grow(const void* data, int size)
@@ -127,13 +128,14 @@ int obsmem::size()
 void* obsmem::finish()
 {
 	auto ptr = ptrs[ptrs.size() -1];			
-	this->alloc(0);
+	//this->alloc(0);
 	return ptr;
 }
 
 
 void obsmem::free_from(void* obj)
 {
+
 	/*
 	if(obj == nullptr) {
 		reset();
@@ -144,6 +146,8 @@ void obsmem::free_from(void* obj)
 		auto ptr = ptrs[i];
 		ptrs.pop_back();
 		sizes.pop_back();
+		free(ptr);
+		if(i==0) obsmem_reinit(this);
 		if(ptr == obj) break;
 	}
 	//if(obj == nullptr)

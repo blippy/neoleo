@@ -90,6 +90,15 @@ void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
 #endif
 }
 
+void obstack_mc_1grow(cmd_obstack_t* ptr, char c)
+{
+#ifdef USE_CMD_OBSTACK
+	obstack_1grow(ptr, c);
+#else
+	ptr->grow1(c);
+#endif
+}
+
 void* obstack_mc_finish(cmd_obstack_t* ptr)
 {
 #ifdef USE_CMD_OBSTACK
@@ -210,6 +219,15 @@ default_input_stream (void)
 static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
+	if(true) { // for debugging purposes
+		char cmd[len+1];
+		for(int i = 0; i<len; ++i) cmd[i] = first_line[i];
+		cmd[len] = '\0';
+		log_debug("macro_only_input_stream: "s + cmd);
+	}
+
+
+
 	//input_stream_ptr ret = make_input_stream();
 	input_stream_ptr ret = new input_stream();
 	ret->_rmac = (struct macro *) obstack_mc_alloc(&ret->_macro_stack, sizeof (struct macro));
@@ -218,7 +236,8 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
 	ret->_rmac->mac_row = rng->lr;
 	ret->_rmac->mac_col = rng->lc;
 	obstack_mc_grow(&ret->_macro_stack, first_line, len);
-	obstack_mc_grow(&ret->_macro_stack, "", 1);
+	//obstack_mc_grow(&ret->_macro_stack, "", 1);
+	obstack_mc_1grow(&ret->_macro_stack, 0);
 	ret->_rmac->mac_start = ret->_rmac->mac_exe = (unsigned char *) obstack_mc_finish (&ret->_macro_stack);
 	ret->prev_stream = frame->input;
 	{
@@ -235,10 +254,8 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
 void
 free_input_stream (input_stream_ptr stream)
 {
-	if (stream->_macro_start)
-		free (stream->_macro_start);
-	if (stream->_last_macro)
-		free (stream->_last_macro);
+	if (stream->_macro_start) free (stream->_macro_start);
+	if (stream->_last_macro) free (stream->_last_macro);
 	obstack_mc_free (&stream->_macro_stack, 0);
 	//free(stream);
 	delete stream;
@@ -2337,8 +2354,7 @@ execute_command(const char *instr)
       found_command:
 	while (count-- > 0)
 	  {
-		  macro_only_input_stream (&rng, run, strlen (run),
-					   the_cmd_frame);
+		  macro_only_input_stream (&rng, run, strlen (run), the_cmd_frame);
 		  command_loop (1, iscmd);
 	  }
 }
