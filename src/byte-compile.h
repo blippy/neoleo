@@ -24,7 +24,7 @@
 #include "mem.h"
 
 char *parse_and_compile (cell* cp, const char *string);
-char *parse_and_compile (cell* cp, const char *string, mem& the_mem);
+char *parse_and_compile (cell* cp, const char *string, mem_c& the_mem);
 extern void byte_free (unsigned char *form);
 extern int is_constant (const unsigned char *bytes);
 

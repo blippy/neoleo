@@ -709,11 +709,11 @@ loop:
 char*
 parse_and_compile(cell* cp, const char* string)
 {
-	mem the_mem; // we're just going to ignore the mem allocated
+	mem_c the_mem; // we're just going to ignore the mem allocated
 	return parse_and_compile(cp, string, the_mem);
 }
 
-char* parse_and_compile_1 (cell* cp, const char *string, mem& the_mem)
+char* parse_and_compile_1 (cell* cp, const char *string, mem_c& the_mem)
 {
 	struct node *node;
 	const function_t *f;
@@ -858,7 +858,7 @@ loop:
 // caller is responsible for free'ing `char* ret'. The chances are
 // that it will be stored in the cells, and become automatically
 // reaped that way.
-char* parse_and_compile (cell* cp, const char *string, mem& the_mem)
+char* parse_and_compile (cell* cp, const char *string, mem_c& the_mem)
 {
 	char* ret = parse_and_compile_1(cp, string, the_mem);
 #ifdef USE_OBSTACK

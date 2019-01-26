@@ -282,7 +282,7 @@ void yyerror (std::string_view s)
 		parse_error=PARSE_ERR;
 }
 
-static mem* _mem_ptr = nullptr;
+static mem_c* _mem_ptr = nullptr;
 
 void* alloc_parsing_memory(size_t nbytes)
 {
@@ -320,7 +320,7 @@ void check_parser_called_correctly()
 		throw std::logic_error("parse.yy:yyparse() called erroneously. Call yyparse_parse() instead");
 }
 
-int yyparse_parse(const std::string& input, mem& yymem)
+int yyparse_parse(const std::string& input, mem_c& yymem)
 {
 	allow_yyparse = true;	
 	instr = (char*) malloc(input.size()+1);
@@ -336,7 +336,7 @@ int yyparse_parse(const std::string& input, mem& yymem)
 
 int yyparse_parse(const std::string& input)
 {
-	mem yymem;
+	mem_c yymem;
 	return yyparse_parse(input, yymem);
 }
 void FormulaParser::clear()

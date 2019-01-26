@@ -9,15 +9,15 @@
 #include <functional>
 #include <vector>
 
-class mem {
+class mem_c {
 	public:
-		mem() {}
-		mem(bool auto_release);
+		mem_c() {}
+		mem_c(bool auto_release);
 		void add_ptr(void* ptr);
 		void auto_release(); // destructor releases everything
 		void release_all();
 		void* gimme(size_t n);
-		~mem();
+		~mem_c();
 
 
 	private:

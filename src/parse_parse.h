@@ -22,7 +22,7 @@ class FormulaParser {
 		void clear();
 		~FormulaParser();
 	private:
-		mem parser_mem{true};
+		mem_c parser_mem{true};
 		node* m_root = nullptr;
 };
 

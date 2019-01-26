@@ -4,30 +4,30 @@
 
 #include "mem.h"
 
-mem::mem(bool auto_release)
+mem_c::mem_c(bool auto_release)
 {
 	_release_on_destruction = auto_release;
 }
 
 void
-mem::add_ptr(void* ptr)
+mem_c::add_ptr(void* ptr)
 {
 	ptrs.push_back(ptr);
 }
 
-void mem::auto_release()
+void mem_c::auto_release()
 {
 	_release_on_destruction = true;
 }
 
 void
-mem::release_all()
+mem_c::release_all()
 {
 	for(auto& p: ptrs) free(p);
 	ptrs = {};
 }
 
-void* mem::gimme(size_t n)
+void* mem_c::gimme(size_t n)
 {
 	void* ptr = malloc(n);
 	assert(ptr);
@@ -35,7 +35,7 @@ void* mem::gimme(size_t n)
 	return ptr;
 }
 
-mem::~mem()
+mem_c::~mem_c()
 {
 	if(_release_on_destruction)
 		release_all();
