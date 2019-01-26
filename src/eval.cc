@@ -35,7 +35,7 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
-#include "mem.h"
+//#include "mem.h"
 #include "ref.h"
 #include "sheet.h"
 
@@ -301,7 +301,7 @@ static void do_math_binop(int op, struct value* p1, struct value* p2)
 
 }
 
-void fill_argument(char arg_type, struct value* p, mem& eval_mem)
+void fill_argument(char arg_type, struct value* p)
 {
 	char* strptr;
 	switch (arg_type) {
@@ -496,7 +496,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 // Maybe contains too many parameters, but it will do as a first cut
 static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp, 
 		struct value *value_ptr, unsigned &jumpto, unsigned char *&expr,
-		function_t *f, mem& eval_mem)
+		function_t *f)
 {
 	cell* cell_ptr;
 	char *strptr;
@@ -805,7 +805,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 }
 /* This huge function takes a byte-compiled expression and executes it. */
 static struct value *
-eval_expression (unsigned char *expr, mem& eval_mem)
+eval_expression (unsigned char *expr)
 {
 	if (!expr) return 0;
 
@@ -900,7 +900,7 @@ eval_expression (unsigned char *expr, mem& eval_mem)
 			{
 				char arg_type =f->fn_argt[xt <= 3 ? xt : 3];
 				try {
-					fill_argument(arg_type, value_ptr+xt, eval_mem);
+					fill_argument(arg_type, value_ptr+xt);
 				} catch (int e) {
 					value_ptr->sErr(e);
 					goto next_byte;
@@ -910,7 +910,7 @@ eval_expression (unsigned char *expr, mem& eval_mem)
 		}
 
 		try {
-			switch_by_byte(byte, numarg, tmp, value_ptr, jumpto, expr, f, eval_mem);
+			switch_by_byte(byte, numarg, tmp, value_ptr, jumpto, expr, f);
 		} catch (ValErr& e) {
 			goto next_byte;
 		}
@@ -955,11 +955,11 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
-	mem eval_mem(true);
+	//mem eval_mem(true);
 	struct value *newv;
 	int new_val;
 
-	newv = eval_expression (cell->get_cell_formula(), eval_mem);
+	newv = eval_expression (cell->get_cell_formula());
 	if (!newv)
 	{
 		push_refs(cell);
