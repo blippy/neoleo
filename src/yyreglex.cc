@@ -7,6 +7,7 @@
 #include "parse_parse.h"
 #include "parse.hh"
 #include "ref.h"
+#include "convert.h"
 
 using std::cout;
 using std::endl;

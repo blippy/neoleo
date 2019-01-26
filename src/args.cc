@@ -25,6 +25,7 @@
 #define DEFINE_STYLES	1
 #include "args.h"
 #include "cmd.h"
+#include "convert.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-edit.h"

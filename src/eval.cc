@@ -30,6 +30,7 @@
 constexpr auto pi = std::acos(-1);
 
 #include "global.h"
+#include "convert.h"
 #include "cell.h"
 #include "eval.h"
 #include "errors.h"
@@ -69,7 +70,7 @@ RETSIGTYPE math_sig ( int sig);
 
 
 #define Float	x.c_n
-#define String	x.c_s
+//#define String	x.c_s
 #define Int	x.c_l
 #define Value	x.c_i
 #define Rng	x.c_r
@@ -116,11 +117,14 @@ void TO_FLT(struct value* val)
 		(val)->type=TYP_FLT; 
 		(val)->Float=(double)(val)->Int; 
 	} else if((val)->type==TYP_STR) { 
-		(val)->type=TYP_FLT; 
-		char* strptr=(val)->String; 
-		(val)->Float=astof(&strptr); 
-		if(*strptr) 
-			ERROR1(NON_NUMBER); 
+		bool ok;
+		val->sFlt(to_double(val->gString(), ok));
+		if(!ok) ERROR1(NON_NUMBER);
+		//(val)->type=TYP_FLT; 
+		//char* strptr=(val)->gString(); 
+		//(val)->Float=astof(&strptr); 
+		//if(*strptr) 
+		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR1((val)->Value); 
 	} else if((val)->type==0) { 
@@ -138,11 +142,14 @@ void  TO_INT(struct value* val)
 		(val)->type=TYP_INT; 
 		(val)->Int=(long)(val)->Float; 
 	} else if((val)->type==TYP_STR) { 
-		(val)->type=TYP_INT; 
-		char* strptr=(val)->String; 
-		(val)->Int=astol(&strptr); 
-		if(*strptr) 
-			ERROR1(NON_NUMBER); 
+		bool ok;
+		val->sInt(to_long(val->gString(), ok));
+		if(!ok) ERROR1(NON_NUMBER);
+		//(val)->type=TYP_INT; 
+		//char* strptr=(val)->gString(); 
+		//(val)->Int=astol(&strptr); 
+		//if(*strptr) 
+		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR1((val)->Value); 
 	} else if((val)->type==0) { 
@@ -157,11 +164,14 @@ void TO_NUM(struct value* val)
 	if((val)->type==TYP_INT || (val)->type==TYP_FLT) 
 		; 
 	else if((val)->type==TYP_STR) { 
-		(val)->type=TYP_FLT; 
-		char* strptr=(val)->String; 
-		(val)->Float=astof(&strptr); 
-		if(*strptr) 
-			ERROR1(NON_NUMBER); 
+		bool ok;
+		val->sFlt(to_double(val->gString(), ok));
+		if(!ok) ERROR1(NON_NUMBER);
+		//(val)->type=TYP_FLT; 
+		//char* strptr=(val)->gString(); 
+		//(val)->Float=astof(&strptr); 
+		//if(*strptr) 
+		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR1((val)->Value); 
 	} else if((val)->type==0) { 
@@ -179,7 +189,7 @@ void TO_STR(struct value* val, mem& eval_mem)
 		(val)->type=TYP_STR;	
 		char* s = (char*) eval_mem.gimme(30);
 		sprintf(s,"%ld",(val)->Int); 
-		(val)->String=s;	
+		(val)->sString(s);	
 	} else if((val)->type==TYP_FLT) {		
 		char *s=flt_to_str((val)->Float);		
 		char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
@@ -188,9 +198,10 @@ void TO_STR(struct value* val, mem& eval_mem)
 	} else if((val)->type==TYP_ERR) {		
 		ERROR1((val)->Value);	
 	} else if((val)->type==0) {	
-		(val)->type=TYP_STR;	
-		val->String = (char*) eval_mem.gimme(1);
-		val->String[0] = '\0';
+		//(val)->type=TYP_STR;	
+		//val->String = (char*) eval_mem.gimme(1);
+		//val->String[0] = '\0';
+		val->sString("");
 	} else 
 		ERROR1(NON_STRING);
 }
@@ -377,8 +388,8 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 			if ((value_ptr + 1)->type == TYP_STR)
 			{
-				value_ptr->type = TYP_STR;
-				value_ptr->String = "";
+				//value_ptr->type = TYP_STR;
+				value_ptr->sString("");
 			}
 			else if ((value_ptr + 1)->type == TYP_INT)
 			{
@@ -393,8 +404,8 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 			if (value_ptr->type == TYP_STR)
 			{				
-				(value_ptr + 1)->type = TYP_STR;
-				(value_ptr + 1)->String = "";
+				//(value_ptr + 1)->type = TYP_STR;
+				(value_ptr + 1)->sString("");
 			}
 			else if (value_ptr->type == TYP_INT)
 			{
@@ -407,18 +418,23 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		}
 		else if (value_ptr->type == TYP_STR)
 		{
-			strptr = value_ptr->String;
+			bool ok = false;
+			const char* s = value_ptr->gString();
+			//strptr = value_ptr->gString();
 			if ((value_ptr + 1)->type == TYP_INT)
 			{
-				value_ptr->type = TYP_INT;
-				value_ptr->Int = astol (&strptr);
+				//value_ptr->type = TYP_INT;
+				//value_ptr->Int = astol (&strptr);
+				value_ptr->sInt(to_long(s, ok));
 			}
 			else
 			{
-				value_ptr->type = TYP_FLT;
-				value_ptr->Float = astof (&strptr);
+				//value_ptr->type = TYP_FLT;
+				//value_ptr->Float = astof (&strptr);
+				value_ptr->sFlt(to_double(s, ok));
 			}
-			if (*strptr)
+			//if (*strptr)
+			if(!ok)
 			{
 				value_ptr->type = TYP_BOL;
 				value_ptr->Value = (byte == NOTEQUAL);
@@ -427,12 +443,15 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		}
 		else if ((value_ptr + 1)->type == TYP_STR)
 		{
-			strptr = (value_ptr + 1)->String;
+		       	bool ok = false ;
+			const char* s = (value_ptr+1)->gString();
+			//strptr = (value_ptr + 1)->gString();
 			if (value_ptr->type == TYP_INT)
-				(value_ptr + 1)->Int = astol (&strptr);
+				(value_ptr + 1)->sInt(to_long(s, ok));
 			else
-				(value_ptr + 1)->Float = astof (&strptr);
-			if (*strptr)
+				(value_ptr + 1)->sFlt(to_double(s, ok));
+			//if (*strptr)
+			if(!ok)
 			{
 				value_ptr->type = TYP_BOL;
 				value_ptr->Value = (byte == NOTEQUAL);
@@ -451,7 +470,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 			(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
 	}
 	if (value_ptr->type == TYP_STR)
-		tmp = strcmp (value_ptr->String, (value_ptr + 1)->String);
+		tmp = strcmp (value_ptr->gString(), (value_ptr + 1)->gString());
 	else if (value_ptr->type == TYP_FLT)
 		tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
 	else if (value_ptr->type == TYP_INT)
@@ -564,7 +583,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case CONST_STR:
 		case CONST_STR_L:
 			value_ptr->type = TYP_STR;
-			value_ptr->String = (char *) expr + jumpto;
+			value_ptr->sString((char *) expr + jumpto);
 			break;
 
 		case CONST_ERR:
@@ -757,13 +776,8 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case CONCAT:
 			{
-				//strptr = (char *) obstack_alloc (&tmp_mem, strlen (value_ptr->String) + strlen ((value_ptr + 1)->String) + 1);
-				//strptr = (char*) eval_mem.gimme(strlen(value_ptr->String) + strlen((value_ptr + 1)->String +1));
-				//strcpy (strptr, value_ptr->String);
-				//strcat (strptr, (value_ptr + 1)->String);
 				std::string s{value_ptr->gString()};
 				s+= (value_ptr+1)->gString();
-				//value_ptr->String = strptr;
 				value_ptr->sString(s);
 			}
 			break;
@@ -955,7 +969,7 @@ update_cell(CELL *cell)
 		SET_TYP (cell, newv->type);
 		new_val = 1;
 		// TODO mcarter 2019-01-20 seems highly suspicious, and leaky:
-		if (newv->type == TYP_STR) newv->String = strdup (newv->String);
+		//if (newv->type == TYP_STR) newv->String = strdup (newv->String);
 	} else {
 		switch (newv->type) {
 			case 0:
@@ -968,11 +982,13 @@ update_cell(CELL *cell)
 				new_val = newv->Int != cell->gInt();
 				break;
 			case TYP_STR:
-				new_val = strcmp (newv->String, cell->gString());
+				new_val = strcmp (newv->gString(), cell->gString());
+				/*
 				if (new_val)
 				{
 					newv->String = strdup (newv->String); // TODO seems leaky
 				}
+				*/
 				break;
 			case TYP_BOL:
 				new_val = newv->Value != cell->gBol();

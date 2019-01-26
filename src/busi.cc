@@ -23,6 +23,7 @@
 #include <iostream>
 #include <math.h>
 
+#include "convert.h"
 #include "funcs.h"
 #include "global.h"
 #include "cell.h"
@@ -49,18 +50,6 @@ busi_pow(num_t x, num_t y)
 	return (num_t) pow( (double) x, (double) y );
 }
 
-double to_double(const char* strptr, bool &ok)
-{
-	double d;
-	ok = true;
-	size_t idx;
-	try { 
-		d = std::stod(strptr, &idx);
-	} catch(...) {
-		ok = false;
-	}
-	return d;
-}
 
 static int
 npv ( struct rng *rng, num_t rate, num_t *putres)

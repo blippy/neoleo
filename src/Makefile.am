@@ -41,7 +41,7 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
 neoleo_SOURCES = defuns.cc \
 		 $(BLANG_SRCS) \
 		 args.cc basic.cc busi.cc byte-compile.cc \
-                 cell.cc cmd.cc \
+                 cell.cc cmd.cc  convert.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc funcs.cc \
 		 init.cc input.cc \
@@ -70,7 +70,7 @@ neoleo_SOURCES = defuns.cc \
 
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 $(BLANG_HDRS) \
-		 cmd.h date.h decompile.h defun.h defuns.h display.h \
+		 cmd.h convert.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
 		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \

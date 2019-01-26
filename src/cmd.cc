@@ -38,6 +38,7 @@
 
 #include "global.h"
 #include "cmd.h"
+#include "convert.h"
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-generic.h"

@@ -39,6 +39,7 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include "basic.h"
 #include "cell.h"
 #include "cmd.h"
+#include "convert.h"
 #include "format.h"
 #include "init.h"
 #define DEFINE_IO_VARS 1

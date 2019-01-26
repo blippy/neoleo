@@ -38,6 +38,7 @@
 #include "basic.h"
 #include "cell.h"
 #include "cmd.h"
+#include "convert.h"
 #include "decompile.h"
 #include "io-abstract.h"
 #include "io-generic.h"

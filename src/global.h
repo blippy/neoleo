@@ -151,7 +151,7 @@ extern int ioerror;
 extern int errno;
 extern const char oleo_version_string[];
 
-extern long astol (char **);
+//extern long astol (char **);
 extern void panic (const char *, ...);
 
 extern void add_ref (CELLREF, CELLREF);

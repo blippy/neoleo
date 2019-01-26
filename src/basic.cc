@@ -29,6 +29,7 @@
 #include "basic.h"
 #include "byte-compile.h"
 #include "cmd.h"
+#include "convert.h"
 #include "regions.h"
 #include "window.h"
 #include "io-term.h"
