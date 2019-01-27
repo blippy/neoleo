@@ -81,7 +81,6 @@ static bool	option_tests = false;
 std::string	option_tests_argument = "regular";
 static char	option_separator = '\t';
 static char	*option_format = NULL;
-int		option_filter = 0;
 
 bool get_option_tests() { return option_tests;}
 
@@ -93,7 +92,6 @@ static struct option long_options[] =
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
-	{"filter",		0,	NULL,	'-'},
 	{"tests",		optional_argument,	NULL,	'T'},
 	{"version",		0,	NULL,	'v'},
 	{NULL,			0,	NULL,	0}
@@ -132,7 +130,6 @@ const char* usage = R"(
   -q, --quiet              do not display startup messages
   -f, --ignore-init-file   ignore settings defined in init file
   -T, --tests [x]          run test suite x
-  --filter		   read file from stdin, write to stdout on exit
 
 Report bugs to https://github.com/blippy/neoleo/issues
 )";
@@ -180,9 +177,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 					option_tests_argument = argv[optind++];
 				//exit(1);
 				break;
-			case '-':
-				option_filter = 1;
-				break;
 		}
 	}
 
@@ -225,9 +219,7 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 	using namespace std::literals;
 	execute_command_sv("set-default-format general.float"sv);
 
-	if (option_filter) {
-		read_file_and_run_hooks(stdin, 0, "stdin");
-	} else if (argc - optind == 1) {
+	if (argc - optind == 1) {
 		if (FILE *fp = fopen (argv[optind], "r")) {
 			try {
 				read_file_and_run_hooks (fp, 0, argv[optind]);

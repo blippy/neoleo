@@ -466,12 +466,6 @@ recalculate (int all)
 void
 kill_oleo (void)
 {
-	extern int option_filter;
-
-	if (option_filter) {
-		write_file_generic(stdout, NULL, NULL);
-	}
-
 	io_close_display(0);
 	exit (0);
 }
