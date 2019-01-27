@@ -20,8 +20,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
-
 #include <assert.h>
 #include <errno.h>
 #include <iostream>
@@ -38,7 +36,6 @@ static const char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp 
 #include "utils.h"
 #include "basic.h"
 #include "cell.h"
-#include "cmd.h"
 #include "convert.h"
 #include "format.h"
 #include "init.h"

@@ -47,7 +47,6 @@ using namespace std::string_literals;
 #undef NULL
 #include "global.h"
 #include "cell.h"
-#include "cmd.h"
 #include "line.h"
 #include "io-curses.h"
 #include "io-generic.h"

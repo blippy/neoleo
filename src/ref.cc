@@ -33,7 +33,6 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
-#include "cell.h"
 #include "eval.h"
 #include "io-abstract.h"
 #include "io-generic.h"

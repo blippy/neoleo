@@ -33,7 +33,6 @@
 #include "io-edit.h"
 #include "io-abstract.h"
 #include "io-generic.h"
-#include "cmd.h"
 #include "format.h"
 #include "mem.h"
 #include "sheet.h"

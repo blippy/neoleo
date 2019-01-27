@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include "global.h"
-#include "cell.h"
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
