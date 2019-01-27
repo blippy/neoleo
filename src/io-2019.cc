@@ -22,6 +22,12 @@ void main_command_loop_for2019()
 		switch(c) {
 			case CTRL('q'):  
 				goto finis;
+			case KEY_LEFT:
+				io_shift_cell_cursor(3, 1);
+				break;
+			case KEY_RIGHT:
+				io_shift_cell_cursor(2, 1);
+				break;
 			case KEY_DOWN:
 			case 'j':
 				log_debug("io-2019:down arrow");
