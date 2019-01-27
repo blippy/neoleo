@@ -251,15 +251,6 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
 	return ret;
 }
 
-void
-free_input_stream (input_stream_ptr stream)
-{
-	if (stream->_macro_start) free (stream->_macro_start);
-	if (stream->_last_macro) free (stream->_last_macro);
-	obstack_mc_free (&stream->_macro_stack, 0);
-	//free(stream);
-	delete stream;
-}
 
 /* This gets rid of an input stream created by macro_only_input_stream.
  * It fixes the INPUT fields of pending command frames.
@@ -268,18 +259,20 @@ free_input_stream (input_stream_ptr stream)
 void
 pop_input_stream (void)
 {
-	if (the_cmd_frame->input->prev_stream)
-	  {
-		  struct command_frame *fr = the_cmd_frame;
-		  input_stream_ptr key = the_cmd_frame->input;
-		  while (fr->input == key)
-		    {
-			    fr->input = key->prev_stream;
-			    fr = fr->prev;
-		    }
-		  free_input_stream (key);
-		  return;
-	  }
+	if(!the_cmd_frame->input->prev_stream) return;
+
+	struct command_frame *fr = the_cmd_frame;
+	input_stream_ptr key = the_cmd_frame->input;
+	while (fr->input == key)
+	{
+		fr->input = key->prev_stream;
+		fr = fr->prev;
+	}
+
+	if(key->_macro_start) free(key->_macro_start);
+	if(key->_last_macro) free(key->_last_macro);
+	obstack_mc_free (&key->_macro_stack, 0);
+	delete key;
 }
 
 /* Macros 
@@ -915,7 +908,7 @@ recover_from_error (void)
 
 	/* pop input streams until the bottom is reached. */
 	while (the_cmd_frame->input->prev_stream)
-		pop_input_stream ();
+		pop_input_stream();
 
 	/* cancel the current macros */
 	{
@@ -1951,7 +1944,7 @@ call_destroy_restart ()
 	 */
 	if ((!rmac && the_cmd_frame->input->prev_stream) || ioerror)
 	  {
-		  pop_input_stream ();
+		  pop_input_stream();
 		  ioerror = 0;
 		  return sc_end;	//state machine
 
