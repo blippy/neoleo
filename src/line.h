@@ -36,5 +36,3 @@ extern void sprint_line (struct line *line, const char * fmt, ...);
 void splicen_line(struct line * line, const char * str, int n, int pos);
 extern void edit_line (struct line * line, int begin, int len);
 extern void free_line (struct line * line);
-extern int read_line (struct line * line, FILE * fp, int * linec);
-

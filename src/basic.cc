@@ -890,20 +890,6 @@ goto_set_cell (int c)
 	execute_command (S "set-cell");
 }
 
-void 
-read_cmds_cmd (FILE *fp)
-{
-	struct line line; // TODO It would be nice to eliminate all of these using C++
-	char *ptr;
-	init_line (&line);
-	Global->sneaky_linec = 0;
-	while (read_line (&line, fp, &Global->sneaky_linec)) {
-		execute_command(line.buf);
-	}
-	free_line(&line);
-}
-
-
 static char load_hooks_string[] = "load_hooks";
 
 /*

@@ -60,35 +60,6 @@ init_maps (void)
 }
 
 
-void
-read_init_files()
-{
-	vector<string> fnames;
-	char *home = getenv ("HOME");
-	if (home) fnames.push_back(string(home) + "/" + RCFILE);
-	fnames.push_back(RCFILE);
-
-	for(const auto& fname:fnames) {
-		FILE *fp = fopen(fname.c_str(), "r");
-		if(!fp) continue;
-
-		try {
-			read_cmds_cmd(fp);
-		} catch (OleoJmp& e) {
-			cerr << "OleoJmp caught by read_init_file()" << endl;
-			string msg = string("   error occured in init file ")
-				+ fname
-				+ " near line "
-				+ std::to_string(Global->sneaky_linec)
-				+ "\n";
-			const char *m = msg.c_str();
-			fprintf(stderr, "%s", m);
-			io_info_msg(m);
-		}
-
-		fclose(fp);
-	}
-}
 
 void
 init_maps_and_macros()
@@ -253,7 +224,6 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 
 	using namespace std::literals;
 	execute_command_sv("set-default-format general.float"sv);
-	if(!ignore_init_file) read_init_files();
 
 	if (option_filter) {
 		read_file_and_run_hooks(stdin, 0, "stdin");

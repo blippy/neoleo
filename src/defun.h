@@ -755,11 +755,6 @@ DEFUN ("read-variables", FDread_variables, FAread_variables, read_variables)
 "frRead variables from file? ",
 #endif
 
-DEFUN ("read-commands", FDread_cmds_cmd, FAread_cmds_cmd, read_cmds_cmd)
-#ifdef FUNC_ARG_STRINGS
-"frRead commands from file? ",
-#endif
-
 DEFUN("shell", FDrun_shell, FArun_shell, run_shell)
 #ifdef FUNC_ARG_STRINGS
 "sRun shell command file? ",
