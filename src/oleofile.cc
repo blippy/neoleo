@@ -31,7 +31,6 @@
 #include "io-term.h"
 #include "global.h"
 #include "cell.h"
-#include "line.h"
 #include "sheet.h"
 #include "ref.h"
 #include "regions.h"
