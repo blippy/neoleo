@@ -42,6 +42,7 @@
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
 #include "io-headless.h"
+#include "io-2019.h"
 #include "io-curses.h"
 #include "io-edit.h"
 #include "io-generic.h"
@@ -83,16 +84,20 @@ void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 
 
+static void activate_relevant_command_loop()
+{
+	if(use_2019)
+		main_command_loop_for2019();
+	else
+		command_loop (0, 0);
+}
+
 EXTERN void
 fairly_std_main_loop(void)
 {
-	/* This is considered the "standard" loop. It works
-	 * with curses and X11, but Motif and headless require
-	 * their own special cases.
-	 */
 	  while (1) {
 		  try {
-			  command_loop (0, 0);
+			  activate_relevant_command_loop();
 		  } catch (OleoJmp& e) { }
 	  }
 }

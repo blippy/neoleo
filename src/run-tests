@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# just a convenience function to run the tests from this dir
+
+cd ..
+make check
+cd -

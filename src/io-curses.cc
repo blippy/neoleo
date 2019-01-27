@@ -48,6 +48,7 @@ using namespace std::string_literals;
 #include "global.h"
 #include "cell.h"
 #include "io-curses.h"
+#include "io-2019.h"
 #include "io-generic.h"
 #include "io-edit.h"
 #include "io-term.h"
@@ -1134,7 +1135,10 @@ _io_flush (void)
 void
 _io_command_loop (int a)
 {
-	command_loop (a, 0);
+	if(use_2019)
+		main_command_loop_for2019();
+	else
+		command_loop (a, 0);
 }
 
 
