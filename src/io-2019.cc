@@ -57,11 +57,13 @@ class nform_c : public nwin_c {
 			m_f = new_form(m_fields);
 			assert(m_f);
 			set_field_buffer(m_fields[0], 0, "this is a static field");
-			field_opts_off(m_fields[0], O_ACTIVE);
+			set_field_opts(m_fields[0], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
 			set_field_buffer(m_fields[1], 0, "edit this text");
-			field_opts_on(m_fields[1], O_EDIT);
+			set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
+			set_field_back(m_fields[1], A_UNDERLINE);
 			set_field_type(m_fields[1], TYPE_ALNUM, 60);
-			form_driver(m_f, REQ_NEXT_FIELD);
+			set_current_field(m_f, m_fields[1]);
+			//form_driver(m_f, REQ_NEXT_FIELD);
 
 			set_form_win(m_f, m_w);
 			//set_form_sub(m_f, derwin(m_w, 18, 18, 1, 1));
@@ -74,6 +76,21 @@ class nform_c : public nwin_c {
 			//mvwprintw(m_w, 0, 0, "%s", "Press x to exit");
 			//refresh();
 
+			int ch;
+			while((ch = getch()) != CTRL('m')) {
+				switch(ch) {
+					case KEY_LEFT:
+						form_driver(m_f, REQ_LEFT_CHAR);
+						break;
+					case KEY_RIGHT:
+						form_driver(m_f, REQ_NEXT_CHAR);
+						break;
+				}
+				//form_driver(m_f, ch);
+				refresh();
+				wrefresh(m_w);
+			}
+
 		}
 		~nform_c() {
 			unpost_form(m_f);
@@ -81,8 +98,8 @@ class nform_c : public nwin_c {
 			free_field(m_fields[0]);
 			free_field(m_fields[1]);
 			//delwin(m_f);
-			refresh();
-			wrefresh(m_w);
+			//refresh();
+			//wrefresh(m_w);
 		}
 
 	private:
@@ -98,7 +115,7 @@ void test_form()
 	//npanel_c pan;
 	nform_c frm;
 
-	while(getch() != CTRL('m')) ;
+	//while(getch() != CTRL('m')) ;
 }
 
 void main_command_loop_for2019()
