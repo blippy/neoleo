@@ -27,7 +27,7 @@ BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh
 CLEANFILES = $(BUILT_SOURCES)
 
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
-neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel
+neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 #neoleo_LDFLAGS = $(COV)
 #neoleo_LIBS= $(CODE_COVERAGE_LIBS)
 
