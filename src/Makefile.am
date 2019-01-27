@@ -45,7 +45,7 @@ neoleo_SOURCES = defuns.cc \
 		 date.cc decompile.cc display.cc \
 		 eval.cc format.cc funcs.cc \
 		 init.cc input.cc \
-		 io-headless.cc io-curses.cc io-edit.cc io-term.cc \
+		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc io-visual.cc \
 		 key.cc \
 		 line.cc logging.cc \
@@ -73,7 +73,8 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h convert.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
-		 input.h io-abstract.h io-headless.h io-curses.h io-edit.h \
+		 input.h \
+		 io-2019.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h io-visual.h \
 		 key.h \
 		 line.h logging.h \

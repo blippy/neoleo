@@ -88,6 +88,7 @@ static char short_options[] = "4:VqfxHhsFSTvx";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
+	{"2019",		0,	NULL,	'x'},
 	{"quiet",		0,	NULL,	'q'},
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
@@ -102,7 +103,7 @@ void
 print_version()
 {
 	printf("%s %s\n", PACKAGE_NAME, VERSION);
-	printf("Copyright © 1992-2000 Free Software Foundation, Inc.\n");
+	printf("Copyright (c) 1992-2000 Free Software Foundation, Inc.\n");
 	printf("%s comes with ABSOLUTELY NO WARRANTY.\n", PACKAGE_NAME);
 	printf("You may redistribute copies of %s\n", PACKAGE);
 	printf("under the terms of the GNU General Public License.\n");
@@ -130,6 +131,7 @@ const char* usage = R"(
   -q, --quiet              do not display startup messages
   -f, --ignore-init-file   ignore settings defined in init file
   -T, --tests [x]          run test suite x
+  -x, --2019               use experimental interface
 
 Report bugs to https://github.com/blippy/neoleo/issues
 )";
@@ -176,6 +178,9 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 						&& '-' != argv[optind][0])
 					option_tests_argument = argv[optind++];
 				//exit(1);
+				break;
+			case 'x':
+				use_2019 = true;
 				break;
 		}
 	}

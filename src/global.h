@@ -44,6 +44,8 @@ constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
  */
 #define RCFILE ".oleorc"
 
+inline bool use_2019 = false;
+
 /* The most important compile-time constant.  How many bits do we want to
    allocate for cell-references?  Useful values are 8 and 16 (at the moment)
    8 allows luser to access 255*255 cells (probably big enough)
