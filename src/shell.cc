@@ -12,31 +12,14 @@
 using std::ofstream;
 using std::cout;
 using std::endl;
-//using std::out;
 using std::string;
 using std::vector;
 
 
 
-#include "cmd.h"
 #include "shell.h"
 #include "io-headless.h"
 
-/*
-void
-exec_cmd(string line, int fildes)
-{
-#if 0
-	// convert from const char* to char* 
-	vector<char> v(line.begin(), line.end());
-	v.push_back(0);
-	char* cmd = &v[0];
-
-	//execute_command(cmd);
-#endif
-	process_headless_line(line, fildes);
-}
-*/
 
 
 std::string
@@ -134,26 +117,6 @@ run_shell(char* cmd)
 		default:
 			/* Parent. */
 			/* Close what we don't need. */
-#if 0
-			printf("Input to child:\n");
-			while(  read(0, &ch, 1) > 0 )
-			{
-				write(pc[1],&ch, 1);
-				write(1, &ch, 1);
-				incount ++;
-			}
-			close(pc[1]);
-			printf("\nOutput from child:\n");
-			close(cp[1]);
-			while( read(cp[0], &ch, 1) == 1)
-			{
-				write(1, &ch, 1);
-				outcount++;
-			}
-			printf("\n\nTotal characters in: %d\n",incount);
-			printf("Total characters out: %d\n", outcount);
-			exit(0);
-#endif			
 			close(pc[1]);
 			close(cp[1]);
 			run_shell_output_commands(cp[0]);
