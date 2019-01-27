@@ -898,13 +898,7 @@ read_cmds_cmd (FILE *fp)
 	init_line (&line);
 	Global->sneaky_linec = 0;
 	while (read_line (&line, fp, &Global->sneaky_linec)) {
-#if 0
-		fprintf(stderr, "RunCommand(%s)\n", line.buf);
-#endif
-		for (ptr = line.buf; isspace (*ptr); ptr++);
-		if (!*ptr || (*ptr == '#'))
-			continue;
-		execute_command (ptr);
+		execute_command(line.buf);
 	}
 	free_line(&line);
 }
