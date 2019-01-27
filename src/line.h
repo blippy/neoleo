@@ -1,7 +1,5 @@
 #pragma once
 /*
- * $Id: line.h,v 1.5 2000/08/10 21:02:50 danny Exp $
- *
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify

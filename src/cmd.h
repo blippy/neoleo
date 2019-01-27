@@ -36,10 +36,10 @@ typedef struct obstack cmd_obstack_t;
 typedef obsmem cmd_obstack_t;
 #endif
 
-#include "line.h"
 #include "key.h"
 #include "args.h"
 #include "funcs.h"
+#include "line.h"
 
 typedef void (*alarm_fn)(void);
 

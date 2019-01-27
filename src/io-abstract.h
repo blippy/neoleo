@@ -19,8 +19,6 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <stdbool.h>
-
 #ifdef DEFINE_IO_VARS
 #define EXTERN
 #else
@@ -28,7 +26,6 @@
 #endif
 
 #include "global.h"
-#include "line.h"
 #include "window.h"
 
 EXTERN void (*io_open_display) (void);

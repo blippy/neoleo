@@ -21,7 +21,7 @@
 
 
 #include "cell.h"
-#include "line.h"
+//#include "line.h"
 
 /* The tty windows datastructures: */
 
