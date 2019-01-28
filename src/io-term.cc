@@ -281,51 +281,6 @@ do_set_option (char *ptr)
   return 1;
 }
 
-void
-save_preferences(void)
-{
-	char	*home = getenv("HOME");
-	char	*rc, *rc2;
-	FILE	*fp;
-	int	i;
-
-	rc = (char *) malloc(strlen(home) + strlen(RCFILE) + 4);
-	rc2 = (char *)malloc(strlen(home) + strlen(RCFILE) + 4);
-
-	sprintf(rc, "%s/%s", home, RCFILE);
-	sprintf(rc2, "%s/%s.bak", home, RCFILE);
-
-	(void)unlink(rc2);
-	rename(rc, rc2);
-
-	free(rc2);
-
-	fp = fopen(rc, "w");
-	if (fp == NULL) {
-		io_info_msg("Couldn't save preferences in %s: %s",
-			rc, strerror(errno));
-		free(rc);
-		return;
-	}
-
-	for (i=0; Preferences[i].name; i++)
-		if (Preferences[i].write) {
-			if (Preferences[i].copynext) {
-				if (strlen((char *)Preferences[i].var) != 0)
-				    fprintf(fp, "set-option %s %s\n",
-					Preferences[i].name,
-					(char *) Preferences[i].var);
-			} else if (Preferences[i].value == *(int *)Preferences[i].var)
-				fprintf(fp, "set-option %s\n",
-					Preferences[i].name);
-		}
-
-	fclose(fp);
-
-	io_info_msg("Saved preferences to %s", rc);
-
-	free(rc);
-}
 
 void
 set_options (char * ptr)

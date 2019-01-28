@@ -75,7 +75,6 @@ extern void read_variables (FILE * fp);
 extern int add_usr_cmds (struct cmd_func *new_cmds);
 extern int main (int argc, char **argv);
 extern void InitializeGlobals(void);
-void save_preferences();
 
 extern int option_filter;
 extern std::string option_tests_argument;

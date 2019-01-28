@@ -42,7 +42,6 @@ constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 /*
  * All kinds of other global stuff
  */
-#define RCFILE ".oleorc"
 
 inline bool use_2019 = false;
 
