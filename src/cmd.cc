@@ -186,7 +186,7 @@ input_stream_ptr the_input_stream = nullptr;
 
 void debug_input_stream(const char* str, struct input_stream *isp)
 {
-	if constexpr(true) {
+	if constexpr(false) {
 		char str1[50];
 		sprintf(str1, "cmd.cc:input_stream :%s:%p", str, isp);
 		log_debug(str1);
@@ -219,7 +219,7 @@ default_input_stream (void)
 static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
-	if(true) { // for debugging purposes
+	if constexpr(false) { // for debugging purposes
 		char cmd[len+1];
 		for(int i = 0; i<len; ++i) cmd[i] = first_line[i];
 		cmd[len] = '\0';

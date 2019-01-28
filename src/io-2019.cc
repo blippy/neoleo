@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <sstream> // for ostringstream
 
 #include <ncurses.h>
 #include <form.h>
@@ -14,6 +15,14 @@
 using std::cout;
 
 constexpr int CTRL(int c) { return c & 037; }
+
+// TODO belongs in logging.h
+template<typename... Args>
+void log(Args ... args) {
+	std::ostringstream ss;
+	(ss << ... << args);
+	log_debug(ss.str());
+}
 
 int scr_width() {
 	int x,y;
@@ -50,6 +59,7 @@ class npanel_c : public nwin_c {
 		~npanel_c() {
 			del_panel(m_p);
 		}
+
 	private:
 		//nwin_c w;
 		PANEL* m_p;
@@ -109,6 +119,11 @@ class nform_c : public npanel_c {
 			}
 
 		}
+		const char* text() {
+			// TODO NOW: doesn't work, but it must be getting close'ish
+			return field_buffer(m_fields[1], 0);
+		}
+
 		~nform_c() {
 			unpost_form(m_f);
 			free_form(m_f);
@@ -136,6 +151,9 @@ void edit_cell2019()
 	std::string formula = decompile();
 	strcpy_c text{formula};
 	nform_c frm("=", text.data());
+
+	const char* newformula = frm.text();
+	log("ui2019:formula`", newformula, "'");
 
 	//while(getch() != CTRL('m')) ;
 }
