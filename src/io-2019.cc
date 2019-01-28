@@ -48,7 +48,7 @@ class npanel_c : public nwin_c {
 
 };
 
-class nform_c : public nwin_c {
+class nform_c : public npanel_c {
 	public:
 		nform_c() {
 			m_fields[0] = new_field(1, 10, 0, 0, 0, 0);
