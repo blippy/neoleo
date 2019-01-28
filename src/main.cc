@@ -89,7 +89,6 @@ static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
 	{"2019",		0,	NULL,	'x'},
-	{"quiet",		0,	NULL,	'q'},
 	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
@@ -128,7 +127,6 @@ const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
   -V, --version            output version information and exit
-  -q, --quiet              do not display startup messages
   -f, --ignore-init-file   ignore settings defined in init file
   -T, --tests [x]          run test suite x
   -x, --2019               use experimental interface
