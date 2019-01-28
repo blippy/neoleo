@@ -79,11 +79,20 @@ class nform_c : public npanel_c {
 			int ch;
 			while((ch = getch()) != CTRL('m')) {
 				switch(ch) {
+					case KEY_HOME:
+						form_driver(m_f, REQ_BEG_FIELD);
+						break;
+					case KEY_END:
+						form_driver(m_f, REQ_END_FIELD);
+						break;
 					case KEY_LEFT:
 						form_driver(m_f, REQ_LEFT_CHAR);
 						break;
 					case KEY_RIGHT:
 						form_driver(m_f, REQ_NEXT_CHAR);
+						break;
+					default:
+						form_driver(m_f, ch);
 						break;
 				}
 				//form_driver(m_f, ch);
