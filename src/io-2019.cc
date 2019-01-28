@@ -6,6 +6,7 @@
 #include <form.h>
 #include <panel.h>
 
+#include "basic.h"
 #include "decompile.h"
 #include "io-2019.h"
 #include "logging.h"
@@ -179,6 +180,12 @@ void main_command_loop_for2019()
 		switch(c) {
 			case '=':
 				edit_cell2019();
+				break;
+			case CTRL('l'):
+				set_cell_alignment_left();
+				break;
+			case CTRL('r'):
+				set_cell_alignment_right();
 				break;
 			case CTRL('q'):  
 				goto finis;
