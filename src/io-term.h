@@ -79,9 +79,7 @@ extern void InitializeGlobals(void);
 extern int option_filter;
 extern std::string option_tests_argument;
 
-int main0(int argc, char **argv);
 void init_basics();
 void choose_display(bool force_cmd_graphics);
 
 bool get_option_tests();
-void parse_command_line(int argc, char **argv, volatile int *ignore_init_file);

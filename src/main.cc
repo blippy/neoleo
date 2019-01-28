@@ -89,7 +89,6 @@ static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
 	{"2019",		0,	NULL,	'x'},
-	{"ignore-init-file",	0,	NULL,	'f'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
 	{"tests",		optional_argument,	NULL,	'T'},
@@ -127,7 +126,6 @@ const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
   -V, --version            output version information and exit
-  -f, --ignore-init-file   ignore settings defined in init file
   -T, --tests [x]          run test suite x
   -x, --2019               use experimental interface
 
@@ -140,7 +138,7 @@ Report bugs to https://github.com/blippy/neoleo/issues
 
 
 void
-parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
+parse_command_line(int argc, char **argv)
 {
 	int opt, optindex;
 
@@ -155,9 +153,6 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 			case 'V':
 				print_version();
 				exit (0);
-				break;
-			case 'f':
-				*ignore_init_file = 1;
 				break;
 			case 'H':
 				user_wants_headless = true;
@@ -192,7 +187,7 @@ parse_command_line(int argc, char **argv, volatile int *ignore_init_file)
 }
 
 
-void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int command_line_file)
+void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 {
 	init_basics();
 	headless_graphics(); // fallback position
@@ -257,14 +252,13 @@ void run_nonexperimental_mode(int argc, char** argv, int ignore_init_file, int c
 int 
 main(int argc, char **argv)
 {
-	int ignore_init_file = 0;
 	int command_line_file = 0;	/* was there one? */
 
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;
-	parse_command_line(argc, argv, &ignore_init_file);
-	run_nonexperimental_mode(argc, argv, ignore_init_file, command_line_file);
+	parse_command_line(argc, argv);
+	run_nonexperimental_mode(argc, argv, command_line_file);
 
 	return (0); /* Never Reached! */
 }
