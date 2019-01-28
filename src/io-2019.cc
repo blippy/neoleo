@@ -10,6 +10,7 @@
 #include "io-2019.h"
 #include "logging.h"
 #include "mem.h"
+#include "ref.h"
 #include "window.h"
 
 using std::cout;
@@ -79,7 +80,7 @@ class nform_c : public npanel_c {
 			set_field_buffer(m_fields[1], 0, text);
 			set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
 			set_field_back(m_fields[1], A_UNDERLINE);
-			set_field_type(m_fields[1], TYPE_ALNUM, 60);
+			//set_field_type(m_fields[1], TYPE_ALNUM, 60);
 			set_current_field(m_f, m_fields[1]);
 			//form_driver(m_f, REQ_NEXT_FIELD);
 
@@ -87,6 +88,7 @@ class nform_c : public npanel_c {
 			//set_form_sub(m_f, derwin(m_w, 18, 18, 1, 1));
 			set_form_sub(m_f, m_w);
 			post_form(m_f);
+			form_driver(m_f, REQ_END_FIELD);
 			refresh();
 			wrefresh(m_w);
 			//wrefresh(m_f);
@@ -109,6 +111,12 @@ class nform_c : public npanel_c {
 					case KEY_RIGHT:
 						form_driver(m_f, REQ_NEXT_CHAR);
 						break;
+					case KEY_DC:
+						form_driver(m_f, REQ_DEL_CHAR);
+						break;
+					case KEY_BACKSPACE:
+						form_driver(m_f, REQ_DEL_PREV);
+						break;
 					default:
 						form_driver(m_f, ch);
 						break;
@@ -120,7 +128,7 @@ class nform_c : public npanel_c {
 
 		}
 		const char* text() {
-			// TODO NOW: doesn't work, but it must be getting close'ish
+			form_driver(m_f, REQ_NEXT_FIELD); // force buffer sync
 			return field_buffer(m_fields[1], 0);
 		}
 
@@ -153,7 +161,8 @@ void edit_cell2019()
 	nform_c frm("=", text.data());
 
 	const char* newformula = frm.text();
-	log("ui2019:formula`", newformula, "'");
+	edit_cell(newformula);
+	//log("ui2019:formula`", newformula, "'");
 
 	//while(getch() != CTRL('m')) ;
 }
