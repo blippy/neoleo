@@ -5,18 +5,26 @@
 #include <form.h>
 #include <panel.h>
 
+#include "decompile.h"
 #include "io-2019.h"
 #include "logging.h"
+#include "mem.h"
 #include "window.h"
 
 using std::cout;
 
 constexpr int CTRL(int c) { return c & 037; }
 
+int scr_width() {
+	int x,y;
+	getmaxyx(stdscr, y, x);
+	return x;
+}
+
 class nwin_c {
 	public:
 		nwin_c() { 
-			m_w = newwin(1, 30, 0, 0);
+			m_w = newwin(1, scr_width(), 0, 0);
 			assert(m_w);
 			wrefresh(m_w);
 		}
@@ -50,15 +58,15 @@ class npanel_c : public nwin_c {
 
 class nform_c : public npanel_c {
 	public:
-		nform_c() {
-			m_fields[0] = new_field(1, 10, 0, 0, 0, 0);
-			m_fields[1] = new_field(1, 10, 0, 11, 0, 0);
+		nform_c(char* desc, char * text) {
+			m_fields[0] = new_field(1, strlen(desc), 0, 0, 0, 0);
+			m_fields[1] = new_field(1, scr_width() - strlen(desc), 0, strlen(desc), 0, 0);
 			m_fields[2] = nullptr;
 			m_f = new_form(m_fields);
 			assert(m_f);
-			set_field_buffer(m_fields[0], 0, "this is a static field");
+			set_field_buffer(m_fields[0], 0, desc);
 			set_field_opts(m_fields[0], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
-			set_field_buffer(m_fields[1], 0, "edit this text");
+			set_field_buffer(m_fields[1], 0, text);
 			set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
 			set_field_back(m_fields[1], A_UNDERLINE);
 			set_field_type(m_fields[1], TYPE_ALNUM, 60);
@@ -112,17 +120,22 @@ class nform_c : public npanel_c {
 		}
 
 	private:
-		FIELD *m_fields[3];
+		//FIELD* m_desc, m_edit;
+		FIELD *m_fields[3]; //= { m_desc, m_edit, nullptr };;
 		FORM* m_f;
+		//FIELD* m_fields[] = { m_desc, m_edit, nullptr };
 
 };
 
-void test_form()
+void edit_cell2019()
 {
 	//nwin_c win;
 	//printw("Press x to exit");
 	//npanel_c pan;
-	nform_c frm;
+
+	std::string formula = decompile();
+	strcpy_c text{formula};
+	nform_c frm("=", text.data());
 
 	//while(getch() != CTRL('m')) ;
 }
@@ -137,15 +150,17 @@ void main_command_loop_for2019()
 	while(1) {
 		int c = getch();
 		switch(c) {
-			case 'w':
-				test_form();
+			case '=':
+				edit_cell2019();
 				break;
 			case CTRL('q'):  
 				goto finis;
 			case KEY_LEFT:
+			case 'h':
 				io_shift_cell_cursor(3, 1);
 				break;
 			case KEY_RIGHT:
+			case 'l':
 				io_shift_cell_cursor(2, 1);
 				break;
 			case KEY_DOWN:

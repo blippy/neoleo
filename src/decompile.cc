@@ -66,6 +66,10 @@ static void log_debug_1(std::string s)
 }
 
 
+std::string decompile()
+{
+	return decomp_str(curow, cucol);
+}
 
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
