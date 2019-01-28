@@ -5,12 +5,9 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <vector>
 #include <map>
-
-//bool run_alt_cells_tests();
 
 using std::string;
 using std::cout;
@@ -24,10 +21,6 @@ using namespace std::string_literals;
 // http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
 //#include <sanitizer/lsan_interface.h>
 
-
-#ifdef BLANG
-#include "blang-parse.h"
-#endif // BLANG
 
 #include "tests.h"
 #include "io-abstract.h"
@@ -157,9 +150,6 @@ headless_tests()
 	map<string, std::function<bool()> > func_map = {
 		{"cells",	run_cell_tests},
 		{"obsmem",	run_obsmem_tests},
-#ifdef BLANG
-		{"alt-parse",	run_alt_parse_tests},
-#endif // BLANG
 		{"regular", 	run_regular_tests},
 		{"yyparse", 	test_yyparse_parse},
 		{"yyreglex",	yyreglex_experiment}

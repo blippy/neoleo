@@ -35,10 +35,6 @@ using std::endl;
 
 /* First, build arrays containing FUNC_ARG strings. */
 
-#ifdef BLANG
-#include "blang-parse.h"
-#endif
-
 #include "global.h"
 #include "cmd.h"
 #include "key.h"

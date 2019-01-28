@@ -10,11 +10,6 @@
 #include <sstream>
 #include <vector>
 
-
-#ifdef BLANG
-#include "blang-parse.h"
-#endif
-
 #include "basic.h"
 #include "cell.h"
 #include "defuns.h"
@@ -38,7 +33,6 @@ using std::function;
 using std::map;
 using std::vector;
 
-//using T = int;
 typedef int T;
 
 string to_hex(long n)
@@ -228,23 +222,6 @@ insert_columnwise(T fildes)
 	}
 }
 
-/* run a neobasic program between .BAS and .XBAS */
-#ifdef BLANG
-static void
-bas(int fildes)
-{
-	string prog;
-	bool eof = false;
-	while(!eof) {
-		bool eof;
-		string line{getline_from_fildes(fildes,eof)};
-		if(line == ".XBAS") break;
-		prog += line + "\n";
-	}
-
-	run_neobasic(prog);
-}
-#endif // BLANG
 
 static void
 hless_dump_sheet(T fildes)
@@ -322,9 +299,6 @@ static void type_dsv(int fildes)
 }
 
 static map<string, function<void(T)> > func_map = {
-#ifdef BLANG
-	{".BAS", bas},
-#endif // BLANG
 	{"dump-sheet", hless_dump_sheet},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},

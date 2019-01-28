@@ -31,15 +31,8 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 #neoleo_LDFLAGS = $(COV)
 #neoleo_LIBS= $(CODE_COVERAGE_LIBS)
 
-# Optional component: neobasic:
-#if 0
-#BLANG_SRCS = blang-lex.cc blang-parse.cc
-#BLANG_HDRS = blang-lex.h  blang-parse.h
-#AM_CXXFLAGS += -DBLANG
-#endif
 
 neoleo_SOURCES = defuns.cc \
-		 $(BLANG_SRCS) \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
 		 date.cc decompile.cc display.cc \
@@ -69,7 +62,6 @@ neoleo_SOURCES = defuns.cc \
 
 
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
-		 $(BLANG_HDRS) \
 		 cmd.h convert.h date.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
