@@ -1,4 +1,3 @@
-//#include <array>
 #include <assert.h>
 #include <algorithm>
 #include <errno.h>
@@ -21,7 +20,6 @@
 #include "defuns.h"
 #include "io-abstract.h"
 #include "io-headless.h"
-#include "io-visual.h"
 #include "cmd.h"
 #include "window.h"
 #include "oleox.h"
@@ -327,19 +325,14 @@ static map<string, function<void(T)> > func_map = {
 #ifdef BLANG
 	{".BAS", bas},
 #endif // BLANG
-	{"colours", colours},
 	{"dump-sheet", hless_dump_sheet},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
-	{"kt", keyboard_test},
 	{"tbl", hless_tbl},
-	//{"tbl", with_int(tbl)},
 	{"rewrite-defuns", hless_rewrite_defuns},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},
-	{"view", show_cells},
-	{"vi", visual_mode},
 	{"w", write_file}
 };
 
