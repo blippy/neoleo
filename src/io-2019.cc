@@ -9,6 +9,7 @@
 #include "basic.h"
 #include "decompile.h"
 #include "io-2019.h"
+#include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
 #include "ref.h"
@@ -83,10 +84,8 @@ class nform_c : public npanel_c {
 			set_field_back(m_fields[1], A_UNDERLINE);
 			//set_field_type(m_fields[1], TYPE_ALNUM, 60);
 			set_current_field(m_f, m_fields[1]);
-			//form_driver(m_f, REQ_NEXT_FIELD);
 
 			set_form_win(m_f, m_w);
-			//set_form_sub(m_f, derwin(m_w, 18, 18, 1, 1));
 			set_form_sub(m_f, m_w);
 			post_form(m_f);
 			form_driver(m_f, REQ_END_FIELD);
@@ -105,16 +104,11 @@ class nform_c : public npanel_c {
 			free_form(m_f);
 			free_field(m_fields[0]);
 			free_field(m_fields[1]);
-			//delwin(m_f);
-			//refresh();
-			//wrefresh(m_w);
 		}
 
 	public:
-		//FIELD* m_desc, m_edit;
 		FIELD *m_fields[3]; //= { m_desc, m_edit, nullptr };;
 		FORM* m_f;
-		//FIELD* m_fields[] = { m_desc, m_edit, nullptr };
 
 };
 
@@ -227,14 +221,9 @@ finis:
 
 }
 
-//static void insert_current_filename2019();
 static void save_spreadsheet2019(){
-	//insert_current_filename2019();
+	std::string filename = FileGetCurrentFileName();
+	if(!invoke_std_form("Save spreadsheet as:", filename)) return;
+	FileSetCurrentFileName(filename);
 	// TODO
 }
-/*
-static void insert_current_filename2019()
-{
-	// TODO
-}
-*/

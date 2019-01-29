@@ -1325,6 +1325,11 @@ FileSetCurrentFileName(const char *s)
 	_FileName = s;
 }
 
+void FileSetCurrentFileName(const std::string& s)
+{
+	FileSetCurrentFileName(s.c_str());
+}
+
 std::string FileGetCurrentFileName()
 {
 	return _FileName;

@@ -52,9 +52,9 @@ extern int words_member (char ** keys, int len, char * check);
 extern int prompt_len (char * prompt);
 extern int says_default (char * str);
 
-extern void FileSetCurrentFileName(const char *s);
+void FileSetCurrentFileName(const char *s);
+void FileSetCurrentFileName(const std::string& s);
 std::string FileGetCurrentFileName();
-//extern void FileCloseCurrent(void);
 extern void FileCloseCurrentFile(void);
 extern char *file_get_default_format(void);
 extern char *file_get_format(int);
