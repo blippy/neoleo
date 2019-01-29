@@ -70,7 +70,7 @@ class npanel_c : public nwin_c {
 
 class nform_c : public npanel_c {
 	public:
-		nform_c(char* desc, char * text) {
+		nform_c(char* desc, std::string& text) {
 			m_fields[0] = new_field(1, strlen(desc), 0, 0, 0, 0);
 			m_fields[1] = new_field(1, scr_width() - strlen(desc), 0, strlen(desc), 0, 0);
 			m_fields[2] = nullptr;
@@ -78,7 +78,7 @@ class nform_c : public npanel_c {
 			assert(m_f);
 			set_field_buffer(m_fields[0], 0, desc);
 			set_field_opts(m_fields[0], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
-			set_field_buffer(m_fields[1], 0, text);
+			set_field_buffer(m_fields[1], 0, text.c_str());
 			set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
 			set_field_back(m_fields[1], A_UNDERLINE);
 			//set_field_type(m_fields[1], TYPE_ALNUM, 60);
@@ -118,15 +118,11 @@ class nform_c : public npanel_c {
 
 };
 
-void edit_cell2019()
+// retun true for normal exit, false if user wants to abort action
+// text_field is modified by nform_c
+static bool invoke_std_form(char* desc, std::string& text_field)
 {
-	//nwin_c win;
-	//printw("Press x to exit");
-	//npanel_c pan;
-
-	std::string formula = decompile();
-	strcpy_c text{formula};
-	nform_c frm("=", text.data());
+	nform_c frm(desc, text_field);
 
 	auto fdrive = [&frm](int req) { form_driver(frm.m_f, req); } ;
 	int ch;
@@ -151,22 +147,32 @@ void edit_cell2019()
 				fdrive(REQ_DEL_PREV);
 				break;
 			case CTRL('g'):
-				return;
+				return false;
 			default:
 				fdrive(ch);
 				break;
 		}
-		//form_driver(m_f, ch);
 		refresh();
 		wrefresh(frm.m_w);
 	}
-	const char* newformula = frm.text();
-	edit_cell(newformula);
-	recalculate(1);
-	//log("ui2019:formula`", newformula, "'");
 
-	//while(getch() != CTRL('m')) ;
+	text_field =  frm.text();
+	return true;
 }
+
+void edit_cell2019()
+{
+	std::string formula = decompile();
+	//strcpy_c text{formula};
+	bool ok = invoke_std_form("=", formula);
+	if(!ok) return;
+	//const char* newformula = frm.text();
+	edit_cell_str(formula);
+	recalculate(1);
+}
+
+static void save_spreadsheet2019();
+
 
 void main_command_loop_for2019()
 {
@@ -187,6 +193,9 @@ void main_command_loop_for2019()
 			case CTRL('r'):
 				set_cell_alignment_right();
 				break;
+			case CTRL('s'):
+				save_spreadsheet2019();
+				break;
 			case CTRL('q'):  
 				goto finis;
 			case KEY_LEFT:
@@ -199,7 +208,7 @@ void main_command_loop_for2019()
 				break;
 			case KEY_DOWN:
 			case 'j':
-				log_debug("io-2019:down arrow");
+				//log_debug("io-2019:down arrow");
 				io_shift_cell_cursor(1, 1);
 				break;
 			case KEY_UP:
@@ -217,3 +226,15 @@ finis:
 	exit(0);
 
 }
+
+//static void insert_current_filename2019();
+static void save_spreadsheet2019(){
+	//insert_current_filename2019();
+	// TODO
+}
+/*
+static void insert_current_filename2019()
+{
+	// TODO
+}
+*/

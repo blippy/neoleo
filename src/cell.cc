@@ -183,12 +183,16 @@ int init_cells_function_count(void)
         return sizeof(cells_funs) / sizeof(function_t) - 1;
 }
 
-void edit_cell(const char* input)
+void edit_cell (const char* input)
 {
 	new_value(curow, cucol, input);
 }
 
 
+void edit_cell_str (const std::string& new_formula)
+{
+	edit_cell(new_formula.c_str());
+}
 
 /*
  * highest_row() and highest_col() should be expected to 

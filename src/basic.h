@@ -98,7 +98,6 @@ extern void end_of_row (int count);
 extern void beginning_of_col (int count);
 extern void end_of_col (int count);
 extern void scan_cell_cursor (int magic, int count);
-extern void edit_cell (const char* new_formula);
 extern void set_region_formula (struct rng * rng, char * str);
 extern void goto_edit_cell (int c);
 extern void goto_set_cell (int c);

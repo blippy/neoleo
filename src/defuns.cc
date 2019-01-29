@@ -36,6 +36,7 @@ using std::endl;
 /* First, build arrays containing FUNC_ARG strings. */
 
 #include "global.h"
+#include "cell.h"
 #include "cmd.h"
 #include "key.h"
 #include "io-term.h"
