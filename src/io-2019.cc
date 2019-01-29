@@ -163,6 +163,7 @@ void edit_cell2019()
 
 	const char* newformula = frm.text();
 	edit_cell(newformula);
+	recalculate(1);
 	//log("ui2019:formula`", newformula, "'");
 
 	//while(getch() != CTRL('m')) ;
