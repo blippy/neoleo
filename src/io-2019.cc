@@ -150,6 +150,8 @@ void edit_cell2019()
 			case KEY_BACKSPACE:
 				fdrive(REQ_DEL_PREV);
 				break;
+			case CTRL('g'):
+				return;
 			default:
 				fdrive(ch);
 				break;
