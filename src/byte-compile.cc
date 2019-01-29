@@ -51,7 +51,6 @@
 #include "ref.h"
 #include "sort.h"
 #include "busi.h"
-#include "date.h"
 #include "parse_parse.h"
 
 #include "stringo.h"
@@ -65,7 +64,6 @@ using namespace std::string_literals;
 using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
 
-extern function_t date_funs[];
 extern function_t busi_funs[];
 extern function_t string_funs[];
 extern function_t cells_funs[];
@@ -270,7 +268,6 @@ function_t the_funs[] =
  */
 static function_t *__usr_funs[] =
 {
-	date_funs,
 	busi_funs,
 	string_funs,
 	cells_funs,
@@ -281,7 +278,6 @@ static function_t *__usr_funs[] =
  * A small function in each module tells us how many functions
  * it defines.
  */
-extern int init_date_function_count(void);
 extern int init_busi_function_count(void);
 extern int init_string_function_count(void);
 extern int init_cells_function_count(void);
@@ -292,7 +288,6 @@ extern int init_cells_function_count(void);
 typedef int (*init_function_count)(void);
 
 static init_function_count init_function_counts[] = {
-	&init_date_function_count,
 	&init_busi_function_count,
 	&init_string_function_count,
 	&init_cells_function_count,

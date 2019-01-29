@@ -11,6 +11,11 @@ DATE:    ONGOING
 
 * Removed reading of init file
 
+* Removed many date functions. C++ has date-parsing libraries, so it's
+better to use those if needed. If anyone finds that their much-needed
+date function has disappeared, then let me know, and I'll see what I 
+can do.
+
 ===========================================================================
 VERSION: 8.0.0
 STATUS:  RELEASED

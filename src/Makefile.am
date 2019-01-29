@@ -23,7 +23,7 @@ bin_PROGRAMS = neoleo
 #man_MANS = neoleo.1
 dist_man_MANS = neoleo.1
 
-BUILT_SOURCES = getdate.cc getdate.hh parse.cc parse.hh posixtm.cc posixtm.hh 
+BUILT_SOURCES = parse.cc parse.hh
 CLEANFILES = $(BUILT_SOURCES)
 
 #neoleo_LDADD = -lm @CURSES_LIBS@ -lpanel $(ASAN_FLAGSL)  
@@ -35,7 +35,7 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 neoleo_SOURCES = defuns.cc \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
-		 date.cc decompile.cc display.cc \
+		 decompile.cc display.cc \
 		 eval.cc format.cc funcs.cc \
 		 init.cc input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
@@ -50,9 +50,7 @@ neoleo_SOURCES = defuns.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
-		 get_date.h getdate.yy \
 		 parse.yy \
-		 posixtm.yy \
 		 main.cc \
 		 shell.cc \
 		 tests.cc \
@@ -62,7 +60,7 @@ neoleo_SOURCES = defuns.cc \
 
 
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
-		 cmd.h convert.h date.h decompile.h defun.h defuns.h display.h \
+		 cmd.h convert.h decompile.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
 		 input.h \
@@ -75,7 +73,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 obstack.h \
 		 oleofile.h  oleox.h \
 		 parse.hh parse_parse.h \
-		 posixtm.hh ref.h \
+		 ref.h \
 		 regions.h sheet.h sort.h spans.h stringo.h stub.h stubs.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
