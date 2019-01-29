@@ -92,40 +92,7 @@ class nform_c : public npanel_c {
 			form_driver(m_f, REQ_END_FIELD);
 			refresh();
 			wrefresh(m_w);
-			//wrefresh(m_f);
-			//mvprintw(0,0, "Try pressing x");
-			//mvwprintw(m_w, 0, 0, "%s", "Press x to exit");
-			//refresh();
 
-			int ch;
-			while((ch = getch()) != CTRL('m')) {
-				switch(ch) {
-					case KEY_HOME:
-						form_driver(m_f, REQ_BEG_FIELD);
-						break;
-					case KEY_END:
-						form_driver(m_f, REQ_END_FIELD);
-						break;
-					case KEY_LEFT:
-						form_driver(m_f, REQ_LEFT_CHAR);
-						break;
-					case KEY_RIGHT:
-						form_driver(m_f, REQ_NEXT_CHAR);
-						break;
-					case KEY_DC:
-						form_driver(m_f, REQ_DEL_CHAR);
-						break;
-					case KEY_BACKSPACE:
-						form_driver(m_f, REQ_DEL_PREV);
-						break;
-					default:
-						form_driver(m_f, ch);
-						break;
-				}
-				//form_driver(m_f, ch);
-				refresh();
-				wrefresh(m_w);
-			}
 
 		}
 		const char* text() {
@@ -143,7 +110,7 @@ class nform_c : public npanel_c {
 			//wrefresh(m_w);
 		}
 
-	private:
+	public:
 		//FIELD* m_desc, m_edit;
 		FIELD *m_fields[3]; //= { m_desc, m_edit, nullptr };;
 		FORM* m_f;
@@ -161,6 +128,36 @@ void edit_cell2019()
 	strcpy_c text{formula};
 	nform_c frm("=", text.data());
 
+	auto fdrive = [&frm](int req) { form_driver(frm.m_f, req); } ;
+	int ch;
+	while((ch = getch()) != CTRL('m')) {
+		switch(ch) {
+			case KEY_HOME:
+				fdrive(REQ_BEG_FIELD);
+				break;
+			case KEY_END:
+				fdrive(REQ_END_FIELD);
+				break;
+			case KEY_LEFT:
+				fdrive(REQ_LEFT_CHAR);
+				break;
+			case KEY_RIGHT:
+				fdrive(REQ_NEXT_CHAR);
+				break;
+			case KEY_DC:
+				fdrive(REQ_DEL_CHAR);
+				break;
+			case KEY_BACKSPACE:
+				fdrive(REQ_DEL_PREV);
+				break;
+			default:
+				fdrive(ch);
+				break;
+		}
+		//form_driver(m_f, ch);
+		refresh();
+		wrefresh(frm.m_w);
+	}
 	const char* newformula = frm.text();
 	edit_cell(newformula);
 	recalculate(1);
