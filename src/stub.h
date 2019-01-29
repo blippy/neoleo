@@ -1,16 +1,8 @@
 #pragma once
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-//#ifndef STUBH
-//#define STUBH
-
 /*
  * $Id : $
  *
- * Copyright © 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1993 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,11 +25,4 @@ extern "C" {
  */
 
 typedef void (*cmd_invoker) (struct command_frame *);
-
 extern cmd_invoker find_stub (void);
-
-#ifdef __cplusplus
-}
-#endif
-
-//#endif  /* STUBH */
