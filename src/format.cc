@@ -22,7 +22,6 @@
 #include "global.h"
 #include "format.h"
 #include "cell.h"
-#include "cmd.h"
 #include "convert.h"
 #include "io-term.h"
 #include "io-abstract.h"
