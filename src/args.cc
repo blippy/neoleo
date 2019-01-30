@@ -1,7 +1,7 @@
 /*
  * $Id: args.c,v 1.6 2000/08/10 21:02:49 danny Exp $
  *
- * Copyright © 1993, 1999 Free Software Foundation, Inc.
+ * Copyright (c) 1993, 1999 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 #include "global.h"
 #define DEFINE_STYLES	1
 #include "args.h"
-#include "cmd.h"
 #include "convert.h"
 #include "io-abstract.h"
 #include "io-generic.h"
