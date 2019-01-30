@@ -166,6 +166,7 @@ void edit_cell2019()
 	recalculate(1);
 }
 
+static bool maybe_quit_spreadsheet2019();
 static void save_spreadsheet2019();
 
 
@@ -192,7 +193,9 @@ void main_command_loop_for2019()
 				save_spreadsheet2019();
 				break;
 			case CTRL('q'):  
-				goto finis;
+				if(maybe_quit_spreadsheet2019())
+					goto finis;
+				break;
 			case KEY_LEFT:
 			case 'h':
 				io_shift_cell_cursor(3, 1);
@@ -229,4 +232,15 @@ static void save_spreadsheet2019(){
 	FileSetCurrentFileName(filename);
 	log("Filename after:<", FileGetCurrentFileName(), ">");
 	hl_write_file();
+}
+
+// return true to go ahead with quit, false otherwise
+static bool maybe_quit_spreadsheet2019()
+{
+	if(Global->modified== false) return true;
+	std::string response = ""; 
+	if(!invoke_std_form("Spreadsheet modifield; kill anyway? (y/[n])? ", response))
+		return false;
+	if(response == "y" || response == "yes") return true;
+	return false;
 }
