@@ -57,7 +57,6 @@ using namespace std::string_literals;
 #include "regions.h"
 #include "spans.h"
 #include "window.h"
-#include "key.h"
 #include "input.h"
 #include <term.h>
 #include "logging.h"
