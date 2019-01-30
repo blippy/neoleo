@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: cmd.h,v 1.9 2001/02/14 19:22:57 danny Exp $
- *
- * Copyright © 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -374,3 +372,6 @@ extern void one_cmd_with_keymap (char * mapname, struct key_sequence * keyseq);
 
 void set_curow(int nrow);
 void set_cucol(int nrow);
+
+void rebuild_command_frame();
+void init_maps_and_macros();

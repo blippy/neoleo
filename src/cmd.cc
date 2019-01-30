@@ -1,7 +1,5 @@
 /*
- * $Id: cmd.c,v 1.27 2001/02/14 20:54:50 danny Exp $
- *
- * Copyright © 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +37,13 @@
 #include "global.h"
 #include "cmd.h"
 #include "convert.h"
+#include "defuns.h"
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-utils.h"
 #include "io-edit.h"
+#include "init.h"
 #include "stub.h"
 #include "ref.h"
 #include "key.h"
@@ -2612,3 +2612,50 @@ set_cucol(int ncol)
 	the_cmd_frame->_cucol = ncol;
 }
 
+
+
+void rebuild_command_frame()
+{
+	/* Force the command frame to be rebuilt now that the keymaps exist. */
+	struct command_frame * last_of_the_old = the_cmd_frame->next;
+	while (the_cmd_frame != last_of_the_old)
+		free_cmd_frame (the_cmd_frame);
+	free_cmd_frame (last_of_the_old);
+}
+static void
+init_maps (void)
+{
+  num_maps = 0;
+  the_maps = 0;
+  map_names = 0;
+  map_prompts = 0;
+
+  the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
+  num_funcs = 1;
+  the_funcs[0] = (cmd_func *) get_cmd_funcs();
+
+  find_func (0, &end_macro_cmd, "end-macro");
+  find_func (0, &digit_0_cmd, "digit-0");
+  find_func (0, &digit_9_cmd, "digit-9");
+  find_func (0, &break_cmd, "break");
+  find_func (0, &universal_arg_cmd, "universal-argument");
+
+  create_keymap ("universal", 0);
+  push_command_frame (0, 0, 0);
+}
+
+
+
+void
+init_maps_and_macros()
+{
+	try {
+		init_maps();
+		init_named_macro_strings ();
+                run_init_cmds ();
+	} catch (OleoJmp& e) {
+		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
+                io_close_display(69);
+                exit (69);
+	}
+}

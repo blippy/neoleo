@@ -11,8 +11,8 @@
 #include "basic.h"
 #include "cmd.h"
 #include "config.h"
-#include "defuns.h"
-#include "init.h"
+//#include "defuns.h"
+//#include "init.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "io-term.h"
@@ -37,43 +37,6 @@ got_sig (int sig)
 }
 
 
-static void
-init_maps (void)
-{
-  num_maps = 0;
-  the_maps = 0;
-  map_names = 0;
-  map_prompts = 0;
-
-  the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
-  num_funcs = 1;
-  the_funcs[0] = (cmd_func *) get_cmd_funcs();
-
-  find_func (0, &end_macro_cmd, "end-macro");
-  find_func (0, &digit_0_cmd, "digit-0");
-  find_func (0, &digit_9_cmd, "digit-9");
-  find_func (0, &break_cmd, "break");
-  find_func (0, &universal_arg_cmd, "universal-argument");
-
-  create_keymap ("universal", 0);
-  push_command_frame (0, 0, 0);
-}
-
-
-
-void
-init_maps_and_macros()
-{
-	try {
-		init_maps();
-		init_named_macro_strings ();
-                run_init_cmds ();
-	} catch (OleoJmp& e) {
-		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
-                io_close_display(69);
-                exit (69);
-	}
-}
 
 
 static bool	option_tests = false;
@@ -233,13 +196,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 		optind++;
 	}
 
-	/* Force the command frame to be rebuilt now that the keymaps exist. */
-	{
-		struct command_frame * last_of_the_old = the_cmd_frame->next;
-		while (the_cmd_frame != last_of_the_old)
-			free_cmd_frame (the_cmd_frame);
-		free_cmd_frame (last_of_the_old);
-	}
+	rebuild_command_frame();
 
 	io_recenter_cur_win ();
 	Global->display_opened = 1;
