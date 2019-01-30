@@ -1392,3 +1392,13 @@ std::string stringify_value_file_style(value* val)
 	return ss.str();
 
 }
+
+std::string trim(const std::string& str)
+{
+    if(str.length() ==0) { return str;}
+    size_t first = str.find_first_not_of(" \t\r");
+    if(first == std::string::npos) return "";
+    size_t last = str.find_last_not_of(" \t\r");
+    return str.substr(first, (last-first+1));
+}
+

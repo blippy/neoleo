@@ -9,6 +9,7 @@
 #include "basic.h"
 #include "decompile.h"
 #include "io-2019.h"
+#include "io-headless.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
@@ -94,9 +95,9 @@ class nform_c : public npanel_c {
 
 
 		}
-		const char* text() {
+		const std::string text() {
 			form_driver(m_f, REQ_NEXT_FIELD); // force buffer sync
-			return field_buffer(m_fields[1], 0);
+			return trim(field_buffer(m_fields[1], 0));
 		}
 
 		~nform_c() {
@@ -223,7 +224,9 @@ finis:
 
 static void save_spreadsheet2019(){
 	std::string filename = FileGetCurrentFileName();
+	log("Filename before:<", filename, ">");
 	if(!invoke_std_form("Save spreadsheet as:", filename)) return;
 	FileSetCurrentFileName(filename);
-	// TODO
+	log("Filename after:<", FileGetCurrentFileName(), ">");
+	hl_write_file();
 }

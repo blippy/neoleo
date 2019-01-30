@@ -27,3 +27,4 @@
 
 void headless_graphics(void);
 bool process_headless_line(std::string line, int fildes);
+void hl_write_file();

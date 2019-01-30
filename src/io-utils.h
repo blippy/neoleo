@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: io-utils.h,v 1.12 2000/08/10 21:02:50 danny Exp $
- *
- * Copyright © 1992, 1999 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1999 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,7 +92,7 @@ extern struct user_fmt fxt;
 //std::string 
 char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 char *flt_to_str (num_t val);
-
+std::string trim(const std::string& str);
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
 

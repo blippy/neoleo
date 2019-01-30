@@ -279,6 +279,9 @@ static void write_file(int fildes)
 	fclose(fp);
 
 }
+void hl_write_file(){
+	write_file(0);
+}
 
 // this seems to crash
 function<void(int)> with_int(function<void()> fn)
