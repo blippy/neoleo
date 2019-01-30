@@ -12,6 +12,7 @@
 
 #include "basic.h"
 #include "cell.h"
+#include "convert.h"
 #include "defuns.h"
 #include "io-abstract.h"
 #include "io-headless.h"
@@ -34,6 +35,12 @@ using std::map;
 using std::vector;
 
 typedef int T;
+
+string hl_getline (int fildes)
+{
+	bool eof;
+	return getline_from_fildes(fildes, eof);
+}
 
 string to_hex(long n)
 {
@@ -196,8 +203,6 @@ info(int fildes)
 static void
 insert_columnwise(T fildes)
 {
-	//FILE *fp=0; // std::cin
-	//for(std::string line; line = getline_from_fildes(fildes);){
 	std::string line;
 	while(true) {
 		bool eof;
@@ -301,8 +306,22 @@ static void type_dsv(int fildes)
 	save_dsv(stdout, 0);
 }
 
+static void hl_goto_cell(int fildes)
+{
+	bool ok;
+	auto r = (CELLREF) to_long(hl_getline(fildes), ok);
+	if(!ok) return;
+	auto c = (CELLREF) to_long(hl_getline(fildes), ok);
+	if(!ok) return;
+	curow = r;
+	cucol = c;
+	//rng_t a_rng{r, c, r, c};
+	//goto_cell(&a_rng);
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"dump-sheet", hless_dump_sheet},
+	{"g", hl_goto_cell},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
@@ -323,25 +342,22 @@ process_headless_line(std::string line, int fildes)
 	if(it != func_map.end()) {
 		auto fn = it->second;
 		fn(fildes);
-		//(it->second)();
 		cout << std::flush;
 		return true;
 	}
 
 
 	if(line == "q") {
-	       	//cout << "300 OK bye" << endl;
 		return false;
 	}
 
+	/*
 	try {
-		//cout << "process_headless_line: execute_command:" << line << endl;
 		execute_command((char*) line.c_str());
-		//std::cout << "100 OK" << endl;
 	} catch (const OleoJmp& e) {
-		//cout << "200 FAIL Caught OleoJmp" << endl;
 		cout << "? " << e.what() << "\n";
 	}
+	*/
 
 	cout << std::flush;
 	return true;

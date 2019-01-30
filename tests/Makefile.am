@@ -9,12 +9,11 @@ AM_TESTS_ENVIRONMENT = \
 
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = busi.scr \
-	cellspans.scr concata.scr cpreg-02.scr cpreg-03.scr ctime.scr \
+	concata.scr ctime.scr \
 	decompile-01.scr \
 	floor.scr \
-	issue16.scr issue17.scr issue18.scr issue19.scr issue25.sh \
-	nohead-01.scr nohead-02.scr \
-	row-del.scr row-ins.scr
+	issue16.scr issue18.scr issue25.sh \
+	nohead-01.scr 
 
 
 TEST_EXTENSIONS = .scr
@@ -27,4 +26,4 @@ EXTRA_DIST = neotests-env.sh script.sh issue25.oleo $(TESTS)
 clean-local : clean-local-out
 .PHONY: clean-local-out
 clean-local-out:
-	-rm -f out/*oleo out/*rep
+	-rm -f out/*oleo out/*rep *.log *.trs

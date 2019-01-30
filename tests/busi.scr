@@ -40,7 +40,10 @@ kprin(300, 0.1, 5, 2)
 .
 
 # range-based functions
-goto-cell r1c5
+g
+1
+5
+
 i
 -100.10
 20.3
@@ -48,7 +51,10 @@ i
 120.4
 .
 
-goto-cell r1c6
+g
+1
+6
+
 i
 "npv - expect 14.61759259259"
 npv(r1c5:r4c5, 0.2)

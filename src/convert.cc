@@ -28,6 +28,11 @@ long to_long(const char* strptr, bool &ok)
 	return n;
 }
 
+long to_long(const std::string& str, bool &ok)
+{
+	return to_long(str.c_str(), ok);
+}
+
 long astol (char **ptr)
 {
 	long i = 0;
