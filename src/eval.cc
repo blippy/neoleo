@@ -81,9 +81,6 @@ static int curstack;
 
 unsigned short current_cycle;
 
-CELLREF cur_row;
-CELLREF cur_col;
-
 num_t rintn(num_t n)
 {
 	double d1 = n;

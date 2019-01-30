@@ -141,7 +141,7 @@ extern double __plinf, __neinf;
  * least toss in a COMMENT like the above to explain what was happening? 
  * ANOTHER GOOD QUESTION!
  */
-extern CELLREF cur_row, cur_col;
+inline CELLREF cur_row, cur_col;
 
 extern int default_jst;
 extern int default_fmt, default_prc;
