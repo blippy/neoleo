@@ -16,6 +16,8 @@ better to use those if needed. If anyone finds that their much-needed
 date function has disappeared, then let me know, and I'll see what I 
 can do.
 
+* Added headless command `g", for `goto-cell'
+
 ===========================================================================
 VERSION: 8.0.0
 STATUS:  RELEASED
