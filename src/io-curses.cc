@@ -1193,4 +1193,5 @@ tty_graphics (void)
 	// added by mcarter:
 	//io_run_main_loop = _io_run_curses_main_loop;
 	io_run_main_loop = fairly_std_main_loop;
+	io_error_msg = cmd_io_error_msg; // eventually we'll want to replace this in a 2019 ui
 }

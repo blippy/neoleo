@@ -2415,7 +2415,7 @@ pushback_keystroke (int c)
 }
 
 void
-io_error_msg (const char *str, ...)
+cmd_io_error_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];

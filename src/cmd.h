@@ -359,7 +359,7 @@ void execute_command_sv(std::string_view cmd);
 extern int get_chr (void);
 extern void display_msg (char * msg, int c);
 extern void pushback_keystroke (int c);
-extern void io_error_msg (const char *str,...);
+void cmd_io_error_msg (const char *str,...);
 extern void io_info_msg (const char *str,...);
 extern char * expand_prompt (char * str);
 void expand_prompt (char * str, struct line& line);

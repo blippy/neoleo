@@ -88,3 +88,4 @@ EXTERN void (*io_do_button)(int r, int c, char *lbl, char *cmd);
 EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
 EXTERN void (*io_update_width)(int col, int wid);
 
+EXTERN void (*io_error_msg)(const char* str, ...);
