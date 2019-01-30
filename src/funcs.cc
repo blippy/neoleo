@@ -27,7 +27,6 @@
 
 #include "global.h"
 #include "cmd.h"
-#include "key.h"
 #include "io-term.h"
 #include "basic.h"
 #include "format.h"
