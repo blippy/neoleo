@@ -1,5 +1,5 @@
 /*
- * Copyright © 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -24,7 +24,6 @@
 #include "global.h"
 #include "decompile.h"
 #include "eval.h"
-#include "cell.h"
 #include "io-utils.h"
 #include "cmd.h"
 #include "mem.h"
