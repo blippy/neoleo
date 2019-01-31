@@ -24,8 +24,9 @@
 
 typedef struct line
 {
-	int alloc = 0;
+	int alloc = 0;	
 	char *buf = nullptr;
+	~line();
 } line_t;
 
 //#define init_line(L)  bzero((L), sizeof (struct line))

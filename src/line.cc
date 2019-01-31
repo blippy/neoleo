@@ -164,10 +164,22 @@ edit_line (struct line * line, int begin, int len)
 	void
 free_line (struct line * line)
 {
+#if 1
 	if (line->buf && line->alloc)
 		free (line->buf);
 	line->buf = 0;
 	line->alloc = 0;
+#endif
 }
 
-
+line::~line()
+{
+	// We'll eventually want to reinstate this, but we need to 
+	// sort out a few memory puzzles first.
+#if 0
+	if (buf && alloc)
+		free(buf);
+	buf = 0;
+	alloc = 0;
+#endif
+}
