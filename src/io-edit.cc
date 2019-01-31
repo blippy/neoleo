@@ -548,23 +548,11 @@ insert_cell_attr (struct rng * rng, char * attr)
 	}
 	else if (!stricmp (attr, "font"))
 	{
-		/* 07-Jul-2017 mcarter remove font handling
-		   CELL * cp = find_cell (rng->lr, rng->lc);
-		   if (!(cp && cp->cell_font))
-		   set_line (&line, "def");
-		   else
-		   set_line (&line, cp->cell_font->names->oleo_name);
-		   */
+		// 07-Jul-2017 mcarter remove font handling
 	}
 	else if (!stricmp (attr, "font-scale"))
 	{
-		/* 07-Jul-2017 mcarter more font handling removal
-		   CELL * cp = find_cell (rng->lr, rng->lc);
-		   if (!(cp && cp->cell_font))
-		   set_line (&line, "1.0");
-		   else
-		   sprint_line (&line, "%lf", cp->cell_font->scale);
-		   */
+		// 07-Jul-2017 mcarter more font handling removal
 	}
 	put_string (line.buf, strlen (line.buf));
 	free_line(&line);
