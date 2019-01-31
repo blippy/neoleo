@@ -645,35 +645,3 @@ issymb (int c)
 #undef the_text
 #undef the_cursor
 #undef the_do_prompt
-	void
-insert_context_word (void)
-{
-	struct command_frame * cf = the_cmd_frame->prev;
-	if (   (cf == the_cmd_frame)
-			|| !cf->cmd
-			|| !cf->argv [cf->_cur_arg].do_prompt)
-		return;
-	{
-		struct command_arg * ca = &cf->argv [cf->_cur_arg];
-		char * beg_text = ca->text.buf;
-		char * last = beg_text + ca->cursor;
-		char * start;
-
-		while ((last > beg_text) && !issymb(*last))
-			--last;
-		while (*last && issymb (*last))
-			++last;
-		--last;
-		start = last;
-		while ((start > beg_text) && issymb(*start))
-			--start;
-		if (!issymb (*start) && (start < last))
-			++start;
-
-		if ((start <= last) && issymb (*start))
-		{
-			insert_string (start, last - start + 1);
-			the_cmd_arg.cursor = 0;
-		}
-	}
-}

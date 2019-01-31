@@ -657,7 +657,6 @@ DEFUN ("insert-cell-attr", FDinsert_cell_attr, FAinsert_cell_attr, insert_cell_a
 DEFUN_3 ("insert-current-filename",
 	 FDinsert_current_filename, insert_current_filename)
 
-DEFUN_3 ("insert-context-word", FDinsert_context_word, insert_context_word)
 
 DEFUN ("insert-user-format-part",
        FDinsert_usr_fmt_part, FAinsert_usr_fmt_part, insert_usr_fmt_part)
