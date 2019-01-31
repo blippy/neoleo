@@ -364,22 +364,25 @@ kill_line(void)
 	}
 }
 
-	void
-insert_string(const char * str, int len)
-{
-	if (check_editting_mode ())
-		return;
-	splicen_line (&the_text, str, len, the_cursor);
-	io_insert (len);
-	the_cursor += len;
-}
-
 const char*
 str_and_len(const std::string& instr, int& len)
 {
 	len = instr.size();
 	return instr.c_str();
 }
+
+	void
+insert_string(const std::string& instr)
+{
+	if (check_editting_mode ())
+		return;
+	int len;
+	const char*  str = str_and_len(instr, len);
+	splicen_line (&the_text, str, len, the_cursor);
+	io_insert (len);
+	the_cursor += len;
+}
+
 
 	void
 over_string(const std::string& instr)
@@ -412,7 +415,7 @@ put_string (const char * str, int len)
 	if(the_overwrite)
 		over_string(s1);
 	else
-		insert_string(str, len);
+		insert_string(s1);
 }
 
 void
@@ -594,8 +597,8 @@ self_map_command (int c)
 	char space = ' ';
 	const char * str = char_to_string (c);
 
-	insert_string (str, strlen (str));
-	insert_string (&space, 1);
+	insert_string(str);
+	insert_string(" ");
 
 	while (map)
 	{
@@ -631,7 +634,7 @@ exit_self_inserting (int c)
 {
 	const char * str = char_to_string (c);
 
-	insert_string (str, strlen (str));
+	insert_string(str);
 	exit_minibuffer ();
 }
 
