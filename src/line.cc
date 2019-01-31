@@ -40,7 +40,7 @@
 
 using CPTR = char *;
 
-void
+	void
 set_line (struct line *line, const char *string)
 {
 	assert(line);
@@ -55,7 +55,7 @@ set_line (struct line *line, const char *string)
 		if (line->buf)
 			line->buf = (CPTR) ck_realloc (line->buf, line->alloc);
 		else {
-			
+
 			size_t nbytes = line->alloc;
 			line->buf = (CPTR) ck_malloc(nbytes);
 		}
@@ -63,105 +63,105 @@ set_line (struct line *line, const char *string)
 	strcpy (line->buf, string);
 }
 
-void
+	void
 setn_line (struct line *line, const char *string, int n)
 {
-  int len = n;
-  if (line->alloc <= len)
-    {
-      if (len < LINE_MIN)
-	len = LINE_MIN;
-      else
-	len++;
-      line->alloc = len;
-      line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
-    }
-  bcopy (string, line->buf, n);
-  line->buf[n] = 0;
+	int len = n;
+	if (line->alloc <= len)
+	{
+		if (len < LINE_MIN)
+			len = LINE_MIN;
+		else
+			len++;
+		line->alloc = len;
+		line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
+	}
+	bcopy (string, line->buf, n);
+	line->buf[n] = 0;
 }
 
 #define Max(A,B)  ((A) > (B) ? (A) : (B))
 
-void
+	void
 catn_line (struct line *line, const char *string, int n)
 {
-  int len = (line->buf ? strlen (line->buf) : 0);
-  if (line->alloc <= len + n + 1)
-    {
-      line->alloc = Max (len + n + 1, LINE_MIN);
-      line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
-    }
-  if (n)
-    bcopy (string, line->buf + len, n);
-  line->buf[len + n] = '\0';
+	int len = (line->buf ? strlen (line->buf) : 0);
+	if (line->alloc <= len + n + 1)
+	{
+		line->alloc = Max (len + n + 1, LINE_MIN);
+		line->buf = (CPTR) ck_remalloc (line->buf, line->alloc);
+	}
+	if (n)
+		bcopy (string, line->buf + len, n);
+	line->buf[len + n] = '\0';
 }
 
 
-void
+	void
 sprint_line (struct line *line, const char * fmt, ...)
 {
-  va_list iggy;
-  int len;
+	va_list iggy;
+	int len;
 
-  len = strlen (fmt) + 200;
-  if (!line->alloc)
-    {
-      line->buf = (CPTR) ck_malloc (len);
-      line->alloc = len;
-    }
-  else if (line->alloc < len)
-    {
-      line->buf = (CPTR) ck_realloc (line->buf, len);
-      line->alloc = len;
-    }
-  va_start (iggy, fmt);
-  vsprintf (line->buf, fmt, iggy);
-  va_end (iggy);
+	len = strlen (fmt) + 200;
+	if (!line->alloc)
+	{
+		line->buf = (CPTR) ck_malloc (len);
+		line->alloc = len;
+	}
+	else if (line->alloc < len)
+	{
+		line->buf = (CPTR) ck_realloc (line->buf, len);
+		line->alloc = len;
+	}
+	va_start (iggy, fmt);
+	vsprintf (line->buf, fmt, iggy);
+	va_end (iggy);
 }
 
-void
+	void
 splicen_line (struct line * line, const char * str, int n, int pos)
 {
-  int old_len = strlen (line->buf);
-  int len = old_len + n;
-  if (line->alloc <= len)
-    {
-      line->alloc = len;
-      line->buf = (CPTR) ck_remalloc (line->buf, len + 1);
-    }
-  line->buf[len--] = '\0';
-  --old_len;
-  while (old_len >= pos)
-    {
-      line->buf[len] = line->buf[old_len];
-      --len;
-      --old_len;
-    }
-  while (n--)
-    line->buf[pos + n] = str[n];
+	int old_len = strlen (line->buf);
+	int len = old_len + n;
+	if (line->alloc <= len)
+	{
+		line->alloc = len;
+		line->buf = (CPTR) ck_remalloc (line->buf, len + 1);
+	}
+	line->buf[len--] = '\0';
+	--old_len;
+	while (old_len >= pos)
+	{
+		line->buf[len] = line->buf[old_len];
+		--len;
+		--old_len;
+	}
+	while (n--)
+		line->buf[pos + n] = str[n];
 }
 
-void
+	void
 edit_line (struct line * line, int begin, int len)
 {
-  int old_len = strlen (line->buf);
-  int new_len = old_len - len;
-  while (begin < new_len)
-    {
-      line->buf[begin] = line->buf[begin + len];
-      ++begin;
-    }
-  line->buf[begin] = '\0';
+	int old_len = strlen (line->buf);
+	int new_len = old_len - len;
+	while (begin < new_len)
+	{
+		line->buf[begin] = line->buf[begin + len];
+		++begin;
+	}
+	line->buf[begin] = '\0';
 }
 
 
-void
+	void
 free_line (struct line * line)
 {
-  if (line->buf && line->alloc)
-    free (line->buf);
-  line->buf = 0;
-  line->alloc = 0;
+	if (line->buf && line->alloc)
+		free (line->buf);
+	line->buf = 0;
+	line->alloc = 0;
 }
 
 

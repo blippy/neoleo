@@ -527,28 +527,22 @@ insert_abs_ref(int x)
 	void
 insert_cell_attr (struct rng * rng, char * attr)
 {
-	//struct line line;
-	//init_line (&line);
 	std::ostringstream oss;
 	if (!stricmp (attr, "width"))
 	{
 		int wid = get_nodef_width (rng->lc);
 		if (wid == 0)
-			//set_line (&line, "def");
 			oss << "def";
 		else
 			oss << wid-1;
-			//sprint_line (&line, "%d", wid - 1);
 	}
 	else if (!stricmp (attr, "height"))
 	{
 		int hgt = get_nodef_height (rng->lr);
 		if (hgt == 0)
-			//set_line (&line, "def");
 			oss << "def";
 		else
 			oss << hgt-1;
-			//sprint_line (&line, "%d", hgt - 1);
 	}
 	else if (!stricmp (attr, "format"))
 	{
@@ -571,7 +565,6 @@ insert_cell_attr (struct rng * rng, char * attr)
 		// 07-Jul-2017 mcarter more font handling removal
 	}
 	put_string(oss.str());
-	//free_line(&line);
 }
 
 	void

@@ -145,6 +145,9 @@ typedef void (*direction_function) (int magic, int repeat);
 
 
 
+typedef struct line command_arg_text_t ;
+//typedef std::string command_arg_text_t ;
+
 typedef struct command_arg
 {
 	int do_prompt = 0;		/* If true, the user gets to edit this. */
@@ -158,7 +161,7 @@ typedef struct command_arg
 	/* prompting for this argument. */
 	int info_line = 0;		/* First line visible in prompt_info */
 
-	struct line text;		/* A buffer for the user to edit this value. */
+	command_arg_text_t text;		/* A buffer for the user to edit this value. */
 	int cursor = 0;			/* cursor position of this buffer. */
 	int overwrite = 0;		/* Is overwrite mode on? */
 
