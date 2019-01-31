@@ -178,7 +178,8 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	init_maps_and_macros();
 
 	using namespace std::literals;
-	execute_command_sv("set-default-format general.float"sv);
+	//execute_command_sv("set-default-format general.float"sv);
+	set_def_format(155); // which is "general.float", believe it or not
 
 	if (argc - optind == 1) {
 		if (FILE *fp = fopen (argv[optind], "r")) {
