@@ -778,7 +778,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_cur_vector = 0;
 	new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
 
-	init_line (&new_cf->_raw_prefix);
+	//init_line (&new_cf->_raw_prefix);
 	new_cf->_cmd_argc = 0;
 	new_cf->complex_to_user = 0;
 
@@ -803,7 +803,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 				    // other initialisation of cfn taken care of by constructor
 				    command_arg_t* cfn = &new_cf->argv[argc];
 				    cfn->arg_desc = *prompt;
-				    init_line (&cfn->text);
+				    //init_line (&cfn->text);
 				    set_line (&cfn->text, "");
 				    bzero (&cfn->val, sizeof (union command_arg_val));
 				    ++argc;
@@ -1003,7 +1003,7 @@ get_argument (char *prompt, struct prompt_style *style)
 	    && the_cmd_frame->cmd->init_code[cur_arg])
 	  {
 		  struct line init_code;
-		  init_line(&init_code);
+		  //init_line(&init_code);
 		  expand_prompt (the_cmd_frame-> cmd->init_code[cur_arg], init_code);
 		  struct rng rng;
 		  rng.lr = rng.hr = rng.lc = rng.hc = 1;
@@ -1979,7 +1979,6 @@ do_got_command ()
 	/* The binding of all keys associated with the prefix arg. */
 	if (cur_cmd == universal_arg_cmd)
 	  {
-		  char ch = cur_chr;
 		  int prefix_map = map_id ("prefix");
 		  /* Make sure the prefix-arg keymap is in place. */
 		  if (cur_keymap != prefix_map)
@@ -1989,7 +1988,9 @@ do_got_command ()
 			    cur_keymap = prefix_map;
 		    }
 		  /* Store the last character typed in the raw-prefix. */
-		  catn_line (&raw_prefix, &ch, 1);
+		  std::string ch{(char) cur_chr};
+		  //catn_line (&raw_prefix, &ch, 1);
+		  catn_line (&raw_prefix, ch);
 		  /* Recompute the numeric value of the prefix. */
 		  recompute_numeric_value_of_prefix ();
 		  //goto prefix_cmd_continuation;
@@ -2447,7 +2448,7 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 					rng.lr = rng.hr = the_cmd_frame-> prev->_setrow;
 					rng.lc = rng.hc = the_cmd_frame-> prev->_setcol;
 					str = range_name (&rng);
-					catn_line (&expanded, str, strlen (str));
+					catn_line (&expanded, str);
 					++src_pos;
 					break;
 				}
@@ -2458,7 +2459,7 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 					rng.lr = rng.hr = the_cmd_frame-> prev->_curow;
 					rng.lc = rng.hc = the_cmd_frame-> prev->_cucol;
 					str = range_name (&rng);
-					catn_line (&expanded, str, strlen (str));
+					catn_line (&expanded, str);
 					++src_pos;
 					break;
 				}
@@ -2476,26 +2477,19 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 					int argn = *src_pos - '0';
 					if ((cmd_argc > argn) && the_cmd_frame-> argv[argn].is_set 
 							&& the_cmd_frame-> argv[argn].text.buf)
-						catn_line (&expanded,
-								the_cmd_frame->argv
-								[argn].text.
-								buf,
-								strlen
-								(the_cmd_frame->argv
-								 [argn].text.
-								 buf));
+						catn_line (&expanded, the_cmd_frame->argv[argn].text.buf);
 					else
-						catn_line (&expanded, "????", 4);
+						catn_line (&expanded, "????");
 					++src_pos;
 					break;
 				}
 			default:
-				catn_line (&expanded, "%", 1);
+				catn_line (&expanded, "%");
 				break;
 		}
 		last_pos = src_pos;
 	}
-	catn_line (&expanded, last_pos, strlen (last_pos));
+	catn_line (&expanded, last_pos);
 }
 
 /* Expands a string that will be used to prompt for an argument.
@@ -2513,7 +2507,7 @@ expand_prompt (char *str)
 		return str;
 
 	struct line expanded;
-	init_line (&expanded);
+	//init_line (&expanded);
 	inner_prompt_expansion(str, expanded);
 	return expanded.buf;
 	

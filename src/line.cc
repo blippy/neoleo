@@ -97,6 +97,12 @@ catn_line (struct line *line, const char *string, int n)
 }
 
 
+void 
+catn_line (struct line *line, const std::string& str)
+{
+	catn_line(line, str.c_str(), str.size());
+}
+
 	void
 sprint_line (struct line *line, const char * fmt, ...)
 {
