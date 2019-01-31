@@ -155,7 +155,8 @@ typedef struct command_arg
 	struct prompt_style* style = 0;	/* The editting mode for this argument. */
 	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
 	char * prompt = 0;		/* Unexpanded prompt */
-	char * expanded_prompt = 0;
+	//char * expanded_prompt = 0;
+	line_t expanded_prompt;
 
 	struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
 	/* prompting for this argument. */

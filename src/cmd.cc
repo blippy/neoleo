@@ -51,6 +51,9 @@
 
 using namespace std::literals::string_literals;
 
+char * expand_prompt (char *str);
+void expand_prompt(char *str, struct line& line);
+
 ///// obstack stuff begin
 // inherits USE_CMD_OBSTACK (or not) from cmd.h
 //#undef USE_OBSTACK
@@ -865,8 +868,9 @@ free_cmd_frame (struct command_frame *frame)
 			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
 				frame->argv[argc].style->destroy (&frame->argv[argc]);
 			free_line (&frame->argv[argc].text);
-			if (frame->argv[argc].expanded_prompt && (frame->argv[argc].expanded_prompt != frame->argv[argc].prompt))
-				free (frame->argv[argc].expanded_prompt);
+			if (frame->argv[argc].expanded_prompt.buf 
+					&& (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt))
+				free (frame->argv[argc].expanded_prompt.buf);
 		}
 	  }
 	delete frame;
@@ -946,6 +950,20 @@ recover_from_error (void)
 	  }
 }
 
+line_t lineify_expand_prompt(line_t prompt)
+{
+	line_t result;
+	expand_prompt(prompt.buf, result);
+	return result;
+}
+
+line_t lineify_expand_char(char* prompt)
+{
+	line_t inp;
+	setn_line(&inp, prompt, strlen(prompt));
+	return lineify_expand_prompt(inp);
+}
+
 /*
  * When we begin editting a new argument, this function sets up the
  * appropriate keymap, and then resets the state of the editting commands.
@@ -958,8 +976,8 @@ get_argument (char *prompt, struct prompt_style *style)
 	//log_debug("cmd.cc:get_argment() style keymap=" + std::string(style->keymap));
 	the_cmd_arg.style = style;
 	the_cmd_arg.prompt = prompt;
-	if (!the_cmd_arg.expanded_prompt)
-		the_cmd_arg.expanded_prompt = expand_prompt (prompt);
+	if (!the_cmd_arg.expanded_prompt.buf)
+		the_cmd_arg.expanded_prompt = lineify_expand_char(prompt);
 	the_cmd_frame->top_keymap = map_id (the_cmd_arg.style->keymap);
 	the_cmd_arg.is_set = 0;
 	the_cmd_arg.do_prompt = 1;
@@ -1461,25 +1479,20 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				{
 					char *map;
 					++prompt;
-					map = expand_prompt
-						(prompt);
+					map = expand_prompt (prompt);
 					the_cmd_arg.val.
 						key.cmd.
 						vector = -1;
 					the_cmd_arg.val.
-						key.cmd.code =
-						map_id (map);
+						key.cmd.code = map_id (map);
 					the_cmd_arg.val.
-						key.keys =
-						&the_cmd_arg.text;
+						key.keys = &the_cmd_arg.text;
 				}
 				else
 				{
 					if (mode_style.keymap)
 						ck_free (mode_style.keymap);
-					mode_style.keymap =
-						expand_prompt
-						(prompt);
+					mode_style.keymap = expand_prompt (prompt);
 				}
 				if (get_argument
 						(prompt,
@@ -1722,9 +1735,9 @@ bool turd_1(bool interactive_mode, bool iscmd)
 		case '=':
 			{
 				++prompt;
-				the_cmd_arg.expanded_prompt = expand_prompt (prompt);
-				init_arg_text (&the_cmd_arg, the_cmd_arg.expanded_prompt);
-				the_cmd_arg.val.string = the_cmd_arg.expanded_prompt;
+				the_cmd_arg.expanded_prompt = lineify_expand_char(prompt);
+				init_arg_text (&the_cmd_arg, the_cmd_arg.expanded_prompt.buf);
+				the_cmd_arg.val.string = the_cmd_arg.expanded_prompt.buf;
 				the_cmd_arg.is_set = 1;
 				the_cmd_arg.do_prompt = 0;
 				the_cmd_arg.style =

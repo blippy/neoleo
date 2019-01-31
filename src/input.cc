@@ -206,8 +206,8 @@ iv_reset_input (struct input_view * this_iv)
 #ifdef DEBUG
 			fprintf(stderr, "input.c: inside else of ~the_cmd_frame, etc...\n");
 #endif
-			Prompt_wid = Prompt_metric (the_cmd_arg.expanded_prompt,
-					strlen (the_cmd_arg.expanded_prompt));
+			Prompt_wid = Prompt_metric (the_cmd_arg.expanded_prompt.buf,
+					strlen (the_cmd_arg.expanded_prompt.buf));
 #ifdef DEBUG
 			fprintf(stderr, "step1\n");
 #endif
@@ -219,7 +219,7 @@ iv_reset_input (struct input_view * this_iv)
 #ifdef DEBUG
 			fprintf(stderr, "step3\n");
 #endif
-			Prompt = the_cmd_arg.expanded_prompt;
+			Prompt = the_cmd_arg.expanded_prompt.buf;
 
 #ifdef DEBUG
 			fprintf(stderr, "input.c: Before scr_cols loop\n");
@@ -275,7 +275,7 @@ iv_fix_input (struct input_view * this_iv)
 			|| ((the_cmd_frame->cmd
 					&& (the_cmd_arg.do_prompt && !the_cmd_arg.is_set))
 				? ((Input_area != &the_cmd_arg.text)
-					|| (Prompt != the_cmd_arg.expanded_prompt)
+					|| (Prompt != the_cmd_arg.expanded_prompt.buf)
 					|| (Input_cursor != the_cmd_arg.cursor))
 				: (Input_area || Prompt_wid)))
 		iv_reset_input (this_iv);
