@@ -63,6 +63,11 @@ set_line (struct line *line, const char *string)
 	strcpy (line->buf, string);
 }
 
+void set_line_a (line_t& a_line, const char *string)
+{
+	set_line(&a_line, string);
+}
+
 	void
 setn_line (struct line *line, const char *string, int n)
 {

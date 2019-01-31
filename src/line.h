@@ -31,7 +31,8 @@ typedef struct line
 
 //#define init_line(L)  bzero((L), sizeof (struct line))
 
-extern void set_line (struct line *line, const char *string);
+void set_line (struct line *line, const char *string);
+void set_line_a (line_t& a_line, const char *string);
 extern void setn_line (struct line *line, const char *string, int n);
 extern void catn_line (struct line *line, const char *string, int n);
 void catn_line (struct line *line, const std::string& str);

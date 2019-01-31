@@ -868,9 +868,11 @@ free_cmd_frame (struct command_frame *frame)
 			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
 				frame->argv[argc].style->destroy (&frame->argv[argc]);
 			free_line (&frame->argv[argc].text);
+			/*
 			if (frame->argv[argc].expanded_prompt.buf 
-					&& (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt))
+					&& (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt.buf))
 				free (frame->argv[argc].expanded_prompt.buf);
+				*/
 		}
 	  }
 	delete frame;
@@ -975,7 +977,7 @@ get_argument (char *prompt, struct prompt_style *style)
 {
 	//log_debug("cmd.cc:get_argment() style keymap=" + std::string(style->keymap));
 	the_cmd_arg.style = style;
-	the_cmd_arg.prompt = prompt;
+	set_line_a(the_cmd_arg.prompt, prompt);
 	if (!the_cmd_arg.expanded_prompt.buf)
 		the_cmd_arg.expanded_prompt = lineify_expand_char(prompt);
 	the_cmd_frame->top_keymap = map_id (the_cmd_arg.style->keymap);
@@ -1838,7 +1840,7 @@ resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 	while (cur_arg < cmd_argc) {
 		if (the_cmd_arg.is_set)
 			goto next_arg;
-		else if (the_cmd_arg.prompt) {
+		else if (the_cmd_arg.prompt.buf) {
 			begin_edit ();
 			return true;	// state machine
 		} else {

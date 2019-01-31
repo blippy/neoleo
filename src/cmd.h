@@ -154,7 +154,7 @@ typedef struct command_arg
 	int is_set = 0;		/* If true, a valid value is stored here. */
 	struct prompt_style* style = 0;	/* The editting mode for this argument. */
 	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
-	char * prompt = 0;		/* Unexpanded prompt */
+	line_t prompt;		/* Unexpanded prompt */
 	//char * expanded_prompt = 0;
 	line_t expanded_prompt;
 
