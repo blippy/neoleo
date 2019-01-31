@@ -685,21 +685,6 @@ real_get_chr (void)
 	return ch;
 }
 
-void
-OleoLog (const char *fmt, ...)
-{
-#if 0
-	va_list ap;
-	FILE *log = fopen ("/tmp/oleolog", "a");
-	if (log)
-	  {
-		  va_start (ap, fmt);
-		  vfprintf (log, fmt, ap);
-		  va_end (ap);
-		  fclose (log);
-	  }
-#endif
-}
 
 /*****************************************************************
  * 
@@ -1321,9 +1306,6 @@ bool turd_1(bool interactive_mode, bool iscmd)
 	 * (`goto new_cycle').
 	 */
 	char *prompt = the_cmd_arg.arg_desc;
-
-	OleoLog ("Prompt [%s]\n", prompt);
-
 	switch (*prompt)
 	{	/* Main prompt */
 		case 'c':
@@ -2073,11 +2055,6 @@ print_state(int state)
 		default:
 			assert(false);
 	}
-
-	OleoLog("cmd.c state=%s\n", state_str);
-
-
-
 }
 
 void
