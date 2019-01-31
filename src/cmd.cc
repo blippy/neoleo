@@ -1313,22 +1313,15 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				if (*prompt == '#')
 				{
 					++prompt;
-					the_cmd_arg.
-						val.integer =
-						*prompt;
-					the_cmd_arg.is_set =
-						1;
-					the_cmd_arg.do_prompt
-						= 0;
-					the_cmd_arg.style =
-						&int_constant_style;
+					the_cmd_arg.val.integer = *prompt;
+					the_cmd_arg.is_set = 1;
+					the_cmd_arg.do_prompt = 0;
+					the_cmd_arg.style = &int_constant_style;
 					{
 						char c[2];
 						c[0] = cur_chr;
 						c[1] = '\0';
-						init_arg_text
-							(&the_cmd_arg,
-							 c);
+						init_arg_text (&the_cmd_arg, c);
 					}
 					goto next_arg;
 				}
@@ -1523,37 +1516,20 @@ bool turd_1(bool interactive_mode, bool iscmd)
 
 				if (*prompt == '?')
 				{	/* Command wants to know if prefix provided */
-					the_cmd_arg.
-						val.integer =
-						(the_cmd_frame->prev->_raw_prefix.alloc
-						 &&
-						 the_cmd_frame->prev->_raw_prefix.buf
-						 [0]);
-					the_cmd_arg.is_set =
-						1;
-					the_cmd_arg.do_prompt
-						= 0;
-					the_cmd_arg.style =
-						&int_constant_style;
-					init_arg_text
-						(&the_cmd_arg,
-						 the_cmd_arg.val.integer
-						 ? "1" : "0");
+					the_cmd_arg.val.integer = (the_cmd_frame->prev->_raw_prefix.alloc 
+							&& the_cmd_frame->prev->_raw_prefix.buf [0]);
+					the_cmd_arg.is_set = 1;
+					the_cmd_arg.do_prompt = 0;
+					the_cmd_arg.style = &int_constant_style;
+					init_arg_text (&the_cmd_arg, the_cmd_arg.val.integer ? "1" : "0");
 				}
 				else
 				{
-					the_cmd_arg.
-						val.integer =
-						the_cmd_frame->prev->_how_many;
-					the_cmd_arg.is_set =
-						1;
-					the_cmd_arg.do_prompt
-						= 0;
-					the_cmd_arg.style =
-						&int_constant_style;
-					init_arg_text
-						(&the_cmd_arg,
-						 long_to_str ((long) the_cmd_arg.val.integer));
+					the_cmd_arg.val.integer = the_cmd_frame->prev->_how_many;
+					the_cmd_arg.is_set = 1;
+					the_cmd_arg.do_prompt = 0;
+					the_cmd_arg.style = &int_constant_style;
+					init_arg_text (&the_cmd_arg, long_to_str ((long) the_cmd_arg.val.integer));
 				}
 				goto next_arg;
 			}
@@ -1581,11 +1557,8 @@ bool turd_1(bool interactive_mode, bool iscmd)
 					if (*prompt == ']')
 						++prompt;
 				}
-				if ((type == 'N')
-						&& the_cmd_frame->
-						prev->_raw_prefix.alloc
-						&& the_cmd_frame->
-						prev->_raw_prefix.buf[0])
+				if ((type == 'N') && the_cmd_frame-> prev->_raw_prefix.alloc 
+						&& the_cmd_frame-> prev->_raw_prefix.buf[0])
 				{
 					the_cmd_arg.
 						val.integer =
@@ -1603,19 +1576,13 @@ bool turd_1(bool interactive_mode, bool iscmd)
 							  val.integer)
 							 || (high <
 								 the_cmd_arg.val.integer)))
-						io_error_msg
-							("Out of range %d (should be in [%d-%d]).");
+						io_error_msg ("Out of range %d (should be in [%d-%d]).");
 					else
-						init_arg_text
-							(&the_cmd_arg,
-							 long_to_str
-							 ((long) the_cmd_arg.val.integer));
+						init_arg_text (&the_cmd_arg, long_to_str ((long) the_cmd_arg.val.integer));
 				}
 				else
 				{
-					if (get_argument
-							(prompt,
-							 &number_style))
+					if (get_argument (prompt, &number_style))
 						//goto new_cycle;
 						return true;	// state machine
 				}
@@ -1653,6 +1620,8 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				/*
 				 * I don't know what I'm breaking by uncommenting this.
 				 * Danny 18/7/2000.
+				 *
+				 * ... yes, it's all a bit of a mystery, isn't it? mcarter 31-jan-2018
 				 */
 				if (*prompt != '@' && !mark_is_set)
 				{
