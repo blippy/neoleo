@@ -42,49 +42,6 @@ struct cmd_func **the_funcs;
 int num_funcs;
 
 
-int
-search_map_for_cmd (struct line * line, int map, int vec, int code)
-{
-  int len = strlen (line->buf);
-  struct keymap * this_map;
-  int x;
-  char used[OLEO_NUM_KEYS];
-  int try_prefix;
-
-  for (try_prefix = 0; try_prefix < 2; ++try_prefix)
-    {
-      bzero (used, sizeof (used));
-
-      for (this_map = the_maps[map]; this_map; this_map = this_map->map_next)
-	{
-	  for (x = 128; x >= 0; --x)
-	    if (!used[x])
-	      {
-		int found_it = ((this_map->keys[x].vector == vec)
-				&& this_map->keys[x].code == code);
-		int prefix_key = ((this_map->keys[x].vector == -1)
-				  && (this_map->keys[x].code != -1));
-		if (!(   (this_map->keys[x].vector == -1)
-		      && (this_map->keys[x].code == -1)))
-		  used[x] = 1;
-		if (found_it || (try_prefix && prefix_key))
-		  {
-		    const char * c = char_to_string (x);
-		    catn_line (line, " ", 1);
-		    catn_line (line, c, strlen (c));
-		    if (found_it
-			|| (try_prefix
-			    && search_map_for_cmd (line,
-						   this_map->keys[x].code,
-						   vec, code)))
-		      return 1;
-		    line->buf[len] = 0;
-		  }
-	      }
-	}
-    }
-  return 0;
-}
 
 static void 
 do_bind_key (struct keymap *m, int key, int vector, int code)

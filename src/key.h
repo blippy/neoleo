@@ -58,7 +58,6 @@ extern struct keymap **the_maps;
 extern char **map_names;
 extern char **map_prompts;
 
-extern int search_map_for_cmd (struct line * line, int map, int vec, int code);
 extern void bind_key (char * keymap, char * function, int ch);
 extern void unbind_key (char * keymap, int ch);
 extern void bind_or_unbind_set (char * keymap, char * command, char * keyset);
