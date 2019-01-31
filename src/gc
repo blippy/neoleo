@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# convenience for gcov
+CC=$1.cc
+gcov $CC
+less $CC.gcov

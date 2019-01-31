@@ -22,7 +22,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
-#include <tuple>
+#include <sstream>
+//#include <tuple>
 
 #undef NULL
 
@@ -440,7 +441,6 @@ insert_other_cell_expression (struct rng * rng)
 {
 	if (check_editting_mode ()) return;
 	std::string in_str = decomp_str(rng->lr, rng->lc);
-	//put_string(in_str.c_str(), in_str.size());
 	put_string(in_str);
 }
 
@@ -477,8 +477,10 @@ insert_abs_ref(int x)
 	if (check_editting_mode ())
 		return;
 
-	char vbuf[50];
-	char * in_str;
+	std::ostringstream oss;
+
+	//char vbuf[50];
+	//char * in_str;
 	CELLREF mr = mkrow;
 	CELLREF mc = mkcol;
 	/* Insert current cell/range name as an absolute reference
@@ -492,12 +494,17 @@ insert_abs_ref(int x)
 	}
 	if (Global->a0)
 	{
-		if (mr != NON_ROW)
-			sprintf (vbuf, "$%s$%u:$%s:$%u",
-					col_to_str (cucol), curow, col_to_str (mc), mr) ;
-		else
-			sprintf (vbuf, "$%s$%u", col_to_str (cucol), curow);
-		in_str = vbuf;
+		if (mr != NON_ROW) {
+			//sprintf (vbuf, "$%s$%u:$%s:$%u", col_to_str (cucol), curow, col_to_str (mc), mr) ;
+			oss << "$" << col_to_str(cucol)
+				<< "$" << curow 
+				<< ":$" << col_to_str(mc) 
+				<< ":$" << mr;
+		} else {
+			//sprintf (vbuf, "$%s$%u", col_to_str (cucol), curow);
+			oss << "$" << col_to_str(cucol) << "$" << curow;
+		}
+		// in_str = vbuf;
 	}
 	else
 	{
@@ -506,12 +513,12 @@ insert_abs_ref(int x)
 			struct rng r;
 
 			set_rng (&r, curow, cucol, mr, mc);
-			in_str = range_name (&r);
+			oss << range_name (&r);
 		}
 		else
-			in_str = cell_name (curow, cucol);
+			oss << cell_name (curow, cucol);
 	}
-	put_string (in_str, strlen (in_str));  
+	put_string(oss.str());  
 }
 
 	void
