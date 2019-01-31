@@ -962,7 +962,7 @@ line_t lineify_expand_prompt(line_t prompt)
 line_t lineify_expand_char(char* prompt)
 {
 	line_t inp;
-	setn_line(&inp, prompt, strlen(prompt));
+	set_line(&inp, prompt);
 	return lineify_expand_prompt(inp);
 }
 
