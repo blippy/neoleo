@@ -406,10 +406,11 @@ over_string(const std::string& instr)
 }
 
 	void
-put_string (const char * str, int len)
+//put_string (const char * str, int len)
+put_string (const std::string& s1)
 {
-	std::string s1{str};
-	assert(s1.size() == len);
+	//std::string s1{str};
+	//assert(s1.size() == len);
 
 	if (check_editting_mode ())
 		return;
@@ -419,11 +420,13 @@ put_string (const char * str, int len)
 		insert_string(s1);
 }
 
+/*
 void
 put_string (const std::string& s)
 {
 	put_string(s.c_str(), s.size());
 }
+*/
 
 /* Higher Level editting commands. */
 
@@ -576,17 +579,13 @@ insert_usr_fmt_part (int fmt, int stat)
 {
 	char * usr_stats[9];
 	if ((fmt < 1) || (fmt > 16))
-		io_error_msg
-			("insert-user-format-part arg 1 out of range (%d); should be in [1-16].",
-			 fmt);
+		io_error_msg ("insert-user-format-part arg 1 out of range (%d); should be in [1-16].", fmt);
 	--fmt;
 	if ((stat < 1) || (stat > 16))
-		io_error_msg
-			("insert-user-format-part arg 2 out of range (%d); should be in [1-9].",
-			 stat);
+		io_error_msg ("insert-user-format-part arg 2 out of range (%d); should be in [1-9].", stat);
 	--stat;
-	get_usr_stats (fmt, usr_stats);
-	put_string (usr_stats[stat], strlen (usr_stats[stat]));
+	get_usr_stats(fmt, usr_stats);
+	put_string(usr_stats[stat]);
 }
 
 	void
@@ -634,9 +633,9 @@ self_map_command (int c)
 	void
 insert_current_filename (void)
 {
-	int len = FileGetCurrentFileName().size();
-	if (len >0)
-		put_string(FileGetCurrentFileName().c_str(), len);
+	std::string name = FileGetCurrentFileName();
+	if(name == "") return;
+	put_string(name);
 }
 
 
