@@ -19,6 +19,7 @@
  */
 
 
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1027,18 +1028,21 @@ io_set_win_flags (struct window *w, int f)
 	w->flags = f;
 }
 
-void 
-io_write_window_config (struct line * out)
+std::string
+io_write_window_config ()
 {
+	std::ostringstream oss;
+
 	int n;
 	char buf[90];
-	struct line scratch;
-	scratch.alloc = 0;
-	scratch.buf = 0;
+	//struct line scratch;
+	//scratch.alloc = 0;
+	//scratch.buf = 0;
 
 	cwin->win_curow = curow;
 	cwin->win_cucol = cucol;
-	sprint_line (out, "O;status %d\n", user_status);
+	//sprint_line (&out, "O;status %d\n", user_status);
+	oss << "O;status " << user_status << "\n";
 	if (nwin > 1)
 	{
 		/* ... */ /* fixme ? */
@@ -1058,14 +1062,16 @@ io_write_window_config (struct line * out)
 			strcat (buf, ",standout");
 		if ((wins[n].flags & WIN_EDGES) == 0)
 			strcat (buf, ",noedges");
-		scratch = *out;
-		out->alloc = 0;
-		out->buf = 0;
-		sprint_line (out, "%sW;N%d;A%u %u;C%d %d %d;O%s\n",
-				scratch.buf, n + 1, wins[n].win_curow, wins[n].win_cucol,
-				7, 0, 7, buf + 1);
-		free (scratch.buf);
+		//scratch = *out;
+		//out->alloc = 0;
+		//out->buf = 0;
+		//sprint_line (out, "%sW;N%d;A%u %u;C%d %d %d;O%s\n", scratch.buf, n + 1, wins[n].win_curow, wins[n].win_cucol, 7, 0, 7, buf + 1);
+		oss << "W;N" << n+1 << ";A" << wins[n].win_curow << " " << wins[n].win_cucol 
+			<< ";C7 0 7;O" << buf+1 << "\n";
+		//free (scratch.buf);
 	}
+
+	return oss.str();
 }
 
 void 

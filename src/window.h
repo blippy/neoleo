@@ -177,7 +177,7 @@ extern void io_recenter_cur_win (void);
 extern void io_recenter_named_window(struct window *w);
 extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
-extern void io_write_window_config (struct line * out);
+std::string io_write_window_config ();
 extern void io_read_window_config (char * line);
 extern void dequeue_mouse_event (struct mouse_event *out, int seq);
 extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,

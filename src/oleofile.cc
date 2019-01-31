@@ -30,12 +30,11 @@
 #include "io-utils.h"
 #include "io-term.h"
 #include "global.h"
-#include "cell.h"
 #include "sheet.h"
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-#include "cmd.h"
+//#include "cmd.h"
 #include "decompile.h"
 #include "spans.h"
 #include "utils.h"
@@ -689,13 +688,13 @@ static void oleo_write_var ( char *name, struct var *var)
 
 static void write_mp_windows ( FILE *fp)
 {
-	struct line line;
+	//struct line line;
 
-	line.alloc = 0;
-	line.buf = 0;
-	io_write_window_config (&line);
-	fputs (line.buf, fp);
-	free (line.buf);
+	//line.alloc = 0;
+	//line.buf = 0;
+	std::string str = io_write_window_config();
+	fputs(str.c_str(), fp);
+	//free (line.buf);
 }
 
 void write_spans(FILE* fp, span_find_t& s_find, char typechar)
