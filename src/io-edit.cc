@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
+#include <tuple>
 
 #undef NULL
 
@@ -384,9 +385,20 @@ insert_string(const char * str, int len)
 	the_cursor += len;
 }
 
-	void
-over_string(const char * str, int len)
+const char*
+str_and_len(const std::string& instr, int& len)
 {
+	len = instr.size();
+	return instr.c_str();
+}
+
+	void
+//over_string(const char * str, int len)
+over_string(const std::string& instr)
+{
+	int len;
+	const char*  str = str_and_len(instr, len);
+
 	if (check_editting_mode ())
 		return;
 	if (the_cursor + len > strlen (the_text.buf))
@@ -404,12 +416,21 @@ over_string(const char * str, int len)
 	void
 put_string (const char * str, int len)
 {
+	std::string s1{str};
+	assert(s1.size() == len);
+
 	if (check_editting_mode ())
 		return;
 	if(the_overwrite)
-		over_string(str, len);
+		over_string(s1);
 	else
 		insert_string(str, len);
+}
+
+void
+put_string (const std::string& s)
+{
+	put_string(s.c_str(), s.size());
 }
 
 /* Higher Level editting commands. */
@@ -581,19 +602,29 @@ self_insert_command (int ch, int count)
 {
 	if (check_editting_mode ())
 		return;
+
+	std::string s;
+	for(int i = 0; i< count; ++i)
+		s += (char) ch;
+	put_string(s);
+
+	/*
 	else if (count == 1)
 	{
-		char chr = ch;
-		put_string (&chr, 1);
+		//char chr = ch;
+		//put_string (&chr, 1);
+		std::string ch1{(char) ch};
+		put_string(ch1);
 	}
 	else if (count > 0)
 	{
-		char * buf = (char *)ck_malloc (count); /* sleazy, huh? */
+		char * buf = (char *)ck_malloc (count); // sleazy, huh?
 		int x;
 		for (x = 0; x < count; ++x)
 			buf[x] = ch;
 		put_string (buf, count);
 	}
+*/
 }
 
 

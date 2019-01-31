@@ -38,7 +38,6 @@ extern void delete_char (int n);
 extern void delete_word (int n);
 extern void kill_line(void);
 extern void insert_string(const char * str, int len);
-extern void over_string (char * str, int len);
 extern void put_string (const char * str, int len);
 extern void insert_cell_expression (void);
 extern void insert_other_cell_expression (struct rng * rng);
