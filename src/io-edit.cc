@@ -60,8 +60,7 @@ check_editting_mode (void)
 {
 	if (!the_cmd_frame->cmd || cur_arg >= cmd_argc || !the_do_prompt || the_is_set)
 	{
-		io_error_msg ("Command '%s' is not appropriate now.",
-				cur_cmd->func_name);
+		io_error_msg ("Command '%s' is not appropriate now.", cur_cmd->func_name);
 		/* not reached */
 	}
 	return 0;
@@ -235,22 +234,12 @@ erase (int len)
 {
 	if (check_editting_mode ())
 		return;
-	else {
-#if 0
-		// mcarter 28-Aug-2017 this is how it originally read
-		// BUT it is wrong, because strings are not allowed
-		// to overlap
-		strcpy (&the_text.buf[the_cursor],
-				&the_text.buf[the_cursor + len]);
-#else
-		// alternative strcpy() with overlap
-		// as per https://stackoverflow.com/questions/14476627/strcpy-implementation-in-c
-		char *dst = &the_text.buf[the_cursor];
-		char* src = &the_text.buf[the_cursor + len];
-		while(*dst++ = *src++);
-#endif
-		io_erase (len);
-	}
+	// strcpy() with overlap
+	// as per https://stackoverflow.com/questions/14476627/strcpy-implementation-in-c
+	char *dst = &the_text.buf[the_cursor];
+	char* src = &the_text.buf[the_cursor + len];
+	while(*dst++ = *src++);
+	io_erase (len);
 }
 
 
@@ -393,7 +382,6 @@ str_and_len(const std::string& instr, int& len)
 }
 
 	void
-//over_string(const char * str, int len)
 over_string(const std::string& instr)
 {
 	int len;
@@ -440,7 +428,7 @@ insert_cell_expression (void)
 {
 	if (check_editting_mode ()) return;
 	std::string in_str = decomp_str(curow, cucol);
-	put_string(in_str.c_str(), in_str.size());
+	put_string(in_str);
 }
 
 
@@ -449,7 +437,8 @@ insert_other_cell_expression (struct rng * rng)
 {
 	if (check_editting_mode ()) return;
 	std::string in_str = decomp_str(rng->lr, rng->lc);
-	put_string(in_str.c_str(), in_str.size());
+	//put_string(in_str.c_str(), in_str.size());
+	put_string(in_str);
 }
 
 /* No quotes are provided here, because it's easier to add
@@ -462,13 +451,7 @@ insert_cell_value(void)
 {
 	if (check_editting_mode ())
 		return;
-	else
-	{
-		//const char * in_str = cell_value_string (curow, cucol, 0);
-		//put_string (in_str, strlen(in_str));
-		strcpy_c in_str{cell_value_string(curow, cucol, 0)};
-		put_string(in_str.data(), strlen(in_str.data()));
-	}
+	put_string(cell_value_string(curow, cucol, 0));
 }
 
 /* Ditto.
@@ -480,13 +463,7 @@ insert_other_cell_value(struct rng * rng)
 {
 	if (check_editting_mode ())
 		return;
-	else
-	{
-		//const char * in_str; in_str = cell_value_string (rng->lr, rng->lc, 0);
-		//put_string (in_str, strlen(in_str));
-		strcpy_c in_str{cell_value_string(rng->lr, rng->lc, 0)};
-		put_string(in_str.data(), strlen(in_str.data()));		
-	}
+	put_string(cell_value_string(rng->lr, rng->lc, 0));
 }
 
 
@@ -496,44 +473,42 @@ insert_abs_ref(int x)
 {
 	if (check_editting_mode ())
 		return;
+
+	char vbuf[50];
+	char * in_str;
+	CELLREF mr = mkrow;
+	CELLREF mc = mkcol;
+	/* Insert current cell/range name as an absolute reference
+	 * but if argument x is 1, insert current cell address,
+	 * leaving out mark information.
+	 */
+	if (x)
+	{
+		mr = curow;
+		mc = cucol;
+	}
+	if (Global->a0)
+	{
+		if (mr != NON_ROW)
+			sprintf (vbuf, "$%s$%u:$%s:$%u",
+					col_to_str (cucol), curow, col_to_str (mc), mr) ;
+		else
+			sprintf (vbuf, "$%s$%u", col_to_str (cucol), curow);
+		in_str = vbuf;
+	}
 	else
 	{
-		char vbuf[50];
-		char * in_str;
-		CELLREF mr = mkrow;
-		CELLREF mc = mkcol;
-		/* Insert current cell/range name as an absolute reference
-		 * but if argument x is 1, insert current cell address,
-		 * leaving out mark information.
-		 */
-		if (x)
+		if (mr != NON_ROW)
 		{
-			mr = curow;
-			mc = cucol;
-		}
-		if (Global->a0)
-		{
-			if (mr != NON_ROW)
-				sprintf (vbuf, "$%s$%u:$%s:$%u",
-						col_to_str (cucol), curow, col_to_str (mc), mr) ;
-			else
-				sprintf (vbuf, "$%s$%u", col_to_str (cucol), curow);
-			in_str = vbuf;
+			struct rng r;
+
+			set_rng (&r, curow, cucol, mr, mc);
+			in_str = range_name (&r);
 		}
 		else
-		{
-			if (mr != NON_ROW)
-			{
-				struct rng r;
-
-				set_rng (&r, curow, cucol, mr, mc);
-				in_str = range_name (&r);
-			}
-			else
-				in_str = cell_name (curow, cucol);
-		}
-		put_string (in_str, strlen (in_str));  
+			in_str = cell_name (curow, cucol);
 	}
+	put_string (in_str, strlen (in_str));  
 }
 
 	void
@@ -600,31 +575,12 @@ insert_usr_fmt_part (int fmt, int stat)
 	void
 self_insert_command (int ch, int count)
 {
-	if (check_editting_mode ())
-		return;
+	if (check_editting_mode ()) return;
 
 	std::string s;
 	for(int i = 0; i< count; ++i)
 		s += (char) ch;
 	put_string(s);
-
-	/*
-	else if (count == 1)
-	{
-		//char chr = ch;
-		//put_string (&chr, 1);
-		std::string ch1{(char) ch};
-		put_string(ch1);
-	}
-	else if (count > 0)
-	{
-		char * buf = (char *)ck_malloc (count); // sleazy, huh?
-		int x;
-		for (x = 0; x < count; ++x)
-			buf[x] = ch;
-		put_string (buf, count);
-	}
-*/
 }
 
 
