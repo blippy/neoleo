@@ -57,9 +57,7 @@ class ValErr : public std::exception
 
 void throw_valerr(int n, struct value* vp)
 {
-	vp->type = TYP_ERR;
-	//vp->Value = n;
-	vp->x.c_i = n;
+	vp->sErr(n);
 	throw ValErr(n);
 }
 
@@ -72,7 +70,7 @@ RETSIGTYPE math_sig ( int sig);
 #define Float	x.c_n
 //#define String	x.c_s
 #define Int	x.c_l
-#define Value	x.c_i
+//#define Value	x.c_i
 #define Rng	x.c_r
 
 static struct value *eval_stack;
@@ -377,9 +375,9 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		if (value_ptr->type != (value_ptr + 1)->type || (byte != EQUAL && byte != NOTEQUAL))
 			throw_valerr(BAD_INPUT, value_ptr);
 		if (byte == EQUAL)
-			value_ptr->Value = value_ptr->Value == (value_ptr + 1)->Value;
+			value_ptr->sBol(value_ptr->gBol() == (value_ptr + 1)->gBol());
 		else
-			value_ptr->Value = value_ptr->Value != (value_ptr + 1)->Value;
+			value_ptr->sBol(value_ptr->gBol() != (value_ptr + 1)->gBol());
 		return;
 	}
 	if (value_ptr->type != (value_ptr + 1)->type)
@@ -388,7 +386,6 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 			if ((value_ptr + 1)->type == TYP_STR)
 			{
-				//value_ptr->type = TYP_STR;
 				value_ptr->sString("");
 			}
 			else if ((value_ptr + 1)->type == TYP_INT)
@@ -404,7 +401,6 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 			if (value_ptr->type == TYP_STR)
 			{				
-				//(value_ptr + 1)->type = TYP_STR;
 				(value_ptr + 1)->sString("");
 			}
 			else if (value_ptr->type == TYP_INT)
@@ -452,8 +448,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 			//if (*strptr)
 			if(!ok)
 			{
-				value_ptr->type = TYP_BOL;
-				value_ptr->Value = (byte == NOTEQUAL);
+				value_ptr->sBol(byte == NOTEQUAL);
 				return;
 			}
 
@@ -507,8 +502,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			{
 				if (value_ptr->type != TYP_ERR)
 				{
-					value_ptr->type = TYP_ERR;
-					value_ptr->Value = NON_BOOL;
+					value_ptr->sErr(NON_BOOL);
 				}
 				expr += jumpto;
 				if (expr[-2] != SKIP)
@@ -518,7 +512,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				expr += jumpto;	/* Skip both branches of the if */
 
 			}
-			else if (value_ptr->Value == 0)
+			else if (value_ptr->gBol() == 0)
 			{
 				expr += jumpto;
 				--curstack;
@@ -539,11 +533,10 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				expr += jumpto;
 			else if (value_ptr->type != TYP_BOL)
 			{
-				value_ptr->type = TYP_ERR;
-				value_ptr->Value = NON_BOOL;
+				value_ptr->sErr(NON_BOOL);
 				expr += jumpto;
 			}
-			else if (value_ptr->Value == 0)
+			else if (value_ptr->gBol() == 0)
 				expr += jumpto;
 			else
 				--curstack;
@@ -555,11 +548,10 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				expr += jumpto;
 			else if (value_ptr->type != TYP_BOL)
 			{
-				value_ptr->type = TYP_ERR;
-				value_ptr->Value = NON_BOOL;
+				value_ptr->sErr(NON_BOOL);
 				expr += jumpto;
 			}
-			else if (value_ptr->Value)
+			else if (value_ptr->gBol())
 				expr += jumpto;
 			else
 				--curstack;
@@ -581,13 +573,11 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case CONST_STR:
 		case CONST_STR_L:
-			value_ptr->type = TYP_STR;
 			value_ptr->sString((char *) expr + jumpto);
 			break;
 
 		case CONST_ERR:
-			value_ptr->type = TYP_ERR;
-			value_ptr->Value = *expr++;
+			value_ptr->sErr(*expr++);
 			/* expr+=sizeof(char *); */
 			break;
 
