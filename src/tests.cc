@@ -142,10 +142,16 @@ bool run_obsmem_tests()
 	return true;
 }
 
+
+template<typename... Args>
+std::string format_sub_test(Args... args)
+{
+	return string_format(args...);
+}
 void format_tests()
 {
 	cout << "Format tests ...\n";
-	cout << string_format("Hello %s, meaning of life is %d\n", "world", 42);
+	cout << format_sub_test("Hello %s, meaning of life is %d\n", "world", 42);
 }
 
 bool
