@@ -105,6 +105,7 @@ int overflow;
 
 
 void ERROR1 (int cause) { throw cause;}
+void ERROR2 (struct value* v) { ERROR1(v->gErr()); }
 
 void TO_FLT(struct value* val)
 {	
@@ -123,7 +124,7 @@ void TO_FLT(struct value* val)
 		//if(*strptr) 
 		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
-		ERROR1((val)->Value); 
+		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_FLT; 
 		(val)->Float=0.0; 
@@ -148,7 +149,7 @@ void  TO_INT(struct value* val)
 		//if(*strptr) 
 		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
-		ERROR1((val)->Value); 
+		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
 		(val)->Int=0; 
@@ -170,7 +171,7 @@ void TO_NUM(struct value* val)
 		//if(*strptr) 
 		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
-		ERROR1((val)->Value); 
+		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
 		(val)->Int=0; 
@@ -195,7 +196,7 @@ void TO_STR(struct value* val)
 		//(val)->type=TYP_STR;
 		val->sString(flt_to_str(val->gFlt()));
 	} else if((val)->type==TYP_ERR) {		
-		ERROR1((val)->Value);	
+		ERROR2(val);	
 	} else if((val)->type==0) {	
 		//(val)->type=TYP_STR;	
 		//val->String = (char*) eval_mem.gimme(1);
@@ -210,7 +211,7 @@ void TO_BOL(struct value* val)
 	if((val)->type==TYP_BOL)	
 		;	
 	else if((val)->type==TYP_ERR) {	
-		ERROR1((val)->Value);	
+		ERROR2(val);	
 	} else	
 		ERROR1(NON_BOOL);
 }
@@ -221,7 +222,7 @@ void TO_RNG(struct value* val)
 	if((val)->type==TYP_RNG) 
 		; 
 	else if((val)->type==TYP_ERR) {
-		ERROR1((val)->Value); 
+		ERROR2(val); 
 	} else 
 		ERROR1(NON_RANGE);
 }
@@ -369,7 +370,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 	if (value_ptr->type == TYP_ERR)
 		return;
 	if ((value_ptr + 1)->type == TYP_ERR)
-		throw_valerr((value_ptr + 1)->Value, value_ptr);
+		throw_valerr((value_ptr + 1)->gInt(), value_ptr);
 
 	if (value_ptr->type == TYP_BOL || (value_ptr + 1)->type == TYP_BOL)
 	{
@@ -435,8 +436,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 			//if (*strptr)
 			if(!ok)
 			{
-				value_ptr->type = TYP_BOL;
-				value_ptr->Value = (byte == NOTEQUAL);
+				value_ptr->sBol((byte == NOTEQUAL));
 				return;
 			}
 		}
@@ -607,8 +607,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				switch (varp->var_flags)
 				{
 					case VAR_UNDEF:
-						value_ptr->type = TYP_ERR;
-						value_ptr->Value = BAD_NAME;
+						value_ptr->sErr(BAD_NAME);
 						break;
 
 					case VAR_CELL:
@@ -675,8 +674,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case F_TRUE:
 		case F_FALSE:
-			value_ptr->type = TYP_BOL;
-			value_ptr->Value = (byte == F_TRUE);
+			value_ptr->sBol((byte == F_TRUE));
 			break;
 
 		case F_PI:
@@ -711,7 +709,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case NOT:
 		case F_NOT:
-			value_ptr->Value = !(value_ptr->Value);
+			value_ptr->sBol(!(value_ptr->gBol()));
 			break;
 
 		case F_ROWS:
@@ -943,8 +941,7 @@ static unsigned char area_cmd;
 RETSIGTYPE
 math_sig ( int sig)
 {
-	eval_stack[curstack].type = TYP_ERR;
-	eval_stack[curstack].Value = BAD_INPUT;
+	eval_stack[curstack].sErr(BAD_INPUT);
 }
 
 
@@ -990,10 +987,10 @@ update_cell(CELL *cell)
 				*/
 				break;
 			case TYP_BOL:
-				new_val = newv->Value != cell->gBol();
+				new_val = newv->gBol() != cell->gBol();
 				break;
 			case TYP_ERR:
-				new_val = newv->Value != cell->gErr();
+				new_val = newv->gBol() != cell->gErr();
 				break;
 			default:
 				new_val = 0;
@@ -1006,6 +1003,7 @@ update_cell(CELL *cell)
 	if (new_val)
 	{
 		cell->set_c_z(newv->x);
+		//if(is_string(newv) free(newv->x);
 		push_refs(cell);
 	}
 	//(void) obstack_free (&tmp_mem, tmp_mem_start);
