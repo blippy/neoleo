@@ -1,6 +1,6 @@
 #pragma once
 /*
- * Copyright © 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
  * All kinds of other global stuff
  */
 
-inline bool use_2019 = false;
+inline bool use_2019 = true;
 
 /* The most important compile-time constant.  How many bits do we want to
    allocate for cell-references?  Useful values are 8 and 16 (at the moment)
