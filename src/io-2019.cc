@@ -244,3 +244,10 @@ static bool maybe_quit_spreadsheet2019()
 	if(response == "y" || response == "yes") return true;
 	return false;
 }
+
+void io_error_msg2019_str(const std::string& str)
+{
+	log("TODO:io_error_msg2019_str:", str);
+}
+
+

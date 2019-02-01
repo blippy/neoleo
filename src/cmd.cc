@@ -38,6 +38,7 @@
 #include "cmd.h"
 #include "convert.h"
 #include "defuns.h"
+#include "io-2019.h"
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-generic.h"
@@ -2386,15 +2387,21 @@ cmd_io_error_msg (const char *str, ...)
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
 
-	char buf2[1020];
-	sprintf (buf2, "display-msg %s", buf);
-	recover_from_error ();
+	if(use_2019) {
+		//std::string msg = string_format(str, 
+		io_error_msg2019_str(buf);
+	} else {
 
-	if (Global->display_opened)
-		execute_command (buf2);
-	else
-		fprintf (stderr, "oleo: %s\n", buf);
+		char buf2[1020];
+		sprintf (buf2, "display-msg %s", buf);
+		recover_from_error ();
 
+		if (Global->display_opened)
+			execute_command (buf2);
+		else
+			fprintf (stderr, "oleo: %s\n", buf);
+
+	}
 
 	//longjmp (Global->error_exception, 1);
 	throw OleoJmp("OleoJmp from io_error_msg()");
