@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: format.h,v 1.5 2000/08/10 21:02:50 danny Exp $
- *
- * Copyright © 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +16,11 @@
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#include <memory>
+#include <iostream>
+#include <string>
+#include <cstdio>
+
 #include "global.h"
 #include "cell.h"
 
@@ -26,3 +29,14 @@ extern char *cell_format_string(CELL *cp);
 extern int str_to_fmt (char *ptr);
 const char * jst_to_str (int jst);
 extern int chr_to_jst (int chr);
+
+
+// https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/3742999#3742999
+template<typename ... Args>
+std::string string_format( const std::string& format, Args ... args )
+{
+    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buf( new char[ size ] ); 
+    snprintf( buf.get(), size, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}

@@ -23,6 +23,7 @@ using namespace std::string_literals;
 
 
 #include "tests.h"
+#include "format.h"
 #include "io-abstract.h"
 #include "basic.h"
 #include "io-headless.h"
@@ -141,6 +142,12 @@ bool run_obsmem_tests()
 	return true;
 }
 
+void format_tests()
+{
+	cout << "Format tests ...\n";
+	cout << string_format("Hello %s, meaning of life is %d\n", "world", 42);
+}
+
 bool
 headless_tests()
 {
@@ -154,6 +161,8 @@ headless_tests()
 		{"yyparse", 	test_yyparse_parse},
 		{"yyreglex",	yyreglex_experiment}
 	};
+
+	format_tests();
 
 	auto it = func_map.find(option_tests_argument);
 	if(it != func_map.end()) {
