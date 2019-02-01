@@ -77,7 +77,7 @@ via stdin/stdout, a la `ed`. One command that `neoleo` has is
 can create your spreadsheet, and create a nice PDF with it, say
 by typing the following from the command line:
 ```
-neoleo foo.oleo -H <<<tbl 2>dev/null | groff -t -Tascii | text2pdf >foo.pdf
+neoleo foo.oleo -H <<<tbl 2>/dev/null | groff -t -Tascii | text2pdf >foo.pdf
 ```
 
 ## Technical Reports
