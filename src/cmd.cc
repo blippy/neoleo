@@ -50,6 +50,9 @@
 #include "key.h"
 #include "utils.h"
 
+// 2019-02-01 Let's see what we can purge here
+#define	ASSERT_UNCALLED() { assert(false); }
+
 using namespace std::literals::string_literals;
 
 char * expand_prompt (char *str);
@@ -77,6 +80,7 @@ void obstack_mc_init(cmd_obstack_t* ptr)
 
 void* obstack_mc_alloc(cmd_obstack_t* ptr, int size)
 {
+	ASSERT_UNCALLED();
 #ifdef USE_CMD_OBSTACK
 	return obstack_alloc(ptr, size);
 #else
@@ -86,6 +90,7 @@ void* obstack_mc_alloc(cmd_obstack_t* ptr, int size)
 
 void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
 {
+	ASSERT_UNCALLED();
 #ifdef USE_CMD_OBSTACK
 	obstack_grow(ptr, data, size);
 #else
@@ -96,6 +101,7 @@ void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
 
 void obstack_mc_1grow(cmd_obstack_t* ptr, char c)
 {
+	ASSERT_UNCALLED();
 #ifdef USE_CMD_OBSTACK
 	obstack_1grow(ptr, c);
 #else
@@ -105,6 +111,7 @@ void obstack_mc_1grow(cmd_obstack_t* ptr, char c)
 
 void* obstack_mc_finish(cmd_obstack_t* ptr)
 {
+	ASSERT_UNCALLED();
 #ifdef USE_CMD_OBSTACK
 	return obstack_finish(ptr);
 #else
@@ -114,6 +121,7 @@ void* obstack_mc_finish(cmd_obstack_t* ptr)
 
 void obstack_mc_free(cmd_obstack_t* ptr, void* mem_start)
 {
+	ASSERT_UNCALLED();
 #ifdef USE_CMD_OBSTACK
 	obstack_free(ptr, mem_start);
 #else
@@ -223,6 +231,7 @@ default_input_stream (void)
 static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
+	ASSERT_UNCALLED();
 	if constexpr(false) { // for debugging purposes
 		char cmd[len+1];
 		for(int i = 0; i<len; ++i) cmd[i] = first_line[i];
@@ -263,6 +272,7 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
 void
 pop_input_stream (void)
 {
+	ASSERT_UNCALLED();
 	if(!the_cmd_frame->input->prev_stream) return;
 
 	struct command_frame *fr = the_cmd_frame;
@@ -286,6 +296,7 @@ pop_input_stream (void)
 void
 start_entering_macro (void)
 {
+	ASSERT_UNCALLED();
 	if (making_macro)
 	  {
 		  io_error_msg ("Can't define two macros at once");
@@ -298,6 +309,7 @@ start_entering_macro (void)
 void
 bound_macro (int num)
 {
+	ASSERT_UNCALLED();
 	struct macro *old;
 	CELL *cp;
 
@@ -317,6 +329,7 @@ bound_macro (int num)
 void
 run_string_as_macro (const char *macro)
 {
+	ASSERT_UNCALLED();
 	struct rng rng;
 	/* This is going to continue the command loop
 	 * as if some other command had been executed.
@@ -335,6 +348,7 @@ run_string_as_macro (const char *macro)
 void
 call_last_kbd_macro (int count)
 {
+	ASSERT_UNCALLED();
 	if (!last_macro)
 		io_error_msg ("No keyboard macro entered.");
 	while (count-- > 0)
@@ -347,6 +361,7 @@ call_last_kbd_macro (int count)
 void
 end_macro (void)
 {
+	ASSERT_UNCALLED();
 	CELL *cp;
 	struct macro *old;
 
@@ -398,6 +413,7 @@ end_macro (void)
 void
 stop_entering_macro (void)
 {
+	ASSERT_UNCALLED();
 	if (!making_macro)
 	  {
 		  if (rmac)
@@ -437,6 +453,7 @@ stop_entering_macro (void)
 static void
 error_alarm ()
 {
+	ASSERT_UNCALLED();
 	if (the_cmd_frame->cmd && the_cmd_arg.timeout_seconds)
 	  {
 		  --the_cmd_arg.timeout_seconds;
@@ -463,6 +480,7 @@ struct alarm_entry alarm_table[3] = {
 static void
 alarm_hooks (void)
 {
+	ASSERT_UNCALLED();
 	int x;
 	time_t now = time (0);
 	for (x = 0; alarm_table[x].fn; ++x)
@@ -479,6 +497,7 @@ alarm_hooks (void)
 static void
 select_hooks (void)
 {
+	ASSERT_UNCALLED();
 	int x;
 	for (x = 0; x < SELECT_SET_SIZE; ++x)
 	  {
@@ -504,6 +523,7 @@ select_hooks (void)
 void
 block_until_excitement (struct timeval *tv)
 {
+	ASSERT_UNCALLED();
 	int ret;
 
 	bcopy ((char *) &read_fd_set, (char *) &read_pending_fd_set,
@@ -526,6 +546,7 @@ block_until_excitement (struct timeval *tv)
 void
 loop_until_char_avail()
 {
+	ASSERT_UNCALLED();
 	/* This loop until a character can be read. */
 	while (!io_input_avail ())
 	{
@@ -586,6 +607,7 @@ loop_until_char_avail()
 int
 real_get_chr (void)
 {
+	ASSERT_UNCALLED();
 	int ret;
 	unsigned int ch = EOF;	/* The char that will be returned. */
 
@@ -871,6 +893,7 @@ free_cmd_frame (struct command_frame *frame)
 void
 pop_unfinished_command (void)
 {
+	ASSERT_UNCALLED();
 	if (the_cmd_frame->cmd)
 	  {
 		  int move_cursor = 0;
@@ -896,6 +919,7 @@ pop_unfinished_command (void)
 void
 recover_from_error (void)
 {
+	ASSERT_UNCALLED();
 	if(!the_cmd_frame) return; // maybe running headless
 
 	/* pop input streams until the bottom is reached. */
@@ -940,6 +964,7 @@ recover_from_error (void)
 
 line_t lineify_expand_prompt(line_t prompt)
 {
+	ASSERT_UNCALLED();
 	line_t result;
 	expand_prompt(prompt.buf, result);
 	return result;
@@ -947,6 +972,7 @@ line_t lineify_expand_prompt(line_t prompt)
 
 line_t lineify_expand_char(char* prompt)
 {
+	ASSERT_UNCALLED();
 	line_t inp;
 	set_line(&inp, prompt);
 	return lineify_expand_prompt(inp);
@@ -961,6 +987,7 @@ line_t lineify_expand_char(char* prompt)
 static int
 get_argument (char *prompt, struct prompt_style *style)
 {
+	ASSERT_UNCALLED();
 	//log_debug("cmd.cc:get_argment() style keymap=" + std::string(style->keymap));
 	the_cmd_arg.style = style;
 	set_line_a(the_cmd_arg.prompt, prompt);
@@ -1024,6 +1051,7 @@ get_argument (char *prompt, struct prompt_style *style)
 void
 exit_minibuffer (void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	else
@@ -1060,6 +1088,7 @@ exit_minibuffer (void)
 void
 setn_arg_text (struct command_arg *arg, const char *text, int len)
 {
+	ASSERT_UNCALLED();
 	setn_line (&arg->text, text, len);
 	arg->cursor = len;
 }
@@ -1067,6 +1096,7 @@ setn_arg_text (struct command_arg *arg, const char *text, int len)
 void
 init_arg_text (struct command_arg *arg, const char *text)
 {
+	ASSERT_UNCALLED();
 	setn_arg_text (arg, text, strlen (text));
 }
 
@@ -1078,12 +1108,14 @@ init_arg_text (struct command_arg *arg, const char *text)
 void
 set_default_arg (struct command_arg *arg, char *text, int len)
 {
+	ASSERT_UNCALLED();
 	setn_arg_text (arg, text, len);
 }
 
 int				// new state
 prefix_cmd_continuation_loop (bool goto_have_character)
 {
+	ASSERT_UNCALLED();
 	int ch;			/* The next character to be keymapped. */
 	if (goto_have_character)
 		goto have_character;
@@ -1300,6 +1332,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 
 bool turd_1(bool interactive_mode, bool iscmd)
 {
+	ASSERT_UNCALLED();
 	 /* FUNC_ARGS string. To continue this loop, use `goto next_arg;'.
 	 *
 	 * If user interaction is required, the appropriate keymap,
@@ -1820,6 +1853,7 @@ next_arg:
 bool				// return true if we have to jump to new_cycle upon completion 
 resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 {
+	ASSERT_UNCALLED();
 	while (cur_arg < cmd_argc) {
 		if (the_cmd_arg.is_set)
 			goto next_arg;
@@ -1839,6 +1873,7 @@ next_arg:
 void
 recompute_numeric_value_of_prefix ()
 {
+	ASSERT_UNCALLED();
 	//puts("recompute_numeric_value_of_prefix()");
 	int x = 0;
 	int presumed_digits = 0;
@@ -1879,6 +1914,7 @@ recompute_numeric_value_of_prefix ()
 int				// return next state
 call_destroy_restart ()
 {
+	ASSERT_UNCALLED();
 	int move_cursor = 0;
 	struct command_frame *frame = the_cmd_frame;
 	cmd_invoker stub = find_stub ();
@@ -1928,6 +1964,7 @@ call_destroy_restart ()
 int				// return a new state
 do_new_cycle ()
 {
+	ASSERT_UNCALLED();
 	// puts("command_loop(): new_cycle");
 
 	if (!the_cmd_frame)
@@ -1947,6 +1984,7 @@ do_new_cycle ()
 int				// new state
 do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
 {
+	ASSERT_UNCALLED();
 
 	if (resume_getting_arguments_loop (interactive_mode_on, iscmd))
 		return sc_new_cycle;
@@ -1964,6 +2002,7 @@ do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
 int				// return a new state
 do_got_command ()
 {
+	ASSERT_UNCALLED();
 	/* There are some commands that are implemented right here. */
 	if (cur_cmd == break_cmd)
 	  {
@@ -2031,6 +2070,7 @@ do_got_command ()
 void 
 print_state(int state)
 {
+	ASSERT_UNCALLED();
 	//char* state_str = 0;
 	char state_str[80];
 #define SET_ST_STR(x) strcpy(state_str, x)
@@ -2061,6 +2101,7 @@ print_state(int state)
 void
 inner_command_loop (int state, int iscmd)
 {
+	ASSERT_UNCALLED();
 
 	while (1)
 	  {
@@ -2153,6 +2194,7 @@ inner_command_loop (int state, int iscmd)
 void
 command_loop (int prefix, int iscmd)
 {
+	ASSERT_UNCALLED();
 
 	//puts("command_loop() started");
 	int state = sc_start;
@@ -2198,6 +2240,7 @@ static struct line exec_cmd_line;
 static void
 quote_macro_args (char *args)
 {
+	ASSERT_UNCALLED();
 	while (*args)
 	  {
 		  switch (*args)
@@ -2216,6 +2259,7 @@ quote_macro_args (char *args)
 void
 execute_command(const char *instr)
 {
+	ASSERT_UNCALLED();
 	// kludge to ensure we can pass in a const string
 	strcpy_c mem(instr);
 	char *str = mem.data();
@@ -2314,11 +2358,13 @@ execute_command(const char *instr)
 void
 execute_command_str(std::string cmd)
 {
+	ASSERT_UNCALLED();
 	execute_command((char*) cmd.c_str());
 }
 
 void execute_command_sv(std::string_view cmd)
 {
+	ASSERT_UNCALLED();
 	execute_command_str(std::string(cmd));
 }
 
@@ -2328,6 +2374,7 @@ void execute_command_sv(std::string_view cmd)
 int
 get_chr (void)
 {
+	ASSERT_UNCALLED();
 	int ch;
 
 	if (rmac)
@@ -2373,6 +2420,7 @@ display_msg (char *msg, int c)
 void
 pushback_keystroke (int c)
 {
+	ASSERT_UNCALLED();
 	if (c > 0)
 		pushed_back_char = c;
 }
@@ -2426,6 +2474,7 @@ io_info_msg (const char *str, ...)
 // refactoring. Only called by expand_prompt()
 void inner_prompt_expansion(char*& str, struct line& expanded)
 {
+	ASSERT_UNCALLED();
 	char *last_pos = str;
 	char *src_pos;
 
@@ -2502,6 +2551,7 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
 char *
 expand_prompt (char *str)
 {
+	ASSERT_UNCALLED();
 	if (!str || !index (str, '%')) 
 		return str;
 
@@ -2514,6 +2564,7 @@ expand_prompt (char *str)
 
 void expand_prompt(char *str, struct line& line)
 {
+	ASSERT_UNCALLED();
 	if (!str || !index (str, '%')) {
 		set_line(&line, str);
 	} else {
@@ -2534,6 +2585,7 @@ void expand_prompt(char *str, struct line& line)
 void
 view_info (char *name, int ignore)
 {
+	ASSERT_UNCALLED();
 }
 
 /* The C part of this function is uninteresting.  The interesting part
@@ -2548,6 +2600,8 @@ with_keymap (char *mapname)
 void
 one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
 {
+	ASSERT_UNCALLED();
+
 	if (keyseq->cmd.vector < 0 && keyseq->cmd.code < 0)
 		io_bell ();
 	else if (keyseq->cmd.vector < 0)
