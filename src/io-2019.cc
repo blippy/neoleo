@@ -184,6 +184,9 @@ void main_command_loop_for2019()
 			case '=':
 				edit_cell2019();
 				break;
+			case CTRL('c'):
+				copy_this_cell_formula();
+				break;
 			case CTRL('l'):
 				set_cell_alignment_left();
 				break;
@@ -196,6 +199,9 @@ void main_command_loop_for2019()
 			case CTRL('q'):  
 				if(maybe_quit_spreadsheet2019())
 					goto finis;
+				break;
+			case CTRL('v'):
+				paste_this_cell_formula();
 				break;
 			case KEY_LEFT:
 			case 'h':
