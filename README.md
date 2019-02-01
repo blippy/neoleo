@@ -69,6 +69,16 @@ and Mint.
 <br>A plot created using gnuplot, output to a dumb terminal (in
 examples/plot)
 
+## Getting fancy
+
+`Neoleo` comes with a "headerless" mode, where you can interact
+via stdin/stdout, a la `ed`. One command that `neoleo` has is
+`tbl`, for example, which prints a sheet in `groff`-compatible form. So you
+can create your spreadsheet, and create a nice PDF with it, say
+by typing the following from the command line:
+```
+neoleo foo.oleo -H &lt;&lt;&lt;tbl 2&gt;dev/nu;; | groff -t -Tascii | text2pdf &gt;foo.pdf
+```
 
 ## Technical Reports
 
