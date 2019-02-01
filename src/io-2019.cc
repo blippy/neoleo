@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream> // for ostringstream
+#include <unistd.h> // for sleep
 
 #include <ncurses.h>
 #include <form.h>
@@ -247,7 +248,14 @@ static bool maybe_quit_spreadsheet2019()
 
 void io_error_msg2019_str(const std::string& str)
 {
-	log("TODO:io_error_msg2019_str:", str);
+	//log("TODO:io_error_msg2019_str:", str);
+	npanel_c pan;
+	wprintw(pan.m_w, "%s", str.c_str());
+	update_panels();
+	doupdate();
+	//sleep(1);
+	usleep(0.5 * 1'000'000); // half a second
+
 }
 
 
