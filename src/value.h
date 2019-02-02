@@ -47,6 +47,7 @@ class value {
 		void sBol(int newval);
 
 		struct rng gRng() { return x.c_r; }
+		void sRng(rng_t r);
 
 		void free_string();
 	public:

@@ -1,7 +1,5 @@
 /*
- * $Id: busi.c,v 1.8 2001/02/13 23:38:05 danny Exp $
- *
- * Copyright © 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -580,11 +578,9 @@ static void do_ctime(struct value *p)
 
 
 static void
-do_sum(struct value* p)
+_do_sum(struct value* p, rng_t* rng)
 {
-	log_debug("busi.cc:do_sum called");
-	struct rng rng1 = p->gRng();
-	struct rng* rng = &rng1;
+	//struct rng* r g= 1;
 	double res = 0;
 
 	CELL* cell_ptr;
@@ -599,6 +595,22 @@ do_sum(struct value* p)
 		}
 	}
 	p->sFlt(res);
+}
+
+static void
+do_sum(struct value* p)
+{
+	rng_t rng = p->gRng();
+	_do_sum(p, &rng);
+}
+
+static void
+do_sumr(struct value* p)
+{
+	auto fn = [&p](int i) { return (CELLREF) (p+i)->gInt();};
+	CELLREF lr=fn(0), lc=fn(1), hr=fn(2), hc=fn(3);
+	rng_t rng{lr, lc, hr, hc};
+	_do_sum(p, &rng);
 }
 
 function_t busi_funs[] =
@@ -628,6 +640,7 @@ function_t busi_funs[] =
   {C_FN1, X_A1, "F",    to_vptr(do_floor), "floor"},
   {C_FN1, X_A1, "F",    to_vptr(do_ceil), "ceil"},
   {C_FN1, X_A1, "I",    to_vptr(do_ctime), "ctime"},
+  {C_FN4, X_A4, "IIII", to_vptr(do_sumr), "sumr"},
   {0, 0, "", 0, 0},
 };
 

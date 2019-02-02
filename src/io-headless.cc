@@ -319,6 +319,11 @@ static void hl_goto_cell(int fildes)
 	//goto_cell(&a_rng);
 }
 
+static void hl_recalc(int fildes)
+{
+	recalculate(1);
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"dump-sheet", hless_dump_sheet},
 	{"g", hl_goto_cell},
@@ -326,6 +331,7 @@ static map<string, function<void(T)> > func_map = {
 	{"i", insert_columnwise},
 	{"info", info},
 	{"tbl", hless_tbl},
+	{"recalc", hl_recalc},
 	{"rewrite-defuns", hless_rewrite_defuns},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},

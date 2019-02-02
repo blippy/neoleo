@@ -71,6 +71,8 @@ void value::sErr(int newval) { type = TYP_ERR ; x.c_err = newval ;};
 int value::gBol() const { return x.c_b ;};
 void value::sBol(int newval) { type = TYP_BOL; x.c_b = newval; };
 
+void value::sRng(rng_t r) { type = TYP_RNG; x.c_r = r; }
+
 void value::free_string()
 {
 	if(type != TYP_STR) return;

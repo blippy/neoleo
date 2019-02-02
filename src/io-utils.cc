@@ -1383,6 +1383,14 @@ std::string stringify_value_file_style(value* val)
 		case TYP_BOL:
 			ss << bname[val->gBol()];
 			break;
+			/*
+		case TYP_RNG: 
+			{
+				rng_t r = val->gRng();
+				ss << 'r' << r.lr << ":" << r.hr << 'c' << r.lc << ":" << r.hc;
+		       	}
+			break;
+			*/
 		case TYP_ERR:
 			ss << ename[val->gErr()];
 			break;

@@ -3,6 +3,16 @@ VERSION: 9.0.0
 STATUS:  DEV
 DATE:    ONGOING
 
+* Added sumr() function, to sum a range. It is like sum(),
+but takes 4 parameters instead of a range. It is useful
+if you want to use relative ranges based on current row()
+and col(), for example.
+
+* Input interface heavily reworked. It is now more vi-like.
+Use `=' to change a cell, for example.
+
+* Commands don't work anymore.
+
 * Fixed C-l, C-r, cell alignment
 
 * Eliminated the creation of backup files
