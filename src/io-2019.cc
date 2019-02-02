@@ -228,10 +228,10 @@ void main_command_loop_for2019()
 
 static void save_spreadsheet2019(){
 	std::string filename = FileGetCurrentFileName();
-	log("Filename before:<", filename, ">");
+	//log("Filename before:<", filename, ">");
 	if(!invoke_std_form("Save spreadsheet as:", filename)) return;
 	FileSetCurrentFileName(filename);
-	log("Filename after:<", FileGetCurrentFileName(), ">");
+	//log("Filename after:<", FileGetCurrentFileName(), ">");
 	hl_write_file();
 }
 
