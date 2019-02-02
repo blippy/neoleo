@@ -186,20 +186,20 @@ void main_command_loop_for2019()
 
 	bool quit = false;
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
-
 	using fn_t = std::function<void()> ;
 	static auto keymap = std::map<int, fn_t> {
-		{CTRL('q'), quitter}, // this may (or may not) set quit to true
-			{'=', edit_cell2019},
-			{KEY_DOWN,	cursor_down},
-			{KEY_LEFT,  	cursor_left},
-			{KEY_RIGHT, 	cursor_right},
-			{KEY_UP, 	cursor_up},
-			{CTRL('c'), copy_this_cell_formula},
-			{CTRL('l'), set_cell_alignment_left},
-			{CTRL('r'), set_cell_alignment_right},
-			{CTRL('s'), save_spreadsheet2019},
-			{CTRL('v'), paste_this_cell_formula},
+		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
+		{'=', 		edit_cell2019},
+		{KEY_DC, 	kill_cell_cmd}, // the delete key
+		{KEY_DOWN,	cursor_down},
+		{KEY_LEFT,  	cursor_left},
+		{KEY_RIGHT, 	cursor_right},
+		{KEY_UP, 	cursor_up},
+		{CTRL('c'), 	copy_this_cell_formula},
+		{CTRL('l'), 	set_cell_alignment_left},
+		{CTRL('r'), 	set_cell_alignment_right},
+		{CTRL('s'), 	save_spreadsheet2019},
+		{CTRL('v'), 	paste_this_cell_formula},
 
 	};
 	
