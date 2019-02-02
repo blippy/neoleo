@@ -95,6 +95,11 @@
   (define (port-line port) '??)
   (define (port-column port) '??)))
 
+(define (read-word l)
+  (let ((c (peek-char)))
+    (if (char-alphabetic? c)
+	(read-word (cons (read-char) l))
+	(apply string (reverse l)))))
 
 (define (make-lexer errorp)
   (lambda ()
@@ -111,13 +116,7 @@
                 (let ((c (peek-char)))
                   (if (char-numeric? c)
                       (read-number (cons (read-char) l))
-                      (string->number (apply string (reverse l)))))))
-             (read-id
-              (lambda (l)
-                (let ((c (peek-char)))
-                  (if (char-alphabetic? c)
-                      (read-id (cons (read-char) l))
-		      (apply string (reverse l)))))))
+                      (string->number (apply string (reverse l))))))))
 
       ;; -- skip spaces
       (skip-spaces)
@@ -136,7 +135,7 @@
                 ((char=? c #\()       (make-lexical-token 'LPAREN  location #f))
                 ((char=? c #\))       (make-lexical-token 'RPAREN  location #f))
                 ((char-numeric? c)    (make-lexical-token 'NUM     location (read-number (list c))))
-                ((char-alphabetic? c) (let* ((foo (read-id (list c))))
+                ((char-alphabetic? c) (let* ((foo (read-word (list c))))
 					(if (string=? foo "IF")
 					    (make-lexical-token 'IFS location foo)
 					    (make-lexical-token 'ID  location (string->symbol foo)))))
