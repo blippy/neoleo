@@ -116,6 +116,12 @@ insert_row (int repeat)
 }
 
 void
+insert_1row()
+{
+	insert_row(1);
+}
+
+void
 insert_col (int repeat)
 {
 	struct rng from;

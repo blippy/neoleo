@@ -324,12 +324,18 @@ static void hl_recalc(int fildes)
 	recalculate(1);
 }
 
+static void hl_insert_row(int fildes)
+{
+	insert_1row();
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"dump-sheet", hless_dump_sheet},
 	{"g", hl_goto_cell},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
 	{"info", info},
+	{"ri", hl_insert_row},
 	{"tbl", hless_tbl},
 	{"recalc", hl_recalc},
 	{"rewrite-defuns", hless_rewrite_defuns},

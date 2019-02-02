@@ -127,4 +127,4 @@ extern void auto_move (void);
 extern void auto_next_set (void);
 extern void set_cell_alignment_left();
 extern void set_cell_alignment_right();
-
+void insert_1row();

@@ -19,6 +19,7 @@
 
 #include "neotypes.h"
 #include "cell.h"
+#include "decompile.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
@@ -225,6 +226,7 @@ void dump_sheet()
 		cout << "Row: " << get_row(cp) << "\n";
 		value val = cp->get_value();
 		cout << "Val: " << stringify_value_file_style(&val) << "\n";
+		cout << "Frm: " << decomp_formula(cp) << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";

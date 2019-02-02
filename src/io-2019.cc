@@ -260,7 +260,6 @@ void io_error_msg2019_str(const std::string& str)
 
 
 static void delete_1row() { delete_row(1); }
-static void insert_1row() { insert_row(1); }
 
 // user has typed 'r' to perform a row action. This function
 // decides which one it is

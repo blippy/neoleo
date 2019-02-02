@@ -70,6 +70,12 @@ std::string decompile()
 	return decomp_str(curow, cucol);
 }
 
+std::string decomp_formula(CELL* cell)
+{
+	coord_t coord = cell->coord;
+	return decomp_str(get_row(coord),get_col(coord));
+}
+
 /* We decompile things with these wierd node-things.  It's ugly, but it works.
  */
 
