@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include "global.h"
 #include "decompile.h"
+#include "format.h"
 #include "eval.h"
 #include "io-utils.h"
 #include "cmd.h"
@@ -218,12 +219,47 @@ void decompile_comp(function_t*& f, struct pr_node*& newn,
 				}
 				else
 				{
+					/*
+					num1 = (int) decomp_row;
+					num2 = (int) decomp_col;
+
+					std::string rstr;
+					if(byte & ROWREL) {
+						rstr = string_format("r[%+d]", row - decomp_row);
+					} else if(row == decomp_row) {
+						rstr = "r";
+					} else {
+						rstr = string_format("r%d", 67);
+					}
+
+					std::string cstr;
+					if(byte & COLREL) {
+						cstr = string_format("c[%+d]", (int) col - decomp_col);
+					} else if(col == decomp_col) {
+						cstr = "c";
+					} else {
+						cstr = string_format("c%d", 69);
+					}
+
+					std::string rowcol = rstr + cstr;
+
+					//std::string rfmt = (byte & ROWREL)? "r[%+d]" : "r%d";
+					//std::string cfmt = (byte & COLREL)? "c[%+d]" : "c%d";
+					//std::string rowcol = string_format(rfmt+cfmt, num1, num2);
+					newn = n_alloc(1000, rowcol.c_str());
+
+*/
+					
 					if (byte & ROWREL)
 					{
 						num1 = row - decomp_row;
 						if (byte & COLREL)
 						{
 							num2 = col - decomp_col;
+							int16_t c2 = col;
+							num2 = c2;
+							//num2 = col;
+							log_debug("decomp:col:" + std::to_string(c2) + ":decomp_col:" + std::to_string(decomp_col));
 							if (row == decomp_row && col == decomp_col)
 								str = "rc";
 							else if (row == decomp_row)
@@ -263,7 +299,9 @@ void decompile_comp(function_t*& f, struct pr_node*& newn,
 						num2 = col;
 					}
 					newn = n_alloc(1000, str, num1, num2);
+					
 				}
+				
 			}
 			//log_debug_1("decomp:C_CELL:"s + newn->string);
 			break;

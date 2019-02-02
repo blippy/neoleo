@@ -8,6 +8,7 @@
 #include "parse.hh"
 #include "ref.h"
 #include "convert.h"
+#include "logging.h"
 
 using std::cout;
 using std::endl;
@@ -426,10 +427,15 @@ noa0_numeric_range(char **ptr, int *r1, int *r2, int current)
 			else if (*p != '+')	/* A digit */
 				num = (num * 10) + *p - '0';	/* FIX ME relies on ASCII */
 
+		/*
 		if (negative)
 			*r2 = current - num;
 		else
 			*r2 = current + num;
+			*/
+		*r2 = negative? -num : num ;
+		log_debug("noa0_numeric_range:" + std::to_string(*r2));
+		//*r2 = 62;
 		*ptr = p;	/* Advance pointer */
 		return 1;	/* range */
 	}
@@ -467,7 +473,9 @@ noa0_number(char **ptr, int *r, int current)
 		p++;
 	}
 
-	*r = current + sgn*num;
+	//*r = current + sgn*num;
+	*r = sgn*num;
+	log_debug("noa0_number:" + std::to_string(*r));
 	*ptr = p;
 }
 
