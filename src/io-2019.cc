@@ -1,7 +1,9 @@
 #include <cassert>
+#include <functional>
 #include <iostream>
 #include <sstream> // for ostringstream
 #include <unistd.h> // for sleep
+#include <map>
 
 #include <ncurses.h>
 #include <form.h>
@@ -167,9 +169,13 @@ void edit_cell2019()
 	recalculate(1);
 }
 
-static bool maybe_quit_spreadsheet2019();
+static void maybe_quit_spreadsheet2019(bool& quit);
 static void save_spreadsheet2019();
 
+static void cursor_left()  { io_shift_cell_cursor(3, 1); }
+static void cursor_right() { io_shift_cell_cursor(2, 1); }
+static void cursor_down()  { io_shift_cell_cursor(1, 1); }
+static void cursor_up()    { io_shift_cell_cursor(0, 1); }
 
 void main_command_loop_for2019()
 {
@@ -178,54 +184,35 @@ void main_command_loop_for2019()
 	// read separately
 	keypad(stdscr, TRUE);
 
-	while(1) {
+	bool quit = false;
+	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
+
+	using fn_t = std::function<void()> ;
+	static auto keymap = std::map<int, fn_t> {
+		{CTRL('q'), quitter}, // this may (or may not) set quit to true
+			{'=', edit_cell2019},
+			{KEY_DOWN,	cursor_down},
+			{KEY_LEFT,  	cursor_left},
+			{KEY_RIGHT, 	cursor_right},
+			{KEY_UP, 	cursor_up},
+			{CTRL('c'), copy_this_cell_formula},
+			{CTRL('l'), set_cell_alignment_left},
+			{CTRL('r'), set_cell_alignment_right},
+			{CTRL('s'), save_spreadsheet2019},
+			{CTRL('v'), paste_this_cell_formula},
+
+	};
+	
+
+	while(!quit) {
 		int c = getch();
-		switch(c) {
-			case '=':
-				edit_cell2019();
-				break;
-			case CTRL('c'):
-				copy_this_cell_formula();
-				break;
-			case CTRL('l'):
-				set_cell_alignment_left();
-				break;
-			case CTRL('r'):
-				set_cell_alignment_right();
-				break;
-			case CTRL('s'):
-				save_spreadsheet2019();
-				break;
-			case CTRL('q'):  
-				if(maybe_quit_spreadsheet2019())
-					goto finis;
-				break;
-			case CTRL('v'):
-				paste_this_cell_formula();
-				break;
-			case KEY_LEFT:
-			case 'h':
-				io_shift_cell_cursor(3, 1);
-				break;
-			case KEY_RIGHT:
-			case 'l':
-				io_shift_cell_cursor(2, 1);
-				break;
-			case KEY_DOWN:
-			case 'j':
-				//log_debug("io-2019:down arrow");
-				io_shift_cell_cursor(1, 1);
-				break;
-			case KEY_UP:
-			case 'k':
-				io_shift_cell_cursor(0, 1);
-				break;
-
-		}
-
+		auto search = keymap.find(c);
+		if(search == keymap.end()) continue;
+		auto fn = search->second;
+		fn();
 	}
 
-finis:
+
 	endwin();
 	cout << "Exiting from 2019 io\n";
 	exit(0);
@@ -242,14 +229,14 @@ static void save_spreadsheet2019(){
 }
 
 // return true to go ahead with quit, false otherwise
-static bool maybe_quit_spreadsheet2019()
+static void maybe_quit_spreadsheet2019(bool& quit)
 {
-	if(Global->modified== false) return true;
+	quit = false;
+	if(Global->modified == false) { quit = true ; return; }
 	std::string response = ""; 
-	if(!invoke_std_form("Spreadsheet modifield; kill anyway? (y/[n])? ", response))
-		return false;
-	if(response == "y" || response == "yes") return true;
-	return false;
+	if(!invoke_std_form("Spreadsheet modifield; kill anyway? (y/[n])? ", response)) return;
+	if(response == "y" || response == "yes") quit = true;
+
 }
 
 void io_error_msg2019_str(const std::string& str)
