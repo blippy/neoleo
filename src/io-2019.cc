@@ -23,6 +23,9 @@ using std::cout;
 
 constexpr int CTRL(int c) { return c & 037; }
 
+using fn_t = std::function<void()> ;
+using keymap_t = std::map<int, fn_t>;
+
 // TODO belongs in logging.h
 template<typename... Args>
 void log(Args ... args) {
@@ -170,12 +173,23 @@ void edit_cell2019()
 }
 
 static void maybe_quit_spreadsheet2019(bool& quit);
+static void row_cmd2019();
 static void save_spreadsheet2019();
 
 static void cursor_left()  { io_shift_cell_cursor(3, 1); }
 static void cursor_right() { io_shift_cell_cursor(2, 1); }
 static void cursor_down()  { io_shift_cell_cursor(1, 1); }
 static void cursor_up()    { io_shift_cell_cursor(0, 1); }
+
+
+void process_key(const keymap_t& keymap)
+{
+	int c = getch();
+	auto search = keymap.find(c);
+	if(search == keymap.end()) return;
+	auto fn = search->second;
+	fn();
+}
 
 void main_command_loop_for2019()
 {
@@ -186,10 +200,10 @@ void main_command_loop_for2019()
 
 	bool quit = false;
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
-	using fn_t = std::function<void()> ;
-	static auto keymap = std::map<int, fn_t> {
+	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 		{'=', 		edit_cell2019},
+		{'r',		row_cmd2019},
 		{KEY_DC, 	kill_cell_cmd}, // the delete key
 		{KEY_DOWN,	cursor_down},
 		{KEY_LEFT,  	cursor_left},
@@ -204,14 +218,7 @@ void main_command_loop_for2019()
 	};
 	
 
-	while(!quit) {
-		int c = getch();
-		auto search = keymap.find(c);
-		if(search == keymap.end()) continue;
-		auto fn = search->second;
-		fn();
-	}
-
+	while(!quit) process_key(keymap);
 
 	endwin();
 	cout << "Exiting from 2019 io\n";
@@ -252,3 +259,14 @@ void io_error_msg2019_str(const std::string& str)
 }
 
 
+static void delete_1row() { delete_row(1); }
+
+// user has typed 'r' to perform a row action. This function
+// decides which one it is
+static void row_cmd2019(){
+	static auto keymap = std::map<int, fn_t> {
+		{'d', delete_1row}
+	};
+
+	process_key(keymap);
+}
