@@ -604,6 +604,7 @@ do_sum(struct value* p)
 	_do_sum(p, &rng);
 }
 
+/* removed because it doesn't pick up on any cell layout changes. Ranges work, though.
 static void
 do_sumr(struct value* p)
 {
@@ -612,6 +613,7 @@ do_sumr(struct value* p)
 	rng_t rng{lr, lc, hr, hc};
 	_do_sum(p, &rng);
 }
+*/
 
 function_t busi_funs[] =
 {
@@ -640,7 +642,7 @@ function_t busi_funs[] =
   {C_FN1, X_A1, "F",    to_vptr(do_floor), "floor"},
   {C_FN1, X_A1, "F",    to_vptr(do_ceil), "ceil"},
   {C_FN1, X_A1, "I",    to_vptr(do_ctime), "ctime"},
-  {C_FN4, X_A4, "IIII", to_vptr(do_sumr), "sumr"},
+//  {C_FN4, X_A4, "IIII", to_vptr(do_sumr), "sumr"},
   {0, 0, "", 0, 0},
 };
 
