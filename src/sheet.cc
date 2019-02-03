@@ -18,11 +18,14 @@
 
 
 #include "neotypes.h"
+#include "byte-compile.h"
 #include "cell.h"
 #include "decompile.h"
+#include "eval.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
+#include "ref.h"
 #include "sheet.h"
 
 using std::cout;
@@ -234,10 +237,29 @@ void dump_sheet()
 
 void bump_row(CELLREF row, int increment)
 {
-	for(CELL* cp : the_cells) {
+	if(increment == 0) return;
+
+	rng_t rng{rng_all};
+	rng.lr = row;
+	celldeq_t q = get_cells_in_range(&rng);
+	if(increment>0) std::reverse(q.begin(), q.end());
+
+	for(CELL* cp : q) {
 		CELLREF r, c;
 		decoord(cp, r, c);		
-		if(r < row) continue;
+		//if(r < row) continue;
+
+		// Relative refs in formulas hard-code to abosulte cells
+		// We must bump them
+		string formula = decomp_str(r, c);
+		cur_row = r+increment;
+		cur_col = c;
+		formula_t new_formula = (formula_t) parse_and_compile(cp, formula.c_str());
+		free(cp->get_cell_formula());
+		cp->set_cell_formula(new_formula);
+		update_cell(cp); // fix for pesky references
+		//new_value(r+increment, c, formula.c_str());
+		
 		coord_t coord = to_coord(r+increment, c);
 		cp->coord = coord;
 	}
