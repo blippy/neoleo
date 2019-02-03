@@ -258,11 +258,14 @@ void bump_row(CELLREF row, int increment)
 		free(cp->get_cell_formula());
 		cp->set_cell_formula(new_formula);
 		update_cell(cp); // fix for pesky references
-		//new_value(r+increment, c, formula.c_str());
 		
 		coord_t coord = to_coord(r+increment, c);
 		cp->coord = coord;
 	}
+
+	// brute-force any fixes for refernces
+	for(CELL* cp: the_cells) update_cell(cp);
+
 	Global->modified = 1;
 }
 
