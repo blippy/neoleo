@@ -10,13 +10,16 @@
 #include <panel.h>
 
 #include "basic.h"
+#include "cmd.h"
 #include "decompile.h"
+#include "eval.h"
 #include "io-2019.h"
 #include "io-headless.h"
 #include "io-utils.h"
 #include "logging.h"
-#include "mem.h"
+//#include "mem.h"
 #include "ref.h"
+#include "sheet.h"
 #include "window.h"
 
 using std::cout;
@@ -181,6 +184,17 @@ static void cursor_right() { io_shift_cell_cursor(2, 1); }
 static void cursor_down()  { io_shift_cell_cursor(1, 1); }
 static void cursor_up()    { io_shift_cell_cursor(0, 1); }
 
+// TODO this may be more useful that you think
+static void clear_cell_formula()
+{
+	/*
+	new_value(curow, cucol, "");
+	CELL* cp = find_cell(curow, cucol);
+	update_cell(cp);
+	*/
+	edit_cell_str("");
+	recalculate(1);
+}
 
 void process_key(const keymap_t& keymap)
 {
@@ -204,7 +218,7 @@ void main_command_loop_for2019()
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 		{'=', 		edit_cell2019},
 		{'r',		row_cmd2019},
-		{KEY_DC, 	kill_cell_cmd}, // the delete key
+		{KEY_DC, 	clear_cell_formula}, // delete key
 		{KEY_DOWN,	cursor_down},
 		{KEY_LEFT,  	cursor_left},
 		{KEY_RIGHT, 	cursor_right},
