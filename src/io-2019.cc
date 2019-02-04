@@ -11,6 +11,7 @@
 
 #include "basic.h"
 #include "cmd.h"
+#include "convert.h"
 #include "decompile.h"
 #include "eval.h"
 #include "io-2019.h"
@@ -19,6 +20,7 @@
 #include "logging.h"
 //#include "mem.h"
 #include "ref.h"
+#include "regions.h"
 #include "sheet.h"
 #include "window.h"
 
@@ -275,12 +277,23 @@ void io_error_msg2019_str(const std::string& str)
 
 static void delete_1row() { delete_row(1); }
 
+static void paste_1row() 
+{ 
+	std::string response;
+	if(!invoke_std_form("Row to copy from?", response)) return;
+	bool ok;
+	long src = to_long(response, ok);
+	if(!ok) { beep(); return;}
+	copy_row(src);
+}
+
 // user has typed 'r' to perform a row action. This function
 // decides which one it is
 static void row_cmd2019(){
 	static auto keymap = std::map<int, fn_t> {		
 		{'d', delete_1row},
-		{'i', insert_1row}
+		{'i', insert_1row},
+		{'p', paste_1row}
 	};
 
 	process_key(keymap);
