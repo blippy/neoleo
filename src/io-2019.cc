@@ -200,7 +200,7 @@ void process_key(const keymap_t& keymap)
 {
 	int c = getch();
 	auto search = keymap.find(c);
-	if(search == keymap.end()) return;
+	if(search == keymap.end()) { beep(); return; }
 	auto fn = search->second;
 	fn();
 }
