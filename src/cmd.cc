@@ -47,7 +47,6 @@
 #include "init.h"
 #include "stub.h"
 #include "ref.h"
-#include "key.h"
 #include "utils.h"
 
 // 2019-02-01 Let's see what we can purge here
@@ -74,7 +73,7 @@ void obstack_mc_init(cmd_obstack_t* ptr)
 #else
 	// I don't think I have to do anything
 	//ptr->init();
-	
+
 #endif
 }
 
@@ -166,13 +165,13 @@ SELECT_TYPE exception_fd_set;
 SELECT_TYPE write_fd_set;
 
 /* These are fd's returned by the last call to select.
- */
+*/
 SELECT_TYPE read_pending_fd_set;
 SELECT_TYPE exception_pending_fd_set;
 SELECT_TYPE write_pending_fd_set;
 
 /* Hooks for asynchronos i/o
- */
+*/
 
 struct select_hook file_read_hooks[SELECT_SET_SIZE] = { {0} };
 struct select_hook file_exception_hooks[SELECT_SET_SIZE] = { {0} };
@@ -183,13 +182,13 @@ int ioerror = 0;
 /* The current stream from which commands are being read. */
 
 /*
-input_stream_ptr make_input_stream() 
-{ 
-	auto ptr = new input_stream();
-	obstack_mc_init(&ptr->_macro_stack);
-	return ptr;
-}
-*/
+   input_stream_ptr make_input_stream() 
+   { 
+   auto ptr = new input_stream();
+   obstack_mc_init(&ptr->_macro_stack);
+   return ptr;
+   }
+   */
 
 input_stream_ptr the_input_stream = nullptr;
 //struct input_stream the_default_input_stream;
@@ -215,7 +214,7 @@ input_stream::~input_stream()
 	debug_input_stream("dtor", this);
 }
 
-static input_stream_ptr
+	static input_stream_ptr
 default_input_stream (void)
 {
 	if (!the_input_stream) the_input_stream = new input_stream();
@@ -228,7 +227,7 @@ default_input_stream (void)
  */
 
 
-static input_stream_ptr
+	static input_stream_ptr
 macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
 {
 	ASSERT_UNCALLED();
@@ -256,10 +255,10 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
 	{
 		input_stream_ptr key = frame->input;
 		while (frame->input == key)
-		  {
-			  frame->input = ret;
-			  frame = frame->prev;
-		  }
+		{
+			frame->input = ret;
+			frame = frame->prev;
+		}
 	}
 	return ret;
 }
@@ -269,7 +268,7 @@ macro_only_input_stream (struct rng *rng, const char *first_line, int len, struc
  * It fixes the INPUT fields of pending command frames.
  */
 
-void
+	void
 pop_input_stream (void)
 {
 	ASSERT_UNCALLED();
@@ -293,20 +292,20 @@ pop_input_stream (void)
  * These are the commands the user has to interact with macros.
  */
 
-void
+	void
 start_entering_macro (void)
 {
 	ASSERT_UNCALLED();
 	if (making_macro)
-	  {
-		  io_error_msg ("Can't define two macros at once");
-		  return;
-	  }
+	{
+		io_error_msg ("Can't define two macros at once");
+		return;
+	}
 	making_macro_size = 20;
 	making_macro = making_macro_start = (unsigned char*)ck_malloc (5 + making_macro_size);
 }
 
-void
+	void
 bound_macro (int num)
 {
 	ASSERT_UNCALLED();
@@ -326,7 +325,7 @@ bound_macro (int num)
 	rmac->mac_start = rmac->mac_exe = (unsigned char *) obstack_mc_finish (&macro_stack);
 }
 
-void
+	void
 run_string_as_macro (const char *macro)
 {
 	ASSERT_UNCALLED();
@@ -345,7 +344,7 @@ run_string_as_macro (const char *macro)
 	command_loop (1, 0);
 }
 
-void
+	void
 call_last_kbd_macro (int count)
 {
 	ASSERT_UNCALLED();
@@ -358,7 +357,7 @@ call_last_kbd_macro (int count)
 /* This command is automaticly inserted into the command stream
  * when the end of a macro is reached.  
  */
-void
+	void
 end_macro (void)
 {
 	ASSERT_UNCALLED();
@@ -366,61 +365,61 @@ end_macro (void)
 	struct macro *old;
 
 	if (!rmac)
-	  {
-		  io_error_msg ("Not executing a macro!");
-		  return;
-	  }
+	{
+		io_error_msg ("Not executing a macro!");
+		return;
+	}
 	if ((rmac->mac_row == rmac->mac_rng.hr)
-	    && (rmac->mac_col == rmac->mac_rng.hc))
-	  {
-		  old = rmac->mac_prev;
-		  obstack_mc_free(&macro_stack, rmac);
-		  rmac = old;
-	  }
+			&& (rmac->mac_col == rmac->mac_rng.hc))
+	{
+		old = rmac->mac_prev;
+		obstack_mc_free(&macro_stack, rmac);
+		rmac = old;
+	}
 	else
-	  {
-		  if (rmac->mac_row == rmac->mac_rng.hr)
-		    {
-			    rmac->mac_row = rmac->mac_rng.lr;
-			    rmac->mac_col++;
-		    }
-		  else
-			  rmac->mac_row++;
+	{
+		if (rmac->mac_row == rmac->mac_rng.hr)
+		{
+			rmac->mac_row = rmac->mac_rng.lr;
+			rmac->mac_col++;
+		}
+		else
+			rmac->mac_row++;
 
-		  cp = find_cell (rmac->mac_row, rmac->mac_col);
+		cp = find_cell (rmac->mac_row, rmac->mac_col);
 
-		  if (!cp || GET_TYP (cp) != TYP_STR
-		      || cp->gString()[0] == '\0')
-		    {
-			    old = rmac->mac_prev;
-			    obstack_mc_free (&macro_stack, rmac);
-			    rmac = old;
-		    }
-		  else
-		    {
-			    obstack_mc_grow(&macro_stack, cp->gString(),
-					  1 + strlen (cp->gString()));
-			    rmac->mac_exe =
-				    (unsigned char *)
-				    obstack_mc_finish(&macro_stack);
-		    }
-	  }
+		if (!cp || GET_TYP (cp) != TYP_STR
+				|| cp->gString()[0] == '\0')
+		{
+			old = rmac->mac_prev;
+			obstack_mc_free (&macro_stack, rmac);
+			rmac = old;
+		}
+		else
+		{
+			obstack_mc_grow(&macro_stack, cp->gString(),
+					1 + strlen (cp->gString()));
+			rmac->mac_exe =
+				(unsigned char *)
+				obstack_mc_finish(&macro_stack);
+		}
+	}
 }
 
 
 /* This command is executed by the user to stop entering a macro.
- */
-void
+*/
+	void
 stop_entering_macro (void)
 {
 	ASSERT_UNCALLED();
 	if (!making_macro)
-	  {
-		  if (rmac)
-			  return;
-		  io_error_msg ("Not defining a macro!");
-		  return;
-	  }
+	{
+		if (rmac)
+			return;
+		io_error_msg ("Not defining a macro!");
+		return;
+	}
 
 	making_macro[0] = '\0';
 	making_macro = 0;
@@ -450,21 +449,21 @@ stop_entering_macro (void)
  * to avoid circularity.
  */
 
-static void
+	static void
 error_alarm ()
 {
 	ASSERT_UNCALLED();
 	if (the_cmd_frame->cmd && the_cmd_arg.timeout_seconds)
-	  {
-		  --the_cmd_arg.timeout_seconds;
-		  if (!the_cmd_arg.timeout_seconds)
-		    {
-			    pop_unfinished_command ();
-			    alarm_table[2].freq = 0;
-			    //longjmp (Global->error_exception, 1);
-			    throw OleoJmp("OleJmp from error_alarm()");
-		    }
-	  }
+	{
+		--the_cmd_arg.timeout_seconds;
+		if (!the_cmd_arg.timeout_seconds)
+		{
+			pop_unfinished_command ();
+			alarm_table[2].freq = 0;
+			//longjmp (Global->error_exception, 1);
+			throw OleoJmp("OleJmp from error_alarm()");
+		}
+	}
 	else
 		alarm_table[2].freq = 0;
 }
@@ -477,7 +476,7 @@ struct alarm_entry alarm_table[3] = {
 
 /* Function that get called whenever blocking times out. */
 
-static void
+	static void
 alarm_hooks (void)
 {
 	ASSERT_UNCALLED();
@@ -485,65 +484,65 @@ alarm_hooks (void)
 	time_t now = time (0);
 	for (x = 0; alarm_table[x].fn; ++x)
 		if (alarm_table[x].freq
-		    && ((now - alarm_table[x].last_time) >=
-			alarm_table[x].freq))
-		  {
-			  alarm_table[x].last_time = now;
-			  alarm_table[x].fn ();
-		  }
+				&& ((now - alarm_table[x].last_time) >=
+					alarm_table[x].freq))
+		{
+			alarm_table[x].last_time = now;
+			alarm_table[x].fn ();
+		}
 }
 
 
-static void
+	static void
 select_hooks (void)
 {
 	ASSERT_UNCALLED();
 	int x;
 	for (x = 0; x < SELECT_SET_SIZE; ++x)
-	  {
-		  if (file_read_hooks[x].hook_fn
-		      && FD_ISSET (x, &read_pending_fd_set))
-			  file_read_hooks[x].hook_fn (x);
-		  FD_CLR (x, &read_pending_fd_set);
-		  if (file_write_hooks[x].hook_fn
-		      && FD_ISSET (x, &write_pending_fd_set))
-			  file_write_hooks[x].hook_fn (x);
-		  FD_CLR (x, &write_pending_fd_set);
-		  if (file_exception_hooks[x].hook_fn
-		      && FD_ISSET (x, &exception_pending_fd_set))
-			  file_exception_hooks[x].hook_fn (x);
-		  FD_CLR (x, &exception_pending_fd_set);
-	  }
+	{
+		if (file_read_hooks[x].hook_fn
+				&& FD_ISSET (x, &read_pending_fd_set))
+			file_read_hooks[x].hook_fn (x);
+		FD_CLR (x, &read_pending_fd_set);
+		if (file_write_hooks[x].hook_fn
+				&& FD_ISSET (x, &write_pending_fd_set))
+			file_write_hooks[x].hook_fn (x);
+		FD_CLR (x, &write_pending_fd_set);
+		if (file_exception_hooks[x].hook_fn
+				&& FD_ISSET (x, &exception_pending_fd_set))
+			file_exception_hooks[x].hook_fn (x);
+		FD_CLR (x, &exception_pending_fd_set);
+	}
 }
 
 /* Block until we get a signal (unless system calls restart), 
  * can do i/o or, until we timeout (timeout is specified in seconds,
  * 0 means block indefinately).  (Front end to select)
  */
-void
+	void
 block_until_excitement (struct timeval *tv)
 {
 	ASSERT_UNCALLED();
 	int ret;
 
 	bcopy ((char *) &read_fd_set, (char *) &read_pending_fd_set,
-	       sizeof (SELECT_TYPE));
+			sizeof (SELECT_TYPE));
 	bcopy ((char *) &exception_fd_set,
-	       (char *) &exception_pending_fd_set, sizeof (SELECT_TYPE));
+			(char *) &exception_pending_fd_set, sizeof (SELECT_TYPE));
 	bcopy ((char *) &write_fd_set,
-	       (char *) &write_pending_fd_set, sizeof (SELECT_TYPE));
+			(char *) &write_pending_fd_set, sizeof (SELECT_TYPE));
 	ret = select (SELECT_SET_SIZE,
-		      &read_pending_fd_set, &write_pending_fd_set,
-		      &exception_pending_fd_set, tv);
+			&read_pending_fd_set, &write_pending_fd_set,
+			&exception_pending_fd_set, tv);
 	if (ret < 0)
-	  {
-		  FD_ZERO (&read_pending_fd_set);
-		  FD_ZERO (&write_pending_fd_set);
-		  FD_ZERO (&exception_pending_fd_set);
-	  }
+	{
+		FD_ZERO (&read_pending_fd_set);
+		FD_ZERO (&write_pending_fd_set);
+		FD_ZERO (&exception_pending_fd_set);
+	}
 }
 
-void
+	void
 loop_until_char_avail()
 {
 	ASSERT_UNCALLED();
@@ -604,7 +603,7 @@ loop_until_char_avail()
  * it updates cells and the display.  If a macro is being defined,
  * this function save characters in the macro.
  */
-int
+	int
 real_get_chr (void)
 {
 	ASSERT_UNCALLED();
@@ -625,86 +624,86 @@ real_get_chr (void)
 
 	alarm_hooks ();
 	if (have_saved_char)
-	  {
-		  ch = saved_char;
-		  have_saved_char = 0;
-		  goto fini;
-	  }
+	{
+		ch = saved_char;
+		have_saved_char = 0;
+		goto fini;
+	}
 
 	if (i_cnt)
-	  {
-		  ch = ibuf[i_cnt++];
-		  if (i_cnt == i_in)
-			  i_cnt = i_in = 0;
-		  goto fini;
-	  }
+	{
+		ch = ibuf[i_cnt++];
+		if (i_cnt == i_in)
+			i_cnt = i_in = 0;
+		goto fini;
+	}
 
 	loop_until_char_avail();
 
 	ret = io_read_kbd (ibuf, sizeof (ibuf));
 	if (ret == 1)
-	  {
-		  ch = ibuf[0];
-	  }
+	{
+		ch = ibuf[0];
+	}
 	else if (ret > 1)
-	  {
-		  i_cnt = 1;
-		  i_in = ret;
-		  ch = ibuf[0];
-	  }
+	{
+		i_cnt = 1;
+		i_in = ret;
+		ch = ibuf[0];
+	}
 	else if (ret == 0 || errno != EINTR)
-	  {
-		  return EOF;
-	  }
+	{
+		return EOF;
+	}
 
-      fini:
+fini:
 	if (ch & META_BIT)
-	  {
-		  switch (ch)
-		    {
-		    case 229:	/* e */
-		    case 228:	/* d */
-		    case 246:	/* v */
-		    case 197:	/* E */
-		    case 196:	/* D */
-		    case 214:	/* V */
-			    break;
-		    default:
-			    saved_char = ch;
-			    have_saved_char = 1;
-			    ch = CTRL_CHAR ('[');
-		    }
-	  }
+	{
+		switch (ch)
+		{
+			case 229:	/* e */
+			case 228:	/* d */
+			case 246:	/* v */
+			case 197:	/* E */
+			case 196:	/* D */
+			case 214:	/* V */
+				break;
+			default:
+				saved_char = ch;
+				have_saved_char = 1;
+				ch = CTRL_CHAR ('[');
+		}
+	}
 
 	if (making_macro)
-	  {
-		  /* This is stoopid and should be fixed.
-		   * Macros (and other cell strings) should be 
-		   * `struct line' and not c-strings.   -tl
-		   */
-		  if (ch == 0)
-		    {
-			    *making_macro++ = SPECIAL_CODE_A;
-		    }
-		  else if (ch == '{')
-		    {
-			    *making_macro++ = SPECIAL_CODE_B;
-		    }
-		  else
-		    {
-			    *making_macro++ = ch;
-		    }
-		  if (making_macro >=
-		      (making_macro_start + making_macro_size))
-		    {
-			    making_macro_start =
-				    (unsigned char *)ck_realloc (making_macro_start,
+	{
+		/* This is stoopid and should be fixed.
+		 * Macros (and other cell strings) should be 
+		 * `struct line' and not c-strings.   -tl
+		 */
+		if (ch == 0)
+		{
+			*making_macro++ = SPECIAL_CODE_A;
+		}
+		else if (ch == '{')
+		{
+			*making_macro++ = SPECIAL_CODE_B;
+		}
+		else
+		{
+			*making_macro++ = ch;
+		}
+		if (making_macro >=
+				(making_macro_start + making_macro_size))
+		{
+			making_macro_start =
+				(unsigned char *)ck_realloc (making_macro_start,
 						5 + making_macro_size * 2);
-			    making_macro =
-				    (making_macro_start + making_macro_size);
-			    making_macro_size *= 2;
-		    }
-	  }
+			making_macro =
+				(making_macro_start + making_macro_size);
+			making_macro_size *= 2;
+		}
+	}
 	return ch;
 }
 
@@ -757,7 +756,7 @@ struct command_frame *running_frames = 0;
  *
  */
 
-void
+	void
 push_command_frame (struct rng *rng, char *first_line, int len)
 {
 	//struct command_frame *new_cf = (struct command_frame *) ck_malloc (sizeof (*new_cf));
@@ -794,46 +793,46 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->complex_to_user = 0;
 
 	if (!the_cmd_frame)
-	  {
-		  /* This is a new top-level frame. */
-		  the_cmd_frame = new_cf;
-		  new_cf->cmd = 0;
-		  new_cf->top_keymap = map_id ("main");
-		  if (new_cf->top_keymap < 0)
-			  new_cf->top_keymap = map_id ("universal");
-	  }
+	{
+		/* This is a new top-level frame. */
+		the_cmd_frame = new_cf;
+		new_cf->cmd = 0;
+		new_cf->top_keymap = map_id ("main");
+		if (new_cf->top_keymap < 0)
+			new_cf->top_keymap = map_id ("universal");
+	}
 	else if (cur_cmd)
-	  {
-		  new_cf->_cur_arg = 0;
-		  new_cf->cmd = cur_cmd;
-		  {
-			  int argc = 0;
-			  char **prompt = new_cf->cmd->func_args;
-			  while (prompt && *prompt)
-			    {
-				    // other initialisation of cfn taken care of by constructor
-				    command_arg_t* cfn = &new_cf->argv[argc];
-				    cfn->arg_desc = *prompt;
-				    //init_line (&cfn->text);
-				    set_line (&cfn->text, "");
-				    bzero (&cfn->val, sizeof (union command_arg_val));
-				    ++argc;
-				    ++prompt;
-			    }
-			  if (argc && new_cf->argv[0].arg_desc[0] == '+')
-				  ++new_cf->argv[0].arg_desc;
-			  new_cf->_cmd_argc = argc;
-			  new_cf->_curow = curow;
-			  new_cf->_cucol = cucol;
-			  new_cf->_mkrow = mkrow;
-			  new_cf->_mkcol = mkcol;
-			  new_cf->_setrow = setrow;
-			  new_cf->_setcol = setcol;
+	{
+		new_cf->_cur_arg = 0;
+		new_cf->cmd = cur_cmd;
+		{
+			int argc = 0;
+			char **prompt = new_cf->cmd->func_args;
+			while (prompt && *prompt)
+			{
+				// other initialisation of cfn taken care of by constructor
+				command_arg_t* cfn = &new_cf->argv[argc];
+				cfn->arg_desc = *prompt;
+				//init_line (&cfn->text);
+				set_line (&cfn->text, "");
+				bzero (&cfn->val, sizeof (union command_arg_val));
+				++argc;
+				++prompt;
+			}
+			if (argc && new_cf->argv[0].arg_desc[0] == '+')
+				++new_cf->argv[0].arg_desc;
+			new_cf->_cmd_argc = argc;
+			new_cf->_curow = curow;
+			new_cf->_cucol = cucol;
+			new_cf->_mkrow = mkrow;
+			new_cf->_mkcol = mkcol;
+			new_cf->_setrow = setrow;
+			new_cf->_setcol = setcol;
 
-			  if (!rng)
-				  new_cf->input = the_cmd_frame->input;
-		  }
-	  }
+			if (!rng)
+				new_cf->input = the_cmd_frame->input;
+		}
+	}
 
 	new_cf->prev = the_cmd_frame;
 	new_cf->next = the_cmd_frame->next;
@@ -843,7 +842,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 }
 
 /* Remove a frame from the queue/stack. */
-void
+	void
 remove_cmd_frame (struct command_frame *frame)
 {
 	frame->next->prev = frame->prev;
@@ -851,10 +850,10 @@ remove_cmd_frame (struct command_frame *frame)
 	if (the_cmd_frame == frame)
 		the_cmd_frame = frame->prev;
 	if (the_cmd_frame == frame)
-	  {
-		  the_cmd_frame = 0;
-		  push_command_frame (0, 0, 0);
-	  }
+	{
+		the_cmd_frame = 0;
+		push_command_frame (0, 0, 0);
+	}
 	frame->next = frame->prev = 0;
 }
 
@@ -863,7 +862,7 @@ remove_cmd_frame (struct command_frame *frame)
  * This frees all of the memory allocated to FRAME (including
  * the frame itself. 
  */
-void
+	void
 free_cmd_frame (struct command_frame *frame)
 {
 	if (frame->next)
@@ -877,12 +876,12 @@ free_cmd_frame (struct command_frame *frame)
 				frame->argv[argc].style->destroy (&frame->argv[argc]);
 			free_line (&frame->argv[argc].text);
 			/*
-			if (frame->argv[argc].expanded_prompt.buf 
-					&& (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt.buf))
-				free (frame->argv[argc].expanded_prompt.buf);
-				*/
+			   if (frame->argv[argc].expanded_prompt.buf 
+			   && (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt.buf))
+			   free (frame->argv[argc].expanded_prompt.buf);
+			   */
 		}
-	  }
+	}
 	delete frame;
 }
 
@@ -890,25 +889,25 @@ free_cmd_frame (struct command_frame *frame)
  * Discard the current frame if it contains an unexecuted commnand. 
  * This is used, for example, to handle break.
  */
-void
+	void
 pop_unfinished_command (void)
 {
 	ASSERT_UNCALLED();
 	if (the_cmd_frame->cmd)
-	  {
-		  int move_cursor = 0;
-		  struct command_frame *frame = the_cmd_frame;
-		  if (frame->_curow != frame->prev->_curow
-		      || frame->_cucol != frame->prev->_cucol)
-		    {
-			    io_hide_cell_cursor ();
-			    move_cursor = 1;
-		    }
-		  remove_cmd_frame (frame);
-		  if (move_cursor)
-			  io_display_cell_cursor ();
-		  free_cmd_frame (frame);
-	  }
+	{
+		int move_cursor = 0;
+		struct command_frame *frame = the_cmd_frame;
+		if (frame->_curow != frame->prev->_curow
+				|| frame->_cucol != frame->prev->_cucol)
+		{
+			io_hide_cell_cursor ();
+			move_cursor = 1;
+		}
+		remove_cmd_frame (frame);
+		if (move_cursor)
+			io_display_cell_cursor ();
+		free_cmd_frame (frame);
+	}
 }
 
 /* This is called if an error has been signaled with io_error_msg.
@@ -916,7 +915,7 @@ pop_unfinished_command (void)
  * and cancels all pending macros.  This is properly followed by 
  * generating an error message for the user and longjmp to error_exception.
  */
-void
+	void
 recover_from_error (void)
 {
 	ASSERT_UNCALLED();
@@ -945,21 +944,21 @@ recover_from_error (void)
 
 	/* pop command frames until an interactive one is reached. */
 	while (the_cmd_frame->prev != the_cmd_frame
-	       && !the_cmd_frame->complex_to_user)
-	  {
-		  struct command_frame *fr = the_cmd_frame;
-		  the_cmd_frame = the_cmd_frame->prev;
-		  free_cmd_frame (fr);
-	  }
+			&& !the_cmd_frame->complex_to_user)
+	{
+		struct command_frame *fr = the_cmd_frame;
+		the_cmd_frame = the_cmd_frame->prev;
+		free_cmd_frame (fr);
+	}
 
 	/* Discard any frames that were executing */
 	while (running_frames)
-	  {
-		  struct command_frame *f = running_frames;
-		  running_frames = running_frames->next;
-		  f->next = 0;
-		  free_cmd_frame (f);
-	  }
+	{
+		struct command_frame *f = running_frames;
+		running_frames = running_frames->next;
+		f->next = 0;
+		free_cmd_frame (f);
+	}
 }
 
 line_t lineify_expand_prompt(line_t prompt)
@@ -984,7 +983,7 @@ line_t lineify_expand_char(char* prompt)
  *
  * The return value is 1 if the user must be prompted, 0 otherwise.
  */
-static int
+	static int
 get_argument (char *prompt, struct prompt_style *style)
 {
 	ASSERT_UNCALLED();
@@ -999,33 +998,33 @@ get_argument (char *prompt, struct prompt_style *style)
 	if (the_cmd_frame->top_keymap < 0)
 		the_cmd_frame->top_keymap = map_id ("universal");
 	if (macro_func_arg)
-	  {
-		  set_line (&the_cmd_arg.text, macro_func_arg);
-		  {
-			  char *arg_ptr;
-			  const char *error;
-			  arg_ptr = the_cmd_arg.text.buf;
-			  error = the_cmd_arg.style->verify (&arg_ptr,
-							     &the_cmd_arg);
-			  if (error)
-			    {
-				    macro_func_arg = 0;
-				    io_error_msg ("%s", error);
-			    }
-			  else
-			    {
-				    the_cmd_arg.is_set = 1;
-				    if (arg_ptr)
-					    while (isspace (*arg_ptr))
-						    ++arg_ptr;
-				    if (arg_ptr && *arg_ptr)
-					    macro_func_arg = arg_ptr;
-				    else
-					    macro_func_arg = 0;
-				    return 0;
-			    }
-		  }
-	  }
+	{
+		set_line (&the_cmd_arg.text, macro_func_arg);
+		{
+			char *arg_ptr;
+			const char *error;
+			arg_ptr = the_cmd_arg.text.buf;
+			error = the_cmd_arg.style->verify (&arg_ptr,
+					&the_cmd_arg);
+			if (error)
+			{
+				macro_func_arg = 0;
+				io_error_msg ("%s", error);
+			}
+			else
+			{
+				the_cmd_arg.is_set = 1;
+				if (arg_ptr)
+					while (isspace (*arg_ptr))
+						++arg_ptr;
+				if (arg_ptr && *arg_ptr)
+					macro_func_arg = arg_ptr;
+				else
+					macro_func_arg = 0;
+				return 0;
+			}
+		}
+	}
 	input_active = 1;
 	begin_edit ();
 
@@ -1033,59 +1032,59 @@ get_argument (char *prompt, struct prompt_style *style)
 	 * As for the call to expand_prompt -- hehehehehe
 	 */
 	if (the_cmd_frame->cmd->init_code
-	    && the_cmd_frame->cmd->init_code[cur_arg])
-	  {
-		  struct line init_code;
-		  //init_line(&init_code);
-		  expand_prompt (the_cmd_frame-> cmd->init_code[cur_arg], init_code);
-		  struct rng rng;
-		  rng.lr = rng.hr = rng.lc = rng.hc = 1;
-		  macro_only_input_stream (&rng, init_code.buf, strlen (init_code.buf), the_cmd_frame);
-		  command_loop (1, 0);
-		  free_line(&init_code);
-	  }
+			&& the_cmd_frame->cmd->init_code[cur_arg])
+	{
+		struct line init_code;
+		//init_line(&init_code);
+		expand_prompt (the_cmd_frame-> cmd->init_code[cur_arg], init_code);
+		struct rng rng;
+		rng.lr = rng.hr = rng.lc = rng.hc = 1;
+		macro_only_input_stream (&rng, init_code.buf, strlen (init_code.buf), the_cmd_frame);
+		command_loop (1, 0);
+		free_line(&init_code);
+	}
 
 	return 1;
 }
 
-void
+	void
 exit_minibuffer (void)
 {
 	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	else
-	  {
-		  char *extra = the_cmd_arg.text.buf;
-		  const char* error =
-			  the_cmd_arg.style->verify (&extra, &the_cmd_arg);
-		  if (error)
-		    {
-			    if (*error)
-				    io_error_msg ("%s", error);
-		    }
-		  else
-		    {
-			    if (extra)
-			      {
-				      while (isspace (*extra))
-					      ++extra;
-				      if (*extra)
-					      io_error_msg
-						      ("%s: extra characters in argument (%s)",
-						       the_cmd_frame->
-						       cmd->func_name, extra);
-			      }
-			    the_cmd_arg.is_set = 1;
-			    input_active = 0;
-			    window_after_input = -1;
-			    Global->topclear = 2;
-		    }
-	  }
+	{
+		char *extra = the_cmd_arg.text.buf;
+		const char* error =
+			the_cmd_arg.style->verify (&extra, &the_cmd_arg);
+		if (error)
+		{
+			if (*error)
+				io_error_msg ("%s", error);
+		}
+		else
+		{
+			if (extra)
+			{
+				while (isspace (*extra))
+					++extra;
+				if (*extra)
+					io_error_msg
+						("%s: extra characters in argument (%s)",
+						 the_cmd_frame->
+						 cmd->func_name, extra);
+			}
+			the_cmd_arg.is_set = 1;
+			input_active = 0;
+			window_after_input = -1;
+			Global->topclear = 2;
+		}
+	}
 }
 
 
-void
+	void
 setn_arg_text (struct command_arg *arg, const char *text, int len)
 {
 	ASSERT_UNCALLED();
@@ -1093,7 +1092,7 @@ setn_arg_text (struct command_arg *arg, const char *text, int len)
 	arg->cursor = len;
 }
 
-void
+	void
 init_arg_text (struct command_arg *arg, const char *text)
 {
 	ASSERT_UNCALLED();
@@ -1105,14 +1104,14 @@ init_arg_text (struct command_arg *arg, const char *text)
  * differently.  
  */
 
-void
+	void
 set_default_arg (struct command_arg *arg, char *text, int len)
 {
 	ASSERT_UNCALLED();
 	setn_arg_text (arg, text, len);
 }
 
-int				// new state
+	int				// new state
 prefix_cmd_continuation_loop (bool goto_have_character)
 {
 	ASSERT_UNCALLED();
@@ -1120,210 +1119,210 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 	if (goto_have_character)
 		goto have_character;
 	while (1)
-	  {
-		  /* Get the next character.
-		   * However, if we are in a macro, and the next character
-		   * is '{', then the macro contains a function name
-		   * and keymapping is circumvented. 
-		   */
+	{
+		/* Get the next character.
+		 * However, if we are in a macro, and the next character
+		 * is '{', then the macro contains a function name
+		 * and keymapping is circumvented. 
+		 */
 
-		get_next_char:
+get_next_char:
 
-		  if (pushed_back_char >= 0)
-		    {
-			    ch = pushed_back_char;
-			    pushed_back_char = -1;
-		    }
-		  else if (!rmac)
-		    {
-			    io_fix_input ();
-			    ch = real_get_chr ();
-		    }
-		  else
-		    {
-			    int len;
-			    unsigned char *ptr;
+		if (pushed_back_char >= 0)
+		{
+			ch = pushed_back_char;
+			pushed_back_char = -1;
+		}
+		else if (!rmac)
+		{
+			io_fix_input ();
+			ch = real_get_chr ();
+		}
+		else
+		{
+			int len;
+			unsigned char *ptr;
 
-			  tryagain:
-			    alarm_hooks ();
-			    ch = *(rmac->mac_exe++);
-			    switch (ch)
-			      {
-			      case '\0':
-				      cur_vector = 0;
-				      cur_cmd = end_macro_cmd;
-				      cur_chr = 0;
-				      //goto got_command;
-				      return sc_got_command;	// state machine
+tryagain:
+			alarm_hooks ();
+			ch = *(rmac->mac_exe++);
+			switch (ch)
+			{
+				case '\0':
+					cur_vector = 0;
+					cur_cmd = end_macro_cmd;
+					cur_chr = 0;
+					//goto got_command;
+					return sc_got_command;	// state machine
 
-			      case SPECIAL_CODE_A:
-				      ch = '\0';
-				      break;
+				case SPECIAL_CODE_A:
+					ch = '\0';
+					break;
 
-			      case SPECIAL_CODE_B:
-				      ch = '{';
-				      break;
-			      case SPECIAL_CODE_C:
-				      ch = '}';
-				      break;
+				case SPECIAL_CODE_B:
+					ch = '{';
+					break;
+				case SPECIAL_CODE_C:
+					ch = '}';
+					break;
 
-			      case '{':
-				      for (ptr = rmac->mac_exe;
-					   *ptr && *ptr != ' ' && *ptr != '}';
-					   ptr++);
-				      len = ptr - rmac->mac_exe;
-				      for (cur_vector = 0;
-					   cur_vector < num_funcs;
-					   cur_vector++)
-					      for (cur_cmd =
-						   &the_funcs[cur_vector][0];
-						   cur_cmd->func_name;
-						   cur_cmd++)
-						      if (!strincmp
-							  ((char
-							    *)
-							   (rmac->mac_exe),
-							   cur_cmd->func_name,
-							   len)
-							  &&
-							  cur_cmd->func_name
-							  [len] == '\0')
+				case '{':
+					for (ptr = rmac->mac_exe;
+							*ptr && *ptr != ' ' && *ptr != '}';
+							ptr++);
+					len = ptr - rmac->mac_exe;
+					for (cur_vector = 0;
+							cur_vector < num_funcs;
+							cur_vector++)
+						for (cur_cmd =
+								&the_funcs[cur_vector][0];
+								cur_cmd->func_name;
+								cur_cmd++)
+							if (!strincmp
+									((char
+									  *)
+									 (rmac->mac_exe),
+									 cur_cmd->func_name,
+									 len)
+									&&
+									cur_cmd->func_name
+									[len] == '\0')
 							{
 								cur_chr =
 									'\0';
 								goto out;
 							}
-				      io_error_msg
-					      ("Ignoring unknown function '%.*s' in macro",
-					       len, rmac->mac_exe);
-				      while (*ptr != '\0' && *ptr != '}')
-					      ptr++;
-				      if (*ptr == '}')
-					      ptr++;
-				      rmac->mac_exe = ptr;
-				      goto tryagain;
+					io_error_msg
+						("Ignoring unknown function '%.*s' in macro",
+						 len, rmac->mac_exe);
+					while (*ptr != '\0' && *ptr != '}')
+						ptr++;
+					if (*ptr == '}')
+						ptr++;
+					rmac->mac_exe = ptr;
+					goto tryagain;
 
-				    out:
-				      if (*ptr == ' ')
+out:
+					if (*ptr == ' ')
 					{
 						/* ... add argument support here ... */
 						if (!cur_cmd->func_args)
-						  {
-							  io_error_msg
-								  ("Ignoring extra operand to %s",
-								   cur_cmd->func_name);
-							  while (*ptr
-								 && *ptr !=
-								 '}')
-								  ptr++;
-							  if (*ptr == '}')
-								  ptr++;
-						  }
+						{
+							io_error_msg
+								("Ignoring extra operand to %s",
+								 cur_cmd->func_name);
+							while (*ptr
+									&& *ptr !=
+									'}')
+								ptr++;
+							if (*ptr == '}')
+								ptr++;
+						}
 						else if (cur_cmd->func_args[0]
-							 [0] == '+')
-						  {
-							  unsigned char *start
-								  = ptr;
-							  how_many =
-								  astol ((char
-									  **)
-									 (&ptr));
-							  setn_line
-								  (&raw_prefix,
-								   (char *)
-								   start,
-								   ptr -
-								   start);
-							  if (*ptr == '}')
-								  ptr++;
-						  }
+								[0] == '+')
+						{
+							unsigned char *start
+								= ptr;
+							how_many =
+								astol ((char
+											**)
+										(&ptr));
+							setn_line
+								(&raw_prefix,
+								 (char *)
+								 start,
+								 ptr -
+								 start);
+							if (*ptr == '}')
+								ptr++;
+						}
 						else
-						  {
-							  while (isspace
-								 (*ptr))
-								  ++ptr;
-							  macro_func_arg =
-								  (char *)
-								  ptr;
-							  while (*ptr
-								 && *ptr !=
-								 '}')
-							    {
-								    switch (*ptr)
-								      {
-								      case SPECIAL_CODE_B:
-									      *ptr = '{';
-									      break;
-								      case SPECIAL_CODE_C:
-									      *ptr = '}';
-									      break;
-								      }
-								    ptr++;
-							    }
-							  if (*ptr == '}')
-								  *ptr++ = '\0';
-						  }
+						{
+							while (isspace
+									(*ptr))
+								++ptr;
+							macro_func_arg =
+								(char *)
+								ptr;
+							while (*ptr
+									&& *ptr !=
+									'}')
+							{
+								switch (*ptr)
+								{
+									case SPECIAL_CODE_B:
+										*ptr = '{';
+										break;
+									case SPECIAL_CODE_C:
+										*ptr = '}';
+										break;
+								}
+								ptr++;
+							}
+							if (*ptr == '}')
+								*ptr++ = '\0';
+						}
 						rmac->mac_exe = ptr;
 					}
-				      else
-					      rmac->mac_exe += len + 1;
-				      //goto got_command;
-				      return sc_got_command;	// state machine
-			      }
-		    }
+					else
+						rmac->mac_exe += len + 1;
+					//goto got_command;
+					return sc_got_command;	// state machine
+			}
+		}
 
-		  /* When control comes here, adjust the keystate according 
-		   * to the cur_keymap and `ch';
-		   */
-		have_character:
-		  /* This is how keymaps are searched for a binding. */
-		  while (1)
-		    {
-			    struct key *key;
-			    key = &(the_maps[cur_keymap]->keys[ch]);
+		/* When control comes here, adjust the keystate according 
+		 * to the cur_keymap and `ch';
+		 */
+have_character:
+		/* This is how keymaps are searched for a binding. */
+		while (1)
+		{
+			struct key *key;
+			key = &(the_maps[cur_keymap]->keys[ch]);
 #if 0
-			    /* Debug keymap processing */
-			    fprintf (stderr,
-				     "Key %c Keymap %p (%s) code %d next %p\n",
-				     ch, cur_keymap, map_names[cur_keymap],
-				     key->code,
-				     the_maps[cur_keymap]->map_next);
+			/* Debug keymap processing */
+			fprintf (stderr,
+					"Key %c Keymap %p (%s) code %d next %p\n",
+					ch, cur_keymap, map_names[cur_keymap],
+					key->code,
+					the_maps[cur_keymap]->map_next);
 #endif
-			    if (key->vector < 0)
-			      {
-				      if (key->code >= 0)
-					{
-						cur_keymap = key->code;
-						goto get_next_char;
-					}
-				      else if (the_maps[cur_keymap]->map_next)
-					{
-						cur_keymap =
-							the_maps
-							[cur_keymap]->map_next->
-							id;
-					}
-				      else
-					{
-						cur_vector = 0;
-						cur_cmd = 0;
-						cur_chr = ch;
-						//goto got_command;
-						return sc_got_command;	// state machine
-					}
-			      }
-			    else
-			      {
-				      cur_vector = key->vector;
-				      cur_cmd =
-					      &(the_funcs[key->vector]
-						[key->code]);
-				      cur_chr = ch;
-				      //goto got_command;
-				      return sc_got_command;	// state machine
-			      }
-		    }
-	  }
+			if (key->vector < 0)
+			{
+				if (key->code >= 0)
+				{
+					cur_keymap = key->code;
+					goto get_next_char;
+				}
+				else if (the_maps[cur_keymap]->map_next)
+				{
+					cur_keymap =
+						the_maps
+						[cur_keymap]->map_next->
+						id;
+				}
+				else
+				{
+					cur_vector = 0;
+					cur_cmd = 0;
+					cur_chr = ch;
+					//goto got_command;
+					return sc_got_command;	// state machine
+				}
+			}
+			else
+			{
+				cur_vector = key->vector;
+				cur_cmd =
+					&(the_funcs[key->vector]
+							[key->code]);
+				cur_chr = ch;
+				//goto got_command;
+				return sc_got_command;	// state machine
+			}
+		}
+	}
 
 	assert ("we never reach here" == 0);
 }
@@ -1333,7 +1332,7 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 bool turd_1(bool interactive_mode, bool iscmd)
 {
 	ASSERT_UNCALLED();
-	 /* FUNC_ARGS string. To continue this loop, use `goto next_arg;'.
+	/* FUNC_ARGS string. To continue this loop, use `goto next_arg;'.
 	 *
 	 * If user interaction is required, the appropriate keymap,
 	 * editing area, etc. is set up, and the command loop resumes
@@ -1412,7 +1411,7 @@ bool turd_1(bool interactive_mode, bool iscmd)
 				goto next_arg;
 			}
 		case 'f':
-		       	{
+			{
 				struct prompt_style *style;
 				++prompt;
 				char type = *prompt;
@@ -1850,7 +1849,7 @@ next_arg:
 }
 
 
-bool				// return true if we have to jump to new_cycle upon completion 
+	bool				// return true if we have to jump to new_cycle upon completion 
 resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
 {
 	ASSERT_UNCALLED();
@@ -1870,7 +1869,7 @@ next_arg:
 	return false;
 }
 
-void
+	void
 recompute_numeric_value_of_prefix ()
 {
 	ASSERT_UNCALLED();
@@ -1881,37 +1880,37 @@ recompute_numeric_value_of_prefix ()
 
 	how_many = 1;
 	while (raw_prefix.buf[x])
-	  {
-		  if (isdigit (raw_prefix.buf[x]))
-		    {
-			    if (presumed_digits)
-				    how_many =
-					    how_many * 10 +
-					    (raw_prefix.buf[x] - '0');
-			    else
-			      {
-				      presumed_digits = 1;
-				      how_many = raw_prefix.buf[x] - '0';
-			      }
-		    }
-		  else if (raw_prefix.buf[x] == '-')
-			  sign *= -1;
-		  else
-		    {
-			    if (presumed_digits)
-			      {
-				      presumed_digits = 0;
-				      how_many = 1;
-			      }
-			    how_many *= 4;
-		    }
-		  ++x;
-	  }
+	{
+		if (isdigit (raw_prefix.buf[x]))
+		{
+			if (presumed_digits)
+				how_many =
+					how_many * 10 +
+					(raw_prefix.buf[x] - '0');
+			else
+			{
+				presumed_digits = 1;
+				how_many = raw_prefix.buf[x] - '0';
+			}
+		}
+		else if (raw_prefix.buf[x] == '-')
+			sign *= -1;
+		else
+		{
+			if (presumed_digits)
+			{
+				presumed_digits = 0;
+				how_many = 1;
+			}
+			how_many *= 4;
+		}
+		++x;
+	}
 	how_many *= sign;
 	io_update_status ();
 }
 
-int				// return next state
+	int				// return next state
 call_destroy_restart ()
 {
 	ASSERT_UNCALLED();
@@ -1919,11 +1918,11 @@ call_destroy_restart ()
 	struct command_frame *frame = the_cmd_frame;
 	cmd_invoker stub = find_stub ();
 	if (frame->_curow != frame->prev->_curow
-	    || frame->_cucol != frame->prev->_cucol)
-	  {
-		  move_cursor = 1;
-		  io_hide_cell_cursor ();
-	  }
+			|| frame->_cucol != frame->prev->_cucol)
+	{
+		move_cursor = 1;
+		io_hide_cell_cursor ();
+	}
 	remove_cmd_frame (frame);
 
 	/* Add frame to the list of frames to be freed on error. */
@@ -1934,7 +1933,7 @@ call_destroy_restart ()
 
 	if (!stub)
 		io_error_msg ("Don't know how to invoke %s!!!",
-			      frame->cmd->func_name);
+				frame->cmd->func_name);
 	else
 		stub (frame);
 
@@ -1946,12 +1945,12 @@ call_destroy_restart ()
 	 * return as soon as there is no more macro to evaluate.
 	 */
 	if ((!rmac && the_cmd_frame->input->prev_stream) || ioerror)
-	  {
-		  pop_input_stream();
-		  ioerror = 0;
-		  return sc_end;	//state machine
+	{
+		pop_input_stream();
+		ioerror = 0;
+		return sc_end;	//state machine
 
-	  }
+	}
 	if (the_cmd_frame->cmd)
 		//goto resume_getting_arguments;
 		return sc_resume_getting_arguments;	// state machine
@@ -1961,7 +1960,7 @@ call_destroy_restart ()
 	return sc_new_cycle;
 }
 
-int				// return a new state
+	int				// return a new state
 do_new_cycle ()
 {
 	ASSERT_UNCALLED();
@@ -1981,7 +1980,7 @@ do_new_cycle ()
 	return sc_prefix_cmd_continuation;
 }
 
-int				// new state
+	int				// new state
 do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
 {
 	ASSERT_UNCALLED();
@@ -1999,60 +1998,60 @@ do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
 	return call_destroy_restart ();
 }
 
-int				// return a new state
+	int				// return a new state
 do_got_command ()
 {
 	ASSERT_UNCALLED();
 	/* There are some commands that are implemented right here. */
 	if (cur_cmd == break_cmd)
-	  {
-		  io_bell ();
-		  if (input_active)
-			  pop_unfinished_command ();	/* Abort a complex command. */
-		  //goto new_cycle;
-		  return sc_new_cycle;	// state machine
-	  }
+	{
+		io_bell ();
+		if (input_active)
+			pop_unfinished_command ();	/* Abort a complex command. */
+		//goto new_cycle;
+		return sc_new_cycle;	// state machine
+	}
 
 	/* The binding of all keys associated with the prefix arg. */
 	if (cur_cmd == universal_arg_cmd)
-	  {
-		  int prefix_map = map_id ("prefix");
-		  /* Make sure the prefix-arg keymap is in place. */
-		  if (cur_keymap != prefix_map)
-		    {
-			    the_cmd_frame->saved_cur_keymap
-				    = the_cmd_frame->top_keymap;
-			    cur_keymap = prefix_map;
-		    }
-		  /* Store the last character typed in the raw-prefix. */
-		  std::string ch{(char) cur_chr};
-		  //catn_line (&raw_prefix, &ch, 1);
-		  catn_line (&raw_prefix, ch);
-		  /* Recompute the numeric value of the prefix. */
-		  recompute_numeric_value_of_prefix ();
-		  //goto prefix_cmd_continuation;
-		  return sc_prefix_cmd_continuation;
-	  }
+	{
+		int prefix_map = map_id ("prefix");
+		/* Make sure the prefix-arg keymap is in place. */
+		if (cur_keymap != prefix_map)
+		{
+			the_cmd_frame->saved_cur_keymap
+				= the_cmd_frame->top_keymap;
+			cur_keymap = prefix_map;
+		}
+		/* Store the last character typed in the raw-prefix. */
+		std::string ch{(char) cur_chr};
+		//catn_line (&raw_prefix, &ch, 1);
+		catn_line (&raw_prefix, ch);
+		/* Recompute the numeric value of the prefix. */
+		recompute_numeric_value_of_prefix ();
+		//goto prefix_cmd_continuation;
+		return sc_prefix_cmd_continuation;
+	}
 
 	/* Make sure we really mapped to a command. */
 	if (!cur_cmd || !cur_cmd->func_func)
-	  {
-		  /* If a character is unmapped in the prefix map,
-		   * retry mapping in the last-used normal keymap.
-		   */
-		  if (the_cmd_frame->saved_cur_keymap >= 0)
-		    {
-			    cur_keymap = the_cmd_frame->saved_cur_keymap;
-			    the_cmd_frame->saved_cur_keymap = -1;
-			    //goto have_character;
-			    prefix_cmd_continuation_loop (true);
-			    return sc_resume_getting_arguments;	// state machine
-		    }
-		  /* Otherwise, signal an error and start from the top keymap. */
-		  io_bell ();
-		  //goto new_cycle;
-		  return sc_new_cycle;	// state machine
-	  }
+	{
+		/* If a character is unmapped in the prefix map,
+		 * retry mapping in the last-used normal keymap.
+		 */
+		if (the_cmd_frame->saved_cur_keymap >= 0)
+		{
+			cur_keymap = the_cmd_frame->saved_cur_keymap;
+			the_cmd_frame->saved_cur_keymap = -1;
+			//goto have_character;
+			prefix_cmd_continuation_loop (true);
+			return sc_resume_getting_arguments;	// state machine
+		}
+		/* Otherwise, signal an error and start from the top keymap. */
+		io_bell ();
+		//goto new_cycle;
+		return sc_new_cycle;	// state machine
+	}
 
 	/* The next step is to gather the arguments with which to call
 	 * the function interactively.
@@ -2067,7 +2066,7 @@ do_got_command ()
 	return sc_resume_getting_arguments;
 }
 
-void 
+	void 
 print_state(int state)
 {
 	ASSERT_UNCALLED();
@@ -2098,85 +2097,85 @@ print_state(int state)
 	}
 }
 
-void
+	void
 inner_command_loop (int state, int iscmd)
 {
 	ASSERT_UNCALLED();
 
 	while (1)
-	  {
-		  print_state(state);
-		  switch (state)
-		    {
-		    case sc_start:
+	{
+		print_state(state);
+		switch (state)
+		{
+			case sc_start:
 
-		    case sc_new_cycle:
+			case sc_new_cycle:
 
-			    //new_cycle:
+				//new_cycle:
 
-			    /* Some commands are prefix commands: they effect the 
-			     * user's state without beginnging a new command cyle.
-			     * Those commands return here:
-			     */
+				/* Some commands are prefix commands: they effect the 
+				 * user's state without beginnging a new command cyle.
+				 * Those commands return here:
+				 */
 
-			    state = do_new_cycle ();
-			    assert (state == sc_prefix_cmd_continuation);
-			    break;
-		    case sc_prefix_cmd_continuation:
-			    //prefix_cmd_continuation:
-			    /* In this loop, we look for the next command to
-			     * execute.  This may involve reading from a macro, 
-			     * or the keyboard.  If there is time to kill, updates
-			     * and evalutations are done.
-			     *
-			     * This loop is exited by `goto got_command'.
-			     */
-			    state = prefix_cmd_continuation_loop (false);
-			    assert (state == sc_got_command);
-			    break;
+				state = do_new_cycle ();
+				assert (state == sc_prefix_cmd_continuation);
+				break;
+			case sc_prefix_cmd_continuation:
+				//prefix_cmd_continuation:
+				/* In this loop, we look for the next command to
+				 * execute.  This may involve reading from a macro, 
+				 * or the keyboard.  If there is time to kill, updates
+				 * and evalutations are done.
+				 *
+				 * This loop is exited by `goto got_command'.
+				 */
+				state = prefix_cmd_continuation_loop (false);
+				assert (state == sc_got_command);
+				break;
 
-			    // fallthrough
+				// fallthrough
 
-		    case sc_got_command:
-			    /* Now the next command to begin has been read from a macro
-			     * or the keyboard.
-			     */
-			    //got_command:
+			case sc_got_command:
+				/* Now the next command to begin has been read from a macro
+				 * or the keyboard.
+				 */
+				//got_command:
 
-			    state = do_got_command ();
-			    assert (state == sc_resume_getting_arguments
-				    || state == sc_new_cycle
-				    || state == sc_prefix_cmd_continuation);
-			    break;
+				state = do_got_command ();
+				assert (state == sc_resume_getting_arguments
+						|| state == sc_new_cycle
+						|| state == sc_prefix_cmd_continuation);
+				break;
 
-			    /* After some other command finishes from underneath a complex command,
-			     * flow returns here. 
-			     */
+				/* After some other command finishes from underneath a complex command,
+				 * flow returns here. 
+				 */
 
-			    // fallthrough
+				// fallthrough
 
-		    case sc_resume_getting_arguments:
-			    //resume_getting_arguments:
-			    state = do_resume_getting_arguments
-				    (interactive_mode_1, iscmd);
+			case sc_resume_getting_arguments:
+				//resume_getting_arguments:
+				state = do_resume_getting_arguments
+					(interactive_mode_1, iscmd);
 
-			    assert (state == sc_new_cycle
-				    || state == sc_resume_getting_arguments
-				    || state == sc_end);
-			    break;
-		    case sc_end:
-			    return;
+				assert (state == sc_new_cycle
+						|| state == sc_resume_getting_arguments
+						|| state == sc_end);
+				break;
+			case sc_end:
+				return;
 
-		    default:
-			    fprintf (stderr,
-				     "call_destroy_restart(): unknown state\n");
-			    fflush (stderr);
-			    abort ();	// should NEVER reach here
+			default:
+				fprintf (stderr,
+						"call_destroy_restart(): unknown state\n");
+				fflush (stderr);
+				abort ();	// should NEVER reach here
 
 
 
-		    }
-	  }
+		}
+	}
 }
 
 /*
@@ -2191,7 +2190,7 @@ inner_command_loop (int state, int iscmd)
  * This is done by pushing a macro_only command frame (see execute_command).
  */
 
-void
+	void
 command_loop (int prefix, int iscmd)
 {
 	ASSERT_UNCALLED();
@@ -2200,25 +2199,25 @@ command_loop (int prefix, int iscmd)
 	int state = sc_start;
 
 	if (the_cmd_frame->cmd)
-	  {
-		  /* We might be re-entering after a longjmp caused by an error.
-		   * In that case, we use an alternate entry point:
-		   */
-		  //goto resume_getting_arguments;
-		  state = sc_resume_getting_arguments;
-	  }
+	{
+		/* We might be re-entering after a longjmp caused by an error.
+		 * In that case, we use an alternate entry point:
+		 */
+		//goto resume_getting_arguments;
+		state = sc_resume_getting_arguments;
+	}
 	else if (prefix)
-	  {
+	{
 
-		  /*
-		   * Commands (notably execute_command) just tweek the command_frame
-		   * state for some other command.  To accomplish this, there is an 
-		   * entry point that avoid reinitializing the command_frame.
-		   */
-		  prefix = 0;
-		  //goto prefix_cmd_continuation;
-		  state = sc_prefix_cmd_continuation;
-	  }
+		/*
+		 * Commands (notably execute_command) just tweek the command_frame
+		 * state for some other command.  To accomplish this, there is an 
+		 * entry point that avoid reinitializing the command_frame.
+		 */
+		prefix = 0;
+		//goto prefix_cmd_continuation;
+		state = sc_prefix_cmd_continuation;
+	}
 
 	inner_command_loop (state, iscmd);
 }
@@ -2237,26 +2236,26 @@ static struct line exec_cmd_line;
  * This function quotes the braces in ARGS so that the macro reader knows
  * they are literal rather than macro syntax.
  */
-static void
+	static void
 quote_macro_args (char *args)
 {
 	ASSERT_UNCALLED();
 	while (*args)
-	  {
-		  switch (*args)
-		    {
-		    case '{':
-			    *args = SPECIAL_CODE_B;
-			    break;
-		    case '}':
-			    *args = SPECIAL_CODE_C;
-			    break;
-		    }
-		  ++args;
-	  }
+	{
+		switch (*args)
+		{
+			case '{':
+				*args = SPECIAL_CODE_B;
+				break;
+			case '}':
+				*args = SPECIAL_CODE_C;
+				break;
+		}
+		++args;
+	}
 }
 
-void
+	void
 execute_command(const char *instr)
 {
 	ASSERT_UNCALLED();
@@ -2284,12 +2283,12 @@ execute_command(const char *instr)
 		return;
 	for (ptr = str; *ptr && !isspace (*ptr); ptr++);
 	if (*ptr)
-	  {
-		  setn_line (&exec_buf, str, ptr - str + 1);
-		  exec_buf.buf[ptr - str] = 0;
-		  str = exec_buf.buf;
-		  ++ptr;
-	  }
+	{
+		setn_line (&exec_buf, str, ptr - str + 1);
+		exec_buf.buf[ptr - str] = 0;
+		str = exec_buf.buf;
+		++ptr;
+	}
 	else
 		ptr = 0;
 
@@ -2300,44 +2299,44 @@ execute_command(const char *instr)
 		struct cmd_func *cmd;
 
 		if (!find_function (&vector, &cmd, str, strlen (str)))
-		  {
-			  if (ptr)
-			    {
-				    quote_macro_args (ptr);
-				    sprint_line (&exec_cmd_line, "{%s %s}",
-						 str, ptr);
-			    }
-			  else
-				  sprint_line (&exec_cmd_line, "{%s}", str);
-			  run = exec_cmd_line.buf;
-			  rng.lr = rng.hr = 1;
-			  rng.lc = rng.hc = 1;
-			  iscmd = 1;
-			  goto found_command;
-		  }
+		{
+			if (ptr)
+			{
+				quote_macro_args (ptr);
+				sprint_line (&exec_cmd_line, "{%s %s}",
+						str, ptr);
+			}
+			else
+				sprint_line (&exec_cmd_line, "{%s}", str);
+			run = exec_cmd_line.buf;
+			rng.lr = rng.hr = 1;
+			rng.lc = rng.hc = 1;
+			iscmd = 1;
+			goto found_command;
+		}
 	}
 
 	{
 		/* Try for a range address. */
 		CELL *cp;
 		if (get_abs_rng (&str, &rng))
-		  {
-			  io_error_msg ("Unknown command %s", str);
-			  return;
-		  }
+		{
+			io_error_msg ("Unknown command %s", str);
+			return;
+		}
 		if (ptr)
-		  {
-			  io_error_msg ("Macros can't take arguments");
-			  return;
-		  }
+		{
+			io_error_msg ("Macros can't take arguments");
+			return;
+		}
 
 		cp = find_cell (rng.lr, rng.lc);
 		if (!cp || GET_TYP (cp) != TYP_STR || cp->gString()[0] == '\0')
-		  {
-			  io_error_msg ("No macro found at %s.",
+		{
+			io_error_msg ("No macro found at %s.",
 					range_name (&rng));
-			  return;
-		  }
+			return;
+		}
 
 		run = cp->gString();
 		/* Reset the keystate. */
@@ -2347,15 +2346,15 @@ execute_command(const char *instr)
 		set_line (&raw_prefix, "");	/* see run_string_as_macro for more info */
 	}
 
-      found_command:
+found_command:
 	while (count-- > 0)
-	  {
-		  macro_only_input_stream (&rng, run, strlen (run), the_cmd_frame);
-		  command_loop (1, iscmd);
-	  }
+	{
+		macro_only_input_stream (&rng, run, strlen (run), the_cmd_frame);
+		command_loop (1, iscmd);
+	}
 }
 
-void
+	void
 execute_command_str(std::string cmd)
 {
 	ASSERT_UNCALLED();
@@ -2371,33 +2370,33 @@ void execute_command_sv(std::string_view cmd)
 
 
 /* Read a character.  If we're in a macro, read from the macro. . . */
-int
+	int
 get_chr (void)
 {
 	ASSERT_UNCALLED();
 	int ch;
 
 	if (rmac)
-	  {
-		  ch = *(rmac->mac_exe++);
-		  switch (ch)
-		    {
-		    case '{':	/* What else can we do? */
-		    case '\0':
-			    --rmac->mac_exe;
-			    break;
+	{
+		ch = *(rmac->mac_exe++);
+		switch (ch)
+		{
+			case '{':	/* What else can we do? */
+			case '\0':
+				--rmac->mac_exe;
+				break;
 
-		    case (SPECIAL_CODE_A):
-			    ch = 0;
-			    break;
+			case (SPECIAL_CODE_A):
+				ch = 0;
+				break;
 
-		    case (SPECIAL_CODE_B):
-			    ch = '{';
-			    break;
-		    default:
-			    break;
-		    }
-	  }
+			case (SPECIAL_CODE_B):
+				ch = '{';
+				break;
+			default:
+				break;
+		}
+	}
 	else
 		ch = real_get_chr ();
 	return ch;
@@ -2410,14 +2409,14 @@ get_chr (void)
  * typed to cause the error message to go away.
  */
 
-void
+	void
 display_msg (char *msg, int c)
 {
 	if (c > 0)
 		pushed_back_char = c;
 }
 
-void
+	void
 pushback_keystroke (int c)
 {
 	ASSERT_UNCALLED();
@@ -2425,7 +2424,7 @@ pushback_keystroke (int c)
 		pushed_back_char = c;
 }
 
-void
+	void
 cmd_io_error_msg (const char *str, ...)
 {
 	va_list foo;
@@ -2457,7 +2456,7 @@ cmd_io_error_msg (const char *str, ...)
 }
 
 
-void
+	void
 io_info_msg (const char *str, ...)
 {
 	va_list foo;
@@ -2548,7 +2547,7 @@ void inner_prompt_expansion(char*& str, struct line& expanded)
  * malloced memory is returned.
  */
 
-char *
+	char *
 expand_prompt (char *str)
 {
 	ASSERT_UNCALLED();
@@ -2559,7 +2558,7 @@ expand_prompt (char *str)
 	//init_line (&expanded);
 	inner_prompt_expansion(str, expanded);
 	return expanded.buf;
-	
+
 }
 
 void expand_prompt(char *str, struct line& line)
@@ -2582,7 +2581,7 @@ void expand_prompt(char *str, struct line& line)
 #define MAX(A,B) (((A) >= (B)) ? (A) : (B))
 
 
-void
+	void
 view_info (char *name, int ignore)
 {
 	ASSERT_UNCALLED();
@@ -2592,12 +2591,12 @@ view_info (char *name, int ignore)
  * is in defun.h.
  */
 
-void
+	void
 with_keymap (char *mapname)
 {
 }
 
-void
+	void
 one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
 {
 	ASSERT_UNCALLED();
@@ -2614,14 +2613,14 @@ one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
 			 [keyseq->cmd.code].func_name);
 }
 
-void 
+	void 
 set_curow(int nrow)
 {
 	if(!the_cmd_frame) return; // maybe running headless
 	the_cmd_frame->_curow = nrow;
 }
 
-void
+	void
 set_cucol(int ncol)
 {
 	if(!the_cmd_frame) return; // maybe running headless
@@ -2638,32 +2637,32 @@ void rebuild_command_frame()
 		free_cmd_frame (the_cmd_frame);
 	free_cmd_frame (last_of_the_old);
 }
-static void
+	static void
 init_maps (void)
 {
-  num_maps = 0;
-  the_maps = 0;
-  map_names = 0;
-  map_prompts = 0;
+	num_maps = 0;
+	the_maps = 0;
+	map_names = 0;
+	map_prompts = 0;
 
-  the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
-  num_funcs = 1;
-  the_funcs[0] = (cmd_func *) get_cmd_funcs();
+	the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
+	num_funcs = 1;
+	the_funcs[0] = (cmd_func *) get_cmd_funcs();
 
-  if(!use_2019) {
-  find_func (0, &end_macro_cmd, "end-macro");
-  find_func (0, &digit_0_cmd, "digit-0");
-  find_func (0, &digit_9_cmd, "digit-9");
-  find_func (0, &break_cmd, "break");
-  find_func (0, &universal_arg_cmd, "universal-argument");
-  create_keymap ("universal", 0);
-  }
-  push_command_frame (0, 0, 0);
+	if(!use_2019) {
+		find_func (0, &end_macro_cmd, "end-macro");
+		find_func (0, &digit_0_cmd, "digit-0");
+		find_func (0, &digit_9_cmd, "digit-9");
+		find_func (0, &break_cmd, "break");
+		find_func (0, &universal_arg_cmd, "universal-argument");
+		create_keymap ("universal", 0);
+	}
+	push_command_frame (0, 0, 0);
 }
 
 
 
-void
+	void
 init_maps_and_macros()
 {
 	try {
@@ -2671,10 +2670,10 @@ init_maps_and_macros()
 		init_named_macro_strings ();
 		if(!use_2019) 
 			run_init_cmds ();
-		
+
 	} catch (OleoJmp& e) {
 		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
-                io_close_display(69);
-                exit (69);
+		io_close_display(69);
+		exit (69);
 	}
 }
