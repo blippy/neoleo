@@ -55,6 +55,7 @@ neoleo_SOURCES = defuns.cc \
 		 shell.cc \
 		 tests.cc \
 		 value.cc \
+		 xcept.cc \
 		 yyreglex.cc
 	
 
@@ -71,14 +72,14 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 mem.h \
 		 neotypes.h node.h  numeric.h \
 		 obstack.h \
-		 oleofile.h  oleox.h \
+		 oleofile.h  \
 		 parse.hh parse_parse.h \
 		 ref.h \
 		 regions.h sheet.h sort.h spans.h stringo.h stub.h stubs.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h \
-		 value.h
+		 value.h xcept.h
 
 
 byte-compile.o : parse.hh

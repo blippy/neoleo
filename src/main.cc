@@ -21,7 +21,7 @@
 #include "tests.h"
 #include "utils.h"
 
-#include "oleox.h"
+#include "xcept.h"
 
 using std::cerr;
 using std::cout;

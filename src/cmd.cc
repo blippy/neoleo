@@ -26,7 +26,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "oleox.h"
+#include "xcept.h"
 #include "decompile.h"
 #include "sheet.h"
 #include "logging.h"
