@@ -582,50 +582,22 @@ decomp_str(const CELLREF r, const CELLREF c)
 
 
 
-const std::string
-decomp_formula_1(const CELLREF r, const CELLREF c, CELL *cell, int tog)
-{
-	extern char *bname[];
-	switch (GET_TYP (cell)) {
-		case 0:
-			return "";
-		case TYP_FLT:
-			if (tog) return flt_to_str_fmt(cell);
-			return flt_to_str (cell->gFlt());
-		case TYP_INT:
-			return std::to_string(cell->gInt());
-		case TYP_STR:
-			{
-				strcpy_c s{cell->gString()};
-				return backslash_a_string (s.data(), 1);
-			}
-		case TYP_BOL:
-			return bname[cell->gBol()];
-		case TYP_ERR:
-			return ename[cell->gBol()];
-		default:
-			panic ("Unknown type %d in decomp", GET_TYP (cell));
-			return "PANIC";
-	}
-}
-
 std::string
 decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 {
 	if(!cell) return "";
 	decomp_row = r;
 	decomp_col = c;
-
-	// we don't care about 'tightness', as all the computation has been done
-	if (cell->get_cell_formula() == 0) {
-		save_decomp.string = decomp_formula_1(r, c, cell, tog);
-	} else {
+	std::string str;
+	formula_t form = cell->get_cell_formula();
+	if(form) {
 		pr_node_t* n = byte_decompile (cell->get_cell_formula());
-		save_decomp.string = n->string;
+		str = n->string;
 		delete n;
 	}
-	//log_debug_1("decomp_formula:return:"s + save_decomp.string);
-	return save_decomp.string.c_str();
+
+	save_decomp.string = str;
+	return str;
 }
 
 
@@ -640,10 +612,6 @@ decomp_formula(const CELLREF r, const CELLREF c, CELL *cell, int tog)
 const char *
 backslash_a_string (char *string, int add_quote)
 {
-// TODO causes crashing at 19-Jan-2019
-#if 0	
-	return string;
-#else
 	char		*pf, *pt;
 	unsigned char	ch;
 	int		size, len;
@@ -704,6 +672,5 @@ backslash_a_string (char *string, int add_quote)
 		return cbuf;
 	}
 	return string;
-#endif
 }
 
