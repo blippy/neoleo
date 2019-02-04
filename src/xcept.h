@@ -8,7 +8,6 @@ using std::string;
  * */
 class OleoJmp : public std::exception
 {
-
 	public:
 		OleoJmp() {}
 		OleoJmp(const string& msg) : msg_(msg) {}
@@ -20,4 +19,14 @@ class OleoJmp : public std::exception
 
 	private:
 		string msg_ = "OleoJmp";
+};
+
+class SyntaxError : public std::exception
+{
+	public:
+		SyntaxError() {}
+		SyntaxError(const string& msg) : msg_(msg) {}
+		virtual const char* what() const throw() { return msg_.c_str() ; }
+	private:
+		string msg_ = "SyntaxError";
 };
