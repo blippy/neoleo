@@ -92,6 +92,7 @@ oleo_read_file (FILE *fp, int ismerge)
 		clear_spreadsheet ();
 	while (fgets (cbuf, sizeof (cbuf), fp))
 	{
+		std::string input_line = cbuf;
 		lineno++;
 
 		if ((ptr = (char *)index (cbuf, '\n')))
@@ -561,7 +562,7 @@ bad_field:
 				if (!ismerge)
 					clear_spreadsheet ();
 				io_recenter_all_win ();
-				io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, cbuf);
+				io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, input_line.c_str());
 				Global->return_from_error = 0;
 				return;
 		}	/* End of switch */
