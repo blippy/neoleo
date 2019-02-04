@@ -1,7 +1,5 @@
 /*
- * $Id: io-utils.c,v 1.39 2001/02/13 23:38:06 danny Exp $
- *
- * Copyright © 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -1404,9 +1402,9 @@ std::string stringify_value_file_style(value* val)
 std::string trim(const std::string& str)
 {
     if(str.length() ==0) { return str;}
-    size_t first = str.find_first_not_of(" \t\r");
+    size_t first = str.find_first_not_of(" \t\r\n");
     if(first == std::string::npos) return "";
-    size_t last = str.find_last_not_of(" \t\r");
+    size_t last = str.find_last_not_of(" \t\r\n");
     return str.substr(first, (last-first+1));
 }
 

@@ -25,6 +25,7 @@
 
 #include "byte-compile.h"
 #include "convert.h"
+#include "format.h"
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
@@ -38,6 +39,7 @@
 #include "decompile.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 /* These functions read and write OLEO style files. */
 
@@ -558,13 +560,18 @@ oleo_read_file (FILE *fp, int ismerge)
 				break;
 			default:
 bad_field:
-				Global->a0 = old_a0;
-				if (!ismerge)
-					clear_spreadsheet ();
-				io_recenter_all_win ();
-				io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, input_line.c_str());
-				Global->return_from_error = 0;
-				return;
+				{
+					Global->a0 = old_a0;
+					if (!ismerge)
+						clear_spreadsheet ();
+					io_recenter_all_win ();
+					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
+					std::string msg{string_format(fmt, lineno, input_line.c_str())};
+					msg = trim(msg);
+					throw SyntaxError(msg);
+					Global->return_from_error = 0;
+					return;
+					}
 		}	/* End of switch */
 	}
 	if (!feof (fp)) {
