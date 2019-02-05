@@ -181,19 +181,8 @@ int ioerror = 0;
 
 /* The current stream from which commands are being read. */
 
-/*
-   input_stream_ptr make_input_stream() 
-   { 
-   auto ptr = new input_stream();
-   obstack_mc_init(&ptr->_macro_stack);
-   return ptr;
-   }
-   */
 
 input_stream_ptr the_input_stream = nullptr;
-//struct input_stream the_default_input_stream;
-//void delete_the_input_stream() { if(the_input_stream) delete the_input_stream; }
-//exit_c exit_the_input_stream(delete_the_input_stream);
 
 void debug_input_stream(const char* str, struct input_stream *isp)
 {
