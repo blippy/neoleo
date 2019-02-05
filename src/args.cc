@@ -323,33 +323,6 @@ incremental_cmd_verify (char ** end, struct command_arg * arg)
 }
 
 
-	const char *
-menu_verify (char ** end, struct command_arg * arg)
-{
-	const char * error = char_verify (end, arg);
-	if (error)
-		return error;
-
-	{
-		int pick = arg->val.integer;
-		char * key = arg->arg_desc + 1;
-		while (*key && (*key != ']'))
-		{
-			if (*key == '\\')
-			{
-				++key;
-				if (!*key)
-					break;
-			}
-			if (pick == *key)
-				return 0;
-			else
-				++key;
-		}
-		setn_edit_line ("", 0);
-		return "No such menu option.";
-	}
-}
 
 
 	const char *
