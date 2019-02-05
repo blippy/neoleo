@@ -30,7 +30,7 @@
 
 typedef std::deque<cell_t*> celldeq_t;
 
-void decoord(CELL* cp, CELLREF& r, CELLREF& c);
+void decoord(const CELL* cp, CELLREF& r, CELLREF& c);
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
 struct cell* find_or_make_cell(CELLREF row, CELLREF col);
@@ -46,8 +46,8 @@ void no_more_cells();
 coord_t to_coord(coord_t row, coord_t col);
 int get_col(coord_t coord);
 int get_row(coord_t coord);
-int get_col(CELL* cp);
-int get_row(CELL* cp);
+int get_col(const CELL* cp);
+int get_row(const CELL* cp);
 CELLREF max_row();
 CELLREF max_col();
 CELLREF highest_row();

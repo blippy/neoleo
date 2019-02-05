@@ -94,8 +94,8 @@ class cell : public value
 		struct ref_to *cell_refs_to = nullptr;
 
 		coord_t coord;
-		CELLREF get_row();
-		CELLREF get_col();
+		//CELLREF get_row() const;
+		//CELLREF get_col() const;
 
 		cell(coord_t coord);
 		~cell();

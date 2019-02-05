@@ -11,6 +11,7 @@
 //#include <functional>
 #include <iostream>
 #include <map>
+#include <set>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -54,14 +55,14 @@ coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
-int get_col(CELL* cp) 
+int get_col(const CELL* cp) 
 { 
 	//coord_t coord; 
 	CELLREF r,c;
 	decoord(cp, r, c); 
 	return c;
 }
-int get_row(CELL* cp)
+int get_row(const CELL* cp)
 { 
 	//coord_t coord; 
 	CELLREF r,c;
@@ -70,7 +71,7 @@ int get_row(CELL* cp)
 }
 
 
-void decoord(CELL* cp, CELLREF& r, CELLREF& c)
+void decoord(const CELL* cp, CELLREF& r, CELLREF& c)
 {
 	coord_t coord = cp->coord;
 	assert(coord);
@@ -235,16 +236,25 @@ void dump_sheet()
 	cout << "--- dump_sheet:end ---\n";
 }
 
-void bump_row(CELLREF row, int increment)
+
+void 
+bump_row (CELLREF row, int increment)
 {
 	if(increment == 0) return;
 
-	rng_t rng{rng_all};
-	rng.lr = row;
-	celldeq_t q = get_cells_in_range(&rng);
-	if(increment>0) std::reverse(q.begin(), q.end());
+	std::vector<CELL*> subrange;
+	for(CELL* cell: the_cells)
+		if(get_row(cell)>=row) subrange.push_back(cell);
 
-	for(CELL* cp : q) {
+	auto sorter = [&increment](CELL* cp1, CELL* cp2) { 
+		if(increment>0)
+			return get_row(cp2) < get_row(cp1);
+		else
+			return get_row(cp1) < get_row(cp2);
+	};
+	sort(subrange.begin(), subrange.end(), sorter);
+
+	for(CELL* cp : subrange) {
 		CELLREF r, c;
 		decoord(cp, r, c);		
 		//if(r < row) continue;
@@ -258,7 +268,7 @@ void bump_row(CELLREF row, int increment)
 		free(cp->get_cell_formula());
 		cp->set_cell_formula(new_formula);
 		update_cell(cp); // fix for pesky references
-		
+
 		coord_t coord = to_coord(r+increment, c);
 		cp->coord = coord;
 	}
