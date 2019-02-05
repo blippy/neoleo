@@ -548,11 +548,9 @@ insert_cell_attr (struct rng * rng, char * attr)
 	{
 		CELL * cp = find_cell (rng->lr, rng->lc);
 		if (!cp)
-			//set_line (&line, "def");
 			oss << "def";
 		else
 		{
-			//set_line(&line, cell_format_string(cp));
 			oss << cell_format_string(cp);
 		}
 	}

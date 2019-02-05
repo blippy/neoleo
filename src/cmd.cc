@@ -356,14 +356,12 @@ struct command_frame *running_frames = 0;
 	void
 push_command_frame (struct rng *rng, char *first_line, int len)
 {
-	//struct command_frame *new_cf = (struct command_frame *) ck_malloc (sizeof (*new_cf));
 	auto new_cf = new struct command_frame;
 
 	new_cf->next = new_cf;
 	new_cf->prev = new_cf;
 
 	new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : default_input_stream ());
-	//new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : &the_default_input_stream);
 
 	new_cf->_setrow = NON_ROW;
 	new_cf->_setcol = NON_COL;
@@ -385,7 +383,6 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_cur_vector = 0;
 	new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
 
-	//init_line (&new_cf->_raw_prefix);
 	new_cf->_cmd_argc = 0;
 	new_cf->complex_to_user = 0;
 
@@ -410,7 +407,6 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 				// other initialisation of cfn taken care of by constructor
 				command_arg_t* cfn = &new_cf->argv[argc];
 				cfn->arg_desc = *prompt;
-				//init_line (&cfn->text);
 				set_line (&cfn->text, "");
 				bzero (&cfn->val, sizeof (union command_arg_val));
 				++argc;
