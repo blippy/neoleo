@@ -77,56 +77,6 @@ void obstack_mc_init(cmd_obstack_t* ptr)
 #endif
 }
 
-void* obstack_mc_alloc(cmd_obstack_t* ptr, int size)
-{
-	ASSERT_UNCALLED();
-#ifdef USE_CMD_OBSTACK
-	return obstack_alloc(ptr, size);
-#else
-	return ptr->alloc(size);
-#endif
-}
-
-void obstack_mc_grow(cmd_obstack_t* ptr, const void* data, int size)
-{
-	ASSERT_UNCALLED();
-#ifdef USE_CMD_OBSTACK
-	obstack_grow(ptr, data, size);
-#else
-	strcpy_c data1{(const char*) data};
-	ptr->grow(data1.data(), size);
-#endif
-}
-
-void obstack_mc_1grow(cmd_obstack_t* ptr, char c)
-{
-	ASSERT_UNCALLED();
-#ifdef USE_CMD_OBSTACK
-	obstack_1grow(ptr, c);
-#else
-	ptr->grow1(c);
-#endif
-}
-
-void* obstack_mc_finish(cmd_obstack_t* ptr)
-{
-	ASSERT_UNCALLED();
-#ifdef USE_CMD_OBSTACK
-	return obstack_finish(ptr);
-#else
-	return ptr->finish();
-#endif
-}
-
-void obstack_mc_free(cmd_obstack_t* ptr, void* mem_start)
-{
-	ASSERT_UNCALLED();
-#ifdef USE_CMD_OBSTACK
-	obstack_free(ptr, mem_start);
-#else
-	ptr->free_from(mem_start);
-#endif
-}
 
 ///// obstack stuff end
 
@@ -524,11 +474,6 @@ free_cmd_frame (struct command_frame *frame)
 			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
 				frame->argv[argc].style->destroy (&frame->argv[argc]);
 			free_line (&frame->argv[argc].text);
-			/*
-			   if (frame->argv[argc].expanded_prompt.buf 
-			   && (frame->argv[argc].expanded_prompt.buf != frame->argv[argc].prompt.buf))
-			   free (frame->argv[argc].expanded_prompt.buf);
-			   */
 		}
 	}
 	delete frame;
