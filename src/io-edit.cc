@@ -23,7 +23,6 @@
 #include <errno.h>
 #include <ctype.h>
 #include <sstream>
-//#include <tuple>
 
 #undef NULL
 
@@ -40,6 +39,7 @@
 #include "spans.h"
 #include "utils.h"
 #include "decompile.h"
+#include "xcept.h"
 
 /* Shorthand */
 
@@ -78,6 +78,7 @@ check_editting_mode (void)
 	void
 begin_edit (void)
 {
+	ASSERT_UNCALLED();
 	Global->topclear = 0;
 	the_cmd_frame->complex_to_user = 1;
 	io_fix_input ();
@@ -93,6 +94,7 @@ setn_edit_line (char * str, int len)
 	void
 toggle_overwrite (int set, int setting)
 {
+	ASSERT_UNCALLED();
 	if (!set)
 		the_overwrite = !the_overwrite;
 	else
@@ -102,6 +104,7 @@ toggle_overwrite (int set, int setting)
 	void
 beginning_of_line (void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	the_cursor = 0;
@@ -112,6 +115,7 @@ beginning_of_line (void)
 	void
 end_of_line (void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	the_cursor = strlen (the_text.buf);
@@ -121,6 +125,7 @@ end_of_line (void)
 	void
 backward_char (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -144,6 +149,7 @@ backward_char (int n)
 	void
 backward_word (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -170,6 +176,7 @@ backward_word (int n)
 	void
 forward_char (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -195,6 +202,7 @@ forward_char (int n)
 	void
 goto_char (int n)
 {
+	ASSERT_UNCALLED();
 	int len;
 	if (n < 0)
 		n = 0;
@@ -208,6 +216,7 @@ goto_char (int n)
 	void
 forward_word (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -233,6 +242,7 @@ forward_word (int n)
 	static void
 erase (int len)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	// strcpy() with overlap
@@ -247,6 +257,7 @@ erase (int len)
 	void
 backward_delete_char (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -270,6 +281,7 @@ backward_delete_char (int n)
 	void 
 backward_delete_word (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	else
@@ -294,6 +306,7 @@ backward_delete_word (int n)
 	void
 delete_to_start(void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	else
@@ -308,6 +321,7 @@ delete_to_start(void)
 	void
 delete_char (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -330,6 +344,7 @@ delete_char (int n)
 	void
 delete_word (int n)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	if (n < 0)
@@ -356,6 +371,7 @@ delete_word (int n)
 	void
 kill_line(void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	else
@@ -375,6 +391,7 @@ str_and_len(const std::string& instr, int& len)
 	void
 insert_string(const std::string& instr)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ())
 		return;
 	int len;
@@ -406,12 +423,8 @@ over_string(const std::string& instr)
 }
 
 	void
-//put_string (const char * str, int len)
 put_string (const std::string& s1)
 {
-	//std::string s1{str};
-	//assert(s1.size() == len);
-
 	if (check_editting_mode ())
 		return;
 	if(the_overwrite)
@@ -420,19 +433,13 @@ put_string (const std::string& s1)
 		insert_string(s1);
 }
 
-/*
-void
-put_string (const std::string& s)
-{
-	put_string(s.c_str(), s.size());
-}
-*/
 
 /* Higher Level editting commands. */
 
 	void
 insert_cell_expression (void)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ()) return;
 	std::string in_str = decomp_str(curow, cucol);
 	put_string(in_str);
@@ -442,6 +449,7 @@ insert_cell_expression (void)
 	void
 insert_other_cell_expression (struct rng * rng)
 {
+	ASSERT_UNCALLED();
 	if (check_editting_mode ()) return;
 	std::string in_str = decomp_str(rng->lr, rng->lc);
 	put_string(in_str);
@@ -482,8 +490,6 @@ insert_abs_ref(int x)
 
 	std::ostringstream oss;
 
-	//char vbuf[50];
-	//char * in_str;
 	CELLREF mr = mkrow;
 	CELLREF mc = mkcol;
 	/* Insert current cell/range name as an absolute reference
@@ -636,6 +642,7 @@ insert_current_filename (void)
 	void
 exit_self_inserting (int c)
 {
+	ASSERT_UNCALLED();
 	const char * str = char_to_string (c);
 
 	insert_string(str);
