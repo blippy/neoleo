@@ -48,9 +48,7 @@
 #include "stub.h"
 #include "ref.h"
 #include "utils.h"
-
-// 2019-02-01 Let's see what we can purge here
-#define	ASSERT_UNCALLED() { assert(false); }
+#include "xcept.h"
 
 using namespace std::literals::string_literals;
 
@@ -563,6 +561,7 @@ set_default_arg (struct command_arg *arg, char *text, int len)
 prefix_cmd_continuation_loop (bool goto_have_character)
 {
 	ASSERT_UNCALLED();
+	return 0;
 }
 
 #define interactive_mode_1 (!rmac || iscmd)

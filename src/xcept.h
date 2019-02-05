@@ -30,3 +30,7 @@ class SyntaxError : public std::exception
 	private:
 		string msg_ = "SyntaxError";
 };
+ 
+void  _assert_uncalled(const char* __file__, int __line__); 
+#define	ASSERT_UNCALLED() { _assert_uncalled(__FILE__, __LINE__); }
+
