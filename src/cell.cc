@@ -91,6 +91,21 @@ formula_t cell::set_cell_formula(formula_t newval)
 	return cell_formula; 
 }
 
+void cell::recompute_bytecode()
+{
+	this->reset();
+	/*
+	strcpy_c frm(this->formula_text);
+	const auto frm1 = (char*) frm.data();
+	this->cell_formula = parse_and_compile(this, frm1);
+	*/
+	this->set_cell_formula(parse_and_compile(this));
+}
+void cell::invalidate_bytecode()
+{
+	reset();
+}
+
 void cell::set_row(CELLREF r)
 {
 	this->coord = to_coord(r, get_col(this));

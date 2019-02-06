@@ -241,13 +241,19 @@ bump_row (CELLREF row, int increment)
 {
 	if(increment == 0) return;
 
-	// we need to rejig the cells before we start fiddling with the formulae
 	for(CELL* cp: the_cells) {
 		if(get_row(cp)<row || cp == nullptr) continue;
 		auto r = get_row(cp);
 		cp->set_row(r+increment);
+		cp->invalidate_bytecode(); // due to relative referencing issues
 	}
 
+#if 0
+	for(CELL* cp: the_cells) {
+		if(get_row(cp)<row || cp == nullptr) continue;
+		cp->recompute_bytecode();
+	}
+#endif
 
 #if 0
 	std::vector<CELL*> subrange;

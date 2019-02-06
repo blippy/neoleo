@@ -701,18 +701,24 @@ loop:
    and a way to encode longer branches would be a *good* idea.
  */
 
-char*
+formula_t
 parse_and_compile(cell* cp, const char* string)
 {
 	mem_c the_mem; // we're just going to ignore the mem allocated
 	return parse_and_compile(cp, string, the_mem);
 }
 
-char* parse_and_compile_1 (cell* cp, const char *string, mem_c& the_mem)
+formula_t parse_and_compile (cell* cp)
+{
+	return parse_and_compile(cp, cp->formula_text.c_str());
+}
+
+formula_t
+parse_and_compile_1 (cell* cp, const char *string, mem_c& the_mem)
 {
 	struct node *node;
 	const function_t *f;
-	char *ret;
+	formula_t ret;
 	int n;
 	unsigned buf_siz;
 	int need_relax;
@@ -726,7 +732,7 @@ char* parse_and_compile_1 (cell* cp, const char *string, mem_c& the_mem)
 	//if (yyparse_parse(string, the_mem) || parse_error)
 	if(!ok)
 	{
-		ret = (char*) ck_malloc (strlen (string) + 5);
+		ret = (formula_t) ck_malloc (strlen (string) + 5);
 		ret[0] = CONST_ERR;
 		ret[1] = 2;
 		ret[2] = parse_error;
@@ -774,7 +780,7 @@ loop:
 	}
 
 	buf_siz = obstack_mc_object_size();
-	ret = (char *) ck_malloc (buf_siz);
+	ret = (formula_t) ck_malloc (buf_siz);
 	//the_mem.add_ptr(ret);
 	bcopy (obstack_mc_finish(), ret, buf_siz);
 
@@ -800,7 +806,7 @@ loop:
 
 		while (need_relax)
 		{
-			ret = (char *)ck_realloc (ret, buf_siz + need_relax);
+			ret = (formula_t) ck_realloc (ret, buf_siz + need_relax);
 			for (n_lo = 0; n_lo < patches_used; n_lo++)
 			{
 				offset = (patches[n_lo].to - patches[n_lo].from) - 1;
@@ -853,9 +859,10 @@ loop:
 // caller is responsible for free'ing `char* ret'. The chances are
 // that it will be stored in the cells, and become automatically
 // reaped that way.
-char* parse_and_compile (cell* cp, const char *string, mem_c& the_mem)
+formula_t
+parse_and_compile (cell* cp, const char *string, mem_c& the_mem)
 {
-	char* ret = parse_and_compile_1(cp, string, the_mem);
+	formula_t ret = parse_and_compile_1(cp, string, the_mem);
 #ifdef USE_OBSTACK
 	if(ret) obstack_mc_free(tmp_mem_start);
 #else

@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: byte-compile.h,v 1.4 2000/08/10 21:02:50 danny Exp $
- *
- * Copyright © 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +17,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#include "neotypes.h"
 #include "cell.h"
 #include "mem.h"
 
-char *parse_and_compile (cell* cp, const char *string);
-char *parse_and_compile (cell* cp, const char *string, mem_c& the_mem);
+formula_t parse_and_compile (cell* cp);
+formula_t parse_and_compile (cell* cp, const char *string);
+formula_t parse_and_compile (cell* cp, const char *string, mem_c& the_mem);
 extern void byte_free (unsigned char *form);
 extern int is_constant (const unsigned char *bytes);
 

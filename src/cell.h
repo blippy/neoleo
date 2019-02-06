@@ -106,6 +106,10 @@ class cell : public value
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
 		std::string formula_text;
+
+		void recompute_bytecode();
+		void invalidate_bytecode();
+
 		formula_t get_cell_formula(); 
 		formula_t set_cell_formula(formula_t newval);
 		void clear_formula();
