@@ -248,49 +248,6 @@ bump_row (CELLREF row, int increment)
 		cp->invalidate_bytecode(); // due to relative referencing issues
 	}
 
-#if 0
-	for(CELL* cp: the_cells) {
-		if(get_row(cp)<row || cp == nullptr) continue;
-		cp->recompute_bytecode();
-	}
-#endif
-
-#if 0
-	std::vector<CELL*> subrange;
-	for(CELL* cell: the_cells) 
-		if(get_row(cell)>=row) subrange.push_back(cell);
-
-	auto sorter = [&increment](CELL* cp1, CELL* cp2) { 
-		if(increment>0)
-			return get_row(cp2) < get_row(cp1);
-		else
-			return get_row(cp1) < get_row(cp2);
-	};
-	sort(subrange.begin(), subrange.end(), sorter);
-
-	for(CELL* cp : subrange) {
-		CELLREF r, c;
-		decoord(cp, r, c);		
-		//if(r < row) continue;
-
-		// Relative refs in formulas hard-code to abosulte cells
-		// We must bump them
-		string formula = decomp_str(r, c);
-		cur_row = r+increment;
-		cur_col = c;
-		formula_t new_formula = (formula_t) parse_and_compile(cp, formula.c_str());
-		free(cp->get_cell_formula());
-		cp->set_cell_formula(new_formula);
-		update_cell(cp); // fix for pesky references
-
-		coord_t coord = to_coord(r+increment, c);
-		cp->coord = coord;
-	}
-
-	// brute-force any fixes for refernces
-	for(CELL* cp: the_cells) update_cell(cp);
-#endif
-
 	Global->modified = 1;
 }
 
