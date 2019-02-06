@@ -213,7 +213,7 @@ int init_cells_function_count(void)
 
 void edit_cell (const char* input)
 {
-	CELL* cp = find_cell(curow, cucol);
+	CELL* cp = find_or_make_cell(curow, cucol);
 	cp->set_formula_text(input);
 	new_value(curow, cucol, input);
 }

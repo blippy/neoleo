@@ -167,7 +167,7 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 
 void edit_cell2019()
 {
-	std::string formula = formula_text(curow, cucol);
+	std::string formula{ formula_text(curow, cucol)};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
 	edit_cell_str(formula);
