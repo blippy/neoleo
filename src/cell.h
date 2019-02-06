@@ -85,8 +85,9 @@ typedef unsigned char* formula_t;
 class cell : public value
 {
 	private:
-		formula_t cell_formula = nullptr; // (unsigned char*) dupe("");
+		//formula_t cell_formula = nullptr;
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
+		formula_t bytecode = nullptr;
 		std::string formula_text;
 
 	public:
@@ -112,9 +113,9 @@ class cell : public value
 		void recompute_bytecode();
 		void invalidate_bytecode();
 
-		formula_t get_cell_formula(); 
-		formula_t set_cell_formula(formula_t newval);
-		void clear_formula();
+		formula_t get_bytecode(); 
+		//formula_t set_cell_formula(formula_t newval);
+		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
 

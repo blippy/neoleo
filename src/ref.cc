@@ -114,8 +114,8 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 	else	
 		my_cell = find_or_make_cell(cur_row, cur_col);
 
-	ret = (unsigned char*) parse_and_compile (my_cell, s2.c_str());
-	my_cell->set_cell_formula(ret);
+	//ret = (unsigned char*) parse_and_compile (my_cell, s2.c_str());
+	//my_cell->set_cell_formula(ret);
 }
 
 extern int default_lock;
@@ -173,9 +173,11 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell = find_cell (cur_row, cur_col);
 		if (my_cell)
 			flush_old_value ();
+		/*
 		else if (non_cell.zeroed_1() && !non_cell.get_cell_formula())
 			return;
 		else
+		*/
 			my_cell = find_or_make_cell (cur_row, cur_col);
 
 		copy_cell_stuff(&non_cell, my_cell);
@@ -198,7 +200,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 			copy_cell_stuff(cpf, &non_cell);
 			cpf->clear_flags();
 			cpf->cell_refs_to = 0;
-			cpf->clear_formula();
+			//cpf->clear_formula();
+			cpf->invalidate_bytecode();
 			cpf->cell_cycle = 0;
 		}
 		return;
@@ -223,7 +226,8 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	copy_cell_stuff(cpf, my_cell);
 	cpf->clear_flags();
 	cpf->cell_refs_to = 0;
-	cpf->clear_formula();
+	//cpf->clear_formula();
+	cpf->invalidate_bytecode();
 	cpf->cell_cycle = 0;
 
 	push_refs(my_cell);
@@ -239,6 +243,9 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELLREF &ct)
 {
+	// mcarter 2019-02-06 shouldn't be necessary as bytecodes are calculated
+	// from textual formulae anyway
+#if 0
 	unsigned char *fp;
 	unsigned char *hi = 0;
 	unsigned char byte;
@@ -375,6 +382,9 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 	} else
 		hi = fp;
 
+#if 1
+	my_cell->invalidate_bytecode();
+#else
 	{ // attempt to refactor for issue#17
 		size_t len = hi - cpf->get_cell_formula();
 		assert(len >=0);
@@ -387,6 +397,8 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 			cpf->clear_formula(); 
 		}
 	}
+#endif
+
 	while ((fp = (unsigned char*) pop_stack (moving)))
 	{
 		byte = fp[-1];
@@ -431,6 +443,7 @@ void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELL
 		}
 	}
 	update_cell (my_cell);
+#endif
 }
 
 /* Used only in regions.c for copy_region. */
@@ -442,8 +455,7 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	cur_col = ct;
 	my_cell = find_cell (cur_row, cur_col);
 	if(!cpf) return;
-	if (cpf->zeroed_1() && !cpf->get_cell_formula() && !my_cell)
-		return;
+	//if (cpf->zeroed_1() && !cpf->get_cell_formula() && !my_cell) return;
 	if (!my_cell)
 	{
 		my_cell = find_or_make_cell (cur_row, cur_col);
@@ -471,11 +483,15 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell->set_c_z(cpf->get_c_z());
 	}
 
+#if 1
+	cpf->set_formula_text(my_cell->get_formula_text());
+#else
 	if (cpf->get_cell_formula()) {
 		copy_cell_formula(cpf, rf, cf, rt, ct);
 	} else {
 		my_cell->clear_formula();
 	}
+#endif
 
 	io_pr_cell (cur_row, cur_col, my_cell);
 
@@ -489,6 +505,8 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	void
 flush_old_value (void)
 {
+	// mcarter 2019-02-96 temporarily (??) disabled
+#if 0
 	struct ref_to *ref;
 	unsigned char *refloc;
 	int n;
@@ -600,6 +618,7 @@ flush_old_value (void)
 		my_cell->clear_formula();
 	}
 	SET_TYP (my_cell, TYP_NUL);
+#endif
 }
 
 /* --------- Routines for dealing with cell references to other cells ------ */
@@ -1254,7 +1273,8 @@ shift_outside (struct rng *fm, int dn, int ov)
 		{
 			for (n = 0; n < cp->cell_refs_to->refs_used; n++)
 			{
-				fp = &(cp->get_cell_formula()[cp->cell_refs_to->to_refs[n]]);
+				//fp = &(cp->get_cell_formula()[cp->cell_refs_to->to_refs[n]]);
+				fp = &(cp->get_bytecode()[cp->cell_refs_to->to_refs[n]]);
 				switch (*fp)
 				{
 					case R_CELL:
@@ -1460,7 +1480,8 @@ shift_outside (struct rng *fm, int dn, int ov)
 			for (fn = 0; fcp->cell_refs_to && fn < fcp->cell_refs_to->refs_used; fn++)
 			{
 
-				ffp = &(fcp->get_cell_formula()[fcp->cell_refs_to->to_refs[fn]]);
+				//ffp = &(fcp->get_cell_formula()[fcp->cell_refs_to->to_refs[fn]]);
+				ffp = &(fcp->get_bytecode()[fcp->cell_refs_to->to_refs[fn]]);
 				switch (*ffp)
 				{
 					case R_CELL:

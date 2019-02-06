@@ -38,6 +38,7 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 using std::cerr;
 using std::cout;
@@ -61,9 +62,13 @@ cell::cell(coord_t coord) :coord(coord)
 {
 }
 
-formula_t cell::get_cell_formula()
+formula_t cell::get_bytecode()
 { 
-	return cell_formula; 
+	if(!bytecode)
+		bytecode = parse_and_compile(this);
+
+	return bytecode;
+	//return cell_formula; 
 }
 
 value cell::get_value()
@@ -85,21 +90,19 @@ bool cell::locked() const
 	return cell_flags.cell_lock;
 }
 
+/*
 formula_t cell::set_cell_formula(formula_t newval)
 { 
 	cell_formula = newval ;  
 	return cell_formula; 
 }
+*/
 
 void cell::recompute_bytecode()
 {
-	this->reset();
-	/*
-	strcpy_c frm(this->formula_text);
-	const auto frm1 = (char*) frm.data();
-	this->cell_formula = parse_and_compile(this, frm1);
-	*/
-	this->set_cell_formula(parse_and_compile(this));
+	ASSERT_UNCALLED();
+	//this->reset();
+	//this->set_cell_formula(parse_and_compile(this));
 }
 void cell::invalidate_bytecode()
 {
@@ -113,14 +116,12 @@ void cell::set_row(CELLREF r)
 
 void cell::reset()
 {
-	free_nonempty_str(&cell_formula);
-	//if(cell_formula) free(cell_formula);
-	//cell_formula = 0;
+	clear_bytecode();
 }
 
-void cell::clear_formula()
+void cell::clear_bytecode()
 {
-	cell_formula = nullptr;
+	free_nonempty_str(&bytecode);
 }
 
 void cell::clear_flags()
@@ -162,7 +163,7 @@ void copy_cell_stuff (cell* src, cell* dest)
 {
 	dest->cell_flags = src->cell_flags;
 	dest->cell_refs_to = src->cell_refs_to;
-	dest->set_cell_formula(src->get_cell_formula());
+	dest->set_formula_text(src->get_formula_text());
 	dest->cell_cycle = src->cell_cycle;
 	dest->set_c_z(src->get_c_z());
 }

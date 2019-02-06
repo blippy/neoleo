@@ -881,7 +881,7 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
-	struct value *newv = eval_expression (cell->get_cell_formula());
+	struct value *newv = eval_expression (cell->get_bytecode());
 
 	if (!newv) {
 		push_refs(cell);

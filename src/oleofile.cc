@@ -755,8 +755,8 @@ void write_cells(FILE* fp)
 					oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
 		}
 
-		if (!GET_TYP (cp) && !cp->get_cell_formula())
-			continue;
+		//if (!GET_TYP (cp) && !cp->get_cell_formula()) continue;
+		if (!GET_TYP(cp)) continue;
 
 		(void) fprintf (fp, "C;");
 		if (c != ccol) {
@@ -768,9 +768,8 @@ void write_cells(FILE* fp)
 			crow = r;
 		}
 
-		const unsigned char* formula_1 = cp->get_cell_formula();
+		const unsigned char* formula_1 = cp->get_bytecode();
 		if (formula_1 && !is_constant(formula_1)) {
-			//std::string formula = decomp_str(r, c);
 			std::string formula = formula_text(r, c);
 			(void) fprintf (fp, "E%s;", formula.c_str());
 		}

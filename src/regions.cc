@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -57,6 +57,14 @@ set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 	r->hc = std::max(c1, c2);
 }
 
+void reset_1(CELL* cp)
+{
+	cp->clear_flags();
+	cp->cell_refs_to = 0;
+	cp->invalidate_bytecode();
+	cp->cell_cycle = 0;
+	cp = 0;
+}
 /* Flush all the cells in a region */
 void
 delete_region (struct rng *where)
@@ -66,16 +74,18 @@ delete_region (struct rng *where)
 	{
 		CELLREF r, c;
 		decoord(pp, r, c);
+		/*
 		if (!pp->get_cell_formula() && !GET_TYP (pp))
 		{
 			pp->clear_flags();
 			continue;
 		}
+		*/
 		cur_row = r;
 		cur_col = c;
 		my_cell = pp;
 		flush_old_value ();
-		pp->clear_formula();
+		pp->invalidate_bytecode();
 		pp->clear_flags();
 		push_refs(pp);
 		io_pr_cell(r, c, pp);
@@ -461,16 +471,11 @@ move_region (struct rng *fm, struct rng *to)
 			cur_row = rt;
 			cur_col = ct;
 			my_cell = find_cell (cur_row, cur_col);
-			if ((!cpf || cpf->zeroed_1() && !cpf->get_cell_formula()) && !my_cell)
-				continue;
+			//if ((!cpf || cpf->zeroed_1() && !cpf->get_cell_formula()) && !my_cell) continue;
 
 			if (!cpf)
 			{
-				my_cell->clear_flags();
-				my_cell->cell_refs_to = 0;
-				my_cell->clear_formula();
-				my_cell->cell_cycle = 0;
-				my_cell = 0;
+				reset_1(my_cell);
 				continue;
 			}
 			if (!my_cell)
@@ -482,12 +487,7 @@ move_region (struct rng *fm, struct rng *to)
 				flush_old_value ();
 
 			copy_cell_stuff(cpf, my_cell);
-
-			cpf->clear_flags();
-			cpf->cell_refs_to = 0;
-			cpf->clear_formula();
-			cpf->cell_cycle = 0;
-
+			reset_1(cpf);
 			push_cell (cur_row, cur_col);
 
 			if (!must_repaint)
