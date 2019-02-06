@@ -118,11 +118,6 @@ void  TO_INT(struct value* val)
 		bool ok;
 		val->sInt(to_long(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_INT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Int=astol(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
@@ -140,11 +135,6 @@ void TO_NUM(struct value* val)
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_FLT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Float=astof(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
@@ -249,8 +239,6 @@ static void do_math_binop(int op, struct value* p1, struct value* p2)
 		default:
 			assert(false);
 	}
-
-       //	= std::plus<double>(v1, v2);
 
 	ValType t = TYP_INT;
 	if(std::nearbyint(v3) != v3) t = TYP_FLT;
@@ -406,12 +394,10 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 		       	bool ok = false ;
 			const char* s = (value_ptr+1)->gString();
-			//strptr = (value_ptr + 1)->gString();
 			if (value_ptr->type == TYP_INT)
 				(value_ptr + 1)->sInt(to_long(s, ok));
 			else
 				(value_ptr + 1)->sFlt(to_double(s, ok));
-			//if (*strptr)
 			if(!ok)
 			{
 				value_ptr->sBol(byte == NOTEQUAL);
@@ -442,7 +428,6 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		tmp = 0;
 		panic ("Bad type value %d", value_ptr->type);
 	}
-	//value_ptr->type = TYP_BOL;
 	if (tmp < 0)
 		value_ptr->sBol(byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
 	else if (tmp == 0)
@@ -458,7 +443,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 {
 	cell* cell_ptr;
 	char *strptr;
-	//struct value *value_ptr = 0;
 	switch (byte) {
 		case IF_L:
 		case F_IF_L:
@@ -765,13 +749,10 @@ eval_expression (unsigned char *expr)
 	unsigned jumpto = 0;
 	function_t *f;
 	struct value *value_ptr = 0;
-	//char *strptr;
 	int tmp;
 
 	CELLREF lrow, hrow, crow;
 	CELLREF lcol, hcol, ccol;
-
-	//cell* cell_ptr;
 
 	curstack = 0;
 	while ((byte = *expr++) != ENDCOMP)
@@ -900,16 +881,14 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
-	struct value *newv;
-	int new_val;
+	struct value *newv = eval_expression (cell->get_cell_formula());
 
-	newv = eval_expression (cell->get_cell_formula());
-	if (!newv)
-	{
+	if (!newv) {
 		push_refs(cell);
 		return;
 	}
 
+	int new_val = 0; 
 	cell->cell_cycle = current_cycle;
 	if (newv->type != GET_TYP (cell)) {
 		SET_TYP (cell, newv->type);
