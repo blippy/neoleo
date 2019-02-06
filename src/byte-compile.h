@@ -21,6 +21,7 @@
 #include "mem.h"
 
 formula_t parse_and_compile (cell* cp);
+formula_t parse_and_compile(cell* cp, const std::string& str);
 formula_t parse_and_compile (cell* cp, const char *string);
 formula_t parse_and_compile (cell* cp, const char *string, mem_c& the_mem);
 extern void byte_free (unsigned char *form);

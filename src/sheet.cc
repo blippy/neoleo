@@ -229,7 +229,7 @@ void dump_sheet()
 		cout << "Row: " << get_row(cp) << "\n";
 		value val = cp->get_value();
 		cout << "Val: " << stringify_value_file_style(&val) << "\n";
-		cout << "Frm: " << cp->formula_text << "\n";
+		cout << "Frm: " << cp->get_formula_text() << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";

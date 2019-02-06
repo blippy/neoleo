@@ -167,12 +167,9 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 
 void edit_cell2019()
 {
-	//std::string formula = decompile();
 	std::string formula = formula_text(curow, cucol);
-	//strcpy_c text{formula};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
-	//const char* newformula = frm.text();
 	edit_cell_str(formula);
 	recalculate(1);
 }
@@ -189,11 +186,6 @@ static void cursor_up()    { io_shift_cell_cursor(0, 1); }
 // TODO this may be more useful that you think
 static void clear_cell_formula()
 {
-	/*
-	new_value(curow, cucol, "");
-	CELL* cp = find_cell(curow, cucol);
-	update_cell(cp);
-	*/
 	edit_cell_str("");
 	recalculate(1);
 }

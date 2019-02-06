@@ -483,7 +483,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return print_buf;
 
 		case TYP_STR:
-			return cp->formula_text;
+			return cp->get_formula_text();
 #if 0
 			{
 				strcpy_c s{cp->gString()};

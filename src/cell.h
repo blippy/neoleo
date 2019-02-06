@@ -87,6 +87,7 @@ class cell : public value
 	private:
 		formula_t cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
+		std::string formula_text;
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -98,6 +99,8 @@ class cell : public value
 		//CELLREF get_col() const;
 		void set_row(CELLREF r);
 
+		void set_formula_text(const std::string& str);
+		std::string get_formula_text() const;
 		cell(coord_t coord);
 		~cell();
 		void reset();
@@ -105,7 +108,6 @@ class cell : public value
 		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
-		std::string formula_text;
 
 		void recompute_bytecode();
 		void invalidate_bytecode();

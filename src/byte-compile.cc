@@ -707,10 +707,17 @@ parse_and_compile(cell* cp, const char* string)
 	mem_c the_mem; // we're just going to ignore the mem allocated
 	return parse_and_compile(cp, string, the_mem);
 }
+formula_t
+parse_and_compile(cell* cp, const std::string& str)
+{
+	mem_c the_mem; // we're just going to ignore the mem allocated
+	return parse_and_compile(cp, str.c_str(), the_mem);
+}
 
 formula_t parse_and_compile (cell* cp)
 {
-	return parse_and_compile(cp, cp->formula_text.c_str());
+	auto frm = cp->get_formula_text();
+	return parse_and_compile(cp, frm);
 }
 
 formula_t

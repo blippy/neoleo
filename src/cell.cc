@@ -139,6 +139,17 @@ bool cell::zeroed_1()
 
 }
 
+void cell::set_formula_text(const std::string& str)
+{
+	if(str ==formula_text) return;
+	formula_text = str;
+	invalidate_bytecode();
+}
+
+std::string cell::get_formula_text() const
+{
+	return formula_text;
+}
 cell::~cell()
 {
 	magic = 0x0DEFACED; // see TR06
@@ -202,6 +213,8 @@ int init_cells_function_count(void)
 
 void edit_cell (const char* input)
 {
+	CELL* cp = find_cell(curow, cucol);
+	cp->set_formula_text(input);
 	new_value(curow, cucol, input);
 }
 
@@ -242,7 +255,7 @@ ws_extent()
 std::string formula_text(CELLREF r, CELLREF c){
 	CELL* cp = find_cell(r, c);
 	if(cp==nullptr) return "";
-	return cp->formula_text;
+	return cp->get_formula_text();
 }
 //////////////////////////////////////////////////////////////////////
 // for copying and pasting cells
