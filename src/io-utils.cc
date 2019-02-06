@@ -37,7 +37,6 @@
 #include "cell.h"
 #include "cmd.h"
 #include "convert.h"
-#include "decompile.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-term.h"
@@ -484,10 +483,13 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return print_buf;
 
 		case TYP_STR:
+			return cp->formula_text;
+#if 0
 			{
 				strcpy_c s{cp->gString()};
 				return backslash_a_string (s.data(), add_quote);
 			}
+#endif
 
 		case TYP_BOL:
 			return bname[cp->gBol()];

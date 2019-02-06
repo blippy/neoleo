@@ -35,7 +35,7 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 neoleo_SOURCES = defuns.cc \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
-		 decompile.cc display.cc \
+		 display.cc \
 		 eval.cc format.cc funcs.cc \
 		 init.cc input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
@@ -61,7 +61,7 @@ neoleo_SOURCES = defuns.cc \
 
 
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
-		 cmd.h convert.h decompile.h defun.h defuns.h display.h \
+		 cmd.h convert.h defun.h defuns.h display.h \
 		 errors.h eval.h format.h \
 		 funcs.h global.h init.h \
 		 input.h \

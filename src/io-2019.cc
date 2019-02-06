@@ -12,7 +12,6 @@
 #include "basic.h"
 #include "cmd.h"
 #include "convert.h"
-#include "decompile.h"
 #include "eval.h"
 #include "io-2019.h"
 #include "io-headless.h"
@@ -168,7 +167,8 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 
 void edit_cell2019()
 {
-	std::string formula = decompile();
+	//std::string formula = decompile();
+	std::string formula = formula_text(curow, cucol);
 	//strcpy_c text{formula};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;

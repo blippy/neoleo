@@ -34,7 +34,6 @@ using namespace std::string_literals;
 #include "neotypes.h"
 #include "ref.h"
 #include "byte-compile.h"
-#include "decompile.h"
 #include "sheet.h"
 #include "parse_parse.h"
 

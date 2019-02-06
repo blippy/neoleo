@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "xcept.h"
-#include "decompile.h"
 #include "sheet.h"
 #include "logging.h"
 #include "mem.h"

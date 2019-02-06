@@ -26,7 +26,6 @@
 #include <string>
 #include <vector>
 #include "utils.h"
-#include "decompile.h"
 
 using std::cout;
 using std::endl;
@@ -864,7 +863,8 @@ _io_update_status (void)
 		wid -= strlen (hmbuf);
 	}
 
-	std::string dec = decomp_str(curow, cucol);
+	//std::string dec = decomp_str(curow, cucol);
+	std::string dec = formula_text(curow, cucol);
 	//log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
 
 
@@ -1113,7 +1113,8 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	if ((hgt > 1) && Global->display_formula_mode)
 	{
 		move_cursor_to (win, r, c, 1);
-		std::string formula = decomp_str(r, c);
+		//std::string formula = decomp_str(r, c);
+		std::string formula = formula_text(r, c);
 		//log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}

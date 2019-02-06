@@ -35,8 +35,6 @@
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-//#include "cmd.h"
-#include "decompile.h"
 #include "spans.h"
 #include "utils.h"
 #include "xcept.h"
@@ -772,7 +770,8 @@ void write_cells(FILE* fp)
 
 		const unsigned char* formula_1 = cp->get_cell_formula();
 		if (formula_1 && !is_constant(formula_1)) {
-			std::string formula = decomp_str(r, c);
+			//std::string formula = decomp_str(r, c);
+			std::string formula = formula_text(r, c);
 			(void) fprintf (fp, "E%s;", formula.c_str());
 		}
 

@@ -21,7 +21,6 @@
 #include "neotypes.h"
 #include "byte-compile.h"
 #include "cell.h"
-#include "decompile.h"
 #include "eval.h"
 #include "io-utils.h"
 #include "logging.h"
@@ -230,7 +229,7 @@ void dump_sheet()
 		cout << "Row: " << get_row(cp) << "\n";
 		value val = cp->get_value();
 		cout << "Val: " << stringify_value_file_style(&val) << "\n";
-		cout << "Frm: " << decomp_formula(cp) << "\n";
+		cout << "Frm: " << cp->formula_text << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";
@@ -242,8 +241,17 @@ bump_row (CELLREF row, int increment)
 {
 	if(increment == 0) return;
 
+	// we need to rejig the cells before we start fiddling with the formulae
+	for(CELL* cp: the_cells) {
+		if(get_row(cp)<row || cp == nullptr) continue;
+		auto r = get_row(cp);
+		cp->set_row(r+increment);
+	}
+
+
+#if 0
 	std::vector<CELL*> subrange;
-	for(CELL* cell: the_cells)
+	for(CELL* cell: the_cells) 
 		if(get_row(cell)>=row) subrange.push_back(cell);
 
 	auto sorter = [&increment](CELL* cp1, CELL* cp2) { 
@@ -275,6 +283,7 @@ bump_row (CELLREF row, int increment)
 
 	// brute-force any fixes for refernces
 	for(CELL* cp: the_cells) update_cell(cp);
+#endif
 
 	Global->modified = 1;
 }

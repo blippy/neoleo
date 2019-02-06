@@ -96,6 +96,7 @@ class cell : public value
 		coord_t coord;
 		//CELLREF get_row() const;
 		//CELLREF get_col() const;
+		void set_row(CELLREF r);
 
 		cell(coord_t coord);
 		~cell();
@@ -104,6 +105,7 @@ class cell : public value
 		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
+		std::string formula_text;
 		formula_t get_cell_formula(); 
 		formula_t set_cell_formula(formula_t newval);
 		void clear_formula();
@@ -213,3 +215,4 @@ typedef struct point_t {int r; int c;} point_t;
 typedef point_t RC_t;
 RC_t ws_extent();
 void copy_cell_stuff (cell* src, cell* dest);
+std::string formula_text(CELLREF r, CELLREF c);

@@ -38,7 +38,6 @@
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-#include "decompile.h"
 #include "xcept.h"
 
 /* Shorthand */
@@ -441,7 +440,8 @@ insert_cell_expression (void)
 {
 	ASSERT_UNCALLED();
 	if (check_editting_mode ()) return;
-	std::string in_str = decomp_str(curow, cucol);
+	//std::string in_str = decomp_str(curow, cucol);
+	std::string in_str = formula_text(curow, cucol);
 	put_string(in_str);
 }
 
@@ -451,7 +451,7 @@ insert_other_cell_expression (struct rng * rng)
 {
 	ASSERT_UNCALLED();
 	if (check_editting_mode ()) return;
-	std::string in_str = decomp_str(rng->lr, rng->lc);
+	std::string in_str = formula_text(rng->lr, rng->lc);
 	put_string(in_str);
 }
 

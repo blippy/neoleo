@@ -27,7 +27,6 @@
 
 #include "byte-compile.h"
 #include "cmd.h"
-#include "decompile.h"
 #include "eval.h"
 #include "errors.h"
 #include "format.h"
@@ -92,6 +91,11 @@ formula_t cell::set_cell_formula(formula_t newval)
 	return cell_formula; 
 }
 
+void cell::set_row(CELLREF r)
+{
+	this->coord = to_coord(r, get_col(this));
+}
+
 void cell::reset()
 {
 	free_nonempty_str(&cell_formula);
@@ -152,9 +156,10 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 std::string
 get_cell_formula_at(int r, int c)
 {
+	return formula_text(r, c);
 
-	std::string res = decomp_str(r, c);
-	return res;
+	//std::string res = decomp_str(r, c);
+	//return res;
 }
 
 
@@ -219,6 +224,11 @@ ws_extent()
 }
 
 
+std::string formula_text(CELLREF r, CELLREF c){
+	CELL* cp = find_cell(r, c);
+	if(cp==nullptr) return "";
+	return cp->formula_text;
+}
 //////////////////////////////////////////////////////////////////////
 // for copying and pasting cells
 
@@ -228,13 +238,12 @@ static std::string m_copied_cell_formula = "";
 void
 copy_this_cell_formula()
 {
-	m_copied_cell_formula = decomp_str(curow, cucol);
+	m_copied_cell_formula = formula_text(curow, cucol);
 }
 
 void 
 paste_this_cell_formula()
 {	
-	//edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
 	set_cell_input(curow, cucol, m_copied_cell_formula.c_str());
 }
 

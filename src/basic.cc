@@ -38,7 +38,6 @@
 #include "format.h"
 #include "io-edit.h"
 #include "eval.h"
-#include "decompile.h"
 #include "sheet.h"
 #include "shell.h"
 #include "spans.h"
