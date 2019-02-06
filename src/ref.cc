@@ -1632,6 +1632,11 @@ shift_outside (struct rng *fm, int dn, int ov)
 	void
 shift_formula (int r, int c, int dn, int ov)
 {
+	// mcarter 2019-02-06 disabled
+	// When a cell moves, its byte-code ought to be invalidated.
+	// Invalidation should then cause a recompute of the
+	// btye-code, rendering this unnecessary.
+#if 0
 	int n;
 	unsigned char *fp;
 
@@ -1779,6 +1784,7 @@ shift_formula (int r, int c, int dn, int ov)
 				break;
 		}
 	}
+#endif
 }
 
 
