@@ -716,23 +716,7 @@ cmd_io_error_msg (const char *str, ...)
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
 
-	if(use_2019) {
-		//std::string msg = string_format(str, 
-		io_error_msg2019_str(buf);
-	} else {
-
-		char buf2[1020];
-		sprintf (buf2, "display-msg %s", buf);
-		recover_from_error ();
-
-		if (Global->display_opened)
-			execute_command (buf2);
-		else
-			fprintf (stderr, "oleo: %s\n", buf);
-
-	}
-
-	//longjmp (Global->error_exception, 1);
+	io_error_msg2019_str(buf);
 	throw OleoJmp("OleoJmp from io_error_msg()");
 
 }
@@ -846,14 +830,6 @@ init_maps (void)
 	num_funcs = 1;
 	the_funcs[0] = (cmd_func *) get_cmd_funcs();
 
-	if(!use_2019) {
-		find_func (0, &end_macro_cmd, "end-macro");
-		find_func (0, &digit_0_cmd, "digit-0");
-		find_func (0, &digit_9_cmd, "digit-9");
-		find_func (0, &break_cmd, "break");
-		find_func (0, &universal_arg_cmd, "universal-argument");
-		create_keymap ("universal", 0);
-	}
 	push_command_frame (0, 0, 0);
 }
 
@@ -865,9 +841,6 @@ init_maps_and_macros()
 	try {
 		init_maps();
 		init_named_macro_strings ();
-		if(!use_2019) 
-			run_init_cmds ();
-
 	} catch (OleoJmp& e) {
 		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
 		io_close_display(69);
