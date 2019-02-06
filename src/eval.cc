@@ -53,7 +53,7 @@ RETSIGTYPE math_sig ( int sig);
 
 #define Float	x.c_n
 #define Int	x.c_l
-#define Rng	x.c_r
+//#define Rng	x.c_r
 
 static struct value *eval_stack;
 static int stackmax;
@@ -191,6 +191,9 @@ void TO_ANY(struct value* val)
 
 void PUSH_ANY(struct value* value_ptr, cell* cp)
 {
+#if 0
+	value_ptr = cp->get_value()
+#else
 	if(!cp || !GET_TYP(cp)) {		
 		value_ptr->type=TYP_NUL;			
 		value_ptr->Int=0;			
@@ -198,6 +201,7 @@ void PUSH_ANY(struct value* value_ptr, cell* cp)
 		value_ptr->type=GET_TYP(cp);		
 		value_ptr->x=cp->get_c_z();			
 	}
+#endif
 }
 
 
@@ -563,8 +567,9 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 						}
 						else
 						{
-							value_ptr->type = TYP_RNG;
-							value_ptr->Rng = varp->v_rng;
+							//value_ptr->type = TYP_RNG;
+							//value_ptr->Rng = varp->v_rng;
+							value_ptr->sRng(varp->v_rng);
 						}
 						break;
 #ifdef TEST
@@ -607,9 +612,13 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case RANGE | LCREL:
 		case RANGE | LCREL | HCREL:
 		case RANGE | HCREL:
-			value_ptr->type = TYP_RNG;
-			GET_RNG (expr, &(value_ptr->Rng));
-			expr += EXP_ADD_RNG;
+			{
+				//value_ptr->type = TYP_RNG;
+				//GET_RNG (expr, &(value_ptr->Rng));
+				rng_t* rng = (rng_t*) expr;
+				value_ptr->sRng(*rng);
+				expr += EXP_ADD_RNG;
+			}
 			break;
 
 		case F_TRUE:
@@ -655,9 +664,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case F_ROWS:
 		case F_COLS:
 			value_ptr->type = TYP_INT;
-			value_ptr->Int = 1 + (byte == F_ROWS ? 
-					(value_ptr->Rng.hr - value_ptr->Rng.lr) 
-					: (value_ptr->Rng.hc - value_ptr->Rng.lc));
+			value_ptr->Int = 1 + (byte == F_ROWS ?  (value_ptr->gRng().hr - value_ptr->gRng().lr) : (value_ptr->gRng().hc - value_ptr->gRng().lc));
 			break;
 
 			/* Two operand cmds */

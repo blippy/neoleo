@@ -1,6 +1,6 @@
 #pragma once
 /*
- * Copyright © 1990-1999, 2001, Free Software Foundation, Inc.
+ * Copyright (c) 1990-1999, 2001, Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
