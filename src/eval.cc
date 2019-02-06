@@ -1,7 +1,5 @@
 /*
- * $Header: /cvs/oleo/src/eval.c,v 1.12 2001/02/13 23:38:05 danny Exp $
- *
- * Copyright (C) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -35,25 +33,11 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
-//#include "mem.h"
 #include "ref.h"
 #include "sheet.h"
+#include "xcept.h"
 
 
-// TODO probably belongs in oleox.h
-class ValErr : public std::exception
-{
-	public:
-	       ValErr() {}
-	       ValErr(const int n) : n(n) {}
-
-	       virtual const char* what() const throw()
-	       {
-		       return std::to_string(n).c_str();
-	       }
-	private:
-	       int n = 0;
-};
 
 void throw_valerr(int n, struct value* vp)
 {
@@ -68,9 +52,7 @@ RETSIGTYPE math_sig ( int sig);
 
 
 #define Float	x.c_n
-//#define String	x.c_s
 #define Int	x.c_l
-//#define Value	x.c_i
 #define Rng	x.c_r
 
 static struct value *eval_stack;
@@ -116,11 +98,6 @@ void TO_FLT(struct value* val)
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_FLT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Float=astof(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
@@ -182,23 +159,12 @@ void TO_STR(struct value* val)
 	if((val)->type==TYP_STR)	
 		;	
 	else if((val)->type==TYP_INT) {	
-		//(val)->type=TYP_STR;	
-		//char* s = (char*) eval_mem.gimme(30);
-		//sprintf(s,"%ld",(val)->Int); 
-		//(val)->sString(s);	
 		val->sString(format("%ld", val->gInt()));
 	} else if((val)->type==TYP_FLT) {		
-		//char *s=flt_to_str((val)->Float);		
-		//char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
-		//strcpy(s1, s);		
-		//(val)->type=TYP_STR;
 		val->sString(flt_to_str(val->gFlt()));
 	} else if((val)->type==TYP_ERR) {		
 		ERROR2(val);	
 	} else if((val)->type==0) {	
-		//(val)->type=TYP_STR;	
-		//val->String = (char*) eval_mem.gimme(1);
-		//val->String[0] = '\0';
 		val->sString("");
 	} else 
 		ERROR1(NON_STRING);
@@ -909,11 +875,6 @@ next_byte:
 	return eval_stack;
 }
 
-/* These helper functions were split out so that eval_expression would compile
-   under Turbo C 2.0 on my PC.
- */
-
-
 static int cnt_flt;
 static int cnt_int;
 
@@ -939,7 +900,6 @@ math_sig ( int sig)
 void
 update_cell(CELL *cell)
 {
-	//mem eval_mem(true);
 	struct value *newv;
 	int new_val;
 
@@ -954,8 +914,6 @@ update_cell(CELL *cell)
 	if (newv->type != GET_TYP (cell)) {
 		SET_TYP (cell, newv->type);
 		new_val = 1;
-		// TODO mcarter 2019-01-20 seems highly suspicious, and leaky:
-		//if (newv->type == TYP_STR) newv->String = strdup (newv->String);
 	} else {
 		switch (newv->type) {
 			case 0:
@@ -969,12 +927,6 @@ update_cell(CELL *cell)
 				break;
 			case TYP_STR:
 				new_val = strcmp (newv->gString(), cell->gString());
-				/*
-				if (new_val)
-				{
-					newv->String = strdup (newv->String); // TODO seems leaky
-				}
-				*/
 				break;
 			case TYP_BOL:
 				new_val = newv->gBol() != cell->gBol();
@@ -990,13 +942,10 @@ update_cell(CELL *cell)
 		}
 	}
 
-	if (new_val)
-	{
-		cell->set_c_z(newv->x);
-		//if(is_string(newv) free(newv->x);
-		push_refs(cell);
-	}
-	//(void) obstack_free (&tmp_mem, tmp_mem_start);
+	if(!new_val) return;
+	cell->set_c_z(newv->x);
+	push_refs(cell);
+	
 }
 
 

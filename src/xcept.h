@@ -34,3 +34,17 @@ class SyntaxError : public std::exception
 void  _assert_uncalled(const char* __file__, int __line__); 
 #define	ASSERT_UNCALLED() { _assert_uncalled(__FILE__, __LINE__); }
 
+// TODO probably belongs in oleox.h
+class ValErr : public std::exception
+{
+	public:
+	       ValErr() {}
+	       ValErr(const int n) : n(n) {}
+
+	       virtual const char* what() const throw()
+	       {
+		       return std::to_string(n).c_str();
+	       }
+	private:
+	       int n = 0;
+};
