@@ -85,10 +85,11 @@ typedef unsigned char* formula_t;
 class cell : public value
 {
 	private:
-		//formula_t cell_formula = nullptr;
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
+		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
+		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -115,22 +116,9 @@ class cell : public value
 		void invalidate_bytecode();
 
 		formula_t get_bytecode(); 
-		//formula_t set_cell_formula(formula_t newval);
 		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
-
-
-
-		/* mcarter 02-May-2018 issue#37
-		 * This is a potential source of bugs, because set_c_z() does not
-		 * set the type as well. So you might be mixing up types. I encountered
-		 * this when I juiced up class cell to derive from class value, and
-		 * tried the copy-region function. set_c_z() is used in other places,
-		 * so there are likely to be other bugs lurking in the code
-		 */
-		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
-		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
 		value get_value();
 };
 
