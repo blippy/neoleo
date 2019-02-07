@@ -625,8 +625,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case F_NOW:
-			value_ptr->type = TYP_INT;
-			value_ptr->Int = time (nullptr);
+			value_ptr->sInt(time (nullptr));
 			break;
 
 			/* Single operand instrs */			
@@ -636,7 +635,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (value_ptr->type == TYP_ERR)
 				break;
 			if (value_ptr->type == TYP_INT)
-				value_ptr->Int = -(value_ptr->Int);
+				value_ptr->sInt(-(value_ptr->gInt()));
 			else if (value_ptr->type == TYP_FLT)
 				value_ptr->sFlt(-(value_ptr->gFlt()));
 			else
@@ -651,7 +650,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case F_ROWS:
 		case F_COLS:
 			value_ptr->type = TYP_INT;
-			value_ptr->Int = 1 + (byte == F_ROWS ?  (value_ptr->gRng().hr - value_ptr->gRng().lr) : (value_ptr->gRng().hc - value_ptr->gRng().lc));
+			value_ptr->sInt(1 + (byte == F_ROWS ?  (value_ptr->gRng().hr - value_ptr->gRng().lr) : (value_ptr->gRng().hc - value_ptr->gRng().lc)));
 			break;
 
 			/* Two operand cmds */
@@ -683,7 +682,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case F_FIXED:
-			tmp = (value_ptr + 1)->Int;
+			tmp = (value_ptr + 1)->gInt();
 			if (tmp < -29 || tmp > 29)
 				throw_valerr(OUT_OF_RANGE, value_ptr);
 			if (tmp < 0) {
@@ -891,7 +890,7 @@ update_cell(CELL *cell)
 				new_val = newv->gFlt() != cell->gFlt();
 				break;
 			case TYP_INT:
-				new_val = newv->Int != cell->gInt();
+				new_val = newv->gInt() != cell->gInt();
 				break;
 			case TYP_STR:
 				new_val = strcmp (newv->gString(), cell->gString());
