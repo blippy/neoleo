@@ -165,7 +165,6 @@ extern char *cell_name (CELLREF, CELLREF);
 extern unsigned char parse_cell_or_range (char **, struct rng *);
 
 struct var; /* in case it hasn't been declared yet */
-extern void for_all_vars (void (*)(char *, struct var *));
 
 /*
  * Forward declarations required to get the global variable to compile

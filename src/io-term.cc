@@ -479,7 +479,7 @@ show_var (char *ptr)
 static FILE * write_variable_fp = 0;
 
 static void
-write_a_var (char *name, struct var *v)
+write_a_var (const char *name, struct var *v)
 {
 	CELLREF r, c;
 	if (v->var_flags == VAR_UNDEF)

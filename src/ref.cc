@@ -1126,7 +1126,7 @@ static int shift_dn;
  * finish_shift_var to install the new CELL_REF_FM links.
  */
 	static void 
-start_shift_var (char *name, struct var *v)
+start_shift_var (const char *name, struct var *v)
 {
 	int n;
 	int nn;
@@ -1188,7 +1188,7 @@ start_shift_var (char *name, struct var *v)
 
 
 	static void 
-finish_shift_var (char *name, struct var *v)
+finish_shift_var (const char *name, struct var *v)
 {
 	int n;
 	if (v->var_flags != VAR_DANGLING_RANGE)
@@ -2210,7 +2210,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 }
 
 	void
-for_all_vars (void (*func) (char *, struct var *))
+for_all_vars (void (*func) (const char *, struct var *))
 {
 	//log_debug("for_all_vars called");
 	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {

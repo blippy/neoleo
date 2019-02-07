@@ -666,7 +666,7 @@ static char jst_to_chr ( int just)
 static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
-static void oleo_write_var ( char *name, struct var *var)
+static void oleo_write_var (const char *name, struct var *var)
 {
 	if (var->var_flags == VAR_UNDEF
 			&& (!var->var_ref_fm || var->var_ref_fm->refs_used == 0))
