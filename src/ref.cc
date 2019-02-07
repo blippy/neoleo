@@ -475,15 +475,6 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell->cell_refs_to->refs_refcnt++;
 
 
-#if 0
-	if (GET_TYP (my_cell) == TYP_STR) {
-		strcpy_c s{cpf->gString()};
-		my_cell->sString(s.data());
-	} else {
-		my_cell->type = cpf->type;
-		my_cell->set_c_z(cpf->get_c_z());
-	}
-#endif
 
 #if 1
 	cpf->set_formula_text(my_cell->get_formula_text());
