@@ -262,10 +262,6 @@ insert_rowwise(T fildes)
 	}
 }
 
-static void hless_rewrite_defuns(int fildes)
-{
-	rewrite_defuns();
-}
 
 static void type_cell(int fildes)
 {
@@ -338,7 +334,6 @@ static map<string, function<void(T)> > func_map = {
 	{"ri", hl_insert_row},
 	{"tbl", hless_tbl},
 	{"recalc", hl_recalc},
-	{"rewrite-defuns", hless_rewrite_defuns},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},
 	{"w", write_file}

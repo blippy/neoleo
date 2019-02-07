@@ -805,7 +805,8 @@ init_maps (void)
 
 	the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
 	num_funcs = 1;
-	the_funcs[0] = (cmd_func *) get_cmd_funcs();
+	//the_funcs[0] = (cmd_func *) get_cmd_funcs();
+	the_funcs[0] = nullptr;
 
 	push_command_frame (0, 0, 0);
 }
