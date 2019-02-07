@@ -88,8 +88,6 @@ class cell : public value
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
-		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
-		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
 
 	public:
 		unsigned short cell_cycle = 0;

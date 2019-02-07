@@ -165,7 +165,6 @@ void copy_cell_stuff (cell* src, cell* dest)
 	dest->cell_refs_to = src->cell_refs_to;
 	dest->set_formula_text(src->get_formula_text());
 	dest->cell_cycle = src->cell_cycle;
-	//dest->set_c_z(src->get_c_z());
 	dest->set_formula_text(src->get_formula_text());
 }
 

@@ -189,10 +189,7 @@ void PUSH_ANY(struct value* value_ptr, cell* cp)
 {
 	if(!cp || !GET_TYP(cp)) {		
 		value_ptr->type=TYP_NUL;			
-		//value_ptr->sInt(0);			
 	} else {				
-		//value_ptr->type=GET_TYP(cp);		
-		//value_ptr->x=cp->get_c_z();
 		switch(GET_TYP(cp)) {
 			case TYP_NUL:
 				value_ptr->type = TYP_NUL;
@@ -934,7 +931,7 @@ cell::update_cell()
 	}
 
 	if(!new_val) return;
-	this->set_c_z(newv->x);
+	this->x = newv->x;
 	push_refs(this);
 	
 }
