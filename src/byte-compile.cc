@@ -32,17 +32,6 @@
 #include "funcs.h"
 #include "parse_parse.h"
 
-#undef USE_OBSTACK
-//#define USE_OBSTACK 1
-
-#ifdef USE_OBSTACK
-#define obstack_chunk_free free
-#define obstack_chunk_alloc ck_malloc
-#include "obstack.h"
-#else
-#undef tmp_mem
-#endif
-
 #include "global.h"
 #include "byte-compile.h"
 #include "node.h"

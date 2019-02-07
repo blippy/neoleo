@@ -20,10 +20,6 @@
 #include <map>
 #include <string>
 
-//#include "obstack.h"
-//inline  struct obstack tmp_mem;
-//inline char * tmp_mem_start = 0;
-
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
 #endif /* RETSIGTYPE */
