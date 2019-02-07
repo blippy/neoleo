@@ -22,7 +22,7 @@ neoleo_SOURCES = \
                  cell.cc cmd.cc  convert.cc \
 		 display.cc \
 		 eval.cc format.cc funcs.cc \
-		 init.cc input.cc \
+		 input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc \
 		 key.cc \
@@ -47,7 +47,7 @@ neoleo_SOURCES = \
 noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 cmd.h convert.h  display.h \
 		 errors.h eval.h format.h \
-		 funcs.h global.h init.h \
+		 funcs.h global.h \
 		 input.h \
 		 io-2019.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h \
