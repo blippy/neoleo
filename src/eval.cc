@@ -52,7 +52,6 @@ RETSIGTYPE math_sig ( int sig);
 
 #define Float	x.c_n
 #define Int	x.c_l
-//#define Rng	x.c_r
 
 static struct value *eval_stack;
 static int stackmax;
@@ -91,8 +90,7 @@ void TO_FLT(struct value* val)
 	if((val)->type==TYP_FLT) 
 		; 
 	else if((val)->type==TYP_INT) { 
-		(val)->type=TYP_FLT; 
-		(val)->Float=(double)(val)->Int; 
+		(val)->sFlt((double)(val)->Int); 
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
@@ -100,8 +98,7 @@ void TO_FLT(struct value* val)
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
-		(val)->type=TYP_FLT; 
-		(val)->Float=0.0; 
+		(val)->sFlt(0.0); 
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -112,7 +109,7 @@ void  TO_INT(struct value* val)
 		; 
 	else if((val)->type==TYP_FLT) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=(long)(val)->Float; 
+		(val)->Int=(long)(val)->gFlt(); 
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sInt(to_long(val->gString(), ok));
@@ -376,17 +373,12 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 			//strptr = value_ptr->gString();
 			if ((value_ptr + 1)->type == TYP_INT)
 			{
-				//value_ptr->type = TYP_INT;
-				//value_ptr->Int = astol (&strptr);
 				value_ptr->sInt(to_long(s, ok));
 			}
 			else
 			{
-				//value_ptr->type = TYP_FLT;
-				//value_ptr->Float = astof (&strptr);
 				value_ptr->sFlt(to_double(s, ok));
 			}
-			//if (*strptr)
 			if(!ok)
 			{
 				value_ptr->sBol((byte == NOTEQUAL));
@@ -412,11 +404,10 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		}
 		else if (value_ptr->type == TYP_INT)
 		{
-			value_ptr->type = TYP_FLT;
-			value_ptr->Float = (double) value_ptr->Int;
+			value_ptr->sFlt((double) value_ptr->Int);
 		}
 		else
-			(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
+			(value_ptr + 1)->sFlt((double) (value_ptr + 1)->Int);
 	}
 	if (value_ptr->type == TYP_STR)
 		tmp = strcmp (value_ptr->gString(), (value_ptr + 1)->gString());
