@@ -1,7 +1,5 @@
 /*
- * $Id: input.c,v 1.11 2001/02/13 23:38:06 danny Exp $
- * 
- * Copyright © 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1993, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +24,7 @@
 #include "window.h"
 #include "io-abstract.h"
 #include "utils.h"
+#include "xcept.h"
 
 
 /* In the functions below, we only ever deal with one input_view at a 
@@ -80,6 +79,7 @@ desired_keymap_prompt (struct input_view * this_iv)
 find_vis_begin (int * wid_used, int wid,
 		char * str, int pos, text_measure metric)
 {
+	ASSERT_UNCALLED();
 	int used;			/* How many cols allocated? */
 	if (str[pos])
 		used = metric (&str[pos], 1);
@@ -114,6 +114,7 @@ static int
 find_vis_end (int * wid_used, int wid, char * str, int start, text_measure
 		metric) 
 {
+	ASSERT_UNCALLED();
 	int used = metric (&str[start], 1);	/* How many cols allocated? */
 	int pos = start;
 	int max = strlen (str) - 1;
@@ -138,6 +139,7 @@ find_vis_end (int * wid_used, int wid, char * str, int start, text_measure
 	static void
 set_vis_wid (struct input_view * this_iv)
 {
+	ASSERT_UNCALLED();
 	Vis_wid = (Input_metric (Input_area->buf + Visibility_begin,
 				Visibility_end - Visibility_begin)
 			+ ((Input_cursor > Visibility_end)
@@ -153,6 +155,7 @@ set_vis_wid (struct input_view * this_iv)
 	static void
 iv_reset_input (struct input_view * this_iv)
 {
+	ASSERT_UNCALLED();
 	char * km = desired_keymap_prompt (this_iv);
 	if (km && (km == Keymap_prompt))
 		return;
@@ -307,6 +310,7 @@ iv_fix_input (struct input_view * this_iv)
 	void
 iv_move_cursor (struct input_view * this_iv)
 {
+	ASSERT_UNCALLED();
 	if (   Must_fix_input
 			|| (Visibility_begin > the_cmd_arg.cursor)
 			|| (   ((Visibility_end + 1) < the_cmd_arg.cursor)
@@ -334,6 +338,7 @@ iv_move_cursor (struct input_view * this_iv)
 	void
 iv_erase (struct input_view * this_iv, int len)
 {
+	ASSERT_UNCALLED();
 	if (Must_fix_input
 			|| (the_cmd_arg.cursor <= Visibility_begin))
 	{
@@ -360,6 +365,7 @@ iv_erase (struct input_view * this_iv, int len)
 	void
 iv_insert (struct input_view * this_iv, int len)
 {
+	ASSERT_UNCALLED();
 	if (!Must_fix_input)
 	{
 		int new_end;
@@ -386,6 +392,7 @@ iv_insert (struct input_view * this_iv, int len)
 	void
 iv_over (struct input_view * this_iv, int len)
 {
+	ASSERT_UNCALLED();
 	iv_insert (this_iv, len);
 }
 
