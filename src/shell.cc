@@ -8,35 +8,24 @@
 #include <string>
 #include <vector>
 
-
 using std::ofstream;
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
 
-
-
 #include "shell.h"
 #include "io-headless.h"
-
-
 
 std::string
 getline_from_fildes(int fildes, bool& eof)
 {
-	/* TODO Account for use of `#' and line continuations `\'
-	 * */
-
 	char ch;
 	string line;
-	//ofstream ofs;
-	//ofs.open("/tmp/oleo-shell", ofstream::out);
 	while(true) {
 		eof = read(fildes, &ch, 1) == 0;
 		if(eof) return line;
 
-		//cout << "getline_from_fildes:ch:" << ch << endl;
 		if(ch == '\n') {
 			//ofs << "line: " << line << endl;
 			//exec_cmd(line, fildes);
@@ -108,11 +97,8 @@ run_shell(char* cmd)
 					end of pipe. */
 			close( pc[1]);
 			close( cp[0]);
-			//execvp(argv[1], argv + 1, envp);
-			//cout << "run_shell:cmd:" << cmd << "." << endl;
 			execlp(cmd, cmd, (char *)0);	
 			perror("No exec");
-			//signal(getppid(), SIGQUIT);
 			exit(1);
 		default:
 			/* Parent. */
