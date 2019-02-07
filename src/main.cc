@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <sys/auxv.h>
-//#include <sys/param.h> // for PATH_MAX
 #include <unistd.h>
 #include <vector>
 
@@ -11,8 +10,6 @@
 #include "basic.h"
 #include "cmd.h"
 #include "config.h"
-//#include "defuns.h"
-//#include "init.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "io-term.h"

@@ -38,7 +38,6 @@
 #include "cell.h"
 #include "convert.h"
 #include "format.h"
-#include "init.h"
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
 #include "io-headless.h"
