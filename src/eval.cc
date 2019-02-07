@@ -412,7 +412,7 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 	if (value_ptr->type == TYP_STR)
 		tmp = strcmp (value_ptr->gString(), (value_ptr + 1)->gString());
 	else if (value_ptr->type == TYP_FLT)
-		tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
+		tmp = (value_ptr->gFlt() < (value_ptr + 1)->gFlt()) ? -1 : ((value_ptr->gFlt() > (value_ptr + 1)->gFlt()) ? 1 : 0);
 	else if (value_ptr->type == TYP_INT)
 		tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
 	else if (value_ptr->type == 0)
@@ -527,7 +527,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case CONST_NINF:
 		case CONST_NAN:
 			value_ptr->type = TYP_FLT;
-			value_ptr->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
+			value_ptr->sFlt((byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN));
 			break;
 
 		case VAR:
@@ -612,7 +612,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case F_PI:
 			value_ptr->type = TYP_FLT;
-			value_ptr->Float = std::acos(-1);
+			value_ptr->sFlt(std::acos(-1));
 			break;
 
 		case F_ROW:
