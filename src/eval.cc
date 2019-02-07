@@ -50,7 +50,7 @@ extern int n_usr_funs;
 RETSIGTYPE math_sig ( int sig);
 
 
-#define Float	x.c_n
+//#define Float	x.c_n
 #define Int	x.c_l
 
 static struct value *eval_stack;
@@ -502,9 +502,14 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case CONST_FLT:
-			value_ptr->type = TYP_FLT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), sizeof (double));
-			expr += sizeof (double);
+			{
+				//value_ptr->type = TYP_FLT;
+				//bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), sizeof (double));
+				double* fp = (double *) expr;
+				double f = *fp;
+				value_ptr->sFlt(f);
+				expr += sizeof (double);
+			}
 			break;
 
 		case CONST_INT:

@@ -60,7 +60,7 @@ num_t value::gFlt() const { return x.c_n ;};
 
 void value::sFlt(num_t v) 
 {
-	free_string();	
+	//free_string();	
 	type = TYP_FLT; 
 	x.c_n = v ;
 }
