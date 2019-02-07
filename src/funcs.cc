@@ -37,11 +37,6 @@
 #include "utils.h"
 
 
-/* This include builds the function table, doc strings, and FUNC_ARGS strings.
- */
-//#include "defuns.h"
-
-
 /* Returns 0 if the function is found.
  * Also returns (through parameters) the vector and cmd_func.
  * The output parameters can be NULL.

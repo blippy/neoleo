@@ -13,7 +13,6 @@
 #include "basic.h"
 #include "cell.h"
 #include "convert.h"
-#include "defuns.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "cmd.h"

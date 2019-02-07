@@ -36,7 +36,6 @@
 #include "global.h"
 #include "cmd.h"
 #include "convert.h"
-#include "defuns.h"
 #include "io-2019.h"
 #include "io-term.h"
 #include "io-abstract.h"
