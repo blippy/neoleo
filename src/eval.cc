@@ -872,19 +872,19 @@ math_sig ( int sig)
 
 /* Here's the entry point for this module. */
 void
-update_cell(CELL *cell)
+cell::update_cell()
 {
-	struct value *newv = eval_expression (cell->get_bytecode());
+	struct value *newv = eval_expression(this->get_bytecode());
 
 	if (!newv) {
-		push_refs(cell);
+		push_refs(this);
 		return;
 	}
 
 	int new_val = 0; 
-	cell->cell_cycle = current_cycle;
-	if (newv->type != GET_TYP (cell)) {
-		SET_TYP (cell, newv->type);
+	cell_cycle = current_cycle;
+	if (newv->type != GET_TYP (this)) {
+		SET_TYP(this, newv->type);
 		new_val = 1;
 	} else {
 		switch (newv->type) {
@@ -892,19 +892,19 @@ update_cell(CELL *cell)
 				new_val = 0;
 				break;
 			case TYP_FLT:
-				new_val = newv->gFlt() != cell->gFlt();
+				new_val = newv->gFlt() != this->gFlt();
 				break;
 			case TYP_INT:
-				new_val = newv->gInt() != cell->gInt();
+				new_val = newv->gInt() != this->gInt();
 				break;
 			case TYP_STR:
-				new_val = strcmp (newv->gString(), cell->gString());
+				new_val = strcmp (newv->gString(), this->gString());
 				break;
 			case TYP_BOL:
-				new_val = newv->gBol() != cell->gBol();
+				new_val = newv->gBol() != this->gBol();
 				break;
 			case TYP_ERR:
-				new_val = newv->gBol() != cell->gErr();
+				new_val = newv->gBol() != this->gErr();
 				break;
 			default:
 				new_val = 0;
@@ -915,7 +915,7 @@ update_cell(CELL *cell)
 	}
 
 	if(!new_val) return;
-	cell->set_c_z(newv->x);
-	push_refs(cell);
+	this->set_c_z(newv->x);
+	push_refs(this);
 	
 }

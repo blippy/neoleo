@@ -137,7 +137,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	set_cell (row, col, string);
 	if (my_cell)
 	{
-		update_cell (my_cell);
+		my_cell->update_cell();
 		io_pr_cell (row, col, my_cell);
 		my_cell = 0;
 	}
@@ -2046,7 +2046,7 @@ eval_next_cell (void)
 	fprintf(stderr, "eval_next_cell:  cp->cell_cycle = %d, current_cycle = %d, loop_counter = %d\n", cp->cell_cycle, current_cycle, loop_counter);
 	cell_buffer_contents(stderr);
 #endif
-	update_cell (cp);
+	cp->update_cell();
 	io_pr_cell (cur_row, cur_col, cp);
 #if 0
 	if (!loop_counter)

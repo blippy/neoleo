@@ -94,6 +94,7 @@ class cell : public value
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
+		void update_cell();
 
 		coord_t coord;
 		//CELLREF get_row() const;
