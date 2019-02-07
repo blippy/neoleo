@@ -176,9 +176,9 @@ vacuous(cell* cp)
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
-	CELL* cp = find_or_make_cell(r, c);
-	cp->set_formula_text(new_input);
-	// TODO formerly it called new_value(), so a repaint may be required to be consistent
+	curow = r;
+	cucol = c;
+	edit_cell_str(new_input);
 }
 
 std::string
