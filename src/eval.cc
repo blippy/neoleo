@@ -683,11 +683,11 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (tmp < -29 || tmp > 29)
 				throw_valerr(OUT_OF_RANGE, value_ptr);
 			if (tmp < 0) {
-				num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
+				num_t f1 = (value_ptr->gFlt()) / exp10_arr[-tmp];
 				num_t f2 = rintn(f1);
-				value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
+				value_ptr->sFlt(rintn (f2) * exp10_arr[-tmp]);
 			} else {
-				value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
+				value_ptr->sFlt(rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp]);
 			}
 			break;
 
