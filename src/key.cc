@@ -29,6 +29,7 @@
 #include "io-utils.h"
 #include "io-term.h"
 #include "utils.h"
+#include "xcept.h"
 
 using RPTR = rng*;
 
@@ -44,6 +45,7 @@ int num_funcs;
 	static void 
 do_bind_key (struct keymap *m, int key, int vector, int code)
 {
+	ASSERT_UNCALLED();
 	m->keys[key].vector = (short)vector;
 	m->keys[key].code = (short)code;
 }
@@ -52,6 +54,7 @@ do_bind_key (struct keymap *m, int key, int vector, int code)
 	void 
 bind_key (char * keymap, char * function, int ch)
 {
+	ASSERT_UNCALLED();
 	struct cmd_func * tmpfunc;
 	int map = map_id (keymap);
 	int vec;
@@ -126,6 +129,7 @@ fini:
 	void
 unbind_key (char * keymap, int ch)
 {
+	ASSERT_UNCALLED();
 	int map = map_id (keymap);
 	struct keymap *m;
 	m = the_maps[map];
@@ -136,6 +140,7 @@ unbind_key (char * keymap, int ch)
 	void
 bind_or_unbind_set (char * keymap, char * command, char * keyset)
 {
+	ASSERT_UNCALLED();
 	int first;
 	int last;
 	first = string_to_char (&keyset);
@@ -175,11 +180,9 @@ bind_or_unbind_set (char * keymap, char * command, char * keyset)
 	}
 }
 
-//using CCC = const_cast<char*>;
-//using CCC =char*;
-
 void unbind_set (char *keymap, char *keyset)
 {
+	ASSERT_UNCALLED();
 	char *command = const_cast<char*>("0");
 	bind_or_unbind_set (keymap, command, keyset);
 }
@@ -187,6 +190,7 @@ void unbind_set (char *keymap, char *keyset)
 	void 
 bind_all_keys (char * keymap, char * function)
 {
+	ASSERT_UNCALLED();
 	struct cmd_func * tmpfunc;
 	int map = map_id (keymap);
 	int vec;
@@ -265,6 +269,7 @@ fini:
 	void 
 write_keys_cmd (FILE *fp)
 {
+	ASSERT_UNCALLED();
 	struct keymap *map;
 	int n;
 	int key;
@@ -316,6 +321,7 @@ write_keys_cmd (FILE *fp)
 	void 
 clear_keymap (struct keymap *m)
 {
+	ASSERT_UNCALLED();
 	int n;
 	for (n = 0; n < OLEO_NUM_KEYS; n++)
 	{
@@ -343,6 +349,7 @@ map_id(const char *name)
 	void
 create_keymap (const char * mapname, char * parentname)
 {
+	ASSERT_UNCALLED();
 	int map = map_id (mapname);
 	int parent = parentname ? map_id (parentname) : -1;
 
@@ -381,6 +388,7 @@ create_keymap (const char * mapname, char * parentname)
 	void
 set_map_prompt (char * map, char * str)
 {
+	ASSERT_UNCALLED();
 	int id = map_id (map);
 	if (id < 0)
 		io_error_msg ("No such keymap as %s.", map); /* No return. */
