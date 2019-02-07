@@ -484,12 +484,6 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 
 		case TYP_STR:
 			return cp->get_formula_text();
-#if 0
-			{
-				strcpy_c s{cp->gString()};
-				return backslash_a_string (s.data(), add_quote);
-			}
-#endif
 
 		case TYP_BOL:
 			return bname[cp->gBol()];
