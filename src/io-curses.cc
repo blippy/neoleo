@@ -863,12 +863,7 @@ _io_update_status (void)
 		wid -= strlen (hmbuf);
 	}
 
-	//std::string dec = decomp_str(curow, cucol);
 	std::string dec = formula_text(curow, cucol);
-	//log_debug("io-curses.cc:_io_update_status:dec:"s + dec);
-
-
-	//ptr = cell_value_string (curow, cucol, 1);
 	strcpy_c cvs(cell_value_string(curow, cucol, 1).c_str());
 	ptr = cvs.data();
 
