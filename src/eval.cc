@@ -187,17 +187,36 @@ void TO_ANY(struct value* val)
 
 void PUSH_ANY(struct value* value_ptr, cell* cp)
 {
-#if 0
-	value_ptr = cp->get_value()
-#else
 	if(!cp || !GET_TYP(cp)) {		
 		value_ptr->type=TYP_NUL;			
-		value_ptr->sInt(0);			
+		//value_ptr->sInt(0);			
 	} else {				
-		value_ptr->type=GET_TYP(cp);		
-		value_ptr->x=cp->get_c_z();			
+		//value_ptr->type=GET_TYP(cp);		
+		//value_ptr->x=cp->get_c_z();
+		switch(GET_TYP(cp)) {
+			case TYP_NUL:
+				value_ptr->type = TYP_NUL;
+				break;
+			case TYP_FLT:
+				value_ptr->sFlt(cp->gFlt());
+				break;
+			case TYP_INT:
+				value_ptr->sInt(cp->gInt());
+				break;
+			case TYP_STR:
+				value_ptr->sString(cp->gString());
+				break;
+			case TYP_ERR:
+				value_ptr->sErr(cp->gErr());
+				break;
+			case TYP_RNG:
+				value_ptr->sRng(cp->gRng());
+				break;
+			default:
+				panic("eval.cc:PUSH_ANY unhandled type");
+
+		}
 	}
-#endif
 }
 
 
