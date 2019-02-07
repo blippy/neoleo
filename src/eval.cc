@@ -51,7 +51,7 @@ RETSIGTYPE math_sig ( int sig);
 
 
 //#define Float	x.c_n
-#define Int	x.c_l
+//#define Int	x.c_l
 
 static struct value *eval_stack;
 static int stackmax;
@@ -513,9 +513,14 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case CONST_INT:
-			value_ptr->type = TYP_INT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), sizeof (long));
-			expr += sizeof (long);
+			{
+				//value_ptr->type = TYP_INT;
+				//bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), sizeof (long));
+				int* i1 = (int*) expr;
+				int i2 = *i1;
+				value_ptr->sInt(i2);
+				expr += sizeof (long);
+			}
 			break;
 
 		case CONST_STR:
