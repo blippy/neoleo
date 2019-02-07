@@ -66,7 +66,6 @@ static char * FAname [] = \
 
 static char * FAfnord[] = 
 {
-#include "defun.h"
 0,
 };
 
@@ -94,7 +93,6 @@ static char * DFname [] = \
 
 static char * DFfnord[] = 
 {
-#include "defun.h"
 0,
 };
 
@@ -124,8 +122,6 @@ static char * DFfnord[] =
 
 struct cmd_func cmd_funcs[] =
 {
-  { "fnord", FAfnord, DFfnord, to_vptr(fnord), "fnord" },
-#include "defun.h"
   { 0, 0, 0, to_vptr(0), 0 }
 };
 
