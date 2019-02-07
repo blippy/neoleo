@@ -611,7 +611,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case F_PI:
-			value_ptr->type = TYP_FLT;
 			value_ptr->sFlt(std::acos(-1));
 			break;
 
@@ -635,7 +634,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (value_ptr->type == TYP_INT)
 				value_ptr->Int = -(value_ptr->Int);
 			else if (value_ptr->type == TYP_FLT)
-				value_ptr->Float = -(value_ptr->Float);
+				value_ptr->sFlt(-(value_ptr->gFlt()));
 			else
 				throw_valerr(NON_NUMBER, value_ptr);
 			break;
@@ -656,10 +655,9 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			{
 				double (*funp2) (double, double);
 				funp2 = (double (*)(double, double)) (f->fn_fun);
-
-				value_ptr->Float = (*funp2) (value_ptr->Float, (value_ptr + 1)->Float);
-				if (value_ptr->Float != value_ptr->Float)
-					throw_valerr(OUT_OF_RANGE, value_ptr);
+				double f = (*funp2) (value_ptr->Float, (value_ptr + 1)->Float);
+				value_ptr->sFlt(f);
+				//if (value_ptr->Float != value_ptr->Float) throw_valerr(OUT_OF_RANGE, value_ptr);
 			}
 			break;
 
