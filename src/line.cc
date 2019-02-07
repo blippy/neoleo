@@ -1,7 +1,5 @@
 /*
- * $Id: line.c,v 1.6 2000/08/10 21:02:50 danny Exp $
- *
- * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -23,14 +21,6 @@
 #include <cassert>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#ifdef	WITH_DMALLOC
-#include <dmalloc.h>
-#endif
 
 #include <stdio.h>
 #include "global.h"
