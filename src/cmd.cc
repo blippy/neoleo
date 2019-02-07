@@ -51,31 +51,9 @@
 
 using namespace std::literals::string_literals;
 
-char * expand_prompt (char *str);
-void expand_prompt(char *str, struct line& line);
+//char * expand_prompt (char *str);
+//void expand_prompt(char *str, struct line& line);
 
-///// obstack stuff begin
-// inherits USE_CMD_OBSTACK (or not) from cmd.h
-//#undef USE_OBSTACK
-//#define USE_OBSTACK 1
-#define obstack_chunk_alloc ck_malloc
-#define obstack_chunk_free free
-#include "obstack.h"
-
-//static obstack* s_obstack;
-void obstack_mc_init(cmd_obstack_t* ptr)
-{
-#ifdef USE_CMD_OBSTACK
-	obstack_init(ptr);
-#else
-	// I don't think I have to do anything
-	//ptr->init();
-
-#endif
-}
-
-
-///// obstack stuff end
 
 /* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
  * unwind the disaster using state machines. An implementation of state 
@@ -142,7 +120,6 @@ void debug_input_stream(const char* str, struct input_stream *isp)
 input_stream::input_stream()
 {
 	debug_input_stream("ctor", this);
-	obstack_mc_init(&(this->_macro_stack));
 }
 
 input_stream::~input_stream()
