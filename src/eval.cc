@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-constexpr auto pi = std::acos(-1);
 
 #include "global.h"
 #include "convert.h"
@@ -513,15 +512,13 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case CONST_FLT:
 			value_ptr->type = TYP_FLT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), 
-					sizeof (double));
+			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), sizeof (double));
 			expr += sizeof (double);
 			break;
 
 		case CONST_INT:
 			value_ptr->type = TYP_INT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), 
-					sizeof (long));
+			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), sizeof (long));
 			expr += sizeof (long);
 			break;
 
@@ -567,8 +564,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 						}
 						else
 						{
-							//value_ptr->type = TYP_RNG;
-							//value_ptr->Rng = varp->v_rng;
 							value_ptr->sRng(varp->v_rng);
 						}
 						break;
@@ -613,8 +608,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case RANGE | LCREL | HCREL:
 		case RANGE | HCREL:
 			{
-				//value_ptr->type = TYP_RNG;
-				//GET_RNG (expr, &(value_ptr->Rng));
 				rng_t* rng = (rng_t*) expr;
 				value_ptr->sRng(*rng);
 				expr += EXP_ADD_RNG;
@@ -628,7 +621,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case F_PI:
 			value_ptr->type = TYP_FLT;
-			value_ptr->Float = pi;
+			value_ptr->Float = std::acos(-1);
 			break;
 
 		case F_ROW:
@@ -673,8 +666,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				double (*funp2) (double, double);
 				funp2 = (double (*)(double, double)) (f->fn_fun);
 
-				value_ptr->Float = (*funp2) (value_ptr->Float, 
-						(value_ptr + 1)->Float);
+				value_ptr->Float = (*funp2) (value_ptr->Float, (value_ptr + 1)->Float);
 				if (value_ptr->Float != value_ptr->Float)
 					throw_valerr(OUT_OF_RANGE, value_ptr);
 			}
@@ -704,7 +696,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (tmp < 0) {
 				num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
 				num_t f2 = rintn(f1);
-				//num f3 = f2 * exp10_arr[-tmp];
 				value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
 			} else {
 				value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
@@ -715,8 +706,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (value_ptr->type == TYP_ERR)
 				*value_ptr = *(value_ptr + 1);
 			break;
-
-
 
 		case CONCAT:
 			{
@@ -933,5 +922,3 @@ update_cell(CELL *cell)
 	push_refs(cell);
 	
 }
-
-
