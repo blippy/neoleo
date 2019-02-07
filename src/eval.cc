@@ -90,7 +90,7 @@ void TO_FLT(struct value* val)
 	if((val)->type==TYP_FLT) 
 		; 
 	else if((val)->type==TYP_INT) { 
-		(val)->sFlt((double)(val)->Int); 
+		(val)->sFlt((double)(val)->gInt()); 
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
@@ -109,7 +109,7 @@ void  TO_INT(struct value* val)
 		; 
 	else if((val)->type==TYP_FLT) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=(long)(val)->gFlt(); 
+		(val)->sInt((long)(val)->gFlt());
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sInt(to_long(val->gString(), ok));
@@ -118,7 +118,7 @@ void  TO_INT(struct value* val)
 		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=0; 
+		(val)->sInt(0);
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -135,7 +135,7 @@ void TO_NUM(struct value* val)
 		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=0; 
+		(val)->sInt(0); 
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -192,7 +192,7 @@ void PUSH_ANY(struct value* value_ptr, cell* cp)
 #else
 	if(!cp || !GET_TYP(cp)) {		
 		value_ptr->type=TYP_NUL;			
-		value_ptr->Int=0;			
+		value_ptr->sInt(0);			
 	} else {				
 		value_ptr->type=GET_TYP(cp);		
 		value_ptr->x=cp->get_c_z();			
@@ -404,17 +404,17 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		}
 		else if (value_ptr->type == TYP_INT)
 		{
-			value_ptr->sFlt((double) value_ptr->Int);
+			value_ptr->sFlt((double) value_ptr->gInt());
 		}
 		else
-			(value_ptr + 1)->sFlt((double) (value_ptr + 1)->Int);
+			(value_ptr + 1)->sFlt((double) (value_ptr + 1)->gInt());
 	}
 	if (value_ptr->type == TYP_STR)
 		tmp = strcmp (value_ptr->gString(), (value_ptr + 1)->gString());
 	else if (value_ptr->type == TYP_FLT)
 		tmp = (value_ptr->gFlt() < (value_ptr + 1)->gFlt()) ? -1 : ((value_ptr->gFlt() > (value_ptr + 1)->gFlt()) ? 1 : 0);
 	else if (value_ptr->type == TYP_INT)
-		tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
+		tmp = (value_ptr->gInt() < (value_ptr + 1)->gInt() ? -1 : ((value_ptr->gInt() > (value_ptr + 1)->gInt()) ? 1 : 0));
 	else if (value_ptr->type == 0)
 		tmp = 0;
 	else
@@ -621,8 +621,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 
 		case F_ROW:
 		case F_COL:
-			value_ptr->type = TYP_INT;
-			value_ptr->Int = ((byte == F_ROW) ? cur_row : cur_col);
+			value_ptr->sInt(((byte == F_ROW) ? cur_row : cur_col));
 			break;
 
 		case F_NOW:
