@@ -2212,11 +2212,9 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 	void
 for_all_vars (void (*func) (const char *, struct var *))
 {
-	//log_debug("for_all_vars called");
 	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {
 		auto s1{it->first};
-		strcpy_c s2(s1.c_str());
-		char* s3 = s2.data();
+		const char* s3 = s1.c_str();
 		func(s3, &(it->second));
 	}
 }
