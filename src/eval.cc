@@ -655,7 +655,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			{
 				double (*funp2) (double, double);
 				funp2 = (double (*)(double, double)) (f->fn_fun);
-				double f = (*funp2) (value_ptr->Float, (value_ptr + 1)->Float);
+				double f = (*funp2) (value_ptr->gFlt(), (value_ptr + 1)->gFlt());
 				value_ptr->sFlt(f);
 				//if (value_ptr->Float != value_ptr->Float) throw_valerr(OUT_OF_RANGE, value_ptr);
 			}
@@ -687,7 +687,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 				num_t f2 = rintn(f1);
 				value_ptr->sFlt(rintn (f2) * exp10_arr[-tmp]);
 			} else {
-				value_ptr->sFlt(rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp]);
+				value_ptr->sFlt(rintn ((value_ptr->gFlt()) * exp10_arr[tmp]) / exp10_arr[tmp]);
 			}
 			break;
 
@@ -884,7 +884,7 @@ update_cell(CELL *cell)
 				new_val = 0;
 				break;
 			case TYP_FLT:
-				new_val = newv->Float != cell->gFlt();
+				new_val = newv->gFlt() != cell->gFlt();
 				break;
 			case TYP_INT:
 				new_val = newv->Int != cell->gInt();
