@@ -49,6 +49,7 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 
 /* Routines for formatting cell values */
@@ -1389,7 +1390,7 @@ std::string stringify_value_file_style(value* val)
 			ss << ename[val->gErr()];
 			break;
 		default:
-			assert(false);
+			ASSERT_UNCALLED();
 	}
 	return ss.str();
 
