@@ -768,32 +768,6 @@ beginning_of_col (int count)
 	goto_region (&rng);
 }
 
-static void
-skip_empties (CELLREF * rout, CELLREF * cout, int magic)
-{
-	CELLREF r = *rout;
-	CELLREF c = *cout;
-	CELL * cp = find_cell (r, c);
-
-	while (!cp || !GET_TYP (cp))
-	{
-		if (r != boundrymagic [rowmagic [magic] + 1])
-			r += rowmagic [magic];
-		else if (rowmagic [magic])
-			break;
-		if (c != boundrymagic [colmagic [magic] + 1])
-			c += colmagic [magic];
-		else if (colmagic[magic])
-			break;
-		cp = find_cell (r, c);
-	}
-
-	*rout = r;
-	*cout = c;
-}
-
-
-
 
 
 void
