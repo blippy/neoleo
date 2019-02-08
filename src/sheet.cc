@@ -19,6 +19,7 @@
 
 
 #include "neotypes.h"
+#include "basic.h"
 #include "byte-compile.h"
 #include "cell.h"
 #include "eval.h"
@@ -245,9 +246,9 @@ bump_row (CELLREF row, int increment)
 		if(get_row(cp)<row || cp == nullptr) continue;
 		auto r = get_row(cp);
 		cp->set_row(r+increment);
-		cp->invalidate_bytecode(); // due to relative referencing issues
 	}
 
+	//recalculate(1); // this doesn't help
 	Global->modified = 1;
 }
 

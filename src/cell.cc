@@ -112,6 +112,7 @@ void cell::invalidate_bytecode()
 void cell::set_row(CELLREF r)
 {
 	this->coord = to_coord(r, get_col(this));
+	this->invalidate_bytecode(); // due to relative referencing issues
 }
 
 void cell::reset()
