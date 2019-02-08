@@ -54,43 +54,12 @@ npv ( struct rng *rng, num_t rate, num_t *putres)
 {
 	num_t npv = 0;
 	int i = 0;;
-	num_t f;
-	CELL *cell_ptr;
-	const char *strptr;
-	bool ok;
 
 	for(auto cell_ptr: get_cells_in_range(rng)) {
-		switch (GET_TYP (cell_ptr))
-		{
-			case 0:
-				f = 0.0;
-				goto know_f;
-
-			case TYP_INT:
-				f = (double) (cell_ptr->gInt());
-				goto know_f;
-
-			case TYP_FLT:
-				f = cell_ptr->gFlt();
-				goto know_f;
-
-			case TYP_STR:
-				strptr = cell_ptr->gString();
-				f = to_double(strptr, ok);
-				if (!ok) return NON_NUMBER;
-know_f:
-				npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
-				break;
-
-			case TYP_ERR:
-				return cell_ptr->gErr();
-
-			default:
-				return NON_NUMBER;
-		}
+		double f = to_double(cell_ptr);
+		npv += (double) f *  (1.0 / (pow (1.0 + rate, (double) i)));
 		i++;
 	}
-
 	*putres = npv;
 	return 0;
 }
@@ -118,14 +87,12 @@ do_npv ( struct value *p)
 {
 	num_t putres = p->gFlt();
 	struct rng a_rng = p->gRng();
-  int tmp =  npv (&a_rng, (p + 1)->gFlt(), &putres);
-  p->sFlt(putres);
-  if (tmp)
-    {
-	    p->sErr(tmp);
-    }
-  else
-    p->type = TYP_FLT;
+	int tmp =  npv (&a_rng, (p + 1)->gFlt(), &putres);
+	p->sFlt(putres);
+	if (tmp)
+		p->sErr(tmp);
+	else
+		p->type = TYP_FLT;
 }
 
 static void
