@@ -82,12 +82,13 @@ struct cell_flags_s {
 typedef unsigned char* formula_t;
 //typedef std::byte* formula_t;
 
-class cell : public value
+class cell
 {
 	private:
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
+		value val;
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -162,7 +163,7 @@ typedef struct var
 #define LCK_LCK		2
 
 /* The type of a cell, or of a eval_expression() value */
-#define GET_TYP(p)	((p)->get_type())
+#define GET_TYP(p)	((p)->val.get_type())
 #define SET_TYP(p,x)	((p)->set_type(x))
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
