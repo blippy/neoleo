@@ -163,7 +163,6 @@ typedef struct var
 
 /* The type of a cell, or of a eval_expression() value */
 #define GET_TYP(p)	((p)->get_type())
-#define SET_TYP(p,x)	((p)->set_type(x))
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))

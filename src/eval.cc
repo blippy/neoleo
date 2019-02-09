@@ -900,7 +900,7 @@ cell::update_cell()
 	int new_val = 0; 
 	cell_cycle = current_cycle;
 	if (newv->type != GET_TYP (this)) {
-		SET_TYP(this, newv->type);
+		this->set_type(newv->type);
 		new_val = 1;
 	} else {
 		switch (newv->type) {
