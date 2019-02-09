@@ -50,7 +50,7 @@ constexpr auto JST_DEF = 0;
 
 #define FMT_DEF		0	/* Default */
 #define FMT_HID		1	/* Hidden */
-#define FMT_GPH		2	/* Graph */
+//#define FMT_GPH		2	/* Graph */
 #define FMT_DOL		3	/* Dollar */
 #define FMT_CMA		4	/* Comma */
 #define FMT_PCT		5	/* Percent */

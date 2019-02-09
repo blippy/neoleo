@@ -171,9 +171,6 @@ oleo_read_file (FILE *fp, int ismerge)
 							case '$':
 								default_fmt = FMT_DOL;
 								break;
-							case '*':	/* * format implemented as +- format */
-								default_fmt = FMT_GPH;
-								break;
 							case ',':	/* JF */
 								default_fmt = FMT_CMA;
 								break;
@@ -252,9 +249,6 @@ oleo_read_file (FILE *fp, int ismerge)
 								break;
 							case '$':
 								fmt = FMT_DOL;
-								break;
-							case '*':	/* JF implemented as +- format */
-								fmt = FMT_GPH;
 								break;
 							case ',':	/* JF */
 								fmt = FMT_CMA;
@@ -598,9 +592,6 @@ static char * oleo_fmt_to_str (int f1, int p1)
 			break;
 		case FMT_HID:
 			p_buf[0] = 'H';
-			break;
-		case FMT_GPH:
-			p_buf[0] = '*';
 			break;
 		default:
 			if (p1 == FLOAT_PRECISION)

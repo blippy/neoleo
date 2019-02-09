@@ -305,32 +305,6 @@ std::string print_cell (CELL * cp)
 	if (GET_TYP (cp) == TYP_FLT) {
 		switch (j)
 		{
-			case FMT_GPH:
-				if (cp->gFlt() < 0)
-				{
-					j = '-';
-					num = -(cp->gFlt());
-				}
-				else if (cp->gFlt() >= 1)
-				{
-					j = '+';
-					num = (cp->gFlt());
-				}
-				else
-				{
-					j = '0';
-					num = 1;
-				}
-graph:
-				if (num >= sizeof (print_buf))
-				{
-					io_error_msg ("Cannot graph %d '%c'", p, j);
-					num = sizeof (print_buf) - 1;
-				}
-				print_buf[num] = '\0';
-				while (--num >= 0)
-					print_buf[num] = j;
-				return print_buf;
 
 			case FMT_USR:
 				return pr_flt (cp->gFlt(), &u[p], u[p].prec);
@@ -381,23 +355,6 @@ handle_exp:
 		p = GET_PRECISION (cp);
 		switch (j)
 		{
-			case FMT_GPH:
-				if (cp->gInt() < 0)
-				{
-					j = '-';
-					num = -(cp->gInt());
-				}
-				else if (cp->gInt() >= 1)
-				{
-					j = '+';
-					num = (cp->gInt());
-				}
-				else
-				{
-					j = '0';
-					num = 1;
-				}
-				goto graph;
 
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 			case FMT_DATE:
@@ -634,7 +591,6 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 	prc = GET_PRECISION (cp);
 	switch (fmt)
 	{
-		case FMT_GPH:
 		case FMT_HID:
 			return numb_oflo;
 		case FMT_DOL:
