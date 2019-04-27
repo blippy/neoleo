@@ -13,12 +13,11 @@
 #include "basic.h"
 #include "cell.h"
 #include "convert.h"
-#include "defuns.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "cmd.h"
 #include "window.h"
-#include "oleox.h"
+#include "xcept.h"
 #include "io-curses.h"
 #include "io-utils.h"
 #include "sheet.h"
@@ -262,10 +261,6 @@ insert_rowwise(T fildes)
 	}
 }
 
-static void hless_rewrite_defuns(int fildes)
-{
-	rewrite_defuns();
-}
 
 static void type_cell(int fildes)
 {
@@ -338,7 +333,6 @@ static map<string, function<void(T)> > func_map = {
 	{"ri", hl_insert_row},
 	{"tbl", hless_tbl},
 	{"recalc", hl_recalc},
-	{"rewrite-defuns", hless_rewrite_defuns},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},
 	{"w", write_file}
@@ -363,13 +357,6 @@ process_headless_line(std::string line, int fildes)
 		return false;
 	}
 
-	/*
-	try {
-		execute_command((char*) line.c_str());
-	} catch (const OleoJmp& e) {
-		cout << "? " << e.what() << "\n";
-	}
-	*/
 
 	cout << std::flush;
 	return true;
@@ -378,26 +365,14 @@ process_headless_line(std::string line, int fildes)
 static void
 _io_run_main_loop()
 {
-	//cout << "100 OK Type 'bye' to exit" << endl;
-
-
-	//cout << "100 OK" << "\n";
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
-	//while(getline(std::cin, line)) {
 	bool cont = true;
 	while(cont) {
 		bool eof;
-		//cout << "_io_run_main_loop:about to call getline_from_fildes" << endl;
 		line = getline_from_fildes(fildes, eof);
-		//cout << "_io_run_main_loop:line:" << line << endl;
-		//if(line == "q")
-		//	return;
-		//else
 		cont =	process_headless_line(line, fildes);
-		//cout << "_io_run_main_loop: cont:" << cont << endl;
 		if(eof) {
-		       	//cout << "_io_run_main_loop: eof" << endl;
 			cont = false;
 		}
 	}
@@ -413,59 +388,21 @@ _io_bell()
 void
 headless_graphics(void)
 {
-	// not sure if the following are useful:
-	//FD_SET (0, &read_fd_set);
-	//FD_SET (0, &exception_fd_set);
-	
-	/* I'm bored by most of this, although it is probably (?) useful
-	 */
-
-	//io_command_loop = _io_headless_command_loop;
-
 	io_open_display = _io_open_display;
-	//io_open_display = do_nothing;
-
-	//io_redisp = _io_redisp;
 	io_redisp = do_nothing;
-
 	io_repaint = do_nothing;
-
 	io_repaint_win = _io_repaint_win;
-	//io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
 	io_scan_for_input = _curses_io_scan_for_input;
-	//io_wait_for_input = _io_wait_for_input;
 	io_read_kbd = _io_read_kbd;
-	//io_nodelay = _io_nodelay;
-	//io_getch = _io_getch;
 	io_bell = _io_bell;
-	//io_get_chr = _io_get_chr;
-
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
-	//io_move_cursor = _io_move_cursor;
-	//io_erase = _io_erase;
 	io_insert = _io_insert;
-	//io_over = _io_over;
 	io_flush = do_nothing;
-	//io_clear_input_before = _io_clear_input_before;
-	//io_clear_input_after = _io_clear_input_after;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = do_nothing;
-	//io_cellize_cursor = _io_cellize_cursor;
-	//io_inputize_cursor = _io_inputize_cursor;
 	io_display_cell_cursor = do_nothing;
-
-
-	
-	//set_headless(true);
-	//io_recenter_cur_win = do_nothing;
-	//io_recenter_all_win = do_nothing;
-	//set_curow = _set_curow;
-	//set_cucol = _set_cucol;
-
-	//io_run_main_loop = fairly_std_main_loop;
 	io_run_main_loop = _io_run_main_loop;
-	//nwin = 1;
 }
 

@@ -1,6 +1,9 @@
 #include <stddef.h>
 #include <string>
 
+#include "convert.h"
+#include "xcept.h"
+
 double to_double(const char* strptr, bool &ok)
 {
 	double d;
@@ -14,6 +17,27 @@ double to_double(const char* strptr, bool &ok)
 	return d;
 }
 
+double to_double(CELL* cp)
+{
+	double f;
+	value v = cp->get_value();
+	switch(v.type) {
+		case TYP_NUL: return 0;
+		case TYP_INT: return v.gInt();
+		case TYP_FLT: return v.gFlt();
+		case TYP_STR: {
+				      bool ok;
+				      f = to_double(v.gString(), ok);
+				      if(!ok) throw ValErr();
+				      return f;
+			      }
+		case TYP_ERR: throw ValErr();
+		default:
+			      ASSERT_UNCALLED();
+	}
+	return f;
+
+}
 
 long to_long(const char* strptr, bool &ok)
 {

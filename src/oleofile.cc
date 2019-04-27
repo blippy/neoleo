@@ -25,6 +25,7 @@
 
 #include "byte-compile.h"
 #include "convert.h"
+#include "format.h"
 #include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
@@ -34,10 +35,9 @@
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-//#include "cmd.h"
-#include "decompile.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 /* These functions read and write OLEO style files. */
 
@@ -92,6 +92,7 @@ oleo_read_file (FILE *fp, int ismerge)
 		clear_spreadsheet ();
 	while (fgets (cbuf, sizeof (cbuf), fp))
 	{
+		std::string input_line = cbuf;
 		lineno++;
 
 		if ((ptr = (char *)index (cbuf, '\n')))
@@ -169,9 +170,6 @@ oleo_read_file (FILE *fp, int ismerge)
 								break;
 							case '$':
 								default_fmt = FMT_DOL;
-								break;
-							case '*':	/* * format implemented as +- format */
-								default_fmt = FMT_GPH;
 								break;
 							case ',':	/* JF */
 								default_fmt = FMT_CMA;
@@ -251,9 +249,6 @@ oleo_read_file (FILE *fp, int ismerge)
 								break;
 							case '$':
 								fmt = FMT_DOL;
-								break;
-							case '*':	/* JF implemented as +- format */
-								fmt = FMT_GPH;
 								break;
 							case ',':	/* JF */
 								fmt = FMT_CMA;
@@ -557,13 +552,18 @@ oleo_read_file (FILE *fp, int ismerge)
 				break;
 			default:
 bad_field:
-				Global->a0 = old_a0;
-				if (!ismerge)
-					clear_spreadsheet ();
-				io_recenter_all_win ();
-				io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, cbuf);
-				Global->return_from_error = 0;
-				return;
+				{
+					Global->a0 = old_a0;
+					if (!ismerge)
+						clear_spreadsheet ();
+					io_recenter_all_win ();
+					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
+					std::string msg{string_format(fmt, lineno, input_line.c_str())};
+					msg = trim(msg);
+					throw SyntaxError(msg);
+					Global->return_from_error = 0;
+					return;
+					}
 		}	/* End of switch */
 	}
 	if (!feof (fp)) {
@@ -592,9 +592,6 @@ static char * oleo_fmt_to_str (int f1, int p1)
 			break;
 		case FMT_HID:
 			p_buf[0] = 'H';
-			break;
-		case FMT_GPH:
-			p_buf[0] = '*';
 			break;
 		default:
 			if (p1 == FLOAT_PRECISION)
@@ -660,7 +657,7 @@ static char jst_to_chr ( int just)
 static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
-static void oleo_write_var ( char *name, struct var *var)
+static void oleo_write_var (const char *name, struct var *var)
 {
 	if (var->var_flags == VAR_UNDEF
 			&& (!var->var_ref_fm || var->var_ref_fm->refs_used == 0))
@@ -749,8 +746,8 @@ void write_cells(FILE* fp)
 					oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
 		}
 
-		if (!GET_TYP (cp) && !cp->get_cell_formula())
-			continue;
+		//if (!GET_TYP (cp) && !cp->get_cell_formula()) continue;
+		if (!GET_TYP(cp)) continue;
 
 		(void) fprintf (fp, "C;");
 		if (c != ccol) {
@@ -762,9 +759,9 @@ void write_cells(FILE* fp)
 			crow = r;
 		}
 
-		const unsigned char* formula_1 = cp->get_cell_formula();
+		const unsigned char* formula_1 = cp->get_bytecode();
 		if (formula_1 && !is_constant(formula_1)) {
-			std::string formula = decomp_str(r, c);
+			std::string formula = formula_text(r, c);
 			(void) fprintf (fp, "E%s;", formula.c_str());
 		}
 

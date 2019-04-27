@@ -1,6 +1,6 @@
 #pragma once
 /*
- * Copyright © 1990-1999, 2001, Free Software Foundation, Inc.
+ * Copyright (c) 1990-1999, 2001, Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -50,7 +50,7 @@ constexpr auto JST_DEF = 0;
 
 #define FMT_DEF		0	/* Default */
 #define FMT_HID		1	/* Hidden */
-#define FMT_GPH		2	/* Graph */
+//#define FMT_GPH		2	/* Graph */
 #define FMT_DOL		3	/* Dollar */
 #define FMT_CMA		4	/* Comma */
 #define FMT_PCT		5	/* Percent */
@@ -85,18 +85,23 @@ typedef unsigned char* formula_t;
 class cell : public value
 {
 	private:
-		formula_t cell_formula = nullptr; // (unsigned char*) dupe("");
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
+		formula_t bytecode = nullptr;
+		std::string formula_text;
 
 	public:
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
+		void update_cell();
 
 		coord_t coord;
-		CELLREF get_row();
-		CELLREF get_col();
+		//CELLREF get_row() const;
+		//CELLREF get_col() const;
+		void set_row(CELLREF r);
 
+		void set_formula_text(const std::string& str);
+		std::string get_formula_text() const;
 		cell(coord_t coord);
 		~cell();
 		void reset();
@@ -104,23 +109,14 @@ class cell : public value
 		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
-		formula_t get_cell_formula(); 
-		formula_t set_cell_formula(formula_t newval);
-		void clear_formula();
+
+		void recompute_bytecode();
+		void invalidate_bytecode();
+
+		formula_t get_bytecode(); 
+		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
-
-
-
-		/* mcarter 02-May-2018 issue#37
-		 * This is a potential source of bugs, because set_c_z() does not
-		 * set the type as well. So you might be mixing up types. I encountered
-		 * this when I juiced up class cell to derive from class value, and
-		 * tried the copy-region function. set_c_z() is used in other places,
-		 * so there are likely to be other bugs lurking in the code
-		 */
-		union vals get_c_z() { return x; }; // ugly compilation hack. TODO eliminate
-		void set_c_z(union vals newval) { x = newval; } ; // TODO more ugly hackery
 		value get_value();
 };
 
@@ -167,7 +163,6 @@ typedef struct var
 
 /* The type of a cell, or of a eval_expression() value */
 #define GET_TYP(p)	((p)->get_type())
-#define SET_TYP(p,x)	((p)->set_type(x))
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
@@ -213,3 +208,4 @@ typedef struct point_t {int r; int c;} point_t;
 typedef point_t RC_t;
 RC_t ws_extent();
 void copy_cell_stuff (cell* src, cell* dest);
+std::string formula_text(CELLREF r, CELLREF c);

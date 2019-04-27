@@ -56,7 +56,7 @@ void push_cell(cell* cp);
 extern int eval_next_cell (void);
 extern char * old_new_var_value (char *v_name, int v_namelen, char *v_newval);
 extern char * new_var_value (char *v_name, int v_namelen, struct rng *tmp_rng);
-extern void for_all_vars (void (*func) (char *, struct var *));
+void for_all_vars (void (*func) (const char *, struct var *));
 extern struct var * find_var (char *string, int len);
 extern void add_var_ref (void * vvar);
 extern void flush_variables (void);

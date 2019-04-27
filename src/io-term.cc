@@ -38,7 +38,6 @@
 #include "cell.h"
 #include "convert.h"
 #include "format.h"
-#include "init.h"
 #define DEFINE_IO_VARS 1
 #include "io-abstract.h"
 #include "io-headless.h"
@@ -48,13 +47,12 @@
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
-#include "oleox.h"
+#include "xcept.h"
 
 using std::cerr;
 using std::endl;
 
 
-#include "defuns.h"
 #include "sheet.h"
 #include "oleofile.h"
 #include "ref.h"
@@ -481,7 +479,7 @@ show_var (char *ptr)
 static FILE * write_variable_fp = 0;
 
 static void
-write_a_var (char *name, struct var *v)
+write_a_var (const char *name, struct var *v)
 {
 	CELLREF r, c;
 	if (v->var_flags == VAR_UNDEF)

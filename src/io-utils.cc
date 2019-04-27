@@ -1,7 +1,5 @@
 /*
- * $Id: io-utils.c,v 1.39 2001/02/13 23:38:06 danny Exp $
- *
- * Copyright © 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -39,7 +37,6 @@
 #include "cell.h"
 #include "cmd.h"
 #include "convert.h"
-#include "decompile.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-term.h"
@@ -52,6 +49,7 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 
 /* Routines for formatting cell values */
@@ -307,32 +305,6 @@ std::string print_cell (CELL * cp)
 	if (GET_TYP (cp) == TYP_FLT) {
 		switch (j)
 		{
-			case FMT_GPH:
-				if (cp->gFlt() < 0)
-				{
-					j = '-';
-					num = -(cp->gFlt());
-				}
-				else if (cp->gFlt() >= 1)
-				{
-					j = '+';
-					num = (cp->gFlt());
-				}
-				else
-				{
-					j = '0';
-					num = 1;
-				}
-graph:
-				if (num >= sizeof (print_buf))
-				{
-					io_error_msg ("Cannot graph %d '%c'", p, j);
-					num = sizeof (print_buf) - 1;
-				}
-				print_buf[num] = '\0';
-				while (--num >= 0)
-					print_buf[num] = j;
-				return print_buf;
 
 			case FMT_USR:
 				return pr_flt (cp->gFlt(), &u[p], u[p].prec);
@@ -383,23 +355,6 @@ handle_exp:
 		p = GET_PRECISION (cp);
 		switch (j)
 		{
-			case FMT_GPH:
-				if (cp->gInt() < 0)
-				{
-					j = '-';
-					num = -(cp->gInt());
-				}
-				else if (cp->gInt() >= 1)
-				{
-					j = '+';
-					num = (cp->gInt());
-				}
-				else
-				{
-					j = '0';
-					num = 1;
-				}
-				goto graph;
 
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 			case FMT_DATE:
@@ -486,10 +441,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return print_buf;
 
 		case TYP_STR:
-			{
-				strcpy_c s{cp->gString()};
-				return backslash_a_string (s.data(), add_quote);
-			}
+			return cp->get_formula_text();
 
 		case TYP_BOL:
 			return bname[cp->gBol()];
@@ -639,7 +591,6 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 	prc = GET_PRECISION (cp);
 	switch (fmt)
 	{
-		case FMT_GPH:
 		case FMT_HID:
 			return numb_oflo;
 		case FMT_DOL:
@@ -1395,7 +1346,7 @@ std::string stringify_value_file_style(value* val)
 			ss << ename[val->gErr()];
 			break;
 		default:
-			assert(false);
+			ASSERT_UNCALLED();
 	}
 	return ss.str();
 
@@ -1404,9 +1355,9 @@ std::string stringify_value_file_style(value* val)
 std::string trim(const std::string& str)
 {
     if(str.length() ==0) { return str;}
-    size_t first = str.find_first_not_of(" \t\r");
+    size_t first = str.find_first_not_of(" \t\r\n");
     if(first == std::string::npos) return "";
-    size_t last = str.find_last_not_of(" \t\r");
+    size_t last = str.find_last_not_of(" \t\r\n");
     return str.substr(first, (last-first+1));
 }
 

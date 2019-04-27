@@ -111,14 +111,12 @@ struct fmt
 
 static char *def_names[] =	{"default", "def", "D", 0};
 static char *hid_names[] =	{"hidden", "hid", "H", 0};
-static char *gph_names[] =	{"graph", "gph", "*", 0};
 static char *int_names[] =	{"integer", "int", "I", 0};
 
 static struct fmt simple[] =
 {
 	{FMT_DEF,	def_names},
 	{FMT_HID,	hid_names},
-	{FMT_GPH,	gph_names},
 	{FMT_FXT,	int_names},
 #if 0
 	{FMT_FXT,	dec_names},

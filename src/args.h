@@ -75,7 +75,6 @@ const char * range_verify (char ** end, struct command_arg * arg);
 const char * string_verify (char ** end, struct command_arg * arg);
 const char * yes_verify (char ** end, struct command_arg * arg);
 const char * incremental_cmd_verify (char ** end, struct command_arg * arg);
-const char * menu_verify (char ** end, struct command_arg * arg);
 const char * format_verify (char ** end, struct command_arg * arg);
 const char * noop_verify (char ** end, struct command_arg * arg);
 
@@ -94,7 +93,6 @@ struct prompt_style NAME = \
 
 DEFSTYLE(char_style, char_verify, 0, cmd_int, "read-char");
 DEFSTYLE(double_style, double_verify, 0, cmd_float, "read-float");
-DEFSTYLE(menu_style, menu_verify, 0, cmd_int, "read-menu");
 DEFSTYLE(format_style, format_verify, 0, cmd_int, "read-format");
 DEFSTYLE(symbol_style,
 	 symbol_verify, symbol_destroy, cmd_string, "read-symbol");

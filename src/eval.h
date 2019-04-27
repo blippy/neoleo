@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: eval.h,v 1.4 2000/08/10 21:02:50 danny Exp $
- *
- * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -214,4 +212,4 @@ extern function_t skip_funs[];
 #define X_J	0x08
 #define X_JL	0x10
 
-extern void update_cell (CELL *);
+//extern void update_cell (CELL *);

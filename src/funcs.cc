@@ -37,11 +37,6 @@
 #include "utils.h"
 
 
-/* This include builds the function table, doc strings, and FUNC_ARGS strings.
- */
-//#include "defuns.h"
-
-
 /* Returns 0 if the function is found.
  * Also returns (through parameters) the vector and cmd_func.
  * The output parameters can be NULL.
@@ -77,32 +72,3 @@ init_named_macro_strings (void)
   bzero (named_macro_strings, sizeof (struct cmd_func));
   named_macro_vec = add_usr_cmds (named_macro_strings);
 }
-
-
-void 
-name_macro_string (char * name, char * str)
-{
-  int i = num_named_macro_strings;
-  ++num_named_macro_strings;
-  named_macro_strings =
-    ((struct cmd_func *)
-     ck_realloc (named_macro_strings,
-		 ((1 + num_named_macro_strings) * sizeof (struct cmd_func))));
-  the_funcs [named_macro_vec] = named_macro_strings;
-  bzero (named_macro_strings + num_named_macro_strings,
-	 sizeof (struct cmd_func));
-  {
-    struct cmd_func * cf = &named_macro_strings [i];
-    cf->func_name = ck_savestr (name);
-    cf->func_func = to_vptr(run_string_as_macro);
-    cf->init_code = 0;
-    {
-      int i = 0;
-      cf->func_args = (char **)ck_malloc (3 * sizeof (char *));
-      cf->func_args [i++] = mk_sprintf ("=%s", str);
-      cf->func_args [i++] = "p";
-      cf->func_args [i++] = 0;
-    }
-  }
-}
-

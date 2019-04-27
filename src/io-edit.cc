@@ -23,7 +23,6 @@
 #include <errno.h>
 #include <ctype.h>
 #include <sstream>
-//#include <tuple>
 
 #undef NULL
 
@@ -39,7 +38,7 @@
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-#include "decompile.h"
+#include "xcept.h"
 
 /* Shorthand */
 
@@ -78,9 +77,7 @@ check_editting_mode (void)
 	void
 begin_edit (void)
 {
-	Global->topclear = 0;
-	the_cmd_frame->complex_to_user = 1;
-	io_fix_input ();
+	ASSERT_UNCALLED();
 }
 
 	void
@@ -93,276 +90,100 @@ setn_edit_line (char * str, int len)
 	void
 toggle_overwrite (int set, int setting)
 {
-	if (!set)
-		the_overwrite = !the_overwrite;
-	else
-		the_overwrite = (setting > 0);
+	ASSERT_UNCALLED();
 }
 
 	void
 beginning_of_line (void)
 {
-	if (check_editting_mode ())
-		return;
-	the_cursor = 0;
-	io_move_cursor ();
+	ASSERT_UNCALLED();
 }
 
 
 	void
 end_of_line (void)
 {
-	if (check_editting_mode ())
-		return;
-	the_cursor = strlen (the_text.buf);
-	io_move_cursor ();
+	ASSERT_UNCALLED();
 }
 
 	void
 backward_char (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		forward_char (-n);
-	else
-	{
-		char * error = 0;
-		if (the_cursor < n)
-		{
-			error = "Beginning of buffer.";
-			the_cursor = 0;
-		}
-		else
-			the_cursor -= n;
-		io_move_cursor ();
-		if (error)
-			io_error_msg (error);	/* Doesn't return. */
-	}
+	ASSERT_UNCALLED();
 }
 
 	void
 backward_word (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		forward_word (-n);
-	else
-	{
-		if (the_cursor == strlen (the_text.buf))
-			--the_cursor;
-		while (n)
-		{
-			while (the_cursor
-					&& !isalnum (the_text.buf[the_cursor]))
-				--the_cursor;
-			while (the_cursor
-					&& isalnum (the_text.buf[the_cursor]))
-				--the_cursor;
-			--n;
-		}
-		io_move_cursor ();
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void
 forward_char (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		backward_char (-n);
-	else
-	{
-		char * error = 0;
-		int len = strlen(the_text.buf);
-		if ((the_cursor + n) > len)
-		{
-			error = "End of buffer.";
-			the_cursor = len;
-		}
-		else
-			the_cursor += n;
-		io_move_cursor ();
-		if (error)
-			io_error_msg (error);	/* Doesn't return. */
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void
 goto_char (int n)
 {
-	int len;
-	if (n < 0)
-		n = 0;
-	len = strlen(the_text.buf);
-	if (n > len)
-		n = len;
-	the_cursor = n;
-	io_move_cursor ();
+	ASSERT_UNCALLED();
 }
 
 	void
 forward_word (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		backward_word (-n);
-	else
-	{
-		int len = strlen (the_text.buf);
-		while (n)
-		{
-			while ((the_cursor < len)
-					&& !isalnum (the_text.buf[the_cursor]))
-				++the_cursor;
-			while ((the_cursor < len)
-					&& isalnum (the_text.buf[the_cursor]))
-				++the_cursor;
-			--n;
-		}
-		io_move_cursor ();
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	static void
 erase (int len)
 {
-	if (check_editting_mode ())
-		return;
-	// strcpy() with overlap
-	// as per https://stackoverflow.com/questions/14476627/strcpy-implementation-in-c
-	char *dst = &the_text.buf[the_cursor];
-	char* src = &the_text.buf[the_cursor + len];
-	while(*dst++ = *src++);
-	io_erase (len);
+	ASSERT_UNCALLED();
 }
 
 
 	void
 backward_delete_char (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		delete_char (-n);
-	else
-	{
-		char * error = 0;
-		if (the_cursor < n)
-		{
-			error = "Beginning of buffer.";
-			n = the_cursor;
-		}
-		the_cursor -= n;
-		erase (n);
-		if (error)
-			io_error_msg (error);	/* Doesn't return. */
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void 
 backward_delete_word (int n)
 {
-	if (check_editting_mode ())
-		return;
-	else
-	{
-		int at = the_cursor;
-		while (n)
-		{
-			while (the_cursor
-					&& !isalnum (the_text.buf[the_cursor]))
-				--the_cursor;
-
-			while (the_cursor
-					&& isalnum (the_text.buf[the_cursor - 1]))
-				--the_cursor;
-			--n;
-		}
-		erase (at - the_cursor);
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void
 delete_to_start(void)
 {
-	if (check_editting_mode ())
-		return;
-	else
-	{
-		int at = the_cursor;
-		the_cursor = 0;
-		erase (at);
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void
 delete_char (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		backward_delete_char (-n);
-	else
-	{
-		char * error = 0;
-		int len = strlen (the_text.buf);
-		if (the_cursor + n > len)
-		{
-			error = "End of buffer.";
-			n = len - the_cursor;
-		}
-		erase (n);
-		if (error)
-			io_error_msg (error);	/* Doesn't return. */
-	}
+	ASSERT_UNCALLED();
 }
 
 	void
 delete_word (int n)
 {
-	if (check_editting_mode ())
-		return;
-	if (n < 0)
-		backward_delete_word (-n);
-	else
-	{
-		int len = strlen (the_text.buf);
-		int erase_len = 0;
-		while (n)
-		{
-			while (((the_cursor + erase_len) < len)
-					&& !isalnum (the_text.buf[(the_cursor + erase_len)]))
-				++erase_len;
-			while (((the_cursor + erase_len) < len)
-					&& isalnum (the_text.buf[(the_cursor + erase_len)]))
-				++erase_len;
-			--n;
-		}      
-		erase (erase_len);
-	}
+	ASSERT_UNCALLED();
 }
 
 
 	void
 kill_line(void)
 {
-	if (check_editting_mode ())
-		return;
-	else
-	{
-		int len = strlen (the_text.buf);
-		erase (len - the_cursor);
-	}
+	ASSERT_UNCALLED();
 }
 
 const char*
@@ -375,13 +196,7 @@ str_and_len(const std::string& instr, int& len)
 	void
 insert_string(const std::string& instr)
 {
-	if (check_editting_mode ())
-		return;
-	int len;
-	const char*  str = str_and_len(instr, len);
-	splicen_line (&the_text, str, len, the_cursor);
-	io_insert (len);
-	the_cursor += len;
+	ASSERT_UNCALLED();
 }
 
 
@@ -406,12 +221,8 @@ over_string(const std::string& instr)
 }
 
 	void
-//put_string (const char * str, int len)
 put_string (const std::string& s1)
 {
-	//std::string s1{str};
-	//assert(s1.size() == len);
-
 	if (check_editting_mode ())
 		return;
 	if(the_overwrite)
@@ -420,31 +231,20 @@ put_string (const std::string& s1)
 		insert_string(s1);
 }
 
-/*
-void
-put_string (const std::string& s)
-{
-	put_string(s.c_str(), s.size());
-}
-*/
 
 /* Higher Level editting commands. */
 
 	void
 insert_cell_expression (void)
 {
-	if (check_editting_mode ()) return;
-	std::string in_str = decomp_str(curow, cucol);
-	put_string(in_str);
+	ASSERT_UNCALLED();
 }
 
 
 	void
 insert_other_cell_expression (struct rng * rng)
 {
-	if (check_editting_mode ()) return;
-	std::string in_str = decomp_str(rng->lr, rng->lc);
-	put_string(in_str);
+	ASSERT_UNCALLED();
 }
 
 /* No quotes are provided here, because it's easier to add
@@ -482,8 +282,6 @@ insert_abs_ref(int x)
 
 	std::ostringstream oss;
 
-	//char vbuf[50];
-	//char * in_str;
 	CELLREF mr = mkrow;
 	CELLREF mc = mkcol;
 	/* Insert current cell/range name as an absolute reference
@@ -548,11 +346,9 @@ insert_cell_attr (struct rng * rng, char * attr)
 	{
 		CELL * cp = find_cell (rng->lr, rng->lc);
 		if (!cp)
-			//set_line (&line, "def");
 			oss << "def";
 		else
 		{
-			//set_line(&line, cell_format_string(cp));
 			oss << cell_format_string(cp);
 		}
 	}
@@ -638,10 +434,7 @@ insert_current_filename (void)
 	void
 exit_self_inserting (int c)
 {
-	const char * str = char_to_string (c);
-
-	insert_string(str);
-	exit_minibuffer ();
+	ASSERT_UNCALLED();
 }
 
 

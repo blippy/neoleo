@@ -38,7 +38,6 @@
 #include "format.h"
 #include "io-edit.h"
 #include "eval.h"
-#include "decompile.h"
 #include "sheet.h"
 #include "shell.h"
 #include "spans.h"
@@ -769,86 +768,6 @@ beginning_of_col (int count)
 	goto_region (&rng);
 }
 
-static void
-skip_empties (CELLREF * rout, CELLREF * cout, int magic)
-{
-	CELLREF r = *rout;
-	CELLREF c = *cout;
-	CELL * cp = find_cell (r, c);
-
-	while (!cp || !GET_TYP (cp))
-	{
-		if (r != boundrymagic [rowmagic [magic] + 1])
-			r += rowmagic [magic];
-		else if (rowmagic [magic])
-			break;
-		if (c != boundrymagic [colmagic [magic] + 1])
-			c += colmagic [magic];
-		else if (colmagic[magic])
-			break;
-		cp = find_cell (r, c);
-	}
-
-	*rout = r;
-	*cout = c;
-}
-
-void
-scan_cell_cursor (int magic, int count)
-{
-	CELLREF r = curow;
-	CELLREF c = cucol;
-	CELLREF last_r = r;
-	CELLREF last_c = c;
-
-	skip_empties (&r, &c, magic);
-	{
-		CELL * cp = find_cell (r, c);
-		if (!(cp && GET_TYP (cp)))
-			return;
-	}
-	while (count)
-	{
-		CELL * cp = find_cell (r, c);
-		while (!cp || !GET_TYP (cp))
-		{
-			if (r != boundrymagic [rowmagic [magic] + 1])
-				r += rowmagic [magic];
-			else if (rowmagic [magic])
-				break;
-			if (c != boundrymagic [colmagic [magic] + 1])
-				c += colmagic [magic];
-			else if (colmagic[magic])
-				break;
-			cp = find_cell (r, c);
-		}
-		while (cp && GET_TYP (cp))
-		{
-			if (r != boundrymagic [rowmagic [magic] + 1])
-				r += rowmagic [magic];
-			else if (rowmagic[magic])
-				break;
-			if (c != boundrymagic [colmagic [magic] + 1])
-				c += colmagic [magic];
-			else if (colmagic [magic])
-				break;
-			last_r = r;
-			last_c = c;
-			cp = find_cell (r, c);
-		}
-		--count;
-	}
-	{
-		struct rng rng;
-		rng.lr = last_r;
-		rng.lc = last_c;
-		rng.hr = mkrow;
-		rng.hc = mkcol;
-		goto_region (&rng);
-	}
-}
-
-
 
 
 void
@@ -1272,15 +1191,4 @@ auto_move (void)
 	shift_cell_cursor (Global->auto_motion_direction, 1);
 }
 
-void
-auto_next_set (void)
-{
-	scan_cell_cursor (opposite_motion[Global->auto_motion_direction], 1);
-	{
-		CELL * cp = find_cell (curow, cucol);
-		if (!cp || !GET_TYP(cp))
-			shift_cell_cursor (Global->auto_motion_direction, 1);
-	}
-	shift_cell_cursor (complementary_motion[Global->auto_motion_direction], 1);
-}
 

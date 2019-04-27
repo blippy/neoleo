@@ -1,7 +1,5 @@
 /*
- * $Header: /cvs/oleo/src/eval.c,v 1.12 2001/02/13 23:38:05 danny Exp $
- *
- * Copyright (C) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
  *
@@ -27,7 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-constexpr auto pi = std::acos(-1);
 
 #include "global.h"
 #include "convert.h"
@@ -35,25 +32,11 @@ constexpr auto pi = std::acos(-1);
 #include "eval.h"
 #include "errors.h"
 #include "io-utils.h"
-//#include "mem.h"
 #include "ref.h"
 #include "sheet.h"
+#include "xcept.h"
 
 
-// TODO probably belongs in oleox.h
-class ValErr : public std::exception
-{
-	public:
-	       ValErr() {}
-	       ValErr(const int n) : n(n) {}
-
-	       virtual const char* what() const throw()
-	       {
-		       return std::to_string(n).c_str();
-	       }
-	private:
-	       int n = 0;
-};
 
 void throw_valerr(int n, struct value* vp)
 {
@@ -67,11 +50,8 @@ extern int n_usr_funs;
 RETSIGTYPE math_sig ( int sig);
 
 
-#define Float	x.c_n
-//#define String	x.c_s
-#define Int	x.c_l
-//#define Value	x.c_i
-#define Rng	x.c_r
+//#define Float	x.c_n
+//#define Int	x.c_l
 
 static struct value *eval_stack;
 static int stackmax;
@@ -110,22 +90,15 @@ void TO_FLT(struct value* val)
 	if((val)->type==TYP_FLT) 
 		; 
 	else if((val)->type==TYP_INT) { 
-		(val)->type=TYP_FLT; 
-		(val)->Float=(double)(val)->Int; 
+		(val)->sFlt((double)(val)->gInt()); 
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_FLT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Float=astof(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
-		(val)->type=TYP_FLT; 
-		(val)->Float=0.0; 
+		(val)->sFlt(0.0); 
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -136,21 +109,16 @@ void  TO_INT(struct value* val)
 		; 
 	else if((val)->type==TYP_FLT) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=(long)(val)->Float; 
+		(val)->sInt((long)(val)->gFlt());
 	} else if((val)->type==TYP_STR) { 
 		bool ok;
 		val->sInt(to_long(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_INT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Int=astol(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=0; 
+		(val)->sInt(0);
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -163,16 +131,11 @@ void TO_NUM(struct value* val)
 		bool ok;
 		val->sFlt(to_double(val->gString(), ok));
 		if(!ok) ERROR1(NON_NUMBER);
-		//(val)->type=TYP_FLT; 
-		//char* strptr=(val)->gString(); 
-		//(val)->Float=astof(&strptr); 
-		//if(*strptr) 
-		//	ERROR1(NON_NUMBER); 
 	} else if((val)->type==TYP_ERR) {
 		ERROR2(val); 
 	} else if((val)->type==0) { 
 		(val)->type=TYP_INT; 
-		(val)->Int=0; 
+		(val)->sInt(0); 
 	} else 
 		ERROR1(NON_NUMBER);
 }
@@ -182,23 +145,12 @@ void TO_STR(struct value* val)
 	if((val)->type==TYP_STR)	
 		;	
 	else if((val)->type==TYP_INT) {	
-		//(val)->type=TYP_STR;	
-		//char* s = (char*) eval_mem.gimme(30);
-		//sprintf(s,"%ld",(val)->Int); 
-		//(val)->sString(s);	
 		val->sString(format("%ld", val->gInt()));
 	} else if((val)->type==TYP_FLT) {		
-		//char *s=flt_to_str((val)->Float);		
-		//char *s1 = (char*) eval_mem.gimme(strlen(s)+1);
-		//strcpy(s1, s);		
-		//(val)->type=TYP_STR;
 		val->sString(flt_to_str(val->gFlt()));
 	} else if((val)->type==TYP_ERR) {		
 		ERROR2(val);	
 	} else if((val)->type==0) {	
-		//(val)->type=TYP_STR;	
-		//val->String = (char*) eval_mem.gimme(1);
-		//val->String[0] = '\0';
 		val->sString("");
 	} else 
 		ERROR1(NON_STRING);
@@ -237,10 +189,30 @@ void PUSH_ANY(struct value* value_ptr, cell* cp)
 {
 	if(!cp || !GET_TYP(cp)) {		
 		value_ptr->type=TYP_NUL;			
-		value_ptr->Int=0;			
 	} else {				
-		value_ptr->type=GET_TYP(cp);		
-		value_ptr->x=cp->get_c_z();			
+		switch(GET_TYP(cp)) {
+			case TYP_NUL:
+				value_ptr->type = TYP_NUL;
+				break;
+			case TYP_FLT:
+				value_ptr->sFlt(cp->gFlt());
+				break;
+			case TYP_INT:
+				value_ptr->sInt(cp->gInt());
+				break;
+			case TYP_STR:
+				value_ptr->sString(cp->gString());
+				break;
+			case TYP_ERR:
+				value_ptr->sErr(cp->gErr());
+				break;
+			case TYP_RNG:
+				value_ptr->sRng(cp->gRng());
+				break;
+			default:
+				panic("eval.cc:PUSH_ANY unhandled type");
+
+		}
 	}
 }
 
@@ -283,8 +255,6 @@ static void do_math_binop(int op, struct value* p1, struct value* p2)
 		default:
 			assert(false);
 	}
-
-       //	= std::plus<double>(v1, v2);
 
 	ValType t = TYP_INT;
 	if(std::nearbyint(v3) != v3) t = TYP_FLT;
@@ -419,17 +389,12 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 			//strptr = value_ptr->gString();
 			if ((value_ptr + 1)->type == TYP_INT)
 			{
-				//value_ptr->type = TYP_INT;
-				//value_ptr->Int = astol (&strptr);
 				value_ptr->sInt(to_long(s, ok));
 			}
 			else
 			{
-				//value_ptr->type = TYP_FLT;
-				//value_ptr->Float = astof (&strptr);
 				value_ptr->sFlt(to_double(s, ok));
 			}
-			//if (*strptr)
 			if(!ok)
 			{
 				value_ptr->sBol((byte == NOTEQUAL));
@@ -440,12 +405,10 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		{
 		       	bool ok = false ;
 			const char* s = (value_ptr+1)->gString();
-			//strptr = (value_ptr + 1)->gString();
 			if (value_ptr->type == TYP_INT)
 				(value_ptr + 1)->sInt(to_long(s, ok));
 			else
 				(value_ptr + 1)->sFlt(to_double(s, ok));
-			//if (*strptr)
 			if(!ok)
 			{
 				value_ptr->sBol(byte == NOTEQUAL);
@@ -457,18 +420,17 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		}
 		else if (value_ptr->type == TYP_INT)
 		{
-			value_ptr->type = TYP_FLT;
-			value_ptr->Float = (double) value_ptr->Int;
+			value_ptr->sFlt((double) value_ptr->gInt());
 		}
 		else
-			(value_ptr + 1)->Float = (double) (value_ptr + 1)->Int;
+			(value_ptr + 1)->sFlt((double) (value_ptr + 1)->gInt());
 	}
 	if (value_ptr->type == TYP_STR)
 		tmp = strcmp (value_ptr->gString(), (value_ptr + 1)->gString());
 	else if (value_ptr->type == TYP_FLT)
-		tmp = (value_ptr->Float < (value_ptr + 1)->Float) ? -1 : ((value_ptr->Float > (value_ptr + 1)->Float) ? 1 : 0);
+		tmp = (value_ptr->gFlt() < (value_ptr + 1)->gFlt()) ? -1 : ((value_ptr->gFlt() > (value_ptr + 1)->gFlt()) ? 1 : 0);
 	else if (value_ptr->type == TYP_INT)
-		tmp = (value_ptr->Int < (value_ptr + 1)->Int ? -1 : ((value_ptr->Int > (value_ptr + 1)->Int) ? 1 : 0));
+		tmp = (value_ptr->gInt() < (value_ptr + 1)->gInt() ? -1 : ((value_ptr->gInt() > (value_ptr + 1)->gInt()) ? 1 : 0));
 	else if (value_ptr->type == 0)
 		tmp = 0;
 	else
@@ -476,7 +438,6 @@ static void compare_values(const unsigned byte, struct value *value_ptr)
 		tmp = 0;
 		panic ("Bad type value %d", value_ptr->type);
 	}
-	//value_ptr->type = TYP_BOL;
 	if (tmp < 0)
 		value_ptr->sBol(byte == NOTEQUAL || byte == LESS || byte == LESSEQ);
 	else if (tmp == 0)
@@ -492,7 +453,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 {
 	cell* cell_ptr;
 	char *strptr;
-	//struct value *value_ptr = 0;
 	switch (byte) {
 		case IF_L:
 		case F_IF_L:
@@ -558,17 +518,25 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case CONST_FLT:
-			value_ptr->type = TYP_FLT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), 
-					sizeof (double));
-			expr += sizeof (double);
+			{
+				//value_ptr->type = TYP_FLT;
+				//bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Float)), sizeof (double));
+				double* fp = (double *) expr;
+				double f = *fp;
+				value_ptr->sFlt(f);
+				expr += sizeof (double);
+			}
 			break;
 
 		case CONST_INT:
-			value_ptr->type = TYP_INT;
-			bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), 
-					sizeof (long));
-			expr += sizeof (long);
+			{
+				//value_ptr->type = TYP_INT;
+				//bcopy ((VOIDSTAR) expr, (VOIDSTAR) (&(value_ptr->Int)), sizeof (long));
+				int* i1 = (int*) expr;
+				int i2 = *i1;
+				value_ptr->sInt(i2);
+				expr += sizeof (long);
+			}
 			break;
 
 		case CONST_STR:
@@ -585,7 +553,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case CONST_NINF:
 		case CONST_NAN:
 			value_ptr->type = TYP_FLT;
-			value_ptr->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN);
+			value_ptr->sFlt((byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : NAN));
 			break;
 
 		case VAR:
@@ -613,8 +581,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 						}
 						else
 						{
-							value_ptr->type = TYP_RNG;
-							value_ptr->Rng = varp->v_rng;
+							value_ptr->sRng(varp->v_rng);
 						}
 						break;
 #ifdef TEST
@@ -657,9 +624,11 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case RANGE | LCREL:
 		case RANGE | LCREL | HCREL:
 		case RANGE | HCREL:
-			value_ptr->type = TYP_RNG;
-			GET_RNG (expr, &(value_ptr->Rng));
-			expr += EXP_ADD_RNG;
+			{
+				rng_t* rng = (rng_t*) expr;
+				value_ptr->sRng(*rng);
+				expr += EXP_ADD_RNG;
+			}
 			break;
 
 		case F_TRUE:
@@ -668,19 +637,16 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case F_PI:
-			value_ptr->type = TYP_FLT;
-			value_ptr->Float = pi;
+			value_ptr->sFlt(std::acos(-1));
 			break;
 
 		case F_ROW:
 		case F_COL:
-			value_ptr->type = TYP_INT;
-			value_ptr->Int = ((byte == F_ROW) ? cur_row : cur_col);
+			value_ptr->sInt(((byte == F_ROW) ? cur_row : cur_col));
 			break;
 
 		case F_NOW:
-			value_ptr->type = TYP_INT;
-			value_ptr->Int = time (nullptr);
+			value_ptr->sInt(time (nullptr));
 			break;
 
 			/* Single operand instrs */			
@@ -690,9 +656,9 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (value_ptr->type == TYP_ERR)
 				break;
 			if (value_ptr->type == TYP_INT)
-				value_ptr->Int = -(value_ptr->Int);
+				value_ptr->sInt(-(value_ptr->gInt()));
 			else if (value_ptr->type == TYP_FLT)
-				value_ptr->Float = -(value_ptr->Float);
+				value_ptr->sFlt(-(value_ptr->gFlt()));
 			else
 				throw_valerr(NON_NUMBER, value_ptr);
 			break;
@@ -705,9 +671,7 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 		case F_ROWS:
 		case F_COLS:
 			value_ptr->type = TYP_INT;
-			value_ptr->Int = 1 + (byte == F_ROWS ? 
-					(value_ptr->Rng.hr - value_ptr->Rng.lr) 
-					: (value_ptr->Rng.hc - value_ptr->Rng.lc));
+			value_ptr->sInt(1 + (byte == F_ROWS ?  (value_ptr->gRng().hr - value_ptr->gRng().lr) : (value_ptr->gRng().hc - value_ptr->gRng().lc)));
 			break;
 
 			/* Two operand cmds */
@@ -715,11 +679,9 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			{
 				double (*funp2) (double, double);
 				funp2 = (double (*)(double, double)) (f->fn_fun);
-
-				value_ptr->Float = (*funp2) (value_ptr->Float, 
-						(value_ptr + 1)->Float);
-				if (value_ptr->Float != value_ptr->Float)
-					throw_valerr(OUT_OF_RANGE, value_ptr);
+				double f = (*funp2) (value_ptr->gFlt(), (value_ptr + 1)->gFlt());
+				value_ptr->sFlt(f);
+				//if (value_ptr->Float != value_ptr->Float) throw_valerr(OUT_OF_RANGE, value_ptr);
 			}
 			break;
 
@@ -741,16 +703,15 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			break;
 
 		case F_FIXED:
-			tmp = (value_ptr + 1)->Int;
+			tmp = (value_ptr + 1)->gInt();
 			if (tmp < -29 || tmp > 29)
 				throw_valerr(OUT_OF_RANGE, value_ptr);
 			if (tmp < 0) {
-				num_t f1 = (value_ptr->Float) / exp10_arr[-tmp];
+				num_t f1 = (value_ptr->gFlt()) / exp10_arr[-tmp];
 				num_t f2 = rintn(f1);
-				//num f3 = f2 * exp10_arr[-tmp];
-				value_ptr->Float = rintn (f2) * exp10_arr[-tmp];
+				value_ptr->sFlt(rintn (f2) * exp10_arr[-tmp]);
 			} else {
-				value_ptr->Float = rintn ((value_ptr->Float) * exp10_arr[tmp]) / exp10_arr[tmp];
+				value_ptr->sFlt(rintn ((value_ptr->gFlt()) * exp10_arr[tmp]) / exp10_arr[tmp]);
 			}
 			break;
 
@@ -758,8 +719,6 @@ static void switch_by_byte(unsigned char &byte, unsigned &numarg, int &tmp,
 			if (value_ptr->type == TYP_ERR)
 				*value_ptr = *(value_ptr + 1);
 			break;
-
-
 
 		case CONCAT:
 			{
@@ -799,13 +758,10 @@ eval_expression (unsigned char *expr)
 	unsigned jumpto = 0;
 	function_t *f;
 	struct value *value_ptr = 0;
-	//char *strptr;
 	int tmp;
 
 	CELLREF lrow, hrow, crow;
 	CELLREF lcol, hcol, ccol;
-
-	//cell* cell_ptr;
 
 	curstack = 0;
 	while ((byte = *expr++) != ENDCOMP)
@@ -909,11 +865,6 @@ next_byte:
 	return eval_stack;
 }
 
-/* These helper functions were split out so that eval_expression would compile
-   under Turbo C 2.0 on my PC.
- */
-
-
 static int cnt_flt;
 static int cnt_int;
 
@@ -937,50 +888,39 @@ math_sig ( int sig)
 
 /* Here's the entry point for this module. */
 void
-update_cell(CELL *cell)
+cell::update_cell()
 {
-	//mem eval_mem(true);
-	struct value *newv;
-	int new_val;
+	struct value *newv = eval_expression(this->get_bytecode());
 
-	newv = eval_expression (cell->get_cell_formula());
-	if (!newv)
-	{
-		push_refs(cell);
+	if (!newv) {
+		push_refs(this);
 		return;
 	}
 
-	cell->cell_cycle = current_cycle;
-	if (newv->type != GET_TYP (cell)) {
-		SET_TYP (cell, newv->type);
+	int new_val = 0; 
+	cell_cycle = current_cycle;
+	if (newv->type != GET_TYP (this)) {
+		this->set_type(newv->type);
 		new_val = 1;
-		// TODO mcarter 2019-01-20 seems highly suspicious, and leaky:
-		//if (newv->type == TYP_STR) newv->String = strdup (newv->String);
 	} else {
 		switch (newv->type) {
 			case 0:
 				new_val = 0;
 				break;
 			case TYP_FLT:
-				new_val = newv->Float != cell->gFlt();
+				new_val = newv->gFlt() != this->gFlt();
 				break;
 			case TYP_INT:
-				new_val = newv->Int != cell->gInt();
+				new_val = newv->gInt() != this->gInt();
 				break;
 			case TYP_STR:
-				new_val = strcmp (newv->gString(), cell->gString());
-				/*
-				if (new_val)
-				{
-					newv->String = strdup (newv->String); // TODO seems leaky
-				}
-				*/
+				new_val = strcmp (newv->gString(), this->gString());
 				break;
 			case TYP_BOL:
-				new_val = newv->gBol() != cell->gBol();
+				new_val = newv->gBol() != this->gBol();
 				break;
 			case TYP_ERR:
-				new_val = newv->gBol() != cell->gErr();
+				new_val = newv->gBol() != this->gErr();
 				break;
 			default:
 				new_val = 0;
@@ -990,13 +930,8 @@ update_cell(CELL *cell)
 		}
 	}
 
-	if (new_val)
-	{
-		cell->set_c_z(newv->x);
-		//if(is_string(newv) free(newv->x);
-		push_refs(cell);
-	}
-	//(void) obstack_free (&tmp_mem, tmp_mem_start);
+	if(!new_val) return;
+	this->x = newv->x;
+	push_refs(this);
+	
 }
-
-

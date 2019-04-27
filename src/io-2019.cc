@@ -10,13 +10,17 @@
 #include <panel.h>
 
 #include "basic.h"
-#include "decompile.h"
+#include "cmd.h"
+#include "convert.h"
+#include "eval.h"
 #include "io-2019.h"
 #include "io-headless.h"
 #include "io-utils.h"
 #include "logging.h"
-#include "mem.h"
+//#include "mem.h"
 #include "ref.h"
+#include "regions.h"
+#include "sheet.h"
 #include "window.h"
 
 using std::cout;
@@ -163,11 +167,9 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 
 void edit_cell2019()
 {
-	std::string formula = decompile();
-	//strcpy_c text{formula};
+	std::string formula{ formula_text(curow, cucol)};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
-	//const char* newformula = frm.text();
 	edit_cell_str(formula);
 	recalculate(1);
 }
@@ -181,12 +183,18 @@ static void cursor_right() { io_shift_cell_cursor(2, 1); }
 static void cursor_down()  { io_shift_cell_cursor(1, 1); }
 static void cursor_up()    { io_shift_cell_cursor(0, 1); }
 
+// TODO this may be more useful that you think
+static void clear_cell_formula()
+{
+	edit_cell_str("");
+	recalculate(1);
+}
 
 void process_key(const keymap_t& keymap)
 {
 	int c = getch();
 	auto search = keymap.find(c);
-	if(search == keymap.end()) return;
+	if(search == keymap.end()) { beep(); return; }
 	auto fn = search->second;
 	fn();
 }
@@ -204,7 +212,7 @@ void main_command_loop_for2019()
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 		{'=', 		edit_cell2019},
 		{'r',		row_cmd2019},
-		{KEY_DC, 	kill_cell_cmd}, // the delete key
+		{KEY_DC, 	clear_cell_formula}, // delete key
 		{KEY_DOWN,	cursor_down},
 		{KEY_LEFT,  	cursor_left},
 		{KEY_RIGHT, 	cursor_right},
@@ -261,12 +269,23 @@ void io_error_msg2019_str(const std::string& str)
 
 static void delete_1row() { delete_row(1); }
 
+static void paste_1row() 
+{ 
+	std::string response;
+	if(!invoke_std_form("Row to copy from?", response)) return;
+	bool ok;
+	long src = to_long(response, ok);
+	if(!ok) { beep(); return;}
+	copy_row(src);
+}
+
 // user has typed 'r' to perform a row action. This function
 // decides which one it is
 static void row_cmd2019(){
 	static auto keymap = std::map<int, fn_t> {		
 		{'d', delete_1row},
-		{'i', insert_1row}
+		{'i', insert_1row},
+		{'p', paste_1row}
 	};
 
 	process_key(keymap);

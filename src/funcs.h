@@ -130,4 +130,3 @@ extern struct cmd_func **the_funcs;
 
 extern int find_function (int * vec_out, struct cmd_func ** cmd_out, const char * name, int len);
 extern void init_named_macro_strings (void);
-extern void name_macro_string (char * name, char * str);

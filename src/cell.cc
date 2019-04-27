@@ -27,7 +27,6 @@
 
 #include "byte-compile.h"
 #include "cmd.h"
-#include "decompile.h"
 #include "eval.h"
 #include "errors.h"
 #include "format.h"
@@ -39,6 +38,7 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
+#include "xcept.h"
 
 using std::cerr;
 using std::cout;
@@ -62,9 +62,13 @@ cell::cell(coord_t coord) :coord(coord)
 {
 }
 
-formula_t cell::get_cell_formula()
+formula_t cell::get_bytecode()
 { 
-	return cell_formula; 
+	if(!bytecode)
+		bytecode = parse_and_compile(this);
+
+	return bytecode;
+	//return cell_formula; 
 }
 
 value cell::get_value()
@@ -86,22 +90,39 @@ bool cell::locked() const
 	return cell_flags.cell_lock;
 }
 
+/*
 formula_t cell::set_cell_formula(formula_t newval)
 { 
 	cell_formula = newval ;  
 	return cell_formula; 
 }
+*/
+
+void cell::recompute_bytecode()
+{
+	ASSERT_UNCALLED();
+	//this->reset();
+	//this->set_cell_formula(parse_and_compile(this));
+}
+void cell::invalidate_bytecode()
+{
+	reset();
+}
+
+void cell::set_row(CELLREF r)
+{
+	this->coord = to_coord(r, get_col(this));
+	this->invalidate_bytecode(); // due to relative referencing issues
+}
 
 void cell::reset()
 {
-	free_nonempty_str(&cell_formula);
-	//if(cell_formula) free(cell_formula);
-	//cell_formula = 0;
+	clear_bytecode();
 }
 
-void cell::clear_formula()
+void cell::clear_bytecode()
 {
-	cell_formula = nullptr;
+	free_nonempty_str(&bytecode);
 }
 
 void cell::clear_flags()
@@ -120,6 +141,17 @@ bool cell::zeroed_1()
 
 }
 
+void cell::set_formula_text(const std::string& str)
+{
+	if(str ==formula_text) return;
+	formula_text = str;
+	invalidate_bytecode();
+}
+
+std::string cell::get_formula_text() const
+{
+	return formula_text;
+}
 cell::~cell()
 {
 	magic = 0x0DEFACED; // see TR06
@@ -132,9 +164,9 @@ void copy_cell_stuff (cell* src, cell* dest)
 {
 	dest->cell_flags = src->cell_flags;
 	dest->cell_refs_to = src->cell_refs_to;
-	dest->set_cell_formula(src->get_cell_formula());
+	dest->set_formula_text(src->get_formula_text());
 	dest->cell_cycle = src->cell_cycle;
-	dest->set_c_z(src->get_c_z());
+	dest->set_formula_text(src->get_formula_text());
 }
 
 bool 
@@ -145,16 +177,18 @@ vacuous(cell* cp)
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
-	//log_debug_1("set_cell_input:r:" + std::to_string(r) + ":c:" + std::to_string(c) + ":new_input:" + new_input);
-	new_value(r, c, new_input.c_str());
+	curow = r;
+	cucol = c;
+	edit_cell_str(new_input);
 }
 
 std::string
 get_cell_formula_at(int r, int c)
 {
+	return formula_text(r, c);
 
-	std::string res = decomp_str(r, c);
-	return res;
+	//std::string res = decomp_str(r, c);
+	//return res;
 }
 
 
@@ -182,6 +216,8 @@ int init_cells_function_count(void)
 
 void edit_cell (const char* input)
 {
+	CELL* cp = find_or_make_cell(curow, cucol);
+	cp->set_formula_text(input);
 	new_value(curow, cucol, input);
 }
 
@@ -219,6 +255,11 @@ ws_extent()
 }
 
 
+std::string formula_text(CELLREF r, CELLREF c){
+	CELL* cp = find_cell(r, c);
+	if(cp==nullptr) return "";
+	return cp->get_formula_text();
+}
 //////////////////////////////////////////////////////////////////////
 // for copying and pasting cells
 
@@ -228,13 +269,12 @@ static std::string m_copied_cell_formula = "";
 void
 copy_this_cell_formula()
 {
-	m_copied_cell_formula = decomp_str(curow, cucol);
+	m_copied_cell_formula = formula_text(curow, cucol);
 }
 
 void 
 paste_this_cell_formula()
 {	
-	//edit_cell_at(curow, cucol, m_copied_cell_formula.c_str());
 	set_cell_input(curow, cucol, m_copied_cell_formula.c_str());
 }
 

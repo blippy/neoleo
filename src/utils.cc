@@ -376,20 +376,6 @@ size_stack ( void *bb)
 	return b->used;
 }
 
-/* mcarter
-#ifndef HAVE_STRDUP
-char *
-strdup (str)
-const char *str;
-{
-char *ret;
-
-ret = (char *) ck_malloc (strlen (str) + 2);
-strcpy (ret, str);
-return ret;
-}
-#endif
-*/
 
 /*
  * stricmp - compare string s1 to s2, ignoring case

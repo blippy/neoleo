@@ -31,6 +31,7 @@
 #include "io-utils.h"
 #include "format.h"
 #include "utils.h"
+#include "xcept.h"
 
 
 /* These commands define the syntax and editting modes of command arguments.
@@ -47,6 +48,7 @@
 	const char *
 char_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	if (!**end)
 		return "No character specified";
 	else
@@ -68,6 +70,7 @@ char_verify (char ** end, struct command_arg * arg)
 	const char *
 symbol_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	char * e = *end;
 	char * start = *end;
 	if (isalpha (*e) || (*e == '-') || (*e == '_') || (*e == (Global->a0 ? '$' : ':')))
@@ -97,6 +100,7 @@ bad_symbol:
 	const char *
 word_verify ( char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	char * e = *end;
 	char * start = *end;
 	if (!isspace (*e))
@@ -122,6 +126,7 @@ word_verify ( char ** end, struct command_arg * arg)
 	void
 symbol_destroy (struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	if (arg->val.string)
 		ck_free (arg->val.string);
 }
@@ -129,6 +134,7 @@ symbol_destroy (struct command_arg * arg)
 	const char *
 command_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	const char * error = symbol_verify (end, arg);
 	char * str;
 	if (error)
@@ -144,6 +150,7 @@ command_verify (char ** end, struct command_arg * arg)
 	const char * 
 read_file_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	FILE * fp = xopen_with_backup (arg->text.buf, "r");
 	*end = 0;
 	if (!fp)
@@ -161,6 +168,7 @@ read_file_verify (char ** end, struct command_arg * arg)
 	void
 read_file_destroy (struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	int num;
 	num = xclose (arg->val.fp);
 	if (num)
@@ -172,6 +180,7 @@ read_file_destroy (struct command_arg * arg)
 	const char * 
 write_file_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	FILE * fp = xopen_with_backup (arg->text.buf, "w");
 	*end = 0;
 	if (!fp)
@@ -189,6 +198,7 @@ write_file_verify (char ** end, struct command_arg * arg)
 	void
 write_file_destroy (struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	int num;
 
 	num = xclose (arg->val.fp);
@@ -204,6 +214,7 @@ write_file_destroy (struct command_arg * arg)
 	const char *
 keyseq_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	*end = 0;
 	return 0;
 }
@@ -212,6 +223,7 @@ keyseq_verify (char ** end, struct command_arg * arg)
 	const char *
 keymap_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	char * start = *end;
 	const char * error = symbol_verify (end, arg);
 	int id;
@@ -226,6 +238,7 @@ keymap_verify (char ** end, struct command_arg * arg)
 	const char *
 number_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	char * e = *end;
 
 	while (*e && isspace (*e))
@@ -261,6 +274,7 @@ number_verify (char ** end, struct command_arg * arg)
 	const char *
 double_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	char * e = *end;
 
 	while (*e && isspace (*e))
@@ -278,6 +292,7 @@ double_verify (char ** end, struct command_arg * arg)
 	const char * 
 range_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	union command_arg_val * val = &arg->val;
 	*end = arg->text.buf;
 	if (get_abs_rng (end, &val->range))
@@ -289,6 +304,7 @@ range_verify (char ** end, struct command_arg * arg)
 	const char * 
 string_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	arg->val.string = arg->text.buf;
 	*end = 0;
 	return 0;
@@ -302,6 +318,7 @@ string_verify (char ** end, struct command_arg * arg)
 	const char * 
 yes_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	if (words_imatch (end, "no"))
 	{
 		pop_unfinished_command ();
@@ -319,42 +336,17 @@ yes_verify (char ** end, struct command_arg * arg)
 	const char *
 incremental_cmd_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	return 0;
 }
 
 
-	const char *
-menu_verify (char ** end, struct command_arg * arg)
-{
-	const char * error = char_verify (end, arg);
-	if (error)
-		return error;
-
-	{
-		int pick = arg->val.integer;
-		char * key = arg->arg_desc + 1;
-		while (*key && (*key != ']'))
-		{
-			if (*key == '\\')
-			{
-				++key;
-				if (!*key)
-					break;
-			}
-			if (pick == *key)
-				return 0;
-			else
-				++key;
-		}
-		setn_edit_line ("", 0);
-		return "No such menu option.";
-	}
-}
 
 
 	const char *
 format_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	arg->val.integer = str_to_fmt (*end);
 	if (arg->val.integer < 0)
 		return "Unknown format.";
@@ -366,5 +358,6 @@ format_verify (char ** end, struct command_arg * arg)
 	const char *
 noop_verify (char ** end, struct command_arg * arg)
 {
+	ASSERT_UNCALLED();
 	return 0;
 }

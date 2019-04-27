@@ -11,6 +11,7 @@
 //#include <functional>
 #include <iostream>
 #include <map>
+#include <set>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -18,11 +19,14 @@
 
 
 #include "neotypes.h"
+#include "basic.h"
+#include "byte-compile.h"
 #include "cell.h"
-#include "decompile.h"
+#include "eval.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "mem.h"
+#include "ref.h"
 #include "sheet.h"
 
 using std::cout;
@@ -51,14 +55,14 @@ coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
 int get_row(coord_t coord) { return coord & 0xFF; }
 
-int get_col(CELL* cp) 
+int get_col(const CELL* cp) 
 { 
 	//coord_t coord; 
 	CELLREF r,c;
 	decoord(cp, r, c); 
 	return c;
 }
-int get_row(CELL* cp)
+int get_row(const CELL* cp)
 { 
 	//coord_t coord; 
 	CELLREF r,c;
@@ -67,7 +71,7 @@ int get_row(CELL* cp)
 }
 
 
-void decoord(CELL* cp, CELLREF& r, CELLREF& c)
+void decoord(const CELL* cp, CELLREF& r, CELLREF& c)
 {
 	coord_t coord = cp->coord;
 	assert(coord);
@@ -226,21 +230,25 @@ void dump_sheet()
 		cout << "Row: " << get_row(cp) << "\n";
 		value val = cp->get_value();
 		cout << "Val: " << stringify_value_file_style(&val) << "\n";
-		cout << "Frm: " << decomp_formula(cp) << "\n";
+		cout << "Frm: " << cp->get_formula_text() << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";
 }
 
-void bump_row(CELLREF row, int increment)
+
+void 
+bump_row (CELLREF row, int increment)
 {
-	for(CELL* cp : the_cells) {
-		CELLREF r, c;
-		decoord(cp, r, c);		
-		if(r < row) continue;
-		coord_t coord = to_coord(r+increment, c);
-		cp->coord = coord;
+	if(increment == 0) return;
+
+	for(CELL* cp: the_cells) {
+		if(get_row(cp)<row || cp == nullptr) continue;
+		auto r = get_row(cp);
+		cp->set_row(r+increment);
 	}
+
+	//recalculate(1); // this doesn't help
 	Global->modified = 1;
 }
 
