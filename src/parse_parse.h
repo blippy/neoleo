@@ -9,7 +9,10 @@ inline char *instr = 0;
 inline int parse_error = 0;
 #define YYREGSTYPE struct node*
 
-//int yyparse_parse(const std::string& input, mem& yymem);
+inline YYREGSTYPE  parse_return;
+YYREGSTYPE make_list (YYREGSTYPE, YYREGSTYPE);
+
+int yyparse_parse(const std::string& input, mem_c& yymem);
 void add_parse_hash(const char* name, function_t* func);
 void* alloc_parsing_memory(size_t nbytes);
 

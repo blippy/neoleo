@@ -29,6 +29,7 @@ neoleo_SOURCES = \
 		 line.cc logging.cc \
 		 mem.cc \
 		 oleofile.cc \
+		 parse_parse.cc \
 		 ref.cc regions.cc \
 		 sheet.cc sort.cc spans.cc stringo.cc \
 		 tbl.cc \
