@@ -1,7 +1,5 @@
 %{
 /*
- * $Id: parse.y,v 1.11 2001/02/04 00:03:48 pw Exp $
- *
  * Copyright (C) 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
  *
  * This file is part of Oleo, the GNU Spreadsheet.
@@ -302,11 +300,6 @@ make_list (YYSTYPE car, YYSTYPE cdr)
 	ret->n_x.v_subs[1]=cdr;
 	return ret;
 }
-
-
-//extern struct node *yylval;
-
-unsigned char parse_cell_or_range (char **,struct rng *);
 
 
 /* create a sentinel to check that yyparse() is only called
