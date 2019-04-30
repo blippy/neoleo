@@ -70,6 +70,8 @@ void yyregerror (std::string_view s);
 
 void check_parser_called_correctly();
 
+
+
 %}
 %%
 top: line { check_parser_called_correctly(); }
@@ -107,6 +109,7 @@ exp:	  L_CONST
 		($1)->n_x.v_subs[1]=$3;
 		$$=$1; }
 	| L_FN1R '(' L_RANGE ')' {
+		parse_range($3);
 		$1->n_x.v_subs[0]=$3;
 		$$=$1; }
 	| L_FN1R '(' L_VAR ')' {
@@ -114,6 +117,7 @@ exp:	  L_CONST
 		$$=$1; }
 
 	| L_FN2R '(' L_RANGE ',' exp ')' {
+		parse_range($3);
 		$1->n_x.v_subs[0]=$3;
 		$1->n_x.v_subs[1]=$5;
 		$$=$1; }
@@ -123,6 +127,7 @@ exp:	  L_CONST
 		$$=$1; }
 
 	| L_FN3R '(' L_RANGE ',' exp ',' exp ')' {
+		parse_range($3);
 		($1)->n_x.v_subs[0]=make_list($3,$5);
  		($1)->n_x.v_subs[1]=$7;
  		$$=$1;}
@@ -132,6 +137,7 @@ exp:	  L_CONST
  		$$=$1;}
 
 	| L_FN4R '(' L_RANGE ',' exp ',' exp ',' exp ')' {
+		parse_range($3);
 		($1)->n_x.v_subs[0]=make_list($3,$5);
  		($1)->n_x.v_subs[1]=make_list($7,$9);
  		$$=$1;}

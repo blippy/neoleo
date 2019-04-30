@@ -1,0 +1,10 @@
+set-option noa0
+
+i
+12
+13.1
+sum(r1:2c1)
+.
+dump-sheet
+w
+q

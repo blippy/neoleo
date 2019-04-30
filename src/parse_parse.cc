@@ -1,8 +1,10 @@
 // scanner support routines
 
 #include <cstring>
+#include <sstream>
 
 #include "parse_parse.h"
+#include "logging.h"
 
 extern int yyregparse();
 
@@ -85,6 +87,7 @@ int yyparse_parse(const std::string& input, mem_c& yymem)
 	_mem_ptr = &yymem;
 	_mem_ptr->auto_release();
 	//int ret = yyparse();
+	clear_parse_prec_cells();
 	int ret = yyregparse();
 	allow_yyparse = false;	
 	return ret;
@@ -94,4 +97,26 @@ int yyparse_parse(const std::string& input)
 {
 	mem_c yymem;
 	return yyparse_parse(input, yymem);
+}
+
+std::string to_string(const rng_t& rng)
+{
+	std::ostringstream ss;
+        ss << "{" << rng.lr << ", " << rng.lc << ", " << rng.hr << ", " << rng.hc << "}";
+	return std::move(ss).str();
+}
+
+static std::set<coord_t> m_prec_cells;
+
+void clear_parse_prec_cells() { m_prec_cells.clear(); }
+std::set<coord_t> get_parse_prec_cells() { return m_prec_cells; }
+
+void parse_range(struct node* n)
+{
+	const rng_t& rng = n->n_x.v_rng;
+	for(int r= rng.lr ; r <= rng.hr; ++r)
+		for(int c= rng.lc; c <= rng.hc; ++c)
+			m_prec_cells.insert(to_coord(r, c));
+	//log_debug("parse_range: " + to_string(rng));
+
 }

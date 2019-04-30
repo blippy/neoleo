@@ -28,6 +28,7 @@
 #include <cassert>
 #include <cstdint>
 #include <cstddef>
+#include <set>
 #include <string>
 #include <variant>
 
@@ -92,6 +93,7 @@ class cell : public value
 	public:
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
+		std::set<coord_t> prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		struct ref_to *cell_refs_to = nullptr;
 		void update_cell();
 

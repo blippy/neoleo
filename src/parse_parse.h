@@ -1,9 +1,12 @@
 #pragma once
+
+#include <set>
 #include <string>
 
 #include "eval.h"
 #include "mem.h"
 #include "node.h"
+#include "sheet.h"
 
 inline char *instr = 0;
 inline int parse_error = 0;
@@ -29,3 +32,6 @@ class FormulaParser {
 		node* m_root = nullptr;
 };
 
+void parse_range(struct node* n);
+void clear_parse_prec_cells();
+std::set<coord_t> get_parse_prec_cells();

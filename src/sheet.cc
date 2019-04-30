@@ -231,6 +231,8 @@ void dump_sheet()
 		value val = cp->get_value();
 		cout << "Val: " << stringify_value_file_style(&val) << "\n";
 		cout << "Frm: " << cp->get_formula_text() << "\n";
+		for(const auto& prec: cp->prec_cells)
+			cout << "Prec: R" << get_row(prec) << "C" << get_col(prec) << "\n";
 		cout << "\n";
 	}
 	cout << "--- dump_sheet:end ---\n";
