@@ -225,16 +225,7 @@ exit_c exit_cells(delete_all_cells);
 void dump_sheet()
 {
 	cout << "--- dump_sheet:begin ---\n";
-	for(CELL* cp:the_cells) {
-		cout << "Col: " << get_col(cp) << "\n";
-		cout << "Row: " << get_row(cp) << "\n";
-		value val = cp->get_value();
-		cout << "Val: " << stringify_value_file_style(&val) << "\n";
-		cout << "Frm: " << cp->get_formula_text() << "\n";
-		for(const auto& prec: cp->prec_cells)
-			cout << "Prec: R" << get_row(prec) << "C" << get_col(prec) << "\n";
-		cout << "\n";
-	}
+	for(CELL* cp:the_cells) cp->dump_cell();
 	cout << "--- dump_sheet:end ---\n";
 }
 

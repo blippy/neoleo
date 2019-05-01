@@ -725,7 +725,7 @@ parse_and_compile_1 (cell* cp, const char *string, mem_c& the_mem)
 
 	FormulaParser yy;
 	bool ok = yy.parse(string);
-	cp->prec_cells = get_parse_prec_cells();
+	cp->set_refs(get_parse_prec_cells());
 	//if (yyparse_parse(string, the_mem) || parse_error)
 	if(!ok)
 	{

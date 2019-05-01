@@ -33,6 +33,7 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "io-term.h"
+#include "io-utils.h"
 #include "sheet.h"
 #include "logging.h"
 #include "ref.h"
@@ -152,6 +153,40 @@ std::string cell::get_formula_text() const
 {
 	return formula_text;
 }
+		
+void cell::set_refs(const crefs_t& coords)
+{
+	// TODO remove deps of old  precs
+
+	prec_cells = coords;
+
+	// this cell's prec becomes the other cells deps.
+	for(auto& coord: coords) {
+		cell* other = find_or_make_cell(coord);
+		other->dep_cells.insert(this->coord);
+	}
+		
+}
+
+void cell::dump_cell()
+{
+	cout << "Col: " << get_col(this) << "\n";
+	cout << "Row: " << get_row(this) << "\n";
+	value val = get_value();
+	cout << "Val: " << stringify_value_file_style(&val) << "\n";
+	cout << "Frm: " << get_formula_text() << "\n";
+
+
+	auto dump_coords = [](string field, crefs_t& coords) {
+		for(const auto& coord: coords)
+			cout << field << ": R" << get_row(coord) << "C" << get_col(coord) << "\n";
+	};
+	dump_coords("Dep", dep_cells);
+	dump_coords("Prec", prec_cells);
+
+	cout << "\n";
+}
+
 cell::~cell()
 {
 	magic = 0x0DEFACED; // see TR06

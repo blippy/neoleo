@@ -42,6 +42,7 @@ typedef uint32_t coord_t;
 #include "value.h"
 
 
+typedef std::set<coord_t> crefs_t;
 
 
 constexpr auto JST_DEF = 0;
@@ -89,15 +90,18 @@ class cell : public value
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
+		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
+		crefs_t dep_cells; // other formula locations pointing to this cell
 
 	public:
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
-		std::set<coord_t> prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		struct ref_to *cell_refs_to = nullptr;
 		void update_cell();
+		void dump_cell();
 
 		coord_t coord;
+		void set_refs(const crefs_t& coords);
 		//CELLREF get_row() const;
 		//CELLREF get_col() const;
 		void set_row(CELLREF r);
