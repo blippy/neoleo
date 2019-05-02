@@ -63,6 +63,12 @@ cell::cell(coord_t coord) :coord(coord)
 {
 }
 
+void cell::reparse()
+{
+	// TODO this doesn't work properly
+	// parse_and_compile(this);
+}
+
 formula_t cell::get_bytecode()
 { 
 	if(!bytecode)

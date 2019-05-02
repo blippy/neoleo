@@ -99,6 +99,7 @@ class cell : public value
 		struct ref_to *cell_refs_to = nullptr;
 		void update_cell();
 		void dump_cell();
+		void reparse();
 
 		coord_t coord;
 		void set_refs(const crefs_t& coords);

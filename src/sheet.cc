@@ -241,6 +241,9 @@ bump_row (CELLREF row, int increment)
 		cp->set_row(r+increment);
 	}
 
+	for(CELL* cp: the_cells) 
+		cp->reparse();
+
 	//recalculate(1); // this doesn't help
 	Global->modified = 1;
 }

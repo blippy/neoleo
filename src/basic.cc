@@ -111,6 +111,7 @@ void
 insert_row (int repeat)
 {
 	insert_row_above(curow);
+	//recalculate(1); // for things like areas
 	io_repaint();
 }
 
