@@ -24,6 +24,8 @@ unsigned char fnin[] = {
 };
 
 
+bool using_tokenize_2 = false;
+
 std::map<std::string,function_t*> parse_hash_1;
 
 void add_parse_hash(const char* name, function_t* func)
@@ -59,13 +61,14 @@ yyreglex ()
 	if(!instr)
 		return ERROR;
 #endif
+	if(using_tokenize_2) a_new = new node;
 	while(isspace(*instr))
 		instr++;
 	ch = *instr++;
 	if(ch=='(' || ch==',' || ch==')')
 		return ch;
 
-	a_new=(struct node *)alloc_parsing_memory(sizeof(struct node));
+	if(!using_tokenize_2) a_new=(struct node *)alloc_parsing_memory(sizeof(struct node));
 	a_new->add_byte=0;
 	a_new->sub_value=0;
 	switch(ch) {
@@ -854,7 +857,35 @@ str_to_col (char **str)
 // Experimental section
 
 
-bool yyreglex_experiment()
+typedef struct { int ch ; node_t n; } toke_t;
+typedef std::vector<toke_t> tokes_t;
+
+bool tokenize_2()
+{
+	using_tokenize_2 = true;
+	char prog[1000];
+	//strcpy(prog, "(12.3+12)* \"a string\" ");
+	strcpy(prog, "12.3");
+	instr = prog;
+	tokes_t tokes;
+	while(true) {
+		int ch = yyreglex();
+		toke_t toke;
+		toke.ch = ch;
+		assert(yyreglval);
+		memcpy(&toke.n, yyreglval, sizeof(node_t));
+		//toke_t toke{ch, std::copy(*yyreglval)};
+		delete yyreglval;
+		if(ch == 0 || ch == ERROR) break;
+		//node_t n = *yyreglval;
+		tokes.push_back(toke);
+		//delete yyreglval;
+	}
+	using_tokenize_2 = false;
+	return true;
+}
+
+bool tokenize_1()
 {
 	char prog[1000];
 	strcpy(prog, "(12.3+12)* \"a string\" ");
@@ -904,5 +935,12 @@ bool yyreglex_experiment()
 				cout << "Unknown comp_value:" << ch << ":" << (char) ch  <<endl;
 		}
 	}
+	return true;
+}
+
+
+bool yyreglex_experiment()
+{
+	tokenize_2();
 	return true;
 }
