@@ -34,8 +34,6 @@ loop:
 	} else if ( isdigit(ch)) {
 		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
 		found(NUMBER, token);
-		//tokens.push_back(make_pair(NUMBER, token));
-		//cout <<  "found number: " << token << "\n";
 	} else if (isalpha(ch)) {
 		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
 		found(ID, token);
@@ -44,10 +42,7 @@ loop:
 		token = ch;
 		pos++;
 		found(UNK, token);
-		//cout << "found unknown: " << ch << "\n";
 	}
-	//if(token.size() 
-	//pos++;
 	goto loop;
 finis:
 	found(EOI, "End of stream"); // Add this so that we can look ahead into the void
@@ -55,7 +50,7 @@ finis:
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// SCANNER (the "yacc" side of things
+// SCANNER (the "yacc" side of things)
 
 
 // a little test to show us that we can get recursive definitions
@@ -63,10 +58,22 @@ class Expr;
 class FunCall;
 class FunCall { public: string function_name ; vector<Expr> args; };
 
-class Expr { public: variant<FunCall, int> expr; };
+class Expr { 
+	public: 
+		Expr() {};
+		Expr(int i) : expr(i) {};
+		variant<FunCall, int> expr; 
+};
+
 void parse_error()
 {
 	throw 666;
+}
+
+tokens_t rest(tokens_t tokes)
+{
+	tokes.pop_front();
+	return tokes;
 }
 
 Expr _parse(Expr expr, tokens_t tokes)
@@ -79,15 +86,12 @@ Expr _parse(Expr expr, tokens_t tokes)
 	auto& next = tokes.front();
 	auto nid = tokes.front().first;
 	assert(fid == NUMBER);
-	auto val = stoi(front.second);
+	int val = stoi(front.second);
 	if(next.second == "+") {
-		/*
 		FunCall fc;
-		fc.funcation_name = "+";
-		fc.args = 
+		fc.function_name = "+";
+		fc.args = vector{Expr(val), _parse(xout,  rest(tokes))};
 		xout.expr = fc;
-		*/
-
 	} else
 		xout.expr = val;
 	return xout;
@@ -110,19 +114,12 @@ int eval(Expr expr)
 	int val = 667;
 	if(std::holds_alternative<int>(expr.expr))
 		val = std::get<int>(expr.expr);
-	/*
-	auto fn = [&](auto& arg) {
-		using T = std::decay_t<decltype(arg)>;
+	else { // must be a function call
+		auto &fc = std::get<FunCall>(expr.expr);
+		if(fc.function_name == "+")
+			val = eval(fc.args[0]) + eval(fc.args[1]);
+	}
 
-		if constexpr (std::is_same_v<T, FunCall>) {
-			val = 666;
-		} else if constexpr (std::is_same_v<T, int>) {
-			cout << "evaluating int\n";
-			val = arg;
-		}
-	};
-	fn(expr);
-	*/
 	return val;
 
 
@@ -144,5 +141,7 @@ int interpret(string s)
 int main()
 {
 	interpret("42");
+	interpret("42+3");
+	interpret("1+3+5+7");
 	return 0;
 }
