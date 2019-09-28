@@ -46,6 +46,10 @@ finis:
 	return tokens;
 }
 
+// a little test to show us that we can get recursive definitions
+class FunCall;
+class FunCall { public: vector <FunCall> funcs; };
+
 int main()
 {
 	tokens_t tokes{tokenise("12.3+3*4")};
