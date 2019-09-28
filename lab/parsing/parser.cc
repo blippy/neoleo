@@ -70,13 +70,24 @@ void parse_error()
 	throw 666;
 }
 
+template<class Q>
+Q rest(Q qs)
+{
+	qs.pop_front();
+	return qs;
+}
+
+/*
 tokens_t rest(tokens_t tokes)
 {
 	tokes.pop_front();
 	return tokes;
 }
+*/
 
-Expr _parse(Expr expr, tokens_t tokes)
+typedef deque<string> ops_t;
+
+Expr parse_e(Expr expr, tokens_t tokes)
 {
 	auto front = tokes.front();
 	auto fid = front.first;
@@ -90,7 +101,7 @@ Expr _parse(Expr expr, tokens_t tokes)
 	if(next.second == "+") {
 		FunCall fc;
 		fc.function_name = "+";
-		fc.args = vector{Expr(val), _parse(xout,  rest(tokes))};
+		fc.args = vector{Expr(val), parse_e(xout,  rest(tokes))};
 		xout.expr = fc;
 	} else
 		xout.expr = val;
@@ -100,7 +111,7 @@ Expr _parse(Expr expr, tokens_t tokes)
 Expr parse(tokens_t& tokes)
 {
 	Expr expr;
-	return _parse(expr, tokes);
+	return parse_e(expr, tokes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
