@@ -129,51 +129,32 @@ Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
 
 Expr parse_t(tokens_t& tokes) { return parse_f(tokes); }
 
+
 Expr parse_e(tokens_t& tokes)
 {
-	Expr t{parse_t(tokes)};
-	token_t toke = tokes.front();
-	tokes.pop_front();
-	switch(toke.first) {
-		case EOI:
-			return t;
-		case PLUS:
-			return Expr("+", t, parse_t(tokes));
-		default:
-			parse_error();
+	FunCall fc; // assume it's a funcall for now
+	fc.function_name = "+";
+	fc.args.push_back(parse_t(tokes));
+
+	for(;;) {
+		token_t toke = tokes.front();
+		tokes.pop_front();
+		if(toke.first == EOI) break;
+		if(toke.first != PLUS) parse_error();
+		fc.args.push_back(parse_t(tokes));
 	}
-	return Expr(); // should never reach here
-}
 
-/*
-Expr parse_eXXX(Expr expr, tokens_t tokes)
-{
-	auto front = tokes.front();
-	auto fid = front.first;
-	if(fid == EOI) return expr;
-	tokes.pop_front();
-	Expr xout;
-	auto& next = tokes.front();
-	auto nid = tokes.front().first;
-	assert(fid == NUMBER);
-	int val = stoi(front.second);
-	if(next.second == "+") {
-		FunCall fc;
-		fc.function_name = "+";
-		fc.args = vector{Expr(val), parse_e(xout,  rest(tokes))};
-		xout.expr = fc;
-	} else
-		xout.expr = val;
-	return xout;
+
+	if(fc.args.size() == 1)
+		return Expr(fc.args[0]);
+	else {
+		Expr x;
+		x.expr = fc;
+		return x;
+	}
 }
 
 
-Expr parseXXX(tokens_t& tokes)
-{
-	Expr expr;
-	return parse_e(expr, tokes);
-}
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // EVAL
@@ -188,8 +169,12 @@ int eval(Expr expr)
 		val = std::get<int>(expr.expr);
 	else { // must be a function call
 		auto &fc = std::get<FunCall>(expr.expr);
-		if(fc.function_name == "+")
-			val = eval(fc.args[0]) + eval(fc.args[1]);
+		if(fc.function_name == "+") {
+			val = 0;
+			for(auto& arg: fc.args)
+				val += eval(arg);
+			//val = eval(fc.args[0]) + eval(fc.args[1]);
+		}
 	}
 
 	return val;
@@ -200,13 +185,16 @@ int eval(Expr expr)
 int interpret(string s)
 {
 	tokens_t tokes{tokenise(s)};
-	for(auto& t:tokes) {
-		cout << "Found: " << t.first << " " << t.second << "\n";
+
+	if constexpr (0) {
+		for(auto& t:tokes) {
+			cout << "Found: " << t.first << " " << t.second << "\n";
+		}
 	}
 
 	Expr expr{parse_e(tokes)};
 
-	cout << "Evaluates to " << eval(expr) << "\n";
+	cout << "Evaluates to " << eval(expr) << "\n\n";
 
 	return 0;
 }
