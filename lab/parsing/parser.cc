@@ -57,7 +57,7 @@ value_t do_mul(args_t args)
 	for(auto& arg: args) {
 	       	value_t a = eval(arg);
 		val *= a;
-		cout << "do_mul a and val " << a << " " << val << "\n";
+		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
 	return val;
 }
@@ -65,7 +65,7 @@ value_t do_div(args_t args)
 {
 	if(args.size() == 0) return 0;
 	value_t val = eval(args[0]);
-	cout << "do_div 1/val " << 1.0/val << "\n";
+	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
 	for(int i = 1; i<args.size(); ++i) val /= eval(args[i]);
 	return val;
@@ -174,40 +174,6 @@ Expr parse_p(tokens_t& tokes)
 }
 Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
 
-Expr parse_tXXX(tokens_t& tokes) 
-{
-	FunCall fc; // assume it's a funcall for now
-	fc.fn = &funcmap["*"];
-	fc.args.push_back(parse_f(tokes));
-	/*
-	   for(;;) {
-	   cout << "looping parse_t\n";
-	   token_t toke = tokes.front();
-	   tokes.pop_front();
-	   if(toke.first == EOI) break;
-	   if(toke.first == '*')
-	   fc.args.push_back(parse_f(tokes));
-	   else if(toke.first == '/') {
-	   Expr eneg =parse_f(tokes);
-	   FunCall fneg;
-	   fneg.fn = &funcmap["/"];
-	   fneg.args = args_t{eneg};
-	   Expr x2;
-	   x2.expr = fneg;
-	   fc.args.push_back(x2);
-	   } else break; //else
-	//   	parse_error();
-	}
-	*/
-
-	if(fc.args.size() == 1)
-		return Expr(fc.args[0]);
-	else {
-		Expr x;
-		x.expr = fc;
-		return x;
-	}
-}
 
 FunCall _parse_t(tokens_t& tokes)
 {
