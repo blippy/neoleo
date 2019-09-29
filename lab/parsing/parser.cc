@@ -67,13 +67,21 @@ int eval(Expr expr);
 int do_plus(args_t args)
 {
 	int val = 0;
-	for(auto& arg: args)
-		val += eval(arg);
+	for(auto& arg: args) val += eval(arg);
+	return val;
+}
+int do_minus(args_t args)
+{
+	if(args.size() == 0) return 0;
+	int val = eval(args[0]);
+	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
+	for(int i = 1; i<args.size(); ++i) val -= eval(args[i]);
 	return val;
 }
 
 map<string, function_t> funcmap= {
-	{"+", &do_plus}
+	{"+", &do_plus},
+	{"-", &do_minus}
 };
 
 
@@ -186,8 +194,18 @@ Expr parse_e(tokens_t& tokes)
 		token_t toke = tokes.front();
 		tokes.pop_front();
 		if(toke.first == EOI) break;
-		if(toke.first != '+') parse_error();
-		fc.args.push_back(parse_t(tokes));
+	       	if(toke.first == '+')
+			fc.args.push_back(parse_t(tokes));
+		else if(toke.first == '-') {
+			Expr eneg =parse_t(tokes);
+			FunCall fneg;
+			fneg.fn = &funcmap["-"];
+			fneg.args = args_t{eneg};
+			Expr x2;
+			x2.expr = fneg;
+			fc.args.push_back(x2);
+		} else
+		       	parse_error();
 	}
 
 
@@ -256,5 +274,7 @@ int main()
 	interpret("42", 42);
 	interpret("42+3", 45);
 	interpret("1+3+5+7", 16);
+	interpret("1-3-5-7", -14);
+	interpret("1-3+5-7", -4);
 	return 0;
 }
