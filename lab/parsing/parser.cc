@@ -82,7 +82,8 @@ map<string, function_t> funcmap= {
 typedef pair<int, string> token_t;
 typedef deque<token_t> tokens_t;
 
-enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
+//enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
+enum Tokens { EOI = 128, NUMBER, ID };
 
 
 tokens_t tokenise(string str)
@@ -106,14 +107,10 @@ loop:
 		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
 		found(ID, token);
 		cout << "found id: " << token << "\n";
-	} else if (ch == '+') {
-		token = ch;
-		pos++;
-		found(PLUS, token);
 	} else {
 		token = ch;
 		pos++;
-		found(UNK, token);
+		found(ch, token);
 	}
 	goto loop;
 finis:
@@ -189,7 +186,7 @@ Expr parse_e(tokens_t& tokes)
 		token_t toke = tokes.front();
 		tokes.pop_front();
 		if(toke.first == EOI) break;
-		if(toke.first != PLUS) parse_error();
+		if(toke.first != '+') parse_error();
 		fc.args.push_back(parse_t(tokes));
 	}
 
