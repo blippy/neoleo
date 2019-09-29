@@ -19,7 +19,7 @@ typedef vector<Expr> args_t;
 typedef function<int(args_t)> function_t;
 //class Args { public: vector<Expr> args; };
 class FunCall;
-class FunCall { public: string function_name ; args_t args; };
+class FunCall { public: string function_name ; function_t* fn ; args_t args; };
 class Expr { 
 	public: 
 		Expr() {};
@@ -182,6 +182,7 @@ Expr parse_e(tokens_t& tokes)
 {
 	FunCall fc; // assume it's a funcall for now
 	fc.function_name = "+";
+	fc.fn = &funcmap["+"];
 	fc.args.push_back(parse_t(tokes));
 
 	for(;;) {
@@ -216,7 +217,10 @@ int eval(Expr expr)
 	if(std::holds_alternative<int>(expr.expr))
 		val = std::get<int>(expr.expr);
 	else { // must be a function call		
+		//auto &fn = std::get<FunCall>(expr.fn);
 		auto &fc = std::get<FunCall>(expr.expr);
+		auto fn = fc.fn;
+		return (*fn)(fc.args);
 		if(fc.function_name == "+") {
 			return do_plus(fc.args);
 		}
