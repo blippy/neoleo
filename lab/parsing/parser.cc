@@ -15,9 +15,32 @@ using namespace std;
 // TYPE DECLARATIONS
 
 class Expr;
+typedef vector<Expr> args_t;
+typedef function<int(args_t)> function_t;
+//class Args { public: vector<Expr> args; };
 class FunCall;
-class FunCall { public: string function_name ; vector<Expr> args; };
+class FunCall { public: string function_name ; args_t args; };
+class Expr { 
+	public: 
+		Expr() {};
+		Expr(int i) : expr(i) {};
+		/*
+		Expr(string fn, Expr arg1, Expr arg2)
+		{
+			FunCall fc;
+			fc.function_name = fn;
+			fc.args = vector<Expr>{arg1, arg2};
+			expr = fc;
+		};
+		*/
+		variant<FunCall, int> expr; 
+};
+//typedef vector<Expr> args_t;
+//typedef function<int(args_t)> function_t;
+//class FunCall { public: string function_name ; function_t &fm ; vector<Expr> args; };
+//class FunCall { public: string function_name ; function_t &fm ; Args args; };
 
+/*
 class Expr { 
 	public: 
 		Expr() {};
@@ -31,7 +54,7 @@ class Expr {
 		};
 		variant<FunCall, int> expr; 
 };
-
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,8 +63,6 @@ class Expr {
 int eval(Expr expr);
 
 
-typedef vector<Expr> args_t;
-typedef function<int(args_t)> function_t;
 
 int do_plus(args_t args)
 {
@@ -52,7 +73,7 @@ int do_plus(args_t args)
 }
 
 map<string, function_t> funcmap= {
-	{"+", do_plus}
+	{"+", &do_plus}
 };
 
 
@@ -194,7 +215,7 @@ int eval(Expr expr)
 	int val = 667;
 	if(std::holds_alternative<int>(expr.expr))
 		val = std::get<int>(expr.expr);
-	else { // must be a function call
+	else { // must be a function call		
 		auto &fc = std::get<FunCall>(expr.expr);
 		if(fc.function_name == "+") {
 			return do_plus(fc.args);
