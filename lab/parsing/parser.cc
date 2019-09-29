@@ -1,12 +1,59 @@
 #include <cassert>
 #include <ctype.h>
 #include <deque>
+#include <functional>
 #include <iostream>
+#include <map>
 #include <string>
 #include <variant>
 #include <vector>
 
 using namespace std;
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TYPE DECLARATIONS
+
+class Expr;
+class FunCall;
+class FunCall { public: string function_name ; vector<Expr> args; };
+
+class Expr { 
+	public: 
+		Expr() {};
+		Expr(int i) : expr(i) {};
+		Expr(string fn, Expr arg1, Expr arg2)
+		{
+			FunCall fc;
+			fc.function_name = fn;
+			fc.args = vector<Expr>{arg1, arg2};
+			expr = fc;
+		};
+		variant<FunCall, int> expr; 
+};
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// FUNCTION DEFINITIONS
+
+int eval(Expr expr);
+
+
+typedef vector<Expr> args_t;
+typedef function<int(args_t)> function_t;
+
+int do_plus(args_t args)
+{
+	int val = 0;
+	for(auto& arg: args)
+		val += eval(arg);
+	return val;
+}
+
+map<string, function_t> funcmap= {
+	{"+", do_plus}
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,26 +102,6 @@ finis:
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
-
-
-// a little test to show us that we can get recursive definitions
-class Expr;
-class FunCall;
-class FunCall { public: string function_name ; vector<Expr> args; };
-
-class Expr { 
-	public: 
-		Expr() {};
-		Expr(int i) : expr(i) {};
-		Expr(string fn, Expr arg1, Expr arg2)
-		{
-			FunCall fc;
-			fc.function_name = fn;
-			fc.args = vector<Expr>{arg1, arg2};
-			expr = fc;
-		};
-		variant<FunCall, int> expr; 
-};
 
 void parse_error()
 {
@@ -170,10 +197,7 @@ int eval(Expr expr)
 	else { // must be a function call
 		auto &fc = std::get<FunCall>(expr.expr);
 		if(fc.function_name == "+") {
-			val = 0;
-			for(auto& arg: fc.args)
-				val += eval(arg);
-			//val = eval(fc.args[0]) + eval(fc.args[1]);
+			return do_plus(fc.args);
 		}
 	}
 
@@ -182,7 +206,7 @@ int eval(Expr expr)
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int interpret(string s)
+int interpret(string s, int expected)
 {
 	tokens_t tokes{tokenise(s)};
 
@@ -193,15 +217,20 @@ int interpret(string s)
 	}
 
 	Expr expr{parse_e(tokes)};
-
-	cout << "Evaluates to " << eval(expr) << "\n\n";
+	int val = eval(expr);
+	cout << "Evaluates to " << val << " ";
+	if(val == expected) 
+		cout << "PASS";
+	else
+		cout << "FAIL";
+	cout << "\n\n";
 
 	return 0;
 }
 int main()
 {
-	interpret("42");
-	interpret("42+3");
-	interpret("1+3+5+7");
+	interpret("42", 42);
+	interpret("42+3", 45);
+	interpret("1+3+5+7", 16);
 	return 0;
 }
