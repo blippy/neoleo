@@ -14,7 +14,7 @@ using namespace std;
 typedef pair<int, string> token_t;
 typedef deque<token_t> tokens_t;
 
-enum Tokens { EOI, UNK, NUMBER, ID };
+enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
 
 
 tokens_t tokenise(string str)
@@ -38,6 +38,10 @@ loop:
 		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
 		found(ID, token);
 		cout << "found id: " << token << "\n";
+	} else if (ch == '+') {
+		token = ch;
+		pos++;
+		found(PLUS, token);
 	} else {
 		token = ch;
 		pos++;
@@ -62,6 +66,13 @@ class Expr {
 	public: 
 		Expr() {};
 		Expr(int i) : expr(i) {};
+		Expr(string fn, Expr arg1, Expr arg2)
+		{
+			FunCall fc;
+			fc.function_name = fn;
+			fc.args = vector<Expr>{arg1, arg2};
+			expr = fc;
+		};
 		variant<FunCall, int> expr; 
 };
 
@@ -69,6 +80,16 @@ void parse_error()
 {
 	throw 666;
 }
+
+/*
+template<class R, class Q>
+R pop(Q& qs)
+{
+	R front = qs.front();
+	qs.pop_front();
+	return front;
+}
+*/
 
 template<class Q>
 Q rest(Q qs)
@@ -87,7 +108,45 @@ tokens_t rest(tokens_t tokes)
 
 typedef deque<string> ops_t;
 
-Expr parse_e(Expr expr, tokens_t tokes)
+Expr parse_e(tokens_t& tokes);
+
+Expr parse_p(tokens_t& tokes)
+{
+	//Expr t{parse_t(tokes)};
+	token_t toke = tokes.front();
+	tokes.pop_front();
+	switch(toke.first) {
+		case EOI:
+			return Expr();
+		case NUMBER:
+			return Expr(stoi(toke.second));
+		default:
+			parse_error();
+	}
+	return Expr(); // should never reach here
+}
+Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
+
+Expr parse_t(tokens_t& tokes) { return parse_f(tokes); }
+
+Expr parse_e(tokens_t& tokes)
+{
+	Expr t{parse_t(tokes)};
+	token_t toke = tokes.front();
+	tokes.pop_front();
+	switch(toke.first) {
+		case EOI:
+			return t;
+		case PLUS:
+			return Expr("+", t, parse_t(tokes));
+		default:
+			parse_error();
+	}
+	return Expr(); // should never reach here
+}
+
+/*
+Expr parse_eXXX(Expr expr, tokens_t tokes)
 {
 	auto front = tokes.front();
 	auto fid = front.first;
@@ -108,11 +167,13 @@ Expr parse_e(Expr expr, tokens_t tokes)
 	return xout;
 }
 
-Expr parse(tokens_t& tokes)
+
+Expr parseXXX(tokens_t& tokes)
 {
 	Expr expr;
 	return parse_e(expr, tokes);
 }
+*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // EVAL
@@ -143,7 +204,7 @@ int interpret(string s)
 		cout << "Found: " << t.first << " " << t.second << "\n";
 	}
 
-	Expr expr{parse(tokes)};
+	Expr expr{parse_e(tokes)};
 
 	cout << "Evaluates to " << eval(expr) << "\n";
 
