@@ -167,6 +167,15 @@ Expr parse_p(tokens_t& tokes)
 			return Expr();
 		case NUMBER:
 			return Expr(stoi(toke.second));
+		case '(': {
+				  //tokes.pop_front();
+	  			  Expr x1{parse_e(tokes)};
+				  if(tokes.front().first == ')')
+					  tokes.pop_front();
+				  else
+					  parse_error();
+				  return x1;
+			  }
 		default:
 			parse_error();
 	}
@@ -224,12 +233,12 @@ FunCall _parse_e(tokens_t& tokes)
 	fc.args.push_back(parse_t(tokes));
 	while(1) {
 		auto nid = tokes.front().first;
-		cout << "nid is " << nid << "\n";
+		//cout << "nid is " << nid << "\n";
 		if(nid == EOI) return fc;
 		//tokes.pop_front();
 		if(nid == '+') {
 			tokes.pop_front();
-			cout <<" nod is +\n";
+			//cout <<" nod is +\n";
 			fc.args.push_back(parse_t(tokes));
 		} else  if(nid == '-') {
 			tokes.pop_front();
@@ -315,5 +324,6 @@ int main()
 	interpret("1+2*3", 7);
 	interpret("1+12/3", 5);
 	interpret("1+12/3*2/2", 5);
+	interpret("(1+2)*3", 9);
 	return 0;
 }
