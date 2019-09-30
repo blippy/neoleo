@@ -149,6 +149,10 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 				fdrive(REQ_DEL_CHAR);
 				break;
 			case KEY_BACKSPACE:
+			case 127:
+			case '\b':
+				// backspace goofiness explained here:
+				// https://stackoverflow.com/questions/27200597/c-ncurses-key-backspace-not-working#27203263
 				fdrive(REQ_DEL_PREV);
 				break;
 			case CTRL('g'):
