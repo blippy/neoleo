@@ -25,10 +25,23 @@ class Expr {
 	public: 
 		Expr() {};
 		Expr(value_t v) : expr(v) {};
+		Expr(string fname, Expr x);
 		variant<FunCall, value_t> expr; 
 };
 
 
+extern map<string, function_t> funcmap;
+
+Expr::Expr(string fname, Expr x)
+{
+	FunCall fc;
+	//fc.fn = funcmap[to_string(fname)];
+	auto fn = &funcmap[fname];
+	//auto fn = funcmap[fname];
+	fc.fn = fn;
+	fc.args.push_back(x);
+	this->expr = fc;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
@@ -155,7 +168,31 @@ Q rest(Q qs)
 
 typedef deque<string> ops_t;
 
+// ARITHMETIC
+// Adopt the algorithm at 
+// https://www.engr.mun.ca/~theo/Misc/exp_parsing.htm#classic
+// for computing arithmetic
+//
+// Here's the original derivations
+//  E --> T {( "+" | "-" ) T}
+//  T --> F {( "*" | "/" ) F}
+//  F --> P ["^" F]
+//  P --> v | "(" E ")" | "-" T
+//
+// Here's mine:
+// I extend BNF with the notion of a function, prefixed by &
+// {} zero or more repetitions
+// [] optional
+//  &M(o, X) --> X {o X} // e.g. &M(("+"|"-"), T) --> T { ("+"|"-") T }
+//  E --> &M(( "<" | "<=" | ">" | ">=" | "==" | "!=" ), R)
+//  R --> &M(( "+" | "-" ), T)
+//  T --> &M(( "*" | "/" ), F)
+//  F --> ["+"|"-"] (v | "(" E ")")
+
+
+
 Expr parse_e(tokens_t& tokes);
+Expr parse_t(tokens_t& tokes);
 
 Expr parse_p(tokens_t& tokes)
 {
@@ -176,6 +213,8 @@ Expr parse_p(tokens_t& tokes)
 					  parse_error();
 				  return x1;
 			  }
+		case '-':
+			  return Expr("-", parse_t(tokes));
 		default:
 			parse_error();
 	}
@@ -325,5 +364,6 @@ int main()
 	interpret("1+12/3", 5);
 	interpret("1+12/3*2/2", 5);
 	interpret("(1+2)*3", 9);
+	interpret("-(1+2)*-3", 9);
 	return 0;
 }
