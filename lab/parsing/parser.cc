@@ -51,37 +51,14 @@ funptr fn_lookup(string function_name)
 {
 	if(funcmap.count(function_name) == 0)
 		unknown_function(function_name);
-
 	return &funcmap[function_name];
-	//if(fn == 0)
-	//	unknown_function(function_name);
-	//return fn;
 }
-/*
-   Expr::Expr(string fname, args_t args)
-   {
-   FunCall fc;
-   auto fn = &funcmap[fname];
-   fc.fn = fn;
-   fc.args = args;
-   this->expr = fc;
-   }
-   */
 Expr::Expr(string fname, Expr x)
 {
-
-
 	FunCall fc;
-	//auto fn = funcmap[fname];
 	fc.fn = fn_lookup(fname);
 	fc.args.push_back(x);
 	this->expr = fc;
-
-
-	/*
-	   args_t args{x};	
-	   Expr(fname, args);
-	   */
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,15 +112,28 @@ value_t do_sqrt(args_t args)
 	value_t val = eval(args[0]);
 	return sqrt(val);
 }
-//map<string, funptr> funcmap= {
+value_t do_hypot(args_t args)
+{
+	if(args.size() !=2) parse_error();
+	value_t v1 = eval(args[0]);
+	value_t v2 = eval(args[1]);
+	return sqrt(v1*v1 + v2*v2);
+}
+value_t do_plusfn(args_t args)
+{
+	value_t val = 0;
+	for(auto& v: args) val += eval(v);
+	return val;
+}
 map<string, function_t> funcmap= {
 	
 	{"+", &do_plus},
 	{"-", &do_minus},
 	{"*", &do_mul},
 	{"/", &do_div},
-
-	{"sqrt", do_sqrt}
+	{"sqrt", do_sqrt},
+	{"hypot", do_hypot},
+	{"plus", do_plusfn}
 };
 
 
@@ -191,31 +181,22 @@ finis:
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
+	
+void consume(char ch, tokens_t& tokes)
+{
+	if(ch == tokes.front().first)
+		tokes.pop_front();
+	else
+		parse_error();
+}
 
-/*
-   template<class R, class Q>
-   R pop(Q& qs)
-   {
-   R front = qs.front();
-   qs.pop_front();
-   return front;
-   }
-   */
-
-	template<class Q>
+template<class Q>
 Q rest(Q qs)
 {
 	qs.pop_front();
 	return qs;
 }
 
-/*
-   tokens_t rest(tokens_t tokes)
-   {
-   tokes.pop_front();
-   return tokes;
-   }
-   */
 
 typedef deque<string> ops_t;
 
@@ -245,29 +226,36 @@ typedef deque<string> ops_t;
 Expr parse_e(tokens_t& tokes);
 Expr parse_t(tokens_t& tokes);
 
+// parse a function
 Expr parse_fn(string fname, tokens_t& tokes)
 {
 	cout << "parse_fn name " << fname << "\n";
 	auto fn = fn_lookup(fname);
 	//cout << (*fn)(args_t{12}) << "\n";
 
-	tokes.pop_front(); // lrb
+	consume('(', tokes);
 	FunCall fc;
 	fc.fn = fn;
+loop:
+	if(tokes.front().first == ')') goto finis;
+	fc.args.push_back(parse_e(tokes));
+	if(tokes.front().first == ',') {
+		consume(',', tokes);
+		goto loop;
+	} else if(tokes.front().first != ')')
+		parse_error();
 
-	args_t args{parse_e(tokes)};
+finis:
+	consume(')', tokes);
 
-	fc.args = args;
+	//args_t args{parse_e(tokes)};
+
+	//fc.args = args;
 	Expr x;
 	x.expr = fc;
 
-	tokes.pop_front(); // rrb
+	//tokes.pop_front(); // rrb
 	return x;
-	//return args; // TODO fix this
-	//token_t toke = tokes.front();
-	//if(toke.first != '(')) parse_error();
-	//tokes.pop_front();
-
 }
 
 Expr parse_p(tokens_t& tokes)
@@ -450,6 +438,10 @@ int main()
 	interpret("1+12/3*2/2", 5);
 	interpret("(1+2)*3", 9);
 	interpret("-(1+2)*-3", 9);
+	interpret("hypot(3,4)+1", 6);
+	interpret("plus()+1", 1);
+	interpret("plus(2)+1", 3);
+	interpret("plus(2,3+4)+1", 10);
 
 
 	return 0;
