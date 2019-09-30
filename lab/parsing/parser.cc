@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <map>
+#include <cmath>
 #include <string>
 #include <variant>
 #include <vector>
@@ -19,28 +20,66 @@ typedef vector<Expr> args_t;
 typedef double value_t;
 typedef function<value_t(args_t)> function_t;
 //class Args { public: vector<Expr> args; };
-class FunCall;
-class FunCall { public: function_t* fn ; args_t args; };
+//class FunCall;
+class FunCall { 
+	public: 
+		function_t* fn ; 
+		args_t args; 
+		//void set(string fnamej
+};
 class Expr { 
 	public: 
 		Expr() {};
 		Expr(value_t v) : expr(v) {};
 		Expr(string fname, Expr x);
+		//Expr(string fname, args_t args);
 		variant<FunCall, value_t> expr; 
 };
 
 
 extern map<string, function_t> funcmap;
 
+void unknown_function(string function_name)
+{
+	cerr << "Unknown function " << function_name << "\n";
+	throw 667;
+}
+
+function_t* lookup_fn(string function_name)
+{
+	if(funcmap.count(function_name) == 0)
+		unknown_function(function_name);
+
+	return funcmap[function_name];
+	//if(fn == 0)
+	//	unknown_function(function_name);
+	//return fn;
+}
+/*
+   Expr::Expr(string fname, args_t args)
+   {
+   FunCall fc;
+   auto fn = &funcmap[fname];
+   fc.fn = fn;
+   fc.args = args;
+   this->expr = fc;
+   }
+   */
 Expr::Expr(string fname, Expr x)
 {
+
+
 	FunCall fc;
-	//fc.fn = funcmap[to_string(fname)];
 	auto fn = &funcmap[fname];
-	//auto fn = funcmap[fname];
 	fc.fn = fn;
 	fc.args.push_back(x);
 	this->expr = fc;
+
+
+	/*
+	   args_t args{x};	
+	   Expr(fname, args);
+	   */
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +88,10 @@ Expr::Expr(string fname, Expr x)
 value_t eval(Expr expr);
 
 
+void parse_error()
+{
+	throw 666;
+}
 
 value_t do_plus(args_t args)
 {
@@ -68,7 +111,7 @@ value_t do_mul(args_t args)
 {
 	value_t val = 1.0;
 	for(auto& arg: args) {
-	       	value_t a = eval(arg);
+		value_t a = eval(arg);
 		val *= a;
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
@@ -84,11 +127,18 @@ value_t do_div(args_t args)
 	return val;
 }
 
+value_t do_sqrt(args_t args)
+{
+	if(args.size() !=1) parse_error();
+	value_t val = eval(args[0]);
+	return sqrt(val);
+}
 map<string, function_t> funcmap= {
 	{"+", &do_plus},
 	{"-", &do_minus},
 	{"*", &do_mul},
-	{"/", &do_div}
+	{"/", &do_div},
+	{"sqrt", &do_sqrt}
 };
 
 
@@ -136,10 +186,6 @@ finis:
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
-void parse_error()
-{
-	throw 666;
-}
 
 /*
    template<class R, class Q>
@@ -194,6 +240,23 @@ typedef deque<string> ops_t;
 Expr parse_e(tokens_t& tokes);
 Expr parse_t(tokens_t& tokes);
 
+Expr parse_fn(string fname, tokens_t& tokes)
+{
+	cout << "parse_fn name " << fname << "\n";
+	auto fn = lookup_fn(fname);
+	cout << (*fn)(args_t{12}) << "\n";
+
+	FunCall fc;
+	args_t args;
+	Expr x;
+	return x;
+	//return args; // TODO fix this
+	//token_t toke = tokes.front();
+	//if(toke.first != '(')) parse_error();
+	//tokes.pop_front();
+
+}
+
 Expr parse_p(tokens_t& tokes)
 {
 	//Expr t{parse_t(tokes)};
@@ -204,9 +267,11 @@ Expr parse_p(tokens_t& tokes)
 			return Expr();
 		case NUMBER:
 			return Expr(stoi(toke.second));
+		case ID:
+			return parse_fn(toke.second, tokes);	
 		case '(': {
 				  //tokes.pop_front();
-	  			  Expr x1{parse_e(tokes)};
+				  Expr x1{parse_e(tokes)};
 				  if(tokes.front().first == ')')
 					  tokes.pop_front();
 				  else
@@ -216,7 +281,7 @@ Expr parse_p(tokens_t& tokes)
 		case '-':
 			  return Expr("-", parse_t(tokes));
 		default:
-			parse_error();
+			  parse_error();
 	}
 	return Expr(); // should never reach here
 }
@@ -355,6 +420,9 @@ int interpret(string s, int expected)
 }
 int main()
 {
+
+	interpret("sqrt1(9)+3", 6);
+	return 0;
 	interpret("42", 42);
 	interpret("42+3", 45);
 	interpret("1+3+5+7", 16);
@@ -365,5 +433,7 @@ int main()
 	interpret("1+12/3*2/2", 5);
 	interpret("(1+2)*3", 9);
 	interpret("-(1+2)*-3", 9);
+
+
 	return 0;
 }
