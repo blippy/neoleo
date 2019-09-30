@@ -19,11 +19,12 @@ class Expr;
 typedef vector<Expr> args_t;
 typedef double value_t;
 typedef function<value_t(args_t)> function_t;
+typedef function_t* funptr;
 //class Args { public: vector<Expr> args; };
 //class FunCall;
 class FunCall { 
 	public: 
-		function_t* fn ; 
+		funptr fn ; 
 		args_t args; 
 		//void set(string fnamej
 };
@@ -37,6 +38,7 @@ class Expr {
 };
 
 
+//extern map<string, funptr> funcmap;
 extern map<string, function_t> funcmap;
 
 void unknown_function(string function_name)
@@ -45,12 +47,12 @@ void unknown_function(string function_name)
 	throw 667;
 }
 
-function_t* lookup_fn(string function_name)
+funptr fn_lookup(string function_name)
 {
 	if(funcmap.count(function_name) == 0)
 		unknown_function(function_name);
 
-	return funcmap[function_name];
+	return &funcmap[function_name];
 	//if(fn == 0)
 	//	unknown_function(function_name);
 	//return fn;
@@ -70,8 +72,8 @@ Expr::Expr(string fname, Expr x)
 
 
 	FunCall fc;
-	auto fn = &funcmap[fname];
-	fc.fn = fn;
+	//auto fn = funcmap[fname];
+	fc.fn = fn_lookup(fname);
 	fc.args.push_back(x);
 	this->expr = fc;
 
@@ -133,12 +135,15 @@ value_t do_sqrt(args_t args)
 	value_t val = eval(args[0]);
 	return sqrt(val);
 }
+//map<string, funptr> funcmap= {
 map<string, function_t> funcmap= {
+	
 	{"+", &do_plus},
 	{"-", &do_minus},
 	{"*", &do_mul},
 	{"/", &do_div},
-	{"sqrt", &do_sqrt}
+
+	{"sqrt", do_sqrt}
 };
 
 
@@ -243,12 +248,20 @@ Expr parse_t(tokens_t& tokes);
 Expr parse_fn(string fname, tokens_t& tokes)
 {
 	cout << "parse_fn name " << fname << "\n";
-	auto fn = lookup_fn(fname);
-	cout << (*fn)(args_t{12}) << "\n";
+	auto fn = fn_lookup(fname);
+	//cout << (*fn)(args_t{12}) << "\n";
 
+	tokes.pop_front(); // lrb
 	FunCall fc;
-	args_t args;
+	fc.fn = fn;
+
+	args_t args{parse_e(tokes)};
+
+	fc.args = args;
 	Expr x;
+	x.expr = fc;
+
+	tokes.pop_front(); // rrb
 	return x;
 	//return args; // TODO fix this
 	//token_t toke = tokes.front();
@@ -267,8 +280,12 @@ Expr parse_p(tokens_t& tokes)
 			return Expr();
 		case NUMBER:
 			return Expr(stoi(toke.second));
-		case ID:
-			return parse_fn(toke.second, tokes);	
+		case ID: {
+				 if(tokes.front().first == '(')
+					 return parse_fn(toke.second, tokes);
+				 else
+					 parse_error(); // although could be a variable name
+			 }
 		case '(': {
 				  //tokes.pop_front();
 				  Expr x1{parse_e(tokes)};
@@ -421,8 +438,8 @@ int interpret(string s, int expected)
 int main()
 {
 
-	interpret("sqrt1(9)+3", 6);
-	return 0;
+	interpret("sqrt(4+5)+2", 5);
+	//return 0;
 	interpret("42", 42);
 	interpret("42+3", 45);
 	interpret("1+3+5+7", 16);
