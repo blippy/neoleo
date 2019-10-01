@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "cell.h"
+#include "io-utils.h"
 //#include "ref.h"
 #include "sheet.h"
 
@@ -22,32 +23,9 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TYPE DECLARATIONS
 
-class Expr;
-typedef vector<Expr> args_t;
-typedef double num_t;
-typedef variant<num_t, string> value_t;
-typedef function<value_t(args_t)> function_t;
-typedef function_t* funptr;
-//class Args { public: vector<Expr> args; };
-//class FunCall;
-class FunCall { 
-	public: 
-		funptr fn ; 
-		args_t args; 
-		//void set(string fnamej
-};
-class Expr { 
-	public: 
-		Expr() {};
-		Expr(value_t v) : expr(v) {};
-		Expr(string fname, Expr x);
-		//Expr(string fname, args_t args);
-		variant<FunCall, value_t> expr; 
-};
 
 
-//extern map<string, funptr> funcmap;
-extern map<string, function_t> funcmap;
+extern map<string, parse_function_t> funcmap;
 
 void unknown_function(string function_name)
 {
@@ -151,7 +129,7 @@ value_t do_strlen(args_t args)
 	//return sqrt(val);
 }
 
-map<string, function_t> funcmap= {
+map<string, parse_function_t> funcmap= {
 
 	{"strlen", do_strlen},
 	{"+", &do_plus},
@@ -166,8 +144,6 @@ map<string, function_t> funcmap= {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
-typedef pair<int, string> token_t;
-typedef deque<token_t> tokens_t;
 
 //enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
 enum Tokens { EOI = 128, NUMBER, ID, STR };
@@ -178,7 +154,7 @@ tokens_t tokenise(string str)
 	tokens_t tokens;
 
 	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
-	cout << "Parsing: " << str << "\n";
+	//cout << "Parsing: " << str << "\n";
 	const char* cstr = str.c_str();
 	int pos = 0;
 	auto it = str.begin();
@@ -202,7 +178,7 @@ loop:
 			if(ch == 0 || ch == '"') {pos++; break; }
 			token += ch;
 		}
-		cout << "tokenise string is <" << token << ">\n";
+		//cout << "tokenise string is <" << token << ">\n";
 		found(STR, token);
 	}else {
 		token = ch;
@@ -260,13 +236,12 @@ typedef deque<string> ops_t;
 
 
 
-Expr parse_e(tokens_t& tokes);
 Expr parse_t(tokens_t& tokes);
 
 // parse a function
 Expr parse_fn(string fname, tokens_t& tokes)
 {
-	cout << "parse_fn name " << fname << "\n";
+	//cout << "parse_fn name " << fname << "\n";
 	auto fn = fn_lookup(fname);
 	//cout << (*fn)(args_t{12}) << "\n";
 
@@ -441,6 +416,7 @@ value_t eval (Expr expr)
 
 }
 
+bool is_string(value_t val) { return std::holds_alternative<string>(val); }
 num_t to_num (value_t v) { return std::get<num_t>(v); }
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 string to_str (value_t v) { return std::get<string>(v); }
@@ -472,7 +448,7 @@ int run_parser_2019_tests ()
 
 	cout << "Running parser 2019 tests\n";
 
-	user_parser_2019 = true;
+	use_parser_2019 = true;
 
 	interpret("sqrt(4+5)+2", 5);
 	//return 0;
@@ -498,7 +474,12 @@ int run_parser_2019_tests ()
 	tokens_t tokes{tokenise(s)};
 	Expr expr{parse_e(tokes)};
 	value_t val = eval(expr);
-	cout << "Result is " << to_num(val) << "\n";
+	if(is_string(val)) 
+		cp->sString(to_str(val));
+	else
+		cp->sFlt(to_num(val));
+	//cout << "Result is " << to_num(val) << "\n";
+	cout << "Result is " << print_cell(cp) << "\n";
 
 	return 0;
 }

@@ -46,7 +46,7 @@ static char	*option_format = NULL;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "4:VqfxHhsFSTvx";
+static char short_options[] = "4:VHhpTv";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
@@ -124,7 +124,7 @@ parse_command_line(int argc, char **argv)
 				exit (0);
 				break;
 			case 'p':
-				user_parser_2019 = true;
+				use_parser_2019 = true;
 				break;
 			case 'T':
 				option_tests = true;

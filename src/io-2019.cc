@@ -17,6 +17,7 @@ using namespace std::string_literals;
 #include "eval.h"
 #include "io-2019.h"
 #include "io-headless.h"
+#include "parser-2019.h"
 #include "io-utils.h"
 #include "logging.h"
 //#include "mem.h"
@@ -50,7 +51,7 @@ class nwin_c {
 			delwin(m_w);
 		}
 
-	//private:
+		//private:
 		WINDOW* m_w;
 
 };
@@ -139,9 +140,9 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 				break;
 			case KEY_RIGHT: {
 						/*
-						int y, x;
-						getyx(frm.m_w, y, x);
-						int len = strlen(field_buffer(frm.m_fields[1], 0));
+						   int y, x;
+						   getyx(frm.m_w, y, x);
+						   int len = strlen(field_buffer(frm.m_fields[1], 0));
 						//log_debug("std frm x:"s + std::to_string(x) + "," + std::to_string(frm.text().size()));
 						log_debug("std frm x:"s + std::to_string(x) + "," + std::to_string(len));
 						*/
@@ -149,20 +150,20 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 					}
 					break;
 			case KEY_DC:
-				fdrive(REQ_DEL_CHAR);
-				break;
+					fdrive(REQ_DEL_CHAR);
+					break;
 			case KEY_BACKSPACE:
 			case 127:
 			case '\b':
-				// backspace goofiness explained here:
-				// https://stackoverflow.com/questions/27200597/c-ncurses-key-backspace-not-working#27203263
-				fdrive(REQ_DEL_PREV);
-				break;
+					// backspace goofiness explained here:
+					// https://stackoverflow.com/questions/27200597/c-ncurses-key-backspace-not-working#27203263
+					fdrive(REQ_DEL_PREV);
+					break;
 			case CTRL('g'):
-				return false;
+					return false;
 			default:
-				fdrive(ch);
-				break;
+					fdrive(ch);
+					break;
 		}
 		refresh();
 		wrefresh(frm.m_w);
@@ -177,7 +178,21 @@ void edit_cell2019()
 	std::string formula{ formula_text(curow, cucol)};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
-	edit_cell_str(formula);
+
+	if(use_parser_2019) {
+		// cobbled together from parser-2019.cc
+		CELL* cp = find_or_make_cell(curow, cucol);
+		cp->set_formula_text(formula);
+		tokens_t tokes{tokenise(formula)};
+		Expr expr{parse_e(tokes)};
+		value_t val = eval(expr);
+		if(is_string(val))
+			cp->sString(to_str(val));
+		else
+			cp->sFlt(to_num(val));
+		io_pr_cell(curow, cucol, cp);
+	} else
+		edit_cell_str(formula);
 	recalculate(1);
 }
 
@@ -217,21 +232,21 @@ void main_command_loop_for2019()
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
-		{'=', 		edit_cell2019},
-		{'r',		row_cmd2019},
-		{KEY_DC, 	clear_cell_formula}, // delete key
-		{KEY_DOWN,	cursor_down},
-		{KEY_LEFT,  	cursor_left},
-		{KEY_RIGHT, 	cursor_right},
-		{KEY_UP, 	cursor_up},
-		{CTRL('c'), 	copy_this_cell_formula},
-		{CTRL('l'), 	set_cell_alignment_left},
-		{CTRL('r'), 	set_cell_alignment_right},
-		{CTRL('s'), 	save_spreadsheet2019},
-		{CTRL('v'), 	paste_this_cell_formula},
+			{'=', 		edit_cell2019},
+			{'r',		row_cmd2019},
+			{KEY_DC, 	clear_cell_formula}, // delete key
+			{KEY_DOWN,	cursor_down},
+			{KEY_LEFT,  	cursor_left},
+			{KEY_RIGHT, 	cursor_right},
+			{KEY_UP, 	cursor_up},
+			{CTRL('c'), 	copy_this_cell_formula},
+			{CTRL('l'), 	set_cell_alignment_left},
+			{CTRL('r'), 	set_cell_alignment_right},
+			{CTRL('s'), 	save_spreadsheet2019},
+			{CTRL('v'), 	paste_this_cell_formula},
 
 	};
-	
+
 
 	while(!quit) process_key(keymap);
 
@@ -291,8 +306,8 @@ static void paste_1row()
 static void row_cmd2019(){
 	static auto keymap = std::map<int, fn_t> {		
 		{'d', delete_1row},
-		{'i', insert_1row},
-		{'p', paste_1row}
+			{'i', insert_1row},
+			{'p', paste_1row}
 	};
 
 	process_key(keymap);
