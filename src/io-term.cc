@@ -83,10 +83,7 @@ int (*set_file_opts) (int, char *) = oleo_set_options;
 
 static void activate_relevant_command_loop()
 {
-	if(use_2019)
-		main_command_loop_for2019();
-	else
-		command_loop (0, 0);
+	main_command_loop_for2019();
 }
 
 EXTERN void

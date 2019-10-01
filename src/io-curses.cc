@@ -1128,10 +1128,7 @@ _io_flush (void)
 void
 _io_command_loop (int a)
 {
-	if(use_2019)
-		main_command_loop_for2019();
-	else
-		command_loop (a, 0);
+	main_command_loop_for2019();
 }
 
 

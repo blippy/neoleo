@@ -49,7 +49,6 @@ static char short_options[] = "4:VqfxHhsFSTvx";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
-	{"2019",		0,	NULL,	'x'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
 	{"tests",		optional_argument,	NULL,	'T'},
@@ -88,7 +87,6 @@ const char* usage = R"(
   -h, --help               display this help and exit
   -V, --version            output version information and exit
   -T, --tests [x]          run test suite x
-  -x, --2019               use experimental interface
 
 Report bugs to https://github.com/blippy/neoleo/issues
 )";
@@ -132,9 +130,6 @@ parse_command_line(int argc, char **argv)
 						&& '-' != argv[optind][0])
 					option_tests_argument = argv[optind++];
 				//exit(1);
-				break;
-			case 'x':
-				use_2019 = true;
 				break;
 		}
 	}
