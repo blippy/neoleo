@@ -463,8 +463,10 @@ int interpret(string s, int expected)
 
 	return 0;
 }
-int parser_2019_main ()
+int run_parser_2019_tests ()
 {
+
+	cout << "Running parser 2019 tests\n";
 
 	interpret("sqrt(4+5)+2", 5);
 	//return 0;

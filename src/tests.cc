@@ -41,6 +41,8 @@ static bool all_pass = true; // all the checks have passed so far
 
 extern bool yyreglex_experiment();
 
+int run_parser_2019_tests ();
+
 void 
 check(bool ok, std::string msg)
 {
@@ -162,6 +164,7 @@ headless_tests()
 	map<string, std::function<bool()> > func_map = {
 		{"cells",	run_cell_tests},
 		{"obsmem",	run_obsmem_tests},
+		{"parser2019",	run_parser_2019_tests},
 		{"regular", 	run_regular_tests},
 		{"yyparse", 	test_yyparse_parse},
 		{"yyreglex",	yyreglex_experiment}
