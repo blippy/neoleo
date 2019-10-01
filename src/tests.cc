@@ -39,8 +39,6 @@ using namespace std::string_literals;
 
 static bool all_pass = true; // all the checks have passed so far
 
-extern bool yyreglex_experiment();
-
 int run_parser_2019_tests ();
 
 void 
@@ -166,8 +164,7 @@ headless_tests()
 		{"obsmem",	run_obsmem_tests},
 		{"parser2019",	run_parser_2019_tests},
 		{"regular", 	run_regular_tests},
-		{"yyparse", 	test_yyparse_parse},
-		{"yyreglex",	yyreglex_experiment}
+		{"yyparse", 	test_yyparse_parse}
 	};
 
 	format_tests();
