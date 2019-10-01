@@ -30,6 +30,7 @@ neoleo_SOURCES = \
 		 mem.cc \
 		 oleofile.cc \
 		 parse_parse.cc \
+		 parser-2019.cc \
 		 ref.cc regions.cc \
 		 sheet.cc sort.cc spans.cc stringo.cc \
 		 tbl.cc \
@@ -58,6 +59,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 neotypes.h node.h  numeric.h \
 		 oleofile.h  \
 		 parse.hh parse_parse.h \
+		 parser-2019.h \
 		 ref.h \
 		 regions.h sheet.h sort.h spans.h stringo.h \
 		 userpref.h utils.h window.h  \
