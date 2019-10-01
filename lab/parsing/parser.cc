@@ -143,7 +143,7 @@ typedef pair<int, string> token_t;
 typedef deque<token_t> tokens_t;
 
 //enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
-enum Tokens { EOI = 128, NUMBER, ID };
+enum Tokens { EOI = 128, NUMBER, ID, STR };
 
 
 tokens_t tokenise(string str)
@@ -168,8 +168,16 @@ loop:
 	} else if (isalpha(ch)) {
 		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
 		found(ID, token);
-		cout << "found id: " << token << "\n";
-	} else {
+		//cout << "found id: " << token << "\n";
+	} else if(ch == '"') {
+		while(1) {
+			ch = cstr[++pos];
+			if(ch == 0 || ch == '"') {pos++; break; }
+			token += ch;
+		}
+		cout << "tokenise string is <" << token << ">\n";
+		found(STR, token);
+	}else {
 		token = ch;
 		pos++;
 		found(ch, token);
@@ -444,6 +452,7 @@ int main()
 	interpret("plus()+1", 1);
 	interpret("plus(2)+1", 3);
 	interpret("plus(2,3  +4  )  + 1", 10);
+	interpret(" \"hello world\" ", 0);
 
 
 	return 0;
