@@ -26,6 +26,7 @@ using std::endl;
 using std::string;
 using std::vector;
 
+using namespace std::literals;
 
 /* A bland signal handler. */
 static RETSIGTYPE
@@ -205,13 +206,16 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 
 
 int 
-main(int argc, char **argv)
+main (int argc, char **argv)
 {
 	int command_line_file = 0;	/* was there one? */
 
 	InitializeGlobals();
 	Global->argc = argc;
 	Global->argv = argv;
+
+	//log("logging seems"s, "to work"s, 666);
+
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv, command_line_file);
 

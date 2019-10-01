@@ -9,6 +9,8 @@
 #include <form.h>
 #include <panel.h>
 
+using namespace std::string_literals;
+
 #include "basic.h"
 #include "cmd.h"
 #include "convert.h"
@@ -30,13 +32,6 @@ constexpr int CTRL(int c) { return c & 037; }
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;
 
-// TODO belongs in logging.h
-template<typename... Args>
-void log(Args ... args) {
-	std::ostringstream ss;
-	(ss << ... << args);
-	log_debug(ss.str());
-}
 
 int scr_width() {
 	int x,y;
@@ -142,9 +137,17 @@ static bool invoke_std_form(char* desc, std::string& text_field)
 			case KEY_LEFT:
 				fdrive(REQ_LEFT_CHAR);
 				break;
-			case KEY_RIGHT:
-				fdrive(REQ_NEXT_CHAR);
-				break;
+			case KEY_RIGHT: {
+						/*
+						int y, x;
+						getyx(frm.m_w, y, x);
+						int len = strlen(field_buffer(frm.m_fields[1], 0));
+						//log_debug("std frm x:"s + std::to_string(x) + "," + std::to_string(frm.text().size()));
+						log_debug("std frm x:"s + std::to_string(x) + "," + std::to_string(len));
+						*/
+						fdrive(REQ_NEXT_CHAR);
+					}
+					break;
 			case KEY_DC:
 				fdrive(REQ_DEL_CHAR);
 				break;

@@ -46,6 +46,7 @@ log_debug(const char* s)
 	m_log.debug(s);
 }
 
+
 void
 Log::debug(std::string s)
 {
