@@ -6,6 +6,7 @@
 #include <map>
 #include <cmath>
 #include <string>
+#include <string.h>
 #include <variant>
 #include <vector>
 
@@ -67,6 +68,7 @@ Expr::Expr(string fname, Expr x)
 
 value_t eval(Expr expr);
 num_t num_eval(Expr expr);
+string str_eval(Expr expr);
 
 
 void parse_error()
@@ -134,8 +136,18 @@ value_t do_plusfn(args_t args)
 	for(auto& v: args) val += num_eval(v);
 	return val;
 }
+
+value_t do_strlen(args_t args)
+{
+	if(args.size() !=1) parse_error();
+	return strlen(str_eval(args.at(0)).c_str());
+	//num_t val = num_eval(args[0]);
+	//return sqrt(val);
+}
+
 map<string, function_t> funcmap= {
 
+	{"strlen", do_strlen},
 	{"+", &do_plus},
 	{"-", &do_minus},
 	{"*", &do_mul},
@@ -287,6 +299,8 @@ Expr parse_p(tokens_t& tokes)
 			return Expr();
 		case NUMBER:
 			return Expr(stoi(toke.second));
+		case STR:
+			return Expr(toke.second);
 		case ID: {
 				 if(tokes.front().first == '(')
 					 return parse_fn(toke.second, tokes);
@@ -421,12 +435,10 @@ value_t eval (Expr expr)
 
 }
 
-num_t to_num(value_t v) { return std::get<num_t>(v); }
-
-num_t num_eval (Expr expr)
-{
-	return to_num(eval(expr));
-}
+num_t to_num (value_t v) { return std::get<num_t>(v); }
+num_t num_eval (Expr expr) { return to_num(eval(expr)); }
+string to_str (value_t v) { return std::get<string>(v); }
+string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 int interpret(string s, int expected)
 {
@@ -468,7 +480,7 @@ int main()
 	interpret("plus()+1", 1);
 	interpret("plus(2)+1", 3);
 	interpret("plus(2,3  +4  )  + 1", 10);
-	interpret(" \"hello world\" ", 0);
+	interpret(" strlen(\"hello world\") ", 11);
 
 
 	return 0;
