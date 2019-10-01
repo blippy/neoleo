@@ -17,7 +17,8 @@ using namespace std;
 
 class Expr;
 typedef vector<Expr> args_t;
-typedef double value_t;
+typedef double num_t;
+typedef variant<num_t, string> value_t;
 typedef function<value_t(args_t)> function_t;
 typedef function_t* funptr;
 //class Args { public: vector<Expr> args; };
@@ -65,6 +66,7 @@ Expr::Expr(string fname, Expr x)
 // FUNCTION DEFINITIONS
 
 value_t eval(Expr expr);
+num_t num_eval(Expr expr);
 
 
 void parse_error()
@@ -74,24 +76,31 @@ void parse_error()
 
 value_t do_plus(args_t args)
 {
-	value_t val = 0;
-	for(auto& arg: args) val += eval(arg);
+	num_t val = 0;
+	for(auto& arg: args) val += num_eval(arg);
+
+	/*
+	   if(args.size() ==0) return 0;
+	   value_t val = eval(args[0]);
+	   for(int i=1; i< args.size(); ++i) 
+	   val = val + eval(args[i]);
+	   */
 	return val;
 }
 value_t do_minus(args_t args)
 {
 	if(args.size() == 0) return 0;
-	value_t val = eval(args[0]);
+	num_t val = num_eval(args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
-	for(int i = 1; i<args.size(); ++i) val -= eval(args[i]);
+	for(int i = 1; i<args.size(); ++i) val -= num_eval(args[i]);
 	return val;
 }
 value_t do_mul(args_t args)
 {
-	value_t val = 1.0;
+	num_t val = 1.0;
 	for(auto& arg: args) {
-		value_t a = eval(arg);
-		val *= a;
+		//num_t a = eval(arg);
+		val *=  num_eval(arg);
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
 	return val;
@@ -99,34 +108,34 @@ value_t do_mul(args_t args)
 value_t do_div(args_t args)
 {
 	if(args.size() == 0) return 0;
-	value_t val = eval(args[0]);
+	num_t val = num_eval(args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
-	for(int i = 1; i<args.size(); ++i) val /= eval(args[i]);
+	for(int i = 1; i<args.size(); ++i) val /= num_eval(args[i]);
 	return val;
 }
 
 value_t do_sqrt(args_t args)
 {
 	if(args.size() !=1) parse_error();
-	value_t val = eval(args[0]);
+	num_t val = num_eval(args[0]);
 	return sqrt(val);
 }
 value_t do_hypot(args_t args)
 {
 	if(args.size() !=2) parse_error();
-	value_t v1 = eval(args[0]);
-	value_t v2 = eval(args[1]);
+	num_t v1 = num_eval(args[0]);
+	num_t v2 = num_eval(args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
 value_t do_plusfn(args_t args)
 {
-	value_t val = 0;
-	for(auto& v: args) val += eval(v);
+	num_t val = 0;
+	for(auto& v: args) val += num_eval(v);
 	return val;
 }
 map<string, function_t> funcmap= {
-	
+
 	{"+", &do_plus},
 	{"-", &do_minus},
 	{"*", &do_mul},
@@ -191,7 +200,7 @@ finis:
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
-	
+
 void consume(char ch, tokens_t& tokes)
 {
 	if(ch == tokes.front().first)
@@ -200,7 +209,7 @@ void consume(char ch, tokens_t& tokes)
 		parse_error();
 }
 
-template<class Q>
+	template<class Q>
 Q rest(Q qs)
 {
 	qs.pop_front();
@@ -395,7 +404,7 @@ Expr parse_e(tokens_t& tokes)
 //template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-value_t eval(Expr expr)
+value_t eval (Expr expr)
 {
 	value_t val = 667;
 	if(std::holds_alternative<value_t>(expr.expr))
@@ -411,6 +420,13 @@ value_t eval(Expr expr)
 
 
 }
+
+num_t to_num(value_t v) { return std::get<num_t>(v); }
+
+num_t num_eval (Expr expr)
+{
+	return to_num(eval(expr));
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 int interpret(string s, int expected)
 {
@@ -423,7 +439,7 @@ int interpret(string s, int expected)
 	}
 
 	Expr expr{parse_e(tokes)};
-	value_t val = eval(expr);
+	num_t val = num_eval(expr);
 	cout << "Evaluates to " << val << " ";
 	if(val == expected) 
 		cout << "PASS";
