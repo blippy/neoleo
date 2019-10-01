@@ -160,6 +160,8 @@ loop:
 	char ch = cstr[pos];
 	if(ch == 0) {
 		goto finis;
+	} else if(isspace(ch)) {
+		while(isspace(ch)) { ch = cstr[++pos]; }
 	} else if ( isdigit(ch)) {
 		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
 		found(NUMBER, token);
@@ -441,7 +443,7 @@ int main()
 	interpret("hypot(3,4)+1", 6);
 	interpret("plus()+1", 1);
 	interpret("plus(2)+1", 3);
-	interpret("plus(2,3+4)+1", 10);
+	interpret("plus(2,3  +4  )  + 1", 10);
 
 
 	return 0;
