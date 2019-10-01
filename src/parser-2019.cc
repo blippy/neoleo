@@ -10,6 +10,10 @@
 #include <variant>
 #include <vector>
 
+#include "cell.h"
+//#include "ref.h"
+#include "sheet.h"
+
 #include "parser-2019.h"
 
 using namespace std;
@@ -468,6 +472,8 @@ int run_parser_2019_tests ()
 
 	cout << "Running parser 2019 tests\n";
 
+	user_parser_2019 = true;
+
 	interpret("sqrt(4+5)+2", 5);
 	//return 0;
 	interpret("42", 42);
@@ -486,6 +492,13 @@ int run_parser_2019_tests ()
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
 
+	string s{"1+2"};
+	CELL* cp = find_or_make_cell(1, 1);
+	cp->set_formula_text(s);
+	tokens_t tokes{tokenise(s)};
+	Expr expr{parse_e(tokes)};
+	value_t val = eval(expr);
+	cout << "Result is " << to_num(val) << "\n";
 
 	return 0;
 }

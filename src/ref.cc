@@ -134,7 +134,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
 		return (char *) "cell is locked";
 	}
 
-	set_cell (row, col, string);
+	set_cell(row, col, string);
 	if (my_cell)
 	{
 		my_cell->update_cell();
