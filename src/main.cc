@@ -15,6 +15,7 @@
 #include "io-term.h"
 #include "io-utils.h"
 #include "logging.h"
+#include "parser-2019.h"
 #include "tests.h"
 #include "utils.h"
 
@@ -51,6 +52,7 @@ static struct option long_options[] =
 	{"version",		0,	NULL,	'V'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
+	{"parser",		0,	NULL,	'p'},
 	{"tests",		optional_argument,	NULL,	'T'},
 	{"version",		0,	NULL,	'v'},
 	{NULL,			0,	NULL,	0}
@@ -85,6 +87,7 @@ show_usage (void)
 const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
+  -p, --parser             use experimental 2019 parser
   -V, --version            output version information and exit
   -T, --tests [x]          run test suite x
 
@@ -119,6 +122,9 @@ parse_command_line(int argc, char **argv)
 			case 'h':
 				show_usage ();
 				exit (0);
+				break;
+			case 'p':
+				user_parser_2019 = true;
 				break;
 			case 'T':
 				option_tests = true;

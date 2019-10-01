@@ -1,7 +1,13 @@
 ===========================================================================
-VERSION: 9.0.0
+VERSION: 9.0
 STATUS:  DEV
 DATE:    ONGOING
+
+* Removed '-x' command-line option. The 'experimental' GUI is now the
+GUI that replaces the previous version
+
+* Added '-p' command-line option. This uses the experimental parser
+started in 2019. It is by no means complete.
 
 * Added sumr() function, to sum a range. It is like sum(),
 but takes 4 parameters instead of a range. It is useful
