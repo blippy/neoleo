@@ -45,4 +45,4 @@ Expr parse_e(tokens_t& tokes);
 value_t eval (Expr expr);
 bool is_string(value_t val);
 //num_t to_num (value_t v) { return std::get<num_t>(v); }
-std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula);
+std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);

@@ -182,15 +182,7 @@ void edit_cell2019()
 	if(use_parser_2019) {
 		// cobbled together from parser-2019.cc
 		CELL* cp = find_or_make_cell(curow, cucol);
-		cp->set_formula_text(formula);
-		tokens_t tokes{tokenise(formula)};
-		Expr expr{parse_e(tokes)};
-		value_t val = eval(expr);
-		if(is_string(val))
-			cp->sString(to_str(val));
-		else
-			cp->sFlt(to_num(val));
-		io_pr_cell(curow, cucol, cp);
+		set_and_eval(curow, cucol, formula, true);
 	} else
 		edit_cell_str(formula);
 	recalculate(1);

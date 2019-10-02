@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "cell.h"
+#include "io-abstract.h"
 #include "io-utils.h"
 //#include "neotypes.h"
 //#include "ref.h"
@@ -446,7 +447,7 @@ int interpret(string s, int expected)
 	return 0;
 }
 	
-std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula)
+std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
@@ -455,6 +456,10 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula)
 		cp->sString(to_str(val));
 	else
 		cp->sFlt(to_num(val));
+
+	if(display_it) // this is really cack-handed
+		io_pr_cell(r, c, cp);
+
 	return print_cell(cp);
 }
 int run_parser_2019_tests ()
