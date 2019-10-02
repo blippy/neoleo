@@ -462,6 +462,13 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 
 	return print_cell(cp);
 }
+int interpret(int r, int c, string s)
+{
+	cout << "Interpretting " << s << "\n";
+	cout << "Result is " << set_and_eval(r,c, s) <<"\n";
+	return 1;
+}
+
 int run_parser_2019_tests ()
 {
 
@@ -487,7 +494,7 @@ int run_parser_2019_tests ()
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
 
-	cout << " Result is " << set_and_eval(1,1, "1+2") <<"\n";
+	interpret(1,1, "1+2");
 
 	//value v = val;
 
