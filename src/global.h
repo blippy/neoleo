@@ -20,6 +20,8 @@
 #include <map>
 #include <string>
 
+#include "neotypes.h"
+
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
 #endif /* RETSIGTYPE */
@@ -67,10 +69,6 @@ typedef unsigned short CELLREF;
 #define PUT_COL(name,val)	((name)[2]=((val)>>8)),((name)[3]=val)
 #define EXP_ADD			sizeof(CELLREF)*2
 
-/* Struct rng is used to describe a region of cells */
-typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
-
-typedef struct rng range_t;
 inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
 /* A ref_fm structure contains a list of all cells that reference some

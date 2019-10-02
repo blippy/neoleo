@@ -212,7 +212,7 @@ void delete_all_cells()
 }
 
 
-bool inside(CELL* cp, range_t* a_rng)
+bool inside(CELL* cp, rng_t* a_rng)
 {
 	CELLREF r, c;
 	decoord(cp, r, c);

@@ -1,7 +1,9 @@
+#pragma once
+
 /*
  * $Id: errors.h,v 1.3 2000/08/10 21:02:50 danny Exp $
  *
- * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -38,3 +40,5 @@
 #define NO_QUOTE	15
 #define BAD_CHAR	16
 #define BAD_FUNC	17
+
+typedef struct err_t { int num; std::string what; } err_t;
