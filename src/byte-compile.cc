@@ -42,7 +42,6 @@
 #include "busi.h"
 #include "parse_parse.h"
 
-#include "stringo.h"
 #include "cell.h"
 #include "byte-compile.h"
 #include "utils.h"
@@ -54,7 +53,6 @@ using IFPTR = int (*)(int, int);
 using VIFPTR = void (*)(int, int);
 
 extern function_t busi_funs[];
-extern function_t string_funs[];
 extern function_t cells_funs[];
 
 extern char *instr;
@@ -258,7 +256,6 @@ function_t the_funs[] =
 static function_t *__usr_funs[] =
 {
 	busi_funs,
-	string_funs,
 	cells_funs,
 	/* Add something here */
 };
@@ -268,7 +265,6 @@ static function_t *__usr_funs[] =
  * it defines.
  */
 extern int init_busi_function_count(void);
-extern int init_string_function_count(void);
 extern int init_cells_function_count(void);
 //extern int init_mysql_function_count(void);
 //extern int init_gsl_function_count(void);
@@ -278,7 +274,6 @@ typedef int (*init_function_count)(void);
 
 static init_function_count init_function_counts[] = {
 	&init_busi_function_count,
-	&init_string_function_count,
 	&init_cells_function_count,
 	/* Add something here */
 };

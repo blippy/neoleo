@@ -32,7 +32,7 @@ neoleo_SOURCES = \
 		 parse_parse.cc \
 		 parser-2019.cc \
 		 ref.cc regions.cc \
-		 sheet.cc sort.cc spans.cc stringo.cc \
+		 sheet.cc sort.cc spans.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
@@ -60,7 +60,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 parse.hh parse_parse.h \
 		 parser-2019.h \
 		 ref.h \
-		 regions.h sheet.h sort.h spans.h stringo.h \
+		 regions.h sheet.h sort.h spans.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h \
