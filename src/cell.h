@@ -37,6 +37,7 @@ typedef uint32_t coord_t;
 #include "neotypes.h"
 #include "global.h"
 #include "numeric.h"
+#include "parser-2019.h"
 //#include "sheet.h"
 #include "utils.h"
 #include "value.h"
@@ -119,6 +120,8 @@ class cell : public value
 
 		void recompute_bytecode();
 		void invalidate_bytecode();
+
+		Expr parse_tree;
 
 		formula_t get_bytecode(); 
 		void clear_bytecode();

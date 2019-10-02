@@ -445,6 +445,18 @@ int interpret(string s, int expected)
 
 	return 0;
 }
+	
+std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula)
+{
+	CELL* cp = find_or_make_cell(r, c);
+	cp->set_formula_text(formula);
+	value_t val = eval(cp->parse_tree);
+	if(is_string(val)) 
+		cp->sString(to_str(val));
+	else
+		cp->sFlt(to_num(val));
+	return print_cell(cp);
+}
 int run_parser_2019_tests ()
 {
 
@@ -470,18 +482,7 @@ int run_parser_2019_tests ()
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
 
-	string s{"1+2"};
-	CELL* cp = find_or_make_cell(1, 1);
-	cp->set_formula_text(s);
-	tokens_t tokes{tokenise(s)};
-	Expr expr{parse_e(tokes)};
-	value_t val = eval(expr);
-	if(is_string(val)) 
-		cp->sString(to_str(val));
-	else
-		cp->sFlt(to_num(val));
-	//cout << "Result is " << to_num(val) << "\n";
-	cout << "Result is " << print_cell(cp) << "\n";
+	cout << " Result is " << set_and_eval(1,1, "1+2") <<"\n";
 
 	//value v = val;
 

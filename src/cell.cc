@@ -152,7 +152,12 @@ void cell::set_formula_text(const std::string& str)
 {
 	if(str ==formula_text) return;
 	formula_text = str;
-	invalidate_bytecode();
+
+	if(use_parser_2019) {
+		tokens_t tokes = tokenise(formula_text);
+		parse_tree = parse_e(tokes);
+	} else
+		invalidate_bytecode();
 }
 
 std::string cell::get_formula_text() const
