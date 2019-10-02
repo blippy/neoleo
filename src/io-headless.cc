@@ -31,6 +31,7 @@ using std::cout;
 using std::endl;
 using std::function;
 using std::map;
+using std::string;
 using std::vector;
 
 typedef int T;

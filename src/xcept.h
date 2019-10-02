@@ -2,7 +2,7 @@
 
 #include <string>
 
-using std::string;
+//using std::string;
 
 /* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++ 
  * */
@@ -10,7 +10,7 @@ class OleoJmp : public std::exception
 {
 	public:
 		OleoJmp() {}
-		OleoJmp(const string& msg) : msg_(msg) {}
+		OleoJmp(const std::string& msg) : msg_(msg) {}
 
 		virtual const char* what() const throw()
 		{
@@ -18,17 +18,17 @@ class OleoJmp : public std::exception
 		}
 
 	private:
-		string msg_ = "OleoJmp";
+		std::string msg_ = "OleoJmp";
 };
 
 class SyntaxError : public std::exception
 {
 	public:
 		SyntaxError() {}
-		SyntaxError(const string& msg) : msg_(msg) {}
+		SyntaxError(const std::string& msg) : msg_(msg) {}
 		virtual const char* what() const throw() { return msg_.c_str() ; }
 	private:
-		string msg_ = "SyntaxError";
+		std::string msg_ = "SyntaxError";
 };
  
 void  _assert_uncalled(const char* __file__, int __line__); 
@@ -44,6 +44,11 @@ class ValErr : public std::exception
 	       {
 		       return std::to_string(n).c_str();
 	       }
+	       const int num() const throw()
+	       {
+		       return n;
+	       }
 	private:
 	       int n = 0;
+	       //std::string msg;
 };

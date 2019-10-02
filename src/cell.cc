@@ -183,7 +183,7 @@ void cell::dump_cell()
 	cout << "Frm: " << get_formula_text() << "\n";
 
 
-	auto dump_coords = [](string field, crefs_t& coords) {
+	auto dump_coords = [](std::string field, crefs_t& coords) {
 		for(const auto& coord: coords)
 			cout << field << ": R" << get_row(coord) << "C" << get_col(coord) << "\n";
 	};
