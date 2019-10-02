@@ -17,11 +17,6 @@ using std::vector;
 
 using namespace std::string_literals;
 
-// check for leaks, as suggested at 
-// http://stackoverflow.com/questions/33201345/leaksanitizer-get-run-time-leak-reports
-//#include <sanitizer/lsan_interface.h>
-
-
 #include "tests.h"
 #include "format.h"
 #include "io-abstract.h"
@@ -72,35 +67,6 @@ test_formatting()
 
 
 
-void parse_text(const std::string& expr)
-{
-	FormulaParser yy;
-	cout << "Parsing:<" << expr << ">\n";
-	yy.parse(expr);
-	cout << "\n";
-}
-
-bool
-test_yyparse_parse()
-{
-	FormulaParser yy, yy1;
-
-	auto exprs = strings { "12", "13", "13+14", 
-		"\"hello\"",
-		"",
-		"   ",
-		"  \t\t     ",
-		"     3 + 4   ",
-		"1+", 
-		"\"hello\"",
-		"\"howde doode\"",
-		"\"dangling string"
-	};
-	for(auto const& e: exprs) parse_text(e);
-	
-	cout << "Finished testing yyparse_parse\n";
-	return true;
-}
 
 
 bool
@@ -111,8 +77,7 @@ run_regular_tests()
 	check(pad_left("hello", 7) == "  hello", "padleft");
 	check(pad_right("hello", 7) == "hello  ", "padright");
 
-	test_yyparse_parse();
-	cout << "Finished test\n";
+	cout << "Finished regular test\n";
 	return all_pass;
 }
 
@@ -163,8 +128,7 @@ headless_tests()
 		{"cells",	run_cell_tests},
 		{"obsmem",	run_obsmem_tests},
 		{"parser2019",	run_parser_2019_tests},
-		{"regular", 	run_regular_tests},
-		{"yyparse", 	test_yyparse_parse}
+		{"regular", 	run_regular_tests}
 	};
 
 	format_tests();
