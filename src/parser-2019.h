@@ -6,6 +6,7 @@
 #include <variant>
 #include <vector>
 
+#include "neotypes.h"
 
 inline bool use_parser_2019 = false;
 
@@ -16,7 +17,7 @@ class Expr;
 
 typedef std::vector<Expr> args_t;
 typedef double num_t;
-typedef std::variant<num_t, std::string> value_t;
+//typedef std::variant<num_t, std::string> value_t;
 typedef std::function<value_t(args_t)> parse_function_t;
 typedef parse_function_t* funptr;
 class FunCall { 
