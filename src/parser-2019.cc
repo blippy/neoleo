@@ -11,11 +11,13 @@
 #include <vector>
 
 #include "cell.h"
+
 #include "io-abstract.h"
 #include "io-utils.h"
 //#include "neotypes.h"
 //#include "ref.h"
 #include "sheet.h"
+#include "xcept.h"
 
 #include "parser-2019.h"
 
@@ -59,7 +61,8 @@ string str_eval(Expr expr);
 
 void parse_error()
 {
-	throw 666;
+	throw ValErr(PARSE_ERR);
+	//throw 666;
 }
 
 value_t do_plus(args_t args)
@@ -278,8 +281,8 @@ Expr parse_p(tokens_t& tokes)
 	token_t toke = tokes.front();
 	tokes.pop_front();
 	switch(toke.first) {
-		case EOI:
-			return Expr();
+		//case EOI:
+		//	return Expr();
 		case NUMBER:
 			return Expr(stoi(toke.second));
 		case STR:
@@ -495,6 +498,7 @@ int run_parser_2019_tests ()
 	interpret(" strlen(\"hello world\") ", 11);
 
 	interpret(1,1, "1+2");
+	interpret(1,1, "1 +");
 
 	//value v = val;
 

@@ -1049,16 +1049,6 @@ clear_spreadsheet (void)
 }
 
 
-char *ename[] = 
-{
-	CCC("#WHAT?"),
-	CCC("#ERROR"), CCC("#BAD_INPUT"), CCC("#NON_NUMBER"), CCC("#NON_STRING"),
-	CCC("#NON_BOOL"), CCC("#NON_RANGE"), CCC("#OUT_OF_RANGE"), CCC("#NO_VALUES"),
-	CCC("#DIV_BY_ZERO"), CCC("#BAD_NAME"), CCC("#NOT_AVAIL"), CCC("#PARSE_ERROR"),
-	CCC("#NEED_OPEN"), CCC("#NEED_CLOSE"), CCC("#NEED_QUOTE"), CCC("#UNK_CHAR"),
-	CCC("#UNK_FUNC"),
-	CCC(0)
-};
 
 char tname[] = "#TRUE";
 char fname[] = "#FALSE";

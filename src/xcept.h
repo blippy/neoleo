@@ -39,16 +39,10 @@ class ValErr : public std::exception
 	public:
 	       ValErr() {}
 	       ValErr(const int n) : n(n) {}
+	       const char* what() const throw();
+	       const int num() const throw();
 
-	       virtual const char* what() const throw()
-	       {
-		       return std::to_string(n).c_str();
-	       }
-	       const int num() const throw()
-	       {
-		       return n;
-	       }
 	private:
 	       int n = 0;
-	       //std::string msg;
+	       std::string msg;
 };
