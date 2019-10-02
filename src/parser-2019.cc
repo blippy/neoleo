@@ -453,12 +453,16 @@ int interpret(string s, int expected)
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
+	try {
 	cp->set_formula_text(formula);
 	value_t val = eval(cp->parse_tree);
 	if(is_string(val)) 
 		cp->sString(to_str(val));
 	else
 		cp->sFlt(to_num(val));
+	} catch(ValErr ve) {
+		cp->sErr(ve.num());
+	}
 
 	if(display_it) // this is really cack-handed
 		io_pr_cell(r, c, cp);
