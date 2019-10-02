@@ -46,7 +46,7 @@ static char	*option_format = NULL;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "4:VHhpTv";
+static char short_options[] = "VHhpTv";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
