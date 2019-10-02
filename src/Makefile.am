@@ -21,7 +21,7 @@ neoleo_SOURCES = \
 		 args.cc basic.cc busi.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
 		 display.cc \
-		 eval.cc format.cc funcs.cc \
+		 errors.cc eval.cc format.cc funcs.cc \
 		 input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc \
@@ -41,7 +41,6 @@ neoleo_SOURCES = \
 		 shell.cc \
 		 tests.cc \
 		 value.cc \
-		 xcept.cc \
 		 yyreglex.cc
 	
 
@@ -65,7 +64,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 userpref.h utils.h window.h  \
 		 shell.h \
 		 tbl.h tests.h \
-		 value.h xcept.h
+		 value.h
 
 
 byte-compile.o : parse.hh

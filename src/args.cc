@@ -31,7 +31,7 @@
 #include "io-utils.h"
 #include "format.h"
 #include "utils.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 
 /* These commands define the syntax and editting modes of command arguments.

@@ -19,12 +19,13 @@
 #include <string.h>
 
 #include "global.h"
+#include "errors.h"
 #include "input.h"
 #include "cmd.h"
 #include "window.h"
 #include "io-abstract.h"
 #include "utils.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 
 /* In the functions below, we only ever deal with one input_view at a 

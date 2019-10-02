@@ -37,7 +37,7 @@
 #include "window.h"
 #include "spans.h"
 #include "utils.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 /* These functions read and write OLEO style files. */
 

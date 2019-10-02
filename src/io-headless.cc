@@ -17,7 +17,7 @@
 #include "io-headless.h"
 #include "cmd.h"
 #include "window.h"
-#include "xcept.h"
+//#include "xcept.h"
 #include "io-curses.h"
 #include "io-utils.h"
 #include "sheet.h"

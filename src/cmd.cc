@@ -26,7 +26,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "xcept.h"
+//#include "xcept.h"
 #include "sheet.h"
 #include "logging.h"
 #include "mem.h"
@@ -44,7 +44,7 @@
 #include "io-edit.h"
 #include "ref.h"
 #include "utils.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 using namespace std::literals::string_literals;
 

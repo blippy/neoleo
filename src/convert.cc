@@ -2,7 +2,7 @@
 #include <string>
 
 #include "convert.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 double to_double(const char* strptr, bool &ok)
 {

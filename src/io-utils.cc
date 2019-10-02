@@ -49,7 +49,7 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
-#include "xcept.h"
+//#include "xcept.h"
 
 
 /* Routines for formatting cell values */
