@@ -29,7 +29,7 @@
 #include <stack>
 #include <map>
 
-#include "funcs.h"
+//#include "funcs.h"
 #include "parse_parse.h"
 
 #include "global.h"

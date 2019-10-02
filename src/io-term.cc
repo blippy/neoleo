@@ -58,7 +58,7 @@ using std::endl;
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-#include "funcs.h"
+//#include "funcs.h"
 #include "userpref.h"
 
 #ifdef	HAVE_PANIC_SAVE

@@ -21,7 +21,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "funcs.h"
+//#include "funcs.h"
 #include "key.h"
 #include "cmd.h"
 #include "io-abstract.h"

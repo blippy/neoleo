@@ -18,9 +18,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <ctype.h>
 #include <string.h>
 
-#include <ctype.h>
 #include "global.h"
 #define DEFINE_STYLES	1
 #include "args.h"
@@ -34,6 +34,51 @@
 //#include "xcept.h"
 
 
+
+#include "cmd.h"
+#include "io-term.h"
+#include "basic.h"
+#include "format.h"
+#include "regions.h"
+#include "window.h"
+#include "sheet.h"
+
+
+/* Returns 0 if the function is found.
+ * Also returns (through parameters) the vector and cmd_func.
+ * The output parameters can be NULL.
+ */
+
+int 
+find_function (int * vec_out, struct cmd_func ** cmd_out, const char * name, int len)
+{
+  int vector;
+  struct cmd_func * cmd;
+  for (vector = 0; vector < num_funcs; vector++)
+    for (cmd = &the_funcs[vector][0]; cmd->func_name; cmd++)
+      if (!(strincmp (name, cmd->func_name, len) || cmd->func_name[len]))
+	{
+	  if (vec_out)
+	    *vec_out = vector;
+	  if (cmd_out)
+	    *cmd_out = cmd;
+	  return 0;
+	}
+  return 1;
+}  
+
+static struct cmd_func * named_macro_strings = 0;
+static int num_named_macro_strings = 0;
+static int named_macro_vec;
+
+void 
+init_named_macro_strings (void)
+{
+  named_macro_strings =
+    (struct cmd_func *) ck_malloc (sizeof (struct cmd_func));
+  bzero (named_macro_strings, sizeof (struct cmd_func));
+  named_macro_vec = add_usr_cmds (named_macro_strings);
+}
 /* These commands define the syntax and editting modes of command arguments.
  * Each _verify function parses some kind of argument and stores its value
  * in a command_arg structure.  An error message or NULL is returned.

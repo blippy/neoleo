@@ -22,7 +22,7 @@
 #include <math.h>
 
 #include "convert.h"
-#include "funcs.h"
+#include "args.h"
 #include "global.h"
 #include "cell.h"
 #include "eval.h"

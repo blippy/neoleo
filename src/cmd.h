@@ -36,7 +36,6 @@ typedef obsmem cmd_obstack_t;
 
 #include "key.h"
 #include "args.h"
-#include "funcs.h"
 #include "line.h"
 
 typedef void (*alarm_fn)(void);
