@@ -425,6 +425,7 @@ string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 int interpret(string s, int expected)
 {
+	cout << "Interpretting " << s << "\n";
 	tokens_t tokes{tokenise(s)};
 
 	if constexpr (0) {
@@ -481,6 +482,8 @@ int run_parser_2019_tests ()
 		cp->sFlt(to_num(val));
 	//cout << "Result is " << to_num(val) << "\n";
 	cout << "Result is " << print_cell(cp) << "\n";
+
+	//value v = val;
 
 	return 0;
 }
