@@ -75,13 +75,6 @@ value_t do_plus(args_t args)
 {
 	num_t val = 0;
 	for(auto& arg: args) val += num_eval(arg);
-
-	/*
-	   if(args.size() ==0) return 0;
-	   value_t val = eval(args[0]);
-	   for(int i=1; i< args.size(); ++i) 
-	   val = val + eval(args[i]);
-	   */
 	return val;
 }
 value_t do_minus(args_t args)
@@ -96,7 +89,6 @@ value_t do_mul(args_t args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
-		//num_t a = eval(arg);
 		val *=  num_eval(arg);
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
@@ -420,18 +412,21 @@ Expr parse_e (tokens_t& tokes)
 value_t eval (Expr expr)
 {
 	value_t val = 667;
-	if(std::holds_alternative<value_t>(expr.expr))
-		val = std::get<value_t>(expr.expr);
-	else { // must be a function call		
-		//auto &fn = std::get<FunCall>(expr.fn);
-		auto &fc = std::get<FunCall>(expr.expr);
-		auto fn = fc.fn;
-		return (*fn)(fc.args);
+
+	try {
+		if(std::holds_alternative<value_t>(expr.expr))
+			val = std::get<value_t>(expr.expr);
+		else { // must be a function call		
+			//auto &fn = std::get<FunCall>(expr.fn);
+			auto &fc = std::get<FunCall>(expr.expr);
+			auto fn = fc.fn;
+			return (*fn)(fc.args);
+		}
+	} catch(ValErr ve) {
+		val = err_t{ve.num()};
 	}
 
 	return val;
-
-
 }
 
 	template <class T>
@@ -449,16 +444,6 @@ num_t to_num (value_t v) { return tox<num_t>(v, NON_NUMBER); }
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 //string to_str1 (value_t v) { return std::get<string>(v); }
 string to_str (value_t v) { return tox<string>(v, NON_STRING); }
-
-
-/*
-   string to_str (value_t val) { 
-   if(std::holds_alternative<string>(val))
-   return std::get<string>(val);
-   else
-   throw ValErr(NON_STRING);
-   }
-   */
 
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -487,15 +472,14 @@ Expr parse_string(const std::string& s)
 
 int interpret(string s, string expected)
 {
-	cout << "Interpretting `" << s << "'\n";
+	cout << "Interpreting `" << s << "'\n";
 
 	Expr expr{parse_string(s)};
-	cout << "point b\n";
+	//cout << "point b\n";
 
 	value_t v = eval(expr);
 	string res = stringify_value_file_style(v);
 
-	//num_t val = num_eval(expr);
 	cout << "Evaluates to `" << res << "' ";
 	if(res == expected) 
 		cout << "PASS";
@@ -510,16 +494,19 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
-	try {
-		cout << "point a\n";
-		value_t val = eval(cp->parse_tree);
+	value_t val = eval(cp->parse_tree);
+
+	//try {
+		//cout << "point a\n";
+		//value_t val = eval(cp->parse_tree);
+		// TODO need to cover the full type range
 		if(is_string(val)) 
 			cp->sString(to_str(val));
 		else
 			cp->sFlt(to_num(val));
-	} catch(ValErr ve) {
-		cp->sErr(ve.num());
-	}
+	//} catch(ValErr ve) {
+	//	cp->sErr(ve.num());
+	//}
 
 	if(display_it) // this is really cack-handed
 		io_pr_cell(r, c, cp);
@@ -529,7 +516,7 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 
 int interpret(int r, int c, string s, string expecting)
 {
-	cout << "Interpretting `" << s << "'\n";
+	cout << "Interpreting R" << r << "C" << c << ": `" << s << "'\n";
 	string res = set_and_eval(r,c, s);
 	cout << "Result is `" << res << "' " ;
 	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
@@ -538,7 +525,6 @@ int interpret(int r, int c, string s, string expecting)
 
 int run_parser_2019_tests ()
 {
-
 	cout << "Running parser 2019 tests\n";
 
 	use_parser_2019 = true;
@@ -561,7 +547,7 @@ int run_parser_2019_tests ()
 	interpret("plus(2,3  +4  )  + 1", "10");
 	interpret(" strlen(\"hello world\") ", "11");
 	interpret("1+", "#PARSE_ERROR");
-	interpret(" strlen(1) ", "11");
+	interpret(" strlen(1) ", "#NON_STRING");
 
 	interpret(1,1, "1+2", "3");
 	interpret(1,1, "1 +", "#PARSE_ERROR");
