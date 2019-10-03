@@ -101,6 +101,7 @@ class cell : public value
 		void update_cell();
 		void dump_cell();
 		void reparse();
+		void eval_cell();
 
 		coord_t coord;
 		void set_refs(const crefs_t& coords);

@@ -40,7 +40,7 @@
 #include "spans.h"
 #include "utils.h"
 //#include "xcept.h"
-
+#include "parser-2019.h"
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -204,6 +204,30 @@ cell::~cell()
 	//cout <<"X";
 }
 
+void cell::eval_cell()
+{
+	value_t val = eval(parse_tree);
+
+	// now hack it
+	switch(get_value_t_type(val)) {
+			case TYP_ERR:
+				sErr(to_err(val).num);
+				break;
+			case TYP_NUL:
+				type = TYP_NUL;
+				break;
+			case TYP_STR:
+				sString(to_str(val));
+				break;
+			case TYP_INT:
+			case TYP_FLT:
+				sFlt(to_num(val));
+				break;
+			case TYP_BOL:
+			default:
+				ASSERT_UNCALLED();
+	}
+}
 
 void copy_cell_stuff (cell* src, cell* dest)
 {

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "neotypes.h"
+#include "value.h"
 
 inline bool use_parser_2019 = false;
 
@@ -42,3 +43,8 @@ Expr parse_string(const std::string& s);
 value_t eval (Expr expr);
 bool is_string(value_t val);
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);
+ValType get_value_t_type(value_t& val);
+err_t to_err(value_t v);
+bool is_num(value_t val);
+bool is_err(value_t val); 
+bool is_nul(value_t val); 

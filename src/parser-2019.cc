@@ -438,9 +438,23 @@ T tox(value_t val, int errtype)
 		throw ValErr(errtype);
 }
 
+ValType get_value_t_type(value_t& val)
+{
+	if(is_nul(val)) 	return TYP_NUL;
+	if(is_string(val)) 	return TYP_STR;
+	if(is_num(val))		return TYP_FLT;
+	if(is_err(val))		return TYP_ERR;
+	ASSERT_UNCALLED();
+	return TYP_NUL;
+}
+
+bool is_nul(value_t val) { return std::holds_alternative<empty_t>(val); }
+bool is_err(value_t val) { return std::holds_alternative<err_t>(val); }
+bool is_num(value_t val) { return std::holds_alternative<num_t>(val); }
 bool is_string(value_t val) { return std::holds_alternative<string>(val); }
 //num_t to_num (value_t v) { return std::get<num_t>(v); }
 num_t to_num (value_t v) { return tox<num_t>(v, NON_NUMBER); }
+err_t to_err(value_t v) { return tox<err_t>(v, ERR_CMD); }
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 //string to_str1 (value_t v) { return std::get<string>(v); }
 string to_str (value_t v) { return tox<string>(v, NON_STRING); }
@@ -494,20 +508,9 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
-	value_t val = eval(cp->parse_tree);
-
-	//try {
-		//cout << "point a\n";
-		//value_t val = eval(cp->parse_tree);
-		// TODO need to cover the full type range
-		if(is_string(val)) 
-			cp->sString(to_str(val));
-		else
-			cp->sFlt(to_num(val));
-	//} catch(ValErr ve) {
-	//	cp->sErr(ve.num());
-	//}
-
+	cp->eval_cell();
+	//value_t val = eval(cp->parse_tree);
+	//cp->sValue(val);
 	if(display_it) // this is really cack-handed
 		io_pr_cell(r, c, cp);
 
@@ -550,7 +553,7 @@ int run_parser_2019_tests ()
 	interpret(" strlen(1) ", "#NON_STRING");
 
 	interpret(1,1, "1+2", "3");
-	interpret(1,1, "1 +", "#PARSE_ERROR");
+	interpret(1,1, "1+", "#PARSE_ERROR");
 	interpret(1,1, "strlen(1)", "#NON_STRING");
 	interpret(1,1, "1 1", "#PARSE_ERROR");
 	interpret(1,1, "", "#NON_STRING");

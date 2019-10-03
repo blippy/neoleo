@@ -3,7 +3,7 @@
 /*
  * $Id: utils.h,v 1.4 2000/08/10 21:02:51 danny Exp $
  *
- * Copyright © 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

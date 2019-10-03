@@ -29,6 +29,7 @@ class value {
 		void set_type(ValType t);
 
 		void sValue(value& newval);
+		//void sValue(const value_t& newval);
 
 		int gInt() const;
 		void sInt(int newval);

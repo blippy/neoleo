@@ -6,6 +6,32 @@
 ValType value::get_type() const { return type;}
 void value::set_type(ValType t) { type = t;}
 
+/*
+void value::sValue(const value_& newval)
+{
+	type = get_type(newval.type);
+	switch(type) {
+		case TYP_NUL:
+			type = TYP_NUL;
+			break;
+		case TYP_INT:
+			sInt(to_int(newval));
+			break;
+		case TYP_FLT:
+			sFlt(to_num(newval));
+			break;
+		case TYP_BOL:
+			sBol(to_bool(newval));
+			break;
+		case TYP_ERR:
+			sErr(to_err(newval));
+		default:
+			// strings are going to be a pest
+			assert(false);
+	}
+}
+*/
+
 void value::sValue(value& newval)
 {
 	type = newval.type;
