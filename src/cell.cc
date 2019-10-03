@@ -154,8 +154,7 @@ void cell::set_formula_text(const std::string& str)
 	formula_text = str;
 
 	if(use_parser_2019) {
-		tokens_t tokes = tokenise(formula_text);
-		parse_tree = parse_e(tokes);
+		parse_tree = parse_string(formula_text);
 	} else
 		invalidate_bytecode();
 }

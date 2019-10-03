@@ -33,7 +33,7 @@ class Expr {
 		std::variant<FunCall, value_t> expr; 
 };
 
-tokens_t tokenise(std::string str);
+//tokens_t tokenise(std::string str);
 num_t to_num (value_t v);
 num_t num_eval (Expr expr);
 std::string to_str (value_t v);
