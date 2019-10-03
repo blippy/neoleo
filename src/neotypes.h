@@ -13,7 +13,10 @@
 
 typedef unsigned short CELLREF;
 typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
-typedef std::variant<num_t, std::string, err_t, rng_t> value_t;
+
+typedef struct {}  empty_t;
+typedef std::variant<num_t, std::string, err_t, rng_t, empty_t> value_t;
+//typedef std::variant<num_t, std::string, err_t, rng_t> value_t;
 typedef std::vector<value_t> values;
 
 typedef std::vector<std::string> strings;

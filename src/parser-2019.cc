@@ -241,6 +241,7 @@ typedef deque<string> ops_t;
 
 
 
+Expr parse_e (tokens_t& tokes);
 Expr parse_t(tokens_t& tokes);
 
 // parse a function
@@ -453,18 +454,28 @@ string to_str (value_t v) { return tox<string>(v, NON_STRING); }
 
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-int interpret(string s, int expected)
+
+Expr parse_string(const std::string& s)
+//Expr parse_string(const string& s)
 {
-	cout << "Interpretting " << s << "\n";
 	tokens_t tokes{tokenise(s)};
 
 	if constexpr (0) {
 		for(auto& t:tokes) {
 			cout << "Found: " << t.first << " " << t.second << "\n";
+
 		}
 	}
 
-	Expr expr{parse_e(tokes)};
+	return parse_e(tokes);
+}
+
+int interpret(string s, int expected)
+{
+	cout << "Interpretting " << s << "\n";
+
+	Expr expr{parse_string(s)};
+
 	num_t val = num_eval(expr);
 	cout << "Evaluates to " << val << " ";
 	if(val == expected) 
@@ -496,6 +507,7 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 
 	return print_cell(cp);
 }
+
 int interpret(int r, int c, string s, string expecting)
 {
 	cout << "Interpretting `" << s << "'\n";
