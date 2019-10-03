@@ -1305,6 +1305,50 @@ void OleoUserPrefEncoding(char *s)
 	OleoSetEncoding(p);
 }
 
+std::string stringify_value_file_style(const value_t& val)	
+{
+	if(auto v = std::get_if<empty_t>(&val)) return "";
+	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
+	if(auto v = std::get_if<std::string>(&val)) 	return *v;
+	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];
+
+	ASSERT_UNCALLED();
+	return "BAD STRING";
+	/*
+	std::stringstream ss;
+	switch(val->get_type()) {
+		case TYP_NUL:
+			ss << "";
+			break;
+		case TYP_STR:
+			ss <<  '"' <<  val->gString() << '"';
+			break;
+		case TYP_FLT:
+			ss << flt_to_str(val->gFlt());
+			break;
+		case TYP_INT:
+			ss << val->gInt();
+			break;
+		case TYP_BOL:
+			ss << bname[val->gBol()];
+			break;
+
+		case TYP_RNG: 
+			{
+				rng_t r = val->gRng();
+				ss << 'r' << r.lr << ":" << r.hr << 'c' << r.lc << ":" << r.hc;
+			}
+			break;
+
+		case TYP_ERR:
+			ss << ename[val->gErr()];
+			break;
+		default:
+			ASSERT_UNCALLED();
+	}
+	return ss.str();
+*/
+}
 std::string stringify_value_file_style(value* val)
 {
 	std::stringstream ss;

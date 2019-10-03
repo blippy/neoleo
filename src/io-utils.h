@@ -65,6 +65,7 @@ extern void OleoSetEncoding(const char *);
 extern void OleoUserPrefEncoding(char *);
 extern char *OleoGetEncoding(void);
 
+std::string stringify_value_file_style(const value_t& val);
 std::string stringify_value_file_style(value* val);
 
 /* Structures/vars/functions for dealing with formatting floating-point

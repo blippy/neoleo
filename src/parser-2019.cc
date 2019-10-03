@@ -43,6 +43,12 @@ funptr fn_lookup(string function_name)
 		unknown_function(function_name);
 	return &funcmap[function_name];
 }
+
+Expr::Expr()
+{
+	expr = empty_t{};
+}
+
 Expr::Expr(string fname, Expr x)
 {
 	FunCall fc;
@@ -154,7 +160,8 @@ map<string, parse_function_t> funcmap= {
 enum Tokens { EOI = 128, NUMBER, ID, STR };
 
 
-tokens_t tokenise(string str)
+	static tokens_t 
+tokenise (string str)
 {
 	tokens_t tokens;
 
@@ -443,6 +450,7 @@ num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 //string to_str1 (value_t v) { return std::get<string>(v); }
 string to_str (value_t v) { return tox<string>(v, NON_STRING); }
 
+
 /*
    string to_str (value_t val) { 
    if(std::holds_alternative<string>(val))
@@ -456,7 +464,7 @@ string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Expr parse_string(const std::string& s)
-//Expr parse_string(const string& s)
+	//Expr parse_string(const string& s)
 {
 	tokens_t tokes{tokenise(s)};
 
@@ -467,21 +475,32 @@ Expr parse_string(const std::string& s)
 		}
 	}
 
-	return parse_e(tokes);
+	if(tokes.size() == 0) return Expr(); // the empty expression
+
+	try {
+		return parse_e(tokes);
+	} catch (ValErr ve) {
+		err_t err{ve.num()};
+		return Expr{err};
+	}
 }
 
-int interpret(string s, int expected)
+int interpret(string s, string expected)
 {
-	cout << "Interpretting " << s << "\n";
+	cout << "Interpretting `" << s << "'\n";
 
 	Expr expr{parse_string(s)};
+	cout << "point b\n";
 
-	num_t val = num_eval(expr);
-	cout << "Evaluates to " << val << " ";
-	if(val == expected) 
+	value_t v = eval(expr);
+	string res = stringify_value_file_style(v);
+
+	//num_t val = num_eval(expr);
+	cout << "Evaluates to `" << res << "' ";
+	if(res == expected) 
 		cout << "PASS";
 	else
-		cout << "FAIL";
+		cout << "(s/b `" << expected << "') FAIL";
 	cout << "\n\n";
 
 	return 0;
@@ -490,8 +509,8 @@ int interpret(string s, int expected)
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
+	cp->set_formula_text(formula);
 	try {
-		cp->set_formula_text(formula);
 		cout << "point a\n";
 		value_t val = eval(cp->parse_tree);
 		if(is_string(val)) 
@@ -524,23 +543,25 @@ int run_parser_2019_tests ()
 
 	use_parser_2019 = true;
 
-	interpret("sqrt(4+5)+2", 5);
+	interpret("sqrt(4+5)+2", "5");
 	//return 0;
-	interpret("42", 42);
-	interpret("42+3", 45);
-	interpret("1+3+5+7", 16);
-	interpret("1-3-5-7", -14);
-	interpret("1-3+5-7", -4);
-	interpret("1+2*3", 7);
-	interpret("1+12/3", 5);
-	interpret("1+12/3*2/2", 5);
-	interpret("(1+2)*3", 9);
-	interpret("-(1+2)*-3", 9);
-	interpret("hypot(3,4)+1", 6);
-	interpret("plus()+1", 1);
-	interpret("plus(2)+1", 3);
-	interpret("plus(2,3  +4  )  + 1", 10);
-	interpret(" strlen(\"hello world\") ", 11);
+	interpret("42", "42");
+	interpret("42+3", "45");
+	interpret("1+3+5+7", "16");
+	interpret("1-3-5-7", "-14");
+	interpret("1-3+5-7", "-4");
+	interpret("1+2*3", "7");
+	interpret("1+12/3", "5");
+	interpret("1+12/3*2/2", "5");
+	interpret("(1+2)*3", "9");
+	interpret("-(1+2)*-3", "9");
+	interpret("hypot(3,4)+1", "6");
+	interpret("plus()+1", "1");
+	interpret("plus(2)+1", "3");
+	interpret("plus(2,3  +4  )  + 1", "10");
+	interpret(" strlen(\"hello world\") ", "11");
+	interpret("1+", "#PARSE_ERROR");
+	interpret(" strlen(1) ", "11");
 
 	interpret(1,1, "1+2", "3");
 	interpret(1,1, "1 +", "#PARSE_ERROR");

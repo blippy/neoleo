@@ -27,7 +27,7 @@ class FunCall {
 };
 class Expr { 
 	public: 
-		Expr() {};
+		Expr();
 		Expr(value_t v) : expr(v) {};
 		Expr(std::string fname, Expr x);
 		std::variant<FunCall, value_t> expr; 
