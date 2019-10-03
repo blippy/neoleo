@@ -339,18 +339,21 @@ FunCall _parse_t(tokens_t& tokes)
 		}
 	}
 }
-Expr parse_t(tokens_t& tokes)
+
+	Expr 
+parse_t(tokens_t& tokes)
 {
 	FunCall fc{_parse_t(tokes)};
 
+	if(fc.args.size() == 0)
+		return Expr();
+
 	if(fc.args.size() == 1)
 		return Expr(fc.args[0]);
-	else {
-		Expr x;
-		x.expr = fc;
-		return x;
-	}
 
+	Expr x;
+	x.expr = fc;
+	return x;
 }
 
 FunCall _parse_e(tokens_t& tokes)
@@ -382,17 +385,19 @@ FunCall _parse_e(tokens_t& tokes)
 		}
 	}
 }
-Expr parse_e(tokens_t& tokes)
+Expr parse_e (tokens_t& tokes)
 {
 	FunCall fc{_parse_e(tokes)};
 
+	if(fc.args.size() == 0)
+		return Expr();
+
 	if(fc.args.size() == 1)
 		return Expr(fc.args[0]);
-	else {
-		Expr x;
-		x.expr = fc;
-		return x;
-	}
+
+	Expr x;
+	x.expr = fc;
+	return x;
 
 }
 
@@ -421,10 +426,31 @@ value_t eval (Expr expr)
 
 }
 
+	template <class T>
+T tox(value_t val, int errtype)
+{
+	if(std::holds_alternative<T>(val))
+		return std::get<T>(val);
+	else
+		throw ValErr(errtype);
+}
+
 bool is_string(value_t val) { return std::holds_alternative<string>(val); }
-num_t to_num (value_t v) { return std::get<num_t>(v); }
+//num_t to_num (value_t v) { return std::get<num_t>(v); }
+num_t to_num (value_t v) { return tox<num_t>(v, NON_NUMBER); }
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
-string to_str (value_t v) { return std::get<string>(v); }
+//string to_str1 (value_t v) { return std::get<string>(v); }
+string to_str (value_t v) { return tox<string>(v, NON_STRING); }
+
+/*
+   string to_str (value_t val) { 
+   if(std::holds_alternative<string>(val))
+   return std::get<string>(val);
+   else
+   throw ValErr(NON_STRING);
+   }
+   */
+
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 int interpret(string s, int expected)
@@ -449,17 +475,18 @@ int interpret(string s, int expected)
 
 	return 0;
 }
-	
+
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
 	try {
-	cp->set_formula_text(formula);
-	value_t val = eval(cp->parse_tree);
-	if(is_string(val)) 
-		cp->sString(to_str(val));
-	else
-		cp->sFlt(to_num(val));
+		cp->set_formula_text(formula);
+		cout << "point a\n";
+		value_t val = eval(cp->parse_tree);
+		if(is_string(val)) 
+			cp->sString(to_str(val));
+		else
+			cp->sFlt(to_num(val));
 	} catch(ValErr ve) {
 		cp->sErr(ve.num());
 	}
@@ -469,10 +496,12 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 
 	return print_cell(cp);
 }
-int interpret(int r, int c, string s)
+int interpret(int r, int c, string s, string expecting)
 {
-	cout << "Interpretting " << s << "\n";
-	cout << "Result is " << set_and_eval(r,c, s) <<"\n";
+	cout << "Interpretting `" << s << "'\n";
+	string res = set_and_eval(r,c, s);
+	cout << "Result is `" << res << "' " ;
+	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
 	return 1;
 }
 
@@ -501,8 +530,11 @@ int run_parser_2019_tests ()
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
 
-	interpret(1,1, "1+2");
-	interpret(1,1, "1 +");
+	interpret(1,1, "1+2", "3");
+	interpret(1,1, "1 +", "#PARSE_ERROR");
+	interpret(1,1, "strlen(1)", "#NON_STRING");
+	interpret(1,1, "1 1", "#PARSE_ERROR");
+	interpret(1,1, "", "#NON_STRING");
 
 	//value v = val;
 
