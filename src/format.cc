@@ -1,7 +1,7 @@
 /*
  * $Id: format.c,v 1.14 2001/02/13 23:38:05 danny Exp $
  *
- * Copyright © 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1993, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,57 +27,57 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 
-static char *
+	static char *
 fmt_to_str (int format, int precision)
 {
-  const char *ptr;
-  static char buf[30];
-  char nbuf[10];
+	const char *ptr;
+	static char buf[30];
+	char nbuf[10];
 
-  nbuf[0] = '\0';
+	nbuf[0] = '\0';
 
-  switch (format) {
-    case FMT_USR:
-      ptr = "user-";
-      sprintf (nbuf, "%d", precision + 1);
-      break;
-    case FMT_GEN:
-      ptr = "general.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    case FMT_DOL:
-      ptr = "dollar.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    case FMT_CMA:
-      ptr = "comma.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    case FMT_PCT:
-      ptr = "percent.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    case FMT_FXT:
-      if (precision == 0)
-	return "integer";
+	switch (format) {
+		case FMT_USR:
+			ptr = "user-";
+			sprintf (nbuf, "%d", precision + 1);
+			break;
+		case FMT_GEN:
+			ptr = "general.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		case FMT_DOL:
+			ptr = "dollar.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		case FMT_CMA:
+			ptr = "comma.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		case FMT_PCT:
+			ptr = "percent.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		case FMT_FXT:
+			if (precision == 0)
+				return "integer";
 #if 0
-      if (format == FMT_FXT)
-	return "decimal";				/* What's a decimal ? */
+			if (format == FMT_FXT)
+				return "decimal";				/* What's a decimal ? */
 #endif
-      ptr = "fixed.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    case FMT_EXP:
-      ptr = "exponent.";
-      sprintf (nbuf, "%d", precision);
-      break;
-    default:
-      io_error_msg ("Unknown format %d (%x)", format, format);
-      ptr = "UNKNOWN";
-      break;
-    }
-  sprintf (buf, "%s%s", ptr, nbuf);
-  return buf;
+			ptr = "fixed.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		case FMT_EXP:
+			ptr = "exponent.";
+			sprintf (nbuf, "%d", precision);
+			break;
+		default:
+			io_error_msg ("Unknown format %d (%x)", format, format);
+			ptr = "UNKNOWN";
+			break;
+	}
+	sprintf (buf, "%s%s", ptr, nbuf);
+	return buf;
 }
 
 /*
@@ -89,7 +89,7 @@ fmt_to_str (int format, int precision)
  * This was one of the calls. Nice huh ?
  * p->String = fmt_to_str ((cell_ptr = find_cell (row, col)) ? GET_FORMAT (cell_ptr) : 0);
  */
-char *
+	char *
 cell_format_string(CELL *cp)
 {
 	static char no_default[] = "";
@@ -100,13 +100,13 @@ cell_format_string(CELL *cp)
 	else
 		return no_default;
 
-	
+
 }
 
 struct fmt
 {
-  int fmt;
-  char **strs;
+	int fmt;
+	char **strs;
 };
 
 static char *def_names[] =	{"default", "def", "D", 0};
@@ -152,103 +152,103 @@ static struct fmt withprec[] =
  *
  * FIX ME.
  */
-int
+	int
 str_to_fmt (char *ptr)
 {
-  struct fmt *f;
-  char **strs;
-  int n;
-  int ret;
-  char *p1, *p2;
+	struct fmt *f;
+	char **strs;
+	int n;
+	int ret;
+	char *p1, *p2;
 
-  for (f = simple; f->strs; f++)
-    {
-      for (strs = f->strs; *strs; strs++)
+	for (f = simple; f->strs; f++)
 	{
-	  if (*ptr != **strs)
-	    continue;
-	  for (p1 = ptr, p2 = *strs; *p1 == *p2 && *p1; p1++, p2++)
-	    ;
-	  if (*p1 == '\0' && *p2 == '\0')
+		for (strs = f->strs; *strs; strs++)
+		{
+			if (*ptr != **strs)
+				continue;
+			for (p1 = ptr, p2 = *strs; *p1 == *p2 && *p1; p1++, p2++)
+				;
+			if (*p1 == '\0' && *p2 == '\0')
 #if 0
-	    return f->fmt;		/* AHAAS had a different version here */
+				return f->fmt;		/* AHAAS had a different version here */
 #else
-	    return ((f->fmt) << FMT_SHIFT);
+			return ((f->fmt) << FMT_SHIFT);
+#endif
+		}
+	}
+	if (!strncmp (ptr, "user-", 5))
+	{
+		ptr += 5;
+		n = astol (&ptr);
+		if (*ptr || n < 1 || n > 16)
+			return -1;
+#if 0
+		return n - 1 - FLOAT_PRECISION + FMT_USR;		/* AHAAS had a different version here */
+#else
+		return (FMT_USR << FMT_SHIFT) + n;
 #endif
 	}
-    }
-  if (!strncmp (ptr, "user-", 5))
-    {
-      ptr += 5;
-      n = astol (&ptr);
-      if (*ptr || n < 1 || n > 16)
-	return -1;
-#if 0
-      return n - 1 - FLOAT_PRECISION + FMT_USR;		/* AHAAS had a different version here */
-#else
-      return (FMT_USR << FMT_SHIFT) + n;
-#endif
-    }
-  for (f = withprec, ret = 0; !ret && f->strs; f++)
-    {
-      for (strs = f->strs; *strs; strs++)
+	for (f = withprec, ret = 0; !ret && f->strs; f++)
 	{
-	  if (*ptr != **strs)
-	    continue;
-	  for (p1 = ptr, p2 = *strs; *p2 && *p1 == *p2; p1++, p2++)
-	    ;
-	  if (!*p2)
-	    {
-	      ret = f->fmt;
-	      ptr = p1;
-	      break;
-	    }
+		for (strs = f->strs; *strs; strs++)
+		{
+			if (*ptr != **strs)
+				continue;
+			for (p1 = ptr, p2 = *strs; *p2 && *p1 == *p2; p1++, p2++)
+				;
+			if (!*p2)
+			{
+				ret = f->fmt;
+				ptr = p1;
+				break;
+			}
+		}
 	}
-    }
 
-  if (!ret || !*ptr)
-    return -1;
-  if (!strcmp (ptr, "float") || !strcmp (ptr, "f"))
-    {
-      n = FLOAT_PRECISION;		/* AHAAS had a different version here */
-    }
-  else
-    {
-      n = astol (&ptr);
-      if (*ptr || n < 0 || n > 14)
-	return -1;
-    }
+	if (!ret || !*ptr)
+		return -1;
+	if (!strcmp (ptr, "float") || !strcmp (ptr, "f"))
+	{
+		n = FLOAT_PRECISION;		/* AHAAS had a different version here */
+	}
+	else
+	{
+		n = astol (&ptr);
+		if (*ptr || n < 0 || n > 14)
+			return -1;
+	}
 #if 0
-  return ret + n;		/* AHAAS had a different version here */
+	return ret + n;		/* AHAAS had a different version here */
 #else
-  return (ret << FMT_SHIFT) + n;
+	return (ret << FMT_SHIFT) + n;
 #endif
 }
 
-const char *
+	const char *
 jst_to_str (int jst)
 {
-  if (jst == JST_DEF)
-    return "default";
-  if (jst == JST_LFT)
-    return "left";
-  if (jst == JST_RGT)
-    return "right";
-  if (jst == JST_CNT)
-    return "center";
-  return "unknown";
+	if (jst == JST_DEF)
+		return "default";
+	if (jst == JST_LFT)
+		return "left";
+	if (jst == JST_RGT)
+		return "right";
+	if (jst == JST_CNT)
+		return "center";
+	return "unknown";
 }
 
-int
+	int
 chr_to_jst (int chr)
 {
-  if (chr == 'd' || chr == 'D')
-    return JST_DEF;
-  if (chr == 'l' || chr == 'L')
-    return JST_LFT;
-  if (chr == 'r' || chr == 'R')
-    return JST_RGT;
-  if (chr == 'c' || chr == 'C')
-    return JST_CNT;
-  return -1;
+	if (chr == 'd' || chr == 'D')
+		return JST_DEF;
+	if (chr == 'l' || chr == 'L')
+		return JST_LFT;
+	if (chr == 'r' || chr == 'R')
+		return JST_RGT;
+	if (chr == 'c' || chr == 'C')
+		return JST_CNT;
+	return -1;
 }
