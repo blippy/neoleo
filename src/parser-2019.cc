@@ -335,7 +335,6 @@ parse_t (tokens_t& tokes)
 	//return fc;
 	while(1) {
 		auto nid = tokes.front().first;
-		//if(nid == EOI) return fc;
 		if(nid == '*') {
 			tokes.pop_front();
 			fc.args.push_back(parse_f(tokes));
@@ -348,16 +347,15 @@ parse_t (tokens_t& tokes)
 			Expr x2;
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
-		} else break; /* {
-				 return fc;
-				 }*/
+		} else break; 
 	}
 	return simplify(fc);
 }
 
 
 
-Expr parse_e(tokens_t& tokes)
+	Expr 
+parse_e (tokens_t& tokes)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -365,12 +363,8 @@ Expr parse_e(tokens_t& tokes)
 	fc.args.push_back(parse_t(tokes));
 	while(1) {
 		auto nid = tokes.front().first;
-		//cout << "nid is " << nid << "\n";
-		//if(nid == EOI) break;
-		//tokes.pop_front();
 		if(nid == '+') {
 			tokes.pop_front();
-			//cout <<" nod is +\n";
 			fc.args.push_back(parse_t(tokes));
 		} else  if(nid == '-') {
 			tokes.pop_front();
@@ -380,11 +374,8 @@ Expr parse_e(tokens_t& tokes)
 			fneg.args = args_t{eneg};
 			Expr x2;
 			x2.expr = fneg;
-			fc.args.push_back(x2);		
-		} else break; /* else {
-				 return fc;
-		//parse_error();
-		} */
+			fc.args.push_back(x2);
+		} else break;
 	}
 	return simplify(fc);
 }
