@@ -356,7 +356,20 @@ parse_t(tokens_t& tokes)
 	return x;
 }
 
-FunCall _parse_e(tokens_t& tokes)
+Expr simplify(const FunCall& fc)
+{
+	if(fc.args.size() ==0)
+		return Expr();
+
+	if(fc.args.size() == 1)
+		return Expr(fc.args[0]);
+
+	Expr x;
+	x.expr = fc;
+	return x;
+}
+
+Expr _parse_e(tokens_t& tokes)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -365,7 +378,7 @@ FunCall _parse_e(tokens_t& tokes)
 	while(1) {
 		auto nid = tokes.front().first;
 		//cout << "nid is " << nid << "\n";
-		if(nid == EOI) return fc;
+		//if(nid == EOI) break;
 		//tokes.pop_front();
 		if(nid == '+') {
 			tokes.pop_front();
@@ -380,13 +393,17 @@ FunCall _parse_e(tokens_t& tokes)
 			Expr x2;
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
-		} else {
+		} else break; /* else {
 			return fc;
-		}
+			//parse_error();
+		} */
 	}
+	return simplify(fc);
 }
 Expr parse_e (tokens_t& tokes)
 {
+	return _parse_e(tokes);
+	/*
 	FunCall fc{_parse_e(tokes)};
 
 	if(fc.args.size() == 0)
@@ -398,6 +415,7 @@ Expr parse_e (tokens_t& tokes)
 	Expr x;
 	x.expr = fc;
 	return x;
+	*/
 
 }
 
@@ -555,7 +573,7 @@ int run_parser_2019_tests ()
 	interpret(1,1, "1+2", "3");
 	interpret(1,1, "1+", "#PARSE_ERROR");
 	interpret(1,1, "strlen(1)", "#NON_STRING");
-	interpret(1,1, "1 1", "#PARSE_ERROR");
+	interpret(1,1, "1 2", "#PARSE_ERROR");
 	interpret(1,1, "", "#NON_STRING");
 
 	//value v = val;
