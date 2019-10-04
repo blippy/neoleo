@@ -151,7 +151,6 @@ map<string, parse_function_t> funcmap= {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
 
-//enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
 enum Tokens { EOI = 128, NUMBER, ID, STR };
 
 
