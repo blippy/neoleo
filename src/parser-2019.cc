@@ -455,10 +455,13 @@ Expr parse_string(const std::string& s)
 		}
 	}
 
-	if(tokes.size() == 0) return Expr(); // the empty expression
+	if(tokes.size() == 1) return Expr(); // the empty expression, EOI
 
 	try {
-		return parse_e(tokes);
+		Expr x{parse_e(tokes)};
+		//cout << "tokes remaining: " << tokes.size() << "\n";
+		if(tokes.size() !=1) parse_error(); // remaining token s/b EOI
+		return x;
 	} catch (ValErr ve) {
 		err_t err{ve.num()};
 		return Expr{err};
@@ -532,13 +535,14 @@ int run_parser_2019_tests ()
 	interpret(" strlen(\"hello world\") ", "11");
 	interpret("1+", "#PARSE_ERROR");
 	interpret(" strlen(1) ", "#NON_STRING");
+	interpret("strlen(", "#PARSE_ERROR");
 	interpret("life()", "42");
 
 	interpret(1,1, "1+2", "3");
 	interpret(1,1, "1+", "#PARSE_ERROR");
 	interpret(1,1, "strlen(1)", "#NON_STRING");
 	interpret(1,1, "1 2", "#PARSE_ERROR");
-	interpret(1,1, "", "#NON_STRING");
+	interpret(1,1, "", "");
 
 	//value v = val;
 
