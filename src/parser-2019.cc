@@ -65,9 +65,10 @@ num_t num_eval(Expr expr);
 string str_eval(Expr expr);
 
 
-void parse_error ()
+void parse_error()
 {
 	throw ValErr(PARSE_ERR);
+	//throw 666;
 }
 
 value_t do_plus(args_t args)
@@ -147,64 +148,50 @@ map<string, parse_function_t> funcmap= {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
 
+//enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
 enum Tokens { EOI = 128, NUMBER, ID, STR };
 
 
 	static tokens_t 
 tokenise (string str)
 {
-	assert(!isdigit(0));
-
-	//cout << "tokenis() begin\n";
 	tokens_t tokens;
 
-	auto found = [&tokens](auto toketype, auto token) { 
-		//cout << "pushing token `" << token << "'\n";
-		tokens.push_back(make_pair(toketype, token)); 
-	};
+	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
 	//cout << "Parsing: " << str << "\n";
 	const char* cstr = str.c_str();
 	int pos = 0;
-	auto readc = [&cstr, &pos]() { return (int)cstr[pos++]; };
-	//int pos = 0;
-	//auto it = str.begin();
-	//loop:
-	char ch = readc();
-	while(1) {
-		//cout << ch;
-		string token;
-		if(ch == 0) break;
-		if(isspace(ch)) {ch = readc(); continue;}
-		//while(isspace(ch)) { ch = cstr[++pos]; }
-		if (isdigit(ch)) {
-			token = ch;
-			while(isdigit(ch = readc() ) || ch == '.' ) 
-				token += ch;
-			//cout << "found number\n";
-			found(NUMBER, token);
-		} else if (isalpha(ch)) {
-			token = ch;
-			while(isalpha(ch = readc())) 
-				token += ch;
-			found(ID, token);
-			//cout << "found id: " << token << "\n";
-		} else if(ch == '"') {
-			while(1) {
-				ch = readc();
-				if(ch == 0 || ch == '"') break; 
-				token += ch;
-			}
-			//cout << "tokenise string is <" << token << ">\n";
-			found(STR, token);
-		}else {
-			token = ch;
-			found(ch, token);
-			ch = readc();
+	auto it = str.begin();
+loop:
+	string token;
+	char ch = cstr[pos];
+	if(ch == 0) {
+		goto finis;
+	} else if(isspace(ch)) {
+		while(isspace(ch)) { ch = cstr[++pos]; }
+	} else if ( isdigit(ch)) {
+		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
+		found(NUMBER, token);
+	} else if (isalpha(ch)) {
+		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
+		found(ID, token);
+		//cout << "found id: " << token << "\n";
+	} else if(ch == '"') {
+		while(1) {
+			ch = cstr[++pos];
+			if(ch == 0 || ch == '"') {pos++; break; }
+			token += ch;
 		}
-		//	goto loop;
-		//finis:
-		//found(EOI, "End of stream"); // Add this so that we can look ahead into the void
+		//cout << "tokenise string is <" << token << ">\n";
+		found(STR, token);
+	}else {
+		token = ch;
+		pos++;
+		found(ch, token);
 	}
+	goto loop;
+finis:
+	found(EOI, "End of stream"); // Add this so that we can look ahead into the void
 	return tokens;
 }
 
@@ -330,10 +317,8 @@ Expr simplify(const FunCall& fc)
 	if(fc.args.size() ==0)
 		return Expr();
 
-	/*
 	if(fc.args.size() == 1)
 		return Expr(fc.args[0]);
-		*/
 
 	Expr x;
 	x.expr = fc;
@@ -362,8 +347,8 @@ Expr _parse_t (tokens_t& tokes)
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
 		} else break; /* {
-				 return fc;
-				 }*/
+			return fc;
+		}*/
 	}
 	return simplify(fc);
 }
@@ -374,18 +359,18 @@ parse_t (tokens_t& tokes)
 	return _parse_t(tokes);
 
 	/*
-	   FunCall fc{_parse_t(tokes)};
+	FunCall fc{_parse_t(tokes)};
 
-	   if(fc.args.size() == 0)
-	   return Expr();
+	if(fc.args.size() == 0)
+		return Expr();
 
-	   if(fc.args.size() == 1)
-	   return Expr(fc.args[0]);
+	if(fc.args.size() == 1)
+		return Expr(fc.args[0]);
 
-	   Expr x;
-	   x.expr = fc;
-	   return x;
-	   */
+	Expr x;
+	x.expr = fc;
+	return x;
+	*/
 }
 
 
@@ -414,8 +399,8 @@ Expr _parse_e(tokens_t& tokes)
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
 		} else break; /* else {
-				 return fc;
-		//parse_error();
+			return fc;
+			//parse_error();
 		} */
 	}
 	return simplify(fc);
@@ -424,18 +409,18 @@ Expr parse_e (tokens_t& tokes)
 {
 	return _parse_e(tokes);
 	/*
-	   FunCall fc{_parse_e(tokes)};
+	FunCall fc{_parse_e(tokes)};
 
-	   if(fc.args.size() == 0)
-	   return Expr();
+	if(fc.args.size() == 0)
+		return Expr();
 
-	   if(fc.args.size() == 1)
-	   return Expr(fc.args[0]);
+	if(fc.args.size() == 1)
+		return Expr(fc.args[0]);
 
-	   Expr x;
-	   x.expr = fc;
-	   return x;
-	   */
+	Expr x;
+	x.expr = fc;
+	return x;
+	*/
 
 }
 
@@ -500,17 +485,16 @@ string to_str (value_t v) { return tox<string>(v, NON_STRING); }
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Expr parse_string(const std::string s)
+Expr parse_string(const std::string& s)
+	//Expr parse_string(const string& s)
 {
-	tokens_t tokes = tokenise(s);
+	tokens_t tokes{tokenise(s)};
 
-	if constexpr (1) {
-		cout << "Finished tokenisation\n";
+	if constexpr (0) {
 		for(auto& t:tokes) {
 			cout << "Found: " << t.first << " " << t.second << "\n";
 
 		}
-		cout << "Finished printing tokens\n";
 	}
 
 	if(tokes.size() == 0) return Expr(); // the empty expression
@@ -527,9 +511,8 @@ int interpret(string s, string expected)
 {
 	cout << "Interpreting `" << s << "'\n";
 
-
 	Expr expr{parse_string(s)};
-	cout << "Parsed without incident\n";
+	//cout << "point b\n";
 
 	value_t v = eval(expr);
 	string res = stringify_value_file_style(v);
