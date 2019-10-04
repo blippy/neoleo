@@ -128,12 +128,15 @@ value_t do_strlen(args_t args)
 {
 	if(args.size() !=1) parse_error();
 	return strlen(str_eval(args.at(0)).c_str());
-	//num_t val = num_eval(args[0]);
-	//return sqrt(val);
+}
+
+value_t do_life(args_t args)
+{
+	return 42;
 }
 
 map<string, parse_function_t> funcmap= {
-
+	{"life", do_life},
 	{"strlen", do_strlen},
 	{"+", &do_plus},
 	{"-", &do_minus},
@@ -530,6 +533,7 @@ int run_parser_2019_tests ()
 	interpret(" strlen(\"hello world\") ", "11");
 	interpret("1+", "#PARSE_ERROR");
 	interpret(" strlen(1) ", "#NON_STRING");
+	interpret("life()", "42");
 
 	interpret(1,1, "1+2", "3");
 	interpret(1,1, "1+", "#PARSE_ERROR");
