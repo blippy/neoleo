@@ -312,50 +312,6 @@ Expr parse_p(tokens_t& tokes)
 Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
 
 
-FunCall _parse_t(tokens_t& tokes)
-{
-	FunCall fc;
-	fc.fn = &funcmap["*"];
-
-	fc.args.push_back(parse_f(tokes));
-	//return fc;
-	while(1) {
-		auto nid = tokes.front().first;
-		if(nid == EOI) return fc;
-		if(nid == '*') {
-			tokes.pop_front();
-			fc.args.push_back(parse_f(tokes));
-		} else  if(nid == '/') {
-			tokes.pop_front();
-			Expr eneg =parse_f(tokes);
-			FunCall fneg;
-			fneg.fn = &funcmap["/"];
-			fneg.args = args_t{eneg};
-			Expr x2;
-			x2.expr = fneg;
-			fc.args.push_back(x2);		
-		} else {
-			return fc;
-		}
-	}
-}
-
-	Expr 
-parse_t(tokens_t& tokes)
-{
-	FunCall fc{_parse_t(tokes)};
-
-	if(fc.args.size() == 0)
-		return Expr();
-
-	if(fc.args.size() == 1)
-		return Expr(fc.args[0]);
-
-	Expr x;
-	x.expr = fc;
-	return x;
-}
-
 Expr simplify(const FunCall& fc)
 {
 	if(fc.args.size() ==0)
@@ -368,6 +324,55 @@ Expr simplify(const FunCall& fc)
 	x.expr = fc;
 	return x;
 }
+Expr _parse_t (tokens_t& tokes)
+{
+	FunCall fc;
+	fc.fn = &funcmap["*"];
+
+	fc.args.push_back(parse_f(tokes));
+	//return fc;
+	while(1) {
+		auto nid = tokes.front().first;
+		//if(nid == EOI) return fc;
+		if(nid == '*') {
+			tokes.pop_front();
+			fc.args.push_back(parse_f(tokes));
+		} else  if(nid == '/') {
+			tokes.pop_front();
+			Expr eneg =parse_f(tokes);
+			FunCall fneg;
+			fneg.fn = &funcmap["/"];
+			fneg.args = args_t{eneg};
+			Expr x2;
+			x2.expr = fneg;
+			fc.args.push_back(x2);		
+		} else break; /* {
+			return fc;
+		}*/
+	}
+	return simplify(fc);
+}
+
+	Expr 
+parse_t (tokens_t& tokes)
+{
+	return _parse_t(tokes);
+
+	/*
+	FunCall fc{_parse_t(tokes)};
+
+	if(fc.args.size() == 0)
+		return Expr();
+
+	if(fc.args.size() == 1)
+		return Expr(fc.args[0]);
+
+	Expr x;
+	x.expr = fc;
+	return x;
+	*/
+}
+
 
 Expr _parse_e(tokens_t& tokes)
 {
