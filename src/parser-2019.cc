@@ -324,7 +324,9 @@ Expr simplify(const FunCall& fc)
 	x.expr = fc;
 	return x;
 }
-Expr _parse_t (tokens_t& tokes)
+
+	Expr 
+parse_t (tokens_t& tokes)
 {
 	FunCall fc;
 	fc.fn = &funcmap["*"];
@@ -347,34 +349,15 @@ Expr _parse_t (tokens_t& tokes)
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
 		} else break; /* {
-			return fc;
-		}*/
+				 return fc;
+				 }*/
 	}
 	return simplify(fc);
 }
 
-	Expr 
-parse_t (tokens_t& tokes)
-{
-	return _parse_t(tokes);
-
-	/*
-	FunCall fc{_parse_t(tokes)};
-
-	if(fc.args.size() == 0)
-		return Expr();
-
-	if(fc.args.size() == 1)
-		return Expr(fc.args[0]);
-
-	Expr x;
-	x.expr = fc;
-	return x;
-	*/
-}
 
 
-Expr _parse_e(tokens_t& tokes)
+Expr parse_e(tokens_t& tokes)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -399,29 +382,11 @@ Expr _parse_e(tokens_t& tokes)
 			x2.expr = fneg;
 			fc.args.push_back(x2);		
 		} else break; /* else {
-			return fc;
-			//parse_error();
+				 return fc;
+		//parse_error();
 		} */
 	}
 	return simplify(fc);
-}
-Expr parse_e (tokens_t& tokes)
-{
-	return _parse_e(tokes);
-	/*
-	FunCall fc{_parse_e(tokes)};
-
-	if(fc.args.size() == 0)
-		return Expr();
-
-	if(fc.args.size() == 1)
-		return Expr(fc.args[0]);
-
-	Expr x;
-	x.expr = fc;
-	return x;
-	*/
-
 }
 
 
