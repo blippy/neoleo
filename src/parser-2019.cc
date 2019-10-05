@@ -209,8 +209,15 @@ void consume(char ch, tokens_t& tokes)
 		parse_error();
 }
 
+token_t pop(tokens_t& tokes)
+{
+	token_t front = tokes.front();
+	tokes.pop_front();
+	return front;
+}
+
 	template<class Q>
-Q rest(Q qs)
+Q rest (Q qs)
 {
 	qs.pop_front();
 	return qs;
@@ -279,8 +286,30 @@ finis:
 
 Expr parse_rc(tokens_t& tokes)
 {
-	cout << "TODO RC\n";
-	return Expr();
+	//tokes.pop_front(); // remove the 'R' or 'r'
+	if(tokes.front().first != NUMBER)
+		parse_error();
+
+	CELLREF r = stoi(tokes.front().second);
+	pop(tokes);
+
+	 if(! ((tokes.front().second != "C")
+	 		 || (tokes.front().second != "c")))
+		 parse_error();
+	 pop(tokes);
+
+
+	if(tokes.front().first != NUMBER)
+		parse_error();
+	CELLREF c = stoi(tokes.front().second);
+	pop(tokes);
+
+	cout << "parse_rc: " << r << ":" << c <<"\n";
+
+	Expr x;
+	rng_t rng{r,c,r,c};
+	x.expr = rng;
+	return x;
 }
 Expr parse_p(tokens_t& tokes)
 {
