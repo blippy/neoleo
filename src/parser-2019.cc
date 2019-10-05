@@ -175,7 +175,7 @@ loop:
 		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
 		found(NUMBER, token);
 	} else if (isalpha(ch)) {
-		while(isalnum(ch)) { token += ch; ch = cstr[++pos]; }
+		while(isalpha(ch)) { token += ch; ch = cstr[++pos]; }
 		found(ID, token);
 		//cout << "found id: " << token << "\n";
 	} else if(ch == '"') {
@@ -277,6 +277,11 @@ finis:
 	return x;
 }
 
+Expr parse_rc(tokens_t& tokes)
+{
+	cout << "TODO RC\n";
+	return Expr();
+}
 Expr parse_p(tokens_t& tokes)
 {
 	//Expr t{parse_t(tokes)};
@@ -289,12 +294,14 @@ Expr parse_p(tokens_t& tokes)
 			return Expr(stoi(toke.second));
 		case STR:
 			return Expr(toke.second);
-		case ID: {
-				 if(tokes.front().first == '(')
-					 return parse_fn(toke.second, tokes);
-				 else
-					 parse_error(); // although could be a variable name
-			 }
+		case ID:  {
+				  if(toke.second == "R" || toke.second == "r")
+					  return parse_rc(tokes);
+				  if(tokes.front().first == '(')
+					  return parse_fn(toke.second, tokes);
+				  else
+					  parse_error(); // although could be a variable name
+			  }
 		case '(': {
 				  //tokes.pop_front();
 				  Expr x1{parse_e(tokes)};
@@ -543,6 +550,9 @@ int run_parser_2019_tests ()
 	interpret(1,1, "strlen(1)", "#NON_STRING");
 	interpret(1,1, "1 2", "#PARSE_ERROR");
 	interpret(1,1, "", "");
+
+	interpret(2,2, "2+3", "5");
+	interpret(3,2, "R2C2+1", "6");
 
 	//value v = val;
 
