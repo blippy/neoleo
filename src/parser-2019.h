@@ -48,3 +48,4 @@ err_t to_err(value_t v);
 bool is_num(value_t val);
 bool is_err(value_t val); 
 bool is_nul(value_t val); 
+bool is_range(value_t val); 

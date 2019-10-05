@@ -284,7 +284,7 @@ finis:
 	return x;
 }
 
-Expr parse_rc(tokens_t& tokes)
+Expr parse_rc (tokens_t& tokes)
 {
 	//tokes.pop_front(); // remove the 'R' or 'r'
 	if(tokes.front().first != NUMBER)
@@ -447,8 +447,18 @@ value_t eval (Expr expr)
 }
 
 	template <class T>
-T tox(value_t val, int errtype)
+T tox (value_t val, int errtype)
 {
+	if(is_range(val)) {
+		// convert a point range to a value
+		rng_t rng{std::get<rng_t>(val)};
+		if( rng.lr != rng.hr || rng.lc != rng.hc)
+			throw ValErr(BAD_NAME); 
+		CELL* cp = find_or_make_cell(rng.lr, rng.lc);
+		cp->eval_cell(); // maybe too much evaluation?
+		val = cp->get_value_t();
+	}
+
 	if(std::holds_alternative<T>(val))
 		return std::get<T>(val);
 	else
@@ -461,11 +471,13 @@ ValType get_value_t_type(value_t& val)
 	if(is_string(val)) 	return TYP_STR;
 	if(is_num(val))		return TYP_FLT;
 	if(is_err(val))		return TYP_ERR;
+	if(is_range(val))	return TYP_RNG;
 	ASSERT_UNCALLED();
 	return TYP_NUL;
 }
 
 bool is_nul(value_t val) { return std::holds_alternative<empty_t>(val); }
+bool is_range(value_t val) { return std::holds_alternative<rng_t>(val); }
 bool is_err(value_t val) { return std::holds_alternative<err_t>(val); }
 bool is_num(value_t val) { return std::holds_alternative<num_t>(val); }
 bool is_string(value_t val) { return std::holds_alternative<string>(val); }

@@ -93,6 +93,7 @@ class cell : public value
 		std::string formula_text;
 		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		crefs_t dep_cells; // other formula locations pointing to this cell
+		value_t the_value_t;
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -129,6 +130,7 @@ class cell : public value
 		bool zeroed_1();
 		bool locked() const;
 		value get_value();
+		value_t get_value_t();
 };
 
 bool vacuous(cell* cp);

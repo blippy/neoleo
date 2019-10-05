@@ -204,9 +204,15 @@ cell::~cell()
 	//cout <<"X";
 }
 
+value_t cell::get_value_t()
+{
+	return the_value_t;
+}
+
 void cell::eval_cell()
 {
-	value_t val = eval(parse_tree);
+	the_value_t = eval(parse_tree);
+	value_t& val = the_value_t;
 
 	// now hack it
 	switch(get_value_t_type(val)) {
