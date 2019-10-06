@@ -71,6 +71,12 @@ void parse_error()
 	//throw 666;
 }
 
+void nargs_eq(const args_t& args, int n)
+{
+	if(args.size() != n)
+		throw ValErr(BAD_FUNC);
+}
+
 value_t do_plus(args_t args)
 {
 	num_t val = 0;
@@ -106,13 +112,13 @@ value_t do_div(args_t args)
 
 value_t do_sqrt(args_t args)
 {
-	if(args.size() !=1) parse_error();
+	nargs_eq(args, 1);
 	num_t val = num_eval(args[0]);
 	return sqrt(val);
 }
 value_t do_hypot(args_t args)
 {
-	if(args.size() !=2) parse_error();
+	nargs_eq(args, 2);
 	num_t v1 = num_eval(args[0]);
 	num_t v2 = num_eval(args[1]);
 	return sqrt(v1*v1 + v2*v2);
@@ -126,7 +132,7 @@ value_t do_plusfn(args_t args)
 
 value_t do_strlen(args_t args)
 {
-	if(args.size() !=1) parse_error();
+	nargs_eq(args, 1);
 	return strlen(str_eval(args.at(0)).c_str());
 }
 
@@ -135,7 +141,31 @@ value_t do_life(args_t args)
 	return 42;
 }
 
+value_t do_sum(args_t args)
+{
+	nargs_eq(args, 1);
+	Expr& x = args[0];
+	// TODO might hold fn instead
+	value_t v = std::get<value_t>(x.expr);
+	rng_t rng = to_range(v);
+	//value_t a0 = args[0];
+	//rng_t rng = nge(a0);
+	num_t sum = 0;
+	for(int r = rng.lr; r <= rng.hr; ++r) {
+		for(int c = rng.lc; c <= rng.hc; ++c) {
+			CELL *cp = find_cell(r, c);
+			if(cp) {
+				cp->eval_cell(); // too much?
+				value_t v = cp->get_value_t();
+				sum += to_num(v);
+			}
+		}
+	}
+	return sum;
+}	
+
 map<string, parse_function_t> funcmap= {
+	{"sum", do_sum},
 	{"life", do_life},
 	{"strlen", do_strlen},
 	{"+", &do_plus},
@@ -284,30 +314,49 @@ finis:
 	return x;
 }
 
+void parse_slice (tokens_t& tokes, CELLREF& lower, CELLREF& upper)
+{
+	//cout << "parse_slice: front token:" << tokes.front().second << "\n";
+
+	if(tokes.front().first != NUMBER)
+		parse_error();
+	lower = stoi(tokes.front().second);
+	upper = lower;
+	pop(tokes);
+
+	if(tokes.front().first == ':') {
+		pop(tokes);
+		if(tokes.front().first != NUMBER)
+			parse_error();
+		upper = stoi(tokes.front().second);
+		//cout << "parse_slice: upper:" << upper << "\n";
+		pop(tokes);
+	}
+}
+
 Expr parse_rc (tokens_t& tokes)
 {
+	rng_t rng;
+
+	parse_slice(tokes, rng.lr, rng.hr);
+
+	/*
 	//tokes.pop_front(); // remove the 'R' or 'r'
 	if(tokes.front().first != NUMBER)
 		parse_error();
 
 	CELLREF r = stoi(tokes.front().second);
 	pop(tokes);
+	*/
 
-	 if(! ((tokes.front().second != "C")
-	 		 || (tokes.front().second != "c")))
-		 parse_error();
-	 pop(tokes);
-
-
-	if(tokes.front().first != NUMBER)
+	if(! ((tokes.front().second != "C")
+				|| (tokes.front().second != "c")))
 		parse_error();
-	CELLREF c = stoi(tokes.front().second);
 	pop(tokes);
 
-	cout << "parse_rc: " << r << ":" << c <<"\n";
-
+	parse_slice(tokes, rng.lc, rng.hc);
 	Expr x;
-	rng_t rng{r,c,r,c};
+	//rng_t rng{r,c,r,c};
 	x.expr = rng;
 	return x;
 }
@@ -489,12 +538,17 @@ bool is_range(value_t val) { return std::holds_alternative<rng_t>(val); }
 bool is_err(value_t val) { return std::holds_alternative<err_t>(val); }
 bool is_num(value_t val) { return std::holds_alternative<num_t>(val); }
 bool is_string(value_t val) { return std::holds_alternative<string>(val); }
-//num_t to_num (value_t v) { return std::get<num_t>(v); }
 num_t to_num (value_t v) { return tox<num_t>(v, NON_NUMBER); }
 err_t to_err(value_t v) { return tox<err_t>(v, ERR_CMD); }
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 //string to_str1 (value_t v) { return std::get<string>(v); }
 string to_str (value_t v) { return tox<string>(v, NON_STRING); }
+
+rng_t to_range(value_t val) 
+{
+	if(!is_range(val)) throw ValErr(NON_RANGE);
+	return std::get<rng_t>(val);
+}
 
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -605,6 +659,11 @@ int run_parser_2019_tests ()
 	interpret(3,2, "R2C2+1", "6");
 	interpret(3,2, "R2C2", "5");
 	interpret(3,3, "R3C2", "5");
+
+	// check on sum
+	interpret(1,1, "2+3", "5");
+	interpret(1,2, "6", "6");
+	interpret(1,3, "sum(r1c1:2)", "11");
 
 	//value v = val;
 
