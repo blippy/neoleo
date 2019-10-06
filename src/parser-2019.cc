@@ -426,26 +426,6 @@ parse_e (tokens_t& tokes)
 //template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-value_t eval (Expr expr)
-{
-	value_t val = 667;
-
-	try {
-		if(std::holds_alternative<value_t>(expr.expr))
-			val = std::get<value_t>(expr.expr);
-		else { // must be a function call		
-			//auto &fn = std::get<FunCall>(expr.fn);
-			auto &fc = std::get<FunCall>(expr.expr);
-			auto fn = fc.fn;
-			return (*fn)(fc.args);
-		}
-	} catch(ValErr ve) {
-		val = err_t{ve.num()};
-	}
-
-	return val;
-}
-
 	template <class T>
 T tox (value_t val, int errtype)
 {
@@ -464,6 +444,53 @@ T tox (value_t val, int errtype)
 	else
 		throw ValErr(errtype);
 }
+
+value_t to_irreducible(value_t val)
+{
+	//value_t val;
+	int errtype = PARSE_ERR;
+
+	if(is_range(val)) {
+		// convert a point range to a value
+		rng_t rng{std::get<rng_t>(val)};
+		if( rng.lr != rng.hr || rng.lc != rng.hc)
+			throw ValErr(BAD_NAME); 
+		CELL* cp = find_or_make_cell(rng.lr, rng.lc);
+		cp->eval_cell(); // maybe too much evaluation?
+		val = cp->get_value_t();
+	}
+
+	//if(std::holds_alternative<T>(val))
+		return val;
+	//else
+	//	throw ValErr(errtype);
+	/*
+	using irr_t = std::variant<num_t, std::string, err_t, empty_t>;
+	irr_t irr = tox(v, PARSE_ERR);
+	return irr;
+	*/
+}
+value_t eval (Expr expr)
+{
+	value_t val = 667;
+
+	try {
+		if(std::holds_alternative<value_t>(expr.expr)) {
+			val = std::get<value_t>(expr.expr);
+			val = to_irreducible(val); // resolve single-celled ranges
+		} else { // must be a function call		
+			//auto &fn = std::get<FunCall>(expr.fn);
+			auto &fc = std::get<FunCall>(expr.expr);
+			auto fn = fc.fn;
+			return (*fn)(fc.args);
+		}
+	} catch(ValErr ve) {
+		val = err_t{ve.num()};
+	}
+
+	return val;
+}
+
 
 ValType get_value_t_type(value_t& val)
 {
@@ -592,8 +619,11 @@ int run_parser_2019_tests ()
 	interpret(1,1, "1 2", "#PARSE_ERROR");
 	interpret(1,1, "", "");
 
+	// check on propagation of point cells
 	interpret(2,2, "2+3", "5");
 	interpret(3,2, "R2C2+1", "6");
+	interpret(3,2, "R2C2", "5");
+	interpret(3,3, "R3C2", "5");
 
 	//value v = val;
 
