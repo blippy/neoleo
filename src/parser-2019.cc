@@ -426,18 +426,24 @@ parse_e (tokens_t& tokes)
 //template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+value_t to_irreducible(value_t val)
+{
+	if(!is_range(val))
+		return val;
+
+	// convert a point range to a value
+	rng_t rng{std::get<rng_t>(val)};
+	if( rng.lr != rng.hr || rng.lc != rng.hc)
+		throw ValErr(BAD_NAME); 
+	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
+	cp->eval_cell(); // maybe too much evaluation?
+	val = cp->get_value_t();
+	return val;
+}
 	template <class T>
 T tox (value_t val, int errtype)
 {
-	if(is_range(val)) {
-		// convert a point range to a value
-		rng_t rng{std::get<rng_t>(val)};
-		if( rng.lr != rng.hr || rng.lc != rng.hc)
-			throw ValErr(BAD_NAME); 
-		CELL* cp = find_or_make_cell(rng.lr, rng.lc);
-		cp->eval_cell(); // maybe too much evaluation?
-		val = cp->get_value_t();
-	}
+	val = to_irreducible(val);
 
 	if(std::holds_alternative<T>(val))
 		return std::get<T>(val);
@@ -445,31 +451,6 @@ T tox (value_t val, int errtype)
 		throw ValErr(errtype);
 }
 
-value_t to_irreducible(value_t val)
-{
-	//value_t val;
-	int errtype = PARSE_ERR;
-
-	if(is_range(val)) {
-		// convert a point range to a value
-		rng_t rng{std::get<rng_t>(val)};
-		if( rng.lr != rng.hr || rng.lc != rng.hc)
-			throw ValErr(BAD_NAME); 
-		CELL* cp = find_or_make_cell(rng.lr, rng.lc);
-		cp->eval_cell(); // maybe too much evaluation?
-		val = cp->get_value_t();
-	}
-
-	//if(std::holds_alternative<T>(val))
-		return val;
-	//else
-	//	throw ValErr(errtype);
-	/*
-	using irr_t = std::variant<num_t, std::string, err_t, empty_t>;
-	irr_t irr = tox(v, PARSE_ERR);
-	return irr;
-	*/
-}
 value_t eval (Expr expr)
 {
 	value_t val = 667;
