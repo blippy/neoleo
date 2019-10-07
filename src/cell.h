@@ -131,6 +131,7 @@ class cell : public value
 		bool locked() const;
 		value get_value();
 		value_t get_value_t();
+		ranges_t predecs; // the ranges that the cell needs to evaluate
 };
 
 bool vacuous(cell* cp);

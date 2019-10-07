@@ -39,7 +39,7 @@ num_t to_num (value_t v);
 num_t num_eval (Expr expr);
 std::string to_str (value_t v);
 std::string str_eval (Expr expr);
-Expr parse_string(const std::string& s);
+Expr parse_string(const std::string& s, ranges_t& predecs);
 value_t eval (Expr expr);
 bool is_string(value_t val);
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);

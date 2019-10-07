@@ -279,11 +279,11 @@ typedef deque<string> ops_t;
 
 
 
-Expr parse_e (tokens_t& tokes);
-Expr parse_t(tokens_t& tokes);
+Expr parse_e (tokens_t& tokes, ranges_t& predecs);
+Expr parse_t(tokens_t& tokes, ranges_t& predecs);
 
 // parse a function
-Expr parse_fn(string fname, tokens_t& tokes)
+Expr parse_fn (string fname, tokens_t& tokes, ranges_t& predecs)
 {
 	//cout << "parse_fn name " << fname << "\n";
 	auto fn = fn_lookup(fname);
@@ -294,7 +294,7 @@ Expr parse_fn(string fname, tokens_t& tokes)
 	fc.fn = fn;
 loop:
 	if(tokes.front().first == ')') goto finis;
-	fc.args.push_back(parse_e(tokes));
+	fc.args.push_back(parse_e(tokes, predecs));
 	if(tokes.front().first == ',') {
 		consume(',', tokes);
 		goto loop;
@@ -334,20 +334,11 @@ void parse_slice (tokens_t& tokes, CELLREF& lower, CELLREF& upper)
 	}
 }
 
-Expr parse_rc (tokens_t& tokes)
+Expr parse_rc (tokens_t& tokes, ranges_t& predecs)
 {
 	rng_t rng;
 
 	parse_slice(tokes, rng.lr, rng.hr);
-
-	/*
-	//tokes.pop_front(); // remove the 'R' or 'r'
-	if(tokes.front().first != NUMBER)
-		parse_error();
-
-	CELLREF r = stoi(tokes.front().second);
-	pop(tokes);
-	*/
 
 	if(! ((tokes.front().second != "C")
 				|| (tokes.front().second != "c")))
@@ -355,12 +346,12 @@ Expr parse_rc (tokens_t& tokes)
 	pop(tokes);
 
 	parse_slice(tokes, rng.lc, rng.hc);
+	predecs.push_back(rng);
 	Expr x;
-	//rng_t rng{r,c,r,c};
 	x.expr = rng;
 	return x;
 }
-Expr parse_p(tokens_t& tokes)
+Expr parse_p (tokens_t& tokes, ranges_t& predecs)
 {
 	//Expr t{parse_t(tokes)};
 	token_t toke = tokes.front();
@@ -374,15 +365,14 @@ Expr parse_p(tokens_t& tokes)
 			return Expr(toke.second);
 		case ID:  {
 				  if(toke.second == "R" || toke.second == "r")
-					  return parse_rc(tokes);
+					  return parse_rc(tokes, predecs);
 				  if(tokes.front().first == '(')
-					  return parse_fn(toke.second, tokes);
+					  return parse_fn(toke.second, tokes, predecs);
 				  else
 					  parse_error(); // although could be a variable name
 			  }
 		case '(': {
-				  //tokes.pop_front();
-				  Expr x1{parse_e(tokes)};
+				  Expr x1{parse_e(tokes, predecs)};
 				  if(tokes.front().first == ')')
 					  tokes.pop_front();
 				  else
@@ -390,13 +380,13 @@ Expr parse_p(tokens_t& tokes)
 				  return x1;
 			  }
 		case '-':
-			  return Expr("-", parse_t(tokes));
+			  return Expr("-", parse_t(tokes, predecs));
 		default:
 			  parse_error();
 	}
 	return Expr(); // should never reach here
 }
-Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
+Expr parse_f (tokens_t& tokes, ranges_t& predecs) { return parse_p(tokes, predecs); }
 
 
 Expr simplify(const FunCall& fc)
@@ -413,21 +403,21 @@ Expr simplify(const FunCall& fc)
 }
 
 	Expr 
-parse_t (tokens_t& tokes)
+parse_t (tokens_t& tokes, ranges_t& predecs)
 {
 	FunCall fc;
 	fc.fn = &funcmap["*"];
 
-	fc.args.push_back(parse_f(tokes));
+	fc.args.push_back(parse_f(tokes, predecs));
 	//return fc;
 	while(1) {
 		auto nid = tokes.front().first;
 		if(nid == '*') {
 			tokes.pop_front();
-			fc.args.push_back(parse_f(tokes));
+			fc.args.push_back(parse_f(tokes, predecs));
 		} else  if(nid == '/') {
 			tokes.pop_front();
-			Expr eneg =parse_f(tokes);
+			Expr eneg =parse_f(tokes, predecs);
 			FunCall fneg;
 			fneg.fn = &funcmap["/"];
 			fneg.args = args_t{eneg};
@@ -442,20 +432,20 @@ parse_t (tokens_t& tokes)
 
 
 	Expr 
-parse_e (tokens_t& tokes)
+parse_e (tokens_t& tokes, ranges_t& predecs)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
 
-	fc.args.push_back(parse_t(tokes));
+	fc.args.push_back(parse_t(tokes, predecs));
 	while(1) {
 		auto nid = tokes.front().first;
 		if(nid == '+') {
 			tokes.pop_front();
-			fc.args.push_back(parse_t(tokes));
+			fc.args.push_back(parse_t(tokes, predecs));
 		} else  if(nid == '-') {
 			tokes.pop_front();
-			Expr eneg =parse_t(tokes);
+			Expr eneg =parse_t(tokes, predecs);
 			FunCall fneg;
 			fneg.fn = &funcmap["-"];
 			fneg.args = args_t{eneg};
@@ -553,9 +543,9 @@ rng_t to_range(value_t val)
 string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Expr parse_string(const std::string& s)
-	//Expr parse_string(const string& s)
+Expr parse_string (const std::string& s, ranges_t& predecs)
 {
+	predecs.clear();
 	tokens_t tokes{tokenise(s)};
 
 	if constexpr (0) {
@@ -568,7 +558,7 @@ Expr parse_string(const std::string& s)
 	if(tokes.size() == 1) return Expr(); // the empty expression, EOI
 
 	try {
-		Expr x{parse_e(tokes)};
+		Expr x{parse_e(tokes, predecs)};
 		//cout << "tokes remaining: " << tokes.size() << "\n";
 		if(tokes.size() !=1) parse_error(); // remaining token s/b EOI
 		return x;
@@ -582,7 +572,8 @@ int interpret(string s, string expected)
 {
 	cout << "Interpreting `" << s << "'\n";
 
-	Expr expr{parse_string(s)};
+	ranges_t predecs;
+	Expr expr{parse_string(s, predecs)};
 	//cout << "point b\n";
 
 	value_t v = eval(expr);
@@ -620,6 +611,15 @@ int interpret(int r, int c, string s, string expecting)
 	return 1;
 }
 
+void print_predecs(CELLREF r, CELLREF c)
+{
+	cout << "PREDECS\n";
+	CELL* cp = find_cell(r,c);
+	for(const auto& rng: cp->predecs) {
+		cout << "R" << rng.lr << ":" << rng.hr << "C" << rng.lc << ":" << rng.hc << "\n";
+	}
+	cout << "END PREDECS\n";
+}
 int run_parser_2019_tests ()
 {
 	cout << "Running parser 2019 tests\n";
@@ -664,6 +664,7 @@ int run_parser_2019_tests ()
 	interpret(1,1, "2+3", "5");
 	interpret(1,2, "6", "6");
 	interpret(1,3, "sum(r1c1:2)", "11");
+	print_predecs(1,3);
 
 	//value v = val;
 

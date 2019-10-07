@@ -52,13 +52,6 @@ static void log_debug_1(std::string msg)
 }
 
 
-
-/*
-cell::cell(){
-       	cell(0);
-}
-*/
-
 cell::cell(coord_t coord) :coord(coord)
 {
 }
@@ -154,7 +147,7 @@ void cell::set_formula_text(const std::string& str)
 	formula_text = str;
 
 	if(use_parser_2019) {
-		parse_tree = parse_string(formula_text);
+		parse_tree = parse_string(formula_text, predecs);
 	} else
 		invalidate_bytecode();
 }

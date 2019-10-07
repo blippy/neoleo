@@ -4,6 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include <cstdlib>
+//#include <unordered_set>
 #include <string>
 #include <variant>
 #include <vector>
@@ -25,4 +26,5 @@ class cell;
 typedef cell cell_t;
 typedef uint32_t coord_t; // definition cell location
 
-//typedef struct rng range_t;
+//typedef std::unordered_set<rng_t*> ranges_t;
+typedef std::vector<rng_t> ranges_t;
