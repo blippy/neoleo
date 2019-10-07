@@ -1,6 +1,6 @@
 #pragma once
 /*
- * Copyright © 1992, 1993, 1999 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ typedef std::deque<cell_t*> celldeq_t;
 void decoord(const CELL* cp, CELLREF& r, CELLREF& c);
 void flush_cols();
 struct cell* find_cell(CELLREF row, CELLREF col);
+struct cell* find_cell(coord_t coord);
 struct cell* find_or_make_cell(CELLREF row, CELLREF col);
 cell_t* find_or_make_cell (coord_t coord);
 

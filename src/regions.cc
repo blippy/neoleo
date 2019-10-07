@@ -42,6 +42,26 @@
 using std::cout;
 using std::endl;
 
+crefs_t coords_in_range (const rng_t& rng)
+{
+	crefs_t res;
+	for(CELLREF r = rng.lr; r <= rng.hr; ++r) 
+		for(CELLREF c = rng.lc; c <= rng.hc; ++c) 
+			res.insert(to_coord(r, c));
+	return res;
+
+}
+
+crefs_t coords_in_ranges(const ranges_t& ranges)
+{
+	crefs_t coords;
+	for(const auto& rng: ranges) 
+		for(auto coord: coords_in_range(rng))
+			coords.insert(coord);
+	return coords;
+
+}
+
 /* Apparently "all_rng" is read-only, therefore need not be put in Global. */
 struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
 

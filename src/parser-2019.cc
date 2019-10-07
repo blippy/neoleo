@@ -15,7 +15,7 @@
 #include "io-abstract.h"
 #include "io-utils.h"
 //#include "neotypes.h"
-//#include "ref.h"
+#include "regions.h"
 #include "sheet.h"
 //#include "xcept.h"
 
@@ -141,26 +141,23 @@ value_t do_life(args_t args)
 	return 42;
 }
 
-value_t do_sum(args_t args)
+value_t do_sum (args_t args)
 {
 	nargs_eq(args, 1);
 	Expr& x = args[0];
 	// TODO might hold fn instead
 	value_t v = std::get<value_t>(x.expr);
 	rng_t rng = to_range(v);
-	//value_t a0 = args[0];
-	//rng_t rng = nge(a0);
 	num_t sum = 0;
-	for(int r = rng.lr; r <= rng.hr; ++r) {
-		for(int c = rng.lc; c <= rng.hc; ++c) {
-			CELL *cp = find_cell(r, c);
-			if(cp) {
-				cp->eval_cell(); // too much?
-				value_t v = cp->get_value_t();
-				sum += to_num(v);
-			}
-		}
+	crefs_t coords = coords_in_range(rng);
+	for(auto& coord: coords) {
+		CELL* cp = find_cell(coord);
+		if(!cp) continue;
+		cp->eval_cell(); // too much?
+		value_t v = cp->get_value_t();
+		sum += to_num(v);
 	}
+
 	return sum;
 }	
 

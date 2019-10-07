@@ -37,6 +37,7 @@
 #include "sheet.h"
 #include "logging.h"
 #include "ref.h"
+#include "regions.h"
 #include "spans.h"
 #include "utils.h"
 //#include "xcept.h"
@@ -90,19 +91,10 @@ bool cell::locked() const
 	return cell_flags.cell_lock;
 }
 
-/*
-formula_t cell::set_cell_formula(formula_t newval)
-{ 
-	cell_formula = newval ;  
-	return cell_formula; 
-}
-*/
 
 void cell::recompute_bytecode()
 {
 	ASSERT_UNCALLED();
-	//this->reset();
-	//this->set_cell_formula(parse_and_compile(this));
 }
 void cell::invalidate_bytecode()
 {
@@ -140,6 +132,7 @@ bool cell::zeroed_1()
 		&& (cell_flags.cell_lock == 0);
 
 }
+
 
 void cell::set_formula_text(const std::string& str)
 {
