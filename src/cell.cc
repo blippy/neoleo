@@ -134,13 +134,32 @@ bool cell::zeroed_1()
 }
 
 
+void cell::erase_predec_deps()
+{
+	for(auto rc: coords_in_ranges(predecs)) {
+		CELL* cp = find_cell(rc);
+		if(!cp) continue;
+		cp->deps_2019.erase(rc);
+	}
+}
+void cell::insert_predec_deps()
+{
+	for(auto rc: coords_in_ranges(predecs)) {
+		CELL* cp = find_or_make_cell(rc);
+		//if(!cp) continue;
+		cp->deps_2019.insert(rc);
+	}
+}
 void cell::set_formula_text(const std::string& str)
 {
 	if(str ==formula_text) return;
 	formula_text = str;
 
 	if(use_parser_2019) {
+		erase_predec_deps();
+		predecs.clear();
 		parse_tree = parse_string(formula_text, predecs);
+		insert_predec_deps();
 	} else
 		invalidate_bytecode();
 }

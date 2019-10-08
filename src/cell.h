@@ -132,6 +132,9 @@ class cell : public value
 		value get_value();
 		value_t get_value_t();
 		ranges_t predecs; // the ranges that the cell needs to evaluate
+		crefs_t deps_2019;
+		void erase_predec_deps();
+		void insert_predec_deps();
 };
 
 bool vacuous(cell* cp);
