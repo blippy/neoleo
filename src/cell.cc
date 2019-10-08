@@ -160,7 +160,7 @@ void cell::set_formula_text(const std::string& str)
 		predecs.clear();
 		parse_tree = parse_string(formula_text, predecs);
 		insert_predec_deps(coord);
-		eval_dependents();
+
 	} else
 		invalidate_bytecode();
 }
@@ -222,7 +222,7 @@ std::string string_coord(coord_t coord)
 	CELLREF c = get_col(coord);
 	return string_format("R%dC%d", r, c);
 }
-void cell::eval_dependents()
+void cell::eval_dependents ()
 {
 	for(auto rc: deps_2019) {
 		CELL* cp = find_cell(rc);
@@ -236,29 +236,32 @@ void cell::eval_dependents()
 }
 void cell::eval_cell ()
 {
+	value_t old_value = the_value_t;
 	the_value_t = eval(parse_tree);
 	value_t& val = the_value_t;
 
 	// now hack it
 	switch(get_value_t_type(val)) {
-			case TYP_ERR:
-				sErr(to_err(val).num);
-				break;
-			case TYP_NUL:
-				type = TYP_NUL;
-				break;
-			case TYP_STR:
-				sString(to_str(val));
-				break;
-			case TYP_INT:
-			case TYP_FLT:
-				sFlt(to_num(val));
-				break;
-			case TYP_BOL:
-			default:
-				ASSERT_UNCALLED();
+		case TYP_ERR:
+			sErr(to_err(val).num);
+			break;
+		case TYP_NUL:
+			type = TYP_NUL;
+			break;
+		case TYP_STR:
+			sString(to_str(val));
+			break;
+		case TYP_INT:
+		case TYP_FLT:
+			sFlt(to_num(val));
+			break;
+		case TYP_BOL:
+		default:
+			ASSERT_UNCALLED();
 	}
 
+	if(old_value != the_value_t)
+		eval_dependents();
 }
 
 void copy_cell_stuff (cell* src, cell* dest)

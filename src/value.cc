@@ -40,9 +40,6 @@ void value::sValue(value& newval)
 int value::gInt() const { return x.c_i; };
 void value::sInt(int newval) { type = TYP_INT; x.c_i = newval; };
 
-//long value::gLong() { assert(type == TYP_INT); return x.c_l; };
-//void value::sLong(long newval) { type = TYP_INT; x.c_l = newval; };
-		
 const char *value::gString()
 { 
 	assert(type == TYP_STR); 
@@ -155,7 +152,7 @@ bool operator==(const value_t& v1, const value_t& v2)
 		case TYP_FLT:
 			return to_num(v1) == to_num(v2);
 		case TYP_ERR:
-			return to_err(v1) == to_err(v2);
+			return to_err(v1).num == to_err(v2).num;
 		case TYP_RNG: {
 				      rng_t r1 = to_range(v1);
 				      rng_t r2 = to_range(v2);

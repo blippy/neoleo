@@ -617,11 +617,13 @@ int run_parser_2019_tests ()
 	interpret(1,1, "2+3", "5");
 	interpret(1,2, "6", "6");
 	interpret(1,3, "sum(r1c1:2)", "11");
+	interpret(1,4, "r1c3", "11");
 	print_predecs(1,3);
 
 	cout << "Check that dependent cells are updated\n";
 	interpret(1, 1, "7", "7");
 	check_result(cell_value_string(1, 3, 0), "13");
+	check_result(cell_value_string(1, 4, 0), "13");
 
 	//value v = val;
 
