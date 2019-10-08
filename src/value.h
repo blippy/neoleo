@@ -78,3 +78,5 @@ T tox (value_t val, int errtype)
 	else
 		throw ValErr(errtype);
 }
+bool operator==(const value_t& v1, const value_t& v2);
+bool operator!=(const value_t& lhs, const value_t& rhs);
