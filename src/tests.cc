@@ -36,6 +36,8 @@ static bool all_pass = true; // all the checks have passed so far
 
 int run_parser_2019_tests ();
 
+extern void test_values();
+
 void 
 check(bool ok, std::string msg)
 {
@@ -142,6 +144,8 @@ headless_tests()
 		for(auto it=func_map.begin(); it != func_map.end(); ++it)
 			cout << it->first << "\n";
 	}
+
+	test_values();
 
 	return all_pass;
 }
