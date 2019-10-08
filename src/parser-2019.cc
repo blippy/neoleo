@@ -599,12 +599,18 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 	return print_cell(cp);
 }
 
+void check_result(string res, string expecting)
+{
+
+	cout << "Result is `" << res << "' " ;
+	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
+}
+
 int interpret(int r, int c, string s, string expecting)
 {
 	cout << "Interpreting R" << r << "C" << c << ": `" << s << "'\n";
 	string res = set_and_eval(r,c, s);
-	cout << "Result is `" << res << "' " ;
-	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
+	check_result(res, expecting);
 	return 1;
 }
 
@@ -662,6 +668,10 @@ int run_parser_2019_tests ()
 	interpret(1,2, "6", "6");
 	interpret(1,3, "sum(r1c1:2)", "11");
 	print_predecs(1,3);
+
+	cout << "Check that dependent cells are updated\n";
+	interpret(1, 1, "7", "7");
+	check_result(cell_value_string(1, 3, 0), "13");
 
 	//value v = val;
 

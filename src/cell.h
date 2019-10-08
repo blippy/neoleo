@@ -134,7 +134,8 @@ class cell : public value
 		ranges_t predecs; // the ranges that the cell needs to evaluate
 		crefs_t deps_2019;
 		void erase_predec_deps();
-		void insert_predec_deps();
+		void insert_predec_deps(coord_t coord);
+		void eval_dependents();
 };
 
 bool vacuous(cell* cp);

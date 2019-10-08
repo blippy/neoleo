@@ -142,12 +142,12 @@ void cell::erase_predec_deps()
 		cp->deps_2019.erase(rc);
 	}
 }
-void cell::insert_predec_deps()
+void cell::insert_predec_deps(coord_t coord)
 {
 	for(auto rc: coords_in_ranges(predecs)) {
 		CELL* cp = find_or_make_cell(rc);
 		//if(!cp) continue;
-		cp->deps_2019.insert(rc);
+		cp->deps_2019.insert(coord);
 	}
 }
 void cell::set_formula_text(const std::string& str)
@@ -156,10 +156,11 @@ void cell::set_formula_text(const std::string& str)
 	formula_text = str;
 
 	if(use_parser_2019) {
-		erase_predec_deps();
+		// erase_predec_deps(); TODO get this working properly
 		predecs.clear();
 		parse_tree = parse_string(formula_text, predecs);
-		insert_predec_deps();
+		insert_predec_deps(coord);
+		eval_dependents();
 	} else
 		invalidate_bytecode();
 }
@@ -214,7 +215,26 @@ value_t cell::get_value_t()
 	return the_value_t;
 }
 
-void cell::eval_cell()
+// TODO belongs elsewhere
+std::string string_coord(coord_t coord)
+{
+	CELLREF r = get_row(coord);
+	CELLREF c = get_col(coord);
+	return string_format("R%dC%d", r, c);
+}
+void cell::eval_dependents()
+{
+	for(auto rc: deps_2019) {
+		CELL* cp = find_cell(rc);
+		if(!cp) continue;
+		//cout << "cell::eval_dependent: " << string_coord(rc) <<  "\n";
+		cp->eval_cell();
+		CELLREF r = get_row(rc);
+		CELLREF c = get_col(rc);
+		io_pr_cell(r, c, cp);
+	}
+}
+void cell::eval_cell ()
 {
 	the_value_t = eval(parse_tree);
 	value_t& val = the_value_t;
@@ -238,6 +258,7 @@ void cell::eval_cell()
 			default:
 				ASSERT_UNCALLED();
 	}
+
 }
 
 void copy_cell_stuff (cell* src, cell* dest)

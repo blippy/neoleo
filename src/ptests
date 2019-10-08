@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# check that the new parser works
+neoleo -T parser2019 | grep FAIL
