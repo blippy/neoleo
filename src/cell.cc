@@ -234,31 +234,14 @@ void cell::eval_dependents ()
 		io_pr_cell(r, c, cp);
 	}
 }
+
 void cell::eval_cell ()
 {
 	value_t old_value = the_value_t;
 	the_value_t = eval(parse_tree);
-	value_t& val = the_value_t;
 
-	// now hack it
-	switch(get_value_t_type(val)) {
-		case TYP_ERR:
-			sErr(to_err(val).num);
-			break;
-		case TYP_NUL:
-			type = TYP_NUL;
-			break;
-		case TYP_STR:
-			sString(to_str(val));
-			break;
-		case TYP_INT:
-		case TYP_FLT:
-			sFlt(to_num(val));
-			break;
-		case TYP_BOL:
-		default:
-			ASSERT_UNCALLED();
-	}
+	sValue(the_value_t);
+
 
 	if(old_value != the_value_t)
 		eval_dependents();

@@ -14,6 +14,28 @@ ValType value::get_type() const { return type;}
 void value::set_type(ValType t) { type = t;}
 
 
+void value::sValue(const value_t& newval)
+{
+	switch(get_value_t_type(newval)) {
+		case TYP_ERR:
+			sErr(std::get<err_t>(newval).num);
+			break;
+		case TYP_NUL:
+			type = TYP_NUL;
+			break;
+		case TYP_STR:
+			sString(std::get<std::string>(newval));
+			break;
+		case TYP_INT:
+		case TYP_FLT:
+			sFlt(std::get<num_t>(newval));
+			break;
+		case TYP_BOL:
+		default:
+			ASSERT_UNCALLED();
+	}
+}
+
 void value::sValue(value& newval)
 {
 	type = newval.type;
