@@ -46,6 +46,9 @@
 #define NO_QUOTE	15
 #define BAD_CHAR	16
 #define BAD_FUNC	17
+#define CYCLE		18
+
+#define ERR_MAX		18
 
 typedef struct err_t { int num; std::string what; } err_t;
 //extern char *ename[];
@@ -57,7 +60,7 @@ inline char *ename[] =
 	CCC1("#NON_BOOL"), CCC1("#NON_RANGE"), CCC1("#OUT_OF_RANGE"), CCC1("#NO_VALUES"),
 	CCC1("#DIV_BY_ZERO"), CCC1("#BAD_NAME"), CCC1("#NOT_AVAIL"), CCC1("#PARSE_ERROR"),
 	CCC1("#NEED_OPEN"), CCC1("#NEED_CLOSE"), CCC1("#NEED_QUOTE"), CCC1("#UNK_CHAR"),
-	CCC1("#UNK_FUNC"),
+	CCC1("#UNK_FUNC"), CCC1("#CYCLE"),
 	CCC1(0)
 };
 

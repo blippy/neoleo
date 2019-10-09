@@ -110,7 +110,6 @@ struct ref_to
 
 
 /* Defined in io-utils.c: */
-#define ERR_MAX		17
 extern char tname[];
 extern char fname[];
 extern char iname[];
