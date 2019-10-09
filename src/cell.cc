@@ -222,49 +222,6 @@ std::string string_coord(coord_t coord)
 	CELLREF c = get_col(coord);
 	return string_format("R%dC%d", r, c);
 }
-void cell::eval_dependents ()
-{
-	for(auto rc: deps_2019) {
-		CELL* cp = find_cell(rc);
-		if(!cp) continue;
-		//cout << "cell::eval_dependent: " << string_coord(rc) <<  "\n";
-		cp->eval_cell(this);
-		CELLREF r = get_row(rc);
-		CELLREF c = get_col(rc);
-		io_pr_cell(r, c, cp);
-	}
-}
-void cell::eval_cell (CELL* root)
-{
-	//if(this == root) throw ValErr(CYCLE);
-
-	value_t old_value = the_value_t;
-	the_value_t = eval(this, parse_tree);
-	value_t& val = the_value_t;
-
-	// now hack it
-	switch(get_value_t_type(val)) {
-		case TYP_ERR:
-			sErr(std::get<err_t>(val).num);
-			break;
-		case TYP_NUL:
-			type = TYP_NUL;
-			break;
-		case TYP_STR:
-			sString(std::get<std::string>(val));
-			break;
-		case TYP_INT:
-		case TYP_FLT:
-			sFlt(std::get<num_t>(val));
-			break;
-		case TYP_BOL:
-		default:
-			ASSERT_UNCALLED();
-	}
-
-	if(old_value != the_value_t)
-		eval_dependents();
-}
 
 void copy_cell_stuff (cell* src, cell* dest)
 {

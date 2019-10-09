@@ -60,11 +60,55 @@ Expr::Expr(string fname, Expr x)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
 
-value_t eval(CELL* root, Expr expr);
-num_t num_eval(CELL* root, Expr expr);
-string str_eval(CELL* root, Expr expr);
+//err_t to_err(CELL* root, const value_t& v);
+//num_t to_num(CELL* root, const value_t& v);
+//std::string to_str (CELL* root, const value_t& v);
+//rng_t to_range(const value_t& val) ;
+//value_t to_irreducible(CELL* cp, CELL* root, value_t val);
+
+value_t to_irreducible(CELL* root, value_t val)
+{
+	if(!is_range(val))
+		return val;
+
+	// convert a point range to a value
+	rng_t rng{std::get<rng_t>(val)};
+	if( rng.lr != rng.hr || rng.lc != rng.hc)
+		throw ValErr(BAD_NAME); 
+	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
+	if(root == cp) throw ValErr(CYCLE);
+	eval_cell(cp, cp); // maybe too much evaluation?
+	val = cp->get_value_t();
+	return val;
+}
+	template <class T>
+T tox (CELL* cp, CELL* root, value_t val, int errtype)
+{
+	val = to_irreducible(root, val);
+
+	if(std::holds_alternative<T>(val))
+		return std::get<T>(val);
+	else
+		throw ValErr(errtype);
+}
+value_t eval(CELL* cp, CELL* root, Expr expr);
+num_t num_eval(CELL* cp, CELL* root, Expr expr);
+string str_eval(CELL* cp, CELL* root, Expr expr);
 
 
+num_t to_num (CELL* cp, CELL* root, const value_t& v) { return tox<num_t>(cp, root, v, NON_NUMBER); }
+err_t to_err (CELL* cp, CELL* root, const value_t& v) { return tox<err_t>(cp, root, v, ERR_CMD); }
+string to_str (CELL* cp, CELL* root, const value_t& v) { return tox<string>(cp, root, v, NON_STRING); }
+
+rng_t to_range(const value_t& val) 
+{
+	if(!is_range(val)) throw ValErr(NON_RANGE);
+	return std::get<rng_t>(val);
+}
+
+num_t num_eval (CELL* cp, CELL* root, Expr expr);
+std::string str_eval (Expr expr);
+value_t eval (CELL* cp, CELL* root, Expr expr);
 void parse_error()
 {
 	throw ValErr(PARSE_ERR);
@@ -77,71 +121,71 @@ void nargs_eq(const args_t& args, int n)
 		throw ValErr(BAD_FUNC);
 }
 
-value_t do_plus(CELL* root, args_t args)
+value_t do_plus(CELL* cp, CELL* root, args_t args)
 {
 	num_t val = 0;
-	for(auto& arg: args) val += num_eval(root, arg);
+	for(auto& arg: args) val += num_eval(cp, root, arg);
 	return val;
 }
-value_t do_minus(CELL* root, args_t args)
+value_t do_minus(CELL* cp, CELL* root, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(root, args[0]);
+	num_t val = num_eval(cp, root, args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
-	for(int i = 1; i<args.size(); ++i) val -= num_eval(root, args[i]);
+	for(int i = 1; i<args.size(); ++i) val -= num_eval(cp, root, args[i]);
 	return val;
 }
-value_t do_mul(CELL* root, args_t args)
+value_t do_mul(CELL* cp, CELL* root, args_t args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
-		val *=  num_eval(root, arg);
+		val *=  num_eval(cp, root, arg);
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
 	return val;
 }
-value_t do_div(CELL* root, args_t args)
+value_t do_div(CELL* cp, CELL* root, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(root, args[0]);
+	num_t val = num_eval(cp, root, args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
-	for(int i = 1; i<args.size(); ++i) val /= num_eval(root, args[i]);
+	for(int i = 1; i<args.size(); ++i) val /= num_eval(cp, root, args[i]);
 	return val;
 }
 
-value_t do_sqrt(CELL* root, args_t args)
+value_t do_sqrt(CELL* cp, CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
-	num_t val = num_eval(root, args[0]);
+	num_t val = num_eval(cp, root, args[0]);
 	return sqrt(val);
 }
-value_t do_hypot(CELL* root, args_t args)
+value_t do_hypot(CELL* cp, CELL* root, args_t args)
 {
 	nargs_eq(args, 2);
-	num_t v1 = num_eval(root, args[0]);
-	num_t v2 = num_eval(root, args[1]);
+	num_t v1 = num_eval(cp, root, args[0]);
+	num_t v2 = num_eval(cp, root, args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-value_t do_plusfn(CELL* root, args_t args)
+value_t do_plusfn(CELL* cp, CELL* root, args_t args)
 {
 	num_t val = 0;
-	for(auto& v: args) val += num_eval(root, v);
+	for(auto& v: args) val += num_eval(cp, root, v);
 	return val;
 }
 
-value_t do_strlen(CELL* root, args_t args)
+value_t do_strlen(CELL* cp, CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
-	return strlen(str_eval(root, args.at(0)).c_str());
+	return strlen(str_eval(cp, root, args.at(0)).c_str());
 }
 
-value_t do_life(CELL* root, args_t args)
+value_t do_life(CELL* cp, CELL* root, args_t args)
 {
 	return 42;
 }
 
-value_t do_sum (CELL* root, args_t args)
+value_t do_sum (CELL* cp, CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
 	Expr& x = args[0];
@@ -153,9 +197,9 @@ value_t do_sum (CELL* root, args_t args)
 	for(auto& coord: coords) {
 		CELL* cp = find_cell(coord);
 		if(!cp) continue;
-		cp->eval_cell(root); // too much?
+		eval_cell(cp, root); // too much?
 		value_t v = cp->get_value_t();
-		sum += to_num(root, v);
+		sum += to_num(cp, root, v);
 	}
 
 	return sum;
@@ -463,13 +507,36 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 
-num_t num_eval (CELL* root, Expr expr)	
+void eval_dependents (const crefs_t& dependents)
+{
+	for(auto rc: dependents) {
+		CELL* cp = find_cell(rc);
+		if(!cp) continue;
+		//cout << "cell::eval_dependent: " << string_coord(rc) <<  "\n";
+		eval_cell(cp, cp);
+		CELLREF r = get_row(rc);
+		CELLREF c = get_col(rc);
+		io_pr_cell(r, c, cp);
+	}
+}
+num_t num_eval (CELL* cp, CELL* root, Expr expr)	
 { 
-	value_t v = eval(root, expr); 
-	return to_num(root, v); 
+	value_t v = eval(cp, root, expr); 
+	return to_num(cp, root, v); 
 }
 
-value_t eval (CELL* root, Expr expr)
+void eval_cell (CELL* cp, CELL* root)
+{
+	//if(this == root) throw ValErr(CYCLE);
+
+	value_t old_value = cp->the_value_t;
+	cp->the_value_t = eval(cp, root, cp->parse_tree);
+	cp->sValue(cp->the_value_t);
+
+	if(old_value != cp->the_value_t)
+		eval_dependents(cp->deps_2019);
+}
+value_t eval (CELL* cp, CELL* root, Expr expr)
 {
 	value_t val = 667;
 
@@ -481,7 +548,7 @@ value_t eval (CELL* root, Expr expr)
 			//auto &fn = std::get<FunCall>(expr.fn);
 			auto &fc = std::get<FunCall>(expr.expr);
 			auto fn = fc.fn;
-			return (*fn)(root, fc.args);
+			return (*fn)(cp, root, fc.args);
 		}
 	} catch(ValErr ve) {
 		val = err_t{ve.num()};
@@ -492,10 +559,10 @@ value_t eval (CELL* root, Expr expr)
 
 
 
-string str_eval (CELL* root, Expr expr) 
+string str_eval (CELL* cp, CELL* root, Expr expr) 
 { 
-	value_t v{eval(root, expr)};
-	return to_str(root, v); 
+	value_t v{eval(cp, root, expr)};
+	return to_str(cp, root, v); 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -524,34 +591,12 @@ Expr parse_string (const std::string& s, ranges_t& predecs)
 	}
 }
 
-int interpret(string s, string expected)
-{
-	cout << "Interpreting `" << s << "'\n";
-
-	ranges_t predecs;
-	Expr expr{parse_string(s, predecs)};
-	//cout << "point b\n";
-
-	value_t v = eval(nullptr, expr);
-	string res = stringify_value_file_style(v);
-
-	cout << "Evaluates to `" << res << "' ";
-	if(res == expected) 
-		cout << "PASS";
-	else
-		cout << "(s/b `" << expected << "') FAIL";
-	cout << "\n\n";
-
-	return 0;
-}
 
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
-	cp->eval_cell();
-	//value_t val = eval(cp->parse_tree);
-	//cp->sValue(val);
+	eval_cell(cp, cp);
 	if(display_it) // this is really cack-handed
 		io_pr_cell(r, c, cp);
 
@@ -573,6 +618,29 @@ int interpret(int r, int c, string s, string expecting)
 	return 1;
 }
 
+int interpret(string s, string expected)
+{
+	return interpret(1, 1, s, expected);
+	/*
+	cout << "Interpreting `" << s << "'\n";
+
+	ranges_t predecs;
+	Expr expr{parse_string(s, predecs)};
+	//cout << "point b\n";
+
+	value_t v = eval(nullptr, expr);
+	string res = stringify_value_file_style(v);
+
+	cout << "Evaluates to `" << res << "' ";
+	if(res == expected) 
+		cout << "PASS";
+	else
+		cout << "(s/b `" << expected << "') FAIL";
+	cout << "\n\n";
+
+	return 0;
+	*/
+}
 void print_predecs(CELLREF r, CELLREF c)
 {
 	cout << "PREDECS\n";

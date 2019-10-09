@@ -93,7 +93,6 @@ class cell : public value
 		std::string formula_text;
 		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		crefs_t dep_cells; // other formula locations pointing to this cell
-		value_t the_value_t;
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -102,7 +101,7 @@ class cell : public value
 		void update_cell();
 		void dump_cell();
 		void reparse();
-		void eval_cell(CELL* root);
+		//void eval_cell(CELL* root);
 
 		coord_t coord;
 		void set_refs(const crefs_t& coords);
@@ -136,6 +135,7 @@ class cell : public value
 		void erase_predec_deps();
 		void insert_predec_deps(coord_t coord);
 		void eval_dependents();
+		value_t the_value_t;
 };
 
 bool vacuous(cell* cp);

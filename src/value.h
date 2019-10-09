@@ -29,6 +29,7 @@ class value {
 		void set_type(ValType t);
 
 		void sValue(value& newval);
+		void sValue(const value_t& newval);
 		//void sValue(const value_t& newval);
 
 		int gInt() const;
@@ -65,21 +66,5 @@ bool is_err(const value_t& val);
 bool is_nul(const value_t& val); 
 bool is_range(const value_t& val); 
 
-err_t to_err(CELL* root, const value_t& v);
-num_t to_num(CELL* root, const value_t& v);
-std::string to_str (CELL* root, const value_t& v);
-rng_t to_range(const value_t& val) ;
-value_t to_irreducible(CELL* root, value_t val);
-
-	template <class T>
-T tox (CELL* root, value_t val, int errtype)
-{
-	val = to_irreducible(root, val);
-
-	if(std::holds_alternative<T>(val))
-		return std::get<T>(val);
-	else
-		throw ValErr(errtype);
-}
 bool operator==(const value_t& v1, const value_t& v2);
 bool operator!=(const value_t& lhs, const value_t& rhs);
