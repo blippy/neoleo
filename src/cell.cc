@@ -243,17 +243,17 @@ void cell::eval_cell ()
 	// now hack it
 	switch(get_value_t_type(val)) {
 		case TYP_ERR:
-			sErr(to_err(val).num);
+			sErr(std::get<err_t>(val).num);
 			break;
 		case TYP_NUL:
 			type = TYP_NUL;
 			break;
 		case TYP_STR:
-			sString(to_str(val));
+			sString(std::get<std::string>(val));
 			break;
 		case TYP_INT:
 		case TYP_FLT:
-			sFlt(to_num(val));
+			sFlt(std::get<num_t>(val));
 			break;
 		case TYP_BOL:
 		default:

@@ -57,21 +57,24 @@ class value {
 
 
 
-num_t to_num(const value_t& v);
-std::string to_str (const value_t& v);
-bool is_string(const value_t& val);
 ValType get_value_t_type(const value_t& val);
-err_t to_err(const value_t& v);
+
+bool is_string(const value_t& val);
 bool is_num(const value_t& val);
 bool is_err(const value_t& val); 
 bool is_nul(const value_t& val); 
 bool is_range(const value_t& val); 
+
+err_t to_err(CELL* root, const value_t& v);
+num_t to_num(CELL* root, const value_t& v);
+std::string to_str (CELL* root, const value_t& v);
 rng_t to_range(const value_t& val) ;
-value_t to_irreducible(value_t val);
+value_t to_irreducible(CELL* root, value_t val);
+
 	template <class T>
-T tox (value_t val, int errtype)
+T tox (CELL* root, value_t val, int errtype)
 {
-	val = to_irreducible(val);
+	val = to_irreducible(root, val);
 
 	if(std::holds_alternative<T>(val))
 		return std::get<T>(val);

@@ -155,7 +155,7 @@ value_t do_sum (CELL* root, args_t args)
 		if(!cp) continue;
 		cp->eval_cell(); // too much?
 		value_t v = cp->get_value_t();
-		sum += to_num(v);
+		sum += to_num(root, v);
 	}
 
 	return sum;
@@ -466,7 +466,7 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 num_t num_eval (CELL* root, Expr expr)	
 { 
 	value_t v = eval(root, expr); 
-	return to_num(v); 
+	return to_num(root, v); 
 }
 
 value_t eval (CELL* root, Expr expr)
@@ -476,7 +476,7 @@ value_t eval (CELL* root, Expr expr)
 	try {
 		if(std::holds_alternative<value_t>(expr.expr)) {
 			val = std::get<value_t>(expr.expr);
-			val = to_irreducible(val); // resolve single-celled ranges
+			val = to_irreducible(root, val); // resolve single-celled ranges
 		} else { // must be a function call		
 			//auto &fn = std::get<FunCall>(expr.fn);
 			auto &fc = std::get<FunCall>(expr.expr);
@@ -492,7 +492,11 @@ value_t eval (CELL* root, Expr expr)
 
 
 
-string str_eval (CELL* root, Expr expr) { return to_str(eval(root, expr)); }
+string str_eval (CELL* root, Expr expr) 
+{ 
+	value_t v{eval(root, expr)};
+	return to_str(root, v); 
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Expr parse_string (const std::string& s, ranges_t& predecs)
