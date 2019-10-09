@@ -12,6 +12,7 @@
 
 #include "cell.h"
 
+#include "format.h"
 #include "io-abstract.h"
 #include "io-utils.h"
 //#include "neotypes.h"
@@ -77,7 +78,7 @@ value_t to_irreducible(CELL* root, value_t val)
 		throw ValErr(BAD_NAME); 
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
 	if(root == cp) throw ValErr(CYCLE);
-	eval_cell(cp, cp); // maybe too much evaluation?
+	eval_cell(cp, root); // maybe too much evaluation?
 	val = cp->get_value_t();
 	return val;
 }
@@ -512,7 +513,7 @@ void eval_dependents (const crefs_t& dependents)
 	for(auto rc: dependents) {
 		CELL* cp = find_cell(rc);
 		if(!cp) continue;
-		//cout << "cell::eval_dependent: " << string_coord(rc) <<  "\n";
+		//cout << "eval_dependents: " << string_coord(rc) <<  "\n";
 		eval_cell(cp, cp);
 		CELLREF r = get_row(rc);
 		CELLREF c = get_col(rc);
@@ -527,31 +528,32 @@ num_t num_eval (CELL* cp, CELL* root, Expr expr)
 
 void eval_cell (CELL* cp, CELL* root)
 {
-	//if(this == root) throw ValErr(CYCLE);
+	//if(cp == root) throw ValErr(CYCLE);
 
-	value_t old_value = cp->the_value_t;
-	cp->the_value_t = eval(cp, root, cp->parse_tree);
+	try {
+		value_t old_value = cp->the_value_t;
+		cp->the_value_t = eval(cp, root, cp->parse_tree);
+
+		if(old_value != cp->the_value_t) {
+			eval_dependents(cp->deps_2019);
+		}
+	} catch(ValErr ve) {
+		cp->the_value_t = err_t{ve.num()};
+	}
+
 	cp->sValue(cp->the_value_t);
-
-	if(old_value != cp->the_value_t)
-		eval_dependents(cp->deps_2019);
 }
 value_t eval (CELL* cp, CELL* root, Expr expr)
 {
-	value_t val = 667;
+	value_t val;
 
-	try {
-		if(std::holds_alternative<value_t>(expr.expr)) {
-			val = std::get<value_t>(expr.expr);
-			val = to_irreducible(root, val); // resolve single-celled ranges
-		} else { // must be a function call		
-			//auto &fn = std::get<FunCall>(expr.fn);
-			auto &fc = std::get<FunCall>(expr.expr);
-			auto fn = fc.fn;
-			return (*fn)(cp, root, fc.args);
-		}
-	} catch(ValErr ve) {
-		val = err_t{ve.num()};
+	if(std::holds_alternative<value_t>(expr.expr)) {
+		val = std::get<value_t>(expr.expr);
+		val = to_irreducible(root, val); // resolve single-celled ranges
+	} else { // must be a function call		
+		auto &fc = std::get<FunCall>(expr.expr);
+		auto fn = fc.fn;
+		val = (*fn)(cp, root, fc.args);
 	}
 
 	return val;
@@ -622,10 +624,10 @@ int interpret(string s, string expected)
 {
 	return interpret(1, 1, s, expected);
 	/*
-	cout << "Interpreting `" << s << "'\n";
+	   cout << "Interpreting `" << s << "'\n";
 
-	ranges_t predecs;
-	Expr expr{parse_string(s, predecs)};
+	   ranges_t predecs;
+	   Expr expr{parse_string(s, predecs)};
 	//cout << "point b\n";
 
 	value_t v = eval(nullptr, expr);
@@ -633,9 +635,9 @@ int interpret(string s, string expected)
 
 	cout << "Evaluates to `" << res << "' ";
 	if(res == expected) 
-		cout << "PASS";
+	cout << "PASS";
 	else
-		cout << "(s/b `" << expected << "') FAIL";
+	cout << "(s/b `" << expected << "') FAIL";
 	cout << "\n\n";
 
 	return 0;
@@ -701,6 +703,10 @@ int run_parser_2019_tests ()
 	interpret(1, 1, "7", "7");
 	check_result(cell_value_string(1, 3, 0), "13");
 	check_result(cell_value_string(1, 4, 0), "13");
+
+	cout << "Cyclic check 1\n";
+	interpret(1, 1, "r1c1", "#CYCLE");
+	interpret(2, 1, "r1c1", "#CYCLE");
 
 	//value v = val;
 

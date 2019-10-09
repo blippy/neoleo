@@ -23,6 +23,7 @@
 
 #include "global.h"
 #include "cell.h"
+#include "sheet.h"
 
 /* extern char * fmt_to_str (int fmt);	*/
 extern char *cell_format_string(CELL *cp);
@@ -40,3 +41,5 @@ std::string string_format( const std::string& format, Args ... args )
     snprintf( buf.get(), size, format.c_str(), args ... );
     return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 }
+
+std::string string_coord(coord_t coord);

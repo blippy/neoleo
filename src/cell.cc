@@ -215,13 +215,6 @@ value_t cell::get_value_t()
 	return the_value_t;
 }
 
-// TODO belongs elsewhere
-std::string string_coord(coord_t coord)
-{
-	CELLREF r = get_row(coord);
-	CELLREF c = get_col(coord);
-	return string_format("R%dC%d", r, c);
-}
 
 void copy_cell_stuff (cell* src, cell* dest)
 {
