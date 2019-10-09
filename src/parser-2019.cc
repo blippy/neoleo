@@ -153,7 +153,7 @@ value_t do_sum (CELL* root, args_t args)
 	for(auto& coord: coords) {
 		CELL* cp = find_cell(coord);
 		if(!cp) continue;
-		cp->eval_cell(); // too much?
+		cp->eval_cell(root); // too much?
 		value_t v = cp->get_value_t();
 		sum += to_num(root, v);
 	}
