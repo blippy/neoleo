@@ -60,9 +60,9 @@ Expr::Expr(string fname, Expr x)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
 
-value_t eval(Expr expr);
-num_t num_eval(Expr expr);
-string str_eval(Expr expr);
+value_t eval(CELL* root, Expr expr);
+num_t num_eval(CELL* root, Expr expr);
+string str_eval(CELL* root, Expr expr);
 
 
 void parse_error()
@@ -77,71 +77,71 @@ void nargs_eq(const args_t& args, int n)
 		throw ValErr(BAD_FUNC);
 }
 
-value_t do_plus(args_t args)
+value_t do_plus(CELL* root, args_t args)
 {
 	num_t val = 0;
-	for(auto& arg: args) val += num_eval(arg);
+	for(auto& arg: args) val += num_eval(root, arg);
 	return val;
 }
-value_t do_minus(args_t args)
+value_t do_minus(CELL* root, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(args[0]);
+	num_t val = num_eval(root, args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
-	for(int i = 1; i<args.size(); ++i) val -= num_eval(args[i]);
+	for(int i = 1; i<args.size(); ++i) val -= num_eval(root, args[i]);
 	return val;
 }
-value_t do_mul(args_t args)
+value_t do_mul(CELL* root, args_t args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
-		val *=  num_eval(arg);
+		val *=  num_eval(root, arg);
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
 	return val;
 }
-value_t do_div(args_t args)
+value_t do_div(CELL* root, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(args[0]);
+	num_t val = num_eval(root, args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
-	for(int i = 1; i<args.size(); ++i) val /= num_eval(args[i]);
+	for(int i = 1; i<args.size(); ++i) val /= num_eval(root, args[i]);
 	return val;
 }
 
-value_t do_sqrt(args_t args)
+value_t do_sqrt(CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
-	num_t val = num_eval(args[0]);
+	num_t val = num_eval(root, args[0]);
 	return sqrt(val);
 }
-value_t do_hypot(args_t args)
+value_t do_hypot(CELL* root, args_t args)
 {
 	nargs_eq(args, 2);
-	num_t v1 = num_eval(args[0]);
-	num_t v2 = num_eval(args[1]);
+	num_t v1 = num_eval(root, args[0]);
+	num_t v2 = num_eval(root, args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-value_t do_plusfn(args_t args)
+value_t do_plusfn(CELL* root, args_t args)
 {
 	num_t val = 0;
-	for(auto& v: args) val += num_eval(v);
+	for(auto& v: args) val += num_eval(root, v);
 	return val;
 }
 
-value_t do_strlen(args_t args)
+value_t do_strlen(CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
-	return strlen(str_eval(args.at(0)).c_str());
+	return strlen(str_eval(root, args.at(0)).c_str());
 }
 
-value_t do_life(args_t args)
+value_t do_life(CELL* root, args_t args)
 {
 	return 42;
 }
 
-value_t do_sum (args_t args)
+value_t do_sum (CELL* root, args_t args)
 {
 	nargs_eq(args, 1);
 	Expr& x = args[0];
@@ -463,8 +463,13 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 
-num_t num_eval (Expr expr) { return to_num(eval(expr)); }
-value_t eval (Expr expr)
+num_t num_eval (CELL* root, Expr expr)	
+{ 
+	value_t v = eval(root, expr); 
+	return to_num(v); 
+}
+
+value_t eval (CELL* root, Expr expr)
 {
 	value_t val = 667;
 
@@ -476,7 +481,7 @@ value_t eval (Expr expr)
 			//auto &fn = std::get<FunCall>(expr.fn);
 			auto &fc = std::get<FunCall>(expr.expr);
 			auto fn = fc.fn;
-			return (*fn)(fc.args);
+			return (*fn)(root, fc.args);
 		}
 	} catch(ValErr ve) {
 		val = err_t{ve.num()};
@@ -487,7 +492,7 @@ value_t eval (Expr expr)
 
 
 
-string str_eval (Expr expr) { return to_str(eval(expr)); }
+string str_eval (CELL* root, Expr expr) { return to_str(eval(root, expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Expr parse_string (const std::string& s, ranges_t& predecs)
@@ -523,7 +528,7 @@ int interpret(string s, string expected)
 	Expr expr{parse_string(s, predecs)};
 	//cout << "point b\n";
 
-	value_t v = eval(expr);
+	value_t v = eval(nullptr, expr);
 	string res = stringify_value_file_style(v);
 
 	cout << "Evaluates to `" << res << "' ";

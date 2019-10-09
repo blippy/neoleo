@@ -237,7 +237,7 @@ void cell::eval_dependents ()
 void cell::eval_cell ()
 {
 	value_t old_value = the_value_t;
-	the_value_t = eval(parse_tree);
+	the_value_t = eval(this, parse_tree);
 	value_t& val = the_value_t;
 
 	// now hack it
