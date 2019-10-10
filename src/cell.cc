@@ -53,6 +53,27 @@ static void log_debug_1(std::string msg)
 }
 
 
+value_t cell::get_value_2019() const
+{
+	return value_2019;
+}
+	
+void cell::set_value_2019(value_t newval)
+{
+	value_2019 = newval;
+	sValue(newval);
+}
+
+void cell::set_cyclic()
+{
+	set_value_2019(err_t{CYCLE});
+}
+
+void cell::set_error(const ValErr& ve)
+{
+	set_value_2019(ve.num());
+}
+
 cell::cell(coord_t coord) :coord(coord)
 {
 }
@@ -210,10 +231,12 @@ cell::~cell()
 	//cout <<"X";
 }
 
+/*
 value_t cell::get_value_t()
 {
 	return the_value_t;
 }
+*/
 
 
 void copy_cell_stuff (cell* src, cell* dest)

@@ -93,6 +93,7 @@ class cell : public value
 		std::string formula_text;
 		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		crefs_t dep_cells; // other formula locations pointing to this cell
+		value_t value_2019;
 
 	public:
 		unsigned short cell_cycle = 0;
@@ -129,13 +130,15 @@ class cell : public value
 		bool zeroed_1();
 		bool locked() const;
 		value get_value();
-		value_t get_value_t();
+		value_t get_value_2019() const;
+		void set_value_2019(value_t newval);
 		ranges_t predecs; // the ranges that the cell needs to evaluate
 		crefs_t deps_2019;
 		void erase_predec_deps();
 		void insert_predec_deps(coord_t coord);
 		void eval_dependents();
-		value_t the_value_t;
+		void set_error(const ValErr& ve);
+		void set_cyclic();
 };
 
 bool vacuous(cell* cp);

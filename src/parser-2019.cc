@@ -113,13 +113,13 @@ bool is_cyclic(const value_t& v)
 }
 bool is_cyclic(const CELL* cp)
 {
-	return is_cyclic(cp->the_value_t);
+	return is_cyclic(cp->get_value_2019());
 }
 
 void throw_if_cyclic(const value_t& v)
 {
 	if(is_cyclic(v))
-		throw ValErr(CYCLE);
+		throw CyclicErr();
 }
 
 
@@ -136,7 +136,7 @@ value_t to_irreducible(Tour& tour, value_t val)
 	//if(root == cp) throw ValErr(CYCLE);
 	cout << "to_irreducible:" << string_coord(cp->coord) << "\n";
 	eval_cell(tour, cp); // maybe too much evaluation?
-	val = cp->get_value_t();
+	val = cp->get_value_2019();
 	//throw_if_cyclic(val); // doesn't help
 	return val;
 }
@@ -257,7 +257,7 @@ value_t do_sum (Tour& tour, args_t args)
 		CELL* cp = find_cell(coord);
 		if(!cp) continue;
 		eval_cell(tour, cp); // too much?
-		value_t v = cp->get_value_t();
+		value_t v = cp->get_value_2019();
 		sum += to_num(tour, v);
 	}
 
@@ -589,17 +589,18 @@ void eval_cell (Tour& tour, CELL* cp)
 	//if(cp == root) throw ValErr(CYCLE);
 
 	try {
-		value_t old_value = cp->the_value_t;
-		cp->the_value_t = eval(tour, cp->parse_tree);
+		value_t old_value = cp->get_value_2019();
+		cp->set_value_2019(eval(tour, cp->parse_tree));
 
-		if(old_value != cp->the_value_t) {
+		if(old_value != cp->get_value_2019()) {
 			eval_dependents(tour, cp->deps_2019);
 		}
 	} catch(ValErr ve) {
-		cp->the_value_t = err_t{ve.num()};
+		cp->set_error(ve);
+		//cp->set_value_2019(err_t{ve.num()};
 	}
 
-	cp->sValue(cp->the_value_t);
+	//cp->sValue(cp->the_value_t); // now done in set_value_2019()
 	//throw_if_cyclic(cp->the_value_t);
 }
 value_t eval (Tour& tour, Expr expr)
@@ -663,8 +664,7 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 		Tour tour;
 		eval_cell(tour, cp);
 	} catch(CyclicErr ex) {
-		cp->the_value_t = err_t{CYCLE};
-		cp->sValue(cp->the_value_t);
+		cp->set_cyclic();
 		//assert(is_cyclic(cp));
 	}
 
