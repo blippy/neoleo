@@ -576,7 +576,7 @@ void eval_dependents (Tour& tour, const crefs_t& dependents)
 	for(auto rc: dependents) {
 		CELL* cp = find_cell(rc);
 		if(!cp) continue;
-		//cout << "eval_dependents: " << string_coord(rc) <<  "\n";
+		cout << "eval_dependents: " << string_coord(rc) <<  "\n";
 		eval_cell(tour, cp);
 		CELLREF r = get_row(rc);
 		CELLREF c = get_col(rc);
@@ -786,10 +786,17 @@ int run_parser_2019_tests ()
 	check_result(cell_value_string(1, 4, 0), "13");
 	cout << "Done\n";
 
-	cout << "Cyclic check 1\n";
+	cout << "Cyclic check \n";
 	interpret(10, 1, "r10c1", "#CYCLE");
 	interpret(11, 1, "r10c1", "#CYCLE");
 	cout << "Done\n";
+
+	cout << "Diamond cycle check\n";
+	interpret(1, 1, "4", "4");
+	interpret(2, 1, "r1c1", "4");
+	interpret(2, 2, "r1c1", "4");
+	interpret(3, 1, "r2c1 + r2c2", "8");
+	interpret(1, 1, "10", "10");
 
 	//value v = val;
 
