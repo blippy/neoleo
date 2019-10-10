@@ -21,7 +21,9 @@ class Expr;
 typedef std::vector<Expr> args_t;
 typedef double num_t;
 
-typedef std::function<value_t(CELL*, CELL*, args_t)> parse_function_t;
+class Tour;
+
+typedef std::function<value_t(Tour& tour, args_t)> parse_function_t;
 typedef parse_function_t* funptr;
 class FunCall { 
 	public: 
@@ -37,4 +39,3 @@ class Expr {
 };
 Expr parse_string(const std::string& s, ranges_t& predecs);
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);
-void eval_cell (CELL* cp, CELL* root);

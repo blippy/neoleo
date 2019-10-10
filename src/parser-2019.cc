@@ -58,6 +58,46 @@ Expr::Expr(string fname, Expr x)
 	this->expr = fc;
 }
 
+// Use the topology algorithm for detecting cyclicty at
+// https://en.wikipedia.org/wiki/Topological_sorting
+// DFS (Depth First Search)
+
+/* Algorithm is as follows:
+ * L ← Empty list that will contain the sorted nodes
+ * while exists nodes without a permanent mark do
+ *     select an unmarked node n
+ *     visit(n)
+ *         
+ * function visit(node n)
+ *     if n has a permanent mark then return
+ *     if n has a temporary mark then stop   (not a DAG)
+ *     mark n with a temporary mark
+ *     for each node m with an edge from n to m do
+ *         visit(m)
+ *     remove temporary mark from n
+ *     mark n with a permanent mark
+ *     add n to head of L
+ */
+
+class CyclicErr : public std::exception { };
+
+
+class Tour {
+	public:
+		using marks_t = std::set<CELL*>;
+		marks_t pmarks; // permanent marks
+		bool has_pmark(CELL* cp) { return pmarks.count(cp) != 0; };
+		void touch(CELL* cp) 
+		{ 
+			if(tmarks.count(cp)) // Existence implies cyclicity
+				throw CyclicErr();
+			tmarks.insert(cp);
+		};
+	private:
+		marks_t tmarks; // temporary mark
+};
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
 
@@ -65,9 +105,25 @@ Expr::Expr(string fname, Expr x)
 //num_t to_num(CELL* root, const value_t& v);
 //std::string to_str (CELL* root, const value_t& v);
 //rng_t to_range(const value_t& val) ;
-//value_t to_irreducible(CELL* cp, CELL* root, value_t val);
 
-value_t to_irreducible(CELL* root, value_t val)
+void eval_cell (Tour& tour, CELL* cp);
+bool is_cyclic(const value_t& v)
+{
+	return is_err(v) && std::get<err_t>(v).num == CYCLE;
+}
+bool is_cyclic(const CELL* cp)
+{
+	return is_cyclic(cp->the_value_t);
+}
+
+void throw_if_cyclic(const value_t& v)
+{
+	if(is_cyclic(v))
+		throw ValErr(CYCLE);
+}
+
+
+value_t to_irreducible(Tour& tour, value_t val)
 {
 	if(!is_range(val))
 		return val;
@@ -77,29 +133,31 @@ value_t to_irreducible(CELL* root, value_t val)
 	if( rng.lr != rng.hr || rng.lc != rng.hc)
 		throw ValErr(BAD_NAME); 
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
-	if(root == cp) throw ValErr(CYCLE);
-	eval_cell(cp, root); // maybe too much evaluation?
+	//if(root == cp) throw ValErr(CYCLE);
+	cout << "to_irreducible:" << string_coord(cp->coord) << "\n";
+	eval_cell(tour, cp); // maybe too much evaluation?
 	val = cp->get_value_t();
+	//throw_if_cyclic(val); // doesn't help
 	return val;
 }
 	template <class T>
-T tox (CELL* cp, CELL* root, value_t val, int errtype)
+T tox (Tour& tour, value_t val, int errtype)
 {
-	val = to_irreducible(root, val);
+	val = to_irreducible(tour, val);
 
 	if(std::holds_alternative<T>(val))
 		return std::get<T>(val);
 	else
 		throw ValErr(errtype);
 }
-value_t eval(CELL* cp, CELL* root, Expr expr);
-num_t num_eval(CELL* cp, CELL* root, Expr expr);
-string str_eval(CELL* cp, CELL* root, Expr expr);
+value_t eval(Tour& tour, Expr expr);
+num_t num_eval(Tour& tour, Expr expr);
+string str_eval(Tour& tour, Expr expr);
 
 
-num_t to_num (CELL* cp, CELL* root, const value_t& v) { return tox<num_t>(cp, root, v, NON_NUMBER); }
-err_t to_err (CELL* cp, CELL* root, const value_t& v) { return tox<err_t>(cp, root, v, ERR_CMD); }
-string to_str (CELL* cp, CELL* root, const value_t& v) { return tox<string>(cp, root, v, NON_STRING); }
+num_t to_num (Tour& tour, const value_t& v) { return tox<num_t>(tour, v, NON_NUMBER); }
+err_t to_err (Tour& tour, const value_t& v) { return tox<err_t>(tour, v, ERR_CMD); }
+string to_str (Tour& tour, const value_t& v) { return tox<string>(tour, v, NON_STRING); }
 
 rng_t to_range(const value_t& val) 
 {
@@ -107,9 +165,9 @@ rng_t to_range(const value_t& val)
 	return std::get<rng_t>(val);
 }
 
-num_t num_eval (CELL* cp, CELL* root, Expr expr);
+num_t num_eval (Tour& tour, Expr expr);
 std::string str_eval (Expr expr);
-value_t eval (CELL* cp, CELL* root, Expr expr);
+value_t eval (Tour& tour, Expr expr);
 void parse_error()
 {
 	throw ValErr(PARSE_ERR);
@@ -122,71 +180,71 @@ void nargs_eq(const args_t& args, int n)
 		throw ValErr(BAD_FUNC);
 }
 
-value_t do_plus(CELL* cp, CELL* root, args_t args)
+value_t do_plus(Tour& tour, args_t args)
 {
 	num_t val = 0;
-	for(auto& arg: args) val += num_eval(cp, root, arg);
+	for(auto& arg: args) val += num_eval(tour, arg);
 	return val;
 }
-value_t do_minus(CELL* cp, CELL* root, args_t args)
+value_t do_minus(Tour& tour, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(cp, root, args[0]);
+	num_t val = num_eval(tour, args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
-	for(int i = 1; i<args.size(); ++i) val -= num_eval(cp, root, args[i]);
+	for(int i = 1; i<args.size(); ++i) val -= num_eval(tour, args[i]);
 	return val;
 }
-value_t do_mul(CELL* cp, CELL* root, args_t args)
+value_t do_mul(Tour& tour, args_t args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
-		val *=  num_eval(cp, root, arg);
+		val *=  num_eval(tour, arg);
 		//cout << "do_mul a and val " << a << " " << val << "\n";
 	}
 	return val;
 }
-value_t do_div(CELL* cp, CELL* root, args_t args)
+value_t do_div(Tour& tour, args_t args)
 {
 	if(args.size() == 0) return 0;
-	num_t val = num_eval(cp, root, args[0]);
+	num_t val = num_eval(tour, args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
-	for(int i = 1; i<args.size(); ++i) val /= num_eval(cp, root, args[i]);
+	for(int i = 1; i<args.size(); ++i) val /= num_eval(tour, args[i]);
 	return val;
 }
 
-value_t do_sqrt(CELL* cp, CELL* root, args_t args)
+value_t do_sqrt(Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
-	num_t val = num_eval(cp, root, args[0]);
+	num_t val = num_eval(tour, args[0]);
 	return sqrt(val);
 }
-value_t do_hypot(CELL* cp, CELL* root, args_t args)
+value_t do_hypot(Tour& tour, args_t args)
 {
 	nargs_eq(args, 2);
-	num_t v1 = num_eval(cp, root, args[0]);
-	num_t v2 = num_eval(cp, root, args[1]);
+	num_t v1 = num_eval(tour, args[0]);
+	num_t v2 = num_eval(tour, args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-value_t do_plusfn(CELL* cp, CELL* root, args_t args)
+value_t do_plusfn(Tour& tour, args_t args)
 {
 	num_t val = 0;
-	for(auto& v: args) val += num_eval(cp, root, v);
+	for(auto& v: args) val += num_eval(tour, v);
 	return val;
 }
 
-value_t do_strlen(CELL* cp, CELL* root, args_t args)
+value_t do_strlen(Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
-	return strlen(str_eval(cp, root, args.at(0)).c_str());
+	return strlen(str_eval(tour, args.at(0)).c_str());
 }
 
-value_t do_life(CELL* cp, CELL* root, args_t args)
+value_t do_life(Tour& tour, args_t args)
 {
 	return 42;
 }
 
-value_t do_sum (CELL* cp, CELL* root, args_t args)
+value_t do_sum (Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
 	Expr& x = args[0];
@@ -198,9 +256,9 @@ value_t do_sum (CELL* cp, CELL* root, args_t args)
 	for(auto& coord: coords) {
 		CELL* cp = find_cell(coord);
 		if(!cp) continue;
-		eval_cell(cp, root); // too much?
+		eval_cell(tour, cp); // too much?
 		value_t v = cp->get_value_t();
-		sum += to_num(cp, root, v);
+		sum += to_num(tour, v);
 	}
 
 	return sum;
@@ -508,63 +566,66 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 
-void eval_dependents (const crefs_t& dependents)
+void eval_dependents (Tour& tour, const crefs_t& dependents)
 {
 	for(auto rc: dependents) {
 		CELL* cp = find_cell(rc);
 		if(!cp) continue;
 		//cout << "eval_dependents: " << string_coord(rc) <<  "\n";
-		eval_cell(cp, cp);
+		eval_cell(tour, cp);
 		CELLREF r = get_row(rc);
 		CELLREF c = get_col(rc);
 		io_pr_cell(r, c, cp);
 	}
 }
-num_t num_eval (CELL* cp, CELL* root, Expr expr)	
+num_t num_eval (Tour& tour, Expr expr)	
 { 
-	value_t v = eval(cp, root, expr); 
-	return to_num(cp, root, v); 
+	value_t v = eval(tour, expr); 
+	return to_num(tour, v); 
 }
 
-void eval_cell (CELL* cp, CELL* root)
+void eval_cell (Tour& tour, CELL* cp)
 {
 	//if(cp == root) throw ValErr(CYCLE);
 
 	try {
 		value_t old_value = cp->the_value_t;
-		cp->the_value_t = eval(cp, root, cp->parse_tree);
+		cp->the_value_t = eval(tour, cp->parse_tree);
 
 		if(old_value != cp->the_value_t) {
-			eval_dependents(cp->deps_2019);
+			eval_dependents(tour, cp->deps_2019);
 		}
 	} catch(ValErr ve) {
 		cp->the_value_t = err_t{ve.num()};
 	}
 
 	cp->sValue(cp->the_value_t);
+	//throw_if_cyclic(cp->the_value_t);
 }
-value_t eval (CELL* cp, CELL* root, Expr expr)
+value_t eval (Tour& tour, Expr expr)
 {
 	value_t val;
 
 	if(std::holds_alternative<value_t>(expr.expr)) {
 		val = std::get<value_t>(expr.expr);
-		val = to_irreducible(root, val); // resolve single-celled ranges
+		val = to_irreducible(tour, val); // resolve single-celled ranges
 	} else { // must be a function call		
 		auto &fc = std::get<FunCall>(expr.expr);
 		auto fn = fc.fn;
-		val = (*fn)(cp, root, fc.args);
+		val = (*fn)(tour, fc.args);
 	}
+
+	throw_if_cyclic(val); // doesn't seem to help
 
 	return val;
 }
 
 
 
-string str_eval (CELL* cp, CELL* root, Expr expr) 
+string str_eval (Tour& tour, Expr expr) 
 { 
-	value_t v{eval(cp, root, expr)};
-	return to_str(cp, root, v); 
+	value_t v{eval(tour, expr)};
+	return to_str(tour, v); 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -598,7 +659,15 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
-	eval_cell(cp, cp);
+	try {
+		Tour tour;
+		eval_cell(tour, cp);
+	} catch(CyclicErr ex) {
+		cp->the_value_t = err_t{CYCLE};
+		cp->sValue(cp->the_value_t);
+		//assert(is_cyclic(cp));
+	}
+
 	if(display_it) // this is really cack-handed
 		io_pr_cell(r, c, cp);
 
@@ -705,8 +774,8 @@ int run_parser_2019_tests ()
 	check_result(cell_value_string(1, 4, 0), "13");
 
 	cout << "Cyclic check 1\n";
-	interpret(1, 1, "r1c1", "#CYCLE");
-	interpret(2, 1, "r1c1", "#CYCLE");
+	interpret(10, 1, "r10c1", "#CYCLE");
+	interpret(11, 1, "r10c1", "#CYCLE");
 
 	//value v = val;
 
