@@ -43,3 +43,4 @@ std::string string_format( const std::string& format, Args ... args )
 }
 
 std::string string_coord(coord_t coord);
+std::string string_coord(CELLREF r, CELLREF c);

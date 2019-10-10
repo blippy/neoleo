@@ -571,12 +571,14 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 
-void eval_dependents (Tour& tour, const crefs_t& dependents)
+void eval_dependents (CELL* root)
 {
-	for(auto rc: dependents) {
+	for(auto rc: root->deps_2019) {
 		CELL* cp = find_cell(rc);
 		if(!cp) continue;
-		cout << "eval_dependents: " << string_coord(rc) <<  "\n";
+		Tour tour; // we need to start again due to possible diamond shapes mucking things up
+		tour.freeze(root); // we already know its value
+		//cout << "eval_dependents: " << string_coord(rc) <<  "\n";
 		eval_cell(tour, cp);
 		CELLREF r = get_row(rc);
 		CELLREF c = get_col(rc);
@@ -603,7 +605,7 @@ void eval_cell (Tour& tour, CELL* cp)
 	tour.untouch(cp);
 	tour.freeze(cp);
 	if(old_value != cp->get_value_2019()) {
-		eval_dependents(tour, cp->deps_2019);
+		eval_dependents(cp);
 	}
 	//} catch(ValErr ve) {
 	//	cp->set_error(ve);
@@ -685,11 +687,12 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 	return print_cell(cp);
 }
 
-void check_result(string res, string expecting)
+void check_result(CELLREF r, CELLREF c, string expecting)
 {
 
-	cout << "Result is `" << res << "' " ;
-	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
+	string res = cell_value_string(r, c, 0);
+	cout << "Result  of " << string_coord(r, c) << " is `" << res << "' " ;
+	cout << (res == expecting ? "PASS"s : "FAIL") << "\n";
 }
 
 int interpret (int r, int c, string s, string expecting)
@@ -733,6 +736,9 @@ void print_predecs(CELLREF r, CELLREF c)
 	}
 	cout << "END PREDECS\n";
 }
+
+void done() { cout << "Done\n"; }
+
 int run_parser_2019_tests ()
 {
 	cout << "Running parser 2019 tests\n";
@@ -782,14 +788,14 @@ int run_parser_2019_tests ()
 
 	cout << "Check that dependent cells are updated\n";
 	interpret(1, 1, "7", "7");
-	check_result(cell_value_string(1, 3, 0), "13");
-	check_result(cell_value_string(1, 4, 0), "13");
-	cout << "Done\n";
+	check_result(1, 3, "13");
+	check_result(1, 4, "13");
+	done();
 
 	cout << "Cyclic check \n";
 	interpret(10, 1, "r10c1", "#CYCLE");
 	interpret(11, 1, "r10c1", "#CYCLE");
-	cout << "Done\n";
+	done();
 
 	cout << "Diamond cycle check\n";
 	interpret(1, 1, "4", "4");
@@ -797,6 +803,17 @@ int run_parser_2019_tests ()
 	interpret(2, 2, "r1c1", "4");
 	interpret(3, 1, "r2c1 + r2c2", "8");
 	interpret(1, 1, "10", "10");
+	check_result(2, 1, "10");
+	check_result(2, 2, "10");
+	check_result(3, 1, "20");
+	done();
+
+	cout << "Check triangular cyclicity\n";
+	interpret(12, 1 , "r12c3", "");
+	interpret(12, 2 , "r12c1", "");
+	interpret(12, 3 , "r12c2", "#CYCLE");
+	done();
+
 
 	//value v = val;
 

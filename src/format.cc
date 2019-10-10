@@ -254,9 +254,14 @@ chr_to_jst (int chr)
 }
 
 
-std::string string_coord(coord_t coord)
+std::string string_coord (CELLREF r, CELLREF c)
+{
+	return string_format("R%dC%d", r, c);
+}
+
+std::string string_coord (coord_t coord)
 {
 	CELLREF r = get_row(coord);
 	CELLREF c = get_col(coord);
-	return string_format("R%dC%d", r, c);
+	return string_coord(r, c);
 }
