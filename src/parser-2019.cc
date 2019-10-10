@@ -107,6 +107,8 @@ class Tour {
 //rng_t to_range(const value_t& val) ;
 
 void eval_cell (Tour& tour, CELL* cp);
+
+/*
 bool is_cyclic(const value_t& v)
 {
 	return is_err(v) && std::get<err_t>(v).num == CYCLE;
@@ -121,7 +123,7 @@ void throw_if_cyclic(const value_t& v)
 	if(is_cyclic(v))
 		throw CyclicErr();
 }
-
+*/
 
 value_t to_irreducible(Tour& tour, value_t val)
 {
@@ -167,7 +169,7 @@ rng_t to_range(const value_t& val)
 
 num_t num_eval (Tour& tour, Expr expr);
 std::string str_eval (Expr expr);
-value_t eval (Tour& tour, Expr expr);
+value_t eval_expr (Tour& tour, Expr expr);
 void parse_error()
 {
 	throw ValErr(PARSE_ERR);
@@ -580,7 +582,7 @@ void eval_dependents (Tour& tour, const crefs_t& dependents)
 }
 num_t num_eval (Tour& tour, Expr expr)	
 { 
-	value_t v = eval(tour, expr); 
+	value_t v = eval_expr(tour, expr); 
 	return to_num(tour, v); 
 }
 
@@ -590,7 +592,7 @@ void eval_cell (Tour& tour, CELL* cp)
 
 	try {
 		value_t old_value = cp->get_value_2019();
-		cp->set_value_2019(eval(tour, cp->parse_tree));
+		cp->set_value_2019(eval_expr(tour, cp->parse_tree));
 
 		if(old_value != cp->get_value_2019()) {
 			eval_dependents(tour, cp->deps_2019);
@@ -603,7 +605,7 @@ void eval_cell (Tour& tour, CELL* cp)
 	//cp->sValue(cp->the_value_t); // now done in set_value_2019()
 	//throw_if_cyclic(cp->the_value_t);
 }
-value_t eval (Tour& tour, Expr expr)
+value_t eval_expr (Tour& tour, Expr expr)
 {
 	value_t val;
 
@@ -616,7 +618,7 @@ value_t eval (Tour& tour, Expr expr)
 		val = (*fn)(tour, fc.args);
 	}
 
-	throw_if_cyclic(val); // doesn't seem to help
+	//throw_if_cyclic(val); // doesn't seem to help
 
 	return val;
 }
@@ -625,7 +627,7 @@ value_t eval (Tour& tour, Expr expr)
 
 string str_eval (Tour& tour, Expr expr) 
 { 
-	value_t v{eval(tour, expr)};
+	value_t v{eval_expr(tour, expr)};
 	return to_str(tour, v); 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -773,9 +775,11 @@ int run_parser_2019_tests ()
 	check_result(cell_value_string(1, 3, 0), "13");
 	check_result(cell_value_string(1, 4, 0), "13");
 
+	if constexpr(0) {
 	cout << "Cyclic check 1\n";
 	interpret(10, 1, "r10c1", "#CYCLE");
 	interpret(11, 1, "r10c1", "#CYCLE");
+	}
 
 	//value v = val;
 
