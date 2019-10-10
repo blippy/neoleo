@@ -169,12 +169,13 @@ bool operator!=(const value_t& lhs, const value_t& rhs)
 	return !(lhs==rhs);
 }
 
+#define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";
 void test_values()
 {
 	cout << "test_values ... ";
 	value_t v1 =1, v2 = 1;
-	assert(v1==v2);
+	REQUIRE(v1==v2);
 	v2 = 3;
-	assert(v1!= v2);
+	REQUIRE(v1!= v2);
 	cout << "done\n";
 }

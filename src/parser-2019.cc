@@ -85,16 +85,18 @@ class CyclicErr : public std::exception { };
 class Tour {
 	public:
 		using marks_t = std::set<CELL*>;
-		marks_t pmarks; // permanent marks
-		bool has_pmark(CELL* cp) { return pmarks.count(cp) != 0; };
+		bool frozen(CELL* cp) { return pmarks.count(cp) != 0; };
+		void freeze(CELL* cp) { pmarks.insert(cp); };
 		void touch(CELL* cp) 
 		{ 
 			if(tmarks.count(cp)) // Existence implies cyclicity
 				throw CyclicErr();
 			tmarks.insert(cp);
 		};
+		void untouch(CELL* cp) { tmarks.erase(cp); }
 	private:
 		marks_t tmarks; // temporary mark
+		marks_t pmarks; // permanent marks
 };
 
 
@@ -109,21 +111,21 @@ class Tour {
 void eval_cell (Tour& tour, CELL* cp);
 
 /*
-bool is_cyclic(const value_t& v)
-{
-	return is_err(v) && std::get<err_t>(v).num == CYCLE;
-}
-bool is_cyclic(const CELL* cp)
-{
-	return is_cyclic(cp->get_value_2019());
-}
+   bool is_cyclic(const value_t& v)
+   {
+   return is_err(v) && std::get<err_t>(v).num == CYCLE;
+   }
+   bool is_cyclic(const CELL* cp)
+   {
+   return is_cyclic(cp->get_value_2019());
+   }
 
-void throw_if_cyclic(const value_t& v)
-{
-	if(is_cyclic(v))
-		throw CyclicErr();
-}
-*/
+   void throw_if_cyclic(const value_t& v)
+   {
+   if(is_cyclic(v))
+   throw CyclicErr();
+   }
+   */
 
 value_t to_irreducible(Tour& tour, value_t val)
 {
@@ -136,7 +138,7 @@ value_t to_irreducible(Tour& tour, value_t val)
 		throw ValErr(BAD_NAME); 
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
 	//if(root == cp) throw ValErr(CYCLE);
-	cout << "to_irreducible:" << string_coord(cp->coord) << "\n";
+	//cout << "to_irreducible:" << string_coord(cp->coord) << "\n";
 	eval_cell(tour, cp); // maybe too much evaluation?
 	val = cp->get_value_2019();
 	//throw_if_cyclic(val); // doesn't help
@@ -238,7 +240,8 @@ value_t do_plusfn(Tour& tour, args_t args)
 value_t do_strlen(Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
-	return strlen(str_eval(tour, args.at(0)).c_str());
+	string str = str_eval(tour, args[0]);
+	return str.size();
 }
 
 value_t do_life(Tour& tour, args_t args)
@@ -590,21 +593,26 @@ void eval_cell (Tour& tour, CELL* cp)
 {
 	//if(cp == root) throw ValErr(CYCLE);
 
-	try {
-		value_t old_value = cp->get_value_2019();
-		cp->set_value_2019(eval_expr(tour, cp->parse_tree));
+	if(tour.frozen(cp)) return;  // its value has been fully resolved
 
-		if(old_value != cp->get_value_2019()) {
-			eval_dependents(tour, cp->deps_2019);
-		}
-	} catch(ValErr ve) {
-		cp->set_error(ve);
-		//cp->set_value_2019(err_t{ve.num()};
+	tour.touch(cp);
+	//try {
+	value_t old_value = cp->get_value_2019();
+	cp->set_value_2019(eval_expr(tour, cp->parse_tree));
+
+	tour.untouch(cp);
+	tour.freeze(cp);
+	if(old_value != cp->get_value_2019()) {
+		eval_dependents(tour, cp->deps_2019);
 	}
+	//} catch(ValErr ve) {
+	//	cp->set_error(ve);
+	//}
 
 	//cp->sValue(cp->the_value_t); // now done in set_value_2019()
 	//throw_if_cyclic(cp->the_value_t);
 }
+
 value_t eval_expr (Tour& tour, Expr expr)
 {
 	value_t val;
@@ -622,7 +630,6 @@ value_t eval_expr (Tour& tour, Expr expr)
 
 	return val;
 }
-
 
 
 string str_eval (Tour& tour, Expr expr) 
@@ -658,7 +665,7 @@ Expr parse_string (const std::string& s, ranges_t& predecs)
 }
 
 
-std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
+std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
@@ -668,6 +675,8 @@ std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool 
 	} catch(CyclicErr ex) {
 		cp->set_cyclic();
 		//assert(is_cyclic(cp));
+	} catch(ValErr ex) {
+		cp->set_value_2019(err_t{ex.num()});
 	}
 
 	if(display_it) // this is really cack-handed
@@ -683,11 +692,12 @@ void check_result(string res, string expecting)
 	cout << (res == expecting ? "PASS"s : "FAIL") << "\n\n";
 }
 
-int interpret(int r, int c, string s, string expecting)
+int interpret (int r, int c, string s, string expecting)
 {
-	cout << "Interpreting R" << r << "C" << c << ": `" << s << "'\n";
+	cout << "Pret: R" << r << "C" << c << ": `" << s << "'";
 	string res = set_and_eval(r,c, s);
-	check_result(res, expecting);
+	cout << " => `" << res << "' ";
+	cout << (res == expecting ? "PASS"s : "FAIL") << "\n";
 	return 1;
 }
 
@@ -774,12 +784,12 @@ int run_parser_2019_tests ()
 	interpret(1, 1, "7", "7");
 	check_result(cell_value_string(1, 3, 0), "13");
 	check_result(cell_value_string(1, 4, 0), "13");
+	cout << "Done\n";
 
-	if constexpr(0) {
 	cout << "Cyclic check 1\n";
 	interpret(10, 1, "r10c1", "#CYCLE");
 	interpret(11, 1, "r10c1", "#CYCLE");
-	}
+	cout << "Done\n";
 
 	//value v = val;
 
