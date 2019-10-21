@@ -34,8 +34,9 @@ extern map<string, parse_function_t> funcmap;
 
 void unknown_function(string function_name)
 {
-	cerr << "Unknown function " << function_name << "\n";
-	throw 667;
+	//cerr << "Unknown function " << function_name << "\n";
+	//throw 667;
+	throw ValErr(BAD_FUNC);
 }
 
 funptr fn_lookup(string function_name)
@@ -795,6 +796,9 @@ int run_parser_2019_tests ()
 	done();
 	
 	interpret(13,1, "12.2", "12.2"); // check floats
+	interpret(13,1, "badfunc(12.2)", "#UNK_FUNC"); // an unknown function
+	interpret(13,1, "ceil(12.2)", "13"); 
+	interpret(13,1, "floor(12.2)", "12"); 
 
 
 	//value v = val;
