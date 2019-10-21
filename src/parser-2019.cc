@@ -103,29 +103,8 @@ class Tour {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
 
-//err_t to_err(CELL* root, const value_t& v);
-//num_t to_num(CELL* root, const value_t& v);
-//std::string to_str (CELL* root, const value_t& v);
-//rng_t to_range(const value_t& val) ;
-
 void eval_cell (Tour& tour, CELL* cp);
 
-/*
-   bool is_cyclic(const value_t& v)
-   {
-   return is_err(v) && std::get<err_t>(v).num == CYCLE;
-   }
-   bool is_cyclic(const CELL* cp)
-   {
-   return is_cyclic(cp->get_value_2019());
-   }
-
-   void throw_if_cyclic(const value_t& v)
-   {
-   if(is_cyclic(v))
-   throw CyclicErr();
-   }
-   */
 
 value_t to_irreducible(Tour& tour, value_t val)
 {
@@ -465,7 +444,8 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs)
 		//case EOI:
 		//	return Expr();
 		case NUMBER:
-			return Expr(stoi(toke.second));
+			//return Expr(stoi(toke.second));
+			return Expr(stod(toke.second));
 		case STR:
 			return Expr(toke.second);
 		case ID:  {
@@ -813,6 +793,8 @@ int run_parser_2019_tests ()
 	interpret(12, 2 , "r12c1", "");
 	interpret(12, 3 , "r12c2", "#CYCLE");
 	done();
+	
+	interpret(13,1, "12.2", "12.2"); // check floats
 
 
 	//value v = val;
