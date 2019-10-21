@@ -249,7 +249,30 @@ value_t do_sum (Tour& tour, args_t args)
 	return sum;
 }	
 
+num_t one_num(Tour& tour, args_t args)
+{
+	nargs_eq(args, 1);
+	//value_t v = std::get<value_t>(
+	return num_eval(tour, args[0]);
+	//return to_num(tour, v);
+	//if(!is_num(args[0])) throw ValeErr(NON_NUMBER);
+	//return get<num_t>(args[0]);
+}
+value_t do_floor (Tour& tour, args_t args)
+{
+	num_t n = one_num(tour, args);
+	return floor(n);
+}
+value_t do_ceil (Tour& tour, args_t args)
+{
+	num_t n = one_num(tour, args);
+	return ceil(n);
+}
+
+
 map<string, parse_function_t> funcmap= {
+	{"ceil", do_ceil},
+	{"floor", do_floor},
 	{"sum", do_sum},
 	{"life", do_life},
 	{"strlen", do_strlen},
@@ -797,7 +820,8 @@ int run_parser_2019_tests ()
 	
 	interpret(13,1, "12.2", "12.2"); // check floats
 	interpret(13,1, "badfunc(12.2)", "#UNK_FUNC"); // an unknown function
-	interpret(13,1, "ceil(12.2)", "13"); 
+	interpret(13,1, "ceil(\"oops\")", "#NON_NUMBER"); 
+	interpret(13,1, "ceil(12 + 0.2)", "13"); 
 	interpret(13,1, "floor(12.2)", "12"); 
 
 
