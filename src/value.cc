@@ -31,6 +31,8 @@ void value::sValue(const value_t& newval)
 			sFlt(std::get<num_t>(newval));
 			break;
 		case TYP_BOL:
+			sBol(std::get<bool_t>(newval).v);
+			break;
 		default:
 			ASSERT_UNCALLED();
 	}
@@ -127,6 +129,7 @@ ValType get_value_t_type(const value_t& val)
 	if(is_num(val))		return TYP_FLT;
 	if(is_err(val))		return TYP_ERR;
 	if(is_range(val))	return TYP_RNG;
+	if(is_bool(val))	return TYP_BOL;
 	ASSERT_UNCALLED();
 	return TYP_NUL;
 }
@@ -136,6 +139,7 @@ bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
 bool is_err(const value_t& val) { return std::holds_alternative<err_t>(val); }
 bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
 bool is_string(const value_t& val) { return std::holds_alternative<string>(val); }
+bool is_bool(const value_t& val) { return std::holds_alternative<bool_t>(val); }
 
 bool operator==(const value_t& v1, const value_t& v2)
 { 
@@ -158,6 +162,8 @@ bool operator==(const value_t& v1, const value_t& v2)
 	      			      return r1.lr == r2.lr && r1.hr == r2.hr 
 					      && r1.lr == r2.lr && r1.hr == r1.hr;
 			      }
+		case TYP_BOL:
+			      return std::get<bool_t>(v1).v == std::get<bool_t>(v2).v;
 		default:
 			ASSERT_UNCALLED();
 			return false;

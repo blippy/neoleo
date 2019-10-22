@@ -72,7 +72,7 @@ Expr::Expr(string fname, Expr x)
  * function visit(node n)
  *     if n has a permanent mark then return
  *     if n has a temporary mark then stop   (not a DAG)
- *     mark n with a temporary mark
+ *     mar n with a temporary mark
  *     for each node m with an edge from n to m do
  *         visit(m)
  *     remove temporary mark from n
@@ -298,7 +298,7 @@ map<string, parse_function_t> funcmap= {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
 
-enum Tokens { EOI = 128, NUMBER, ID, STR };
+enum Tokens { EOI = 128, NUMBER, ID, STR, SYM };
 
 
 	static tokens_t 
@@ -311,18 +311,21 @@ tokenise (string str)
 	const char* cstr = str.c_str();
 	int pos = 0;
 	auto it = str.begin();
-loop:
 	string token;
-	char ch = cstr[pos];
+	char ch;
+	auto build_token = [&token, &ch, &pos, cstr] () { token += ch; ch = cstr[++pos]; };
+loop:
+	token = "";
+	ch = cstr[pos];
 	if(ch == 0) {
 		goto finis;
 	} else if(isspace(ch)) {
 		while(isspace(ch)) { ch = cstr[++pos]; }
 	} else if ( isdigit(ch)) {
-		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
+		while(isdigit(ch) || ch == '.' ) build_token();
 		found(NUMBER, token);
 	} else if (isalpha(ch)) {
-		while(isalpha(ch)) { token += ch; ch = cstr[++pos]; }
+		while(isalpha(ch)) build_token();
 		found(ID, token);
 		//cout << "found id: " << token << "\n";
 	} else if(ch == '"') {
@@ -333,7 +336,12 @@ loop:
 		}
 		//cout << "tokenise string is <" << token << ">\n";
 		found(STR, token);
-	}else {
+	}else if(ch =='#') {
+		token = "#";
+		ch = cstr[++pos];
+		while(ch && isalpha(ch)) build_token();
+		found(SYM, token);
+	} else {
 		token = ch;
 		pos++;
 		found(ch, token);
@@ -488,6 +496,19 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs)
 					  return parse_fn(toke.second, tokes, predecs);
 				  else
 					  parse_error(); // although could be a variable name
+			  }
+		case SYM: {
+				  bool_t b;
+				  if(toke.second == "#TRUE") { 
+					  b.v = true;
+					  return Expr(b);
+				  }
+				  if(toke.second == "#FALSE") { 
+					  b.v = false;
+					  return Expr(b);
+				  }
+				  parse_error();
+
 			  }
 		case '(': {
 				  Expr x1{parse_e(tokes, predecs)};
@@ -849,6 +870,10 @@ int run_parser_2019_tests ()
 	interpret(13,1, "ceil(12 + 0.2)", "13"); 
 	interpret(13,1, "floor(12.2)", "12"); 
 	interpret(13,1, "2^(1+1+1)", "8"); 
+
+	interpret(13,1, "#TRUE", "#TRUE"); 
+	interpret(13,1, "#FALSE", "#FALSE"); 
+	interpret(13,1, "#OOPS", "#PARSE_ERROR"); 
 
 
 
