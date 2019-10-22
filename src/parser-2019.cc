@@ -269,8 +269,17 @@ value_t do_ceil (Tour& tour, args_t args)
 	return ceil(n);
 }
 
+value_t do_pow (Tour& tour, args_t args)
+{
+	nargs_eq(args, 2);
+	num_t x  = num_eval(tour, args[0]);
+	num_t y  = num_eval(tour, args[1]);
+	return pow(x, y);
+
+}
 
 map<string, parse_function_t> funcmap= {
+	{"^", do_pow},
 	{"ceil", do_ceil},
 	{"floor", do_floor},
 	{"sum", do_sum},
@@ -495,7 +504,23 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs)
 	}
 	return Expr(); // should never reach here
 }
-Expr parse_f (tokens_t& tokes, ranges_t& predecs) { return parse_p(tokes, predecs); }
+
+Expr parse_f (tokens_t& tokes, ranges_t& predecs) 
+{ 
+	Expr x = parse_p(tokes, predecs); 
+	if(tokes.front().first == '^') {
+		tokes.pop_front();
+		Expr y = parse_p(tokes, predecs);
+		FunCall fc;
+		fc.fn = &funcmap["^"];
+		fc.args.push_back(x);
+		fc.args.push_back(y);
+		Expr x1;
+		x1.expr = fc;
+		return x1;
+	} else
+		return x;
+}
 
 
 Expr simplify(const FunCall& fc)
@@ -823,6 +848,8 @@ int run_parser_2019_tests ()
 	interpret(13,1, "ceil(\"oops\")", "#NON_NUMBER"); 
 	interpret(13,1, "ceil(12 + 0.2)", "13"); 
 	interpret(13,1, "floor(12.2)", "12"); 
+	interpret(13,1, "2^(1+1+1)", "8"); 
+
 
 
 	//value v = val;
