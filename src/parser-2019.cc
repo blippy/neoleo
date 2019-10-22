@@ -252,11 +252,7 @@ value_t do_sum (Tour& tour, args_t args)
 num_t one_num(Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
-	//value_t v = std::get<value_t>(
 	return num_eval(tour, args[0]);
-	//return to_num(tour, v);
-	//if(!is_num(args[0])) throw ValeErr(NON_NUMBER);
-	//return get<num_t>(args[0]);
 }
 value_t do_floor (Tour& tour, args_t args)
 {
@@ -269,16 +265,92 @@ value_t do_ceil (Tour& tour, args_t args)
 	return ceil(n);
 }
 
+
+/*
+using bin_op_fn = std::function<value_t(num_t, num_t)> ;
+value_t bin_op(Tour& tour, args_t args, bin_op_fn fn)
+{
+	nargs_eq(args, 2);
+        num_t x  = num_eval(tour, args[0]);
+        num_t y  = num_eval(tour, args[1]);
+        return (value_t) fn(x, y);
+
+}
+*/
+
+void two_nums(Tour& tour, args_t args, num_t& v1, num_t& v2)
+{
+	nargs_eq(args, 2);
+        v1  = num_eval(tour, args[0]);
+        v2  = num_eval(tour, args[1]);
+}
+
 value_t do_pow (Tour& tour, args_t args)
 {
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return pow(x, y);
+
+	//return bin_op(tour, args, pow);
+	/*
 	nargs_eq(args, 2);
 	num_t x  = num_eval(tour, args[0]);
 	num_t y  = num_eval(tour, args[1]);
 	return pow(x, y);
+	*/
 
 }
 
+value_t to_bool(num_t n)
+{
+	bool_t b;
+	//cout << "to_bool: " << n << "\n";
+	b.v = n != 0;
+	return b;
+}
+value_t do_eq (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x == y);
+}
+value_t do_ne (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x != y);
+}
+value_t do_le (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x <= y);
+}
+value_t do_ge (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x >= y);
+}
+value_t do_lt (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x < y);
+}
+value_t do_gt (Tour& tour, args_t args)
+{
+	num_t x,y;
+	two_nums(tour, args, x, y);
+	return to_bool(x > y);
+}
 map<string, parse_function_t> funcmap= {
+	{"=", do_eq},
+	{"!=", do_ne},
+	{"<=", do_le},
+	{">=", do_ge},
+	{"<", do_lt},
+	{">", do_gt},
 	{"^", do_pow},
 	{"ceil", do_ceil},
 	{"floor", do_floor},
@@ -298,7 +370,7 @@ map<string, parse_function_t> funcmap= {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
 
-enum Tokens { EOI = 128, NUMBER, ID, STR, SYM };
+enum Tokens : unsigned char { EOI = 128, NUMBER, ID, STR, SYM, NE, GE, LE };
 
 
 	static tokens_t 
@@ -314,6 +386,16 @@ tokenise (string str)
 	string token;
 	char ch;
 	auto build_token = [&token, &ch, &pos, cstr] () { token += ch; ch = cstr[++pos]; };
+	auto is_rel = [&ch, &pos, cstr](char rel) { 
+		if(ch != rel) return false;
+		//cout << "is_rel:1\n";
+		if(cstr[pos+1] == '=') {
+			pos += 2;
+		//cout << "is_rel:true\n";
+			return true;
+		} else
+			return false;
+	};
 loop:
 	token = "";
 	ch = cstr[pos];
@@ -336,12 +418,18 @@ loop:
 		}
 		//cout << "tokenise string is <" << token << ">\n";
 		found(STR, token);
-	}else if(ch =='#') {
+	} else if(ch =='#') {
 		token = "#";
 		ch = cstr[++pos];
 		while(ch && isalpha(ch)) build_token();
 		found(SYM, token);
-	} else {
+	} else if(is_rel('!'))
+		found(NE, "!=");
+	else if(is_rel('<'))
+		found(LE, "<=");
+	else if(is_rel('>'))
+		found(GE, ">=");
+	else {
 		token = ch;
 		pos++;
 		found(ch, token);
@@ -526,6 +614,13 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs)
 	return Expr(); // should never reach here
 }
 
+Expr expr_funcall (FunCall fc)
+{
+	Expr x;
+	x.expr = fc;
+	return x;
+}
+
 Expr parse_f (tokens_t& tokes, ranges_t& predecs) 
 { 
 	Expr x = parse_p(tokes, predecs); 
@@ -536,9 +631,12 @@ Expr parse_f (tokens_t& tokes, ranges_t& predecs)
 		fc.fn = &funcmap["^"];
 		fc.args.push_back(x);
 		fc.args.push_back(y);
+		/*
 		Expr x1;
 		x1.expr = fc;
 		return x1;
+		*/
+		return expr_funcall(fc);
 	} else
 		return x;
 }
@@ -587,7 +685,7 @@ parse_t (tokens_t& tokes, ranges_t& predecs)
 
 
 	Expr 
-parse_e (tokens_t& tokes, ranges_t& predecs)
+parse_e1 (tokens_t& tokes, ranges_t& predecs)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -613,6 +711,28 @@ parse_e (tokens_t& tokes, ranges_t& predecs)
 }
 
 
+	Expr 
+parse_e (tokens_t& tokes, ranges_t& predecs)
+{
+
+	Expr x = parse_e1(tokes,  predecs);
+	static unsigned char rel[] = { '=', NE, LE, GE, '<', '>' };
+	auto nid = tokes.front().first;
+	unsigned char *pos = std::find(rel, rel + sizeof(rel),  nid);
+	if(pos != rel + sizeof(rel)) {
+		FunCall fc;
+		fc.fn = &funcmap[tokes.front().second];
+		//cout << "parse_e 1: " << tokes.front().second << "\n";
+		tokes.pop_front();
+		//cout << "parse_e 2: " << tokes.front().second << "\n";
+		fc.args.push_back(x);
+		x = parse_e1(tokes, predecs);
+		fc.args.push_back(x);
+		return expr_funcall(fc);
+
+	} else
+		return x;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // EVAL
@@ -876,6 +996,13 @@ int run_parser_2019_tests ()
 	interpret(13,1, "#OOPS", "#PARSE_ERROR"); 
 
 
+	interpret(13,1, "1<2", "#TRUE"); 
+	interpret(13,1, "1+1=2", "#TRUE"); 
+	interpret(13,1, "1+10!=2", "#TRUE"); 
+	interpret(13,1, "1<=2", "#TRUE"); 
+	interpret(13,1, "2>=1", "#TRUE"); 
+	interpret(13,1, "2>1", "#TRUE"); 
+	interpret(13,1, "1>2", "#FALSE"); 
 
 	//value v = val;
 
