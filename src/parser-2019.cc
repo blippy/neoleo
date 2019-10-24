@@ -135,10 +135,12 @@ T tox (Tour& tour, value_t val, int errtype)
 		throw ValErr(errtype);
 }
 value_t eval(Tour& tour, Expr expr);
+bool bool_eval (Tour& tour, Expr expr);
 num_t num_eval(Tour& tour, Expr expr);
 string str_eval(Tour& tour, Expr expr);
 
 
+bool to_bool (Tour& tour, const value_t& v) { return tox<bool_t>(tour, v, NON_BOOL).v; }
 num_t to_num (Tour& tour, const value_t& v) { return tox<num_t>(tour, v, NON_NUMBER); }
 err_t to_err (Tour& tour, const value_t& v) { return tox<err_t>(tour, v, ERR_CMD); }
 string to_str (Tour& tour, const value_t& v) { return tox<string>(tour, v, NON_STRING); }
@@ -301,7 +303,7 @@ value_t do_pow (Tour& tour, args_t args)
 
 }
 
-value_t to_bool(num_t n)
+value_t to_bool (num_t n)
 {
 	bool_t b;
 	//cout << "to_bool: " << n << "\n";
@@ -344,7 +346,20 @@ value_t do_gt (Tour& tour, args_t args)
 	two_nums(tour, args, x, y);
 	return to_bool(x > y);
 }
+
+value_t do_if (Tour& tour, args_t args)
+{
+        nargs_eq(args, 3);
+	bool test = bool_eval(tour, args[0]);
+	if(test)
+		return eval_expr(tour, args[1]);
+	else
+		return eval_expr(tour, args[2]);
+
+}
+
 map<string, parse_function_t> funcmap= {
+	{"if", do_if},
 	{"=", do_eq},
 	{"!=", do_ne},
 	{"<=", do_le},
@@ -755,6 +770,12 @@ void eval_dependents (CELL* root)
 		io_pr_cell(r, c, cp);
 	}
 }
+
+bool bool_eval (Tour& tour, Expr expr)	
+{ 
+	value_t v = eval_expr(tour, expr); 
+	return to_bool(tour, v); 
+}
 num_t num_eval (Tour& tour, Expr expr)	
 { 
 	value_t v = eval_expr(tour, expr); 
@@ -1004,7 +1025,9 @@ int run_parser_2019_tests ()
 	interpret(13,1, "2>1", "#TRUE"); 
 	interpret(13,1, "1>2", "#FALSE"); 
 
-	//value v = val;
+
+	interpret(13,1, "if(1>2, 10, 11)", "11"); 
+	interpret(13,1, "if(#TRUE, \"hello\", \"world\")", "hello"); 
 
 	return 0;
 }
