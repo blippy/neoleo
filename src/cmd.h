@@ -36,7 +36,6 @@ typedef obsmem cmd_obstack_t;
 
 #include "key.h"
 #include "args.h"
-//#include "line.h"
 
 typedef void (*alarm_fn)(void);
 
@@ -47,9 +46,6 @@ struct alarm_entry
 	time_t last_time;
 };
 
-#define	SPECIAL_CODE_A	0x80 + 'a'
-#define	SPECIAL_CODE_B	0x80 + 'b'
-#define	SPECIAL_CODE_C	0x80 + 'c'
 
 extern struct alarm_entry alarm_table[];
 
@@ -62,7 +58,6 @@ extern struct alarm_entry alarm_table[];
 struct command_frame;
 struct macro;
 
-//typedef std::shared_ptr<struct input_stream> input_stream_ptr;
 typedef struct input_stream* input_stream_ptr;
 
 struct input_stream
@@ -144,8 +139,7 @@ typedef void (*direction_function) (int magic, int repeat);
 
 
 
-typedef struct line command_arg_text_t ;
-//typedef std::string command_arg_text_t ;
+//typedef struct line command_arg_text_t ;
 
 typedef struct command_arg
 {
@@ -153,15 +147,11 @@ typedef struct command_arg
 	int is_set = 0;		/* If true, a valid value is stored here. */
 	struct prompt_style* style = 0;	/* The editting mode for this argument. */
 	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
-	//line_t prompt;		/* Unexpanded prompt */
-	//char * expanded_prompt = 0;
-	//line_t expanded_prompt;
 
 	struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
 	/* prompting for this argument. */
 	int info_line = 0;		/* First line visible in prompt_info */
 
-	//command_arg_text_t text;		/* A buffer for the user to edit this value. */
 	int cursor = 0;			/* cursor position of this buffer. */
 	int overwrite = 0;		/* Is overwrite mode on? */
 
@@ -230,7 +220,6 @@ struct command_frame
 
 	/* The prefix argument */
 	int _how_many;
-	//struct line _raw_prefix;
 
 	/* This becomes true if the user is ever prompted for arguments
 	 * for this frame.
