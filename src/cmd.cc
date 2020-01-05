@@ -26,7 +26,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "xcept.h"
 #include "sheet.h"
 #include "logging.h"
 #include "mem.h"
@@ -44,29 +43,11 @@
 #include "io-edit.h"
 #include "ref.h"
 #include "utils.h"
-//#include "xcept.h"
 
 using namespace std::literals::string_literals;
 
-//char * expand_prompt (char *str);
-//void expand_prompt(char *str, struct line& line);
 
 
-/* mcarter 07-12-2016 the command loop is a right tangled mess, so I am trying to 
- * unwind the disaster using state machines. An implementation of state 
- * machines is shown here:
- * http://stackoverflow.com/questions/1371460/state-machines-tutorials
- */
-
-enum state_codes
-{
-	sc_start = 1,
-	sc_new_cycle,
-	sc_got_command,
-	sc_prefix_cmd_continuation,
-	sc_resume_getting_arguments,
-	sc_end
-};
 
 
 
