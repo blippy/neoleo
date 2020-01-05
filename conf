@@ -12,7 +12,8 @@ source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
 case "$ID" in
 	#ubuntu) OPTS="--with-debug --with-coverage --with-asan" ;;
-	ubuntu) OPTS="--with-debug" ;;
+	#ubuntu) OPTS="--with-debug" ;;
+	ubuntu) OPTS="--with-debug --with-coverage" ;;
 	slackware) OPTS="--with-debug" ;;
 	*) ;;
 esac
