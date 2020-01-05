@@ -155,7 +155,7 @@ typedef struct command_arg
 	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
 	//line_t prompt;		/* Unexpanded prompt */
 	//char * expanded_prompt = 0;
-	line_t expanded_prompt;
+	//line_t expanded_prompt;
 
 	struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
 	/* prompting for this argument. */

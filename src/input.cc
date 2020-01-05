@@ -136,7 +136,7 @@ iv_fix_input (struct input_view * this_iv)
 					&& (the_cmd_arg.do_prompt && !the_cmd_arg.is_set))
 				? (0 
 
-					|| (Prompt != the_cmd_arg.expanded_prompt.buf)
+					|| (0)
 					|| (Input_cursor != the_cmd_arg.cursor))
 				: (Input_area || Prompt_wid)))
 		iv_reset_input (this_iv);
