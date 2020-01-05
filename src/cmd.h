@@ -25,14 +25,6 @@
  */
 #include "global.h"
 
-//#define USE_CMD_OBSTACK
-#ifdef USE_CMD_OBSTACK
-#include "obstack.h"
-typedef struct obstack cmd_obstack_t;
-#else
-#include "mem.h"
-typedef obsmem cmd_obstack_t;
-#endif
 
 #include "key.h"
 #include "args.h"
