@@ -27,7 +27,7 @@ neoleo_SOURCES = \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc \
 		 key.cc \
-		 line.cc logging.cc \
+		 logging.cc \
 		 mem.cc \
 		 oleofile.cc \
 		 parse_parse.cc \
@@ -54,7 +54,7 @@ noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
 		 io-2019.h io-abstract.h io-headless.h io-curses.h io-edit.h \
 		 io-generic.h io-term.h io-utils.h \
 		 key.h \
-		 line.h logging.h \
+		 logging.h \
 		 mem.h \
 		 neotypes.h node.h  numeric.h \
 		 oleofile.h  \

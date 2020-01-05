@@ -36,7 +36,7 @@ typedef obsmem cmd_obstack_t;
 
 #include "key.h"
 #include "args.h"
-#include "line.h"
+//#include "line.h"
 
 typedef void (*alarm_fn)(void);
 
@@ -230,7 +230,7 @@ struct command_frame
 
 	/* The prefix argument */
 	int _how_many;
-	struct line _raw_prefix;
+	//struct line _raw_prefix;
 
 	/* This becomes true if the user is ever prompted for arguments
 	 * for this frame.

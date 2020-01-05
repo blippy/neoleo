@@ -19,7 +19,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 #include "global.h"
-#include "line.h"
+//#include "line.h"
 
 /*
  * Keymaps and keybinds.

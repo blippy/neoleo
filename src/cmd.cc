@@ -434,7 +434,7 @@ free_cmd_frame (struct command_frame *frame)
 	if (frame->next)
 		remove_cmd_frame (frame);
 
-	free_line (&frame->_raw_prefix);
+	//free_line (&frame->_raw_prefix);
 	if (frame->cmd) {
 		int argc;
 		for (argc = 0; argc < frame->_cmd_argc; ++argc) {
@@ -467,6 +467,7 @@ recover_from_error (void)
 	ASSERT_UNCALLED();
 }
 
+/*
 line_t lineify_expand_prompt(line_t prompt)
 {
 	ASSERT_UNCALLED();
@@ -478,6 +479,7 @@ line_t lineify_expand_char(char* prompt)
 	ASSERT_UNCALLED();
 	return line_t{};
 }
+*/
 
 /*
  * When we begin editting a new argument, this function sets up the
@@ -617,7 +619,7 @@ command_loop (int prefix, int iscmd)
  */
 
 //static struct line exec_cmd_line = { 0, 0 };
-static struct line exec_cmd_line;
+//static struct line exec_cmd_line;
 
 /* execute_command buils a macro expression of the from `{command args}'.
  * This function quotes the braces in ARGS so that the macro reader knows

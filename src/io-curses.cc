@@ -198,11 +198,12 @@ _io_redraw_input (void)
 
 	if (   input_view.input_area
 			&& (input_view.visibility_end >= input_view.visibility_begin)
-			&& (input_view.visibility_begin < strlen (input_view.input_area->buf)))
+			&& (1))
 	{
 		int x;
-		for (x = pos; x <= input_view.visibility_end; ++x)
-			addch (input_view.input_area->buf[x]);
+		for (x = pos; x <= input_view.visibility_end; ++x) {
+			//addch (input_view.input_area->buf[x]);
+		}
 	}
 	clrtoeol ();
 	input_view.redraw_needed = NO_REDRAW;
