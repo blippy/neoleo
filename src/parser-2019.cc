@@ -1029,5 +1029,8 @@ int run_parser_2019_tests ()
 	interpret(13,1, "if(1>2, 10, 11)", "11"); 
 	interpret(13,1, "if(#TRUE, \"hello\", \"world\")", "hello"); 
 
+	interpret(14, 1, "14.1", "14.1");
+	interpret(14, 2, "r[-1]c1", "14.1");
+
 	return 0;
 }
