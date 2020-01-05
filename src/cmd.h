@@ -57,7 +57,7 @@ struct input_stream
 	/* The currently executing macro. */
 	struct macro *_rmac = 0;
 
-	unsigned char * _last_macro = 0;		/* The last anonymous macro. */
+	//unsigned char * _last_macro = 0;		/* The last anonymous macro. */
 
 	/* If a macro is being exectuted, arguments to a command
 	 * are read from this string.
@@ -67,9 +67,9 @@ struct input_stream
 	//cmd_obstack_t _macro_stack;
 
 	/* The macro being recorded, if any. */
-	unsigned char *_macro = 0;
-	unsigned char *_macro_start = 0;
-	unsigned int _macro_size = 0;
+	//unsigned char *_macro = 0;
+	//unsigned char *_macro_start = 0;
+	//unsigned int _macro_size = 0;
 
 	/* If this input stream was created only to execute a macro, 
 	 * this will point to the input_stream it suspended.
