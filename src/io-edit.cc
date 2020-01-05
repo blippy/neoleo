@@ -43,7 +43,7 @@
 /* Shorthand */
 
 #define the_cursor		the_cmd_arg.cursor
-#define the_text 		the_cmd_arg.text
+//#define the_text 		the_cmd_arg.text
 #define the_do_prompt		the_cmd_arg.do_prompt
 #define the_is_set		the_cmd_arg.is_set
 #define the_overwrite		the_cmd_arg.overwrite
@@ -83,7 +83,7 @@ begin_edit (void)
 	void
 setn_edit_line (char * str, int len)
 {
-	setn_line (&the_text, str, len);
+	//setn_line (&the_text, str, len);
 	the_cursor = len;
 }
 
@@ -203,19 +203,22 @@ insert_string(const std::string& instr)
 	void
 over_string(const std::string& instr)
 {
-	int len;
+	int len = 0;
 	const char*  str = str_and_len(instr, len);
 
 	if (check_editting_mode ())
 		return;
-	if (the_cursor + len > strlen (the_text.buf))
+	/*
+	if (the_cursor + len > 666)
 	{
 		catn_line (&the_text, str + the_text.alloc - the_cursor,
 				len - (the_text.alloc - the_cursor));
 		len = the_text.alloc - the_cursor;
 	}
+	
 	if (len)
 		bcopy (str, the_text.buf + the_cursor, len);
+	*/
 	io_over(str, len);
 	the_cursor += len;
 }

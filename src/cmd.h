@@ -161,7 +161,7 @@ typedef struct command_arg
 	/* prompting for this argument. */
 	int info_line = 0;		/* First line visible in prompt_info */
 
-	command_arg_text_t text;		/* A buffer for the user to edit this value. */
+	//command_arg_text_t text;		/* A buffer for the user to edit this value. */
 	int cursor = 0;			/* cursor position of this buffer. */
 	int overwrite = 0;		/* Is overwrite mode on? */
 

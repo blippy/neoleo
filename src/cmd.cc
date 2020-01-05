@@ -380,7 +380,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 				// other initialisation of cfn taken care of by constructor
 				command_arg_t* cfn = &new_cf->argv[argc];
 				cfn->arg_desc = *prompt;
-				set_line (&cfn->text, "");
+				//set_line (&cfn->text, "");
 				bzero (&cfn->val, sizeof (union command_arg_val));
 				++argc;
 				++prompt;
@@ -440,7 +440,7 @@ free_cmd_frame (struct command_frame *frame)
 		for (argc = 0; argc < frame->_cmd_argc; ++argc) {
 			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
 				frame->argv[argc].style->destroy (&frame->argv[argc]);
-			free_line (&frame->argv[argc].text);
+			//free_line (&frame->argv[argc].text);
 		}
 	}
 	delete frame;

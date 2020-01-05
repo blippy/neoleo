@@ -134,7 +134,8 @@ iv_fix_input (struct input_view * this_iv)
 			|| (Keymap_prompt != km_prompt)
 			|| ((the_cmd_frame->cmd
 					&& (the_cmd_arg.do_prompt && !the_cmd_arg.is_set))
-				? ((Input_area != &the_cmd_arg.text)
+				? (0 
+
 					|| (Prompt != the_cmd_arg.expanded_prompt.buf)
 					|| (Input_cursor != the_cmd_arg.cursor))
 				: (Input_area || Prompt_wid)))
