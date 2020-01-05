@@ -470,17 +470,13 @@ recover_from_error (void)
 line_t lineify_expand_prompt(line_t prompt)
 {
 	ASSERT_UNCALLED();
-	line_t result;
-	expand_prompt(prompt.buf, result);
-	return result;
+	return line_t{};
 }
 
 line_t lineify_expand_char(char* prompt)
 {
 	ASSERT_UNCALLED();
-	line_t inp;
-	set_line(&inp, prompt);
-	return lineify_expand_prompt(inp);
+	return line_t{};
 }
 
 /*
