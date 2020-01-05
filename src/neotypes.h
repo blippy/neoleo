@@ -13,7 +13,12 @@
 #include "numeric.h"
 
 typedef unsigned short CELLREF;
+
+#if 1
 typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
+#else
+typedef struct rng { CELLREF lr, lc, hr, hc; int mask = 0; } rng_t;
+#endif
 
 typedef struct {}  empty_t;
 typedef struct { bool v; } bool_t;
