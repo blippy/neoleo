@@ -1,7 +1,7 @@
 ===========================================================================
 VERSION: 9.0
-STATUS:  DEV
-DATE:    ONGOING
+STATUS:  RELEASED
+DATE:    2020-01-05
 
 * Removed '-x' command-line option. The 'experimental' GUI is now the
 GUI that replaces the previous version
