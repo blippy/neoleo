@@ -48,14 +48,13 @@ extern struct alarm_entry alarm_table[];
  */
 
 struct command_frame;
-struct macro;
 
 typedef struct input_stream* input_stream_ptr;
 
 struct input_stream
 {
 	/* The currently executing macro. */
-	struct macro *_rmac = 0;
+	//struct macro *_rmac = 0;
 
 	//unsigned char * _last_macro = 0;		/* The last anonymous macro. */
 
@@ -86,17 +85,6 @@ struct input_stream
 	~input_stream();
 };
 
-struct macro
-{
-	struct macro *mac_prev;
-	unsigned char *mac_exe;
-	CELLREF mac_row, mac_col;
-	struct rng mac_rng;
-
-	int count;			/* Repeat count for this macro. */
-	unsigned char * mac_start;	/* Beginning the current cell's string (as */
-	/* copied to the macro stack). */
-};
 
 /* When a key is bound to a range, that range is stored here and 
  * the CODE field of the binding is an index.  This is bogus.
