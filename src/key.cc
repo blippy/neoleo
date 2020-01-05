@@ -21,7 +21,6 @@
 #include <ctype.h>
 #include <string.h>
 
-//#include "funcs.h"
 #include "key.h"
 #include "cmd.h"
 #include "io-abstract.h"
@@ -29,7 +28,6 @@
 #include "io-utils.h"
 #include "io-term.h"
 #include "utils.h"
-//#include "xcept.h"
 
 using RPTR = rng*;
 
@@ -42,56 +40,6 @@ int num_funcs;
 
 
 
-	static void 
-do_bind_key (struct keymap *m, int key, int vector, int code)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void 
-bind_key (char * keymap, char * function, int ch)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-unbind_key (char * keymap, int ch)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-bind_or_unbind_set (char * keymap, char * command, char * keyset)
-{
-	ASSERT_UNCALLED();
-}
-
-void unbind_set (char *keymap, char *keyset)
-{
-	ASSERT_UNCALLED();
-}
-
-	void 
-bind_all_keys (char * keymap, char * function)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void 
-write_keys_cmd (FILE *fp)
-{
-	ASSERT_UNCALLED();
-}
-
-
-
-	void 
-clear_keymap (struct keymap *m)
-{
-	ASSERT_UNCALLED();
-}
 
 	int 
 map_idn (const char *name, int n)
@@ -107,17 +55,4 @@ map_idn (const char *name, int n)
 map_id(const char *name)
 {
 	return map_idn(name, strlen(name));
-}
-
-	void
-create_keymap (const char * mapname, char * parentname)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-set_map_prompt (char * map, char * str)
-{
-	ASSERT_UNCALLED();
 }
