@@ -56,7 +56,7 @@ struct command_frame;
  * Variables should be used.
  */
 extern int n_bound_macros;
-extern struct rng *bound_macros;
+//extern struct rng *bound_macros;
 extern int bound_macro_vec;
 
 /* The pattern of interaction is:
@@ -74,7 +74,7 @@ union command_arg_val
 	int integer;
 	double floating;
 	struct key_sequence key;	/* Passed as (struct keyseq *). */
-	struct rng range;		/* Passed as (struct rng *). */
+	//struct rng range;		/* Passed as (struct rng *). */
 	char * string;
 };
 
@@ -274,7 +274,7 @@ void run_string_as_macro(const char * macro);
 extern void call_last_kbd_macro (int count);
 extern void end_macro (void);
 extern void stop_entering_macro (void);
-extern void store_last_macro (struct rng * rng);
+//extern void store_last_macro (struct rng * rng);
 extern int real_get_chr (void);
 extern void block_until_excitement(struct timeval *tv);
 extern void push_command_frame (struct rng * rng, char * first_line, int len);
