@@ -106,7 +106,7 @@ typedef struct command_arg
 	int timeout_seconds = 0;
 
 	/* The value as it will be passed to the cmd function. */
-	union command_arg_val val;
+	//union command_arg_val val;
 } command_arg_t;
 
 #define MAX_COMMAND_ARGS	10

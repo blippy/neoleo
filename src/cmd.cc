@@ -264,7 +264,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 				command_arg_t* cfn = &new_cf->argv[argc];
 				cfn->arg_desc = *prompt;
 				//set_line (&cfn->text, "");
-				bzero (&cfn->val, sizeof (union command_arg_val));
+				//bzero (&cfn->val, sizeof (union command_arg_val));
 				++argc;
 				++prompt;
 			}

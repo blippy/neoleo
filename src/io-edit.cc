@@ -392,36 +392,6 @@ self_insert_command (int ch, int count)
 }
 
 
-/* Keysequences are read using the `keyseq' keymap.
- * Every key in that map should be bound to this function.
- */
-	void
-self_map_command (int c)
-{
-	struct keymap * map = the_maps[the_cmd_arg.val.key.cmd.code];
-	char space = ' ';
-	const char * str = char_to_string (c);
-
-	insert_string(str);
-	insert_string(" ");
-
-	while (map)
-	{
-		the_cmd_arg.val.key.cmd = map->keys[c];
-		if (the_cmd_arg.val.key.cmd.vector < 0)
-		{
-			if (the_cmd_arg.val.key.cmd.code < 0)
-				map = map->map_next;
-			else
-				return;
-		}
-		else
-			break;
-	}
-	exit_minibuffer ();
-	return;
-}
-
 	void
 insert_current_filename (void)
 {
