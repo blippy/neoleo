@@ -5,7 +5,6 @@
 
 void flush_span (span_t& sp)
 {
-	/* flush(sp); sp-> 0 */
 	sp.clear();
 }
 
@@ -51,14 +50,6 @@ int get_span(const span_t& span, int ref, int incr, int def)
 int 
 get_width (CELLREF col)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) find (col, Global->wids, sizeof (int));
-	if (!ptr || !*ptr)
-		return default_width;
-	return (*ptr) - 1;
-	*/
 	return get_span(the_wids, col, -1, default_width);
 }
 
@@ -66,12 +57,6 @@ get_width (CELLREF col)
 int 
 get_nodef_width (CELLREF col)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) find (col, Global->wids, sizeof (int));
-	return ptr ? *ptr : 0;
-	*/
 	return get_span(the_wids, col, 0, 0);
 
 }
@@ -79,12 +64,6 @@ get_nodef_width (CELLREF col)
 void 
 set_width (CELLREF col, int wid)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) make (col, &Global->wids, sizeof (int), COL_BUF);
-	*ptr = wid;
-	*/
 	the_wids[col] = wid;
 	io_update_width(col, wid);
 }
@@ -106,13 +85,6 @@ class spanner_c {
 };
 */
 
-/*
-struct find*
-find_span(struct list** spans, CELLREF lo, CELLREF hi)
-{
-	return (FPTR) find_rng(spans, lo, hi, sizeof (int));
-}
-*/
 
 
 
@@ -126,42 +98,21 @@ span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi)
 }
 
 
-/*
-int next_span(struct find* s_find, CELLREF *posp)
-{
-	int *ptr;
-
-	do
-		ptr = (IPTR) next_rng(s_find, posp);
-	while (ptr && !*ptr);
-	return ptr ? *ptr : 0;
-}
-*/
 
 
 
 int next_span(span_find_t& sp, CELLREF& n)
 {
-again:
 	if(sp.dq.empty()) return 0;
 	auto [n1, span]  = sp.dq[0];
 	sp.dq.pop_front();
 	n = n1;
-	//if(span == 0) goto again;
 	return span;
 }
 
 int 
 get_height (CELLREF row)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) find (row, Global->hgts, sizeof (int));
-	if (!ptr || !*ptr)
-		return default_height;
-	return *ptr - 1 + (Global->display_formula_mode && using_curses);
-	*/
 	int incr = - 1 + (Global->display_formula_mode && using_curses);
 	return get_span(the_hgts, row, incr, default_height);
 }
@@ -169,33 +120,15 @@ get_height (CELLREF row)
 int 
 get_nodef_height (CELLREF row)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) find (row, Global->hgts, sizeof (int));
-	return ptr ? *ptr : 0;
-	*/
 	return get_span(the_hgts, row, 0, 0);
 }
 
 void set_height (CELLREF row, int hgt)
 {
-	/*
-	int *ptr;
-
-	ptr = (IPTR) make (row, &Global->hgts, sizeof (int), ROW_BUF);
-	*ptr = hgt;
-	*/
 	the_hgts[row] = hgt;
 }
 
 
-/*
-void shift_spans (struct list** spans, int over, CELLREF lo, CELLREF hi)
-{
-	do_shift(over, lo, hi, spans, ROW_BUF);
-}
-*/
 
 
 void shift_spans (span_t&  spans, int over, CELLREF lo, CELLREF hi)
