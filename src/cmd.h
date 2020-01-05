@@ -49,41 +49,6 @@ extern struct alarm_entry alarm_table[];
 
 struct command_frame;
 
-typedef struct input_stream* input_stream_ptr;
-
-struct input_stream
-{
-	/* The currently executing macro. */
-	//struct macro *_rmac = 0;
-
-	//unsigned char * _last_macro = 0;		/* The last anonymous macro. */
-
-	/* If a macro is being exectuted, arguments to a command
-	 * are read from this string.
-	 */
-	char *_func_arg = 0;
-
-	//cmd_obstack_t _macro_stack;
-
-	/* The macro being recorded, if any. */
-	//unsigned char *_macro = 0;
-	//unsigned char *_macro_start = 0;
-	//unsigned int _macro_size = 0;
-
-	/* If this input stream was created only to execute a macro, 
-	 * this will point to the input_stream it suspended.
-	 * The purpose of this stack is to give command_loop the ability to
-	 * execute exactly one macro and then return.
-	 *
-	 * Note that within an input stream there is another macro stack. 
-	 * That stack is used internally to command_loop.
-	 */
-	input_stream_ptr prev_stream = 0;
-
-	int _pushed_back_char = -1;
-	input_stream();
-	~input_stream();
-};
 
 
 /* When a key is bound to a range, that range is stored here and 
@@ -154,8 +119,6 @@ struct command_frame
 	/* If `recursive' edits are enabled, there can be more than one of these. */
 	struct command_frame * next;
 	struct command_frame * prev;
-
-	input_stream_ptr input;
 
 	/* The cell being editted (if any). */
 	CELLREF _setrow;

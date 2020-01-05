@@ -674,8 +674,7 @@ kill_cell_cmd (void)
 void
 imove (struct rng * rng, int ch)
 {
-	if ((ch > 0) && (ch != 27))
-		pushed_back_char = ch;
+	//if ((ch > 0) && (ch != 27)) pushed_back_char = ch;
 
 	goto_region (rng);
 }
@@ -789,7 +788,7 @@ set_region_formula (struct rng * rng, char * str)
 void
 goto_edit_cell (int c)
 {
-	pushed_back_char = c;
+	//pushed_back_char = c;
 	execute_command (S "edit-cell");
 }
 
@@ -799,7 +798,7 @@ goto_edit_cell (int c)
 void
 goto_set_cell (int c)
 {
-	pushed_back_char = c;
+	//pushed_back_char = c;
 	execute_command (S "set-cell");
 }
 

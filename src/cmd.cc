@@ -82,105 +82,7 @@ struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
 
 int ioerror = 0;
 
-/* The current stream from which commands are being read. */
 
-
-input_stream_ptr the_input_stream = nullptr;
-
-void debug_input_stream(const char* str, struct input_stream *isp)
-{
-	if constexpr(false) {
-		char str1[50];
-		sprintf(str1, "cmd.cc:input_stream :%s:%p", str, isp);
-		log_debug(str1);
-	}
-}
-input_stream::input_stream()
-{
-	debug_input_stream("ctor", this);
-}
-
-input_stream::~input_stream()
-{
-	debug_input_stream("dtor", this);
-}
-
-	static input_stream_ptr
-default_input_stream (void)
-{
-	if (!the_input_stream) the_input_stream = new input_stream();
-	return the_input_stream;
-}
-
-
-/* This constructs an input stream that reads from a macro but never
- * from a keyboard.  EXECUTE_CMD uses this.
- */
-
-
-	static input_stream_ptr
-macro_only_input_stream (struct rng *rng, const char *first_line, int len, struct command_frame *frame)
-{
-	ASSERT_UNCALLED();
-	return nullptr;
-}
-
-
-/* This gets rid of an input stream created by macro_only_input_stream.
- * It fixes the INPUT fields of pending command frames.
- */
-
-	void
-pop_input_stream (void)
-{
-	ASSERT_UNCALLED();
-}
-
-/* Macros 
- * These are the commands the user has to interact with macros.
- */
-
-	void
-start_entering_macro (void)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-bound_macro (int num)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-run_string_as_macro (const char *macro)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-call_last_kbd_macro (int count)
-{
-	ASSERT_UNCALLED();
-}
-
-/* This command is automaticly inserted into the command stream
- * when the end of a macro is reached.  
- */
-	void
-end_macro (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-/* This command is executed by the user to stop entering a macro.
-*/
-	void
-stop_entering_macro (void)
-{
-	ASSERT_UNCALLED();
-}
 
 
 /* Scheduling 
@@ -315,7 +217,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->next = new_cf;
 	new_cf->prev = new_cf;
 
-	new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : default_input_stream ());
+	//new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : default_input_stream ());
 
 	new_cf->_setrow = NON_ROW;
 	new_cf->_setcol = NON_COL;
@@ -376,8 +278,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 			new_cf->_setrow = setrow;
 			new_cf->_setcol = setcol;
 
-			if (!rng)
-				new_cf->input = the_cmd_frame->input;
+			//if (!rng) new_cf->input = the_cmd_frame->input;
 		}
 	}
 
@@ -649,8 +550,7 @@ get_chr (void)
 	void
 display_msg (char *msg, int c)
 {
-	if (c > 0)
-		pushed_back_char = c;
+	//if (c > 0) pushed_back_char = c;
 }
 
 	void
