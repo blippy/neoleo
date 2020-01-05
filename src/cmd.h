@@ -25,7 +25,7 @@
  */
 #include "global.h"
 
-#define USE_CMD_OBSTACK
+//#define USE_CMD_OBSTACK
 #ifdef USE_CMD_OBSTACK
 #include "obstack.h"
 typedef struct obstack cmd_obstack_t;
@@ -72,8 +72,7 @@ struct input_stream
 	 */
 	char *_func_arg = 0;
 
-	/* Call stack for macros. */
-	cmd_obstack_t _macro_stack;
+	//cmd_obstack_t _macro_stack;
 
 	/* The macro being recorded, if any. */
 	unsigned char *_macro = 0;
@@ -273,7 +272,7 @@ extern struct command_frame * running_frames;
 #define pushed_back_char	cur_input->_pushed_back_char
 #define last_macro		cur_input->_last_macro
 #define macro_func_arg		cur_input->_func_arg
-#define macro_stack		cur_input->_macro_stack
+//#define macro_stack		cur_input->_macro_stack
 #define making_macro		cur_input->_macro
 #define making_macro_start	cur_input->_macro_start
 #define making_macro_size	cur_input->_macro_size
