@@ -1,4 +1,11 @@
 ===========================================================================
+VERSION: 10.0
+STATUS:  DEV
+DATE:    ONGOING
+
+* 2019 parser is now the default
+ 
+===========================================================================
 VERSION: 9.0
 STATUS:  RELEASED
 DATE:    2020-01-05
@@ -39,7 +46,7 @@ VERSION: 8.0.0
 STATUS:  RELEASED
 DATE:    2019-01-21
 
-NEARLY EVERYONE SHOULD DOWNLOAD THE FILE "neoleo-x,y,z,tar,gz" INSTEAD OF 
+NEARLY EVERYONE SHOULD DOWNLOAD THE FILE "neoleo-x.y.z.tar.gz" INSTEAD OF 
 THE ONES LABELLED "Source code". THE FORMER IS A GNU-STANDARD RELEASE 
 TARBALL, THE LATTER ONES ARE JUST ARCHIVES OF THE REPO.
 
