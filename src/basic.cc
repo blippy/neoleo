@@ -292,16 +292,12 @@ nicely_goto_window (int n)
 	}
 	else
 	{
-		if ((window_after_input >= 0)
-				&& ((window_after_input % nwin) == n))
+		if ((window_after_input >= 0) && ((window_after_input % nwin) == n))
 		{
 			io_inputize_cursor ();
 			window_after_input = -1;
 			input_active = 1;
-			the_cmd_frame->top_keymap =
-				map_id (the_cmd_frame->cmd
-						? the_cmd_arg.style->keymap
-						: "main");
+			the_cmd_frame->top_keymap = map_id (the_cmd_frame->cmd ? the_cmd_arg.style->keymap : "main");
 		}
 		else
 			io_set_cwin (&wins[n]);
