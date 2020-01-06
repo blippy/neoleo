@@ -90,7 +90,6 @@ formula_t cell::get_bytecode()
 		bytecode = parse_and_compile(this);
 
 	return bytecode;
-	//return cell_formula; 
 }
 
 value cell::get_value()

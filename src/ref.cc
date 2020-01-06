@@ -114,8 +114,6 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 	else	
 		my_cell = find_or_make_cell(cur_row, cur_col);
 
-	//ret = (unsigned char*) parse_and_compile (my_cell, s2.c_str());
-	//my_cell->set_cell_formula(ret);
 }
 
 extern int default_lock;
@@ -1266,7 +1264,6 @@ shift_outside (struct rng *fm, int dn, int ov)
 		{
 			for (n = 0; n < cp->cell_refs_to->refs_used; n++)
 			{
-				//fp = &(cp->get_cell_formula()[cp->cell_refs_to->to_refs[n]]);
 				fp = &(cp->get_bytecode()[cp->cell_refs_to->to_refs[n]]);
 				switch (*fp)
 				{
@@ -1473,7 +1470,6 @@ shift_outside (struct rng *fm, int dn, int ov)
 			for (fn = 0; fcp->cell_refs_to && fn < fcp->cell_refs_to->refs_used; fn++)
 			{
 
-				//ffp = &(fcp->get_cell_formula()[fcp->cell_refs_to->to_refs[fn]]);
 				ffp = &(fcp->get_bytecode()[fcp->cell_refs_to->to_refs[fn]]);
 				switch (*ffp)
 				{
