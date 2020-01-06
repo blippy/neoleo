@@ -37,5 +37,5 @@ class Expr {
 		Expr(std::string fname, Expr x);
 		std::variant<FunCall, value_t> expr; 
 };
-Expr parse_string(const std::string& s, ranges_t& predecs);
+Expr parse_string(const std::string& s, ranges_t& predecs, CELLREF r, CELLREF c);
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);

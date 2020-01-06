@@ -178,7 +178,9 @@ void cell::set_formula_text(const std::string& str)
 	if(use_parser_2019) {
 		// erase_predec_deps(); TODO get this working properly
 		predecs.clear();
-		parse_tree = parse_string(formula_text, predecs);
+		CELLREF r, c;
+		decoord(this, r, c);
+		parse_tree = parse_string(formula_text, predecs, r, c);
 		insert_predec_deps(coord);
 
 	} else
