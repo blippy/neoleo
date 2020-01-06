@@ -154,10 +154,10 @@ rng_t to_range(const value_t& val)
 num_t num_eval (Tour& tour, Expr expr);
 std::string str_eval (Expr expr);
 value_t eval_expr (Tour& tour, Expr expr);
-void parse_error()
+bool parse_error()
 {
 	throw ValErr(PARSE_ERR);
-	//throw 666;
+	return true;
 }
 
 void nargs_eq(const args_t& args, int n)
@@ -459,6 +459,8 @@ finis:
 // SCANNER (the "yacc" side of things)
 
 
+static int m_row, m_col; // I'm not a fan of this approach
+
 void consume(char ch, tokens_t& tokes)
 {
 	if(ch == tokes.front().first)
@@ -542,10 +544,53 @@ finis:
 	return x;
 }
 
-void parse_slice (tokens_t& tokes, CELLREF& lower, CELLREF& upper)
+
+bool is_char(tokens_t& tokes, char c)
+{
+
+	if( tokes.front().first != c)
+		return false;
+	//cout << "is_char:" << c << ":true\n";
+	pop(tokes);
+	return true;
+}
+
+bool is_cellref(tokens_t& tokes, CELLREF& ref)
+{
+	bool neg = is_char(tokes, '-');
+
+	if(tokes.front().first != NUMBER)
+		return false;
+	ref = stoi(tokes.front().second);
+	if(neg) ref = - ref;
+	pop(tokes);
+	return true;
+}
+
+
+bool abs_or_rel(tokens_t& tokes, CELLREF& n, bool& relative) 
+{ 
+	//cout << "abs_or_rel:called\n";
+	relative = false;
+	auto set_relative = [&relative]() {relative = true; return true;} ;
+	return (is_char(tokes, '[') && is_cellref(tokes, n) && is_char(tokes, ']') && set_relative() ) 
+		|| is_cellref(tokes, n) 
+		|| parse_error();
+}
+
+// e.g. 12 or 12:13
+void parse_slice (tokens_t& tokes, CELLREF& lower, bool& lower_rel, CELLREF& upper, bool& upper_rel)
 {
 	//cout << "parse_slice: front token:" << tokes.front().second << "\n";
 
+
+	abs_or_rel(tokes, lower, lower_rel); 
+	upper = lower;
+	upper_rel = lower_rel;
+	is_char(tokes, ':') && abs_or_rel(tokes, upper, upper_rel);
+	
+	
+	/*
 	if(tokes.front().first != NUMBER)
 		parse_error();
 	lower = stoi(tokes.front().second);
@@ -560,20 +605,36 @@ void parse_slice (tokens_t& tokes, CELLREF& lower, CELLREF& upper)
 		//cout << "parse_slice: upper:" << upper << "\n";
 		pop(tokes);
 	}
+	*/
 }
 
 Expr parse_rc (tokens_t& tokes, ranges_t& predecs)
 {
 	rng_t rng;
 
-	parse_slice(tokes, rng.lr, rng.hr);
+	//cout << "parse_rc:" << curow << "," << cucol <<"\n";
+
+	bool lr_rel, hr_rel, lc_rel, hc_rel; // TODO
+	parse_slice(tokes, rng.lr, lr_rel, rng.hr, hr_rel);
+	if(lr_rel) 
+		rng.lr += m_row;
+	if(hr_rel) 
+		rng.hr += m_row;
+
+	//parse_slice(tokes, rng.lr, rng.hr);
 
 	if(! ((tokes.front().second != "C")
 				|| (tokes.front().second != "c")))
 		parse_error();
 	pop(tokes);
 
-	parse_slice(tokes, rng.lc, rng.hc);
+	parse_slice(tokes, rng.lc, lc_rel, rng.hc, hc_rel);
+	//parse_slice(tokes, rng.lc, rng.hcl);
+	if(lc_rel) 
+		rng.lc += m_col;
+	if(hc_rel) 
+		rng.hc += m_col;
+
 	predecs.push_back(rng);
 	Expr x;
 	x.expr = rng;
@@ -888,6 +949,8 @@ void check_result(CELLREF r, CELLREF c, string expecting)
 
 int interpret (int r, int c, string s, string expecting)
 {
+	m_row = r; m_col = c; // bad idea, but an expedient fix
+
 	cout << "Pret: R" << r << "C" << c << ": `" << s << "'";
 	string res = set_and_eval(r,c, s);
 	cout << " => `" << res << "' ";
@@ -1030,7 +1093,7 @@ int run_parser_2019_tests ()
 	interpret(13,1, "if(#TRUE, \"hello\", \"world\")", "hello"); 
 
 	interpret(14, 1, "14.1", "14.1");
-	interpret(14, 2, "r[-1]c1", "14.1");
+	interpret(14, 2, "r14c[-1]", "14.1");
 
 	return 0;
 }
