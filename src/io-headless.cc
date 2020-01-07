@@ -36,6 +36,16 @@ using std::vector;
 
 typedef int T;
 
+	void
+set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
+{
+	curow = r;
+	cucol = c;
+	CELL* cp = find_or_make_cell(r, c);
+	set_and_eval(r, c, formula, true);
+}
+
+
 string hl_getline (int fildes)
 {
 	bool eof;
@@ -56,14 +66,14 @@ string to_oct(long n)
 	return ss.str();
 }
 
-static void 
+	static void 
 do_nothing(void)
 {
 	return;
 }
 
 
-static void
+	static void
 _io_open_display(void)
 {
 	/* We fake having a window. This is important because io_init_windows()
@@ -81,21 +91,21 @@ static int m_nrow = 1;
 
 static int m_ncol = 1;
 
-static void
+	static void
 _io_update_status(void)
 {
 	//puts("Called _io_update_status()");
 }
 
-static void
+	static void
 _io_repaint_win (struct window *win)
 {
-  //io_repaint ();
+	//io_repaint ();
 }
 
 
 
-static void
+	static void
 _io_fix_input(void)
 {
 	//puts("Entering _io_fix_input()");
@@ -105,18 +115,18 @@ _io_fix_input(void)
 // suggested at
 // http://stackoverflow.com/questions/8302547/temp-failure-retry-and-use-gnu
 #define CALL_RETRY(retvar, expression) do { \
-    retvar = (expression); \
+	retvar = (expression); \
 } while (retvar == -1 && errno == EINTR);
 
 
-static int
+	static int
 _io_input_avail(void)
 {
 	int filedes = STDIN_FILENO;
 	unsigned int seconds = 0;
 
 	// taken from https://www.gnu.org/software/libc/manual/html_node/Waiting-for-I_002fO.html
-	
+
 
 	fd_set set;
 	struct timeval timeout;
@@ -141,56 +151,56 @@ _io_input_avail(void)
 
 
 // TODO: this was a copy-pasta from io_curses.c
-static void 
+	static void 
 _curses_io_scan_for_input (int block)
 {
-  /* This function only exists because X kbd events don't generate
-   * SIGIO. Under curses, the SIGIO hander does the work of this
-   * function.
-   * Attempt to have the curses mode be somewhat responsive even in
-   * the presence of an endless loop by explicitly looking for events
-   * here.
-   */
-  struct timeval tv;
+	/* This function only exists because X kbd events don't generate
+	 * SIGIO. Under curses, the SIGIO hander does the work of this
+	 * function.
+	 * Attempt to have the curses mode be somewhat responsive even in
+	 * the presence of an endless loop by explicitly looking for events
+	 * here.
+	 */
+	struct timeval tv;
 
-  tv.tv_sec = 0;
-  tv.tv_usec = 1000;
-  block_until_excitement(&tv);
+	tv.tv_sec = 0;
+	tv.tv_usec = 1000;
+	block_until_excitement(&tv);
 }
 
 
-static int
+	static int
 _io_read_kbd(char *buf, int size)
 {        
-  //int r = read (0, buf, size);
-  int r = read (STDIN_FILENO, buf, size);
-  //FD_CLR (0, &read_pending_fd_set);
-  //FD_CLR (0, &exception_pending_fd_set);
-  return r;
+	//int r = read (0, buf, size);
+	int r = read (STDIN_FILENO, buf, size);
+	//FD_CLR (0, &read_pending_fd_set);
+	//FD_CLR (0, &exception_pending_fd_set);
+	return r;
 }      
 
-static void
+	static void
 _io_insert (int len)
 { 
-  //iv_insert (&input_view, len);
+	//iv_insert (&input_view, len);
 } 
 
-static void
+	static void
 _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
-static void 
+	static void 
 info(int fildes)
 {
 	// print diagnostic information
-	
+
 	typedef struct info_t { string str; int num; string desc; } info_t;
 	auto infos = vector<info_t> {
 		{"KEY_END",	KEY_END,	"End key"},
-		{"KEY_HOME",	KEY_HOME,	"Home key"},
-		{"KEY_LEFT", 	KEY_LEFT, 	"Arrow left"},
-		{"KEY_NPAGE",	KEY_NPAGE}
+			{"KEY_HOME",	KEY_HOME,	"Home key"},
+			{"KEY_LEFT", 	KEY_LEFT, 	"Arrow left"},
+			{"KEY_NPAGE",	KEY_NPAGE}
 	};
 
 	for(const auto& i:infos)
@@ -200,7 +210,7 @@ info(int fildes)
 			<< "     # " << i.desc << "\n";
 }
 
-static void
+	static void
 insert_columnwise(T fildes)
 {
 	std::string line;
@@ -219,23 +229,23 @@ insert_columnwise(T fildes)
 		}
 		if(line[0] == '#') continue;
 
-		set_cell_input(curow, cucol, line);
+		set_cell_input_1(curow, cucol, line);
 		curow++;
-		
+
 		//cout << "You said " << line <<  (line != "." ) << endl;
 		if(eof) return;
 	}
 }
 
 
-static void
+	static void
 hless_dump_sheet(T fildes)
 {
 	extern void dump_sheet();
 	dump_sheet();
 }
 
-static void
+	static void
 insert_rowwise(T fildes)
 {
 	std::string line;
@@ -254,9 +264,9 @@ insert_rowwise(T fildes)
 		}
 		if(line[0] == '#') continue;
 
-		set_cell_input(curow, cucol, line);
+		set_cell_input_1(curow, cucol, line);
 		cucol++;
-		
+
 		//cout << "You said " << line <<  (line != "." ) << endl;
 		if(eof) return;
 	}
@@ -339,7 +349,7 @@ static map<string, function<void(T)> > func_map = {
 	{"w", write_file}
 };
 
-bool
+	bool
 process_headless_line(std::string line, int fildes)
 {
 	//cout << "process_headless_line: " << line << endl;
@@ -363,7 +373,7 @@ process_headless_line(std::string line, int fildes)
 	return true;
 }
 
-static void
+	static void
 _io_run_main_loop()
 {
 	std::string line;
@@ -377,16 +387,16 @@ _io_run_main_loop()
 			cont = false;
 		}
 	}
-	
+
 }
 
-static void
+	static void
 _io_bell()
 {
 	//cout << "BELL" << endl;
 }
 
-void
+	void
 headless_graphics(void)
 {
 	io_open_display = _io_open_display;

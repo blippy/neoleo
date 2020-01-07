@@ -2,8 +2,8 @@
 # format 3.0 (requires Neoleo 8.0 or higher)
 F;DGFR8
 O;auto;background;noa0;ticks 1
-C;c1;r1;K1
-C;r3;K2
+C;c1;r1;E1;K1
+C;r3;E2;K2
 O;status 2
 W;N1;A4 1;C7 0 7;Ostandout
 E

@@ -646,7 +646,7 @@ void
 init_basics()
 {
 	init_infinity ();
-	init_mem ();
+	//init_mem ();
 	//init_eval ();
 	init_refs ();
 	init_cells ();

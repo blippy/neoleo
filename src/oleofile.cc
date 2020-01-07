@@ -759,11 +759,14 @@ void write_cells(FILE* fp)
 			crow = r;
 		}
 
-		const unsigned char* formula_1 = cp->get_bytecode();
-		if (formula_1 && !is_constant(formula_1)) {
+		
+		//const unsigned char* formula_1 = cp->get_bytecode();
+		//if (formula_1  && !is_constant(formula_1)  ) {
 			std::string formula = formula_text(r, c);
 			(void) fprintf (fp, "E%s;", formula.c_str());
-		}
+		//}
+		
+
 
 		value val = cp->get_value();
 		std::string strval = stringify_value_file_style(&val);

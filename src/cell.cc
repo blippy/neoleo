@@ -92,10 +92,14 @@ void cell::reparse()
 
 formula_t cell::get_bytecode()
 { 
+#if 1
+	return 0;
+#else
 	if(!bytecode)
 		bytecode = parse_and_compile(this);
 
 	return bytecode;
+#endif
 }
 
 value cell::get_value()

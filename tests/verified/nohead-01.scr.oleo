@@ -2,9 +2,9 @@
 # format 3.0 (requires Neoleo 8.0 or higher)
 F;DGFR8
 O;auto;background;noa0;ticks 1
-C;c1;r1;K12
-C;r2;K13.1
-C;r3;K"hello world"
+C;c1;r1;E12;K12
+C;r2;E13.1;K13.1
+C;r3;E"hello world";K"hello world"
 C;c2;r1;Erc[-1] + 2;K14
 C;r2;Erc[-1] + 3.3;K16.4
 O;status 2

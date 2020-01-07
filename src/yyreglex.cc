@@ -44,6 +44,7 @@ function_t* find_func(char* name)
 int
 yyreglex ()
 {
+#if 0
 	int ch;
 	struct node *a_new = 0;
 	int isflt;
@@ -309,6 +310,9 @@ yyreglex ()
 	a_new->comp_value=byte_value;
 	yyreglval=a_new;
 	return ch;
+#else
+	return 0;
+#endif
 }
 
 /*

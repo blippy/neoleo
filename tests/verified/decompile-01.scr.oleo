@@ -2,9 +2,9 @@
 # format 3.0 (requires Neoleo 8.0 or higher)
 F;DGFR8
 O;auto;background;noa0;ticks 1
-C;c1;r1;K"expect hello:"
+C;c1;r1;E"expect hello:";K"expect hello:"
 C;r2;Eif(#TRUE, "hello", -3);K"hello"
-C;r3;K"---"
+C;r3;E"---";K"---"
 O;status 2
 W;N1;A4 1;C7 0 7;Ostandout
 E

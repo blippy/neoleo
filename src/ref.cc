@@ -1222,6 +1222,7 @@ finish_shift_var (const char *name, struct var *v)
 	void
 shift_outside (struct rng *fm, int dn, int ov)
 {
+#if 0
 	CELL *cp;
 	CELL *fcp;
 	CELL *tcp;
@@ -1635,6 +1636,7 @@ shift_outside (struct rng *fm, int dn, int ov)
 #endif
 	}
 	for_all_vars (finish_shift_var);
+#endif
 }
 
 /* The formula in cell my_cell has moved by DN down and OV over, adjust
