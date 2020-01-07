@@ -53,7 +53,7 @@ noinst_HEADERS = args.h basic.h cell.h \
 		 key.h \
 		 logging.h \
 		 mem.h \
-		 neotypes.h node.h  numeric.h \
+		 neotypes.h  numeric.h \
 		 oleofile.h  \
 		 parser-2019.h \
 		 ref.h \
