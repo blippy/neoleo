@@ -20,14 +20,15 @@ double to_double(const char* strptr, bool &ok)
 double to_double(CELL* cp)
 {
 	double f;
-	value v = cp->get_value();
-	switch(v.type) {
+	//value v = cp->get_value();
+	value_t v = cp->value_2019;
+	switch(cp->get_type()) {
 		case TYP_NUL: return 0;
-		case TYP_INT: return v.gInt();
-		case TYP_FLT: return v.gFlt();
+		case TYP_INT: return cp->gFlt();
+		case TYP_FLT: return cp->gFlt();
 		case TYP_STR: {
 				      bool ok;
-				      f = to_double(v.gString(), ok);
+				      f = to_double(cp->gString().c_str(), ok);
 				      if(!ok) throw ValErr();
 				      return f;
 			      }

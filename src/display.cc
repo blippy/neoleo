@@ -135,7 +135,8 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
 	new_unclipped = 0;
       else
 	{
-	  new_type = GET_TYP (cp);
+	  //new_type = GET_TYP (cp);
+	  new_type = get_value_t_type(cp->value_2019);
 	  new_jst = GET_JST (cp);
 	  //new_font = cp->cell_font;
 	  if (new_jst == JST_DEF)
@@ -167,7 +168,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
   cd->font = new_font;
   cd->cell_type = new_type;
   cd->justification = new_jst;
-  if (!cp || !GET_TYP (cp))
+  if (!cp || cp->get_type() != TYP_NUL)
     {
       xx_IRinit (&cd->goal, 0, 0, 0, 0);
       xx_IRinit (&cd->clip, 0, 0, 0, 0);
@@ -178,7 +179,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
   cd->clipped = 0;
   disp->metric (cd, disp);
   if (new_type == TYP_INT)
-    cd->numeric.integer = cp->gInt();
+    cd->numeric.integer = cp->gFlt();
   else if (new_type == TYP_FLT)
     cd->numeric.dbl = cp->gFlt();
   else

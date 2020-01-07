@@ -51,16 +51,28 @@
 #include "utils.h"
 //#include "xcept.h"
 
+using namespace std::literals;
 
 /* Routines for formatting cell values */
 //struct user_fmt;
 static char *pr_int (long, struct user_fmt *, int);
 
-/* Constants */
-char *bname[] =
+/*char *bname[] =
 {
 	CCC("#FALSE"), CCC("#TRUE")
 };
+*/
+
+std::string bool_name(bool b)
+{
+	if(b) return "#TRUE";
+	else  return "#FALSE";
+}
+
+std::string bool_name(bool_t b)
+{
+	return bool_name(b.v);
+}
 
 char numb_oflo[] = "########################################";
 
@@ -249,9 +261,9 @@ flt_to_str_fmt (CELL *cp)
 		case FMT_FXT:
 		case FMT_DOL:
 		case FMT_PCT:
-			return pr_flt (cp->gFlt(), &fxt, p);
+			return pr_flt (cp->to_num(), &fxt, p);
 		default:
-			return flt_to_str (cp->gFlt());
+			return flt_to_str (cp->to_num());
 	}
 }
 
@@ -282,27 +294,19 @@ std::string print_cell (CELL * cp)
 		j = default_fmt;
 		p = default_prc;
 	}
-	if (j == FMT_HID || GET_TYP (cp) == 0)
+	if (j == FMT_HID || is_nul(cp->value_2019))
 		return CCC("");
 
-	if (GET_TYP (cp) == TYP_STR)
+	if (cp->get_type() == TYP_STR)
 		return cp->gString();
 
-	if (GET_TYP (cp) == TYP_BOL) {
-#ifdef TEST
-		if (cp->cell_bol < 0 || cp->cell_bol > 1)
-			panic ("Bool %d out of range", cp->cell_bol);
-#endif
-		return bname[cp->gBol()];
+	if (cp->get_type() == TYP_BOL) {
+		return bool_name(cp->gBol());
 	}
-	if (GET_TYP (cp) == TYP_ERR) {
-#ifdef TEST
-		if (cp->gErr() > ERR_MAX || cp->gErr() < 0)
-			panic ("Error %d out of range", cp->gErr());
-#endif
-		return ename[cp->gErr()];
+	if (cp->get_type() == TYP_ERR) {
+		return ename[cp->gErr().num];
 	}
-	if (GET_TYP (cp) == TYP_FLT) {
+	if (cp->get_type() == TYP_FLT) {
 		switch (j)
 		{
 
@@ -351,15 +355,17 @@ handle_exp:
 		}
 	}
 
-	if (GET_TYP (cp) == TYP_INT) {
+	if (cp->get_type() == TYP_INT) {
 		p = GET_PRECISION (cp);
+		int v = cp->gFlt();
 		switch (j)
 		{
 
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 			case FMT_DATE:
 				{
-					time_t t = cp->gInt();
+					//time_t t = cp->gInt();
+					time_t t = v;
 					int	f = GET_PRECISION(cp);		/* Determines date format */
 					struct tm *tmp = localtime(&t);
 
@@ -378,33 +384,33 @@ handle_exp:
 #endif
 
 			case FMT_USR:
-				return pr_int (cp->gInt(), &u[p], u[p].prec);
+				return pr_int (v, &u[p], u[p].prec);
 
 			case FMT_GEN:
-				sprintf (print_buf, "%ld", (long) cp->gInt());
+				sprintf (print_buf, "%ld", (long) v);
 				return print_buf;
 
 			case FMT_DOL:
-				return pr_int (cp->gInt(), &dol, p);
+				return pr_int (v, &dol, p);
 
 			case FMT_CMA:
-				return pr_int (cp->gInt(), &cma, p);
+				return pr_int (v, &cma, p);
 
 			case FMT_PCT:
-				return pr_int (cp->gInt(), &pct, p);
+				return pr_int (v, &pct, p);
 
 			case FMT_FXT:
 				if (p != FLOAT_PRECISION && p != 0)
-					sprintf (print_buf, "%ld.%.*s", (long) cp->gInt(), p, zeroes);
+					sprintf (print_buf, "%ld.%.*s", (long) v, p, zeroes);
 				else
-					sprintf (print_buf, "%ld", (long) cp->gInt());
+					sprintf (print_buf, "%ld", (long) v);
 				return print_buf;
 
 			case FMT_EXP:
 				if (p != FLOAT_PRECISION)
-					sprintf (print_buf, "%.*e", p, (double) (cp->gInt()));
+					sprintf (print_buf, "%.*e", p, (double) v);
 				else
-					sprintf (print_buf, "%e", (double) (cp->gInt()));
+					sprintf (print_buf, "%e", (double) v);
 				return print_buf;
 #ifdef TEST
 			default:
@@ -429,29 +435,29 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 	CELL *cp;
 
 	cp = find_cell (row, col);
-	if (!cp || !GET_TYP (cp))
-		return "";
-	switch (GET_TYP (cp))
+	if(!cp) return "";
+	ValType typ = cp->get_type();
+	switch (typ)
 	{
+		case TYP_NUL:
+			return "";
 		case TYP_FLT:
 			return flt_to_str (cp->gFlt());
 
 		case TYP_INT:
-			sprintf (print_buf, "%ld", (long) cp->gInt());
+			sprintf (print_buf, "%ld", (long) cp->gFlt());
 			return print_buf;
 
 		case TYP_STR:
 			return cp->get_formula_text();
 
 		case TYP_BOL:
-			return bname[cp->gBol()];
+			return bool_name(cp->gBol());
 
 		case TYP_ERR:
-			return ename[cp->gErr()];
-#ifdef TEST
+			return ename[cp->gErr().num];
 		default:
-			panic ("unknown type %d in cell_value_string", GET_TYP (cp));
-#endif
+			panic ("unknown type %d in cell_value_string", typ);
 	}
 	return 0;
 }
@@ -1311,45 +1317,11 @@ std::string stringify_value_file_style(const value_t& val)
 {
 	if(auto v = std::get_if<empty_t>(&val)) return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
-	if(auto v = std::get_if<std::string>(&val)) 	return *v;
+	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
 	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];
 
 	ASSERT_UNCALLED();
 	return "BAD STRING";
-	/*
-	std::stringstream ss;
-	switch(val->get_type()) {
-		case TYP_NUL:
-			ss << "";
-			break;
-		case TYP_STR:
-			ss <<  '"' <<  val->gString() << '"';
-			break;
-		case TYP_FLT:
-			ss << flt_to_str(val->gFlt());
-			break;
-		case TYP_INT:
-			ss << val->gInt();
-			break;
-		case TYP_BOL:
-			ss << bname[val->gBol()];
-			break;
-
-		case TYP_RNG: 
-			{
-				rng_t r = val->gRng();
-				ss << 'r' << r.lr << ":" << r.hr << 'c' << r.lc << ":" << r.hc;
-			}
-			break;
-
-		case TYP_ERR:
-			ss << ename[val->gErr()];
-			break;
-		default:
-			ASSERT_UNCALLED();
-	}
-	return ss.str();
-*/
 }
 std::string stringify_value_file_style(value* val)
 {
@@ -1368,7 +1340,7 @@ std::string stringify_value_file_style(value* val)
 			ss << val->gInt();
 			break;
 		case TYP_BOL:
-			ss << bname[val->gBol()];
+			ss << bool_name(val->gBol());
 			break;
 			/*
 		case TYP_RNG: 

@@ -44,6 +44,7 @@
 using std::cerr;
 using std::cout;
 using std::endl;
+using std::get;
 
 static void log_debug_1(std::string msg)
 {
@@ -58,6 +59,34 @@ cell::update_cell()
 {
 }
 
+ValType cell::get_type()
+{
+	return get_value_t_type(value_2019);
+}
+
+bool_t cell::gBol()
+{
+	return get<bool_t>(value_2019);
+}
+err_t cell::gErr()
+{
+	return get<err_t>(value_2019);
+}
+std::string cell::gString()
+{
+	return get<std::string>(value_2019);
+}
+
+num_t cell::gFlt()
+{
+	return get<num_t>(value_2019);
+}
+
+num_t cell::to_num()
+{
+	return std::get<num_t>(value_2019);
+}
+
 value_t cell::get_value_2019() const
 {
 	return value_2019;
@@ -66,7 +95,7 @@ value_t cell::get_value_2019() const
 void cell::set_value_2019(value_t newval)
 {
 	value_2019 = newval;
-	sValue(newval);
+	//sValue(newval);
 }
 
 void cell::set_cyclic()
@@ -101,6 +130,7 @@ formula_t cell::get_bytecode()
 #endif
 }
 
+/*
 value cell::get_value()
 { 
 	value v; 
@@ -113,7 +143,7 @@ value cell::get_value()
 	}
 	return v; 
 }
-
+*/
 
 bool cell::locked() const
 {
@@ -157,7 +187,8 @@ bool cell::zeroed_1()
 	return (cell_flags.cell_format == 0)
 		&& (cell_flags.cell_precision == 0)
 		&& (cell_flags.cell_justify == 0)
-		&& (get_type() == 0)
+		//&& (get_type() == 0)
+		&& is_nul(value_2019) 
 		&& (cell_flags.cell_lock == 0);
 
 }
@@ -219,8 +250,9 @@ void cell::dump_cell()
 {
 	cout << "Col: " << get_col(this) << "\n";
 	cout << "Row: " << get_row(this) << "\n";
-	value val = get_value();
-	cout << "Val: " << stringify_value_file_style(&val) << "\n";
+	// TODO
+	//value val = get_value();
+	//cout << "Val: " << stringify_value_file_style(&val) << "\n";
 	cout << "Frm: " << get_formula_text() << "\n";
 
 
@@ -261,7 +293,7 @@ void copy_cell_stuff (cell* src, cell* dest)
 bool 
 vacuous(cell* cp)
 {
-	return (cp == nullptr) || (cp->get_type() == TYP_NUL);
+	return (cp == nullptr) || is_nul(cp->value_2019);
 }
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)

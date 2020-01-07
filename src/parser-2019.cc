@@ -365,9 +365,11 @@ value_t do_ctime (Tour& tour, args_t args)
         time_t tim = num_eval(tour, args[0]);
         //strcpy_c s1(ctime(&tim));
         //s1.data()[24] = 0;
-	string s{ctime(&tim)};
-	s[24] = 0;
-	return s;
+	char* s1 = ctime(&tim);
+	s1[24] = 0;
+	//string s{ctime(&tim)};
+	//s[24] = 0;
+	return string{s1};
         //p->sString(s1.data());
 }
 

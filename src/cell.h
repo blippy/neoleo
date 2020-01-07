@@ -85,7 +85,7 @@ struct cell_flags_s {
 typedef unsigned char* formula_t;
 //typedef std::byte* formula_t;
 
-class cell : public value
+class cell //: public value
 {
 	private:
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
@@ -93,12 +93,18 @@ class cell : public value
 		std::string formula_text;
 		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
 		crefs_t dep_cells; // other formula locations pointing to this cell
-		value_t value_2019;
 
 	public:
+		value_t value_2019;
 		unsigned short cell_cycle = 0;
 		struct ref_fm *cell_refs_from = nullptr;
 		struct ref_to *cell_refs_to = nullptr;
+		num_t to_num();
+		ValType get_type();
+		bool_t gBol();
+		std::string gString();
+		err_t  gErr();
+		num_t gFlt();
 		void update_cell();
 		void dump_cell();
 		void reparse();
@@ -129,7 +135,7 @@ class cell : public value
 		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
-		value get_value();
+		//value get_value();
 		value_t get_value_2019() const;
 		void set_value_2019(value_t newval);
 		ranges_t predecs; // the ranges that the cell needs to evaluate
@@ -183,7 +189,7 @@ typedef struct var
 #define LCK_LCK		2
 
 /* The type of a cell, or of a eval_expression() value */
-#define GET_TYP(p)	((p)->get_type())
+//#define GET_TYP(p)	((p)->get_type())
 
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))

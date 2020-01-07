@@ -631,11 +631,11 @@ _io_repaint (void)
 		flush_slops (win->win_slops);
 		for(CELL* cp: get_cells_in_range(&(win->screen))) {
 			decoord(cp, rr, cc);
-			if (GET_TYP (cp))
+			if (cp->get_type() != TYP_NUL)
 				io_pr_cell_win(win, rr, cc, cp);
 		}
 	}
-	if (!(cp = find_cell (curow, cucol)) || !GET_TYP (cp))
+	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;
 	_io_redraw_input ();
@@ -1021,7 +1021,7 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		{
 			if (++cc > win->screen.hc
 					|| ((ccp = find_cell (r, cc))
-						&& GET_TYP (ccp)
+						&& (ccp->get_type() != TYP_NUL)
 						&& (GET_FORMAT (ccp) != FMT_HID
 							|| (GET_FORMAT (ccp) == FMT_DEF
 								&& default_fmt != FMT_HID))))
@@ -1032,9 +1032,9 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		}
 
 		if (lenstr > wwid - 1) {  /* FIXME: This construct needs to be checked */
-			if (GET_TYP (cp) == TYP_FLT)
+			if (cp->get_type() == TYP_FLT)
 				ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
-			else if (GET_TYP (cp) == TYP_INT)
+			else if (cp->get_type() == TYP_INT)
 				ptr = (char *) numb_oflo;
 		}
 
