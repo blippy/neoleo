@@ -3,7 +3,10 @@ VERSION: 10.0
 STATUS:  DEV
 DATE:    ONGOING
 
-* 2019 parser is now the default
+* 2019 parser is now the default. Old parsing removed.
+
+* Lots of memory leak fixes. C stuff which was a big problem has been
+replaced by more tractable C++ code.
  
 ===========================================================================
 VERSION: 9.0
