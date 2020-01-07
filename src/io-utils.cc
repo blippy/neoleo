@@ -1323,6 +1323,8 @@ std::string stringify_value_file_style(const value_t& val)
 	ASSERT_UNCALLED();
 	return "BAD STRING";
 }
+
+/*
 std::string stringify_value_file_style(value* val)
 {
 	std::stringstream ss;
@@ -1342,14 +1344,6 @@ std::string stringify_value_file_style(value* val)
 		case TYP_BOL:
 			ss << bool_name(val->gBol());
 			break;
-			/*
-		case TYP_RNG: 
-			{
-				rng_t r = val->gRng();
-				ss << 'r' << r.lr << ":" << r.hr << 'c' << r.lc << ":" << r.hc;
-		       	}
-			break;
-			*/
 		case TYP_ERR:
 			ss << ename[val->gErr()];
 			break;
@@ -1359,6 +1353,7 @@ std::string stringify_value_file_style(value* val)
 	return ss.str();
 
 }
+*/
 
 std::string trim(const std::string& str)
 {

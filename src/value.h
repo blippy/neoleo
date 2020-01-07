@@ -18,43 +18,6 @@ union vals {
 	struct rng c_r;
 };
 
-class value {
-	public:
-		value();
-		~value();
-
-
-		ValType type = TYP_NUL;
-		ValType get_type() const;
-		void set_type(ValType t);
-
-		void sValue(value& newval);
-		void sValue(const value_t& newval);
-		//void sValue(const value_t& newval);
-
-		int gInt() const;
-		void sInt(int newval);
-
-		const char *gString();
-		void sString(const char* newval);
-		void sString(const std::string&  newval);
-
-		num_t gFlt() const;
-		void sFlt(num_t v);
-
-		int gErr() const;
-		void sErr(int newval);
-
-		int gBol() const;
-		void sBol(int newval);
-
-		struct rng gRng() { return x.c_r; }
-		void sRng(rng_t r);
-
-		void free_string();
-	public:
-		union vals x;
-};
 
 
 
