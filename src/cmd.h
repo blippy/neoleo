@@ -26,7 +26,7 @@
 #include "global.h"
 
 
-#include "key.h"
+//#include "key.h"
 //#include "args.h"
 
 typedef void (*alarm_fn)(void);
@@ -73,7 +73,7 @@ union command_arg_val
 	FILE * fp;
 	int integer;
 	double floating;
-	struct key_sequence key;	/* Passed as (struct keyseq *). */
+	//struct key_sequence key;	/* Passed as (struct keyseq *). */
 	//struct rng range;		/* Passed as (struct rng *). */
 	char * string;
 };

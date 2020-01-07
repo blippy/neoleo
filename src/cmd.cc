@@ -229,11 +229,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_window_after_input = -1;
 
 	/* These may be reset later. */
-	new_cf->top_keymap = map_id ("main");
-	if (new_cf->top_keymap < 0)
-		new_cf->top_keymap = map_id ("universal");
 	new_cf->saved_cur_keymap = -1;
-	new_cf->_cur_keymap = map_id ("main");
 	new_cf->_how_many = 1;
 	new_cf->_cur_cmd = 0;
 	new_cf->_cur_vector = 0;
@@ -247,9 +243,6 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 		/* This is a new top-level frame. */
 		the_cmd_frame = new_cf;
 		new_cf->cmd = 0;
-		new_cf->top_keymap = map_id ("main");
-		if (new_cf->top_keymap < 0)
-			new_cf->top_keymap = map_id ("universal");
 	}
 	else if (cur_cmd)
 	{
@@ -676,16 +669,6 @@ void rebuild_command_frame()
 	static void
 init_maps (void)
 {
-	num_maps = 0;
-	the_maps = 0;
-	map_names = 0;
-	map_prompts = 0;
-
-	//the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
-	//num_funcs = 1;
-	//the_funcs[0] = (cmd_func *) get_cmd_funcs();
-	//the_funcs[0] = nullptr;
-
 	push_command_frame (0, 0, 0);
 }
 

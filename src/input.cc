@@ -63,8 +63,7 @@
 desired_keymap_prompt (struct input_view * this_iv)
 {
 	int map = cur_keymap;
-	//if (the_cmd_frame->cmd && (the_cmd_arg.style == &keyseq_style)) map = the_cmd_arg.val.key.cmd.code;
-	return ((map >= 0) ? map_prompts[map] : 0);
+	return 0;
 }
 
 

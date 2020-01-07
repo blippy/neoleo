@@ -285,7 +285,6 @@ nicely_goto_window (int n)
 		io_cellize_cursor ();
 		window_after_input = n;
 		input_active = 0;
-		the_cmd_frame->top_keymap = map_id ("main");
 		return;
 	}
 	else
@@ -590,7 +589,6 @@ do_mouse_goto (void)
 			io_cellize_cursor ();
 			window_after_input = last_mouse_event.location;
 			input_active = 0;
-			the_cmd_frame->top_keymap = map_id ("main");
 		}
 		io_set_cwin (&wins[last_mouse_event.location]);
 		io_move_cell_cursor (last_mouse_event.r, last_mouse_event.c);
