@@ -359,7 +359,22 @@ value_t do_if (Tour& tour, args_t args)
 
 }
 
+value_t do_ctime (Tour& tour, args_t args)
+{
+	nargs_eq(args, 1);
+        time_t tim = num_eval(tour, args[0]);
+        //strcpy_c s1(ctime(&tim));
+        //s1.data()[24] = 0;
+	string s{ctime(&tim)};
+	s[24] = 0;
+	return s;
+        //p->sString(s1.data());
+}
+
+
+
 map<string, parse_function_t> funcmap= {
+	{"ctime", do_ctime},
 	{"if", do_if},
 	{"=", do_eq},
 	{"!=", do_ne},
