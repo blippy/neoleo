@@ -22,7 +22,7 @@ neoleo_SOURCES = \
 		 args.cc basic.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
 		 display.cc \
-		 errors.cc eval.cc format.cc \
+		 errors.cc format.cc \
 		 input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
 		 io-utils.cc \

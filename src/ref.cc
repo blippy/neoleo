@@ -1807,6 +1807,7 @@ shift_formula (int r, int c, int dn, int ov)
 	void
 cell_alarm (void)
 {
+#if 0
 	int n;
 	static time_t last_time = 0;
 	if (timer_active)
@@ -1820,6 +1821,7 @@ cell_alarm (void)
 			push_cell (timer_cells->fm_refs[n].ref_row,
 					timer_cells->fm_refs[n].ref_col);
 	}
+#endif
 }
 
 /* All the timer_cells are going away, 'cuz everything is going away. . . */
@@ -2033,10 +2035,13 @@ eval_next_cell (void)
 	if (!(cp = find_cell(cur_row, cur_col)))
 		return 0;
 
+#if 0
 	if (cp->cell_cycle == current_cycle)
 		--loop_counter;
 	else
 		loop_counter = 40;
+
+#endif
 
 #if 0
 	fprintf(stderr, "eval_next_cell:  cp->cell_cycle = %d, current_cycle = %d, loop_counter = %d\n", cp->cell_cycle, current_cycle, loop_counter);

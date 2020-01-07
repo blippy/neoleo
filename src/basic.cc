@@ -442,6 +442,7 @@ suspend_oleo (void)
 void
 recalculate (int all)
 {
+#if 0
 	current_cycle++;
 	if (all)
 	{
@@ -459,6 +460,7 @@ recalculate (int all)
 	}
 	while (eval_next_cell ())
 		;
+#endif
 }
 
 
