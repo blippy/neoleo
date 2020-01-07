@@ -58,11 +58,13 @@
 	int
 check_editting_mode (void)
 {
+	/*
 	if (!the_cmd_frame->cmd || cur_arg >= cmd_argc || !the_do_prompt || the_is_set)
 	{
 		io_error_msg ("Command '%s' is not appropriate now.", cur_cmd->func_name);
-		/* not reached */
+		// not reached 
 	}
+*/
 	return 0;
 }
 

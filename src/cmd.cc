@@ -257,7 +257,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 		new_cf->cmd = cur_cmd;
 		{
 			int argc = 0;
-			char **prompt = new_cf->cmd->func_args;
+			char **prompt = 0; // new_cf->cmd->func_args;
 			while (prompt && *prompt)
 			{
 				// other initialisation of cfn taken care of by constructor
@@ -317,6 +317,7 @@ free_cmd_frame (struct command_frame *frame)
 		remove_cmd_frame (frame);
 
 	//free_line (&frame->_raw_prefix);
+	/*
 	if (frame->cmd) {
 		int argc;
 		for (argc = 0; argc < frame->_cmd_argc; ++argc) {
@@ -325,6 +326,7 @@ free_cmd_frame (struct command_frame *frame)
 			//free_line (&frame->argv[argc].text);
 		}
 	}
+	*/
 	delete frame;
 }
 
@@ -679,10 +681,10 @@ init_maps (void)
 	map_names = 0;
 	map_prompts = 0;
 
-	the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
-	num_funcs = 1;
+	//the_funcs = (cmd_func**) ck_malloc (sizeof (struct cmd_func *) * 2);
+	//num_funcs = 1;
 	//the_funcs[0] = (cmd_func *) get_cmd_funcs();
-	the_funcs[0] = nullptr;
+	//the_funcs[0] = nullptr;
 
 	push_command_frame (0, 0, 0);
 }
@@ -694,7 +696,7 @@ init_maps_and_macros()
 {
 	try {
 		init_maps();
-		init_named_macro_strings ();
+		//init_named_macro_strings ();
 	} catch (OleoJmp& e) {
 		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
 		io_close_display(69);

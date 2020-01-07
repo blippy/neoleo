@@ -571,11 +571,14 @@ read_variables (FILE * fp)
 int 
 add_usr_cmds (struct cmd_func *new_cmds)
 {
+	return 0;
+	/*
   num_funcs++;
   the_funcs = (cmd_func**) ck_realloc (the_funcs, 
 		  num_funcs * sizeof (struct cmd_func *));
   the_funcs[num_funcs - 1] = new_cmds;
   return num_funcs - 1;
+  */
 }
 
 /*
