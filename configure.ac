@@ -14,7 +14,7 @@ AX_COVERAGE
 AC_SUBST(CURSES_LIBS, `pkg-config --libs ncurses`)
 
 AC_PROG_CXX
-AC_PROG_YACC
+#AC_PROG_YACC
 
 AC_CONFIG_FILES([Makefile examples/Makefile src/Makefile  
 		 tests/Makefile tests/out/Makefile tests/verified/Makefile])

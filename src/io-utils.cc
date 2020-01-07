@@ -937,6 +937,7 @@ range_name (struct rng *rng)
 }
 
 
+#if 0
 /* Parse a range, allowing variable names.
  * Return 1 on failure, 0 on succes.
  */
@@ -972,6 +973,7 @@ get_abs_rng (char **pptr, struct rng *retp)
 	}
 	return 0;
 }
+#endif
 
 
 	char *

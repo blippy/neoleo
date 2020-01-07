@@ -38,7 +38,7 @@
 #include "io-generic.h"
 #include "byte-compile.h"
 #include "mem.h"
-#include "parse.hh"
+//#include "parse.hh"
 #include "ref.h"
 #include "cmd.h"
 #include "sheet.h"
@@ -2083,6 +2083,7 @@ cell_buffer_contents (FILE *fp)
 
 #endif
 
+#if 0
 /* ----------------- Routines for dealing with variables ------------------ */
 
 /* Either this needs to be redone as a wrapper for the new new_var_value,
@@ -2154,6 +2155,7 @@ old_new_var_value (char *v_name, int v_namelen, char *v_newval)
 
 	return 0;
 }
+#endif
 
 /* This sets the variable V_NAME to V_NEWVAL
  * It returns error msg, or 0 on success.

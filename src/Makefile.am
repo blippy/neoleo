@@ -6,14 +6,14 @@ AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += -Wfatal-errors
 
-YFLAGS = -d
+#YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
 
 bin_PROGRAMS = neoleo 
 dist_man_MANS = neoleo.1
 
-BUILT_SOURCES = parse.cc parse.hh
-CLEANFILES = $(BUILT_SOURCES)
+#BUILT_SOURCES = parse.cc parse.hh
+#CLEANFILES = $(BUILT_SOURCES)
 
 neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 
@@ -30,19 +30,16 @@ neoleo_SOURCES = \
 		 logging.cc \
 		 mem.cc \
 		 oleofile.cc \
-		 parse_parse.cc \
 		 parser-2019.cc \
 		 ref.cc regions.cc \
 		 sheet.cc sort.cc spans.cc \
 		 tbl.cc \
 		 utils.cc \
 		 window.cc \
-		 parse.yy \
 		 main.cc \
 		 shell.cc \
 		 tests.cc \
-		 value.cc \
-		 yyreglex.cc
+		 value.cc 
 	
 
 
@@ -58,7 +55,6 @@ noinst_HEADERS = args.h basic.h byte-compile.h cell.h \
 		 mem.h \
 		 neotypes.h node.h  numeric.h \
 		 oleofile.h  \
-		 parse.hh parse_parse.h \
 		 parser-2019.h \
 		 ref.h \
 		 regions.h sheet.h sort.h spans.h \
@@ -68,5 +64,5 @@ noinst_HEADERS = args.h basic.h byte-compile.h cell.h \
 		 value.h
 
 
-byte-compile.o : parse.hh
-ref.o : parse.hh
+#byte-compile.o : parse.hh
+#ref.o : parse.hh

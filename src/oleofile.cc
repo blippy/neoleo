@@ -119,6 +119,7 @@ oleo_read_file (FILE *fp, int ismerge)
 						break;
 					case 'f':		/* %f range font-name */
 						{
+#if 0
 							struct rng rng;
 							/* This field only occurs in files written by 1.1
 							 * oleo.  It's presense indicates that when parsing
@@ -134,6 +135,7 @@ oleo_read_file (FILE *fp, int ismerge)
 								++ptr;
 							{
 							}
+#endif
 							break;
 						}
 					default:		/* % with something invalid */
@@ -401,6 +403,8 @@ oleo_read_file (FILE *fp, int ismerge)
 				break;
 
 			case 'N':		/* A Name field */
+				ASSERT_UNCALLED();
+#if 0
 				if (ptr[1] != 'N')
 					goto bad_field;
 				ptr += 2;
@@ -435,6 +439,7 @@ oleo_read_file (FILE *fp, int ismerge)
 				ptr = old_new_var_value (vname, vlen, vval);
 				if (ptr)
 					io_error_msg ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
+#endif
 				break;
 
 			case 'C':		/* A Cell entry */
