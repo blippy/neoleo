@@ -90,21 +90,6 @@ bool run_cell_tests()
 
 }
 
-bool run_obsmem_tests()
-{
-	cout << "Running obsmem tests\n";
-
-	obsmem m;
-	cout <<"Should say hello world\n";
-	char* s1 = "hello";
-	char* s2 = "world";
-	m.grow(s1, strlen(s1));
-	m.grow1(' ');
-	m.grow(s2, strlen(s2));
-	m.grow1(0);
-	puts((char*) m.finish());
-	return true;
-}
 
 
 template<typename... Args>
@@ -126,7 +111,6 @@ headless_tests()
 
 	map<string, std::function<bool()> > func_map = {
 		{"cells",	run_cell_tests},
-		{"obsmem",	run_obsmem_tests},
 		{"parser2019",	run_parser_2019_tests},
 		{"regular", 	run_regular_tests}
 	};
