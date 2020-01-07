@@ -886,6 +886,7 @@ math_sig ( int sig)
 }
 
 
+#if 0
 /* Here's the entry point for this module. */
 void
 cell::update_cell()
@@ -935,3 +936,4 @@ cell::update_cell()
 	push_refs(this);
 	
 }
+#endif

@@ -53,6 +53,12 @@ static void log_debug_1(std::string msg)
 }
 
 
+
+void
+cell::update_cell()
+{
+}
+
 value_t cell::get_value_2019() const
 {
 	return value_2019;
