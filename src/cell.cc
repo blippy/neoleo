@@ -25,7 +25,6 @@
 
 #include "global.h"
 
-#include "byte-compile.h"
 #include "cmd.h"
 #include "eval.h"
 #include "errors.h"
@@ -144,7 +143,7 @@ void cell::reset()
 
 void cell::clear_bytecode()
 {
-	free_nonempty_str(&bytecode);
+	//free_nonempty_str(&bytecode);
 }
 
 void cell::clear_flags()

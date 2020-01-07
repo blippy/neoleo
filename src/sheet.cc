@@ -20,7 +20,6 @@
 
 #include "neotypes.h"
 #include "basic.h"
-#include "byte-compile.h"
 #include "cell.h"
 #include "eval.h"
 #include "io-utils.h"

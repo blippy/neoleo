@@ -43,7 +43,7 @@ neoleo_SOURCES = \
 	
 
 
-noinst_HEADERS = args.h basic.h byte-compile.h cell.h \
+noinst_HEADERS = args.h basic.h cell.h \
 		 cmd.h convert.h  display.h \
 		 errors.h eval.h format.h \
 		 global.h \

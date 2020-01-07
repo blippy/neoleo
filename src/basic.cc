@@ -25,7 +25,6 @@
 
 
 #include "basic.h"
-#include "byte-compile.h"
 #include "convert.h"
 #include "regions.h"
 #include "window.h"

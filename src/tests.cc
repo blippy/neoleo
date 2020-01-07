@@ -28,7 +28,6 @@ using namespace std::string_literals;
 #include "mem.h"
 #include "neotypes.h"
 #include "ref.h"
-#include "byte-compile.h"
 #include "sheet.h"
 
 static bool all_pass = true; // all the checks have passed so far

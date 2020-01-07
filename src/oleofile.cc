@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include "byte-compile.h"
 #include "convert.h"
 #include "format.h"
 #include "io-generic.h"
