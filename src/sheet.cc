@@ -21,7 +21,6 @@
 #include "neotypes.h"
 #include "basic.h"
 #include "cell.h"
-#include "eval.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "mem.h"

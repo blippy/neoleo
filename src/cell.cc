@@ -26,7 +26,6 @@
 #include "global.h"
 
 #include "cmd.h"
-#include "eval.h"
 #include "errors.h"
 #include "format.h"
 #include "io-abstract.h"
@@ -325,16 +324,6 @@ get_cell_formula_at(int r, int c)
 
 #define S (char *)
 #define T (void (*)())
-function_t cells_funs[] =
-{
-
-  {0, 0, "", 0, 0},
-};
-
-int init_cells_function_count(void) 
-{
-        return sizeof(cells_funs) / sizeof(function_t) - 1;
-}
 
 void edit_cell (const char* input)
 {

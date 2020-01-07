@@ -45,7 +45,7 @@ neoleo_SOURCES = \
 
 noinst_HEADERS = basic.h cell.h \
 		 cmd.h convert.h  display.h \
-		 errors.h eval.h format.h \
+		 errors.h format.h \
 		 global.h \
 		 input.h \
 		 io-2019.h io-abstract.h io-headless.h io-curses.h io-edit.h \

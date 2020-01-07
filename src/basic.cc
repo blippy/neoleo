@@ -36,7 +36,6 @@
 #include "ref.h"
 #include "format.h"
 #include "io-edit.h"
-#include "eval.h"
 #include "sheet.h"
 #include "shell.h"
 #include "spans.h"

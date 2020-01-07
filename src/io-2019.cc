@@ -14,7 +14,6 @@ using namespace std::string_literals;
 #include "basic.h"
 #include "cmd.h"
 #include "convert.h"
-#include "eval.h"
 #include "io-2019.h"
 #include "io-headless.h"
 #include "parser-2019.h"

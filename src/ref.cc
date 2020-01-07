@@ -33,7 +33,6 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
-#include "eval.h"
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "mem.h"
@@ -2174,7 +2173,7 @@ new_var_value (char *v_name, int v_namelen, struct rng *rng)
 	cur_row = MIN_ROW;
 	cur_col = MIN_COL;
 
-	newflag = ((ROWREL | COLREL) == (R_CELL | ROWREL | COLREL)) ? VAR_CELL : VAR_RANGE;
+	//newflag = ((ROWREL | COLREL) == (R_CELL | ROWREL | COLREL)) ? VAR_CELL : VAR_RANGE;
 
 	var = find_or_make_var (v_name, v_namelen);
 
