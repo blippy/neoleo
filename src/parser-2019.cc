@@ -245,7 +245,8 @@ value_t do_sum (Tour& tour, args_t args)
 		if(!cp) continue;
 		eval_cell(tour, cp); // too much?
 		value_t v = cp->get_value_2019();
-		sum += to_num(tour, v);
+		if(is_num(v))
+			sum += to_num(tour, v);
 	}
 
 	return sum;
@@ -269,22 +270,22 @@ value_t do_ceil (Tour& tour, args_t args)
 
 
 /*
-using bin_op_fn = std::function<value_t(num_t, num_t)> ;
-value_t bin_op(Tour& tour, args_t args, bin_op_fn fn)
-{
-	nargs_eq(args, 2);
-        num_t x  = num_eval(tour, args[0]);
-        num_t y  = num_eval(tour, args[1]);
-        return (value_t) fn(x, y);
+   using bin_op_fn = std::function<value_t(num_t, num_t)> ;
+   value_t bin_op(Tour& tour, args_t args, bin_op_fn fn)
+   {
+   nargs_eq(args, 2);
+   num_t x  = num_eval(tour, args[0]);
+   num_t y  = num_eval(tour, args[1]);
+   return (value_t) fn(x, y);
 
-}
-*/
+   }
+   */
 
 void two_nums(Tour& tour, args_t args, num_t& v1, num_t& v2)
 {
 	nargs_eq(args, 2);
-        v1  = num_eval(tour, args[0]);
-        v2  = num_eval(tour, args[1]);
+	v1  = num_eval(tour, args[0]);
+	v2  = num_eval(tour, args[1]);
 }
 
 value_t do_pow (Tour& tour, args_t args)
@@ -295,11 +296,11 @@ value_t do_pow (Tour& tour, args_t args)
 
 	//return bin_op(tour, args, pow);
 	/*
-	nargs_eq(args, 2);
-	num_t x  = num_eval(tour, args[0]);
-	num_t y  = num_eval(tour, args[1]);
-	return pow(x, y);
-	*/
+	   nargs_eq(args, 2);
+	   num_t x  = num_eval(tour, args[0]);
+	   num_t y  = num_eval(tour, args[1]);
+	   return pow(x, y);
+	   */
 
 }
 
@@ -349,7 +350,7 @@ value_t do_gt (Tour& tour, args_t args)
 
 value_t do_if (Tour& tour, args_t args)
 {
-        nargs_eq(args, 3);
+	nargs_eq(args, 3);
 	bool test = bool_eval(tour, args[0]);
 	if(test)
 		return eval_expr(tour, args[1]);
@@ -406,7 +407,7 @@ tokenise (string str)
 		//cout << "is_rel:1\n";
 		if(cstr[pos+1] == '=') {
 			pos += 2;
-		//cout << "is_rel:true\n";
+			//cout << "is_rel:true\n";
 			return true;
 		} else
 			return false;
@@ -572,10 +573,14 @@ bool abs_or_rel(tokens_t& tokes, CELLREF& n, bool& relative)
 { 
 	//cout << "abs_or_rel:called\n";
 	relative = false;
-	auto set_relative = [&relative]() {relative = true; return true;} ;
-	return (is_char(tokes, '[') && is_cellref(tokes, n) && is_char(tokes, ']') && set_relative() ) 
-		|| is_cellref(tokes, n) 
-		|| parse_error();
+	//auto set_relative = [&relative]() {relative = true; return true;} ;
+
+	if(is_char(tokes, '[') && is_cellref(tokes, n) && is_char(tokes, ']')) {
+		relative = true;
+		return true;
+	}
+
+	return  is_cellref(tokes, n); 
 }
 
 // e.g. 12 or 12:13
@@ -588,45 +593,52 @@ void parse_slice (tokens_t& tokes, CELLREF& lower, bool& lower_rel, CELLREF& upp
 	upper = lower;
 	upper_rel = lower_rel;
 	is_char(tokes, ':') && abs_or_rel(tokes, upper, upper_rel);
-	
-	
-	/*
-	if(tokes.front().first != NUMBER)
-		parse_error();
-	lower = stoi(tokes.front().second);
-	upper = lower;
-	pop(tokes);
 
-	if(tokes.front().first == ':') {
-		pop(tokes);
-		if(tokes.front().first != NUMBER)
-			parse_error();
-		upper = stoi(tokes.front().second);
-		//cout << "parse_slice: upper:" << upper << "\n";
-		pop(tokes);
+
+	/*
+	   if(tokes.front().first != NUMBER)
+	   parse_error();
+	   lower = stoi(tokes.front().second);
+	   upper = lower;
+	   pop(tokes);
+
+	   if(tokes.front().first == ':') {
+	   pop(tokes);
+	   if(tokes.front().first != NUMBER)
+	   parse_error();
+	   upper = stoi(tokes.front().second);
+	//cout << "parse_slice: upper:" << upper << "\n";
+	pop(tokes);
 	}
 	*/
 }
 
-Expr parse_rc (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c)
+Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, const string& command)
 {
-	rng_t rng;
+	rng_t rng{r, c, r, c};
 
 	//cout << "parse_rc:" << curow << "," << cucol <<"\n";
 
-	bool lr_rel, hr_rel, lc_rel, hc_rel; // TODO
-	parse_slice(tokes, rng.lr, lr_rel, rng.hr, hr_rel);
-	if(lr_rel) 
-		rng.lr += r;
-	if(hr_rel) 
-		rng.hr += r;
+	bool lr_rel = false, hr_rel = false, lc_rel = false, hc_rel = false;
 
-	//parse_slice(tokes, rng.lr, rng.hr);
+	if(command != "rc") {
+		parse_slice(tokes, rng.lr, lr_rel, rng.hr, hr_rel);
+		if(lr_rel) 
+			rng.lr += r;
+		if(hr_rel) 
+			rng.hr += r;
+	}
 
-	if(! ((tokes.front().second != "C")
-				|| (tokes.front().second != "c")))
+
+	if(tolower(tokes.front().second[0]) == 'c') {
+		pop(tokes);
+	} else if (command != "rc") {
 		parse_error();
-	pop(tokes);
+	}
+	//if(! ((tokes.front().second != "C")
+	//			|| (tokes.front().second != "c")))
+	//	parse_error();
+	//pop(tokes);
 
 	parse_slice(tokes, rng.lc, lc_rel, rng.hc, hc_rel);
 	//parse_slice(tokes, rng.lc, rng.hcl);
@@ -654,8 +666,10 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 		case STR:
 			return Expr(toke.second);
 		case ID:  {
-				  if(toke.second == "R" || toke.second == "r")
-					  return parse_rc(tokes, predecs, r, c);
+				  string lower = toke.second;
+				  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+				  if(lower== "r" || lower == "rc" )
+					  return parse_rc_1(tokes, predecs, r, c, lower);
 				  if(tokes.front().first == '(')
 					  return parse_fn(toke.second, tokes, predecs, r, c);
 				  else
@@ -708,10 +722,10 @@ Expr parse_f (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 		fc.args.push_back(x);
 		fc.args.push_back(y);
 		/*
-		Expr x1;
-		x1.expr = fc;
-		return x1;
-		*/
+		   Expr x1;
+		   x1.expr = fc;
+		   return x1;
+		   */
 		return expr_funcall(fc);
 	} else
 		return x;
@@ -999,6 +1013,7 @@ int run_parser_2019_tests ()
 
 	use_parser_2019 = true;
 
+#if 1
 	interpret("sqrt(4+5)+2", "5");
 	//return 0;
 	interpret("42", "42");
@@ -1067,7 +1082,7 @@ int run_parser_2019_tests ()
 	interpret(12, 2 , "r12c1", "");
 	interpret(12, 3 , "r12c2", "#CYCLE");
 	done();
-	
+
 	interpret(13,1, "12.2", "12.2"); // check floats
 	interpret(13,1, "badfunc(12.2)", "#UNK_FUNC"); // an unknown function
 	interpret(13,1, "ceil(\"oops\")", "#NON_NUMBER"); 
@@ -1094,6 +1109,10 @@ int run_parser_2019_tests ()
 
 	interpret(14, 1, "14.1", "14.1");
 	interpret(14, 2, "r14c[-1]", "14.1");
+#endif
+
+	interpret(15, 1, "15.2", "15.2");
+	interpret(15, 2, "rc[-1]", "15.2");
 
 	return 0;
 }

@@ -19,7 +19,7 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 
 
 neoleo_SOURCES = \
-		 args.cc basic.cc busi.cc byte-compile.cc \
+		 args.cc basic.cc byte-compile.cc \
                  cell.cc cmd.cc  convert.cc \
 		 display.cc \
 		 errors.cc eval.cc format.cc \
@@ -46,7 +46,7 @@ neoleo_SOURCES = \
 	
 
 
-noinst_HEADERS = args.h basic.h byte-compile.h busi.h cell.h \
+noinst_HEADERS = args.h basic.h byte-compile.h cell.h \
 		 cmd.h convert.h  display.h \
 		 errors.h eval.h format.h \
 		 global.h \

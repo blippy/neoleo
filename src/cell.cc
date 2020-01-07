@@ -259,7 +259,8 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
 	curow = r;
 	cucol = c;
-	edit_cell_str(new_input);
+	//edit_cell_str(new_input);
+	set_and_eval(r, c, new_input, true);
 }
 
 std::string
