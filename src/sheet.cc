@@ -23,7 +23,6 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "logging.h"
-#include "mem.h"
 #include "ref.h"
 #include "sheet.h"
 
@@ -216,6 +215,14 @@ bool inside(CELL* cp, rng_t* a_rng)
 	decoord(cp, r, c);
 	return inside(r, c, a_rng); 
 }
+
+class exit_c { // this class is only ever used once (see below)
+	public:
+		exit_c(std::function<void()> fn) : fn(fn) {}
+		~exit_c() { fn(); }
+	private:
+		std::function<void()> fn;
+};
 
 exit_c exit_cells(delete_all_cells);
 

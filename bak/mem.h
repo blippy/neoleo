@@ -8,8 +8,6 @@
 
 #include <functional>
 
-
-
 /* Offers a way of performing automated clearup on exit */
 class exit_c {
 	public:
@@ -18,9 +16,3 @@ class exit_c {
 	private:
 		std::function<void()> fn;
 };
-
-void free_nonempty(void **ptr);
-void free_nonempty_str(char **ptr);
-void free_nonempty_str(unsigned char **ptr);
-
-

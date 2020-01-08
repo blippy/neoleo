@@ -25,9 +25,7 @@
 #include <math.h>
 #include <signal.h>
 #include <sstream>
-
 #include <string.h>
-
 #include <stdio.h>
 #include <ctype.h>
 
@@ -41,7 +39,6 @@
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
-#include "mem.h"
 #include "sheet.h"
 #include "logging.h"
 #include "numeric.h"
@@ -49,7 +46,6 @@
 #include "ref.h"
 #include "spans.h"
 #include "utils.h"
-//#include "xcept.h"
 
 using namespace std::literals;
 

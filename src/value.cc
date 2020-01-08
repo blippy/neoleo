@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string.h>
 
-//#include "cell.h"
-#include "mem.h"
 #include "neotypes.h"
 #include "sheet.h"
 #include "value.h"

@@ -33,12 +33,10 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 #include "format.h"
-#include "mem.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-//#include "xcept.h"
 
 /* Shorthand */
 

@@ -25,7 +25,6 @@ using namespace std::string_literals;
 #include "io-term.h"
 #include "io-utils.h"
 #include "cell.h"
-#include "mem.h"
 #include "neotypes.h"
 #include "ref.h"
 #include "sheet.h"

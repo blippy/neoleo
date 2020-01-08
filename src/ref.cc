@@ -27,15 +27,15 @@
 #include <math.h>
 #include <string>
 #include <string.h>
-
-#include "global.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <sys/types.h>
 #include <signal.h>
+
+
+#include "global.h"
 #include "io-abstract.h"
 #include "io-generic.h"
-#include "mem.h"
 #include "ref.h"
 #include "cmd.h"
 #include "sheet.h"
