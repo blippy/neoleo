@@ -108,12 +108,9 @@ class cell //: public value
 		void update_cell();
 		void dump_cell();
 		void reparse();
-		//void eval_cell(CELL* root);
 
 		coord_t coord;
 		void set_refs(const crefs_t& coords);
-		//CELLREF get_row() const;
-		//CELLREF get_col() const;
 		void set_row(CELLREF r);
 
 		void set_formula_text(const std::string& str);
@@ -135,7 +132,6 @@ class cell //: public value
 		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
-		//value get_value();
 		value_t get_value_2019() const;
 		void set_value_2019(value_t newval);
 		ranges_t predecs; // the ranges that the cell needs to evaluate
