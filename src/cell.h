@@ -97,8 +97,8 @@ class cell //: public value
 	public:
 		value_t value_2019;
 		unsigned short cell_cycle = 0;
-		struct ref_fm *cell_refs_from = nullptr;
-		struct ref_to *cell_refs_to = nullptr;
+		//struct ref_fm *cell_refs_from = nullptr;
+		//struct ref_to *cell_refs_to = nullptr;
 		num_t to_num();
 		ValType get_type();
 		bool_t gBol();

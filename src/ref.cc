@@ -168,17 +168,10 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell = find_cell (cur_row, cur_col);
 		if (my_cell)
 			flush_old_value ();
-		/*
-		else if (non_cell.zeroed_1() && !non_cell.get_cell_formula())
-			return;
-		else
-		*/
-			my_cell = find_or_make_cell (cur_row, cur_col);
+		my_cell = find_or_make_cell (cur_row, cur_col);
 
 		copy_cell_stuff(&non_cell, my_cell);
 		push_refs(my_cell);
-		if (my_cell->cell_refs_to)
-			shift_formula (cur_row, cur_col, rt - non_rf, ct - non_cf);
 		my_cell = 0;
 		return;
 	}
@@ -194,9 +187,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		} else {
 			copy_cell_stuff(cpf, &non_cell);
 			cpf->clear_flags();
-			cpf->cell_refs_to = 0;
-			//cpf->clear_formula();
-			cpf->invalidate_bytecode();
 			cpf->cell_cycle = 0;
 		}
 		return;
@@ -220,14 +210,9 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 	copy_cell_stuff(cpf, my_cell);
 	cpf->clear_flags();
-	cpf->cell_refs_to = 0;
-	//cpf->clear_formula();
-	cpf->invalidate_bytecode();
 	cpf->cell_cycle = 0;
 
 	push_refs(my_cell);
-	if (my_cell->cell_refs_to)
-		shift_formula (cur_row, cur_col, rt - rf, ct - cf);
 	my_cell = 0;
 }
 
@@ -464,22 +449,10 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 	my_cell->cell_flags = cpf->cell_flags;
 	my_cell->cell_cycle = cpf->cell_cycle;
-	my_cell->cell_refs_to = cpf->cell_refs_to;
-
-	if (my_cell->cell_refs_to)
-		my_cell->cell_refs_to->refs_refcnt++;
 
 
 
-#if 1
 	cpf->set_formula_text(my_cell->get_formula_text());
-#else
-	if (cpf->get_cell_formula()) {
-		copy_cell_formula(cpf, rf, cf, rt, ct);
-	} else {
-		my_cell->clear_formula();
-	}
-#endif
 
 	io_pr_cell (cur_row, cur_col, my_cell);
 
@@ -617,10 +590,7 @@ flush_old_value (void)
 	void
 add_ref (CELLREF row, CELLREF col)
 {
-	CELL *other_cell;
-
-	other_cell = find_or_make_cell (row, col);
-	add_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
+	CELL *other_cell = find_or_make_cell (row, col);
 }
 
 /* like add_ref, except over a range of arguments and with memory
@@ -628,113 +598,14 @@ add_ref (CELLREF row, CELLREF col)
  */
 void add_range_ref (struct rng *rng)
 {
-	CELL *other_cell;
-	struct ref_fm *oldref, *newref;
-	struct ref_fm nonref;
-
 
 	make_cells_in_range (rng);
 
-	/* Be efficient:  If cells in the range currently have the same
-	 * references, they'll have the same references afterward, so just
-	 * adjust the refcounts
-	 */
-	nonref.refs_refcnt = 1;
-	celldeq_t cells_in_range = get_cells_in_range(rng);
-	//other_cell = next_cell_in_range ();
-	other_cell = take_front(cells_in_range);
-	//assert(other_cell);
-	oldref = other_cell->cell_refs_from;
-	if (oldref && oldref->refs_refcnt == 1)
-		oldref = &nonref;
-
-	add_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
-	newref = other_cell->cell_refs_from;
-	//while ((other_cell = next_cell_in_range ()))
-	while(other_cell = take_front(cells_in_range))
-	{
-		if (other_cell->cell_refs_from == oldref)
-		{
-			if (oldref)
-			{
-				if (oldref->refs_refcnt == 1)
-				{
-					flush_fm_ref (oldref);
-					oldref = &nonref;
-				}
-				else
-					oldref->refs_refcnt--;
-			}
-			other_cell->cell_refs_from = newref;
-			newref->refs_refcnt++;
-		}
-		else if (oldref == &nonref && (!other_cell->cell_refs_from || other_cell->cell_refs_from->refs_refcnt > 1))
-		{
-			oldref = other_cell->cell_refs_from;
-			add_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
-			newref = other_cell->cell_refs_from;
-		}
-		else
-			add_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
-	}
-	/* if(oldref && oldref->refs_refcnt==0) {
-	   oldref->refs_refcnt=1;
-	   flush_fm_ref(oldref);
-	   } */
 }
 
 	static void
 flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 {
-	CELL *other_cell;
-	struct ref_fm *oldref, *newref;
-	struct ref_fm nonref;
-	/* This is horribly inefficient:  Simply referencing a cell makes
-	   it appear.  On the other hand, there is no other easy way to deal
-	   with the references to the cells (That I know of, anyway) */
-	//find_cells_in_range (rng);
-	celldeq_t cells_in_range = get_cells_in_range(rng);
-	/* Be efficient:  If cells in the range currently have the same
-	   references, they'll have the same references afterward, so just
-	   adjust the refcounts */
-	nonref.refs_refcnt = 1;
-	other_cell = cells_in_range.front();
-	if (!other_cell)
-		return;
-	cells_in_range.pop_front();
-	oldref = other_cell->cell_refs_from;
-	if (oldref && oldref->refs_refcnt == 1)
-		oldref = &nonref;
-
-	flush_ref_fm (&(other_cell->cell_refs_from), rr, cc);
-	newref = other_cell->cell_refs_from;
-	for(CELL* other_cell:cells_in_range)
-	{
-		if (other_cell->cell_refs_from == oldref)
-		{
-			if (oldref)
-			{
-				if (oldref->refs_refcnt == 1)
-				{
-					flush_fm_ref (oldref);
-					oldref = &nonref;
-				}
-				else
-					oldref->refs_refcnt--;
-			}
-			other_cell->cell_refs_from = newref;
-			if (newref)
-				newref->refs_refcnt++;
-		}
-		else if (oldref == &nonref && (!other_cell->cell_refs_from || other_cell->cell_refs_from->refs_refcnt > 1))
-		{
-			oldref = other_cell->cell_refs_from;
-			flush_ref_fm (&(other_cell->cell_refs_from), rr, cc);
-			newref = other_cell->cell_refs_from;
-		}
-		else
-			flush_ref_fm (&(other_cell->cell_refs_from), rr, cc);
-	}
 }
 
 #define FM_HASH_NUM 503
@@ -1018,43 +889,6 @@ find_to_ref (void)
 	void
 add_ref_to (cell* cp, int whereto)
 {
-	struct ref_to *from;
-	int n;
-
-	from = cp->cell_refs_to;
-	if (!from)
-	{
-		if (!to_tmp_ref)
-		{
-			to_tmp_ref = (ref_to*) ck_malloc (sizeof (struct ref_to));
-			to_tmp_ref_alloc = 1;
-		}
-		to_tmp_ref->refs_used = 1;
-		to_tmp_ref->to_refs[0] = whereto;
-	}
-	else
-	{
-		if (to_tmp_ref_alloc <= from->refs_used)
-		{
-			to_tmp_ref = (ref_to*) ck_realloc (to_tmp_ref, sizeof (struct ref_to) + from->refs_used);
-			to_tmp_ref_alloc = from->refs_used + 1;
-		}
-		to_tmp_ref->refs_used = from->refs_used + 1;
-		n = 0;
-		while (n < from->refs_used && from->to_refs[n] < whereto)
-		{
-			to_tmp_ref->to_refs[n] = from->to_refs[n];
-			n++;
-		}
-		to_tmp_ref->to_refs[n] = whereto;
-		while (n < from->refs_used)
-		{
-			to_tmp_ref->to_refs[n + 1] = from->to_refs[n];
-			n++;
-		}
-		flush_ref_to (&(cp->cell_refs_to));
-	}
-	cp->cell_refs_to = find_to_ref ();
 }
 
 	static void
@@ -1865,32 +1699,6 @@ init_refs (void)
    actual work. . . */
 void push_refs (cell *cp)
 {
-	if(!cp) return;
-	struct ref_fm *ref = cp->cell_refs_from;
-	int n;
-
-	if (!ref || !ref->refs_used)
-		return;
-	n = ref->refs_used;
-	while (n--)
-	{
-#if 0
-		CELL *cp;
-
-		fprintf (stderr, "Push %s\n", cell_name (ref->fm_refs[n].ref_row, ref->fm_refs[n].ref_col));
-		cp = find_cell (ref->fm_refs[n].ref_row, ref->fm_refs[n].ref_col);
-		if (cp->cell_cycle == current_cycle)
-		{
-			fprintf (stderr, "Cycle detected from %s to %s\n",
-					cell_name (cur_row, cur_col),
-					cell_name (ref->fm_refs[n].ref_row, ref->fm_refs[n].ref_col));
-			push_cell (ref->fm_refs[n].ref_row,
-					ref->fm_refs[n].ref_col);
-		}
-		else
-#endif
-			push_cell (ref->fm_refs[n].ref_row, ref->fm_refs[n].ref_col);
-	}
 }
 
 /* Push a cell onto the FIFO of cells to evaluate, checking for cells
@@ -1915,101 +1723,6 @@ void push_cell(cell* cp)
 	void
 push_cell (CELLREF row, CELLREF col)
 {
-	struct pos *dup;
-	CELL *cp;
-	struct ref_fm *rf;
-
-	/* printf("push_cell entry %d %d\n", row, col); cell_buffer_contents(stdout); */
-	if (cell_buffer.push_to_here + 1 == cell_buffer.pop_frm_here
-			|| (cell_buffer.pop_frm_here == cell_buffer.buf
-				&& cell_buffer.push_to_here == cell_buffer.buf + (cell_buffer.size - 1)))
-	{
-		int f, t, from_num;
-
-		f = cell_buffer.pop_frm_here - cell_buffer.buf;
-		t = cell_buffer.push_to_here - cell_buffer.buf;
-		from_num = cell_buffer.size - f;
-
-		cell_buffer.size FIFO_INC;
-		cell_buffer.buf = (struct pos *) ck_realloc((VOIDSTAR) cell_buffer.buf,
-				cell_buffer.size * sizeof (struct pos));
-		if (t == 0)
-		{
-			cell_buffer.push_to_here = cell_buffer.buf + f + from_num;
-			cell_buffer.pop_frm_here = cell_buffer.buf + f;
-		}
-		else if (t > f)
-		{
-			cell_buffer.push_to_here = cell_buffer.buf + t;
-			cell_buffer.pop_frm_here = cell_buffer.buf + f;
-		}
-		else
-		{
-			cell_buffer.push_to_here = cell_buffer.buf + t;
-			cell_buffer.pop_frm_here = cell_buffer.buf + (cell_buffer.size - from_num);
-			if (from_num)
-				bcopy (cell_buffer.buf + f,
-						cell_buffer.pop_frm_here,
-						from_num * sizeof (struct pos));
-		}
-	}
-
-#if 1
-	if (cell_buffer.pop_frm_here != cell_buffer.push_to_here)
-	{
-		dup = cell_buffer.pop_frm_here;
-
-		cp = find_cell (row, col);
-		if (!cp)
-		{
-			return;
-		}
-		rf = cp->cell_refs_from;
-		for (; dup != cell_buffer.push_to_here;)
-		{
-			if (dup->row == row && dup->col == col)
-			{
-#ifdef TEST
-				if (debug & 010)
-					io_error_msg ("Flushed dup ref to %s", cell_name (row, col));
-#endif
-				*dup = *(cell_buffer.pop_frm_here);
-				cell_buffer.pop_frm_here++;
-				if (cell_buffer.pop_frm_here == cell_buffer.buf + cell_buffer.size)
-					cell_buffer.pop_frm_here = cell_buffer.buf;
-				break;
-			}
-#if 0
-			if (rf)
-			{
-				for (n = 0; n < rf->refs_used; n++)
-					if (rf->fm_refs[n].ref_row == dup->row && rf->fm_refs[n].ref_col == dup->col)
-					{
-#ifdef TEST
-						if (debug & 01)
-							io_error_msg ("Swapped %s and %s", cell_name (row, col), cell_name (dup->row, dup->col));
-#endif
-						dup->row = row;
-						dup->col = col;
-						row = rf->fm_refs[n].ref_row;
-						col - rf->fm_refs[n].ref_col;
-						goto breakout;
-					}
-			}
-#endif
-
-			if (++dup == cell_buffer.buf + cell_buffer.size)
-				dup = cell_buffer.buf;
-		}
-	}
-#endif
-
-	cell_buffer.push_to_here->row = row;
-	cell_buffer.push_to_here->col = col;
-	cell_buffer.push_to_here++;
-	if (cell_buffer.push_to_here == cell_buffer.buf + cell_buffer.size)
-		cell_buffer.push_to_here = cell_buffer.buf;
-	/* printf("push_cell exit %d %d\n", row, col); cell_buffer_contents(stdout); */
 }
 
 /* Pop a cell off CELL_BUFFER, and evaluate it, displaying the result. . .

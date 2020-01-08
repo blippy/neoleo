@@ -283,7 +283,7 @@ value_t cell::get_value_t()
 void copy_cell_stuff (cell* src, cell* dest)
 {
 	dest->cell_flags = src->cell_flags;
-	dest->cell_refs_to = src->cell_refs_to;
+	//dest->cell_refs_to = src->cell_refs_to;
 	dest->set_formula_text(src->get_formula_text());
 	dest->cell_cycle = src->cell_cycle;
 	dest->set_formula_text(src->get_formula_text());

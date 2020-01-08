@@ -80,8 +80,6 @@ set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 void reset_1(CELL* cp)
 {
 	cp->clear_flags();
-	cp->cell_refs_to = 0;
-	cp->invalidate_bytecode();
 	cp->cell_cycle = 0;
 	cp = 0;
 }
