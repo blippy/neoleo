@@ -413,64 +413,6 @@ err_msg (void)
 
 
 
-/* Take a char and turn it into a readable string */
-	const char *
-char_to_string (int ch)
-{
-	static char buf[] = "M-\0\0\0\0";
-
-	if (ch == '\\')
-		return "\\\\";
-
-	if (isprint(ch)) {
-		buf[3] = ch;
-		buf[4] = 0;
-		return &buf[3];
-	}
-
-	if (ch & META_BIT)
-	{
-		ch &= MASK_META_BIT;
-		if (ch == BACKSPACE || ch < ' ')
-		{
-			buf[2] = '^';
-			buf[3] = (ch == BACKSPACE ? '?' : ch + '@');
-			if (buf[3] == '\\')
-			{
-				buf[4] = '\\';
-				buf[5] = 0;
-			}
-			else
-				buf[4] = 0;
-		}
-		else
-		{
-			buf[2] = ch;
-			if (buf[2] == '\\')
-			{
-				buf[3] = '\\';
-				buf[4] = 0;
-			}
-			else
-				buf[3] = '\0';
-		}
-		return buf;
-	}
-	if (ch == BACKSPACE || ch < ' ')
-	{
-		buf[2] = '^';
-		buf[3] = (ch == BACKSPACE ? '?' : ch + '@');
-		if (buf[3] == '\\')
-		{
-			buf[4] = '\\';
-			buf[5] = 0;
-		}
-		else
-			buf[4] = 0;
-		return &buf[2];
-	}
-	return "huh";
-}
 
 
 

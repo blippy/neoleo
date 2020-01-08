@@ -990,7 +990,7 @@ set_region_alignment (struct rng * rng, int align)
 	if (fun != -1)
 		format_region (rng, -1, fun);
 	else			/* if (main_map[align]!=BREAK_CMD) */
-		io_error_msg ("Unknown Justify '%s'", char_to_string (align));
+		io_error_msg ("Unknown Justify '%c'", align);
 }
 
 static void set_cell_alignment(char align)
