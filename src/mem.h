@@ -7,20 +7,8 @@
  */
 
 #include <functional>
-#include <vector>
 
 
-// offers a kludge around const and non-constant strings
-// Use with care.
-class strcpy_c {
-	public:
-		strcpy_c(const char* str);
-		strcpy_c(const std::string& str);
-		char* data() const;
-		~strcpy_c();
-	private:
-		char* null_terminated_str;
-};
 
 /* Offers a way of performing automated clearup on exit */
 class exit_c {

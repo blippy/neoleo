@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <vector>
 #include "utils.h"
 
@@ -51,7 +52,6 @@ using namespace std::string_literals;
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-utils.h"
-#include "mem.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
@@ -833,7 +833,6 @@ _io_update_status (void)
 	static char hmbuf[40];
 	int wid;
 	int plen;
-	//int dlen;
 	int yy, xx;
 
 	if (!user_status || input_view.current_info)
@@ -865,8 +864,8 @@ _io_update_status (void)
 	}
 
 	std::string dec = formula_text(curow, cucol);
-	strcpy_c cvs(cell_value_string(curow, cucol, 1).c_str());
-	ptr = cvs.data();
+	const std::string& cvs = cell_value_string(curow, cucol, 1);
+	ptr = cvs.c_str();
 
 	plen = strlen (ptr);
 
@@ -932,7 +931,6 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	int j;
 	int wid, wwid;
 	int hgt;
-	char *ptr;
 	int yy, xx;
 
 	if (input_view.current_info)
@@ -951,8 +949,14 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 
 	getyx (stdscr, yy, xx);
 	glowing = (r == curow && c == cucol && win == cwin);
-	strcpy_c str{print_cell(cp).c_str()};
-	ptr = str.data();
+	
+	//strcpy_c str{print_cell(cp).c_str()};
+	//ptr = str.data();
+	const std::string& str = print_cell(cp);
+	char ptr1[str.size()+1];
+	char* ptr = strcpy(ptr1, str.c_str());
+	//char* ptr = str.c_str();
+
 	move_cursor_to (win, r, c, 0);
 	if (glowing)
 		standout ();
