@@ -31,6 +31,11 @@ bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
 bool is_string(const value_t& val) { return std::holds_alternative<string>(val); }
 bool is_bool(const value_t& val) { return std::holds_alternative<bool_t>(val); }
 
+bool operator==(const rng_t& r1, const rng_t& r2)
+{
+	return r1.lr == r2.lr && r1.hr == r2.hr && r1.lr == r2.lr && r1.hr == r1.hr;
+}
+
 bool operator==(const value_t& v1, const value_t& v2)
 { 
 
@@ -46,14 +51,10 @@ bool operator==(const value_t& v1, const value_t& v2)
 			return std::get<num_t>(v1) == std::get<num_t>(v2);
 		case TYP_ERR:
 			return std::get<err_t>(v1).num == std::get<err_t>(v2).num;
-		case TYP_RNG: {
-				      const rng_t& r1 = std::get<rng_t>(v1);
-				      const rng_t& r2 = std::get<rng_t>(v2);
-	      			      return r1.lr == r2.lr && r1.hr == r2.hr 
-					      && r1.lr == r2.lr && r1.hr == r1.hr;
-			      }
+		case TYP_RNG:
+			return std::get<rng_t>(v1) == std::get<rng_t>(v2);
 		case TYP_BOL:
-			      return std::get<bool_t>(v1).v == std::get<bool_t>(v2).v;
+			return std::get<bool_t>(v1).v == std::get<bool_t>(v2).v;
 		default:
 			ASSERT_UNCALLED();
 			return false;
