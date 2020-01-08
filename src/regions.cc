@@ -95,7 +95,6 @@ delete_region (struct rng *where)
 		cur_row = r;
 		cur_col = c;
 		my_cell = pp;
-		flush_old_value ();
 		pp->clear_flags();
 		push_refs(pp);
 		io_pr_cell(r, c, pp);
@@ -493,8 +492,6 @@ move_region (struct rng *fm, struct rng *to)
 				my_cell = find_or_make_cell (cur_row, cur_col);
 				cpf = find_cell (rf, cf);
 			}
-			else
-				flush_old_value ();
 
 			copy_cell_stuff(cpf, my_cell);
 			reset_1(cpf);

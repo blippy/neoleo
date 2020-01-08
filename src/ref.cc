@@ -105,11 +105,7 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
 
 	my_cell = find_cell (cur_row, cur_col);
-	//assert(my_cell);
-	if(my_cell) 
-		flush_old_value ();
-	else	
-		my_cell = find_or_make_cell(cur_row, cur_col);
+	my_cell = find_or_make_cell(cur_row, cur_col);
 
 }
 
@@ -166,8 +162,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		cur_row = rt;
 		cur_col = ct;
 		my_cell = find_cell (cur_row, cur_col);
-		if (my_cell)
-			flush_old_value ();
 		my_cell = find_or_make_cell (cur_row, cur_col);
 
 		copy_cell_stuff(&non_cell, my_cell);
@@ -202,8 +196,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		my_cell = find_or_make_cell (cur_row, cur_col);
 		cpf = find_cell (rf, cf);	/* FOO */
 	}
-	else
-		flush_old_value ();
 
 	if (!cpf)
 		return;
@@ -217,214 +209,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 }
 
 
-/* this function is only called by copy_cell()
- * but it is worth refactoring out because herein lies bug 17
- */
-
-void copy_cell_formula(CELL*& cpf, CELLREF &rf, CELLREF  &cf, CELLREF  &rt, CELLREF &ct)
-{
-	// mcarter 2019-02-06 shouldn't be necessary as bytecodes are calculated
-	// from textual formulae anyway
-#if 0
-	unsigned char *fp;
-	unsigned char *hi = 0;
-	unsigned char byte;
-	CELLREF trr, tcc;
-	struct rng trng;
-	function_t *f;
-	struct var *v;
-	CELL *tcp;
-
-	fp = cpf->get_cell_formula();
-	if (!moving)
-		moving = (char*)init_stack ();
-	while ((byte = *fp++) != ENDCOMP)
-	{
-		unsigned char * refloc = fp - 1;
-		if (byte < USR1)
-			f = &the_funs[byte];
-		else if (byte < SKIP)
-		{
-			int tmp;
-#ifdef TEST
-			if (byte - USR1 >= n_usr_funs)
-				panic ("Only have %d usr-function slots, but found byte for slot %d", n_usr_funs, 1 + byte - USR1);
-#endif
-			tmp = *fp++;
-			f = &usr_funs[byte - USR1][tmp];
-		}
-		else
-			f = &skip_funs[byte - SKIP];
-
-		if (f->fn_argn & X_J)
-			fp++;
-		else if (f->fn_argn & X_JL)
-			fp += 2;
-
-		if ((f->fn_argn & X_ARGS) == X_AN)
-			fp++;
-
-		switch (byte)
-		{
-			case CONST_FLT:
-				fp += sizeof (double);
-				break;
-
-			case CONST_INT:
-				fp += sizeof (long);
-				break;
-
-			case CONST_STR:
-				if (!hi) hi = fp + fp[-1];
-				break;
-			case CONST_STR_L:
-				if (!hi) hi = fp + fp[-2] + ((unsigned) (fp[-1]) << 8);
-				break;
-
-			case CONST_ERR:
-				fp += 1 /* +sizeof(char *) */ ;
-				break;
-
-			case VAR:
-				bcopy (fp, &v, sizeof (struct var *));
-				fp += sizeof (struct var *);
-				add_ref_fm (&(v->var_ref_fm), cur_row, cur_col);
-				switch (v->var_flags)
-				{
-					case VAR_UNDEF:
-						break;
-					case VAR_CELL:
-						tcp = find_cell (v->v_rng.lr, v->v_rng.lc);
-						add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
-						break;
-					case VAR_RANGE:
-						add_range_ref (&(v->v_rng));
-						/* sparse array bug fixed here */
-						my_cell = find_cell (cur_row, cur_col);
-						cpf = find_cell (rf, cf);
-						break;
-				}
-				break;
-
-			case R_CELL:
-			case R_CELL | COLREL:
-			case R_CELL | ROWREL:
-			case R_CELL | ROWREL | COLREL:
-				push_stack (moving, fp);
-				fp += EXP_ADD;
-				break;
-
-			case RANGE:
-			case RANGE | LRREL:
-			case RANGE | LRREL | LCREL:
-			case RANGE | LRREL | LCREL | HCREL:
-			case RANGE | LRREL | HCREL:
-			case RANGE | LRREL | HRREL:
-			case RANGE | LRREL | HRREL | LCREL:
-			case RANGE | LRREL | HRREL | LCREL | HCREL:
-			case RANGE | LRREL | HRREL | HCREL:
-			case RANGE | HRREL:
-			case RANGE | HRREL | LCREL:
-			case RANGE | HRREL | LCREL | HCREL:
-			case RANGE | HRREL | HCREL:
-			case RANGE | LCREL:
-			case RANGE | LCREL | HCREL:
-			case RANGE | HCREL:
-				push_stack (moving, fp);
-				fp += EXP_ADD_RNG;
-				break;
-
-			default:
-				{
-					function_t *fun;
-
-					if (byte >= SKIP)
-						break;
-
-					if (byte < USR1)
-						fun = &the_funs[byte];
-					else
-						fun = &usr_funs[byte - USR1][refloc[1]];
-
-					if (fun->fn_comptype & C_T)
-					{
-						add_ref_fm (&timer_cells, rt, ct);
-						++timer_active;
-					}
-					break;
-				}
-		}
-	}
-
-	if (hi) {
-		hi += strlen ((char *) hi);
-		hi++;
-	} else
-		hi = fp;
-
-#if 1
-	my_cell->invalidate_bytecode();
-#else
-	{ // attempt to refactor for issue#17
-		size_t len = hi - cpf->get_cell_formula();
-		assert(len >=0);
-		my_cell->set_cell_formula(cpf->get_cell_formula());
-		if (len > 0) {
-			unsigned char* formula = (unsigned char*) ck_malloc (len);
-			bcopy (my_cell->get_cell_formula(), formula, len);
-			cpf->set_cell_formula((unsigned char*) formula);
-		} else {
-			cpf->clear_formula(); 
-		}
-	}
-#endif
-
-	while ((fp = (unsigned char*) pop_stack (moving)))
-	{
-		byte = fp[-1];
-		if ((byte | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL))
-		{
-			trr = GET_ROW (fp);
-			tcc = GET_COL (fp);
-			if (byte & ROWREL)
-			{
-				trr += rt - rf;
-				PUT_ROW (fp, trr);
-			}
-			if (byte & COLREL)
-			{
-				tcc += ct - cf;
-				PUT_COL (fp, tcc);
-			}
-			tcp = find_or_make_cell (trr, tcc);
-			add_ref_fm (&(tcp->cell_refs_from), cur_row, cur_col);
-		}
-#ifdef TEST
-		else if ((byte | LRREL | HRREL | LCREL | HCREL) !=
-				(RANGE | LRREL | HRREL | LCREL | HCREL))
-			panic ("Unknown byte %x in copy_cell", byte);
-#endif
-		else
-		{
-			GET_RNG (fp, &trng);
-			if (byte & LRREL)
-				trng.lr += rt - rf;
-			if (byte & HRREL)
-				trng.hr += rt - rf;
-			if (byte & LCREL)
-				trng.lc += ct - cf;
-			if (byte & HCREL)
-				trng.hc += ct - cf;
-			PUT_RNG (fp, &trng);
-			add_range_ref (&trng);
-			/* sparse array bug fixed here */
-			my_cell = find_cell (cur_row, cur_col);
-			cpf = find_cell (rf, cf);
-		}
-	}
-	update_cell (my_cell);
-#endif
-}
 
 /* Used only in regions.c for copy_region. */
 	void
@@ -435,14 +219,11 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	cur_col = ct;
 	my_cell = find_cell (cur_row, cur_col);
 	if(!cpf) return;
-	//if (cpf->zeroed_1() && !cpf->get_cell_formula() && !my_cell) return;
 	if (!my_cell)
 	{
 		my_cell = find_or_make_cell (cur_row, cur_col);
 		cpf = find_cell (rf, cf);	/* FOO */
 	}
-	else
-		flush_old_value ();
 
 	if (!cpf)
 		return;
@@ -460,127 +241,6 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 	my_cell = 0;
 }
 
-/* Take away the value of CP.  This means getting rid of all the references
- * to it, etc.
- */
-	void
-flush_old_value (void)
-{
-	// mcarter 2019-02-96 temporarily (??) disabled
-#if 0
-	struct ref_to *ref;
-	unsigned char *refloc;
-	int n;
-	unsigned char byte;
-	CELL *other_cell;
-	struct var *varp;
-
-	ref = my_cell->cell_refs_to;
-	if (ref)
-	{
-		for (n = 0; n < ref->refs_used; n++)
-		{
-			/* Switch on formula[ref->to_refs[n]] */
-			refloc = &(my_cell->get_cell_formula()[ref->to_refs[n]]);
-			byte = refloc[0];
-			switch (byte)
-			{
-				case F_ROW:
-				case F_COL:
-					break;
-
-				case R_CELL:
-				case R_CELL | ROWREL:
-				case R_CELL | COLREL:
-				case R_CELL | ROWREL | COLREL:
-					other_cell = find_cell (GET_ROW (refloc + 1), GET_COL (refloc + 1));
-					if (other_cell)
-						flush_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
-#ifdef TEST
-					else
-						io_error_msg ("Can't find other_cell in flush_old_value");
-#endif
-					break;
-				case RANGE:
-				case RANGE | LRREL:
-				case RANGE | LRREL | LCREL:
-				case RANGE | LRREL | LCREL | HCREL:
-				case RANGE | LRREL | HCREL:
-				case RANGE | LRREL | HRREL:
-				case RANGE | LRREL | HRREL | LCREL:
-				case RANGE | LRREL | HRREL | LCREL | HCREL:
-				case RANGE | LRREL | HRREL | HCREL:
-				case RANGE | HRREL:
-				case RANGE | HRREL | LCREL:
-				case RANGE | HRREL | LCREL | HCREL:
-				case RANGE | HRREL | HCREL:
-				case RANGE | LCREL:
-				case RANGE | LCREL | HCREL:
-				case RANGE | HCREL:
-					{
-						struct rng rng;
-
-						GET_RNG (refloc + 1, &rng);
-						flush_range_ref (&rng, cur_row, cur_col);
-					}
-					break;
-
-				case VAR:
-					bcopy (&refloc[1], &varp, sizeof (struct var *));
-					flush_ref_fm (&(varp->var_ref_fm), cur_row, cur_col);
-					if (varp->var_flags == VAR_CELL)
-					{
-						other_cell = find_cell (varp->v_rng.lr, varp->v_rng.lc);
-						if (other_cell)
-							flush_ref_fm (&(other_cell->cell_refs_from), cur_row, cur_col);
-					}
-					else if (varp->var_flags == VAR_RANGE)
-						flush_range_ref (&(varp->v_rng), cur_row, cur_col);
-#ifdef TEST
-					else if (varp->var_flags != VAR_UNDEF)
-						panic ("Unknown var type %d", varp->var_flags);
-#endif
-					break;
-
-				default:
-					{
-						function_t *fun;
-
-						if (byte < USR1)
-							fun = &the_funs[byte];
-#ifdef TEST
-						else if (byte >= SKIP)
-							fun = 0, panic ("SKIP? in flush_old_value()");
-#endif
-						else
-							fun = &usr_funs[byte - USR1][refloc[1]];
-
-						if (fun->fn_comptype & C_T)
-						{
-#ifdef TEST
-							if (!timer_cells || !timer_cells->refs_used)
-								panic ("No timer cells in flush_timer_cell");
-#endif
-							flush_ref_fm (&timer_cells, cur_row, cur_col);
-							--timer_active;
-							break;
-						}
-						else
-							io_error_msg ("Bad ref_to of %d.%x ignored", ref->to_refs[n], byte);
-					}
-					break;
-			}
-		}
-		flush_ref_to (&(my_cell->cell_refs_to));
-	}
-	if (my_cell->get_cell_formula())
-	{
-		free(my_cell->get_cell_formula());
-		my_cell->clear_formula();
-	}
-	SET_TYP (my_cell, TYP_NUL);
-#endif
-}
 
 /* --------- Routines for dealing with cell references to other cells ------ */
 
