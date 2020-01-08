@@ -40,7 +40,6 @@ extern void ck_free (VOIDSTAR);
 
 extern num_t astof(char **sp);
 extern const char *char_to_string (int);
-extern int string_to_char (char **);
 extern int strincmp (const char *, const char *, size_t);
 
 extern char *mk_sprintf (const char *, ...);
