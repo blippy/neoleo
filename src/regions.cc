@@ -92,18 +92,10 @@ delete_region (struct rng *where)
 	{
 		CELLREF r, c;
 		decoord(pp, r, c);
-		/*
-		if (!pp->get_cell_formula() && !GET_TYP (pp))
-		{
-			pp->clear_flags();
-			continue;
-		}
-		*/
 		cur_row = r;
 		cur_col = c;
 		my_cell = pp;
 		flush_old_value ();
-		pp->invalidate_bytecode();
 		pp->clear_flags();
 		push_refs(pp);
 		io_pr_cell(r, c, pp);

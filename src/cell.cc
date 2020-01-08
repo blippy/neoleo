@@ -117,32 +117,7 @@ void cell::reparse()
 	// parse_and_compile(this);
 }
 
-formula_t cell::get_bytecode()
-{ 
-#if 1
-	return 0;
-#else
-	if(!bytecode)
-		bytecode = parse_and_compile(this);
 
-	return bytecode;
-#endif
-}
-
-/*
-value cell::get_value()
-{ 
-	value v; 
-	v.set_type(get_type()); 
-	if(get_type() == TYP_STR) {
-		const char* s = x.c_s;
-		v.x.c_s = strdup(s);
-	} else {
-		v.x = x; 
-	}
-	return v; 
-}
-*/
 
 bool cell::locked() const
 {
@@ -150,34 +125,15 @@ bool cell::locked() const
 }
 
 
-void cell::recompute_bytecode()
-{
-	ASSERT_UNCALLED();
-}
-void cell::invalidate_bytecode()
-{
-	reset();
-}
 
 void cell::set_row(CELLREF r)
 {
 	this->coord = to_coord(r, get_col(this));
-	this->invalidate_bytecode(); // due to relative referencing issues
 }
 
-void cell::reset()
-{
-	clear_bytecode();
-}
-
-void cell::clear_bytecode()
-{
-	//free_nonempty_str(&bytecode);
-}
 
 void cell::clear_flags()
 {
-	//bzero((void*) this->cell_flags, sizeof(this->cell_flags));
 	this->cell_flags.clear();
 }
 
@@ -214,16 +170,13 @@ void cell::set_formula_text(const std::string& str)
 	if(str ==formula_text) return;
 	formula_text = str;
 
-	if(use_parser_2019) {
-		// erase_predec_deps(); TODO get this working properly
-		predecs.clear();
-		CELLREF r, c;
-		decoord(this, r, c);
-		parse_tree = parse_string(formula_text, predecs, r, c);
-		insert_predec_deps(coord);
+	// erase_predec_deps(); TODO get this working properly
+	predecs.clear();
+	CELLREF r, c;
+	decoord(this, r, c);
+	parse_tree = parse_string(formula_text, predecs, r, c);
+	insert_predec_deps(coord);
 
-	} else
-		invalidate_bytecode();
 }
 
 std::string cell::get_formula_text() const
@@ -268,22 +221,13 @@ void cell::dump_cell()
 cell::~cell()
 {
 	magic = 0x0DEFACED; // see TR06
-	cell::reset();
-	//cout <<"X";
 }
 
-/*
-value_t cell::get_value_t()
-{
-	return the_value_t;
-}
-*/
 
 
 void copy_cell_stuff (cell* src, cell* dest)
 {
 	dest->cell_flags = src->cell_flags;
-	//dest->cell_refs_to = src->cell_refs_to;
 	dest->set_formula_text(src->get_formula_text());
 	dest->cell_cycle = src->cell_cycle;
 	dest->set_formula_text(src->get_formula_text());
@@ -307,9 +251,6 @@ std::string
 get_cell_formula_at(int r, int c)
 {
 	return formula_text(r, c);
-
-	//std::string res = decomp_str(r, c);
-	//return res;
 }
 
 
