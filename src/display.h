@@ -22,7 +22,6 @@
 
 #include "global.h"
 #include "cell.h"
-//#include "ir.h"
 
 union cell_numeric
 {
@@ -80,17 +79,10 @@ struct display
 };
 
 extern void free_display (struct display *disp);
-extern void build_display (struct display *, struct rng *,
-			   cell_display_metric, void *);
-extern void build_unscaled_display (struct display *, struct rng *,
-				    cell_display_metric, void *);
 extern void display_test_cmd (struct rng *);
-extern struct cell_display *cell_display_of (struct display *dpy,
-					     CELLREF r, CELLREF c);
-extern void display_range (struct rng *, struct display *dpy,
-			   int x, int y, int w, int h);
-extern void record_display_damage (struct display *,
-				   int x, int y, int w, int h);
+extern struct cell_display *cell_display_of (struct display *dpy, CELLREF r, CELLREF c);
+extern void display_range (struct rng *, struct display *dpy, int x, int y, int w, int h);
+extern void record_display_damage (struct display *, int x, int y, int w, int h);
 extern void layout (struct display *);
 extern int pr_display_cell (struct display *, CELLREF, CELLREF, CELL *);
 

@@ -195,67 +195,8 @@ static void null_metric (
 		struct display * disp)
 {}
 
-	static void 
-_build_display (
-		struct display *disp,
-		struct rng *range,
-		cell_display_metric metric,
-		void *vdata,
-		int scalep)
-{
-	/* This would be more useful if it handled scrolling. */
-	int r, c;
-	int rows = range->hr - range->lr + 1;
-	int cols = range->hc - range->lc + 1;
-	int x, y;
-	disp->range = *range;
-	disp->widths = (int *) ck_malloc (sizeof (int) * cols);
-	disp->heights = (int *) ck_malloc (sizeof (int) * rows);
-	disp->rowy = (int *) ck_malloc (sizeof (int) * rows);
-	disp->colx = (int *) ck_malloc (sizeof (int) * cols);
-	disp->metric = metric ? metric : null_metric;
-	disp->vdata = vdata;
-	disp->cells = ((struct cell_display *)
-			ck_calloc (sizeof (struct cell_display) * rows * cols));
-	disp->damaged = (struct cell_display *) disp;
-	for (x = 0, r = range->lr; r <= range->hr; ++r)
-	{
-		disp->rowy[r - range->lr] = x;
-		x += disp->heights[r - range->lr] = (scalep ? get_scaled_height : get_height) (r);
-	}
-	for (y = 0, c = range->lc; c <= range->hc; ++c)
-	{
-		disp->colx[c - range->lc] = y;
-		y += disp->widths[c - range->lc] = (scalep ? get_scaled_width : get_width) (c);
-		for (r = range->lr; r <= range->hr; ++r)
-		{
-			struct cell_display *cd = cell_display_of (disp, r, c);
-			cd->r = r;
-			cd->c = c;
-			pr_display_cell (disp, r, c, find_cell (r, c));
-		}
-	}
-}
 
-	void 
-build_display (
-		struct display *disp,
-		struct rng *range,
-		cell_display_metric metric,
-		void *vdata)
-{
-	_build_display (disp, range, metric, vdata, 1);
-}
 
-	void 
-build_unscaled_display (
-		struct display *disp,
-		struct rng *range,
-		cell_display_metric metric,
-		void *vdata)
-{
-	_build_display (disp, range, metric, vdata, 0);
-}
 
 	void 
 display_range (
