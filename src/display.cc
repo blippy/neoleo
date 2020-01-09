@@ -136,7 +136,7 @@ pr_display_cell (struct display *disp, CELLREF r, CELLREF c, CELL *cp)
 		else
 		{
 			//new_type = GET_TYP (cp);
-			new_type = get_value_t_type(cp->value_2019);
+			new_type = get_value_t_type(cp->get_value_2019());
 			new_jst = GET_JST (cp);
 			//new_font = cp->cell_font;
 			if (new_jst == JST_DEF)

@@ -90,9 +90,9 @@ class cell //: public value
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
+		value_t value_2019;
 
 	public:
-		value_t value_2019;
 		unsigned short cell_cycle = 0;
 		num_t to_num();
 		ValType get_type();

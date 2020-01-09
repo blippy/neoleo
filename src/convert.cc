@@ -20,8 +20,7 @@ double to_double(const char* strptr, bool &ok)
 double to_double(CELL* cp)
 {
 	double f;
-	//value v = cp->get_value();
-	value_t v = cp->value_2019;
+	value_t v = cp->get_value_2019();
 	switch(cp->get_type()) {
 		case TYP_NUL: return 0;
 		case TYP_INT: return cp->gFlt();

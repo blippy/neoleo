@@ -772,8 +772,7 @@ void write_cells(FILE* fp)
 		
 
 
-		//value val = cp->get_value();
-		value_t val = cp->value_2019;
+		value_t val = cp->get_value_2019();
 		std::string strval = stringify_value_file_style(val) ;
 		if(cp->get_type() != TYP_NUL)
 			fprintf(fp, "K%s", strval.c_str());

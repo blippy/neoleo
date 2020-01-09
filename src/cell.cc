@@ -219,7 +219,7 @@ void copy_cell_stuff (cell* src, cell* dest)
 bool 
 vacuous(cell* cp)
 {
-	return (cp == nullptr) || is_nul(cp->value_2019);
+	return (cp == nullptr) || is_nul(cp->get_value_2019());
 }
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)

@@ -290,7 +290,7 @@ std::string print_cell (CELL * cp)
 		j = default_fmt;
 		p = default_prc;
 	}
-	if (j == FMT_HID || is_nul(cp->value_2019))
+	if (j == FMT_HID || is_nul(cp->get_value_2019()))
 		return CCC("");
 
 	if (cp->get_type() == TYP_STR)
