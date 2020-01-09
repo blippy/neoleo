@@ -77,6 +77,12 @@ void decoord(const CELL* cp, CELLREF& r, CELLREF& c)
 
 }
 
+std::tuple<CELLREF, CELLREF> decoord(CELL* cp)
+{
+	CELLREF r, c;
+	decoord(cp, r, c);
+	return std::tuple{r, c};
+}
 cellmap_t the_cells;
 
 
@@ -253,9 +259,26 @@ bump_row (CELLREF row, int increment)
 	Global->modified = 1;
 }
 
+
 void insert_row_above(coord_t row)
 {
+	/* all bets are off as to what's valid, so just zap everything */
+	for(CELL* cp: the_cells) {
+		if(!cp) continue;
+		cp->predecs.clear();
+		cp->deps_2019.clear();
+	}
+
 	bump_row(row, +1);
+
+	/* now recompute everything */
+	for(CELL* cp: the_cells) {
+		if(!cp) continue;
+		auto [r, c] = decoord(cp);
+		auto formula = cp->get_formula_text();
+		set_and_eval(r, c, formula, true);
+	}
+
 }
 
 void delete_sheet_row(coord_t row)
