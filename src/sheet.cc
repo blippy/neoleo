@@ -30,6 +30,7 @@ using std::cout;
 using std::endl;
 using std::map;
 using std::string;
+using std::vector;
 
 typedef std::vector<cell_t*> cellmap_t;
 
@@ -197,7 +198,7 @@ CELLREF highest_col() { return max_col(); }
 
 void delete_all_cells()
 {
-	for(auto c:the_cells)
+	for(auto& c:the_cells)
 		delete c;
 	the_cells.clear();
 
@@ -248,36 +249,42 @@ bump_row (CELLREF row, int increment)
 }
 
 
+using cell_s = struct { CELLREF r, c; struct cell_flags_s cell_flags; string formula; };
+void recreate_cells(const vector<cell_s>& cells)
+{
+	delete_all_cells();
+
+	for(auto [r, c, flags, formula]: cells) {
+		set_and_eval(r, c, formula, true);
+		CELL* cp = find_cell(r, c);
+		cp->cell_flags = flags;
+	}
+	Global->modified = 1;
+}
+
 void insert_row_above(coord_t row)
 {
-	/* all bets are off as to what's valid, so just zap everything */
+	vector<cell_s> cells;
 	for(CELL* cp: the_cells) {
-		if(!cp) continue;
-		cp->predecs.clear();
-		cp->deps_2019.clear();
-	}
-
-	bump_row(row, +1);
-
-	/* now recompute everything */
-	for(CELL* cp: the_cells) {
-		if(!cp) continue;
 		auto [r, c] = decoord(cp);
-		auto formula = cp->get_formula_text();
-		set_and_eval(r, c, formula, true);
+		if(r>=row) r++;
+		cells.push_back(cell_s{r, c, cp->cell_flags, cp->get_formula_text()});
 	}
+
+	recreate_cells(cells);
 
 }
 
 void delete_sheet_row(coord_t row)
 {
-	// remove the cells for the row to delete
-	the_cells.erase(std::remove_if(the_cells.begin(), the_cells.end(), 
-				[&](CELL* cp) { return get_row(cp) == row; }),
-			the_cells.end());
-
-	// rename the rows below
-	bump_row(row, -1);
+	vector<cell_s> cells;
+	for(CELL* cp: the_cells) {
+		auto [r, c] = decoord(cp);
+		if(r==row) continue;
+		if(r>=row) r--;
+		cells.push_back(cell_s{r, c, cp->cell_flags, cp->get_formula_text()});
+	}
+	recreate_cells(cells);
 }
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
