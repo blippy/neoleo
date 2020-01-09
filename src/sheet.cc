@@ -169,25 +169,18 @@ void make_cells_in_range (struct rng *r)
 	       	for(int j  = r->lc; j <= r->hc; ++j)
 			find_or_make_cell(i, j);
 }
-void no_more_cells ()
-{
-}
 
 CELLREF max_row()
 {
 	int hi = 1;
-	//for(auto const& c : the_cells)
-	//	hi = std::max(hi, get_row(c.first));
 	for(CELL* cp : the_cells) {
 		int n = get_row(cp->get_coord());
 		hi = std::max(hi, n);
-		//hi = std::max(hi, cp->get_col());
 	}
 	return hi;
 }
 CELLREF max_col()
 {
-	//CELLREF hi = std::reduce(the_cells.begin(), the_cells.end(), , 1);
 	int hi = 1;
 	for(CELL* cp : the_cells) {
 		int n = get_col(cp->get_coord());
