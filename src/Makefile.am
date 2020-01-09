@@ -21,7 +21,6 @@ neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 neoleo_SOURCES = \
 		 basic.cc \
                  cell.cc cmd.cc  convert.cc \
-		 display.cc \
 		 errors.cc format.cc \
 		 input.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-edit.cc io-term.cc \
@@ -42,7 +41,7 @@ neoleo_SOURCES = \
 
 
 noinst_HEADERS = basic.h cell.h \
-		 cmd.h convert.h  display.h \
+		 cmd.h convert.h  \
 		 errors.h format.h \
 		 global.h \
 		 input.h \
