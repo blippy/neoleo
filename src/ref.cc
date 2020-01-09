@@ -181,7 +181,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		} else {
 			copy_cell_stuff(cpf, &non_cell);
 			cpf->clear_flags();
-			cpf->cell_cycle = 0;
 		}
 		return;
 	}
@@ -202,7 +201,6 @@ move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 
 	copy_cell_stuff(cpf, my_cell);
 	cpf->clear_flags();
-	cpf->cell_cycle = 0;
 
 	push_refs(my_cell);
 	my_cell = 0;
@@ -229,7 +227,6 @@ copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
 		return;
 
 	my_cell->cell_flags = cpf->cell_flags;
-	my_cell->cell_cycle = cpf->cell_cycle;
 
 
 
@@ -794,7 +791,6 @@ void push_cell(coord_t coord)
 }
 void push_cell(cell* cp)
 {
-	push_cell(cp->coord);
 }
 
 	void

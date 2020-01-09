@@ -84,33 +84,42 @@ struct cell_flags_s {
 
 typedef unsigned char* formula_t;
 
-class cell //: public value
+class cell
 {
 	private:
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
-		formula_t bytecode = nullptr;
-		std::string formula_text;
+		coord_t coord;
 		value_t value_2019;
+		std::string formula_text;
 
 	public:
-		unsigned short cell_cycle = 0;
+		cell(coord_t coord);
+		~cell();
+
+		// coord stuff
+		coord_t get_coord() const;
+		void set_coord(coord_t coord);
+		void set_row(CELLREF r);
+
+
+		// value stuff
+		value_t get_value_2019() const;
+		void set_value_2019(value_t newval);
 		num_t to_num();
 		ValType get_type();
 		bool_t gBol();
 		std::string gString();
 		err_t  gErr();
 		num_t gFlt();
+
+		// formula stuff
+		void set_formula_text(const std::string& str);
+
 		void update_cell();
 		void dump_cell();
 		void reparse();
 
-		coord_t coord;
-		void set_row(CELLREF r);
-
-		void set_formula_text(const std::string& str);
 		std::string get_formula_text() const;
-		cell(coord_t coord);
-		~cell();
 		void reset();
 		struct cell_flags_s cell_flags;
 		void clear_flags();
@@ -122,8 +131,6 @@ class cell //: public value
 
 		bool zeroed_1();
 		bool locked() const;
-		value_t get_value_2019() const;
-		void set_value_2019(value_t newval);
 		ranges_t predecs; // the ranges that the cell needs to evaluate
 		crefs_t deps_2019;
 		void erase_predec_deps();

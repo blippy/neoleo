@@ -723,7 +723,7 @@ void write_cells(FILE* fp)
 	CELLREF crow = 0, ccol = 0;
 	for(CELL* cp: get_cells_in_range(&all_rng))
 	{
-		coord_t coord = cp->coord;
+		coord_t coord = cp->get_coord();
 		CELLREF r = get_row(coord);
 		assert(r>0);
 		CELLREF c = get_col(coord);

@@ -70,7 +70,7 @@ int get_row(const CELL* cp)
 
 void decoord(const CELL* cp, CELLREF& r, CELLREF& c)
 {
-	coord_t coord = cp->coord;
+	coord_t coord = cp->get_coord();
 	assert(coord);
 	r = get_row(coord);
 	c = get_col(coord);
@@ -97,9 +97,10 @@ int binary_cell_search(int l, int r, coord_t target)
 {
 	if(r >= l) {
 		int mid = l + (r - l)/2;
-		if(the_cells[mid]->coord == target)
+		coord_t co = the_cells[mid]->get_coord();
+		if(co == target)
 			return mid;
-		if(the_cells[mid]->coord > target)
+		if(co > target)
 			return binary_cell_search(l, mid-1, target);
 		return binary_cell_search(mid+1, r, target);
 	}
@@ -148,7 +149,7 @@ cell_t* find_or_make_cell (coord_t coord)
 	 * insertion point, rather than just adding it on the back and calling sort()
 	 */
 	the_cells.push_back(ptr);
-	static auto compare_cell = [](CELL* a, CELL* b) { return a->coord < b->coord; };
+	static auto compare_cell = [](CELL* a, CELL* b) { return a->get_coord() < b->get_coord(); };
 	std::sort(the_cells.begin(), the_cells.end(), compare_cell);
 
 	return ptr;
@@ -183,7 +184,7 @@ CELLREF max_row()
 	//for(auto const& c : the_cells)
 	//	hi = std::max(hi, get_row(c.first));
 	for(CELL* cp : the_cells) {
-		int n = get_row(cp->coord);
+		int n = get_row(cp->get_coord());
 		hi = std::max(hi, n);
 		//hi = std::max(hi, cp->get_col());
 	}
@@ -194,7 +195,7 @@ CELLREF max_col()
 	//CELLREF hi = std::reduce(the_cells.begin(), the_cells.end(), , 1);
 	int hi = 1;
 	for(CELL* cp : the_cells) {
-		int n = get_col(cp->coord);
+		int n = get_col(cp->get_coord());
 		hi = std::max(hi, n);
 		//hi = std::max(hi, cp->get_col());
 	}

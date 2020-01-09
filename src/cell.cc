@@ -147,6 +147,10 @@ bool cell::zeroed_1()
 }
 
 
+coord_t cell::get_coord() const { return coord;} 
+
+void cell::set_coord(coord_t coord) {	this->coord = coord; }
+
 void cell::erase_predec_deps()
 {
 	for(auto rc: coords_in_ranges(predecs)) {
@@ -212,7 +216,6 @@ void copy_cell_stuff (cell* src, cell* dest)
 {
 	dest->cell_flags = src->cell_flags;
 	dest->set_formula_text(src->get_formula_text());
-	dest->cell_cycle = src->cell_cycle;
 	dest->set_formula_text(src->get_formula_text());
 }
 
