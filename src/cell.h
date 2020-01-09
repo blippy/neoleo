@@ -120,13 +120,9 @@ class cell //: public value
 		int get_cell_jst() { return cell_flags.cell_justify; }
 
 
-		void recompute_bytecode();
-		void invalidate_bytecode();
 
 		Expr parse_tree;
 
-		formula_t get_bytecode(); 
-		void clear_bytecode();
 		bool zeroed_1();
 		bool locked() const;
 		value_t get_value_2019() const;

@@ -24,7 +24,6 @@
 
 
 #include "global.h"
-
 #include "cmd.h"
 #include "errors.h"
 #include "format.h"
@@ -38,7 +37,6 @@
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-//#include "xcept.h"
 #include "parser-2019.h"
 using std::cerr;
 using std::cout;
