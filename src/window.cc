@@ -757,8 +757,7 @@ io_redo_region (struct rng * rng)
 {
 	for(CELL* cp:get_cells_in_range(rng))
 	{
-		CELLREF r, c;
-		decoord(cp, r, c);
+		auto [r, c] = decoord(cp);
 		io_pr_cell (r, c, cp);
 	}
 }

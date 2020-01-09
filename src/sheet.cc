@@ -31,7 +31,6 @@ using std::endl;
 using std::map;
 using std::string;
 
-//typedef std::map<coord_t, cell_t*> cellmap_t;
 typedef std::vector<cell_t*> cellmap_t;
 
 static void log_debug_1(std::string msg)
@@ -54,16 +53,12 @@ int get_row(coord_t coord) { return coord & 0xFF; }
 
 int get_col(const CELL* cp) 
 { 
-	//coord_t coord; 
-	CELLREF r,c;
-	decoord(cp, r, c); 
+	auto [r,c] = decoord(cp); 
 	return c;
 }
 int get_row(const CELL* cp)
 { 
-	//coord_t coord; 
-	CELLREF r,c;
-	decoord(cp, r, c); 
+	auto [r,c] = decoord(cp); 
 	return r;
 }
 
@@ -77,7 +72,7 @@ void decoord(const CELL* cp, CELLREF& r, CELLREF& c)
 
 }
 
-std::tuple<CELLREF, CELLREF> decoord(CELL* cp)
+std::tuple<CELLREF, CELLREF> decoord(const CELL* cp)
 {
 	CELLREF r, c;
 	decoord(cp, r, c);
@@ -218,8 +213,7 @@ void delete_all_cells()
 
 bool inside(CELL* cp, rng_t* a_rng)
 {
-	CELLREF r, c;
-	decoord(cp, r, c);
+	auto [r, c] = decoord(cp);
 	return inside(r, c, a_rng); 
 }
 
