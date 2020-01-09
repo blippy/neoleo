@@ -1,0 +1,88 @@
+Running tests: parser2019
+Format tests ...
+Hello world, meaning of life is 42
+Running parser 2019 tests
+Pret: R1C1: `sqrt(4+5)+2' => `5' PASS
+Pret: R1C1: `42' => `42' PASS
+Pret: R1C1: `42+3' => `45' PASS
+Pret: R1C1: `1+3+5+7' => `16' PASS
+Pret: R1C1: `1-3-5-7' => `-14' PASS
+Pret: R1C1: `1-3+5-7' => `-4' PASS
+Pret: R1C1: `1+2*3' => `7' PASS
+Pret: R1C1: `1+12/3' => `5' PASS
+Pret: R1C1: `1+12/3*2/2' => `5' PASS
+Pret: R1C1: `(1+2)*3' => `9' PASS
+Pret: R1C1: `-(1+2)*-3' => `9' PASS
+Pret: R1C1: `hypot(3,4)+1' => `6' PASS
+Pret: R1C1: `plus()+1' => `1' PASS
+Pret: R1C1: `plus(2)+1' => `3' PASS
+Pret: R1C1: `plus(2,3  +4  )  + 1' => `10' PASS
+Pret: R1C1: ` strlen("hello world") ' => `11' PASS
+Pret: R1C1: `1+' => `#PARSE_ERROR' PASS
+Pret: R1C1: ` strlen(1) ' => `#NON_STRING' PASS
+Pret: R1C1: `strlen(' => `#PARSE_ERROR' PASS
+Pret: R1C1: `life()' => `42' PASS
+Pret: R1C1: `1+2' => `3' PASS
+Pret: R1C1: `1+' => `#PARSE_ERROR' PASS
+Pret: R1C1: `strlen(1)' => `#NON_STRING' PASS
+Pret: R1C1: `1 2' => `#PARSE_ERROR' PASS
+Pret: R1C1: `' => `' PASS
+Pret: R2C2: `2+3' => `5' PASS
+Pret: R3C2: `R2C2+1' => `6' PASS
+Pret: R3C2: `R2C2' => `5' PASS
+Pret: R3C3: `R3C2' => `5' PASS
+Pret: R1C1: `2+3' => `5' PASS
+Pret: R1C2: `6' => `6' PASS
+Pret: R1C3: `sum(r1c1:2)' => `11' PASS
+Pret: R1C4: `r1c3' => `11' PASS
+PREDECS
+R1:1C1:2
+END PREDECS
+Check that dependent cells are updated
+Pret: R1C1: `7' => `7' PASS
+Result  of R1C3 is `13' PASS
+Result  of R1C4 is `13' PASS
+Done
+Cyclic check 
+Pret: R10C1: `r10c1' => `#CYCLE' PASS
+Pret: R11C1: `r10c1' => `#CYCLE' PASS
+Done
+Diamond cycle check
+Pret: R1C1: `4' => `4' PASS
+Pret: R2C1: `r1c1' => `4' PASS
+Pret: R2C2: `r1c1' => `4' PASS
+Pret: R3C1: `r2c1 + r2c2' => `8' PASS
+Pret: R1C1: `10' => `10' PASS
+Result  of R2C1 is `10' PASS
+Result  of R2C2 is `10' PASS
+Result  of R3C1 is `20' PASS
+Done
+Check triangular cyclicity
+Pret: R12C1: `r12c3' => `' PASS
+Pret: R12C2: `r12c1' => `' PASS
+Pret: R12C3: `r12c2' => `#CYCLE' PASS
+Done
+Pret: R13C1: `12.2' => `12.2' PASS
+Pret: R13C1: `badfunc(12.2)' => `#UNK_FUNC' PASS
+Pret: R13C1: `ceil("oops")' => `#NON_NUMBER' PASS
+Pret: R13C1: `ceil(12 + 0.2)' => `13' PASS
+Pret: R13C1: `floor(12.2)' => `12' PASS
+Pret: R13C1: `2^(1+1+1)' => `8' PASS
+Pret: R13C1: `#TRUE' => `#TRUE' PASS
+Pret: R13C1: `#FALSE' => `#FALSE' PASS
+Pret: R13C1: `#OOPS' => `#PARSE_ERROR' PASS
+Pret: R13C1: `1<2' => `#TRUE' PASS
+Pret: R13C1: `1+1=2' => `#TRUE' PASS
+Pret: R13C1: `1+10!=2' => `#TRUE' PASS
+Pret: R13C1: `1<=2' => `#TRUE' PASS
+Pret: R13C1: `2>=1' => `#TRUE' PASS
+Pret: R13C1: `2>1' => `#TRUE' PASS
+Pret: R13C1: `1>2' => `#FALSE' PASS
+Pret: R13C1: `if(1>2, 10, 11)' => `11' PASS
+Pret: R13C1: `if(#TRUE, "hello", "world")' => `hello' PASS
+Pret: R14C1: `14.1' => `14.1' PASS
+Pret: R14C2: `r14c[-1]' => `14.1' PASS
+Pret: R15C1: `15.2' => `15.2' PASS
+Pret: R15C2: `rc[-1]' => `15.2' PASS
+INFO: Completely finished parser2019
+test_values ... done
