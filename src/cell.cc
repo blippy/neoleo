@@ -181,20 +181,7 @@ std::string cell::get_formula_text() const
 {
 	return formula_text;
 }
-		
-void cell::set_refs(const crefs_t& coords)
-{
-	// TODO remove deps of old  precs
-
-	prec_cells = coords;
-
-	// this cell's prec becomes the other cells deps.
-	for(auto& coord: coords) {
-		cell* other = find_or_make_cell(coord);
-		other->dep_cells.insert(this->coord);
-	}
-		
-}
+	
 
 void cell::dump_cell()
 {
@@ -210,8 +197,6 @@ void cell::dump_cell()
 		for(const auto& coord: coords)
 			cout << field << ": R" << get_row(coord) << "C" << get_col(coord) << "\n";
 	};
-	dump_coords("Dep", dep_cells);
-	dump_coords("Prec", prec_cells);
 
 	cout << "\n";
 }

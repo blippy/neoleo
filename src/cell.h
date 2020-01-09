@@ -90,8 +90,6 @@ class cell //: public value
 		uint64_t magic = 0x000FF1CE; // class construction check see TR06
 		formula_t bytecode = nullptr;
 		std::string formula_text;
-		crefs_t prec_cells; // the cells to which to formula points // TODO only considers ranges, needs to include cells
-		crefs_t dep_cells; // other formula locations pointing to this cell
 
 	public:
 		value_t value_2019;
@@ -107,7 +105,6 @@ class cell //: public value
 		void reparse();
 
 		coord_t coord;
-		void set_refs(const crefs_t& coords);
 		void set_row(CELLREF r);
 
 		void set_formula_text(const std::string& str);
