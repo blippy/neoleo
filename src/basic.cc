@@ -119,6 +119,7 @@ insert_1row()
 	insert_row(1);
 }
 
+#if 0
 void
 insert_col (int repeat)
 {
@@ -139,6 +140,7 @@ insert_col (int repeat)
 	to.hc = cucol + repeat;
 	move_region (&from, &to);
 }
+#endif
 
 void
 delete_row (int repeat)
@@ -146,26 +148,9 @@ delete_row (int repeat)
 	delete_sheet_row(curow);
 	io_repaint();
 
-	/*
-	struct rng from;
-	struct rng to;
-	if ((repeat < 0) || (repeat > (MAX_ROW - curow + 1)))
-	{
-		io_error_msg ("delete-row: prefix argument out of range.");
-		return;
-	}
-	from.lc = MIN_COL;
-	from.hc = MAX_COL;
-	from.lr = curow + repeat;
-	from.hr = MAX_ROW;
-	to.lc = MIN_COL;
-	to.hc = MIN_COL;
-	to.lr = curow;
-	to.hr = curow;
-	move_region (&from, &to);
-	*/
 }
 
+#if 0
 void
 delete_col (int repeat)
 {
@@ -186,6 +171,7 @@ delete_col (int repeat)
 	to.hc = cucol;
 	move_region (&from, &to);
 }
+#endif
 
 /* Front end to the window functions. */
 
@@ -1032,7 +1018,7 @@ set_region_format (struct rng * rng, int fmt)
 	int precision = fmt & PREC_MASK;
 
 	format_region (rng, format, -1); 
-	precision_region(rng, precision);
+	//precision_region(rng, precision);
 }
 
 

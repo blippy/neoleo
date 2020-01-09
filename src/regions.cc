@@ -152,26 +152,3 @@ precision_region (struct rng *where, int precision)
 
 
 
-
-void
-move_region (struct rng *fm, struct rng *to)
-{
-}
-
-void
-copy_region (struct rng *fm, struct rng *to)
-{
-}
-
-
-
-
-void
-copy_row(int rf)
-{
-	if(rf == curow) return;
-	struct rng rngf{ .lr= (CELLREF) rf, .lc=(CELLREF) 1, .hr = (CELLREF) rf, .hc = (CELLREF) MAX_COL};
-	struct rng rngt{ .lr= (CELLREF) curow, .lc=(CELLREF) 1, .hr = (CELLREF) curow, .hc = (CELLREF) MAX_COL};
-	//copy_region(&rngf, &rngt);
-}
-
