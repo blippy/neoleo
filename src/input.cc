@@ -62,7 +62,6 @@
 	static char * 
 desired_keymap_prompt (struct input_view * this_iv)
 {
-	int map = cur_keymap;
 	return 0;
 }
 

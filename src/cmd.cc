@@ -165,7 +165,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_how_many = 1;
 	new_cf->_cur_cmd = 0;
 	new_cf->_cur_vector = 0;
-	new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
+	//new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
 
 	new_cf->_cmd_argc = 0;
 
@@ -174,35 +174,6 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 		/* This is a new top-level frame. */
 		the_cmd_frame = new_cf;
 		new_cf->cmd = 0;
-	}
-	else if (cur_cmd)
-	{
-		new_cf->_cur_arg = 0;
-		new_cf->cmd = cur_cmd;
-		{
-			int argc = 0;
-			char **prompt = 0; // new_cf->cmd->func_args;
-			while (prompt && *prompt)
-			{
-				// other initialisation of cfn taken care of by constructor
-				//command_arg_t* cfn = &new_cf->argv[argc];
-				//cfn->arg_desc = *prompt;
-				//set_line (&cfn->text, "");
-				//bzero (&cfn->val, sizeof (union command_arg_val));
-				++argc;
-				++prompt;
-			}
-			//if (argc && new_cf->argv[0].arg_desc[0] == '+') ++new_cf->argv[0].arg_desc;
-			new_cf->_cmd_argc = argc;
-			new_cf->_curow = curow;
-			new_cf->_cucol = cucol;
-			new_cf->_mkrow = mkrow;
-			new_cf->_mkcol = mkcol;
-			new_cf->_setrow = setrow;
-			new_cf->_setcol = setcol;
-
-			//if (!rng) new_cf->input = the_cmd_frame->input;
-		}
 	}
 
 	new_cf->prev = the_cmd_frame;

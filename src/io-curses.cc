@@ -840,12 +840,6 @@ _io_update_status (void)
 	addstr (ptr);
 	wid -= strlen (ptr);
 
-	if (how_many != 1)
-	{
-		sprintf (hmbuf, " {%d}", how_many);
-		addstr (hmbuf);
-		wid -= strlen (hmbuf);
-	}
 
 	std::string dec = formula_text(curow, cucol);
 	const std::string& cvs = cell_value_string(curow, cucol, 1);

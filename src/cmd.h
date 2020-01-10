@@ -100,25 +100,6 @@ extern struct command_frame * running_frames;
 #define window_after_input	the_cmd_frame->_window_after_input
 #define input_active		the_cmd_frame->_input_active
 
-#define cur_keymap		the_cmd_frame->_cur_keymap
-#define cur_cmd			the_cmd_frame->_cur_cmd
-#define cur_vector		the_cmd_frame->_cur_vector
-#define cur_chr			the_cmd_frame->_cur_chr
-#define cur_arg			the_cmd_frame->_cur_arg
-#define cmd_argc		the_cmd_frame->_cmd_argc
-
-#define how_many		the_cmd_frame->_how_many
-#define raw_prefix		the_cmd_frame->_raw_prefix
-
-#define cur_input		the_cmd_frame->input
-#define rmac			cur_input->_rmac
-#define pushed_back_char	cur_input->_pushed_back_char
-#define last_macro		cur_input->_last_macro
-#define macro_func_arg		cur_input->_func_arg
-#define making_macro		cur_input->_macro
-#define making_macro_start	cur_input->_macro_start
-#define making_macro_size	cur_input->_macro_size
-
 
 
 #ifdef FD_SET
