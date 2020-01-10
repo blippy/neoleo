@@ -242,7 +242,6 @@ void main_command_loop_for2019()
 	while(!quit) process_key(keymap);
 
 	endwin();
-	cout << "Exiting from 2019 io\n";
 	exit(0);
 
 }
