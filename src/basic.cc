@@ -1134,16 +1134,6 @@ define_usr_fmt (int fmt, char * pos_h, char * neg_h, char * pos_t,
 	set_usr_stats (fmt, usr_buf);
 }
 
-/* Automatic motion while editting cell's: */
-
-/* Hmm... where should this variable *really* go? */
-
-void
-set_auto_direction (enum motion_magic magic)
-{
-	Global->auto_motion_direction = magic;
-	io_info_msg ("Auto-motion direction = %s.", motion_name[magic]);
-}
 
 void
 auto_move (void)

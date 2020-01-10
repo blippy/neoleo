@@ -177,7 +177,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	init_maps_and_macros();
 
 	using namespace std::literals;
-	//execute_command_sv("set-default-format general.float"sv);
 	set_def_format(155); // which is "general.float", believe it or not
 
 	if (argc - optind == 1) {
@@ -186,7 +185,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 				read_file_and_run_hooks (fp, 0, argv[optind]);
 			} catch (OleoJmp& e) {
 				fprintf (stderr, ", error occured reading '%s'\n", argv[optind]);
-				io_info_msg(", error occured reading '%s'\n", argv[optind]);
+				exit(1);
 			} 
 			fclose (fp);
 		}

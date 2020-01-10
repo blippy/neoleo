@@ -476,12 +476,10 @@ io_info_msg (const char *str, ...)
 {
 	va_list foo;
 	char buf[1000];
-	char buf2[1020];
 
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
-	sprintf (buf2, "display-msg %s", buf);
-	execute_command (buf2);
+	io_error_msg2019_str(buf);
 }
 
 
