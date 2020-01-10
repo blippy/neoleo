@@ -150,23 +150,6 @@ _io_input_avail(void)
 }
 
 
-// TODO: this was a copy-pasta from io_curses.c
-	static void 
-_curses_io_scan_for_input (int block)
-{
-	/* This function only exists because X kbd events don't generate
-	 * SIGIO. Under curses, the SIGIO hander does the work of this
-	 * function.
-	 * Attempt to have the curses mode be somewhat responsive even in
-	 * the presence of an endless loop by explicitly looking for events
-	 * here.
-	 */
-	struct timeval tv;
-
-	tv.tv_sec = 0;
-	tv.tv_usec = 1000;
-	block_until_excitement(&tv);
-}
 
 
 	static int
@@ -404,7 +387,6 @@ headless_graphics(void)
 	io_repaint = do_nothing;
 	io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
-	io_scan_for_input = _curses_io_scan_for_input;
 	io_read_kbd = _io_read_kbd;
 	io_bell = _io_bell;
 	io_update_status = _io_update_status;

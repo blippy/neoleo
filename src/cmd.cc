@@ -45,10 +45,6 @@
 using namespace std::literals::string_literals;
 
 
-
-
-
-
 /* Bogus mapping from KEY->CODE to ranges.  This is how bound
  * macros are represented.
  * This is bogus because the ranges will not be adjusted in 
@@ -81,68 +77,6 @@ struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
 int ioerror = 0;
 
 
-
-
-/* Scheduling 
- *
- * Scheduling is centered around the function real_get_chr
- * which is allowed to block until an input event has occured.
- * Before blocking, real_get_chr may evaluate cells and/or update 
- * the display.
- */
-
-
-/* Error messages are delivered to the user by invoking a command 
- * that prompts with the error message, and waits for the user's next
- * keypress.  This command shouldn't wait indefinitely.  After a short time,
- * the error message should disappear.  This is accomplished by counting down
- * a timer, then destorying the error message command frame and throwing an
- * error.  The error is thrown directly rather than with io_error_msg in order
- * to avoid circularity.
- */
-
-	static void
-error_alarm ()
-{
-	ASSERT_UNCALLED();
-}
-
-struct alarm_entry alarm_table[3] = {
-	{cell_alarm, 1, 0},
-	{error_alarm, 0, 0},
-	{0, 0}
-};
-
-/* Function that get called whenever blocking times out. */
-
-	static void
-alarm_hooks (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	static void
-select_hooks (void)
-{
-	ASSERT_UNCALLED();
-}
-
-/* Block until we get a signal (unless system calls restart), 
- * can do i/o or, until we timeout (timeout is specified in seconds,
- * 0 means block indefinately).  (Front end to select)
- */
-	void
-block_until_excitement (struct timeval *tv)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-loop_until_char_avail()
-{
-	ASSERT_UNCALLED();
-}
 
 
 /*
