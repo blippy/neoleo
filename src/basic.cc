@@ -816,24 +816,6 @@ read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 	}
 }
 
-/* If TURN_ON is 0, this toggles whether load hooks are run.
- * Otherwise, it turns load hooks on.
- */
-
-void
-toggle_load_hooks (int turn_on)
-{
-	if (!turn_on && UserPreferences.run_load_hooks)
-	{
-		UserPreferences.run_load_hooks = 0;
-		io_info_msg ("load hooks turned off");
-	}
-	else
-	{
-		UserPreferences.run_load_hooks = 1;
-		io_info_msg ("load hooks turned on");
-	}
-}
 
 void
 write_cmd (FILE *fp, const char * name)

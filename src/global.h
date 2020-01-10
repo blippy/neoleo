@@ -198,7 +198,7 @@ struct OleoGlobal {
 					height_scale = 1.0, width_scale = 1.0;
 
 	int				cell_font_point_size = 12, block_on_getch = 1;
-	int				run_load_hooks = 1, sneaky_linec;
+	int				sneaky_linec;
 	int				display_formula_mode = 0;
 
 
