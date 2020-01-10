@@ -40,32 +40,9 @@ extern struct alarm_entry alarm_table[];
 
 #define cell_timer_seconds  (alarm_table[0].freq)
 
-/* Fields prefixed by _ should normally be accessed via the macros
- * defined further on. 
- */
-
 struct command_frame;
 
 typedef void (*direction_function) (int magic, int repeat);
-
-
-/*
-typedef struct command_arg
-{
-	int do_prompt = 0;
-	int is_set = 0;	
-	struct prompt_style* style = 0;
-	char * arg_desc;	
-	struct info_buffer * prompt_info = 0;
-	int info_line = 0;
-	int cursor = 0;	
-	int overwrite = 0;
-	direction_function inc_cmd = 0;
-	int timeout_seconds = 0;
-} command_arg_t;
-*/
-
-#define MAX_COMMAND_ARGS	10
 
 
 struct command_frame 
@@ -169,12 +146,9 @@ extern struct command_frame * running_frames;
 #define pushed_back_char	cur_input->_pushed_back_char
 #define last_macro		cur_input->_last_macro
 #define macro_func_arg		cur_input->_func_arg
-//#define macro_stack		cur_input->_macro_stack
 #define making_macro		cur_input->_macro
 #define making_macro_start	cur_input->_macro_start
 #define making_macro_size	cur_input->_macro_size
-
-//#define the_cmd_arg  		the_cmd_frame->argv[cur_arg]
 
 
 
@@ -228,7 +202,6 @@ void run_string_as_macro(const char * macro);
 extern void call_last_kbd_macro (int count);
 extern void end_macro (void);
 extern void stop_entering_macro (void);
-//extern void store_last_macro (struct rng * rng);
 extern int real_get_chr (void);
 extern void block_until_excitement(struct timeval *tv);
 extern void push_command_frame (struct rng * rng, char * first_line, int len);
