@@ -26,15 +26,12 @@
 #include "global.h"
 
 
-//#include "key.h"
-//#include "args.h"
-
 typedef void (*alarm_fn)(void);
 
 struct alarm_entry
 {
 	alarm_fn fn;
-	int freq;			/* in seconds. */
+	int freq; // in seconds
 	time_t last_time;
 };
 
@@ -55,9 +52,8 @@ struct command_frame;
  * the CODE field of the binding is an index.  This is bogus.
  * Variables should be used.
  */
-extern int n_bound_macros;
-//extern struct rng *bound_macros;
-extern int bound_macro_vec;
+//extern int n_bound_macros;
+//extern int bound_macro_vec;
 
 /* The pattern of interaction is:
  *   the user selects an interactive function
