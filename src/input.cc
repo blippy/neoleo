@@ -122,37 +122,6 @@ iv_reset_input (struct input_view * this_iv)
 	void
 iv_fix_input (struct input_view * this_iv)
 {
-	char * km_prompt = desired_keymap_prompt (this_iv);
-
-	if (Keymap_prompt && (Keymap_prompt == km_prompt))
-
-		Must_fix_input = 1;		/* Do nothing, keymap prompt has precedence */
-
-	else if (Must_fix_input
-			|| (Keymap_prompt != km_prompt)
-			|| ((the_cmd_frame->cmd
-					&& (the_cmd_arg.do_prompt && !the_cmd_arg.is_set))
-				? (0 
-
-					|| (0)
-					|| (Input_cursor != the_cmd_arg.cursor))
-				: (Input_area || Prompt_wid)))
-		iv_reset_input (this_iv);
-
-	if (the_cmd_frame->cmd
-			&& ((the_cmd_arg.prompt_info != Current_info)
-				|| (the_cmd_arg.info_line != Info_pos)))
-	{
-		Current_info = the_cmd_arg.prompt_info;
-		Info_pos = the_cmd_arg.info_line;
-		Info_redraw_needed = 1;
-	}
-	else if (Current_info
-			&& (!the_cmd_frame->cmd || !the_cmd_arg.prompt_info))
-	{
-		Current_info = 0;
-		io_repaint ();
-	}
 
 }
 

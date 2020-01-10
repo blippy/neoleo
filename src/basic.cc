@@ -702,8 +702,6 @@ inc_direction (int count, int page_rule, int hack_magic)
 		count *= page_size;
 	}
 
-	if (the_cmd_frame->cmd && the_cmd_arg.inc_cmd)
-		the_cmd_arg.inc_cmd (hack_magic, count);
 }
 
 /* The commands that move to the extreme of a row[col] may also move

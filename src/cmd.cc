@@ -252,15 +252,14 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 			while (prompt && *prompt)
 			{
 				// other initialisation of cfn taken care of by constructor
-				command_arg_t* cfn = &new_cf->argv[argc];
-				cfn->arg_desc = *prompt;
+				//command_arg_t* cfn = &new_cf->argv[argc];
+				//cfn->arg_desc = *prompt;
 				//set_line (&cfn->text, "");
 				//bzero (&cfn->val, sizeof (union command_arg_val));
 				++argc;
 				++prompt;
 			}
-			if (argc && new_cf->argv[0].arg_desc[0] == '+')
-				++new_cf->argv[0].arg_desc;
+			//if (argc && new_cf->argv[0].arg_desc[0] == '+') ++new_cf->argv[0].arg_desc;
 			new_cf->_cmd_argc = argc;
 			new_cf->_curow = curow;
 			new_cf->_cucol = cucol;

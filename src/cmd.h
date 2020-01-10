@@ -46,68 +46,26 @@ extern struct alarm_entry alarm_table[];
 
 struct command_frame;
 
-
-
-/* When a key is bound to a range, that range is stored here and 
- * the CODE field of the binding is an index.  This is bogus.
- * Variables should be used.
- */
-//extern int n_bound_macros;
-//extern int bound_macro_vec;
-
-/* The pattern of interaction is:
- *   the user selects an interactive function
- *   a list of arguments to that function are assembled
- *   the function is called
- *
- * This type is a union of the types that arguments to interactive
- * functions can have.
- */ 
-union command_arg_val
-{
-	char character;
-	FILE * fp;
-	int integer;
-	double floating;
-	//struct key_sequence key;	/* Passed as (struct keyseq *). */
-	//struct rng range;		/* Passed as (struct rng *). */
-	char * string;
-};
-
-
 typedef void (*direction_function) (int magic, int repeat);
 
 
-
-//typedef struct line command_arg_text_t ;
-
+/*
 typedef struct command_arg
 {
-	int do_prompt = 0;		/* If true, the user gets to edit this. */
-	int is_set = 0;		/* If true, a valid value is stored here. */
-	struct prompt_style* style = 0;	/* The editting mode for this argument. */
-	char * arg_desc;		/* Pointer into FUNC_ARGS of CUR_CMD. */
-
-	struct info_buffer * prompt_info = 0;/* Info that should be displayed while */
-	/* prompting for this argument. */
-	int info_line = 0;		/* First line visible in prompt_info */
-
-	int cursor = 0;			/* cursor position of this buffer. */
-	int overwrite = 0;		/* Is overwrite mode on? */
-
-	/* For incremental commands. */
+	int do_prompt = 0;
+	int is_set = 0;	
+	struct prompt_style* style = 0;
+	char * arg_desc;	
+	struct info_buffer * prompt_info = 0;
+	int info_line = 0;
+	int cursor = 0;	
+	int overwrite = 0;
 	direction_function inc_cmd = 0;
-
-	/* For reading a character with timeout. */
 	int timeout_seconds = 0;
-
-	/* The value as it will be passed to the cmd function. */
-	//union command_arg_val val;
 } command_arg_t;
+*/
 
 #define MAX_COMMAND_ARGS	10
-
-/* These declarations make up the state of the command interpreter. */
 
 
 struct command_frame 
@@ -171,7 +129,7 @@ struct command_frame
 	/* The arguments to the current function. 
 	 * This is used only if the current function prompts for arguments.
 	 */
-	struct command_arg argv[MAX_COMMAND_ARGS];
+	//struct command_arg argv[MAX_COMMAND_ARGS];
 };
 
 /* When a command is executing, this points to the frame it should operate
@@ -216,7 +174,7 @@ extern struct command_frame * running_frames;
 #define making_macro_start	cur_input->_macro_start
 #define making_macro_size	cur_input->_macro_size
 
-#define the_cmd_arg  		the_cmd_frame->argv[cur_arg]
+//#define the_cmd_arg  		the_cmd_frame->argv[cur_arg]
 
 
 
