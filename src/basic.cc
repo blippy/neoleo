@@ -767,22 +767,6 @@ set_region_formula (struct rng * rng, char * str)
 		}
 }
 
-void
-goto_edit_cell (int c)
-{
-	//pushed_back_char = c;
-	execute_command (S "edit-cell");
-}
-
-/* This allows keys to be bound for immediate destructive editing.
- */
-
-void
-goto_set_cell (int c)
-{
-	//pushed_back_char = c;
-	execute_command (S "set-cell");
-}
 
 static char load_hooks_string[] = "load_hooks";
 
@@ -796,7 +780,6 @@ read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 	char	*ext = NULL;
 	if (!ismerge)
 	{
-		//FileSetCurrentFileName(name ? ck_savestr (name) : 0);
 		FileSetCurrentFileName(name); // callee duplicates string
 	}
 	ext = strrchr(S name, '.');
@@ -807,13 +790,6 @@ read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 		read_file_generic(fp, ismerge, ext, name);
 	}
 
-	if (UserPreferences.run_load_hooks)
-	{
-		struct var * v;
-		v = find_var (load_hooks_string, sizeof(load_hooks_string)-1);
-		if (v && v->var_flags != VAR_UNDEF)
-			execute_command (load_hooks_string);
-	}
 }
 
 

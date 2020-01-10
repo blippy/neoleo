@@ -409,22 +409,6 @@ quote_macro_args (char *args)
 	ASSERT_UNCALLED();
 }
 
-	void
-execute_command(const char *instr)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-execute_command_str(std::string cmd)
-{
-	ASSERT_UNCALLED();
-}
-
-void execute_command_sv(std::string_view cmd)
-{
-	ASSERT_UNCALLED();
-}
 
 
 
