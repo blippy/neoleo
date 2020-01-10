@@ -234,7 +234,6 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
 
 	new_cf->_cmd_argc = 0;
-	new_cf->complex_to_user = 0;
 
 	if (!the_cmd_frame)
 	{

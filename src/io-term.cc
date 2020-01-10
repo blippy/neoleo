@@ -234,7 +234,7 @@ do_set_option (char *ptr)
   if (set_opt && !strincmp ("ticks ", ptr, 6))
     {
       ptr += 6;
-      cell_timer_seconds = astol (&ptr);
+      //cell_timer_seconds = astol (&ptr);
       return 0;
     }
   if (set_opt && !strincmp ("print ", ptr, 6))
@@ -378,11 +378,10 @@ badline:
 void
 write_mp_options (FILE *fp)
 {
-  fprintf (fp, "O;%sauto;%sbackground;%sa0;ticks %d\n",
+  fprintf (fp, "O;%sauto;%sbackground;%sa0;\n",
 	   Global->auto_recalc ? "" : "no",
 	   Global->bkgrnd_recalc ? "" : "no",
-	   Global->a0 ? "" : "no",
-	   cell_timer_seconds);
+	   Global->a0 ? "" : "no");
 }
 
 void 

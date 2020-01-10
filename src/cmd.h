@@ -38,7 +38,6 @@ struct alarm_entry
 
 extern struct alarm_entry alarm_table[];
 
-#define cell_timer_seconds  (alarm_table[0].freq)
 
 struct command_frame;
 
@@ -47,15 +46,12 @@ typedef void (*direction_function) (int magic, int repeat);
 
 struct command_frame 
 {
-	/* If `recursive' edits are enabled, there can be more than one of these. */
 	struct command_frame * next;
 	struct command_frame * prev;
 
-	/* The cell being editted (if any). */
 	CELLREF _setrow;
 	CELLREF _setcol;
 
-	/* The current cell and the mark. */
 	long	buf1;
 	CELLREF _curow;
 	long	buf2;
@@ -66,47 +62,20 @@ struct command_frame
 	CELLREF _mkcol;
 	long	buf5;
 
-	/* What passes for a window configuration, for now. */
-	/* 
-	 * When the input area is active, it appears to be just another window,
-	 * reachable by other-window.  These values must be maintained by any
-	 * implementation of io_get_line.
-	 */
-	int _window_after_input;	/* Id of the window prior to the input area. */
-	int _input_active;	/* Bool: is the input area selected? */
-
-
-	/* The current top level keymap. */
+	int _window_after_input;
+	int _input_active;
 	int top_keymap;
-
-	/* Current position in the keymaps. */
 	int _cur_keymap;
-
-	int saved_cur_keymap;		/* used when building a prefix arg */
-
-	/* The about-to-begin executing command (if any). */
+	int saved_cur_keymap;
 	struct cmd_func *_cur_cmd;
 	short _cur_vector;
-
-	/* The last character processed .*/
 	int _cur_chr;
-
-	/* The prefix argument */
 	int _how_many;
-
-	/* This becomes true if the user is ever prompted for arguments
-	 * for this frame.
-	 */
-	int complex_to_user; 
-
+	//int complex_to_user; 
 	int _cmd_argc;
 	int _cur_arg;
 	struct cmd_func * cmd;
 
-	/* The arguments to the current function. 
-	 * This is used only if the current function prompts for arguments.
-	 */
-	//struct command_arg argv[MAX_COMMAND_ARGS];
 };
 
 /* When a command is executing, this points to the frame it should operate
