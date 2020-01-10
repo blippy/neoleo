@@ -1,7 +1,4 @@
 file neoleo
-#b parser-2019.cc:243
-b parser-2019.cc:645
-#b cell.cc:227
-#b parse_error()
-b parse_rc
-r -T parser2019
+#b execute_command
+b oleofile.cc:554
+r /home/pi/Documents/cgt1.oleo

@@ -22,6 +22,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <iostream>
+
+using std::cout;
 
 #include "convert.h"
 #include "format.h"
@@ -93,6 +96,8 @@ oleo_read_file (FILE *fp, int ismerge)
 	{
 		std::string input_line = cbuf;
 		lineno++;
+		//cout << "oleofile:lineno:" << lineno << "\n";
+		//std::flush;
 
 		if ((ptr = (char *)index (cbuf, '\n')))
 			*ptr = '\0';
@@ -545,6 +550,7 @@ oleo_read_file (FILE *fp, int ismerge)
 				break;
 				/* JF extension: read uset-settable options */
 			case 'O':
+				//break;
 				Global->a0 = next_a0;
 				read_mp_options (ptr + 2);
 				next_a0 = Global->a0;
