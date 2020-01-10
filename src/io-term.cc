@@ -1,7 +1,5 @@
 /*
- * $Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $
- *
- * Copyright © 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -86,14 +84,14 @@ static void activate_relevant_command_loop()
 	main_command_loop_for2019();
 }
 
-EXTERN void
+	EXTERN void
 fairly_std_main_loop(void)
 {
-	  while (1) {
-		  try {
-			  activate_relevant_command_loop();
-		  } catch (OleoJmp& e) { }
-	  }
+	while (1) {
+		try {
+			activate_relevant_command_loop();
+		} catch (OleoJmp& e) { }
+	}
 }
 
 
@@ -170,122 +168,122 @@ static struct pref {
 
 /* An parser for the language grokked by option setting commands. */
 
-static int 
+	static int 
 do_set_option (char *ptr)
 {
-  int	set_opt = 1;
-  int	i, l;
-  char	*p;
+	int	set_opt = 1;
+	int	i, l;
+	char	*p;
 
-  while (*ptr == ' ')
-    ptr++;
+	while (*ptr == ' ')
+		ptr++;
 
-  for (l=0,p=ptr; *p && !isspace(*p); p++) l++;
- 
-  for (i=0; Preferences[i].name; i++)
-	if (strncmp(ptr, Preferences[i].name, l) == 0) {
-		if (Preferences[i].trigger != NULL)
-			(Preferences[i].trigger)(ptr);
+	for (l=0,p=ptr; *p && !isspace(*p); p++) l++;
 
-		if (Preferences[i].copynext) {
-			ptr += strlen(Preferences[i].name) + 1;
-			//((char *)Preferences[i].var) = strdup(ptr); mcarter
-		} else if (Preferences[i].var)
-			*((int *)Preferences[i].var) = Preferences[i].value;
+	for (i=0; Preferences[i].name; i++)
+		if (strncmp(ptr, Preferences[i].name, l) == 0) {
+			if (Preferences[i].trigger != NULL)
+				(Preferences[i].trigger)(ptr);
 
-		if (Preferences[i].cont == 0)
-			return 1;
-		break;
-	}
+			if (Preferences[i].copynext) {
+				ptr += strlen(Preferences[i].name) + 1;
+				//((char *)Preferences[i].var) = strdup(ptr); mcarter
+			} else if (Preferences[i].var)
+				*((int *)Preferences[i].var) = Preferences[i].value;
 
-  if (!strincmp ("no", ptr, 2))
-    {
-      ptr += 2;
-      set_opt = 0;
-      while (*ptr == ' ')
-	ptr++;
-    }
-  if (!stricmp ("auto", ptr))
-    {
-      Global->auto_recalc = set_opt;
-      return 0;
-    }
-  if (!stricmp ("bkgrnd", ptr) || !stricmp ("background", ptr))
-    {
-      Global->bkgrnd_recalc = set_opt;
-      return 0;
-    }
-  if (!stricmp ("a0", ptr))
-    {
-      Global->a0 = set_opt;
-      io_repaint ();
-      return 0;
-    }
-  if (!stricmp ("backup", ptr))
-    {
-      __make_backups = set_opt;
-      return 0;
-    }
-  if (!stricmp ("bkup_copy", ptr))
-    {
-      __backup_by_copying = set_opt;
-      return 0;
-    }
-  if (set_opt && !strincmp ("ticks ", ptr, 6))
-    {
-      ptr += 6;
-      astol (&ptr);
-      return 0;
-    }
-  if (set_opt && !strincmp ("print ", ptr, 6))
-    {
-      ptr += 6;
-      //print_width = astol (&ptr);
-      return 0;
-    }
-  if (set_opt && !strincmp ("file ", ptr, 5))
-    {
-      ptr += 5;
-      if (!stricmp ("oleo", ptr))
+			if (Preferences[i].cont == 0)
+				return 1;
+			break;
+		}
+
+	if (!strincmp ("no", ptr, 2))
 	{
-	  read_file = oleo_read_file;
-	  write_file = oleo_write_file;
-	  set_file_opts = oleo_set_options;
-	  //show_file_opts = oleo_show_options;
+		ptr += 2;
+		set_opt = 0;
+		while (*ptr == ' ')
+			ptr++;
 	}
+	if (!stricmp ("auto", ptr))
+	{
+		Global->auto_recalc = set_opt;
+		return 0;
+	}
+	if (!stricmp ("bkgrnd", ptr) || !stricmp ("background", ptr))
+	{
+		Global->bkgrnd_recalc = set_opt;
+		return 0;
+	}
+	if (!stricmp ("a0", ptr))
+	{
+		Global->a0 = set_opt;
+		io_repaint ();
+		return 0;
+	}
+	if (!stricmp ("backup", ptr))
+	{
+		__make_backups = set_opt;
+		return 0;
+	}
+	if (!stricmp ("bkup_copy", ptr))
+	{
+		__backup_by_copying = set_opt;
+		return 0;
+	}
+	if (set_opt && !strincmp ("ticks ", ptr, 6))
+	{
+		ptr += 6;
+		astol (&ptr);
+		return 0;
+	}
+	if (set_opt && !strincmp ("print ", ptr, 6))
+	{
+		ptr += 6;
+		//print_width = astol (&ptr);
+		return 0;
+	}
+	if (set_opt && !strincmp ("file ", ptr, 5))
+	{
+		ptr += 5;
+		if (!stricmp ("oleo", ptr))
+		{
+			read_file = oleo_read_file;
+			write_file = oleo_write_file;
+			set_file_opts = oleo_set_options;
+			//show_file_opts = oleo_show_options;
+		}
 #ifdef	HAVE_PANIC_SAVE
-      else if (!stricmp ("panic", ptr))
-	{
-	  read_file = panic_read_file;
-	  write_file = panic_write_file;
-	  set_file_opts = panic_set_options;
-	  //show_file_opts = panic_show_options;
-	}
+		else if (!stricmp ("panic", ptr))
+		{
+			read_file = panic_read_file;
+			write_file = panic_write_file;
+			set_file_opts = panic_set_options;
+			//show_file_opts = panic_show_options;
+		}
 #endif
-      else
-	io_error_msg ("Unknown file format %s", ptr);
-      return 0;
-    }
-  if (set_window_option (set_opt, ptr) == 0)
-    {
-      if ((*set_file_opts) (set_opt, ptr))
-	io_error_msg ("Unknown option '%s'", ptr);
-      return 0;
-    }
-  return 1;
+		else
+			io_error_msg ("Unknown file format %s", ptr);
+		return 0;
+	}
+	if (set_window_option (set_opt, ptr) == 0)
+	{
+		if ((*set_file_opts) (set_opt, ptr))
+			io_error_msg ("Unknown option '%s'", ptr);
+		return 0;
+	}
+	return 1;
 }
 
 
-void
+	void
 set_options (char * ptr)
 {
-  if (do_set_option (ptr))
-    io_recenter_cur_win ();
+	if (do_set_option (ptr))
+		io_recenter_cur_win ();
 }
 
 
 
-void
+	void
 read_mp_usr_fmt (char *ptr)
 {
 	int usr_n = -1;
@@ -375,67 +373,67 @@ badline:
 }
 
 /* Modify this to write out *all* the options */
-void
+	void
 write_mp_options (FILE *fp)
 {
-  fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
-	   Global->auto_recalc ? "" : "no",
-	   Global->bkgrnd_recalc ? "" : "no",
-	   Global->a0 ? "" : "no");
+	fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
+			Global->auto_recalc ? "" : "no",
+			Global->bkgrnd_recalc ? "" : "no",
+			Global->a0 ? "" : "no");
 }
 
-void 
+	void 
 read_mp_options (char *str)
 {
-  char *np;
+	char *np;
 
-  while ((np = (char *)index (str, ';')))
-    {
-      *np = '\0';
-      (void) do_set_option (str);
-      *np++ = ';';
-      str = np;
-    }
-  if ((np = (char *)rindex (str, '\n')))
-    *np = '\0';
-  (void) do_set_option (str);
+	while ((np = (char *)index (str, ';')))
+	{
+		*np = '\0';
+		(void) do_set_option (str);
+		*np++ = ';';
+		str = np;
+	}
+	if ((np = (char *)rindex (str, '\n')))
+		*np = '\0';
+	(void) do_set_option (str);
 }
 
 
 /* Commands related to variables. */
 
-void
+	void
 set_var (struct rng *val, char *var)
 {
-  char *ret;
+	char *ret;
 
-  Global->modified = 1;
-  ret = new_var_value (var, strlen(var), val);
+	Global->modified = 1;
+	ret = new_var_value (var, strlen(var), val);
 
-  if (ret)
-    io_error_msg ("Can't set-var %s: %s\n", var, ret);
+	if (ret)
+		io_error_msg ("Can't set-var %s: %s\n", var, ret);
 }
 
-void
+	void
 unset_var (char *var)
 {
-  struct rng tmp_rng;
-  struct var *v;
+	struct rng tmp_rng;
+	struct var *v;
 
-  v = find_var(var, strlen(var));
+	v = find_var(var, strlen(var));
 
-  if (!v || v->var_flags == VAR_UNDEF)
-    {
-      io_error_msg ("No variable named %s exists.", var);
-    }
-  else
-    {
-      tmp_rng.lr = tmp_rng.hr = NON_ROW;
-      tmp_rng.lc = tmp_rng.hc = NON_COL;
-      v = find_or_make_var(var, strlen(var));
-      v->v_rng = tmp_rng;
-      v->var_flags = VAR_UNDEF;
-    }
+	if (!v || v->var_flags == VAR_UNDEF)
+	{
+		io_error_msg ("No variable named %s exists.", var);
+	}
+	else
+	{
+		tmp_rng.lr = tmp_rng.hr = NON_ROW;
+		tmp_rng.lc = tmp_rng.hc = NON_COL;
+		v = find_or_make_var(var, strlen(var));
+		v->v_rng = tmp_rng;
+		v->var_flags = VAR_UNDEF;
+	}
 }
 
 
@@ -443,7 +441,7 @@ unset_var (char *var)
 
 static FILE * write_variable_fp = 0;
 
-static void
+	static void
 write_a_var (const char *name, struct var *v)
 {
 	CELLREF r, c;
@@ -455,98 +453,98 @@ write_a_var (const char *name, struct var *v)
 		fprintf (write_variable_fp, "%s=%s\n", v->var_name.c_str(), cell_value_string (r, c, 1).c_str());
 }
 
-void
+	void
 write_variables (FILE * fp)
 {
-  if (write_variable_fp)
-    io_error_msg ("Can't re-enter write_variables.");
-  else
-    {
-      write_variable_fp = fp;
-      for_all_vars (write_a_var);
-      write_variable_fp = 0;
-    }
+	if (write_variable_fp)
+		io_error_msg ("Can't re-enter write_variables.");
+	else
+	{
+		write_variable_fp = fp;
+		for_all_vars (write_a_var);
+		write_variable_fp = 0;
+	}
 }
 
-void
+	void
 read_variables (FILE * fp)
 {
-  char buf[1024];
-  int lineno = 0;
-  while (fgets (buf, 1024, fp))
-    {
-      char * ptr;
-      for (ptr = buf; *ptr && *ptr != '\n'; ++ptr)
-	;
-      *ptr = '\0';
-      for (ptr = buf; isspace (*ptr); ptr++)
-	;
-      if (!*ptr || (*ptr == '#'))
-	continue;
-      {
-	char * var_name = ptr;
-	int var_name_len;
-	char * value_string;
-	while (*ptr && *ptr != '=')
-	  ++ptr;
-	if (!*ptr)
-	  {
-	    io_error_msg ("read-variables: format error near line %d.", lineno);
-	    return;
-	  }
-	var_name_len = ptr - var_name;
-	++ptr;
-	value_string = ptr;
+	char buf[1024];
+	int lineno = 0;
+	while (fgets (buf, 1024, fp))
 	{
-	  struct var * var = find_var (var_name, var_name_len);
-	  if (var)
-	    {
-	      switch (var->var_flags)
+		char * ptr;
+		for (ptr = buf; *ptr && *ptr != '\n'; ++ptr)
+			;
+		*ptr = '\0';
+		for (ptr = buf; isspace (*ptr); ptr++)
+			;
+		if (!*ptr || (*ptr == '#'))
+			continue;
 		{
-		case VAR_UNDEF:
-		  break;
-		case VAR_CELL:
-		  {
-		    char * error = new_value (var->v_rng.lr, var->v_rng.lc,
-					      value_string); 
-		    if (error)
-		      {
-			io_error_msg (error);
-			return;	/* actually, io_error_msg never returns. */
-		      }
-		    else
-		      Global->modified = 1;
-		    break;
-		  }
-		case VAR_RANGE:
-		  io_error_msg ("read-variables (line %d): ranges not supported.",
-				lineno);
-		  return;
+			char * var_name = ptr;
+			int var_name_len;
+			char * value_string;
+			while (*ptr && *ptr != '=')
+				++ptr;
+			if (!*ptr)
+			{
+				io_error_msg ("read-variables: format error near line %d.", lineno);
+				return;
+			}
+			var_name_len = ptr - var_name;
+			++ptr;
+			value_string = ptr;
+			{
+				struct var * var = find_var (var_name, var_name_len);
+				if (var)
+				{
+					switch (var->var_flags)
+					{
+						case VAR_UNDEF:
+							break;
+						case VAR_CELL:
+							{
+								char * error = new_value (var->v_rng.lr, var->v_rng.lc,
+										value_string); 
+								if (error)
+								{
+									io_error_msg (error);
+									return;	/* actually, io_error_msg never returns. */
+								}
+								else
+									Global->modified = 1;
+								break;
+							}
+						case VAR_RANGE:
+							io_error_msg ("read-variables (line %d): ranges not supported.",
+									lineno);
+							return;
+					}
+				}
+			}
 		}
-	    }
+		++lineno;
 	}
-      }
-      ++lineno;
-    }
-  if (!feof (fp))
-    {
-      io_error_msg ("read-variables: read error near line %d.", lineno);
-      return;
-    }
+	if (!feof (fp))
+	{
+		io_error_msg ("read-variables: read error near line %d.", lineno);
+		return;
+	}
 }
 
 
-int 
+	int 
 add_usr_cmds (struct cmd_func *new_cmds)
 {
 	return 0;
 	/*
-  num_funcs++;
-  the_funcs = (cmd_func**) ck_realloc (the_funcs, 
-		  num_funcs * sizeof (struct cmd_func *));
-  the_funcs[num_funcs - 1] = new_cmds;
-  return num_funcs - 1;
-  */
+	   num_funcs++;
+	   the_funcs = (cmd_func**) ck_realloc (the_funcs, 
+	   num_funcs * sizeof (struct cmd_func *));
+	   the_funcs[num_funcs - 1] = new_cmds;
+	   return num_funcs - 1;
+	   */
 }
 
 /*
@@ -557,16 +555,16 @@ add_usr_cmds (struct cmd_func *new_cmds)
 //static const char *what_version = "@(#)" PACKAGE " "  VERSION ;
 
 
-static RETSIGTYPE
+	static RETSIGTYPE
 continue_oleo (int sig)
 {
-  io_repaint ();
-  if (using_curses)
-    cont_curses ();
+	io_repaint ();
+	if (using_curses)
+		cont_curses ();
 }
 
 /* set an adapter stub that does nothing */
-void
+	void
 _do_nothing_const_char_s(const char *s)
 {
 }
@@ -575,12 +573,12 @@ void
 _do_nothing() { }; /* stub */
 
 void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
-	
+
 void _io_append_message_nothing(bool beep, char *fmt, ...) {};
 
 void _io_update_width_nothing(int col, int wid) {};
 
-void 
+	void 
 InitializeGlobals(void)
 {
 	FileSetCurrentFileName("unnamed.oleo");
@@ -613,7 +611,7 @@ InitializeGlobals(void)
 
 
 
-void
+	void
 init_basics()
 {
 	init_infinity ();
@@ -623,8 +621,8 @@ init_basics()
 	init_cells ();
 }
 
-  
-void
+
+	void
 choose_display(bool force_cmd_graphics)
 {
 	using_curses = false;
