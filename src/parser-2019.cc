@@ -427,7 +427,8 @@ loop:
 	} else if(ch == '"') {
 		while(1) {
 			ch = cstr[++pos];
-			if(ch == 0 || ch == '"') {pos++; break; }
+			if(ch == 0) break;
+			if(ch == '"') {pos++; break; }
 			token += ch;
 		}
 		found(STR, token);
