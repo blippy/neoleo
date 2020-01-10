@@ -120,7 +120,7 @@ class cell
 		void reparse();
 
 		std::string get_formula_text() const;
-		void reset();
+		//void reset();
 		struct cell_flags_s cell_flags;
 		void clear_flags();
 		int get_cell_jst() { return cell_flags.cell_justify; }

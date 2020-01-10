@@ -293,7 +293,7 @@ void copy_row(CELLREF dst_row, CELLREF src_row)
 	if(src_row == dst_row) return;
 	for(auto cp: the_cells) {
 		auto [r, c] = decoord(cp);
-		if(dst_row == r) cp->reset();
+		if(dst_row == r) cp->set_formula_text(""); // clear stuff out
 		if(src_row != r) continue;
 		set_and_eval(dst_row, c, cp->get_formula_text(), true);
 		auto dst_cp = find_cell(dst_row, c);

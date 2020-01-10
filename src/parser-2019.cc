@@ -269,17 +269,6 @@ value_t do_ceil (Tour& tour, args_t args)
 }
 
 
-/*
-   using bin_op_fn = std::function<value_t(num_t, num_t)> ;
-   value_t bin_op(Tour& tour, args_t args, bin_op_fn fn)
-   {
-   nargs_eq(args, 2);
-   num_t x  = num_eval(tour, args[0]);
-   num_t y  = num_eval(tour, args[1]);
-   return (value_t) fn(x, y);
-
-   }
-   */
 
 void two_nums(Tour& tour, args_t args, num_t& v1, num_t& v2)
 {
@@ -295,19 +284,12 @@ value_t do_pow (Tour& tour, args_t args)
 	return pow(x, y);
 
 	//return bin_op(tour, args, pow);
-	/*
-	   nargs_eq(args, 2);
-	   num_t x  = num_eval(tour, args[0]);
-	   num_t y  = num_eval(tour, args[1]);
-	   return pow(x, y);
-	   */
 
 }
 
 value_t to_bool (num_t n)
 {
 	bool_t b;
-	//cout << "to_bool: " << n << "\n";
 	b.v = n != 0;
 	return b;
 }
@@ -412,7 +394,6 @@ tokenise (string str)
 	tokens_t tokens;
 
 	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
-	//cout << "Parsing: " << str << "\n";
 	const char* cstr = str.c_str();
 	int pos = 0;
 	auto it = str.begin();
@@ -449,7 +430,6 @@ loop:
 			if(ch == 0 || ch == '"') {pos++; break; }
 			token += ch;
 		}
-		//cout << "tokenise string is <" << token << ">\n";
 		found(STR, token);
 	} else if(ch =='#') {
 		token = "#";
@@ -533,9 +513,7 @@ Expr parse_t(tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c);
 // parse a function
 Expr parse_fn (string fname, tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
-	//cout << "parse_fn name " << fname << "\n";
 	auto fn = fn_lookup(fname);
-	//cout << (*fn)(args_t{12}) << "\n";
 
 	consume('(', tokes);
 	FunCall fc;
@@ -552,13 +530,8 @@ loop:
 finis:
 	consume(')', tokes);
 
-	//args_t args{parse_e(tokes)};
-
-	//fc.args = args;
 	Expr x;
 	x.expr = fc;
-
-	//tokes.pop_front(); // rrb
 	return x;
 }
 
@@ -568,7 +541,6 @@ bool is_char(tokens_t& tokes, char c)
 
 	if( tokes.front().first != c)
 		return false;
-	//cout << "is_char:" << c << ":true\n";
 	pop(tokes);
 	return true;
 }
@@ -588,53 +560,26 @@ bool is_cellref(tokens_t& tokes, CELLREF& ref)
 
 bool abs_or_rel(tokens_t& tokes, CELLREF& n, bool& relative) 
 { 
-	//cout << "abs_or_rel:called\n";
 	relative = false;
-	//auto set_relative = [&relative]() {relative = true; return true;} ;
-
 	if(is_char(tokes, '[') && is_cellref(tokes, n) && is_char(tokes, ']')) {
 		relative = true;
 		return true;
 	}
-
 	return  is_cellref(tokes, n); 
 }
 
 // e.g. 12 or 12:13
 void parse_slice (tokens_t& tokes, CELLREF& lower, bool& lower_rel, CELLREF& upper, bool& upper_rel)
 {
-	//cout << "parse_slice: front token:" << tokes.front().second << "\n";
-
-
 	abs_or_rel(tokes, lower, lower_rel); 
 	upper = lower;
 	upper_rel = lower_rel;
 	is_char(tokes, ':') && abs_or_rel(tokes, upper, upper_rel);
-
-
-	/*
-	   if(tokes.front().first != NUMBER)
-	   parse_error();
-	   lower = stoi(tokes.front().second);
-	   upper = lower;
-	   pop(tokes);
-
-	   if(tokes.front().first == ':') {
-	   pop(tokes);
-	   if(tokes.front().first != NUMBER)
-	   parse_error();
-	   upper = stoi(tokes.front().second);
-	//cout << "parse_slice: upper:" << upper << "\n";
-	pop(tokes);
-	}
-	*/
 }
 
 Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, const string& command)
 {
 	rng_t rng{r, c, r, c};
-
-	//cout << "parse_rc:" << curow << "," << cucol <<"\n";
 
 	bool lr_rel = false, hr_rel = false, lc_rel = false, hc_rel = false;
 
@@ -652,13 +597,8 @@ Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, cons
 	} else if (command != "rc") {
 		parse_error();
 	}
-	//if(! ((tokes.front().second != "C")
-	//			|| (tokes.front().second != "c")))
-	//	parse_error();
-	//pop(tokes);
 
 	parse_slice(tokes, rng.lc, lc_rel, rng.hc, hc_rel);
-	//parse_slice(tokes, rng.lc, rng.hcl);
 	if(lc_rel) 
 		rng.lc += c;
 	if(hc_rel) 
@@ -671,14 +611,10 @@ Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, cons
 }
 Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
-	//Expr t{parse_t(tokes)};
 	token_t toke = tokes.front();
 	tokes.pop_front();
 	switch(toke.first) {
-		//case EOI:
-		//	return Expr();
 		case NUMBER:
-			//return Expr(stoi(toke.second));
 			return Expr(stod(toke.second));
 		case STR:
 			return Expr(toke.second);
@@ -769,7 +705,6 @@ parse_t (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 	fc.fn = &funcmap["*"];
 
 	fc.args.push_back(parse_f(tokes, predecs, r , c));
-	//return fc;
 	while(1) {
 		auto nid = tokes.front().first;
 		if(nid == '*') {
@@ -829,14 +764,11 @@ parse_e (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 	if(pos != rel + sizeof(rel)) {
 		FunCall fc;
 		fc.fn = &funcmap[tokes.front().second];
-		//cout << "parse_e 1: " << tokes.front().second << "\n";
 		tokes.pop_front();
-		//cout << "parse_e 2: " << tokes.front().second << "\n";
 		fc.args.push_back(x);
 		x = parse_e1(tokes, predecs, r, c);
 		fc.args.push_back(x);
 		return expr_funcall(fc);
-
 	} else
 		return x;
 }
@@ -855,7 +787,6 @@ void eval_dependents (CELL* root)
 		if(!cp) continue;
 		Tour tour; // we need to start again due to possible diamond shapes mucking things up
 		tour.freeze(root); // we already know its value
-		//cout << "eval_dependents: " << string_coord(rc) <<  "\n";
 		eval_cell(tour, cp);
 		CELLREF r = get_row(rc);
 		CELLREF c = get_col(rc);
@@ -876,12 +807,9 @@ num_t num_eval (Tour& tour, Expr expr)
 
 void eval_cell (Tour& tour, CELL* cp)
 {
-	//if(cp == root) throw ValErr(CYCLE);
-
 	if(tour.frozen(cp)) return;  // its value has been fully resolved
 
 	tour.touch(cp);
-	//try {
 	value_t old_value = cp->get_value_2019();
 	cp->set_value_2019(eval_expr(tour, cp->parse_tree));
 
@@ -890,12 +818,6 @@ void eval_cell (Tour& tour, CELL* cp)
 	if(old_value != cp->get_value_2019()) {
 		eval_dependents(cp);
 	}
-	//} catch(ValErr ve) {
-	//	cp->set_error(ve);
-	//}
-
-	//cp->sValue(cp->the_value_t); // now done in set_value_2019()
-	//throw_if_cyclic(cp->the_value_t);
 }
 
 value_t eval_expr (Tour& tour, Expr expr)
@@ -910,9 +832,6 @@ value_t eval_expr (Tour& tour, Expr expr)
 		auto fn = fc.fn;
 		val = (*fn)(tour, fc.args);
 	}
-
-	//throw_if_cyclic(val); // doesn't seem to help
-
 	return val;
 }
 
@@ -959,7 +878,6 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 		eval_cell(tour, cp);
 	} catch(CyclicErr ex) {
 		cp->set_cyclic();
-		//assert(is_cyclic(cp));
 	} catch(ValErr ex) {
 		cp->set_value_2019(err_t{ex.num()});
 	}
@@ -980,8 +898,6 @@ void check_result(CELLREF r, CELLREF c, string expecting)
 
 int interpret (int r, int c, string s, string expecting)
 {
-	//m_row = r; m_col = c; // bad idea, but an expedient fix
-
 	cout << "Pret: R" << r << "C" << c << ": `" << s << "'";
 	string res = set_and_eval(r,c, s);
 	cout << " => `" << res << "' ";
@@ -992,25 +908,6 @@ int interpret (int r, int c, string s, string expecting)
 int interpret(string s, string expected)
 {
 	return interpret(1, 1, s, expected);
-	/*
-	   cout << "Interpreting `" << s << "'\n";
-
-	   ranges_t predecs;
-	   Expr expr{parse_string(s, predecs)};
-	//cout << "point b\n";
-
-	value_t v = eval(nullptr, expr);
-	string res = stringify_value_file_style(v);
-
-	cout << "Evaluates to `" << res << "' ";
-	if(res == expected) 
-	cout << "PASS";
-	else
-	cout << "(s/b `" << expected << "') FAIL";
-	cout << "\n\n";
-
-	return 0;
-	*/
 }
 void print_predecs(CELLREF r, CELLREF c)
 {
