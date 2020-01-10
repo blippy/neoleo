@@ -187,6 +187,12 @@ std::string cell::get_formula_text() const
 }
 	
 
+void cell::reset()
+{
+	formula_text = "";
+	value_2019 = empty_t{};
+}
+
 void cell::dump_cell()
 {
 	cout << "Col: " << get_col(this) << "\n";

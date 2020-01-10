@@ -283,23 +283,15 @@ void io_error_msg2019_str(const std::string& str)
 static void delete_1row() { delete_row(1); }
 
 
-void
-copy_row (int rf)
-{
-	if(rf == curow) return;
-	struct rng rngf{ .lr= (CELLREF) rf, .lc=(CELLREF) 1, .hr = (CELLREF) rf, .hc = (CELLREF) MAX_COL};
-	struct rng rngt{ .lr= (CELLREF) curow, .lc=(CELLREF) 1, .hr = (CELLREF) curow, .hc = (CELLREF) MAX_COL};
-	//copy_region(&rngf, &rngt);
-}
 
 static void paste_1row () 
 { 
 	std::string response;
 	if(!invoke_std_form("Row to copy from?", response)) return;
 	bool ok;
-	long src = to_long(response, ok);
+	CELLREF src_row = to_long(response, ok);
 	if(!ok) { beep(); return;}
-	copy_row(src);
+	copy_row(curow, src_row);
 }
 
 // user has typed 'r' to perform a row action. This function

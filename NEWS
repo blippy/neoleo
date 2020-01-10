@@ -3,6 +3,8 @@ VERSION: 10.0
 STATUS:  DEV
 DATE:    ONGOING
 
+* copy row functionality reintroduced
+
 * insert and remove row fixed
 
 * 2019 parser is now the default. Old parsing removed.
