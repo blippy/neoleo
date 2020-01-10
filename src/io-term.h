@@ -66,7 +66,6 @@ extern void write_mp_options (FILE *fp);
 extern void read_mp_options (char *str);
 extern void set_var (struct rng *var, char * val);
 extern void unset_var (char *var);
-extern void show_var (char *ptr);
 extern void show_all_var (void);
 extern void write_variables (FILE * fp);
 extern void read_variables (FILE * fp);

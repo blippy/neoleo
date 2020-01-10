@@ -438,37 +438,6 @@ unset_var (char *var)
     }
 }
 
-void
-show_var (char *ptr)
-{
-	struct var *v;
-	int num;
-
-	while (*ptr == ' ')
-		ptr++;
-	for (num = 0; ptr[num] && ptr[num] != ' '; num++)
-		;
-
-	v = find_var (ptr, num);
-	if (!v || v->var_flags == VAR_UNDEF)
-	{
-		io_error_msg ("There is no '%s'", ptr);
-		return;
-	}
-	if (Global->a0)
-	{
-		if (v->v_rng.lr != v->v_rng.hr || v->v_rng.lc != v->v_rng.hc)
-			sprintf (print_buf, "%s $%s$%u:$%s$%u", v->var_name.c_str(), 
-					col_to_str (v->v_rng.lc), v->v_rng.lr, 
-					col_to_str (v->v_rng.hc), v->v_rng.hr);
-		else
-			sprintf (print_buf, "%s $%s$%u", v->var_name.c_str(), 
-					col_to_str (v->v_rng.lc), v->v_rng.lr);
-	}
-	else
-		sprintf (print_buf, "%s %s", v->var_name.c_str(), range_name (&(v->v_rng)));
-	io_info_msg (print_buf);
-}
 
 
 
