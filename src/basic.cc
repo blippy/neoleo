@@ -37,7 +37,6 @@
 #include "format.h"
 #include "io-edit.h"
 #include "sheet.h"
-#include "shell.h"
 #include "spans.h"
 #include "userpref.h"
 #include "utils.h"

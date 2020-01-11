@@ -19,7 +19,6 @@
  */
 
 #include <stdlib.h>
-//#include <string>
 #include <iomanip>
 #include <locale>
 #include <math.h>
@@ -28,6 +27,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #include "config.h"
 
@@ -1320,36 +1320,6 @@ std::string stringify_value_file_style(const value_t& val)
 	return "BAD STRING";
 }
 
-/*
-std::string stringify_value_file_style(value* val)
-{
-	std::stringstream ss;
-	switch(val->get_type()) {
-		case TYP_NUL:
-			ss << "";
-			break;
-		case TYP_STR:
-			ss <<  '"' <<  val->gString() << '"';
-			break;
-		case TYP_FLT:
-			ss << flt_to_str(val->gFlt());
-			break;
-		case TYP_INT:
-			ss << val->gInt();
-			break;
-		case TYP_BOL:
-			ss << bool_name(val->gBol());
-			break;
-		case TYP_ERR:
-			ss << ename[val->gErr()];
-			break;
-		default:
-			ASSERT_UNCALLED();
-	}
-	return ss.str();
-
-}
-*/
 
 std::string trim(const std::string& str)
 {
@@ -1360,3 +1330,24 @@ std::string trim(const std::string& str)
     return str.substr(first, (last-first+1));
 }
 
+std::string
+getline_from_fildes(int fildes, bool& eof)
+{
+	char ch;
+	std::string line;
+	while(true) {
+		eof = read(fildes, &ch, 1) == 0;
+		if(eof) return line;
+
+		if(ch == '\n') {
+			//ofs << "line: " << line << endl;
+			//exec_cmd(line, fildes);
+			//line = "";
+			return line;
+		} else {
+			line += ch;
+		}
+	}
+
+	return line;
+}

@@ -34,7 +34,6 @@ neoleo_SOURCES = \
 		 utils.cc \
 		 window.cc \
 		 main.cc \
-		 shell.cc \
 		 tests.cc \
 		 value.cc 
 	
@@ -51,10 +50,10 @@ noinst_HEADERS = basic.h cell.h \
 		 neotypes.h  numeric.h \
 		 oleofile.h  \
 		 parser-2019.h \
-		 ref.h \
-		 regions.h sheet.h spans.h \
-		 userpref.h utils.h window.h  \
-		 shell.h \
+		 ref.h regions.h \
+		 sheet.h spans.h \
 		 tbl.h tests.h \
-		 value.h
+		 userpref.h utils.h \
+		 value.h \
+		 window.h
 

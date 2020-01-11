@@ -97,3 +97,4 @@ std::string trim(const std::string& str);
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
 
+std::string getline_from_fildes(int fildes, bool& eof);

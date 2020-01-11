@@ -16,28 +16,8 @@ using std::vector;
 
 #include "shell.h"
 #include "io-headless.h"
+#include "io-utils.h"
 
-std::string
-getline_from_fildes(int fildes, bool& eof)
-{
-	char ch;
-	string line;
-	while(true) {
-		eof = read(fildes, &ch, 1) == 0;
-		if(eof) return line;
-
-		if(ch == '\n') {
-			//ofs << "line: " << line << endl;
-			//exec_cmd(line, fildes);
-			//line = "";
-			return line;
-		} else {
-			line += ch;
-		}
-	}
-
-	return line;
-}
 
 
 void

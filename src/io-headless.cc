@@ -17,13 +17,11 @@
 #include "io-headless.h"
 #include "cmd.h"
 #include "window.h"
-//#include "xcept.h"
 #include "io-curses.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "tbl.h"
 #include "utils.h"
-#include "shell.h"
 
 
 using std::cin;
