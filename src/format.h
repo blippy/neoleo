@@ -26,7 +26,7 @@
 #include "sheet.h"
 
 /* extern char * fmt_to_str (int fmt);	*/
-extern char *cell_format_string(CELL *cp);
+const char *cell_format_string(CELL *cp);
 extern int str_to_fmt (char *ptr);
 const char * jst_to_str (int jst);
 extern int chr_to_jst (int chr);

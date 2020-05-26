@@ -27,7 +27,7 @@
 #include "io-abstract.h"
 #include "io-generic.h"
 
-	static char *
+	static const char *
 fmt_to_str (int format, int precision)
 {
 	const char *ptr;
@@ -89,7 +89,7 @@ fmt_to_str (int format, int precision)
  * This was one of the calls. Nice huh ?
  * p->String = fmt_to_str ((cell_ptr = find_cell (row, col)) ? GET_FORMAT (cell_ptr) : 0);
  */
-	char *
+	const char *
 cell_format_string(CELL *cp)
 {
 	static char no_default[] = "";
@@ -106,12 +106,12 @@ cell_format_string(CELL *cp)
 struct fmt
 {
 	int fmt;
-	char **strs;
+	const char **strs;
 };
 
-static char *def_names[] =	{"default", "def", "D", 0};
-static char *hid_names[] =	{"hidden", "hid", "H", 0};
-static char *int_names[] =	{"integer", "int", "I", 0};
+static const char *def_names[] =	{"default", "def", "D", 0};
+static const char *hid_names[] =	{"hidden", "hid", "H", 0};
+static const char *int_names[] =	{"integer", "int", "I", 0};
 
 static struct fmt simple[] =
 {
@@ -124,12 +124,12 @@ static struct fmt simple[] =
 	{0, 0}
 };
 
-char *gen_names[] =	{"general.",	"gen.", "G", 0};
-char *dol_names[] =	{"dollar.",	"dol.", "$", 0};
-char *cma_names[] =	{"comma.",	"com.", ",", 0};
-char *pct_names[] =	{"percent.",	"pct.", "%", 0};
-char *fxt_names[] =	{"fixed.",	"fxt.", "F", 0};
-char *exp_names[] =	{"exponent.",	"exp.", "E", 0};
+const char *gen_names[] =	{"general.",	"gen.", "G", 0};
+const char *dol_names[] =	{"dollar.",	"dol.", "$", 0};
+const char *cma_names[] =	{"comma.",	"com.", ",", 0};
+const char *pct_names[] =	{"percent.",	"pct.", "%", 0};
+const char *fxt_names[] =	{"fixed.",	"fxt.", "F", 0};
+const char *exp_names[] =	{"exponent.",	"exp.", "E", 0};
 
 static struct fmt withprec[] =
 {
@@ -163,7 +163,7 @@ str_to_fmt (char *ptr)
 
 	for (f = simple; f->strs; f++)
 	{
-		for (strs = f->strs; *strs; strs++)
+		for (strs = (char**) f->strs; *strs; strs++)
 		{
 			if (*ptr != **strs)
 				continue;
@@ -191,7 +191,7 @@ str_to_fmt (char *ptr)
 	}
 	for (f = withprec, ret = 0; !ret && f->strs; f++)
 	{
-		for (strs = f->strs; *strs; strs++)
+		for (strs = (char**) f->strs; *strs; strs++)
 		{
 			if (*ptr != **strs)
 				continue;

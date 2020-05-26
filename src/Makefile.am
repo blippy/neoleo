@@ -5,7 +5,7 @@ AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const cha
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@
-AM_CXXFLAGS += -Wfatal-errors
+#AM_CXXFLAGS += -Wfatal-errors
 
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
