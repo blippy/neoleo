@@ -3,6 +3,8 @@ VERSION: 10.0
 STATUS:  DEV
 DATE:    ONGOING
 
+* Compilation fixes for g++ 10.1.0
+
 * copy row functionality reintroduced
 
 * insert and remove row fixed
