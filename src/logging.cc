@@ -1,9 +1,12 @@
 #include <chrono>
 #include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
+
+namespace fs = std::filesystem;
 
 #include "logging.h"
 
@@ -26,9 +29,11 @@ Log m_log;
 
 Log::Log()
 {
-	(void) system("mkdir -p $HOME/.neoleo/logs");
-	std::string logname = std::string(getenv("HOME")) 
-		+ "/.neoleo/logs/log.txt";
+	auto dir = std::string(getenv("HOME")) + "/.neoleo";
+	fs::create_directories(dir);
+	//(void) system("mkdir -p $HOME/.neoleo/logs");
+	//std::string logname = std::string(getenv("HOME")) + "/.neoleo/logs/log.txt";
+	auto logname = dir + "/log.txt";
 	m_ofs.open(logname, std::ofstream::out | std::ofstream::app);
 }
 
