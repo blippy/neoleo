@@ -77,7 +77,7 @@ class npanel_c : public nwin_c {
 
 class nform_c : public npanel_c {
 	public:
-		nform_c(char* desc, std::string& text) {
+		nform_c(const char* desc, std::string& text) {
 			m_fields[0] = new_field(1, strlen(desc), 0, 0, 0, 0);
 			m_fields[1] = new_field(1, scr_width() - strlen(desc), 0, strlen(desc), 0, 0);
 			m_fields[2] = nullptr;
@@ -120,7 +120,7 @@ class nform_c : public npanel_c {
 
 // retun true for normal exit, false if user wants to abort action
 // text_field is modified by nform_c
-static bool invoke_std_form(char* desc, std::string& text_field)
+static bool invoke_std_form(const char* desc, std::string& text_field)
 {
 	nform_c frm(desc, text_field);
 
