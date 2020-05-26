@@ -11,6 +11,8 @@ fi
 source /etc/os-release
 if [ "x$OS" = "xWindows_NT" ]; then ID=Windows_NT ; fi
 case "$ID" in
+	#arch)	OPTS="CPPFLAGS= -D_FORTIFY_SOURCE=2" ;;
+	arch)	OPTS="--with-fortify" ;;
 	ubuntu) OPTS="--with-debug --with-coverage --with-asan" ;;
 	#ubuntu) OPTS="--with-debug" ;;
 	#ubuntu) OPTS="--with-debug --with-coverage" ;;

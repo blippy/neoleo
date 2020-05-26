@@ -4,6 +4,7 @@ AM_CXXFLAGS += -std=c++17
 AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
+AM_CXXFLAGS += @FORTIFY_CXXFLAGS@
 AM_CXXFLAGS += -Wfatal-errors
 
 #YFLAGS = -d
