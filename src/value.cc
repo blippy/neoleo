@@ -70,9 +70,9 @@ bool operator!=(const value_t& lhs, const value_t& rhs)
 void test_values()
 {
 	cout << "test_values ... ";
-	value_t v1 =1, v2 = 1;
+	value_t v1 =1.0, v2 = 1.0;
 	REQUIRE(v1==v2);
-	v2 = 3;
+	v2 = 3.0;
 	REQUIRE(v1!= v2);
 	cout << "done\n";
 }

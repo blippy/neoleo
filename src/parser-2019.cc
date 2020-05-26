@@ -174,8 +174,9 @@ value_t do_plus(Tour& tour, args_t args)
 }
 value_t do_minus(Tour& tour, args_t args)
 {
-	if(args.size() == 0) return 0;
-	num_t val = num_eval(tour, args[0]);
+	num_t val = 0;
+	if(args.size() == 0) return val;
+	val = num_eval(tour, args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
 	for(int i = 1; i<args.size(); ++i) val -= num_eval(tour, args[i]);
 	return val;
@@ -191,8 +192,9 @@ value_t do_mul(Tour& tour, args_t args)
 }
 value_t do_div(Tour& tour, args_t args)
 {
-	if(args.size() == 0) return 0;
-	num_t val = num_eval(tour, args[0]);
+	num_t val = 0;
+	if(args.size() == 0) return val;
+	val = num_eval(tour, args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
 	for(int i = 1; i<args.size(); ++i) val /= num_eval(tour, args[i]);
@@ -223,12 +225,12 @@ value_t do_strlen(Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
 	string str = str_eval(tour, args[0]);
-	return str.size();
+	return (double)str.size();
 }
 
 value_t do_life(Tour& tour, args_t args)
 {
-	return 42;
+	return 42.0;
 }
 
 value_t do_sum (Tour& tour, args_t args)

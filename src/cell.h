@@ -136,7 +136,6 @@ class cell
 		void erase_predec_deps();
 		void insert_predec_deps(coord_t coord);
 		void eval_dependents();
-		void set_error(const ValErr& ve);
 		void set_cyclic();
 };
 

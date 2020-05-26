@@ -100,10 +100,6 @@ void cell::set_cyclic()
 	set_value_2019(err_t{CYCLE});
 }
 
-void cell::set_error(const ValErr& ve)
-{
-	set_value_2019(ve.num());
-}
 
 cell::cell(coord_t coord) :coord(coord)
 {
