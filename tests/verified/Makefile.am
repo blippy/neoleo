@@ -1,4 +1,4 @@
-EXTRA_DIST = \ 
+EXTRA_DIST = \
 	concata.scr.oleo \
 	ctime.scr.oleo \
 	decompile-01.scr.oleo \
