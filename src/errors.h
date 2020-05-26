@@ -53,7 +53,7 @@
 typedef struct err_t { int num; std::string what; } err_t;
 //extern char *ename[];
 #define CCC1(x) x
-inline char *ename[] = 
+inline const char *ename[] = 
 {
 	CCC1("#WHAT?"),
 	CCC1("#ERROR"), CCC1("#BAD_INPUT"), CCC1("#NON_NUMBER"), CCC1("#NON_STRING"),
