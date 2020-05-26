@@ -130,23 +130,6 @@ show_main_menu()
 	}
 }
 
-void
-test_curses_suspension()
-{
-	const char filename[] = "ncurses.dump";
-	refresh();
-	def_prog_mode();
-	scr_dump(filename);
-	//clear();
-	endwin();
-	(void) system("man man");
-	reset_prog_mode();
-	scr_restore(filename);
-	refresh();
-	doupdate();
-	unlink(filename);
-	io_repaint();
-}
 
 
 static int
