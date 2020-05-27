@@ -704,40 +704,8 @@ hit:
 }
 
 
-#if defined(SIGIO)
 
 
-static void 
-_io_nodelay (int delayp)
-{
-	panic ("Trying to curses nodelay on a system with SIGIO.");
-}
-
-#else
-
-static void 
-_io_nodelay (int delayp)
-{
-	nodelay (stdscr, delayp);
-}
-
-#endif
-
-
-static int 
-_io_get_chr (char *prompt) // TODO seems to never be called
-{
-	//log_debug("io-curses.cc:_io_get_chr() called. I thought it was never called.");
-	int x;
-	mvaddstr (Global->input, 0, prompt);
-	clrtoeol ();
-	Global->topclear = 2;
-	refresh ();
-	++term_cursor_claimed;
-	x = get_chr ();
-	--term_cursor_claimed;
-	return x;
-}
 
 #define BUFFER 10
 
@@ -1118,9 +1086,7 @@ tty_graphics (void)
 	io_input_avail = _io_input_avail;
 	io_wait_for_input = _io_wait_for_input;
 	io_read_kbd = _io_read_kbd;
-	io_nodelay = _io_nodelay;
 	io_bell = _io_bell;
-	io_get_chr = _io_get_chr;
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_move_cursor = _io_move_cursor;

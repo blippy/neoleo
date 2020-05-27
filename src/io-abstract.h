@@ -42,12 +42,6 @@ EXTERN void (*io_scan_for_input) (int ok_to_block);
 EXTERN void (*io_wait_for_input) (void);
 EXTERN int (*io_read_kbd) (char *buf, int size);
 
-/* A curses compatible interface.  These have no effect on low level
-   calls except to consume characters which io_read_kbd might
-   otherwise return. */
-EXTERN void (*io_nodelay) (int);
-EXTERN int (*io_getch) (void);
-
 /* Annoy the user: */
 EXTERN void (*io_bell) (void);
 
@@ -59,7 +53,7 @@ EXTERN void (*io_flush) (void);
 EXTERN void (*io_clear_input_before) (void);
 EXTERN void (*io_clear_input_after) (void);
 EXTERN void (*io_update_status) (void);
-EXTERN int (*io_get_chr) (char *prompt);
+//EXTERN int (*io_get_chr) (char *prompt);
 
 EXTERN void (*io_fix_input) (void);
 EXTERN void (*io_move_cursor) (void);
