@@ -38,16 +38,11 @@ extern unsigned int print_width;
 
 
 extern void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
-extern void delete_region (struct rng *where);
 extern void lock_region (struct rng *where, int locked);
 extern void format_region (struct rng *where, int fmt, int just);
 extern void move_region (struct rng *fm, struct rng *to);
 extern void copy_region (struct rng *fm, struct rng *to);
 extern void copy_values_region (struct rng *fm, struct rng *to);
 extern void sort_region (void);
-//extern int cmp_cells (int n1, int n2);
-//extern void swp_cells (int n1, int n2);
-//extern void rot_cells (int n1, int n2);
-//extern void precision_region (struct rng *, int);
 crefs_t coords_in_range (const rng_t& rng);
 crefs_t coords_in_ranges (const ranges_t& rng);

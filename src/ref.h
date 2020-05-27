@@ -24,20 +24,9 @@
 
 struct var * find_or_make_var(const char *string, int len);
 
-/* Operations that add or remove cells to the sparse array
- * may cause the (memory) addresses of other cells to change.
- * Some cell pointers are privileged enough to be relocated.
- * This is one.  The others are part of a stack of iteration 
- * states created by nested calls to find_range etc.
- *
- * When this pointer is not NULL, the variables cur_row and cur_col
- * MUST contain the (spreadsheet) address of my_cell.
- */
-extern cell * my_cell;
 
 extern void set_cell(CELLREF row, CELLREF col, const std::string& in_string);
 extern char * new_value (CELLREF row, CELLREF col, const char *string);
-extern void move_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct);
 extern void flush_old_value (void);
 extern void add_ref (CELLREF row, CELLREF col);

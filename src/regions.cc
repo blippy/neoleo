@@ -82,24 +82,6 @@ void reset_1(CELL* cp)
 	cp->clear_flags();
 	cp = 0;
 }
-/* Flush all the cells in a region */
-void
-delete_region (struct rng *where)
-{
-	Global->modified = 1;
-	for(CELL* pp:get_cells_in_range(where))
-	{
-		CELLREF r, c;
-		decoord(pp, r, c);
-		cur_row = r;
-		cur_col = c;
-		my_cell = pp;
-		pp->clear_flags();
-		push_refs(pp);
-		io_pr_cell(r, c, pp);
-	}
-	my_cell = 0;
-}
 
 /* Turn on/off the locked bits in a region */
 void

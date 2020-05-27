@@ -54,7 +54,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	if(form) text = form;
 	assert(text);
 	set_cell_input(row, col, text);
-	my_cell = 0;
+	//my_cell = 0;
 	return 0;
 }
 
