@@ -84,7 +84,6 @@ extern void do_mouse_cmd (void (*fn) ());
 extern void mouse_mark_cmd (void);
 extern void mouse_goto_cmd (void);
 extern void mouse_mark_and_goto_cmd (void);
-extern void kill_cell_cmd (void);
 extern void imove (struct rng * rng, int ch);
 extern void inc_direction (int count, int page_rule, int hack_magic);
 extern void beginning_of_row (int count);

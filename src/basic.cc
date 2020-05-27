@@ -635,23 +635,6 @@ mouse_mark_and_goto_cmd (void)
 
 /* Commands used to modify cell formulas. */
 
-void 
-kill_cell_cmd (void)
-{
-	CELL *cp;
-
-	cp = find_cell (curow, cucol);
-	if (!cp)
-		return;
-	if ((GET_LCK (cp) == LCK_DEF && default_lock == LCK_LCK) || GET_LCK (cp) == LCK_LCK)
-	{
-		io_error_msg ("Cell %s is locked", cell_name (curow, cucol));
-		return;
-	}
-	new_value (curow, cucol, S "");
-	cp->clear_flags();
-	Global->modified = 1;
-}
 
 
 void
