@@ -68,10 +68,6 @@ using std::cout;
 using std::endl;
 
 
-// mcarter
-#define _(x) (x) // TODO get rid of this line
-
-
 
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;
