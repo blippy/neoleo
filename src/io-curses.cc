@@ -723,16 +723,6 @@ _io_nodelay (int delayp)
 
 #endif
 
-static int 
-_io_getch (void) // TODO seems to never be called
-{
-	assert(false); // I think this function is never called.
-	//log_debug("io-curses.cc:_io_getch() called. I thought it was never called.");
-	char ch;
-	auto v = io_read_kbd (&ch, 1);
-	int res = v == 1 ? ch : EOF;
-	return res;
-}
 
 static int 
 _io_get_chr (char *prompt) // TODO seems to never be called
@@ -1129,7 +1119,6 @@ tty_graphics (void)
 	io_wait_for_input = _io_wait_for_input;
 	io_read_kbd = _io_read_kbd;
 	io_nodelay = _io_nodelay;
-	io_getch = _io_getch;
 	io_bell = _io_bell;
 	io_get_chr = _io_get_chr;
 	io_update_status = _io_update_status;
