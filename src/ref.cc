@@ -665,43 +665,11 @@ cell_alarm (void)
 {
 }
 
-/* All the timer_cells are going away, 'cuz everything is going away. . . */
-	void
-flush_all_timers (void)
-{
-	if (timer_active)
-	{
-		flush_fm_ref (timer_cells);
-		timer_cells = 0;
-		timer_active = 0;
-	}
-}
 
-/* Add CUR_ROW, CUR_COL to the list of active timer-cells, turning on
-   the timer_active, if it isn't already */
-	void
-add_timer_ref (cell*cp, int whereto)
-{
-	add_ref_to (cp, whereto);
-	add_ref_fm (&timer_cells, cur_row, cur_col);
-	++timer_active;
-}
 
 /* ---------- Routines and vars for dealing with the eval FIFO ------------ */
 static struct cell_buf cell_buffer;
 
-/* Start up the FIFO of cells to update */
-	void
-init_refs (void)
-{
-	//log_debug("init_refs called");
-	cell_buffer.size = FIFO_START;
-	cell_buffer.buf = (struct pos *) ck_malloc (cell_buffer.size * sizeof (struct pos));
-	bzero (cell_buffer.buf, cell_buffer.size * sizeof (struct pos));
-	cell_buffer.push_to_here = cell_buffer.buf;
-	cell_buffer.pop_frm_here = cell_buffer.buf;
-	//the_vars = hash_new ();
-}
 
 /* Push the cells in REF onto the FIFO.  This calls push_cell to do the
    actual work. . . */

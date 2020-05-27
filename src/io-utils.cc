@@ -1034,7 +1034,6 @@ clear_spreadsheet (void)
 	flush_cols ();
 	flush_variables ();
 	flush_spans();
-	flush_all_timers ();
 	for (n = 0; n < NUM_USER_FMT; n++)
 	{
 		if (u[n].p_hdr)
