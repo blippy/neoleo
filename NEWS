@@ -1,7 +1,7 @@
 ===========================================================================
 VERSION: 10.0
-STATUS:  DEV
-DATE:    ONGOING
+STATUS:  RELEASED
+DATE:    2020-05-27
 
 * Compilation fixes for g++ 10.1.0 and pesky Arch Linux fortifications
 
@@ -13,6 +13,7 @@ DATE:    ONGOING
 
 * Lots of memory leak fixes. C stuff which was a big problem has been
 replaced by more tractable C++ code.
+
  
 ===========================================================================
 VERSION: 9.0
@@ -49,6 +50,7 @@ date function has disappeared, then let me know, and I'll see what I
 can do.
 
 * Added headless command `g", for `goto-cell'
+
 
 ===========================================================================
 VERSION: 8.0.0
