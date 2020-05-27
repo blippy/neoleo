@@ -58,6 +58,5 @@ extern char * old_new_var_value (char *v_name, int v_namelen, char *v_newval);
 extern char * new_var_value (char *v_name, int v_namelen, struct rng *tmp_rng);
 void for_all_vars (void (*func) (const char *, struct var *));
 extern struct var * find_var (char *string, int len);
-extern void add_var_ref (void * vvar);
 extern void flush_variables (void);
 void push_refs (cell *cp);

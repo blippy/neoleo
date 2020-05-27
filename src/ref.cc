@@ -1037,27 +1037,6 @@ find_var (char *string, int len)
 	return ret;
 }
 
-/* This adds a reference from CUR_ROW,CUR_COL to the variable VAR
-   It calls add_ref or add_range_ref to have the cell(s) in VAR be
-   referenced by CUR_ROW,CUR_COL
-   */
-	void
-add_var_ref (void * vvar)
-{
-	struct var *var = (struct var *)vvar;
-	add_ref_fm (&(var->var_ref_fm), cur_row, cur_col);
-	switch (var->var_flags)
-	{
-		case VAR_UNDEF:
-			break;
-		case VAR_CELL:
-			add_ref (var->v_rng.lr, var->v_rng.lc);
-			break;
-		case VAR_RANGE:
-			add_range_ref (&(var->v_rng));
-			break;
-	}
-}
 
 
 /* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
