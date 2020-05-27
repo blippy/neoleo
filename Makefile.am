@@ -4,7 +4,7 @@ generaldir = $(datadir)/neoleo
 
 SUBDIRS = examples src tests tests/out tests/verified
 
-EXTRA_DIST = FAQ README.md
+EXTRA_DIST = FAQ README.md INSTALL-cygwin INSTALL-ubuntu
 general_DATA = $(EXTRA_DIST)
 
 distclean-local: distclean-local-stamp
