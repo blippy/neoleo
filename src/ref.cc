@@ -446,56 +446,6 @@ add_ref_to (cell* cp, int whereto)
 {
 }
 
-	static void
-flush_ref_to (struct ref_to **where)
-{
-	struct ref_to *tmp;
-	struct ref_to *old;
-	int n;
-	unsigned long hash;
-
-#ifdef TEST
-	if (!where || !*where)
-	{
-		io_error_msg ("null flush_ref_to(%p)", where);
-		return;
-	}
-#endif
-	old = *where;
-	*where = 0;
-	--(old->refs_refcnt);
-
-#ifdef DEFER_FREE
-	return;
-#endif
-	if (!old->refs_refcnt)
-	{
-#if 1
-		for (hash = 0, n = 0; n < old->refs_used; n++)
-			hash += (n + 1) * old->to_refs[n];
-
-		hash %= TO_HASH_NUM;
-#else
-		hash = old->refs_used;
-#endif
-		if (to_list[hash] == old)
-			to_list[hash] = old->refs_next;
-		else
-		{
-			for (tmp = to_list[hash]; tmp && tmp->refs_next != old; tmp = tmp->refs_next)
-				;
-#ifdef TEST
-			if (!tmp)
-			{
-				io_error_msg ("Old not in refs_list in flush_to_ref(%p)", old);
-				return;
-			}
-#endif
-			tmp->refs_next = old->refs_next;
-		}
-		free (old);
-	}
-}
 
 
 /* ------------- Routines for dealing with moving cells -------------------- */
@@ -506,25 +456,6 @@ static int shift_dn;
 
 
 
-	static void 
-finish_shift_var (const char *name, struct var *v)
-{
-	int n;
-	if (v->var_flags != VAR_DANGLING_RANGE)
-		return;
-
-	v->var_flags = VAR_RANGE;
-
-	if (!v->var_ref_fm)
-		return;
-
-	for (n = 0; n < v->var_ref_fm->refs_used; n++)
-	{
-		cur_row = v->var_ref_fm->fm_refs[n].ref_row;
-		cur_col = v->var_ref_fm->fm_refs[n].ref_col;
-		add_range_ref (&(v->v_rng));
-	}
-}
 
 #define RIGHT	8
 #define LEFT	4
