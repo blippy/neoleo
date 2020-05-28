@@ -159,48 +159,6 @@ push_cell (CELLREF row, CELLREF col)
 	char *
 new_var_value (char *v_name, int v_namelen, struct rng *rng)
 {
-	struct var *var;
-	int n = 0;
-	int newflag = 0;
-
-	cur_row = MIN_ROW;
-	cur_col = MIN_COL;
-
-	//newflag = ((ROWREL | COLREL) == (R_CELL | ROWREL | COLREL)) ? VAR_CELL : VAR_RANGE;
-
-	var = find_or_make_var (v_name, v_namelen);
-
-	if (var->var_ref_fm)
-	{
-		if (var->var_flags != VAR_UNDEF)
-		{
-			for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			{
-				flush_range_ref (&(var->v_rng),
-						var->var_ref_fm->fm_refs[n].ref_row,
-						var->var_ref_fm->fm_refs[n].ref_col);
-			}
-		}
-		var->v_rng = *rng;
-
-		if (var->v_rng.lr != NON_ROW)
-		{
-			for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			{
-				cur_row = var->var_ref_fm->fm_refs[n].ref_row;
-				cur_col = var->var_ref_fm->fm_refs[n].ref_col;
-				add_range_ref (&(var->v_rng));
-			}
-		}
-		for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			push_cell (var->var_ref_fm->fm_refs[n].ref_row,
-					var->var_ref_fm->fm_refs[n].ref_col);
-	}
-	else
-		var->v_rng = *rng;
-
-	var->var_flags = newflag;
-
 	return 0;
 }
 
