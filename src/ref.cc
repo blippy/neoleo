@@ -179,32 +179,6 @@ static struct ref_to *to_list[TO_HASH_NUM];
 static struct ref_to *to_tmp_ref;
 static unsigned to_tmp_ref_alloc;
 
-	void
-flush_refs (void)
-{
-	int n;
-	struct ref_fm *ftmp, *oftmp;
-	struct ref_to *ttmp, *ottmp;
-
-	for (n = 0; n < FM_HASH_NUM; n++)
-	{
-		for (ftmp = fm_list[n]; ftmp; ftmp = oftmp)
-		{
-			oftmp = ftmp->refs_next;
-			free (ftmp);
-		}
-		fm_list[n] = 0;
-	}
-	for (n = 0; n < TO_HASH_NUM; n++)
-	{
-		for (ttmp = to_list[n]; ttmp; ttmp = ottmp)
-		{
-			ottmp = ttmp->refs_next;
-			free (ttmp);
-		}
-		to_list[n] = 0;
-	}
-}
 
 
 
