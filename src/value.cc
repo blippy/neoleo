@@ -33,7 +33,7 @@ bool is_bool(const value_t& val) { return std::holds_alternative<bool_t>(val); }
 
 bool operator==(const rng_t& r1, const rng_t& r2)
 {
-	return r1.lr == r2.lr && r1.hr == r2.hr && r1.lr == r2.lr && r1.hr == r1.hr;
+	return r1.lr == r2.lr && r1.hr == r2.hr && r1.lr == r2.lr && r1.hr == r2.hr;
 }
 
 bool operator==(const value_t& v1, const value_t& v2)

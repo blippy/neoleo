@@ -80,14 +80,6 @@ run_regular_tests()
 	return all_pass;
 }
 
-bool run_cell_tests()
-{
-	CELL* cp3 = find_or_make_cell(1,1);
-
-	dump_sheet();
-	return true;
-
-}
 
 
 
@@ -109,7 +101,6 @@ headless_tests()
 	cout << "Running tests: " << option_tests_argument << "\n";
 
 	map<string, std::function<bool()> > func_map = {
-		{"cells",	run_cell_tests},
 		{"parser2019",	run_parser_2019_tests},
 		{"regular", 	run_regular_tests}
 	};

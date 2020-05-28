@@ -59,8 +59,6 @@ std::map<std::string, struct var>the_vars_1;
 	void
 set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 {
-	unsigned char *ret;
-
 	cur_row = row;
 	cur_col = col;
 
@@ -113,13 +111,6 @@ void add_range_ref (struct rng *rng)
 	make_cells_in_range (rng);
 
 }
-
-	static void
-flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
-{
-}
-
-
 
 
 	void
@@ -189,7 +180,7 @@ struct var *find_var_1(const char* str)
 find_or_make_var(const char *string, int len)
 {
 	log_debug("find_or_make_var called");
-	assert(strlen(string) >= len);
+	//assert(strlen(string) >= len);
 	std::string varname;
 	for(int i=0; i<len; ++i) varname += string[i];
 

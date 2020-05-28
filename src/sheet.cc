@@ -34,11 +34,6 @@ using std::vector;
 
 typedef std::vector<cell_t*> cellmap_t;
 
-static void log_debug_1(std::string msg)
-{
-	if constexpr(true) 
-		log_debug("DBG:sheet.cc:" + msg);
-}
 
 /* mcarter 30-Apr-2018
  * Counterintuitively, most functions loop over column, then row. This

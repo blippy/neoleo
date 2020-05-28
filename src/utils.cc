@@ -362,11 +362,9 @@ strincmp (const char * s1, const char * s2, size_t n)
 	char *
 err_msg (void)
 {
-	int n;
+	int n = errno;
 	static char buf[80];	/* Static to be able to return its address */
-	char *p;
 
-	n = errno;
 
 #ifdef	HAVE_STRERROR
 	p = strerror(n);
