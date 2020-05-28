@@ -206,49 +206,6 @@ flush_refs (void)
 	}
 }
 
-	static struct ref_fm *
-find_fm_ref (void)
-{
-	struct ref_fm *tmp;
-	int n;
-	unsigned long hash;
-
-#if 1
-	for (hash = 0, n = 0; n < fm_tmp_ref->refs_used; n++)
-	{
-		hash += (n + 1) * (((fm_tmp_ref->fm_refs[n].ref_row) << BITS_PER_CELLREF) +
-				fm_tmp_ref->fm_refs[n].ref_col);
-	}
-	hash %= FM_HASH_NUM;
-#else
-	hash = fm_tmp_ref->refs_used;
-#endif
-	for (tmp = fm_list[hash]; tmp; tmp = tmp->refs_next)
-	{
-		if (tmp->refs_used != fm_tmp_ref->refs_used)
-			continue;
-		if (!bcmp (tmp->fm_refs, fm_tmp_ref->fm_refs, fm_tmp_ref->refs_used * sizeof (struct ref_array)))
-		{
-			tmp->refs_refcnt++;
-			return tmp;
-		}
-#ifdef TEST
-		else
-			fm_misses++;
-#endif
-	}
-
-	tmp = (ref_fm*) ck_malloc (sizeof (struct ref_fm) + (fm_tmp_ref->refs_used - 1) * sizeof (struct ref_array));
-	tmp->refs_next = fm_list[hash];
-	fm_list[hash] = tmp;
-	tmp->refs_refcnt = 1;
-	tmp->refs_used = fm_tmp_ref->refs_used;
-	if (tmp->refs_used)
-		bcopy (fm_tmp_ref->fm_refs, tmp->fm_refs,
-				tmp->refs_used * sizeof (struct ref_array));
-
-	return tmp;
-}
 
 	static void 
 flush_fm_ref (struct ref_fm *old)
