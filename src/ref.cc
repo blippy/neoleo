@@ -209,51 +209,6 @@ flush_refs (void)
 
 
 
-	static struct ref_to *
-find_to_ref (void)
-{
-	struct ref_to *tmp;
-	int n;
-	unsigned long hash;
-
-	/* io_error_msg("find_to_ref %u %u",to_tmp_ref->refs_used,to_tmp_ref->to_refs[0]); */
-#if 1
-	for (hash = 0, n = 0; n < to_tmp_ref->refs_used; n++)
-		hash += (n + 1) * to_tmp_ref->to_refs[n];
-
-	hash %= TO_HASH_NUM;
-#else
-	hash = to_tmp_ref->refs_used;
-#endif
-	for (tmp = to_list[hash]; tmp; tmp = tmp->refs_next)
-	{
-		/* io_error_msg("%p(%u)->%p  %u %u",tmp,tmp->refs_refcnt,
-		   tmp->refs_next,tmp->refs_used,tmp->to_refs[0]); */
-		if (tmp->refs_used != to_tmp_ref->refs_used)
-			continue;
-		if (!bcmp (tmp->to_refs, to_tmp_ref->to_refs, to_tmp_ref->refs_used))
-		{
-			/* io_error_msg("Hit!"); */
-			tmp->refs_refcnt++;
-			return tmp;
-		}
-#ifdef TEST
-		else
-			to_misses++;
-#endif
-	}
-
-	/* io_error_msg("Miss. .."); */
-	tmp = (ref_to*) ck_malloc (sizeof (struct ref_to) + to_tmp_ref->refs_used - 1);
-	tmp->refs_next = to_list[hash];
-	to_list[hash] = tmp;
-	tmp->refs_refcnt = 1;
-	tmp->refs_used = to_tmp_ref->refs_used;
-	if (tmp->refs_used)
-		bcopy (to_tmp_ref->to_refs, tmp->to_refs, tmp->refs_used);
-
-	return tmp;
-}
 
 	void
 add_ref_to (cell* cp, int whereto)
