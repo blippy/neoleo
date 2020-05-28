@@ -19,8 +19,6 @@
 #include "tests.h"
 #include "utils.h"
 
-//#include "xcept.h"
-
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -29,20 +27,9 @@ using std::vector;
 
 using namespace std::literals;
 
-/* A bland signal handler. */
-static RETSIGTYPE
-got_sig (int sig)
-{
-}
-
-
-
 
 static bool	option_tests = false;
-
 std::string	option_tests_argument = "regular";
-static char	option_separator = '\t';
-static char	*option_format = NULL;
 
 bool get_option_tests() { return option_tests;}
 

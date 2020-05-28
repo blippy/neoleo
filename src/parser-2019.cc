@@ -160,7 +160,7 @@ bool parse_error()
 	return true;
 }
 
-void nargs_eq(const args_t& args, int n)
+void nargs_eq(const args_t& args, size_t n)
 {
 	if(args.size() != n)
 		throw ValErr(BAD_FUNC);
@@ -178,7 +178,7 @@ value_t do_minus(Tour& tour, args_t args)
 	if(args.size() == 0) return val;
 	val = num_eval(tour, args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
-	for(int i = 1; i<args.size(); ++i) val -= num_eval(tour, args[i]);
+	for(size_t i = 1; i<args.size(); ++i) val -= num_eval(tour, args[i]);
 	return val;
 }
 value_t do_mul(Tour& tour, args_t args)
@@ -197,7 +197,7 @@ value_t do_div(Tour& tour, args_t args)
 	val = num_eval(tour, args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
-	for(int i = 1; i<args.size(); ++i) val /= num_eval(tour, args[i]);
+	for(size_t i = 1; i<args.size(); ++i) val /= num_eval(tour, args[i]);
 	return val;
 }
 
@@ -398,7 +398,6 @@ tokenise (string str)
 	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
 	const char* cstr = str.c_str();
 	int pos = 0;
-	auto it = str.begin();
 	string token;
 	char ch;
 	auto build_token = [&token, &ch, &pos, cstr] () { token += ch; ch = cstr[++pos]; };
@@ -865,7 +864,7 @@ Expr parse_string (const std::string& s, ranges_t& predecs, CELLREF r, CELLREF c
 		//cout << "tokes remaining: " << tokes.size() << "\n";
 		if(tokes.size() !=1) parse_error(); // remaining token s/b EOI
 		return x;
-	} catch (ValErr ve) {
+	} catch (const ValErr& ve) {
 		err_t err{ve.num()};
 		return Expr{err};
 	}
@@ -879,9 +878,9 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 	try {
 		Tour tour;
 		eval_cell(tour, cp);
-	} catch(CyclicErr ex) {
+	} catch(const CyclicErr& ex) {
 		cp->set_cyclic();
-	} catch(ValErr ex) {
+	} catch(const ValErr& ex) {
 		cp->set_value_2019(err_t{ex.num()});
 	}
 
