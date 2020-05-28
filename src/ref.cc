@@ -141,14 +141,6 @@ new_value (CELLREF row, CELLREF col, const char *string)
 /* --------- Routines for dealing with cell references to other cells ------ */
 
 
-/* Record in the argument cell that cur_row/col depends on it. */
-
-	void
-add_ref (CELLREF row, CELLREF col)
-{
-	CELL *other_cell = find_or_make_cell (row, col);
-}
-
 /* like add_ref, except over a range of arguments and with memory
  * management weirdness. 
  */
