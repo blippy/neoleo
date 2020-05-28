@@ -66,7 +66,6 @@ oleo_read_file (FILE *fp, int ismerge)
 	int lineno;
 	char cbuf[1024];
 	char expbuf[1024];
-	char *vname, *vval;
 	int vlen = 0;
 	int cprot;
 	char *cexp, *cval;
@@ -74,11 +73,9 @@ oleo_read_file (FILE *fp, int ismerge)
 	struct rng rng;
 	int fmt = 0, prc = 0;
 	int jst = 0;
-	struct font_memo * fnt = 0;
 	struct font_memo ** fnt_map = 0;
 	int fnt_map_size = 0;
 	int fnt_map_alloc = 0;
-	int font_spec_in_format = 1;	/* Reset if we discover this is a v1.1 file. */
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
 	int old_a0;
@@ -149,7 +146,7 @@ oleo_read_file (FILE *fp, int ismerge)
 			case 'F':		/* Format field */
 				vlen = 0;
 				ptr++;
-				fnt = 0;	/* The font must be explicitly overriden for a cell. */
+				//fnt = 0;	/* The font must be explicitly overriden for a cell. */
 				while (*ptr)
 				{
 					if (*ptr != ';')
@@ -234,7 +231,7 @@ oleo_read_file (FILE *fp, int ismerge)
 										lineno, id);
 								break;
 							}
-							fnt = fnt_map[id];
+							//fnt = fnt_map[id];
 							break;
 						}
 
@@ -736,9 +733,7 @@ void write_cells(FILE* fp)
 		CELLREF c = get_col(coord);
 		assert(c>0);
 
-		char *ptr;
 		int f1, j1;
-		char p_buf[40];
 
 		f1 = GET_FORMAT (cp);
 		j1 = GET_JST (cp);
@@ -794,10 +789,7 @@ void
 oleo_write_file(FILE *fp, struct rng *rng)
 {
 	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
-	unsigned short w;
-	/* struct var *var; */
-	int old_a0, i, fnt_map_size = 0;
-	char	*s;
+	int old_a0;
 
 	(void) fprintf (fp, "# This file was created by Neoleo\n");
 
