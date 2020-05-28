@@ -137,42 +137,6 @@ new_value (CELLREF row, CELLREF col, const char *string)
 }
 
 
-
-
-
-
-
-/* Used only in regions.c for copy_region. */
-	void
-copy_cell (CELLREF rf, CELLREF cf, CELLREF rt, CELLREF ct)
-{
-	CELL *cpf = find_cell (rf, cf);
-	cur_row = rt;
-	cur_col = ct;
-	my_cell = find_cell (cur_row, cur_col);
-	if(!cpf) return;
-	if (!my_cell)
-	{
-		my_cell = find_or_make_cell (cur_row, cur_col);
-		cpf = find_cell (rf, cf);	/* FOO */
-	}
-
-	if (!cpf)
-		return;
-
-	my_cell->cell_flags = cpf->cell_flags;
-
-
-
-	cpf->set_formula_text(my_cell->get_formula_text());
-
-	io_pr_cell (cur_row, cur_col, my_cell);
-
-	push_refs(my_cell);
-	my_cell = 0;
-}
-
-
 /* --------- Routines for dealing with cell references to other cells ------ */
 
 
