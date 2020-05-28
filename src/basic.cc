@@ -49,46 +49,6 @@ const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
 const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
 
 #define S (char *)
-static char * motion_name[] =  
-{
-	S "up",
-	S "down",
-	S "right",
-	S "left",
-	S "up right",
-	S "up left",
-	S "down right",
-	S "down left",
-	S "no motion"
-};
-
-
-/* This table ought to be a user parameter. */
-static enum motion_magic complementary_motion[] = 
-{
-	magic_right,
-	magic_right,
-	magic_down,
-	magic_down,
-	magic_right,
-	magic_right,
-	magic_right,
-	magic_right,
-	magic_no_motion,
-};
-
-static enum motion_magic opposite_motion[] = 
-{
-	magic_down,
-	magic_up,
-	magic_left,
-	magic_right,
-	magic_down_left,
-	magic_down_right,
-	magic_up_left,
-	magic_up_right,
-	magic_no_motion,
-};
 
 
 /* Indexed by MAGIC + 1 */
@@ -326,8 +286,8 @@ other_window (void)
 int
 set_window_option (int set_opt, char *text)
 {
-	int n;
 	int stat;
+	int n;
 	static struct opt
 	{
 		char *text;
@@ -379,7 +339,8 @@ set_window_option (int set_opt, char *text)
 	}
 	else
 	{
-		for (n = 0; n < sizeof (opts) / sizeof (struct opt); n++)
+		constexpr int nopts = sizeof (opts) / sizeof (struct opt);
+		for (n = 0; n < nopts; n++)
 			if (!stricmp (text, opts[n].text))
 			{
 				if (set_opt)
@@ -389,7 +350,7 @@ set_window_option (int set_opt, char *text)
 				break;
 			}
 
-		if (n == sizeof (opts) / sizeof (struct opt))
+		if (n == nopts)
 			return 0;
 	}
 	return 1;
@@ -491,6 +452,7 @@ goto_cell (struct rng * rng)
 
 
 
+/*
 static void 
 mk_for_extreme (struct rng * rng)
 {
@@ -505,6 +467,8 @@ mk_for_extreme (struct rng * rng)
 		rng->hr = curow;
 	}
 }
+*/
+
 void
 mark_cell_cmd (int popmk)
 {
@@ -731,7 +695,6 @@ set_region_formula (struct rng * rng, char * str)
 }
 
 
-static char load_hooks_string[] = "load_hooks";
 
 /*
  * Extended this to detect the extension of a file and have the right
@@ -934,7 +897,7 @@ void
 set_region_format (struct rng * rng, int fmt)
 {
 	int format = (fmt & FMT_MASK) >> FMT_SHIFT;
-	int precision = fmt & PREC_MASK;
+	//int precision = fmt & PREC_MASK;
 
 	format_region (rng, format, -1); 
 	//precision_region(rng, precision);
