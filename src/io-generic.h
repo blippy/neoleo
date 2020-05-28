@@ -20,4 +20,4 @@
 extern void (*write_file) (FILE *, struct rng *);
 extern void (*read_file) (FILE *, int);
 extern int set_window_option (int set_opt, char *text);
-extern const int rowmagic[], colmagic[];
+//extern const int rowmagic[], colmagic[];

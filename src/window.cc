@@ -25,7 +25,7 @@
 #include "global.h"
 #include "convert.h"
 #include "window.h"
-#include "io-generic.h"
+//#include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
 #include "io-term.h"
@@ -34,6 +34,10 @@
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
+
+/* Used by motion commands. */
+const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
+const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
 
 /* Low level window operators. */
 

@@ -44,9 +44,6 @@
 using std::cout;
 using std::endl;
 
-/* Used by motion commands. */
-const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
-const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
 
 #define S (char *)
 
