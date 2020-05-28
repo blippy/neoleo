@@ -1,8 +1,6 @@
 #pragma once
 
 /*
- * $Id: utils.h,v 1.4 2000/08/10 21:02:51 danny Exp $
- *
  * Copyright (c) 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +24,7 @@
 #include "numeric.h"	
 
 std::string format(const std::string& format, ...);
-extern char *argv_name;
+//extern char *argv_name;
 extern int __make_backups;
 extern int __backup_by_copying;
 
@@ -41,7 +39,7 @@ extern void ck_free (VOIDSTAR);
 extern num_t astof(char **sp);
 extern int strincmp (const char *, const char *, size_t);
 
-extern char *mk_sprintf (const char *, ...);
+//extern char *mk_sprintf (const char *, ...);
 
 
 extern void get_usr_stats (int, char **);
@@ -51,13 +49,13 @@ extern FILE *xopen_with_backup (char *,const char *);
 extern int xclose (FILE *);
 extern char *err_msg (void);
 
-extern void init_mem (void);
-extern void init_eval (void);
-extern void init_refs (void);
+//extern void init_mem (void);
+//extern void init_eval (void);
+// extern void init_refs (void);
 
 std::string pad_right(const std::string& s, int width);
 std::string pad_left(const std::string& n, int width);
 std::string spaces(int n);
 size_t strlen(const std::string& s);
 int stricmp (const char *, const char *);
-char* dupe(const char* str);
+//char* dupe(const char* str);
