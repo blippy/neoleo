@@ -146,39 +146,14 @@ add_ref_to (cell* cp, int whereto)
 
 
 
-/* ------------- Routines for dealing with moving cells -------------------- */
-
-static struct rng *shift_fm;
-static int shift_ov;
-static int shift_dn;
-
-
-
-
-#define RIGHT	8
-#define LEFT	4
-#define BOTTOM	2
-#define TOP	1
-
-
 
 /* ---------- Routines and vars for dealing with the eval FIFO ------------ */
 
 
-/* Push the cells in REF onto the FIFO.  This calls push_cell to do the
-   actual work. . . */
 void push_refs (cell *cp)
 {
 }
 
-/* Push a cell onto the FIFO of cells to evaluate, checking for cells
-   that are already on the FIFO, etc.
-
-   This does not implement best-order recalculation, since there may be
-   intersecting branches in the dependency tree, however, it's close enough
-   for most people.
-   */
-static void cell_buffer_contents (FILE *fp);
 
 	void
 push_cell (CELLREF row, CELLREF col)
