@@ -297,53 +297,6 @@ flush_fm_ref (struct ref_fm *old)
 }
 
 
-	static void
-flush_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
-{
-	struct ref_fm *from;
-	int n;
-
-	from = *where;
-#ifdef TEST
-	if (!from)
-	{
-		io_error_msg ("No refs in flush_ref_fm(%p,%u,%u)", where, r, c);
-		return;
-	}
-#endif
-	if (!from)
-		return;
-	if (from->refs_used == 1)
-	{
-		*where = 0;
-		flush_fm_ref (from);
-		return;
-	}
-	fm_tmp_ref->refs_used = from->refs_used - 1;
-	n = 0;
-	while (n < from->refs_used
-			&& (from->fm_refs[n].ref_row < r
-				|| (from->fm_refs[n].ref_row == r && from->fm_refs[n].ref_col < c)))
-	{
-		fm_tmp_ref->fm_refs[n] = from->fm_refs[n];
-		n++;
-	}
-#ifdef TEST
-	if (n == from->refs_used)
-	{
-		io_error_msg ("No refs from %u,%u in %p in flush_refs_fm", r, c, where);
-		return;
-	}
-#endif
-	while (n < fm_tmp_ref->refs_used)
-	{
-		fm_tmp_ref->fm_refs[n] = from->fm_refs[n + 1];
-		n++;
-	}
-	*where = find_fm_ref ();
-	flush_fm_ref (from);
-}
-
 
 	static struct ref_to *
 find_to_ref (void)
