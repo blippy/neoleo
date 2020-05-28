@@ -3,15 +3,11 @@
 #include "logging.h"
 #include "spans.h"
 
-void flush_span (span_t& sp)
-{
-	sp.clear();
-}
 
 void flush_spans ()
 {
-	flush_span(the_wids);
-	flush_span(the_hgts);
+	the_wids.clear();
+	the_hgts.clear();
 }
 
 void
@@ -67,25 +63,6 @@ set_width (CELLREF col, int wid)
 	the_wids[col] = wid;
 	io_update_width(col, wid);
 }
-
-/*
-class spanner_c {
-	public:
-		spanner_c(span_t& span, int lo, int hi) : span(span), lo(lo), hi(hi), n(lo) {};
-		unsigned short next(int& pos) {
-			unsigned short ret =0;
-			while
-			get_span(span, n, 0, 0);
-			return ret;
-
-		};
-	private:
-		int lo, hi, n;
-		span_t span;
-};
-*/
-
-
 
 
 span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi)
