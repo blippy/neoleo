@@ -410,27 +410,6 @@ set_var (struct rng *val, char *var)
 		io_error_msg ("Can't set-var %s: %s\n", var, ret);
 }
 
-	void
-unset_var (char *var)
-{
-	struct rng tmp_rng;
-	struct var *v;
-
-	v = find_var(var, strlen(var));
-
-	if (!v || v->var_flags == VAR_UNDEF)
-	{
-		io_error_msg ("No variable named %s exists.", var);
-	}
-	else
-	{
-		tmp_rng.lr = tmp_rng.hr = NON_ROW;
-		tmp_rng.lc = tmp_rng.hc = NON_COL;
-		v = find_or_make_var(var, strlen(var));
-		v->v_rng = tmp_rng;
-		v->var_flags = VAR_UNDEF;
-	}
-}
 
 
 
@@ -462,72 +441,6 @@ write_variables (FILE * fp)
 	}
 }
 
-	void
-read_variables (FILE * fp)
-{
-	char buf[1024];
-	int lineno = 0;
-	while (fgets (buf, 1024, fp))
-	{
-		char * ptr;
-		for (ptr = buf; *ptr && *ptr != '\n'; ++ptr)
-			;
-		*ptr = '\0';
-		for (ptr = buf; isspace (*ptr); ptr++)
-			;
-		if (!*ptr || (*ptr == '#'))
-			continue;
-		{
-			char * var_name = ptr;
-			int var_name_len;
-			char * value_string;
-			while (*ptr && *ptr != '=')
-				++ptr;
-			if (!*ptr)
-			{
-				io_error_msg ("read-variables: format error near line %d.", lineno);
-				return;
-			}
-			var_name_len = ptr - var_name;
-			++ptr;
-			value_string = ptr;
-			{
-				struct var * var = find_var (var_name, var_name_len);
-				if (var)
-				{
-					switch (var->var_flags)
-					{
-						case VAR_UNDEF:
-							break;
-						case VAR_CELL:
-							{
-								char * error = new_value (var->v_rng.lr, var->v_rng.lc,
-										value_string); 
-								if (error)
-								{
-									io_error_msg (error);
-									return;	/* actually, io_error_msg never returns. */
-								}
-								else
-									Global->modified = 1;
-								break;
-							}
-						case VAR_RANGE:
-							io_error_msg ("read-variables (line %d): ranges not supported.",
-									lineno);
-							return;
-					}
-				}
-			}
-		}
-		++lineno;
-	}
-	if (!feof (fp))
-	{
-		io_error_msg ("read-variables: read error near line %d.", lineno);
-		return;
-	}
-}
 
 
 	int 

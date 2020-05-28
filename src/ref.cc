@@ -351,20 +351,6 @@ find_or_make_var(const char *string, int len)
 	return find_var_1(varname.c_str());
 }
 
-/* Like find-or-make-var except returns 0 if it doesn't exist */
-	struct var *
-find_var (char *string, int len)
-{
-	//log_debug("find_var called");
-	int ch;
-	struct var *ret;
-
-	ch = string[len];
-	string[len] = '\0';
-	ret = find_var_1(string);
-	string[len] = ch;
-	return ret;
-}
 
 
 
