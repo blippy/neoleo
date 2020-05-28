@@ -207,52 +207,6 @@ flush_refs (void)
 }
 
 
-	static void 
-flush_fm_ref (struct ref_fm *old)
-{
-	struct ref_fm *tmp;
-	int n;
-	unsigned long hash;
-
-	--(old->refs_refcnt);
-
-#ifdef DEFER_FREE
-	return;
-#endif
-	if (!old->refs_refcnt)
-	{
-#if 1
-		for (hash = 0, n = 0; n < old->refs_used; n++)
-		{
-			hash += (n + 1) * (((old->fm_refs[n].ref_row) << BITS_PER_CELLREF) +
-					old->fm_refs[n].ref_col);
-		}
-		hash %= FM_HASH_NUM;
-#else
-		hash = old->refs_used;
-#endif
-		if (fm_list[hash] == old)
-			fm_list[hash] = old->refs_next;
-		else
-		{
-			for (tmp = fm_list[hash];
-					tmp && tmp->refs_next != old;
-					tmp = tmp->refs_next)
-				;
-#ifdef TEST
-			if (!tmp)
-			{
-				io_error_msg ("Old not in refs_list in flush_fm_ref(%p)", old);
-				return;
-			}
-#endif
-			if (tmp)
-				tmp->refs_next = old->refs_next;
-		}
-		free (old);
-	}
-}
-
 
 
 	static struct ref_to *
