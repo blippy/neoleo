@@ -34,9 +34,12 @@ using keymap_t = std::map<int, fn_t>;
 
 
 int scr_width() {
+	/*
 	int x,y;
 	getmaxyx(stdscr, y, x);
 	return x;
+	*/
+	return getmaxx(stdscr);
 }
 
 class nwin_c {
@@ -179,8 +182,6 @@ void edit_cell2019()
 	if(!ok) return;
 
 	if(use_parser_2019) {
-		// cobbled together from parser-2019.cc
-		CELL* cp = find_or_make_cell(curow, cucol);
 		set_and_eval(curow, cucol, formula, true);
 	} else
 		edit_cell_str(formula);
