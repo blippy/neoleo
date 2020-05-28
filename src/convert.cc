@@ -6,7 +6,7 @@
 
 double to_double(const char* strptr, bool &ok)
 {
-	double d;
+	double d = 666.0;
 	ok = true;
 	size_t idx;
 	try { 
@@ -19,7 +19,7 @@ double to_double(const char* strptr, bool &ok)
 
 double to_double(CELL* cp)
 {
-	double f;
+	double f = 666.0;
 	value_t v = cp->get_value_2019();
 	switch(cp->get_type()) {
 		case TYP_NUL: return 0;
@@ -41,7 +41,7 @@ double to_double(CELL* cp)
 
 long to_long(const char* strptr, bool &ok)
 {
-	long n;
+	long n = 666;
 	ok = true;
 	size_t idx;
 	try { 
