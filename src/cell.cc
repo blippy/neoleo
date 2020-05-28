@@ -43,13 +43,6 @@ using std::cout;
 using std::endl;
 using std::get;
 
-static void log_debug_1(std::string msg)
-{
-	if constexpr(true)
-		log_debug("DBG:cells.cc:" + msg);
-}
-
-
 
 void
 cell::update_cell()
@@ -183,29 +176,12 @@ std::string cell::get_formula_text() const
 }
 	
 
-/*
-void cell::reset()
-{
-	formula_text = "";
-	value_2019 = empty_t{};
-}
-*/
 
 void cell::dump_cell()
 {
 	cout << "Col: " << get_col(this) << "\n";
 	cout << "Row: " << get_row(this) << "\n";
-	// TODO
-	//value val = get_value();
-	//cout << "Val: " << stringify_value_file_style(&val) << "\n";
 	cout << "Frm: " << get_formula_text() << "\n";
-
-
-	auto dump_coords = [](std::string field, crefs_t& coords) {
-		for(const auto& coord: coords)
-			cout << field << ": R" << get_row(coord) << "C" << get_col(coord) << "\n";
-	};
-
 	cout << "\n";
 }
 
