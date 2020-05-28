@@ -260,30 +260,6 @@ eval_next_cell (void)
 	return loop_counter;
 }
 
-#if 1
-	static void
-cell_buffer_contents (FILE *fp)
-{
-	struct pos *ptr;
-
-	if (!fp)
-		fp = stdout;
-	if (cell_buffer.pop_frm_here != cell_buffer.push_to_here)
-	{
-		ptr = cell_buffer.pop_frm_here;
-		for (;;)
-		{
-			/* fprintf (fp, "Ref to %s\r\n", cell_name (ptr->row, ptr->col)); */
-			fprintf (fp, " -> %d %d\n", ptr->row, ptr->col);
-			if (++ptr == cell_buffer.buf + cell_buffer.size)
-				ptr = cell_buffer.buf;
-			if (ptr == cell_buffer.push_to_here)
-				break;
-		}
-	}
-}
-
-#endif
 
 
 /* This sets the variable V_NAME to V_NEWVAL
