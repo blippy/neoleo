@@ -87,7 +87,6 @@ show_usage (void)
 const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
-  -p, --parser             use experimental 2019 parser
   -V, --version            output version information and exit
   -T, --tests [x]          run test suite x
 
@@ -122,9 +121,6 @@ parse_command_line(int argc, char **argv)
 			case 'h':
 				show_usage ();
 				exit (0);
-				break;
-			case 'p':
-				use_parser_2019 = true;
 				break;
 			case 'T':
 				option_tests = true;

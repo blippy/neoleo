@@ -7,11 +7,8 @@
 #include <variant>
 #include <vector>
 
-//#include "cell.h"
 #include "neotypes.h"
 #include "value.h"
-
-inline bool use_parser_2019 = true;
 
 typedef std::pair<int, std::string> token_t;
 typedef std::deque<token_t> tokens_t;

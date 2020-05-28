@@ -180,11 +180,7 @@ void edit_cell2019()
 	std::string formula{ formula_text(curow, cucol)};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
-
-	if(use_parser_2019) {
-		set_and_eval(curow, cucol, formula, true);
-	} else
-		edit_cell_str(formula);
+	set_and_eval(curow, cucol, formula, true);
 	recalculate(1);
 }
 

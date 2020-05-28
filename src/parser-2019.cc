@@ -928,8 +928,6 @@ int run_parser_2019_tests ()
 {
 	cout << "Running parser 2019 tests\n";
 
-	use_parser_2019 = true;
-
 #if 1
 	interpret("sqrt(4+5)+2", "5");
 	//return 0;
