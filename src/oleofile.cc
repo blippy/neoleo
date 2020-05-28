@@ -535,9 +535,10 @@ oleo_read_file (FILE *fp, int ismerge)
 				}
 				if (cprot)
 					SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
-				if (ismerge)
-					push_cell (crow, ccol);
-				/* ... */
+				if (ismerge) {
+					ASSERT_UNCALLED();
+					//push_cell (crow, ccol);
+				}
 				break;
 			case 'E':	/* End of input ?? */
 				break;

@@ -114,6 +114,7 @@ extern int default_lock;
 /* new_value() calls set_cell, but refuses to change locked cells, and
    updates and prints the results.  It returns an error msg on error. . .
    */
+
 	char *
 new_value (CELLREF row, CELLREF col, const char *string)
 {
@@ -462,39 +463,6 @@ static int shift_dn;
 #define BOTTOM	2
 #define TOP	1
 
-/*
- * This iterates over the region FM, preparing the cells there to be shifted
- * OV(er) and D(ow)N.
- *
- * After this, the ref_fm and ref_to lists of a cell within the region should
- * be appropriate to the location that cell will be shifted to.
- * 
- * Variables and references to variables are also shifted.
- */
-	void
-shift_outside (struct rng *fm, int dn, int ov)
-{
-}
-
-/* The formula in cell my_cell has moved by DN down and OV over, adjust
-   everything so it'll still work */
-	void
-shift_formula (int r, int c, int dn, int ov)
-{
-}
-
-
-/* ---------------- Routines for dealing with async functions -------------- */
-
-
-/* This function is called when the alarm has gone off (but not from inside
- * the signal handler!). It schedules timer_cells->fm_refs for recalc. 
- */
-	void
-cell_alarm (void)
-{
-}
-
 
 
 /* ---------- Routines and vars for dealing with the eval FIFO ------------ */
@@ -516,18 +484,10 @@ void push_refs (cell *cp)
    */
 static void cell_buffer_contents (FILE *fp);
 
-void push_cell(coord_t coord)
-{
-	CELLREF row = get_row(coord);
-	CELLREF col = get_col(coord);
-}
-void push_cell(cell* cp)
-{
-}
-
 	void
 push_cell (CELLREF row, CELLREF col)
 {
+	ASSERT_UNCALLED();
 }
 
 /* Pop a cell off CELL_BUFFER, and evaluate it, displaying the result. . .
@@ -583,79 +543,6 @@ cell_buffer_contents (FILE *fp)
 
 #endif
 
-#if 0
-/* ----------------- Routines for dealing with variables ------------------ */
-
-/* Either this needs to be redone as a wrapper for the new new_var_value,
- * or the invocations of it in oleofile.c, sc.c and sylk.c need to be
- * adjusted so it can be deleted altogether.  The new version has 
- * been introduced to improve the interface of new set-var.  The
- * only cost has been the need to introduce and unset-var command,
- * since the '@' argument type now required by set-var will
- * only recognize a valid region.
- */
-	char *
-old_new_var_value (char *v_name, int v_namelen, char *v_newval)
-{
-	struct var *var;
-	int n;
-	int newflag;
-	struct rng tmp_rng;
-
-	cur_row = MIN_ROW;
-	cur_col = MIN_COL;
-	if (v_newval && *v_newval)
-	{
-		n = parse_cell_or_range (&v_newval, &tmp_rng);
-		if (!n)
-			return (char *) "Can't parse cell or range";
-		if (*v_newval)
-			return (char *) "Junk after cell or range";
-		newflag = ((n | ROWREL | COLREL) == (R_CELL | ROWREL | COLREL)) ? VAR_CELL : VAR_RANGE;
-	}
-	else
-	{
-		tmp_rng.lr = tmp_rng.hr = NON_ROW;
-		tmp_rng.lc = tmp_rng.hc = NON_COL;
-		newflag = VAR_UNDEF;
-	}
-
-	var = find_or_make_var (v_name, v_namelen);
-
-	if (var->var_ref_fm)
-	{
-		if (var->var_flags != VAR_UNDEF)
-		{
-			for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			{
-				flush_range_ref (&(var->v_rng),
-						var->var_ref_fm->fm_refs[n].ref_row,
-						var->var_ref_fm->fm_refs[n].ref_col);
-			}
-		}
-		var->v_rng = tmp_rng;
-
-		if (var->v_rng.lr != NON_ROW)
-		{
-			for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			{
-				cur_row = var->var_ref_fm->fm_refs[n].ref_row;
-				cur_col = var->var_ref_fm->fm_refs[n].ref_col;
-				add_range_ref (&(var->v_rng));
-			}
-		}
-		for (n = 0; n < var->var_ref_fm->refs_used; n++)
-			push_cell (var->var_ref_fm->fm_refs[n].ref_row,
-					var->var_ref_fm->fm_refs[n].ref_col);
-	}
-	else
-		var->v_rng = tmp_rng;
-
-	var->var_flags = newflag;
-
-	return 0;
-}
-#endif
 
 /* This sets the variable V_NAME to V_NEWVAL
  * It returns error msg, or 0 on success.
