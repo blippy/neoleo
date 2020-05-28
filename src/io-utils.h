@@ -23,47 +23,24 @@
 #include "cell.h"
 #include "numeric.h"
 
-extern int get_abs_rng (char **pptr, struct rng *retp);
-
-
 extern char numb_oflo[];
-extern char *bname[];
-extern char print_buf[];
 
-extern void init_infinity (void);
-extern char * flt_to_str (num_t val);
-extern char * flt_to_str_fmt (CELL *cp);
-extern char * long_to_str (long val);
-extern std::string print_cell (CELL *cp);
+void OleoSetEncoding(const char *);
+void init_infinity (void);
+void OleoUserPrefEncoding(char *);
+char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
+char * col_to_str (CELLREF col);
+int usr_set_fmts (void);
 std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
-extern char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
-extern void set_usr_stats (int usr_n, char **usr_buf);
-extern int usr_set_fmts (void);
-extern void get_usr_stats (int usr_num, char **usr_buf);
-extern char * cell_name (CELLREF rr, CELLREF cc);
-extern char * range_name (struct rng *rng);
-extern char * col_to_str (CELLREF col);
-extern void clear_spreadsheet (void);
-extern int words_imatch (char ** ptr, char * key);
-extern int parray_len (char ** array);
-extern int words_member (char ** keys, int len, char * check);
-extern int prompt_len (char * prompt);
-extern int says_default (char * str);
-
+std::string print_cell (CELL *cp);
+std::string FileGetCurrentFileName();
+int words_imatch (char ** ptr, char * key);
+void FileCloseCurrentFile(void);
+void clear_spreadsheet (void);
 void FileSetCurrentFileName(const char *s);
 void FileSetCurrentFileName(const std::string& s);
-std::string FileGetCurrentFileName();
-extern void FileCloseCurrentFile(void);
-extern char *file_get_default_format(void);
-extern char *file_get_format(int);
-extern char *file_get_pattern(char *fmt);
-extern void file_set_default_format(char *);
-extern void write_file_generic(FILE *, struct rng *, char *);
-extern void read_file_generic(FILE *, int, char *, const char *);
-
-extern void OleoSetEncoding(const char *);
-extern void OleoUserPrefEncoding(char *);
-extern char *OleoGetEncoding(void);
+void write_file_generic(FILE *, struct rng *, char *);
+void read_file_generic(FILE *, int, char *, const char *);
 
 std::string stringify_value_file_style(const value_t& val);
 //std::string stringify_value_file_style(value* val);
