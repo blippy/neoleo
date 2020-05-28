@@ -108,13 +108,6 @@ const char *date_formats[] = {
 	NULL
 };
 
-	static double
-divide (
-		double a,
-		double b)
-{
-	return a / b;
-}
 
 	static RETSIGTYPE
 ignore_sig (int sig)
@@ -277,7 +270,7 @@ std::string print_cell (CELL * cp)
 {
 	int j;
 	int p;
-	long num;
+	//long num;
 	static char zeroes[] = "000000000000000";
 
 	if (!cp)
@@ -362,7 +355,7 @@ handle_exp:
 				{
 					//time_t t = cp->gInt();
 					time_t t = v;
-					int	f = GET_PRECISION(cp);		/* Determines date format */
+					//int	f = GET_PRECISION(cp);		/* Determines date format */
 					struct tm *tmp = localtime(&t);
 
 #ifdef	HAVE_STRFTIME
@@ -571,7 +564,7 @@ pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 		if(fmt->n_trl && neg) s = s + fmt->n_trl;
 	}
 
-	for(int i = 0; i< s.size(); ++i) buffer[i] = s[i];
+	for(size_t i = 0; i< s.size(); ++i) buffer[i] = s[i];
 	buffer[s.size()] = '\0';
 	//strcpy(print_buf, buffer);
 	return buffer;
@@ -638,7 +631,7 @@ deal_fmt:
 
 			if (width < bptr - oldp)
 				return numb_oflo;
-			if (bptr - oldp + strlen (ufmt->decpt) >= width)
+			if (bptr  + strlen(ufmt->decpt) >= width + oldp)
 				prc = 0;
 			else
 			{
@@ -1310,7 +1303,7 @@ void OleoUserPrefEncoding(char *s)
 
 std::string stringify_value_file_style(const value_t& val)	
 {
-	if(auto v = std::get_if<empty_t>(&val)) return "";
+	if(std::get_if<empty_t>(&val)) return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
 	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];
