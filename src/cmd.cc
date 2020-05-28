@@ -245,32 +245,7 @@ recover_from_error (void)
 	ASSERT_UNCALLED();
 }
 
-/*
-line_t lineify_expand_prompt(line_t prompt)
-{
-	ASSERT_UNCALLED();
-	return line_t{};
-}
 
-line_t lineify_expand_char(char* prompt)
-{
-	ASSERT_UNCALLED();
-	return line_t{};
-}
-*/
-
-/*
- * When we begin editting a new argument, this function sets up the
- * appropriate keymap, and then resets the state of the editting commands.
- *
- * The return value is 1 if the user must be prompted, 0 otherwise.
- */
-	static int
-get_argument (char *prompt, struct prompt_style *style)
-{
-	ASSERT_UNCALLED();
-	return 1;
-}
 
 	void
 exit_minibuffer (void)
@@ -388,27 +363,6 @@ command_loop (int prefix, int iscmd)
 {
 	ASSERT_UNCALLED();
 }
-
-/* Exectute the command called in `string'.
- * If the string begins with a proper command name,
- * it is executed as if it were embedded in "{}" in 
- * a macro.  Otherwise, if the string can be interpreted 
- * as a range address, the macro at that address is executed.
- */
-
-//static struct line exec_cmd_line = { 0, 0 };
-//static struct line exec_cmd_line;
-
-/* execute_command buils a macro expression of the from `{command args}'.
- * This function quotes the braces in ARGS so that the macro reader knows
- * they are literal rather than macro syntax.
- */
-	static void
-quote_macro_args (char *args)
-{
-	ASSERT_UNCALLED();
-}
-
 
 
 
