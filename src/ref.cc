@@ -119,23 +119,6 @@ flush_range_ref (struct rng *rng, CELLREF rr, CELLREF cc)
 {
 }
 
-#define FM_HASH_NUM 503
-#define TO_HASH_NUM 29
-#ifdef TEST
-static int fm_misses = 0;
-static int to_misses = 0;
-#endif
-
-static struct ref_fm *fm_list[FM_HASH_NUM];
-static struct ref_fm *fm_tmp_ref;
-static unsigned fm_tmp_ref_alloc;
-
-static struct ref_to *to_list[TO_HASH_NUM];
-static struct ref_to *to_tmp_ref;
-static unsigned to_tmp_ref_alloc;
-
-
-
 
 
 
