@@ -296,57 +296,6 @@ flush_fm_ref (struct ref_fm *old)
 	}
 }
 
-/* This adds a from reference to a cells reference list.
- * Note that the ref_fm structures themselves are hash-consed.
- */
-	static void
-add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
-{
-	struct ref_fm *from;
-	int n;
-
-	from = *where;
-	if (!from)
-	{
-		if (!fm_tmp_ref)
-		{
-			fm_tmp_ref = (ref_fm*) ck_malloc (sizeof (struct ref_fm));
-			fm_tmp_ref_alloc = 1;
-		}
-		fm_tmp_ref->refs_used = 1;
-		fm_tmp_ref->fm_refs[0].ref_row = r;
-		fm_tmp_ref->fm_refs[0].ref_col = c;
-	}
-	else
-	{
-		if (fm_tmp_ref_alloc <= from->refs_used)
-		{
-			size_t size = sizeof (struct ref_fm)
-				+ (size_t)(from->refs_used) * sizeof (struct ref_array);
-			fm_tmp_ref =   (ref_fm *)ck_realloc (fm_tmp_ref, size);
-			fm_tmp_ref_alloc = from->refs_used + 1;
-		}
-		fm_tmp_ref->refs_used = from->refs_used + 1;
-		n = 0;
-		while (n < from->refs_used
-				&& (from->fm_refs[n].ref_row < r
-					|| (from->fm_refs[n].ref_row == r && from->fm_refs[n].ref_col <= c)))
-		{
-			fm_tmp_ref->fm_refs[n] = from->fm_refs[n];
-			n++;
-		}
-		fm_tmp_ref->fm_refs[n].ref_row = r;
-		fm_tmp_ref->fm_refs[n].ref_col = c;
-		while (n < from->refs_used)
-		{
-			fm_tmp_ref->fm_refs[n + 1] = from->fm_refs[n];
-			n++;
-		}
-	}
-	*where = find_fm_ref ();
-	if (from)
-		flush_fm_ref (from);
-}
 
 	static void
 flush_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c)
