@@ -70,13 +70,6 @@ static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
 
-static void log_debug_1(std::string msg)
-{
-	if constexpr(true)
-		log_debug("io-curses.cc:"s + msg);
-}
-
-
 void
 show_main_menu()
 {
@@ -755,7 +748,6 @@ static void
 _io_update_status (void)
 {
 	const char *ptr;
-	static char hmbuf[40];
 	int wid;
 	int plen;
 	int yy, xx;

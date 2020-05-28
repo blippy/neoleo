@@ -134,11 +134,6 @@ forward_word (int n)
 }
 
 
-	static void
-erase (int len)
-{
-	ASSERT_UNCALLED();
-}
 
 
 	void
@@ -389,11 +384,6 @@ exit_self_inserting (int c)
 }
 
 
-	static int
-issymb (int c)
-{
-	return isalpha (c) || isdigit (c) || (c == '_');
-}
 
 #undef the_text
 #undef the_cursor

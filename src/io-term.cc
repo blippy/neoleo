@@ -456,21 +456,6 @@ add_usr_cmds (struct cmd_func *new_cmds)
 	   */
 }
 
-/*
- * The variable below makes it possible for the program "what" to identify
- * which version of oleo this executable is.
- */
-
-//static const char *what_version = "@(#)" PACKAGE " "  VERSION ;
-
-
-	static RETSIGTYPE
-continue_oleo (int sig)
-{
-	io_repaint ();
-	if (using_curses)
-		cont_curses ();
-}
 
 /* set an adapter stub that does nothing */
 	void
