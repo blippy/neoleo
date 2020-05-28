@@ -39,7 +39,7 @@ set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
 	curow = r;
 	cucol = c;
-	CELL* cp = find_or_make_cell(r, c);
+	//CELL* cp = find_or_make_cell(r, c);
 	set_and_eval(r, c, formula, true);
 }
 
@@ -85,9 +85,6 @@ _io_open_display(void)
 
 }
 
-static int m_nrow = 1;
-
-static int m_ncol = 1;
 
 	static void
 _io_update_status(void)
