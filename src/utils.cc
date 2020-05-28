@@ -39,13 +39,6 @@
 #include <ctype.h>
 #include "utils.h"
 
-#ifndef F_OK
-#define F_OK 0
-#endif
-#ifndef _IOSTRG
-#define _IOSTRG 0
-#endif
-
 
 // very useful function!
 // https://stackoverflow.com/questions/15106102/how-to-use-c-stdostream-with-printf-like-formatting
@@ -289,23 +282,6 @@ ck_realloc (void *ptr, size_t size)
 	return ret;
 }
 
-/* Do a sprintf into an allocated buffer. */
-	char *
-mk_sprintf (const char *str,...)
-{
-	va_list iggy;
-	char tmpbuf[1024 * 8];
-	char *ret;
-
-	va_start (iggy, str);
-	vsprintf (tmpbuf, str, iggy);
-	va_end (iggy);
-	ret = (char *) ck_malloc (strlen (tmpbuf) + 1);
-	strcpy (ret, tmpbuf);
-	return ret;
-}
-
-
 
 /*
  * stricmp - compare string s1 to s2, ignoring case
@@ -444,16 +420,9 @@ err_msg (void)
  *	is needed.
  */
 
-static num_t exps0[10] =
-{1E0, 1E1, 1E2, 1E3, 1E4, 1E5, 1E6, 1E7, 1E8, 1E9};
-static num_t exps1[10] =
-{1E00, 1E10, 1E20, 1E30
-#ifndef vax
-	,1E40, 1E50, 1E60, 1E70, 1E80, 1E90
-#endif
-};
+static num_t exps0[10] = {1E0, 1E1, 1E2, 1E3, 1E4, 1E5, 1E6, 1E7, 1E8, 1E9};
+static num_t exps1[10] = {1E00, 1E10, 1E20, 1E30 ,1E40, 1E50, 1E60, 1E70, 1E80, 1E90 };
 
-//#define REGISTER register
 
 	num_t
 astof (char **sp)
@@ -475,9 +444,7 @@ astof (char **sp)
 			return (0.0);
 		}
 	}
-	/*
-	 *	Need to handle sign here due to '-.3' or '-0.3'
-	 */
+	// Need to handle sign here due to '-.3' or '-0.3' 
 	if (*s == '-')
 	{
 		++neg;
@@ -486,9 +453,7 @@ astof (char **sp)
 	else if (*s == '+')
 		++s;
 	cp = s;
-	/*
-	 *	get ipart handling '.n' case
-	 */
+	// 	get ipart handling '.n' case 
 	res = 0.0;
 	while (isdigit (*s))
 	{
