@@ -43,53 +43,16 @@
 
 using std::cout;
 using std::endl;
-//using std::vector;
 
-static void add_ref_fm (struct ref_fm **where, CELLREF r, CELLREF c);
-static void flush_ref_fm (struct ref_fm **, CELLREF, CELLREF);
-static void flush_range_ref (struct rng *, CELLREF, CELLREF);
-extern void shift_formula (int r, int c, int dn, int ov);
-static void flush_ref_to (struct ref_to **);
-static void flush_fm_ref (struct ref_fm *);
 
-/* More tunable paramaters */
-
-#define FIFO_START	40
-#define FIFO_INC	*=2
-
-#define TO_MAGIC(row,col)	(((long)(row)<<BITS_PER_CELLREF)|(col))
-#define MAGIC_ROW(magic)	(((magic)>>BITS_PER_CELLREF)&CELLREF_MASK)
-#define MAGIC_COL(magic)	((magic)&CELLREF_MASK)
-
-#define BETWEEN(mid,lo,hi)	((mid>=lo)&&(mid<=hi))
-
-static VOIDSTAR moving;
-
-int timer_active = 0;
 struct ref_fm *timer_cells;
 
 CELL *my_cell;
 
-#ifdef TEST
-extern int debug;
-#endif
 
 /* Functions for dealing exclusively with variables */
 std::map<std::string, struct var>the_vars_1;
 
-
-/* For the fifo-buffer */
-struct pos {
-	CELLREF row;
-	CELLREF col;
-};
-
-struct cell_buf {
-	unsigned int size;
-	struct pos *buf;
-	struct pos *push_to_here;
-	struct pos *pop_frm_here;
-};
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
@@ -200,7 +163,6 @@ static int shift_dn;
 
 
 /* ---------- Routines and vars for dealing with the eval FIFO ------------ */
-static struct cell_buf cell_buffer;
 
 
 /* Push the cells in REF onto the FIFO.  This calls push_cell to do the
@@ -224,33 +186,6 @@ push_cell (CELLREF row, CELLREF col)
 	ASSERT_UNCALLED();
 }
 
-/* Pop a cell off CELL_BUFFER, and evaluate it, displaying the result. . .
-   This returns 0 if there are no more cells to update, or if it gets
-   an error. */
-
-	int
-eval_next_cell (void)
-{
-	CELL *cp;
-	static int loop_counter = 40;
-
-	if (cell_buffer.pop_frm_here == cell_buffer.push_to_here)
-		return 0;
-
-	cur_row = cell_buffer.pop_frm_here->row;
-	cur_col = cell_buffer.pop_frm_here->col;
-	cell_buffer.pop_frm_here++;
-	if (cell_buffer.pop_frm_here == cell_buffer.buf + cell_buffer.size)
-		cell_buffer.pop_frm_here = cell_buffer.buf;
-
-	if (!(cp = find_cell(cur_row, cur_col)))
-		return 0;
-
-
-	cp->update_cell();
-	io_pr_cell (cur_row, cur_col, cp);
-	return loop_counter;
-}
 
 
 

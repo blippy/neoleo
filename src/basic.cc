@@ -424,25 +424,6 @@ suspend_oleo (void)
 void
 recalculate (int all)
 {
-#if 0
-	current_cycle++;
-	if (all)
-	{
-		CELLREF row;
-		CELLREF col;
-		struct rng all;
-		all.lr = MIN_ROW;
-		all.hr = MAX_ROW;
-		all.lc = MIN_COL;
-		all.hc = MAX_COL;
-
-		for(auto cp:get_cells_in_range(&all))
-			push_cell(cp);
-
-	}
-	while (eval_next_cell ())
-		;
-#endif
 }
 
 
