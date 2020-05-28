@@ -551,32 +551,7 @@ do_mouse_mark_and_goto (void)
 	do_mouse_goto ();
 }
 
-void
-do_mouse_cmd (void (*fn) ())
-{
-	int seq = real_get_chr ();
-	dequeue_mouse_event (&last_mouse_event, seq);
-	fn ();
-}
 
-void
-mouse_mark_cmd (void)
-{
-	do_mouse_cmd (do_mouse_mark);
-}
-
-
-void
-mouse_goto_cmd (void)
-{
-	do_mouse_cmd (do_mouse_goto);
-}
-
-void
-mouse_mark_and_goto_cmd (void)
-{
-	do_mouse_cmd (do_mouse_mark_and_goto);
-}
 
 /* Commands used to modify cell formulas. */
 

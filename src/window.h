@@ -1,8 +1,6 @@
 #pragma once
 /*
- * $Id: window.h,v 1.6 2001/01/10 20:16:32 danny Exp $
- *
- * Copyright © 1992, 1993, 1999 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +19,6 @@
 
 
 #include "cell.h"
-//#include "line.h"
 
 /* The tty windows datastructures: */
 
@@ -179,6 +176,4 @@ extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
 std::string io_write_window_config ();
 extern void io_read_window_config (char * line);
-extern void dequeue_mouse_event (struct mouse_event *out, int seq);
-extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr,
-		 int lr, int lc) ;
+extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc) ;

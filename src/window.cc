@@ -1,7 +1,5 @@
 /*
- * $Id: window.c,v 1.11 2001/02/13 23:38:06 danny Exp $
- *
- * Copyright © 1992, 1993, 1999, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993, 1999, 2001 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1245,26 +1243,6 @@ init_mouse (void)
 	Global->free_mouse->next = Global->free_mouse;
 	Global->free_mouse->prev = Global->free_mouse;
 }
-
-
-void 
-dequeue_mouse_event (struct mouse_event *out, int seq)
-{
-	assert(false); // added mcater 06_may-2018
-	Global->free_mouse->seq = seq;
-	while (Global->current_mouse->seq != seq)
-		Global->current_mouse = Global->current_mouse->next;
-	if (Global->current_mouse == Global->free_mouse)
-	{
-		out->seq = seq;
-		out->button = MOUSE_QERROR;
-		return;
-	}
-	*out = *Global->current_mouse;
-	out->next = out->prev = 0;
-	Global->current_mouse = Global->current_mouse->next;
-}
-
 
 
 void 
