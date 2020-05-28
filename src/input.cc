@@ -51,64 +51,6 @@
 
 
 
-#define Max(A,B)  ((A) < (B) ? (B) : (A))
-#define Min(A,B)  ((A) > (B) ? (B) : (A))
-
-
-/* Decide if a keymap prompt should be displayed.  If so, 
- * return the prompt, else 0.
- */
-
-	static char * 
-desired_keymap_prompt (struct input_view * this_iv)
-{
-	return 0;
-}
-
-
-
-
-/* In WID columns, find the first char in STR that can
- * be displayed while still leaving POS visible.  METRIC
- * converts str->cols.
- */
-
-	static int
-find_vis_begin (int * wid_used, int wid,
-		char * str, int pos, text_measure metric)
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-
-
-/* Find the last visible character...  -1 if none are vis. */
-
-static int
-find_vis_end (int * wid_used, int wid, char * str, int start, text_measure
-		metric) 
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-	static void
-set_vis_wid (struct input_view * this_iv)
-{
-	ASSERT_UNCALLED();
-}
-
-
-/* This recomputes the input area parameters of an input_view, attempting to 
- * center the cursor. 
- */
-
-	static void
-iv_reset_input (struct input_view * this_iv)
-{
-	ASSERT_UNCALLED();
-}
 
 /* This is called strategicly from the command loop and whenever
  * the input area is changed by beginning a complex command.
