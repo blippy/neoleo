@@ -1,6 +1,6 @@
 #pragma once
 /*
- * Copyright © 1992, 1993 Free Software Foundation, Inc.
+ * Copyright (c) 1992, 1993 Free Software Foundation, Inc.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,13 @@
 
 #include "global.h"
 
-struct cmp
-{
-  char mult;
-  CELLREF row;
-  CELLREF col;
-};
-
-extern struct rng sort_rng;
-extern struct rng sort_ele;
-extern struct cmp *sort_keys;
-extern int sort_keys_num;
-extern int sort_keys_alloc;
 extern struct rng all_rng;
-extern unsigned int print_width;
 
-
-
-
-extern void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
-extern void lock_region (struct rng *where, int locked);
-extern void format_region (struct rng *where, int fmt, int just);
-extern void move_region (struct rng *fm, struct rng *to);
-extern void copy_region (struct rng *fm, struct rng *to);
-extern void copy_values_region (struct rng *fm, struct rng *to);
-extern void sort_region (void);
+void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
+void lock_region (struct rng *where, int locked);
+void format_region (struct rng *where, int fmt, int just);
+void move_region (struct rng *fm, struct rng *to);
+void copy_region (struct rng *fm, struct rng *to);
+void copy_values_region (struct rng *fm, struct rng *to);
 crefs_t coords_in_range (const rng_t& rng);
 crefs_t coords_in_ranges (const ranges_t& rng);
