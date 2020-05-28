@@ -25,7 +25,6 @@
  */
 #include "global.h"
 
-
 typedef void (*alarm_fn)(void);
 
 struct alarm_entry
@@ -71,7 +70,6 @@ struct command_frame
 	short _cur_vector;
 	int _cur_chr;
 	int _how_many;
-	//int complex_to_user; 
 	int _cmd_argc;
 	int _cur_arg;
 	struct cmd_func * cmd;
@@ -90,8 +88,6 @@ extern struct command_frame * running_frames;
  * a set of global variables.
  */
 
-#define setrow			the_cmd_frame->_setrow
-#define setcol			the_cmd_frame->_setcol
 #define curow			the_cmd_frame->_curow
 #define cucol			the_cmd_frame->_cucol
 #define mkrow			the_cmd_frame->_mkrow
@@ -99,8 +95,6 @@ extern struct command_frame * running_frames;
 
 #define window_after_input	the_cmd_frame->_window_after_input
 #define input_active		the_cmd_frame->_input_active
-
-
 
 #ifdef FD_SET
 
@@ -139,44 +133,9 @@ struct select_hook
 	void * jrandom;
 };
 
-extern struct select_hook file_read_hooks[SELECT_SET_SIZE];
-extern struct select_hook file_exception_hooks[SELECT_SET_SIZE];
-extern struct select_hook file_write_hooks[SELECT_SET_SIZE];
-
-
-extern void free_input_stream (struct input_stream * stream);
-extern void pop_input_stream (void);
-extern void start_entering_macro (void);
-extern void bound_macro (int num);
-void run_string_as_macro(const char * macro);
-extern void call_last_kbd_macro (int count);
-extern void end_macro (void);
-extern void stop_entering_macro (void);
-extern int real_get_chr (void);
-extern void block_until_excitement(struct timeval *tv);
-extern void push_command_frame (struct rng * rng, char * first_line, int len);
-extern void remove_cmd_frame (struct command_frame * frame);
-extern void free_cmd_frame (struct command_frame * frame);
-extern void pop_unfinished_command (void);
-extern void recover_from_error (void);
-extern void exit_minibuffer (void);
-extern void setn_arg_text (struct command_arg * arg, const char * text, int len);
-extern void init_arg_text (struct command_arg * arg, const char * text);
-extern void set_default_arg (struct command_arg * arg, char * text, int len);
-extern void command_loop (int prefix, int iscmd);
-extern int get_chr (void);
-extern void display_msg (char * msg, int c);
-extern void pushback_keystroke (int c);
+int real_get_chr (void);
 void cmd_io_error_msg (const char *str,...);
-extern void io_info_msg (const char *str,...);
-extern char * expand_prompt (char * str);
-void expand_prompt (char * str, struct line& line);
-extern void set_info (char * name);
-extern void page_info_backwards (int rep);
-extern void page_info (int rep);
-extern void view_info (char * name, int ignore);
-void with_keymap (char * mapname);
-extern void one_cmd_with_keymap (char * mapname, struct key_sequence * keyseq);
+
 
 void set_curow(int nrow);
 void set_cucol(int nrow);
