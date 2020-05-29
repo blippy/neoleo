@@ -16,6 +16,7 @@
 #include "io-utils.h"
 #include "logging.h"
 #include "parser-2019.h"
+#include "sheet.h"
 #include "tests.h"
 #include "utils.h"
 
@@ -134,7 +135,8 @@ parse_command_line(int argc, char **argv)
 
 void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 {
-	init_basics();
+	init_infinity ();
+	init_cells ();
 	headless_graphics(); // fallback position
 
 	if(get_option_tests()) {
