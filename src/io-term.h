@@ -44,19 +44,6 @@ extern int default_lock;
 extern int modified;
 
 
-extern struct cmd_func *end_macro_cmd;
-extern struct cmd_func *digit_0_cmd;
-extern struct cmd_func *digit_9_cmd;
-extern struct cmd_func * break_cmd;
-extern struct cmd_func * universal_arg_cmd;
-
-extern struct cmd_func * break_cmd;
-extern struct cmd_func * universal_arg_cmd;
-extern struct cmd_func * end_macro_cmd;
-
-
-
-
 extern void set_options (char * ptr);
 extern void show_options (void);
 extern void read_mp_usr_fmt (char *ptr);
