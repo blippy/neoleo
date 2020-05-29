@@ -47,7 +47,7 @@ noinst_HEADERS = basic.h cell.h \
 		 global.h \
 		 input.h \
 		 io-2019.h io-abstract.h io-headless.h io-curses.h io-edit.h \
-		 io-generic.h io-term.h io-utils.h \
+		 io-term.h io-utils.h \
 		 logging.h \
 		 neotypes.h  numeric.h \
 		 oleofile.h  \
