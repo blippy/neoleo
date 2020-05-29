@@ -28,7 +28,6 @@ using std::cout;
 
 #include "convert.h"
 #include "format.h"
-#include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
 #include "io-term.h"
@@ -39,7 +38,6 @@ using std::cout;
 #include "window.h"
 #include "spans.h"
 #include "utils.h"
-//#include "xcept.h"
 
 /* These functions read and write OLEO style files. */
 

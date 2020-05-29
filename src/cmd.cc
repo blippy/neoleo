@@ -36,7 +36,6 @@
 #include "io-2019.h"
 #include "io-term.h"
 #include "io-abstract.h"
-#include "io-generic.h"
 #include "io-utils.h"
 #include "io-edit.h"
 #include "ref.h"

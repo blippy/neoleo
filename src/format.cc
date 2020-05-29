@@ -25,7 +25,6 @@
 #include "convert.h"
 #include "io-term.h"
 #include "io-abstract.h"
-#include "io-generic.h"
 
 	static const char *
 fmt_to_str (int format, int precision)

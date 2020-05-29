@@ -28,7 +28,6 @@
 #include "errors.h"
 #include "format.h"
 #include "io-abstract.h"
-#include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
 #include "sheet.h"
