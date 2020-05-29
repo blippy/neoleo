@@ -23,14 +23,11 @@
 extern bool using_curses;
 extern bool user_wants_headless;
 
-
 /* Cell size paramaters. */
 extern unsigned int default_width;
 extern unsigned int default_height;
 
-/* These values are used by clear_spreadsheet ()
- * to restore the defaults.
- */
+/* clear_spreadsheet () uses these to restore default */
 extern unsigned int saved_default_width;
 extern unsigned int saved_default_height;
 
@@ -43,6 +40,8 @@ extern int default_lock;
 /* When printing ascii output, this controls page width. */
 extern int modified;
 
+extern int option_filter;
+extern std::string option_tests_argument;
 
 extern void set_options (char * ptr);
 extern void show_options (void);
@@ -54,13 +53,6 @@ extern void unset_var (char *var);
 extern void show_all_var (void);
 extern void write_variables (FILE * fp);
 extern void read_variables (FILE * fp);
-extern int add_usr_cmds (struct cmd_func *new_cmds);
-extern int main (int argc, char **argv);
 extern void InitializeGlobals(void);
-
-extern int option_filter;
-extern std::string option_tests_argument;
-
 void choose_display(bool force_cmd_graphics);
-
 bool get_option_tests();
