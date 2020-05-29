@@ -45,7 +45,6 @@
 #include "io-generic.h"
 #include "io-term.h"
 #include "io-utils.h"
-//#include "xcept.h"
 
 using std::cerr;
 using std::endl;
@@ -56,8 +55,6 @@ using std::endl;
 #include "ref.h"
 #include "regions.h"
 #include "window.h"
-//#include "funcs.h"
-#include "userpref.h"
 
 #ifdef	HAVE_PANIC_SAVE
 #include "panic.h"
@@ -125,6 +122,19 @@ struct cmd_func * universal_arg_cmd;
  * Simple table of variables to set
  *	All these variables belong in a UserPreferences structure.
  */
+
+struct UserPreferences {
+	int	a0,
+		auto_recalc,
+		backup,
+		backup_copy,
+		ticks,
+		print;
+	char	*file_type,
+		*bgcolor;
+	int	run_load_hooks;
+	char	*encoding;
+};
 
 struct UserPreferences UserPreferences;
 

@@ -55,7 +55,7 @@ noinst_HEADERS = basic.h cell.h \
 		 ref.h regions.h \
 		 sheet.h spans.h \
 		 tbl.h tests.h \
-		 userpref.h utils.h \
+		 utils.h \
 		 value.h \
 		 window.h
 
