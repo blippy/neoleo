@@ -29,7 +29,6 @@
 #include "regions.h"
 #include "window.h"
 #include "io-term.h"
-#include "io-generic.h"
 #include "io-abstract.h"
 #include "io-utils.h"
 #include "io-curses.h"

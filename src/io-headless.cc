@@ -259,7 +259,7 @@ static void type_cell(int fildes)
 }
 
 
-static void write_file(int fildes)
+static void _write_file(int fildes)
 {
 	string name = FileGetCurrentFileName();
 	FILE *fp = fopen(name.c_str(), "w");
@@ -269,7 +269,7 @@ static void write_file(int fildes)
 
 }
 void hl_write_file(){
-	write_file(0);
+	_write_file(0);
 }
 
 // this seems to crash
@@ -324,7 +324,7 @@ static map<string, function<void(T)> > func_map = {
 	{"recalc", hl_recalc},
 	{"type-cell", type_cell},
 	{"type-dsv", type_dsv},
-	{"w", write_file}
+	{"w", _write_file}
 };
 
 	bool
