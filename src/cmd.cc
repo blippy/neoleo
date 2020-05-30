@@ -319,26 +319,6 @@ do_new_cycle ()
 	return 0;
 }
 
-	int				// new state
-do_resume_getting_arguments (bool interactive_mode_on, int iscmd)
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-	int				// return a new state
-do_got_command ()
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-	void 
-print_state(int state)
-{
-	ASSERT_UNCALLED();
-}
-
 	void
 inner_command_loop (int state, int iscmd)
 {
@@ -374,23 +354,6 @@ get_chr (void)
 }
 
 
-/* This is an entirely magical function.  All of it's work is done 
- * by the argument prompting system.  All that remains to be done
- * when this is called is to push back a character the user may have
- * typed to cause the error message to go away.
- */
-
-	void
-display_msg (char *msg, int c)
-{
-	//if (c > 0) pushed_back_char = c;
-}
-
-	void
-pushback_keystroke (int c)
-{
-	ASSERT_UNCALLED();
-}
 
 	void
 cmd_io_error_msg (const char *str, ...)
@@ -417,34 +380,6 @@ io_info_msg (const char *str, ...)
 	va_start (foo, str);
 	vsprintf (buf, str, foo);
 	io_error_msg2019_str(buf);
-}
-
-
-// refactoring. Only called by expand_prompt()
-void inner_prompt_expansion(char*& str, struct line& expanded)
-{
-	ASSERT_UNCALLED();
-}
-
-/* Expands a string that will be used to prompt for an argument.
- *    %n expands to the text of argument n (if defined -- ??? otherwise).
- *    %% expands to %
- *    %c expands to the name of the_cmd_frame->prev->_set{row,col}
- * If no expansion is needed, the argument is returned.  Otherwise,
- * malloced memory is returned.
- */
-
-	char *
-expand_prompt (char *str)
-{
-	ASSERT_UNCALLED();
-	return nullptr;
-
-}
-
-void expand_prompt(char *str, struct line& line)
-{
-	ASSERT_UNCALLED();
 }
 
 
