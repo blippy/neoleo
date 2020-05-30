@@ -580,9 +580,3 @@ size_t strlen(const std::string& s)
 {
 	return s.size();
 }
-char* dupe(const char* str)
-{
-	char* str1 = (char*) malloc(strlen(str)+1);
-	assert(str1);
-	return strcpy(str1, str);
-}
