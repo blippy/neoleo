@@ -60,36 +60,17 @@ SELECT_TYPE read_fd_set;
 SELECT_TYPE exception_fd_set;
 SELECT_TYPE write_fd_set;
 
-/* These are fd's returned by the last call to select.
-*/
+/* These are fd's returned by the last call to select.  */
 SELECT_TYPE read_pending_fd_set;
 SELECT_TYPE exception_pending_fd_set;
 SELECT_TYPE write_pending_fd_set;
 
-/* Hooks for asynchronos i/o
-*/
-
+/* Hooks for asynchronos i/o */
 struct select_hook file_read_hooks[SELECT_SET_SIZE] = { {0} };
 struct select_hook file_exception_hooks[SELECT_SET_SIZE] = { {0} };
 struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
 
 int ioerror = 0;
-
-
-
-
-/*
- * This is the main interact loop.  As quickly as possible
- * it returns a character from the keyboard.  While waiting,
- * it updates cells and the display.  If a macro is being defined,
- * this function save characters in the macro.
- */
-	int
-real_get_chr (void)
-{
-	ASSERT_UNCALLED();
-	return '\0';
-}
 
 
 /*****************************************************************
@@ -208,82 +189,8 @@ free_cmd_frame (struct command_frame *frame)
 {
 	if (frame->next)
 		remove_cmd_frame (frame);
-
-	//free_line (&frame->_raw_prefix);
-	/*
-	if (frame->cmd) {
-		int argc;
-		for (argc = 0; argc < frame->_cmd_argc; ++argc) {
-			if (frame->argv[argc].is_set && frame->argv[argc].style->destroy)
-				frame->argv[argc].style->destroy (&frame->argv[argc]);
-			//free_line (&frame->argv[argc].text);
-		}
-	}
-	*/
 	delete frame;
 }
-
-/*
- * Discard the current frame if it contains an unexecuted commnand. 
- * This is used, for example, to handle break.
- */
-	void
-pop_unfinished_command (void)
-{
-	ASSERT_UNCALLED();
-}
-
-/* This is called if an error has been signaled with io_error_msg.
- * It discards any frames that the user has never interacted with
- * and cancels all pending macros.  This is properly followed by 
- * generating an error message for the user and longjmp to error_exception.
- */
-	void
-recover_from_error (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-
-	void
-exit_minibuffer (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-setn_arg_text (struct command_arg *arg, const char *text, int len)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-init_arg_text (struct command_arg *arg, const char *text)
-{
-	ASSERT_UNCALLED();
-}
-
-/* This apparently useless alias is here because
- * sometime in the future i want to handle defaults
- * differently.  
- */
-
-	void
-set_default_arg (struct command_arg *arg, char *text, int len)
-{
-	ASSERT_UNCALLED();
-}
-
-	int				// new state
-prefix_cmd_continuation_loop (bool goto_have_character)
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-//#define interactive_mode_1 (!rmac || iscmd)
 
 
 	void
@@ -388,7 +295,6 @@ init_maps_and_macros()
 {
 	try {
 		init_maps();
-		//init_named_macro_strings ();
 	} catch (OleoJmp& e) {
 		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
 		io_close_display(69);
