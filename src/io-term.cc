@@ -72,17 +72,12 @@ void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 
 
-static void activate_relevant_command_loop()
-{
-	main_command_loop_for2019();
-}
-
 	EXTERN void
 fairly_std_main_loop(void)
 {
 	while (1) {
 		try {
-			activate_relevant_command_loop();
+			main_command_loop_for2019();
 		} catch (OleoJmp& e) { }
 	}
 }
