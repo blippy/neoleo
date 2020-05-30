@@ -67,10 +67,6 @@ struct ref_fm
  */
 inline CELLREF cur_row, cur_col;
 
-extern int default_jst;
-extern int default_fmt, default_prc;
-extern int default_lock;
-
 extern void panic (const char *, ...);
 extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
