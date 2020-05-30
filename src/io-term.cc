@@ -389,22 +389,14 @@ read_mp_options (char *str)
 	void
 set_var (struct rng *val, char *var)
 {
-	char *ret;
 
 	Global->modified = 1;
-	ret = new_var_value (var, strlen(var), val);
+	char *ret = new_var_value (var, strlen(var), val);
 
 	if (ret)
 		io_error_msg ("Can't set-var %s: %s\n", var, ret);
 }
 
-
-
-	int 
-add_usr_cmds (struct cmd_func *new_cmds)
-{
-	return 0;
-}
 
 
 /* set an adapter stub that does nothing */
