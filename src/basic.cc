@@ -344,23 +344,6 @@ goto_cell (struct rng * rng)
 
 
 
-/*
-static void 
-mk_for_extreme (struct rng * rng)
-{
-	if (mkrow != NON_ROW)
-	{
-		rng->hr = mkrow;
-		rng->hc = mkcol;
-	}
-	else
-	{
-		rng->hc = cucol;
-		rng->hr = curow;
-	}
-}
-*/
-
 void
 mark_cell_cmd (int popmk)
 {
@@ -541,24 +524,6 @@ write_cmd (FILE *fp, const char * name)
 		FileSetCurrentFileName(name);
 	oleo_write_file(fp, 0);
 	Global->modified = 0;
-}
-
-void
-read_cmd (FILE *fp, char * name)
-{
-	read_file_and_run_hooks (fp, 0, name);
-}
-
-void
-read_merge_cmd (FILE *fp)
-{
-	oleo_read_file(fp, 1);
-}
-
-void
-write_reg_cmd (FILE *fp, struct rng *rng)
-{
-	oleo_write_file(fp, rng);
 }
 
 
