@@ -30,7 +30,6 @@ extern int __backup_by_copying;
 extern void* ck_malloc (size_t);
 extern void* ck_calloc (size_t);
 extern void* ck_realloc (void *,size_t);
-extern char * ck_savestr (const char *);
 extern void ck_free (void*);
 #define ck_remalloc(OLD, SIZE) \
   ((OLD) ? ck_realloc ((OLD), (SIZE)) : ck_malloc (SIZE))

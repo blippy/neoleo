@@ -240,18 +240,6 @@ ck_free (void * mem)
 	if (mem) free (mem);
 }
 
-	char *
-ck_savestr (const char *str)
-{
-	char *newstr = 0;
-	if (str)
-	{
-		int len = strlen (str) + 1;
-		newstr = (char *) ck_malloc (len);
-		bcopy (str, newstr, len);
-	}
-	return newstr;
-}
 
 
 
