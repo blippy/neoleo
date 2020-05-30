@@ -79,7 +79,6 @@ panic (const char *s,...)
 	va_list iggy;
 
 	va_start (iggy, s);
-	//fprintf (stderr, "%s %s:", GNU_PACKAGE, VERSION); mcarter
 	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
 	vfprintf (stderr, s, iggy);
 	putc ('\n', stderr);

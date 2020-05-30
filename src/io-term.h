@@ -20,28 +20,29 @@
 #include <string>
 #include "global.h"
 
-extern bool using_curses;
-extern bool user_wants_headless;
+
+inline bool using_curses = false;
+inline bool user_wants_headless = false;
 
 /* Cell size paramaters. */
-extern unsigned int default_width;
-extern unsigned int default_height;
+inline unsigned int default_width = 8;
+inline unsigned int default_height = 1;
 
 /* clear_spreadsheet () uses these to restore default */
-extern unsigned int saved_default_width;
-extern unsigned int saved_default_height;
+inline unsigned int saved_default_width = 8;
+inline unsigned int saved_default_height = 1;
 
 /* Other cell defaults: */
-extern int default_jst;
-extern int default_fmt;
-extern int default_lock;
-
+inline int default_jst = base_default_jst;
+inline int default_fmt = FMT_GEN;
+inline int default_prc = 0x0F;		/* FIX ME */
+inline int default_lock = LCK_UNL;
 
 /* When printing ascii output, this controls page width. */
-extern int modified;
+//inline int modified;
 
-extern int option_filter;
-extern std::string option_tests_argument;
+//inline int option_filter;
+inline std::string option_tests_argument = "regular";
 
 extern void set_options (char * ptr);
 extern void show_options (void);

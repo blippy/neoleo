@@ -30,7 +30,7 @@ using namespace std::literals;
 
 
 static bool	option_tests = false;
-std::string	option_tests_argument = "regular";
+//std::string	option_tests_argument = "regular";
 
 bool get_option_tests() { return option_tests;}
 

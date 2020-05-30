@@ -64,6 +64,7 @@ using std::cout;
 using std::endl;
 
 
+const int base_default_jst = JST_RGT;
 
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;
@@ -86,28 +87,6 @@ fairly_std_main_loop(void)
 	}
 }
 
-
-/* What kind of display? */
-bool using_curses = false;
-bool user_wants_headless = false;
-
-
-/* Cell size paramaters. */
-unsigned int default_width = 8;
-unsigned int default_height = 1;
-
-/* These values are used by clear_spreadsheet ()
- * to restore the defaults.
- */
-unsigned int saved_default_width = 8;
-unsigned int saved_default_height = 1;
-
-/* Other cell defaults: */
-const int base_default_jst = JST_RGT;
-int default_jst = base_default_jst;
-int default_fmt = FMT_GEN;
-int default_prc = 0x0F;		/* FIX ME */
-int default_lock = LCK_UNL;
 
 /* Pointers to interesting cmd_func structures. */
 struct cmd_func *end_macro_cmd;
