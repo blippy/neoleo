@@ -62,7 +62,7 @@ using std::endl;
 const int base_default_jst = JST_RGT;
 
 /* These are the hooks used to do file-io. */
-void (*read_file) (FILE *, int) = oleo_read_file;
+//void (*read_file) (FILE *, int) = oleo_read_file;
 void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 
@@ -213,7 +213,7 @@ do_set_option (char *ptr)
 		ptr += 5;
 		if (!stricmp ("oleo", ptr))
 		{
-			read_file = oleo_read_file;
+			//read_file = oleo_read_file;
 			write_file = oleo_write_file;
 			set_file_opts = oleo_set_options;
 			//show_file_opts = oleo_show_options;

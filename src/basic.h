@@ -45,4 +45,4 @@ void write_cmd (FILE *fp, const char * name);
 void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name);
 int set_window_option (int set_opt, char *text);
 extern void (*write_file) (FILE *, struct rng *);
-extern void (*read_file) (FILE *, int);
+//extern void (*read_file) (FILE *, int);

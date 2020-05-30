@@ -35,6 +35,7 @@
 #include "ref.h"
 #include "format.h"
 #include "io-edit.h"
+#include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
 #include "utils.h"
@@ -551,7 +552,7 @@ read_cmd (FILE *fp, char * name)
 void
 read_merge_cmd (FILE *fp)
 {
-	(*read_file) (fp, 1);
+	oleo_read_file(fp, 1);
 }
 
 void
