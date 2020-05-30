@@ -21,7 +21,6 @@
 #include <string>
 #include <stdio.h>
 #include "global.h"
-#include "numeric.h"	
 
 std::string format(const std::string& format, ...);
 extern int __make_backups;
