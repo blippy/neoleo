@@ -539,7 +539,7 @@ write_cmd (FILE *fp, const char * name)
 {
 	if(name)
 		FileSetCurrentFileName(name);
-	(*write_file) (fp, 0);
+	oleo_write_file(fp, 0);
 	Global->modified = 0;
 }
 
@@ -558,7 +558,7 @@ read_merge_cmd (FILE *fp)
 void
 write_reg_cmd (FILE *fp, struct rng *rng)
 {
-	(*write_file) (fp, rng);
+	oleo_write_file(fp, rng);
 }
 
 
