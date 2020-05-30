@@ -131,11 +131,6 @@ push_cell (CELLREF row, CELLREF col)
  * This might also be changed to use add_range_ref()?
  */
 
-	char *
-new_var_value (char *v_name, int v_namelen, struct rng *rng)
-{
-	return 0;
-}
 
 	void
 for_all_vars (void (*func) (const char *, struct var *))

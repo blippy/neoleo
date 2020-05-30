@@ -360,19 +360,6 @@ read_mp_options (char *str)
 
 /* Commands related to variables. */
 
-	void
-set_var (struct rng *val, char *var)
-{
-
-	Global->modified = 1;
-	char *ret = new_var_value (var, strlen(var), val);
-
-	if (ret)
-		io_error_msg ("Can't set-var %s: %s\n", var, ret);
-}
-
-
-
 /* set an adapter stub that does nothing */
 	void
 _do_nothing_const_char_s(const char *s)
