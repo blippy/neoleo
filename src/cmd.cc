@@ -283,41 +283,8 @@ prefix_cmd_continuation_loop (bool goto_have_character)
 	return 0;
 }
 
-#define interactive_mode_1 (!rmac || iscmd)
+//#define interactive_mode_1 (!rmac || iscmd)
 
-bool turd_1(bool interactive_mode, bool iscmd)
-{
-	ASSERT_UNCALLED();
-	return true;
-}
-
-
-	bool				// return true if we have to jump to new_cycle upon completion 
-resume_getting_arguments_loop (bool interactive_mode, bool iscmd)
-{
-	ASSERT_UNCALLED();
-	return false;
-}
-
-	void
-recompute_numeric_value_of_prefix ()
-{
-	ASSERT_UNCALLED();
-}
-
-	int				// return next state
-call_destroy_restart ()
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
-
-	int				// return a new state
-do_new_cycle ()
-{
-	ASSERT_UNCALLED();
-	return 0;
-}
 
 	void
 inner_command_loop (int state, int iscmd)
