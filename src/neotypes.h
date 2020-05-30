@@ -9,8 +9,10 @@
 #include <vector>
 
 #include "errors.h"
-#include "numeric.h"
+//#include "numeric.h"
 
+
+typedef double num_t;
 typedef unsigned short CELLREF;
 
 #if 1

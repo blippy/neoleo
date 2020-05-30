@@ -8,4 +8,4 @@ typedef _num_t num_t;
 */
 
 
-typedef double num_t;
+//typedef double num_t;
