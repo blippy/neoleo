@@ -55,11 +55,6 @@ using std::endl;
 #include "regions.h"
 #include "window.h"
 
-#ifdef	HAVE_PANIC_SAVE
-#include "panic.h"
-#endif
-
-
 using std::cout;
 using std::endl;
 
@@ -223,15 +218,6 @@ do_set_option (char *ptr)
 			set_file_opts = oleo_set_options;
 			//show_file_opts = oleo_show_options;
 		}
-#ifdef	HAVE_PANIC_SAVE
-		else if (!stricmp ("panic", ptr))
-		{
-			read_file = panic_read_file;
-			write_file = panic_write_file;
-			set_file_opts = panic_set_options;
-			//show_file_opts = panic_show_options;
-		}
-#endif
 		else
 			io_error_msg ("Unknown file format %s", ptr);
 		return 0;
