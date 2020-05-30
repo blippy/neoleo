@@ -48,6 +48,10 @@
 
 using namespace std::literals;
 
+#ifndef RETSIGTYPE
+#define RETSIGTYPE void
+#endif /* RETSIGTYPE */
+
 constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 
 /* Routines for formatting cell values */

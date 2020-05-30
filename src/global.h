@@ -19,12 +19,6 @@
 
 #include "neotypes.h"
 
-#ifndef RETSIGTYPE
-#define RETSIGTYPE void
-#endif /* RETSIGTYPE */
-
-
-
 inline constexpr auto BITS_PER_CELLREF = 16;
 
 /* The location of a cell that can never be referenced */
