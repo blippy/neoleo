@@ -40,6 +40,10 @@
 #include "utils.h"
 
 
+#define E100 1E100
+//#define NUM_HUNDREDTH 0.01
+#define NUM_TEN 10.0
+
 // very useful function!
 // https://stackoverflow.com/questions/15106102/how-to-use-c-stdostream-with-printf-like-formatting
 std::string format(const std::string& format, ...)
