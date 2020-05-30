@@ -44,9 +44,7 @@ using std::cout;
 using std::endl;
 
 
-struct ref_fm *timer_cells;
-
-CELL *my_cell;
+//CELL *my_cell;
 
 
 /* Functions for dealing exclusively with variables */
@@ -55,7 +53,7 @@ std::map<std::string, struct var>the_vars_1;
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
-	void
+	static CELL*
 set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 {
 	cur_row = row;
@@ -64,8 +62,8 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 	std::string s2{in_string};
 	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
 
-	my_cell = find_cell (cur_row, cur_col);
-	my_cell = find_or_make_cell(cur_row, cur_col);
+	//my_cell = find_cell (cur_row, cur_col);
+	return find_or_make_cell(cur_row, cur_col);
 
 }
 
@@ -78,21 +76,19 @@ extern int default_lock;
 	char *
 new_value (CELLREF row, CELLREF col, const char *string)
 {
-	CELL *cp;
-
-	cp = find_cell (row, col);
+	CELL *cp = find_cell (row, col);
 	if (((!cp || GET_LCK (cp) == LCK_DEF) && default_lock == LCK_LCK) || (cp && GET_LCK (cp) == LCK_LCK))
 	{
 		return (char *) "cell is locked";
 	}
 
-	set_cell(row, col, string);
-	if (my_cell)
-	{
-		my_cell->update_cell();
-		io_pr_cell (row, col, my_cell);
-		my_cell = 0;
-	}
+	cp = set_cell(row, col, string);
+	//if (my_cell)
+	//{
+		cp->update_cell();
+		io_pr_cell (row, col, cp);
+		//my_cell = 0;
+	//}
 	Global->modified = 1;
 	return 0;
 }
