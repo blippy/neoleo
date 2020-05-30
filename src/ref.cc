@@ -1,6 +1,4 @@
 /*
- * $Id: ref.c,v 1.15 2001/02/13 23:38:06 danny Exp $
- *
  * Copyright (c) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
@@ -44,9 +42,6 @@ using std::cout;
 using std::endl;
 
 
-//CELL *my_cell;
-
-
 /* Functions for dealing exclusively with variables */
 std::map<std::string, struct var>the_vars_1;
 
@@ -83,12 +78,8 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	}
 
 	cp = set_cell(row, col, string);
-	//if (my_cell)
-	//{
-		cp->update_cell();
-		io_pr_cell (row, col, cp);
-		//my_cell = 0;
-	//}
+	cp->update_cell();
+	io_pr_cell (row, col, cp);
 	Global->modified = 1;
 	return 0;
 }
@@ -102,9 +93,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
  */
 void add_range_ref (struct rng *rng)
 {
-
 	make_cells_in_range (rng);
-
 }
 
 
@@ -166,29 +155,6 @@ struct var *find_var_1(const char* str)
 	else
 		return nullptr;
 }
-
-/* Find a variable in the list of variables, or create it if it doesn't
-   exist.  Takes a name and a length so the name doesn't have to be
-   null-terminated
-   */
-	struct var *
-find_or_make_var(const char *string, int len)
-{
-	log_debug("find_or_make_var called");
-	//assert(strlen(string) >= len);
-	std::string varname;
-	for(int i=0; i<len; ++i) varname += string[i];
-
-	struct var *ret = find_var_1(varname.c_str());
-	if(ret) return ret;
-
-	struct var new_var;
-	new_var.var_name = varname;
-	the_vars_1[varname] = new_var;
-	return find_var_1(varname.c_str());
-}
-
-
 
 
 /* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
