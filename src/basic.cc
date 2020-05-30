@@ -104,28 +104,6 @@ delete_row (int repeat)
 
 }
 
-#if 0
-void
-delete_col (int repeat)
-{
-	struct rng from;
-	struct rng to;
-	if ((repeat < 0) || (repeat > (MAX_COL - cucol + 1)))
-	{
-		io_error_msg ("delete-col: prefix argument out of range.");
-		return;
-	}
-	from.lr = MIN_ROW;
-	from.hr = MAX_ROW;
-	from.lc = cucol + repeat;
-	from.hc = MAX_COL;
-	to.lr = MIN_ROW;
-	to.hr = MIN_ROW;
-	to.lc = cucol;
-	to.hc = cucol;
-	move_region (&from, &to);
-}
-#endif
 
 /* Front end to the window functions. */
 
@@ -492,58 +470,6 @@ unmark_cmd (void)
 	mkcol = NON_COL;
 
 	io_update_status ();
-}
-
-
-/* This is a bit kludgey. Input line editting has its own event loop (grr!),
- * and all of its state is private.  These mouse commands can't entirely
- * handle it when the target is in the input line.  In that case, they
- * save the decoded mouse event where io_get_line can pick it up:
- */
-struct mouse_event last_mouse_event;
-
-void
-do_mouse_goto (void)
-{
-	if (!last_mouse_event.downp)
-		return;
-	if (last_mouse_event.location >= 0 && last_mouse_event.downp)
-	{
-		if (input_active)
-		{
-			io_cellize_cursor ();
-			window_after_input = last_mouse_event.location;
-			input_active = 0;
-		}
-		io_set_cwin (&wins[last_mouse_event.location]);
-		io_move_cell_cursor (last_mouse_event.r, last_mouse_event.c);
-	}
-	else if (last_mouse_event.location == MOUSE_ON_INPUT)
-	{
-		goto_minibuffer ();
-	}
-	else
-		io_bell ();
-}
-
-void
-do_mouse_mark (void)
-{
-	if (last_mouse_event.location >= 0 && last_mouse_event.downp) {
-		mkrow = last_mouse_event.r;
-		mkcol = last_mouse_event.c;
-	}
-}
-
-
-void
-do_mouse_mark_and_goto (void)
-{
-	if (last_mouse_event.location >= 0 && last_mouse_event.downp) {
-		mkrow = curow;
-		mkcol = cucol;
-	}
-	do_mouse_goto ();
 }
 
 
