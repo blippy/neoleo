@@ -147,15 +147,8 @@ typedef cell cell_t;
 #define VAR_UNDEF 1
 #define VAR_CELL 2
 #define VAR_RANGE 3
-/* A var is only of this type between calls to start_shift_var and 
- * finish_shift_var 
- */
-#define VAR_DANGLING_RANGE 4
-
 typedef struct var
 {
-	//struct var *var_next;
-
 	short var_flags = VAR_UNDEF;
 	struct rng v_rng{0, 0 ,0 ,0};
 
@@ -166,7 +159,6 @@ typedef struct var
 	struct ref_fm *var_ref_fm = nullptr;
 
 	/* A variable sized array that holds the var-name. */
-	//char var_name[1];
 	std::string var_name;
 } var_t;
 
@@ -224,5 +216,4 @@ void paste_this_cell_formula();
 typedef struct point_t {int r; int c;} point_t;
 typedef point_t RC_t;
 RC_t ws_extent();
-void copy_cell_stuff (cell* src, cell* dest);
 std::string formula_text(CELLREF r, CELLREF c);

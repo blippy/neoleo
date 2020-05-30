@@ -84,7 +84,6 @@ value_t cell::get_value_2019() const
 void cell::set_value_2019(value_t newval)
 {
 	value_2019 = newval;
-	//sValue(newval);
 }
 
 void cell::set_cyclic()
@@ -151,7 +150,6 @@ void cell::insert_predec_deps(coord_t coord)
 {
 	for(auto rc: coords_in_ranges(predecs)) {
 		CELL* cp = find_or_make_cell(rc);
-		//if(!cp) continue;
 		cp->deps_2019.insert(coord);
 	}
 }
@@ -191,13 +189,6 @@ cell::~cell()
 
 
 
-void copy_cell_stuff (cell* src, cell* dest)
-{
-	dest->cell_flags = src->cell_flags;
-	dest->set_formula_text(src->get_formula_text());
-	dest->set_formula_text(src->get_formula_text());
-}
-
 bool 
 vacuous(cell* cp)
 {
@@ -208,7 +199,6 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 {
 	curow = r;
 	cucol = c;
-	//edit_cell_str(new_input);
 	set_and_eval(r, c, new_input, true);
 }
 
@@ -217,19 +207,6 @@ get_cell_formula_at(int r, int c)
 {
 	return formula_text(r, c);
 }
-
-
-
-
-
-
-
-
-
-
-
-#define S (char *)
-#define T (void (*)())
 
 void edit_cell (const char* input)
 {
