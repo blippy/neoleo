@@ -203,9 +203,7 @@ inline struct OleoGlobal *Global = new struct OleoGlobal;
 #define	BACKSPACE	0x7f
 
 #if 1
-/*
- * Hopefully 8-bit clean version
- */
+/* Hopefully 8-bit clean version */
 #ifndef CTRL_CHAR
 #define CTRL_CHAR(x)		((x)&037)
 #endif
@@ -218,19 +216,6 @@ inline struct OleoGlobal *Global = new struct OleoGlobal;
 #define META(X)		((X)|0200)
 #endif
 
-#else
-/* 8-bit diry version !! */
-
-#ifndef CTRL_CHAR
-#define CTRL_CHAR(x) (x&037)
-#endif
-#ifndef META
-#define META(X) ((X)|0200)
-#endif
-#define	META_BIT	0x80			/* Must be power of 2 */
-#define	MASK_META_BIT	(META_BIT - 1)		/* used to be 0x7f */
-
-#define	OLEO_NUM_KEYS	256
 #endif
 
 
