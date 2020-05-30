@@ -225,9 +225,7 @@ ck_fclose ( FILE *stream)
 void *
 ck_malloc( size_t size)
 {
-	void *ret;
-
-	ret = malloc (size);
+	void *ret = malloc (size);
 	if (ret == (void *) 0)
 		panic ("Couldn't allocate %u bytes", size);
 	return ret;
@@ -246,9 +244,7 @@ ck_free (void * mem)
 	void *
 ck_calloc (size_t size)
 {
-	void *ret;
-
-	ret = calloc (size, 1);
+	void *ret  = calloc (size, 1);
 	if (ret == (void *) 0)
 		panic ("Couldn't allocate %u bytes", size);
 	return ret;
