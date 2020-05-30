@@ -1,16 +1,10 @@
 #pragma once
 
-#include <cctype>
-#include <memory>
-#include <cstdint>
-#include <cstdlib>
 #include <string>
 #include <variant>
 #include <vector>
 
 #include "errors.h"
-//#include "numeric.h"
-
 
 typedef double num_t;
 typedef unsigned short CELLREF;
