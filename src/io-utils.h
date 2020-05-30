@@ -21,7 +21,6 @@
 
 #include "global.h"
 #include "cell.h"
-#include "numeric.h"
 
 extern char numb_oflo[];
 

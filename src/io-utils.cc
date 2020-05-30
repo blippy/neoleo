@@ -40,7 +40,6 @@
 #include "io-utils.h"
 #include "sheet.h"
 #include "logging.h"
-#include "numeric.h"
 #include "oleofile.h"
 #include "ref.h"
 #include "spans.h"

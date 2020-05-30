@@ -36,9 +36,7 @@ typedef uint32_t coord_t;
 //using coord_t = uint32_t;
 #include "neotypes.h"
 #include "global.h"
-#include "numeric.h"
 #include "parser-2019.h"
-//#include "sheet.h"
 #include "utils.h"
 #include "value.h"
 
