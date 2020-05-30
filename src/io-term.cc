@@ -400,48 +400,10 @@ set_var (struct rng *val, char *var)
 
 
 
-
-
-static FILE * write_variable_fp = 0;
-
-	static void
-write_a_var (const char *name, struct var *v)
-{
-	CELLREF r, c;
-	if (v->var_flags == VAR_UNDEF)
-		return;
-	r = v->v_rng.lr;
-	c = v->v_rng.lc;
-	if (v->var_flags == VAR_CELL)
-		fprintf (write_variable_fp, "%s=%s\n", v->var_name.c_str(), cell_value_string (r, c, 1).c_str());
-}
-
-	void
-write_variables (FILE * fp)
-{
-	if (write_variable_fp)
-		io_error_msg ("Can't re-enter write_variables.");
-	else
-	{
-		write_variable_fp = fp;
-		for_all_vars (write_a_var);
-		write_variable_fp = 0;
-	}
-}
-
-
-
 	int 
 add_usr_cmds (struct cmd_func *new_cmds)
 {
 	return 0;
-	/*
-	   num_funcs++;
-	   the_funcs = (cmd_func**) ck_realloc (the_funcs, 
-	   num_funcs * sizeof (struct cmd_func *));
-	   the_funcs[num_funcs - 1] = new_cmds;
-	   return num_funcs - 1;
-	   */
 }
 
 
