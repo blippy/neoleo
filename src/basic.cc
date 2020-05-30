@@ -335,16 +335,6 @@ goto_region (struct rng *r)
 }
 
 void
-goto_cell (struct rng * rng)
-{
-	rng->hr = mkrow;
-	rng->hc = mkcol;
-	goto_region (rng);
-}
-
-
-
-void
 mark_cell_cmd (int popmk)
 {
 	if (popmk)
