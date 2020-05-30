@@ -147,15 +147,6 @@ for_all_vars (void (*func) (const char *, struct var *))
 	}
 }
 
-struct var *find_var_1(const char* str)
-{
-	auto it = the_vars_1.find(str);
-	if(it != the_vars_1.end())
-		return &(it ->second);
-	else
-		return nullptr;
-}
-
 
 /* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
    associated with each variable.  Note that this does not get rid of
