@@ -75,20 +75,13 @@ int (*set_file_opts) (int, char *) = oleo_set_options;
 	EXTERN void
 fairly_std_main_loop(void)
 {
-	while (1) {
-		try {
-			main_command_loop_for2019();
-		} catch (OleoJmp& e) { }
-	}
+loop:
+	try {
+		main_command_loop_for2019();
+	} catch (OleoJmp& e) { }
+	goto loop;
 }
 
-
-/* Pointers to interesting cmd_func structures. */
-struct cmd_func *end_macro_cmd;
-struct cmd_func *digit_0_cmd;
-struct cmd_func *digit_9_cmd;
-struct cmd_func * break_cmd;
-struct cmd_func * universal_arg_cmd;
 
 
 /*
