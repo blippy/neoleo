@@ -37,8 +37,6 @@
 #include "spans.h"
 #include "utils.h"
 
-/* Shorthand */
-
 #define the_do_prompt		the_cmd_arg.do_prompt
 #define the_is_set		the_cmd_arg.is_set
 
@@ -52,174 +50,22 @@
 	int
 check_editting_mode (void)
 {
-	/*
-	if (!the_cmd_frame->cmd || cur_arg >= cmd_argc || !the_do_prompt || the_is_set)
-	{
-		io_error_msg ("Command '%s' is not appropriate now.", cur_cmd->func_name);
-		// not reached 
-	}
-*/
 	return 0;
 }
 
-/* Set the currently-being-editted line. 
- *
- * When this function is called, it indicates that some argument
- * is being read interactively from the user.  That fact is recorded
- * in the command frame because it relevant to error handling.
- * (See cmd_error in cmd.c)
- *
- */
-	void
-begin_edit (void)
-{
-	ASSERT_UNCALLED();
-}
 
-	void
-setn_edit_line (char * str, int len)
-{
-}
-
-	void
-toggle_overwrite (int set, int setting)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-beginning_of_line (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-end_of_line (void)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-backward_char (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-backward_word (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-forward_char (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-goto_char (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-forward_word (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-
-
-	void
-backward_delete_char (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void 
-backward_delete_word (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-delete_to_start(void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-delete_char (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-	void
-delete_word (int n)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-kill_line(void)
-{
-	ASSERT_UNCALLED();
-}
-
-const char*
+	const char*
 str_and_len(const std::string& instr, int& len)
 {
 	len = instr.size();
 	return instr.c_str();
 }
 
-	void
-insert_string(const std::string& instr)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-over_string(const std::string& instr)
-{
-	int len = 0;
-	const char*  str = str_and_len(instr, len);
-
-	if (check_editting_mode ())
-		return;
-	io_over(str, len);
-}
 
 	void
 put_string (const std::string& s1)
 {
 	return;
-}
-
-
-/* Higher Level editting commands. */
-
-	void
-insert_cell_expression (void)
-{
-	ASSERT_UNCALLED();
-}
-
-
-	void
-insert_other_cell_expression (struct rng * rng)
-{
-	ASSERT_UNCALLED();
 }
 
 /* No quotes are provided here, because it's easier to add
@@ -234,10 +80,6 @@ insert_cell_value(void)
 		return;
 	put_string(cell_value_string(curow, cucol, 0));
 }
-
-/* Ditto.
- * --FB 1997.12.28
- */
 
 	void
 insert_other_cell_value(struct rng * rng)
