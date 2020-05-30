@@ -30,16 +30,6 @@
 #define VOIDSTAR void*
 #endif
 
-/* mcarter 06-May-2018
- * Ugly hack to stop:
- * warning: ISO C++ forbids converting a string constant to ¿char*¿ [-Wwrite-strings]
- */
-//constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
-
-
-/*
- * All kinds of other global stuff
- */
 
 /* The most important compile-time constant.  How many bits do we want to
    allocate for cell-references?  Useful values are 8 and 16 (at the moment)
@@ -92,16 +82,6 @@ struct ref_fm
 	struct ref_array  fm_refs[1];
 };
 
-/* refs_to is a vector of locations in a formula where the
- * cell references other cells, ranges, or variables 
- */
-struct ref_to
-{
-	unsigned short refs_refcnt;
-	struct ref_to *refs_next;
-	unsigned short refs_used;
-	unsigned char to_refs[1];
-};
 
 /* These macros are used to extract/store ranges in compiled formulas. */
 #define GET_RNG(name,putit)	bcopy((VOIDSTAR)(name),(VOIDSTAR)(putit),sizeof(struct rng))
