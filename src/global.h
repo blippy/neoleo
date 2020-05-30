@@ -103,11 +103,7 @@ extern double __plinf, __neinf;
  * base address of all relative references.  During evaluation,
  * these contain the address of the cell that is being updated.
  * 
- * When MY_CELL is set, these should be the address of that cell.
- * The address is used to recompute MY_CELL as the sparse array moves 
- * around.
- * 
- * Whey are all these distinct uses bound up in one pair of GLOBAL
+ * Wey are all these distinct uses bound up in one pair of GLOBAL
  * variables?  GOOD QUESTION?  Why didn't the person who created the mess at
  * least toss in a COMMENT like the above to explain what was happening? 
  * ANOTHER GOOD QUESTION!
@@ -161,28 +157,3 @@ struct OleoGlobal {
 };
 
 inline struct OleoGlobal *Global = new struct OleoGlobal;
-
-/*
- * Determine which flags are set to indicate META-key
- *	OLEO_NUM_KEYS sizes a definition in key.h
- */
-#define	BACKSPACE	0x7f
-
-#if 1
-/* Hopefully 8-bit clean version */
-#ifndef CTRL_CHAR
-#define CTRL_CHAR(x)		((x)&037)
-#endif
-
-#define	META_BIT	0x8000			/* Must be power of 2 */
-#define	MASK_META_BIT	(META_BIT - 1)		/* used to be 0x7f */
-#define	OLEO_NUM_KEYS	0x10000
-
-#ifndef META
-#define META(X)		((X)|0200)
-#endif
-
-#endif
-
-
-static_assert(BITS_PER_CELLREF == 16);
