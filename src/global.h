@@ -17,18 +17,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <map>
-#include <string>
-
 #include "neotypes.h"
 
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
 #endif /* RETSIGTYPE */
 
-#ifndef VOIDSTAR
-#define VOIDSTAR void*
-#endif
 
 
 inline constexpr auto BITS_PER_CELLREF = 16;

@@ -17,7 +17,6 @@
  */
 
 
-#include <unistd.h>
 
 #include <iostream>
 #include <assert.h>
@@ -25,7 +24,9 @@
 #include <stdlib.h>
 #include <string>
 #include <string.h>
+#include <unistd.h>
 #include <vector>
+
 #include "utils.h"
 
 using std::cout;
@@ -62,6 +63,8 @@ using namespace std::string_literals;
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
+
+#define VOIDSTAR void*
 
 static int redrew = 0;
 static int textout = 0;

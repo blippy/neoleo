@@ -76,7 +76,7 @@ struct window
   CELLREF win_curow;
   CELLREF win_cucol;
 
-  VOIDSTAR *win_slops;	/* Slops in this window (tty only) */
+  void* *win_slops;	/* Slops in this window (tty only) */
 };
 
 struct mouse_event

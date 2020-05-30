@@ -24,38 +24,27 @@
 #include "numeric.h"	
 
 std::string format(const std::string& format, ...);
-//extern char *argv_name;
 extern int __make_backups;
 extern int __backup_by_copying;
 
-extern VOIDSTAR ck_malloc (size_t);
-extern VOIDSTAR ck_calloc (size_t);
-extern VOIDSTAR ck_realloc (void *,size_t);
+extern void* ck_malloc (size_t);
+extern void* ck_calloc (size_t);
+extern void* ck_realloc (void *,size_t);
 extern char * ck_savestr (const char *);
-extern void ck_free (VOIDSTAR);
+extern void ck_free (void*);
 #define ck_remalloc(OLD, SIZE) \
   ((OLD) ? ck_realloc ((OLD), (SIZE)) : ck_malloc (SIZE))
 
 extern num_t astof(char **sp);
 extern int strincmp (const char *, const char *, size_t);
 
-//extern char *mk_sprintf (const char *, ...);
-
-
 extern void get_usr_stats (int, char **);
 extern void set_usr_stats (int, char **);
-
 extern FILE *xopen_with_backup (char *,const char *);
 extern int xclose (FILE *);
 extern char *err_msg (void);
-
-//extern void init_mem (void);
-//extern void init_eval (void);
-// extern void init_refs (void);
-
 std::string pad_right(const std::string& s, int width);
 std::string pad_left(const std::string& n, int width);
 std::string spaces(int n);
 size_t strlen(const std::string& s);
 int stricmp (const char *, const char *);
-//char* dupe(const char* str);
