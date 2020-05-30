@@ -83,21 +83,7 @@ struct ref_fm
 };
 
 
-/* These macros are used to extract/store ranges in compiled formulas. */
-#define GET_RNG(name,putit)	bcopy((VOIDSTAR)(name),(VOIDSTAR)(putit),sizeof(struct rng))
-#define PUT_RNG(name,putit)	bcopy((VOIDSTAR)(putit),(VOIDSTAR)(name),sizeof(struct rng))
-#define EXP_ADD_RNG		sizeof(struct rng)
-
-
-/* Defined in io-utils.c: */
-extern char tname[];
-extern char fname[];
-extern char iname[];
-extern char mname[];
-extern char nname[];
-
-extern VOIDSTAR parse_hash;
-extern double __plinf, __neinf;
+//extern double __plinf, __neinf;
 
 /* These have two uses.  During parsing, these contain the 
  * base address of all relative references.  During evaluation,
