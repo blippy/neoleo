@@ -31,13 +31,6 @@
 #endif
 
 
-/* The most important compile-time constant.  How many bits do we want to
-   allocate for cell-references?  Useful values are 8 and 16 (at the moment)
-   8 allows luser to access 255*255 cells (probably big enough)
-   16 allows luser to access 65535*65535, which is more than will fit in
-   the avaliable virtual memory on any 32-bit machine.
- */
-
 inline constexpr auto BITS_PER_CELLREF = 16;
 
 /* The location of a cell that can never be referenced */
@@ -48,7 +41,6 @@ inline constexpr auto BITS_PER_CELLREF = 16;
 #define MIN_COL 	1
 
 typedef unsigned short CELLREF;
-#define CELLREF_MASK 0xFFFF
 #define MAX_ROW 65535
 #define MAX_COL 65535
 
@@ -91,17 +83,10 @@ extern int default_jst;
 extern int default_fmt, default_prc;
 extern int default_lock;
 
-extern unsigned short current_cycle;
-extern int ioerror;
-extern int errno;
-extern const char oleo_version_string[];
 extern void panic (const char *, ...);
-extern void add_ref (CELLREF, CELLREF);
-extern void add_range_ref (struct rng *);
-extern void no_more_cells (void);
 extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
-extern unsigned char parse_cell_or_range (char **, struct rng *);
+
 
 struct var; /* in case it hasn't been declared yet */
 
