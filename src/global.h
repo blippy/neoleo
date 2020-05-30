@@ -133,65 +133,31 @@ extern unsigned char parse_cell_or_range (char **, struct rng *);
 struct var; /* in case it hasn't been declared yet */
 
 /*
- * Forward declarations required to get the global variable to compile
- */
-struct	CursesGlobalType;
-
-/*
  * This structure is a start at cleaning up global variables that are
  * around all over.
  */
 struct OleoGlobal {
-	int				valid = 1;
-	std::string			FileName;	/* current_file in io-utils.c */
-	int				modified = 0;
-	CELLREF				cur_row, cur_col;
-/* User settable options */
+	struct window			*cwin, *wins;
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
-/* This is how frequently the alarm should go off. */
-	unsigned int			alarm_seconds = 1;
-/* This is whether the alarm should go off at all. */
-	unsigned int			alarm_active = 1;
-
+	int				modified = 0;
+	char	*encoding = 0;
+	int				nwin;
+	int				auto_motion_direction;
+	int				display_formula_mode = 0;
+	int				return_from_error = 0;
+	char** argv;
+	int argc;
+	int				display_opened = 0;
+	float				user_height_scale = 1.0, user_width_scale = 1.0,
+					height_scale = 1.0, width_scale = 1.0;
 /* From Window.c */
 	int				scr_lines = 24, scr_cols = 80, user_input, user_status, input = 0,
 					status = 1, input_rows, status_rows, label_rows, label_emcols;
 	struct info_buffer		*current_info;
 	int				info_rows, info_line, info_over;
 	int				default_right_border, default_bottom_border;
-	int				nwin;
-	struct window			*cwin, *wins;
 	int				win_id;
-
-	struct CursesGlobalType		*CursesGlobal;
-
-/* From lists.c */
-	float				user_height_scale = 1.0, user_width_scale = 1.0,
-					height_scale = 1.0, width_scale = 1.0;
-
-	int				cell_font_point_size = 12, block_on_getch = 1;
-	int				sneaky_linec;
-	int				display_formula_mode = 0;
-
-
-/* Basic.c */
-	int				auto_motion_direction;
-
-/* List.c */
-	char				sl_sep = '\t';
-	int				display_opened = 0;
-
-
-/* window.c */
 	struct mouse_event		*current_mouse, *free_mouse;
-	int				mouse_id;
-
-/* new stuff */
-	char				*encoding = 0;
-	int				return_from_error = 0;
-	int				had_error;
-	int argc;
-	char** argv;
 };
 
 inline struct OleoGlobal *Global = new struct OleoGlobal;
