@@ -52,13 +52,6 @@ typedef unsigned short CELLREF;
 #define MAX_ROW 65535
 #define MAX_COL 65535
 
-/* Do *not* assume that 'name' is aligned!  It probably isn't */
-#define GET_ROW(name)		((((name)[0])<<8)|(name)[1])
-#define GET_COL(name)		((((name)[2])<<8)|(name)[3])
-#define PUT_ROW(name,val)	((name)[0]=((val)>>8)),((name)[1]=val)
-#define PUT_COL(name,val)	((name)[2]=((val)>>8)),((name)[3]=val)
-#define EXP_ADD			sizeof(CELLREF)*2
-
 inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
 /* A ref_fm structure contains a list of all cells that reference some
@@ -82,8 +75,6 @@ struct ref_fm
 	struct ref_array  fm_refs[1];
 };
 
-
-//extern double __plinf, __neinf;
 
 /* These have two uses.  During parsing, these contain the 
  * base address of all relative references.  During evaluation,
