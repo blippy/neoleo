@@ -34,7 +34,7 @@
  * Ugly hack to stop:
  * warning: ISO C++ forbids converting a string constant to ¿char*¿ [-Wwrite-strings]
  */
-constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
+//constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 
 
 /*
@@ -142,20 +142,12 @@ extern unsigned short current_cycle;
 extern int ioerror;
 extern int errno;
 extern const char oleo_version_string[];
-
-//extern long astol (char **);
 extern void panic (const char *, ...);
-
 extern void add_ref (CELLREF, CELLREF);
 extern void add_range_ref (struct rng *);
-//extern void add_timer_ref (int);
-//extern void add_ref_to (int);
-
 extern void no_more_cells (void);
-
 extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
-
 extern unsigned char parse_cell_or_range (char **, struct rng *);
 
 struct var; /* in case it hasn't been declared yet */

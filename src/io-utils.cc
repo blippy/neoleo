@@ -48,15 +48,11 @@
 
 using namespace std::literals;
 
+constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
+
 /* Routines for formatting cell values */
-//struct user_fmt;
 static char *pr_int (long, struct user_fmt *, int);
 
-/*char *bname[] =
-{
-	CCC("#FALSE"), CCC("#TRUE")
-};
-*/
 
 std::string bool_name(bool b)
 {
