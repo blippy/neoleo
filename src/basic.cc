@@ -73,28 +73,6 @@ insert_1row()
 	insert_row(1);
 }
 
-#if 0
-void
-insert_col (int repeat)
-{
-	struct rng from;
-	struct rng to;
-	if ((repeat > (MAX_COL - cucol)) || (repeat < 0))
-	{
-		io_error_msg ("insert-col: prefix argument out of range.");
-		return;
-	}
-	from.lr = MIN_ROW;
-	from.hr = MAX_ROW;
-	from.lc = cucol;
-	from.hc = MAX_COL - repeat;
-	to.lr = MIN_ROW;
-	to.hr = MIN_ROW;
-	to.lc = cucol + repeat;
-	to.hc = cucol + repeat;
-	move_region (&from, &to);
-}
-#endif
 
 void
 delete_row (int repeat)
@@ -195,66 +173,6 @@ delete_other_windows (void)
 	}
 }
 
-void 
-nicely_goto_window (int n)
-{
-	if (input_active)
-	{
-		io_cellize_cursor ();
-		window_after_input = n;
-		input_active = 0;
-		return;
-	}
-	else
-	{
-		if ((window_after_input >= 0) && ((window_after_input % nwin) == n))
-		{
-			io_inputize_cursor ();
-			window_after_input = -1;
-			input_active = 1;
-			//the_cmd_frame->top_keymap = map_id (the_cmd_frame->cmd ? the_cmd_arg.style->keymap : "main");
-		}
-		else
-			io_set_cwin (&wins[n]);
-	}
-}
-
-void
-goto_minibuffer (void)
-{
-	if (window_after_input < 0)
-	{
-		if (!input_active)
-			io_error_msg ("Minibuffer not active.");
-	}
-	else
-		nicely_goto_window ((window_after_input % nwin));
-}
-
-
-void
-goto_window (char *text)
-{
-	int n;
-	n = atoi (text) - 1;
-	if (n < 0 || n > nwin)
-	{
-		io_error_msg ("Window %s doesn't exist.", text);
-		return;
-	}
-	else
-		nicely_goto_window (n);
-}
-
-
-void 
-other_window (void)
-{
-	int n = cwin - wins;
-	if (!input_active)
-		n = (n + 1) % nwin;
-	nicely_goto_window (n);
-}
 
 int
 set_window_option (int set_opt, char *text)
