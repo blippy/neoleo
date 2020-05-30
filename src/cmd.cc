@@ -448,35 +448,6 @@ void expand_prompt(char *str, struct line& line)
 }
 
 
-/* Info commands */
-
-
-
-
-#undef MAX
-#define MAX(A,B) (((A) >= (B)) ? (A) : (B))
-
-
-	void
-view_info (char *name, int ignore)
-{
-	ASSERT_UNCALLED();
-}
-
-/* The C part of this function is uninteresting.  The interesting part
- * is in defun.h.
- */
-
-	void
-with_keymap (char *mapname)
-{
-}
-
-	void
-one_cmd_with_keymap (char *mapname, struct key_sequence *keyseq)
-{
-	ASSERT_UNCALLED();
-}
 
 	void 
 set_curow(int nrow)
