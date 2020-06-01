@@ -2,8 +2,7 @@ exampledir = $(datadir)/neoleo/examples
 OLEOS := $(shell ls *.oleo)
 
 EXTRA_DIST = $(OLEOS) \
-	q110399.csv formula.sylk oleo.pm6 \
-	data.sql 
+	q110399.csv oleo.pm6
 
 
 EXTRA_DIST += pivot.r
