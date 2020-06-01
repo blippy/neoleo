@@ -1,6 +1,5 @@
 #include <cassert>
 #include <ctype.h>
-#include <deque>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -15,10 +14,8 @@
 #include "format.h"
 #include "io-abstract.h"
 #include "io-utils.h"
-//#include "neotypes.h"
 #include "regions.h"
 #include "sheet.h"
-//#include "xcept.h"
 
 #include "parser-2019.h"
 
@@ -484,7 +481,6 @@ Q rest (Q qs)
 }
 
 
-typedef deque<string> ops_t;
 
 // ARITHMETIC
 // Adopt the algorithm at 

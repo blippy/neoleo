@@ -1,7 +1,33 @@
 ===========================================================================
-VERSION: 11.0
+VERSION: 10.1
 STATUS:  DEV
 DATE:    ONGOING
+NAME:    SKINNY PETE
+
+NEARLY EVERYONE SHOULD DOWNLOAD THE FILE "neoleo-x.y.tar.gz" INSTEAD OF
+THE ONES LABELLED "Source code". THE FORMER IS A GNU-STANDARD RELEASE
+TARBALL, THE LATTER ONES ARE JUST ARCHIVES OF THE REPO.
+
+This release is a clean-up and configuration nuisance cleanup.
+
+CODEBASE
+
+`cloc' now reports a line count of less than 10K. More reductions
+are possible, although I will probably want to add features at
+some point.
+
+COMPILING ON DEBIAN BUSTER
+
+This will include people running Raspbian and Mint. G++ is at version 8.3.0,
+which has some compilation annoyances. The recommended way to
+configure neoleo is:
+	env LIBS=-lstdc++fs CXXFLAGS='-Wno-psabi' ./configure
+
+Run:
+	make clean
+beforehand if you received compilation errors
+
+
 
 
 ===========================================================================

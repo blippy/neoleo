@@ -25,18 +25,35 @@ Compiling from Git
 Trouble-shooting
 ================
 
+* error: ld undefined refence to `std::filesystem::__cxx11::path::...'
+
+This is due to an older version of g++ that does not fully support
+C++17 (e.g. in  a Debian Buster-like distro). Manifests in g++ 8.3.0
+for example. To fix, issue the commands:
+
+	make clean
+	env LIBS=-lstdc++fs ./configure
+	make
+
+
+* note about "parameter passing ... changed in GCC 7.1"
+
+This is basically saying that there was an ABI incompatiablities between 
+different versions of g++.
+
+It shouldn't cause any problems. If you're worried, then do
+	make clean
+and recompile. You can get rid of the pesky warnings by compiling using
+a command like so:
+	env CXXFLAGS='-Wno-psabi' ./configure
+
+
 * warning: non-static data member initializers only available with -std=c++11 or -std=gnu++11
 
   Manifested on Mint 18 (issue #7) on build of v5.0.0 due to ageing compiler (g++ version 5.4.0). Fix:
 	./configure "CXXFLAGS=-std=gnu++11"
   Fixed in subsequent versions.
 
-* fatal error: readline/readline.h: No such file or directory
-
-  Readline development libraries probably not installed. On Debian-based distros:
-	sudo apt-get install libreadline-dev
-  Readline support has been removed post-v5.0.0, so this problem should not recur.
-  (qv issue #7).
 
 
 Basic Installation
