@@ -1,24 +1,9 @@
-#
-# $Header: /cvs/oleo/examples/Makefile.am,v 1.9 2001/02/08 00:21:23 pw Exp $
-#
-
 exampledir = $(datadir)/neoleo/examples
-
-OLEOS = blank.oleo \
-	docs.oleo \
-	loop.oleo \
-	mysql.oleo\
-	nogood.oleo \
-	pivot.oleo \
-	plot.oleo \
-	shit.oleo \
-	test.oleo \
-	types.oleo \
-	xy.oleo
+OLEOS := $(shell ls *.oleo)
 
 EXTRA_DIST = $(OLEOS) \
 	q110399.csv formula.sylk oleo.pm6 \
-	create_koers.txt data.sql 
+	data.sql 
 
 
 EXTRA_DIST += pivot.r
