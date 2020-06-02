@@ -27,7 +27,10 @@ Run:
 	make clean
 beforehand if you received compilation errors
 
+References: 
 
+* https://github.com/blippy/neoleo/issues/43
+* https://github.com/blippy/neoleo/issues/43
 
 
 ===========================================================================
