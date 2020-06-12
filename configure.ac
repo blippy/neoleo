@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([neoleo], [10.1])
+AC_INIT([neoleo], [11.0])
 : ${CXXFLAGS=""}dnl https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/C_002b_002b-Compiler.html
 AC_CONFIG_HEADERS([config.h])
 
