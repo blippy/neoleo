@@ -41,22 +41,6 @@
 #define the_is_set		the_cmd_arg.is_set
 
 
-	int
-check_editting_mode (void)
-{
-	return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 #undef the_text

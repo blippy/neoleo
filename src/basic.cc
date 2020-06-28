@@ -386,38 +386,7 @@ imove (struct rng * rng, int ch)
 
 #define MIN(A,B)	((A) < (B) ? (A) : (B))
 
-/* PAGE_RULE can be 0: page by  rows, 1: cols, 2 shorter of rows/cols,
- *    		   -1: don't page at all.
- */
 
-void
-inc_direction (int count, int page_rule, int hack_magic)
-{
-	if (check_editting_mode ())
-		return;
-
-	if (page_rule >= 0)
-	{
-		int page_size;
-
-		switch (page_rule)
-		{
-			default:
-			case 0:
-				page_size = (cwin->screen.hr - cwin->screen.lr);
-				break;
-			case 1:
-				page_size = (cwin->screen.hc - cwin->screen.lc);
-				break;
-			case 2:
-				page_size = MIN ((cwin->screen.hr - cwin->screen.lr),
-						(cwin->screen.hc - cwin->screen.lc));
-				break;
-		}
-		count *= page_size;
-	}
-
-}
 
 /* The commands that move to the extreme of a row[col] may also move
  * forward or backward some number of col[row], according to the prefix
