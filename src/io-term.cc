@@ -41,7 +41,6 @@
 #include "io-headless.h"
 #include "io-2019.h"
 #include "io-curses.h"
-#include "io-edit.h"
 #include "io-term.h"
 #include "io-utils.h"
 

@@ -26,6 +26,7 @@
 
 #include "basic.h"
 #include "convert.h"
+#include "cmd.h"
 #include "regions.h"
 #include "window.h"
 #include "io-term.h"
@@ -34,7 +35,6 @@
 #include "io-curses.h"
 #include "ref.h"
 #include "format.h"
-#include "io-edit.h"
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"

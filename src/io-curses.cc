@@ -46,9 +46,9 @@ using namespace std::string_literals;
 #undef NULL
 #include "global.h"
 #include "cell.h"
+#include "cmd.h"
 #include "io-curses.h"
 #include "io-2019.h"
-#include "io-edit.h"
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-utils.h"

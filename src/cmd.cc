@@ -37,7 +37,6 @@
 #include "io-term.h"
 #include "io-abstract.h"
 #include "io-utils.h"
-#include "io-edit.h"
 #include "ref.h"
 #include "utils.h"
 
