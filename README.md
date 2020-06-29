@@ -9,28 +9,32 @@ source files.
 
 ## Quick start
 
+Keybindings work in the style of vim.
+
 Here, `C-` means the `Control character`, `M-` is the mod key, which is
 either `Alt` or `ESC`.
 
 | Key   | Purpose                              |
 | ----- | ------------------------------------ |
+| =     | Edit a cell                          |
+| r     | Do a row command                     |
 | C-c   | copy cell formula to clipboard       |
 | C-g   | cancels current operation            |
-| C-l	| set cell alignment left              |
-| M-m   | menu                                 |
+| C-l   | set cell alignment left              |
 | C-q   | quit                                 |
 | C-r   | set cell alignment right             |
 | C-s   | save document                        |
 | C-v   | paste cell formula from clipboard    |
 
-Other highly useful commands:
+Up, down, left right and delete keys should work as expected.
 
-| Key   | Purpose                              |
-| ----- | ------------------------------------ |
-| C-o   | insert row above                     |
-| C-k   | delete row                           |
-| M-k   | delete column                        |
-| M-o   | insert column to the left            |
+Row commands are activated by `r`:
+
+| Key | Purpose          |
+| --- |------------------|
+| d   | delete row       |
+| i   | insert row above |
+| p   | paste row        |
 
 
 ## Documents and examples
