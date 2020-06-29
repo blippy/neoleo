@@ -33,6 +33,13 @@ References:
 * https://github.com/blippy/neoleo/issues/43
 
 
+COMPILING ON ARCH
+
+* Fixed "fortification" compilation bug 
+https://github.com/blippy/neoleo/issues/44 (-Werror=stringop-overflow in col_to_str())
+
+
+
 ===========================================================================
 VERSION: 10.0
 STATUS:  RELEASED
@@ -48,6 +55,7 @@ DATE:    2020-05-27
 
 * Lots of memory leak fixes. C stuff which was a big problem has been
 replaced by more tractable C++ code.
+
 
  
 ===========================================================================
@@ -85,6 +93,7 @@ date function has disappeared, then let me know, and I'll see what I
 can do.
 
 * Added headless command `g", for `goto-cell'
+
 
 
 ===========================================================================
