@@ -28,7 +28,6 @@ void OleoSetEncoding(const char *);
 void init_infinity (void);
 void OleoUserPrefEncoding(char *);
 char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
-char * col_to_str (CELLREF col);
 int usr_set_fmts (void);
 std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
 std::string print_cell (CELL *cp);

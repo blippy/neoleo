@@ -969,53 +969,6 @@ get_abs_rng (char **pptr, struct rng *retp)
 #endif
 
 
-	char *
-col_to_str (CELLREF col)
-{
-	static char strs[2][10];
-	static int num;
-	char *ptr;
-
-	ptr = &strs[num][9];
-	num = num ? 0 : 1;
-
-	if (col < MIN_COL + 26)
-		*--ptr = 'A' - MIN_COL + col;
-#if MAX_COL>702
-	else if (col < MIN_COL + 702)
-	{
-		col -= MIN_COL + 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-	else if (col < MIN_COL + 18278)
-	{
-		col -= MIN_COL + 702;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-	else
-	{
-		col -= MIN_COL + 18278;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-#else
-	else
-	{
-		col -= MIN_COL + 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-#endif
-	return ptr;
-}
 
 	void
 clear_spreadsheet (void)

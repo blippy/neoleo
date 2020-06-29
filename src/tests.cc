@@ -32,8 +32,9 @@ using namespace std::string_literals;
 static bool all_pass = true; // all the checks have passed so far
 
 int run_parser_2019_tests ();
+int run_bug44_tests();
 
-extern void test_values();
+extern int test_values();
 
 void 
 check(bool ok, std::string msg)
@@ -88,10 +89,11 @@ std::string format_sub_test(Args... args)
 {
 	return string_format(args...);
 }
-void format_tests()
+int format_tests()
 {
 	cout << "Format tests ...\n";
 	cout << format_sub_test("Hello %s, meaning of life is %d\n", "world", 42);
+	return 1;
 }
 
 bool
@@ -101,11 +103,14 @@ headless_tests()
 	cout << "Running tests: " << option_tests_argument << "\n";
 
 	map<string, std::function<bool()> > func_map = {
+		{"44",		run_bug44_tests},
+		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
-		{"regular", 	run_regular_tests}
+		{"regular", 	run_regular_tests},
+		{"vals", 	test_values}
 	};
 
-	format_tests();
+	//format_tests();
 
 	auto it = func_map.find(option_tests_argument);
 	if(it != func_map.end()) {
@@ -117,7 +122,6 @@ headless_tests()
 			cout << it->first << "\n";
 	}
 
-	test_values();
 
 	return all_pass;
 }

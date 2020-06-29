@@ -529,6 +529,75 @@ _io_repaint_win (struct window *win)
 	io_repaint ();
 }
 
+static char *
+col_to_str (CELLREF col)
+{
+	static char strs[2][10];
+	static int num;
+	char *ptr;
+
+	ptr = &strs[num][9];
+	num = num ? 0 : 1;
+
+	if (col < MIN_COL + 26)
+		*--ptr = 'A' - MIN_COL + col;
+#if MAX_COL>702
+	else if (col < MIN_COL + 702)
+	{
+		col -= MIN_COL + 26;
+		*--ptr = 'A' + col % 26;
+		*--ptr = 'A' + col / 26;
+	}
+	else if (col < MIN_COL + 18278)
+	{
+		col -= MIN_COL + 702;
+		*--ptr = 'A' + col % 26;
+		col /= 26;
+		*--ptr = 'A' + col % 26;
+		*--ptr = 'A' + col / 26;
+	}
+	else
+	{
+		col -= MIN_COL + 18278;
+		*--ptr = 'A' + col % 26;
+		col /= 26;
+		*--ptr = 'A' + col % 26;
+		col /= 26;
+		*--ptr = 'A' + col % 26;
+		*--ptr = 'A' + col / 26;
+	}
+#else
+	else
+	{
+		col -= MIN_COL + 26;
+		*--ptr = 'A' + col % 26;
+		*--ptr = 'A' + col / 26;
+	}
+#endif
+	return ptr;
+}
+
+int run_bug44_tests ()
+{
+	auto f = [](CELLREF c, const char* expected) { 
+		const char* out = col_to_str(c); 
+		if(strcmp(out, expected) == 0) {
+			cout << "PASS ";
+		} else {
+			cout << "FAIL ";
+		}
+		cout << c << " " << expected << " vs " << col_to_str(c) << "\n";
+	};
+
+	f(MIN_COL, "A");
+	f(26, "Z");
+	f(27, "AA");
+	f(600, "WB");
+	f(1000, "ALL");
+	f(20000, "ACOF");
+	return 1;
+}
+
 static void 
 _io_repaint (void)
 {
