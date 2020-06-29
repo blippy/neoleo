@@ -8,7 +8,7 @@ AC_ARG_WITH([fortify],
 AM_CONDITIONAL([WITH_FORTIFY], test "x$with_fortify" = "xyes")
 
 AS_IF([test "x$with_fortify" = "xyes"], [
-	AC_SUBST([FORTIFY_CXXFLAGS], ["$CXXFLAGS -O -D_FORTIFY_SOURCE=2"])
+	AC_SUBST([FORTIFY_CXXFLAGS], ["$CXXFLAGS -O2 -D_FORTIFY_SOURCE=2"])
 	AC_SUBST([FORTIFY_LIBS], [])],
 	AC_SUBST([FORTIFY_CXXFLAGS], [])
 	AC_SUBST([FORTIFY_LIBS], []) )
