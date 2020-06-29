@@ -1,6 +1,4 @@
 Running tests: parser2019
-Format tests ...
-Hello world, meaning of life is 42
 Running parser 2019 tests
 Pret: R1C1: `sqrt(4+5)+2' => `5' PASS
 Pret: R1C1: `42' => `42' PASS
@@ -85,4 +83,3 @@ Pret: R14C2: `r14c[-1]' => `14.1' PASS
 Pret: R15C1: `15.2' => `15.2' PASS
 Pret: R15C2: `rc[-1]' => `15.2' PASS
 INFO: Completely finished parser2019
-test_values ... done

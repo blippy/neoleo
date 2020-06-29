@@ -529,53 +529,20 @@ _io_repaint_win (struct window *win)
 	io_repaint ();
 }
 
-static char *
+static char*
 col_to_str (CELLREF col)
 {
-	static char strs[2][10];
-	static int num;
-	char *ptr;
-
-	ptr = &strs[num][9];
-	num = num ? 0 : 1;
-
-	if (col < MIN_COL + 26)
-		*--ptr = 'A' - MIN_COL + col;
-#if MAX_COL>702
-	else if (col < MIN_COL + 702)
-	{
-		col -= MIN_COL + 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
+	static char buf[10];
+	string str = "";
+	while(col>=MIN_COL) {
+		char ch = 'A' + (col-MIN_COL) % 26 ;
+		str = string{ch} + str;
+		col = (col-MIN_COL)/26;
 	}
-	else if (col < MIN_COL + 18278)
-	{
-		col -= MIN_COL + 702;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-	else
-	{
-		col -= MIN_COL + 18278;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		col /= 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-#else
-	else
-	{
-		col -= MIN_COL + 26;
-		*--ptr = 'A' + col % 26;
-		*--ptr = 'A' + col / 26;
-	}
-#endif
-	return ptr;
+	strncpy(buf, str.c_str(), sizeof(buf)-1);
+	return buf;
 }
+
 
 int run_bug44_tests ()
 {
@@ -593,7 +560,11 @@ int run_bug44_tests ()
 	f(26, "Z");
 	f(27, "AA");
 	f(600, "WB");
+	f(MIN_COL + 702 -1, "ZZ");
+	f(MIN_COL + 702 , "AAA");
 	f(1000, "ALL");
+	f(MIN_COL + 18278-1, "ZZZ");
+	f(MIN_COL + 18278, "AAAA");
 	f(20000, "ACOF");
 	return 1;
 }
