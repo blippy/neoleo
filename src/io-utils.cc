@@ -1191,17 +1191,6 @@ read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
 	recalculate(1);
 }
 
-	void
-fmt_set_format()
-{
-}
-
-	void
-fmt_get_format()
-{
-}
-
-
 
 static std::string _FileName = "unnamed.oleo";
 
