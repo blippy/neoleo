@@ -486,84 +486,7 @@ write_cmd (FILE *fp, const char * name)
 }
 
 
-/* Cell attributes. */
-void
-set_region_height (struct rng * rng, char * height)
-{
-	int hgt;
-	char * saved_height = height;
 
-	while (isspace (*height))
-		++height;
-
-	if (   !*height
-			|| words_imatch (&height, S "d")
-			|| words_imatch (&height, S "def")
-			|| words_imatch (&height, S "default"))
-		hgt = 0;
-	else
-	{
-		hgt = astol (&height) + 1;
-		if (hgt < 0)
-			/* noreturn */
-			io_error_msg ("Height (%d) can't be less than 0.", hgt);
-	}      
-
-	if (*height)
-	{
-		io_error_msg ("Unknown height '%s'", saved_height);
-		/* Doesn't return */
-	}
-	{
-		CELLREF cc;
-		for (cc = rng->lr; ;cc++)
-		{
-			set_height (cc, hgt);
-			if (cc == rng->hr)	/* This test goes here to prevent overflow. */
-				break;
-		}
-		io_recenter_all_win ();
-	}
-}
-
-void
-set_region_width (struct rng * rng, char * width)
-{
-	char * saved_width = width;
-	int wid;
-
-	while (isspace (*width))
-		++width;
-
-	if (   !*width
-			|| words_imatch (&width, S "d")
-			|| words_imatch (&width, S "def")
-			|| words_imatch (&width, S "default"))
-		wid = 0;
-	else
-	{
-		wid = astol (&width) + 1;
-		if (wid < 0)
-			/* noreturn */
-			io_error_msg ("Width (%d) can't be less than 0.", wid);
-	}      
-
-	if (*width)
-	{
-		io_error_msg ("Unknown width '%s'", saved_width);
-		/* No return. */
-	}
-	{
-		CELLREF cc;
-		for (cc = rng->lc; ;cc++)
-		{
-			set_width (cc, wid);
-			if (cc == rng->hc)	/* This test goes here to prevent overflow. */
-				break;
-		}
-		io_recenter_all_win ();
-	}
-}
 
 
 /* PROT may be `d', `p', or `u'. */
@@ -643,67 +566,7 @@ set_region_format (struct rng * rng, int fmt)
 }
 
 
-void
-set_def_height (char * height)
-{
-	char * saved_height = height;
-	int hgt;
 
-	while (isspace (*height))
-		++height;
-
-	if (   !*height
-			|| words_imatch (&height, S "d")
-			|| words_imatch (&height, S "def")
-			|| words_imatch (&height, S "default"))
-		hgt = 1;
-	else
-	{
-		hgt = astol (&height);
-		if (hgt < 0)
-			/* noreturn */
-			io_error_msg ("Height (%d) can't be less than 0.", hgt);
-	}      
-
-	if (*height)
-	{
-		io_error_msg ("Unknown height '%s'", saved_height);
-		/* No return. */
-	}
-	default_height = hgt;
-	io_recenter_all_win ();
-}
-
-void
-set_def_width (char * width)
-{
-	char * saved_width = width;
-	int wid;
-
-	while (isspace (*width))
-		++width;
-
-	if (   !*width
-			|| words_imatch (&width, S "d")
-			|| words_imatch (&width, S "def")
-			|| words_imatch (&width, S "default"))
-		wid = 8;
-	else
-	{
-		wid = astol (&width);
-		if (wid < 0)
-			/* noreturn */
-			io_error_msg ("Width (%d) can't be less than 0.", wid);
-	}      
-
-	if (*width)
-	{
-		io_error_msg ("Unknown width '%s'", saved_width);
-		/* No return. */
-	}
-	default_width = wid;
-	io_recenter_all_win ();
-}
 
 /* PROT may be `d', `p', or `u'. */
 

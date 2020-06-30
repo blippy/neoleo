@@ -930,44 +930,6 @@ range_name (struct rng *rng)
 }
 
 
-#if 0
-/* Parse a range, allowing variable names.
- * Return 1 on failure, 0 on succes.
- */
-	int
-get_abs_rng (char **pptr, struct rng *retp)
-{
-	unsigned char n;
-	struct rng ignored;
-
-	if (!retp)
-		retp = &ignored;
-
-	while (**pptr == ' ')
-		(*pptr)++;
-	if (!**pptr)
-		return 1;
-	cur_row = curow;
-	cur_col = cucol;
-	n = parse_cell_or_range (pptr, retp);
-	if (!n)
-	{
-		struct var *v;
-		char *ptr;
-
-		ptr = *pptr;
-		while (ptr[n] && ptr[n] != ' ')
-			n++;
-		v = find_var (ptr, n);
-		if (!v)
-			return 1;
-		(*pptr) += n;
-		*retp = v->v_rng;
-	}
-	return 0;
-}
-#endif
-
 
 
 	void
@@ -1001,40 +963,6 @@ char tname[] = "#TRUE";
 char fname[] = "#FALSE";
 
 
-	int
-words_imatch (char **ptr, char *key)
-{
-	char *str = *ptr;
-
-	while (isspace (*str))
-		++str;
-	while (isspace (*key))
-		++key;
-
-	while (1)
-	{
-		while (*str && *key && (toupper (*str) == toupper (*key)))
-		{
-			++str;
-			++key;
-		}
-		/* If we're not at word breaks in both strings... */
-		if (!((!*str || isspace (*str)) && (!*key || isspace (*key))))
-			return 0;
-		else
-		{
-			while (isspace (*key))
-				++key;
-			while (isspace (*str))
-				++str;
-			if (!*key)
-			{
-				*ptr = str;
-				return 1;
-			}
-		}
-	}
-}
 
 	int
 parray_len (char **array)
@@ -1045,54 +973,7 @@ parray_len (char **array)
 }
 
 
-/* Return the index of CHECK in KEYS or -1.  Case and whitespeace insenstive.
-*/
 
-	int
-words_member (char **keys, int len, char *check)
-{
-	int x;
-	for (x = 0; x < len; ++x)
-	{
-		char *ch = check;
-		if (words_imatch (&ch, keys[x]))
-			if (!*ch)
-				return x;
-	}
-	return -1;
-}
-
-	int
-prompt_len (char *prompt)
-{
-	char *pos;
-	if (!prompt)
-		return 0;
-	for (pos = prompt; *pos && (*pos != '\n'); ++pos)
-		;
-	return pos - prompt;
-}
-
-
-	int
-says_default (char *str)
-{
-	char *key = CCC("ault");
-	if (strincmp (str, "def", 3))
-		return 0;
-	str += 3;
-	while (*str && *key)
-	{
-		int c = isupper (*str) ? tolower (*str) : *str;
-		if (c != *key)
-			return 0;
-		++key;
-		++str;
-	}
-	while (isspace (*str))
-		++str;
-	return !*str;
-}
 
 static char *defaultformat = NULL;
 
