@@ -64,11 +64,6 @@ SELECT_TYPE read_pending_fd_set;
 SELECT_TYPE exception_pending_fd_set;
 SELECT_TYPE write_pending_fd_set;
 
-/* Hooks for asynchronos i/o */
-struct select_hook file_read_hooks[SELECT_SET_SIZE] = { {0} };
-struct select_hook file_exception_hooks[SELECT_SET_SIZE] = { {0} };
-struct select_hook file_write_hooks[SELECT_SET_SIZE] = { {0} };
-
 int ioerror = 0;
 
 

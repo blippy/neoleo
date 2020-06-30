@@ -109,18 +109,6 @@ extern SELECT_TYPE read_pending_fd_set; /* These are the output of select. */
 extern SELECT_TYPE exception_pending_fd_set;
 extern SELECT_TYPE write_pending_fd_set;
 
-#ifdef __STDC__
-typedef void (*select_hook_fn) (int fd);
-#else
-typedef void (*select_hook_fn) ();
-#endif
-
-struct select_hook
-{
-	select_hook_fn hook_fn;
-	void * jrandom;
-};
-
 int real_get_chr (void);
 void cmd_io_error_msg (const char *str,...);
 
