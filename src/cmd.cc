@@ -281,19 +281,12 @@ void rebuild_command_frame()
 		free_cmd_frame (the_cmd_frame);
 	free_cmd_frame (last_of_the_old);
 }
-	static void
-init_maps (void)
-{
-	push_command_frame (0, 0, 0);
-}
-
-
 
 	void
 init_maps_and_macros()
 {
 	try {
-		init_maps();
+		push_command_frame (0, 0, 0);
 	} catch (OleoJmp& e) {
 		fprintf (stderr, "Error in the builtin init scripts (a bug!).\n");
 		io_close_display(69);
