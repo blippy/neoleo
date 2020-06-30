@@ -25,18 +25,6 @@
  */
 #include "global.h"
 
-typedef void (*alarm_fn)(void);
-
-struct alarm_entry
-{
-	alarm_fn fn;
-	int freq; // in seconds
-	time_t last_time;
-};
-
-
-extern struct alarm_entry alarm_table[];
-
 
 struct command_frame;
 
