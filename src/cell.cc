@@ -22,21 +22,12 @@
 #include <string.h>
 #include <string>
 
-
-#include "global.h"
+#include "cell.h"
 #include "cmd.h"
-#include "errors.h"
-#include "format.h"
-#include "io-abstract.h"
-#include "io-term.h"
-#include "io-utils.h"
-#include "sheet.h"
-#include "logging.h"
 #include "ref.h"
 #include "regions.h"
-#include "spans.h"
-#include "utils.h"
-#include "parser-2019.h"
+#include "sheet.h"
+
 using std::cerr;
 using std::cout;
 using std::endl;
