@@ -45,7 +45,7 @@ funptr fn_lookup(string function_name)
 
 Expr::Expr()
 {
-	expr = empty_t{};
+	expr = std::monostate{};
 }
 
 Expr::Expr(string fname, Expr x)

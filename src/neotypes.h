@@ -15,10 +15,7 @@ typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
 typedef struct rng { CELLREF lr, lc, hr, hc; int mask = 0; } rng_t;
 #endif
 
-typedef struct {}  empty_t;
 typedef struct { bool v; } bool_t;
-//typedef std::variant<num_t, std::string, err_t, rng_t, bool_t, empty_t> value_t;
-//typedef std::vector<value_t> values;
 
 typedef std::vector<std::string> strings;
 

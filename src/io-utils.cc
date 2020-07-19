@@ -1124,7 +1124,7 @@ void OleoUserPrefEncoding(char *s)
 
 std::string stringify_value_file_style(const value_t& val)	
 {
-	if(std::get_if<empty_t>(&val)) return "";
+	if(std::get_if<std::monostate>(&val)) return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
 	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];

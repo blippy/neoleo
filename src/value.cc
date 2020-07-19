@@ -24,7 +24,7 @@ ValType get_value_t_type(const value_t& val)
 	return TYP_NUL;
 }
 
-bool is_nul(const value_t& val) { return std::holds_alternative<empty_t>(val); }
+bool is_nul(const value_t& val) { return std::holds_alternative<std::monostate>(val); }
 bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
 bool is_err(const value_t& val) { return std::holds_alternative<err_t>(val); }
 bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
@@ -47,41 +47,7 @@ bool operator==(const rng_t& r1, const rng_t& r2)
 bool operator!=(const rng_t& lhs, const rng_t& rhs) { return !(lhs==rhs); }
 bool operator==(const bool_t& lhs, const bool_t& rhs) { return lhs.v==rhs.v; }
 bool operator!=(const bool_t& lhs, const bool_t& rhs) { return !(lhs==rhs); }
-bool operator==(const empty_t& lhs, const empty_t& rhs) { return true; }
-bool operator!=(const empty_t& lhs, const empty_t& rhs) { return false; }
 
-#if 0
-bool operator==(const value_t& v1, const value_t& v2)
-{ 
-
-	ValType t1 = get_value_t_type(v1);
-	if(t1 != get_value_t_type(v2))
-		return false;
-	switch(t1) {
-		case TYP_NUL:
-			return true;
-		case TYP_STR:
-			return std::get<string>(v1) == std::get<string>(v2);
-		case TYP_FLT:
-			return std::get<num_t>(v1) == std::get<num_t>(v2);
-		case TYP_ERR:
-			return std::get<err_t>(v1).num == std::get<err_t>(v2).num;
-		case TYP_RNG:
-			return std::get<rng_t>(v1) == std::get<rng_t>(v2);
-		case TYP_BOL:
-			return std::get<bool_t>(v1).v == std::get<bool_t>(v2).v;
-		default:
-			ASSERT_UNCALLED();
-			return false;
-	}
-}
-
-bool operator!=(const value_t& lhs, const value_t& rhs)
-{
-	return !(lhs==rhs);
-}
-
-#endif
 
 #define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";
 int test_values()
