@@ -13,5 +13,10 @@ bool is_nul(const value_t& val);
 bool is_range(const value_t& val); 
 bool is_bool(const value_t& val); 
 
-bool operator==(const value_t& v1, const value_t& v2);
-bool operator!=(const value_t& lhs, const value_t& rhs);
+//bool operator==(const value_t& v1, const value_t& v2);
+//bool operator!=(const value_t& lhs, const value_t& rhs);
+bool operator==(const err_t& lhs, const err_t& rhs);
+bool operator!=(const err_t& lhs, const err_t& rhs);
+bool operator!=(const rng_t& lhs, const rng_t& rhs);
+bool operator!=(const bool_t& lhs, const bool_t& rhs);
+bool operator!=(const empty_t& lhs, const empty_t& rhs);

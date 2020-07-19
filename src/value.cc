@@ -31,11 +31,26 @@ bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
 bool is_string(const value_t& val) { return std::holds_alternative<string>(val); }
 bool is_bool(const value_t& val) { return std::holds_alternative<bool_t>(val); }
 
+bool operator!=(const err_t& lhs, const err_t& rhs)
+{
+	return lhs.num != rhs.num;
+}
+bool operator==(const err_t& lhs, const err_t& rhs)
+{
+	return lhs.num == rhs.num;
+}
+
 bool operator==(const rng_t& r1, const rng_t& r2)
 {
 	return r1.lr == r2.lr && r1.hr == r2.hr && r1.lr == r2.lr && r1.hr == r2.hr;
 }
+bool operator!=(const rng_t& lhs, const rng_t& rhs) { return !(lhs==rhs); }
+bool operator==(const bool_t& lhs, const bool_t& rhs) { return lhs.v==rhs.v; }
+bool operator!=(const bool_t& lhs, const bool_t& rhs) { return !(lhs==rhs); }
+bool operator==(const empty_t& lhs, const empty_t& rhs) { return true; }
+bool operator!=(const empty_t& lhs, const empty_t& rhs) { return false; }
 
+#if 0
 bool operator==(const value_t& v1, const value_t& v2)
 { 
 
@@ -65,6 +80,8 @@ bool operator!=(const value_t& lhs, const value_t& rhs)
 {
 	return !(lhs==rhs);
 }
+
+#endif
 
 #define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";
 int test_values()
