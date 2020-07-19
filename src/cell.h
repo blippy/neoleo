@@ -106,9 +106,7 @@ class cell
 		num_t to_num();
 		ValType get_type();
 		bool_t gBol();
-		std::string gString();
 		err_t  gErr();
-		num_t gFlt();
 
 		// formula stuff
 		void set_formula_text(const std::string& str);

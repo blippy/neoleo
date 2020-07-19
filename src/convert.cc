@@ -23,11 +23,13 @@ double to_double(CELL* cp)
 	value_t v = cp->get_value_2019();
 	switch(cp->get_type()) {
 		case TYP_NUL: return 0;
-		case TYP_INT: return cp->gFlt();
-		case TYP_FLT: return cp->gFlt();
+		case TYP_INT: 
+		case TYP_FLT: 
+			      return std::get<num_t>(v);
+
 		case TYP_STR: {
 				      bool ok;
-				      f = to_double(cp->gString().c_str(), ok);
+				      f = to_double(std::get<std::string>(v).c_str(), ok);
 				      if(!ok) throw ValErr();
 				      return f;
 			      }

@@ -52,15 +52,7 @@ err_t cell::gErr()
 {
 	return get<err_t>(value_2019);
 }
-std::string cell::gString()
-{
-	return get<std::string>(value_2019);
-}
 
-num_t cell::gFlt()
-{
-	return get<num_t>(value_2019);
-}
 
 num_t cell::to_num()
 {

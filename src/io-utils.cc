@@ -430,15 +430,16 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 	cp = find_cell (row, col);
 	if(!cp) return "";
 	ValType typ = cp->get_type();
+	value_t val = cp->get_value_2019();
 	switch (typ)
 	{
 		case TYP_NUL:
 			return "";
 		case TYP_FLT:
-			return flt_to_str (cp->gFlt());
+			return flt_to_str(get<num_t>(val));
 
 		case TYP_INT:
-			sprintf (print_buf, "%ld", (long) cp->gFlt());
+			sprintf (print_buf, "%ld", (long) get<num_t>(val));
 			return print_buf;
 
 		case TYP_STR:
@@ -641,34 +642,33 @@ deal_fmt:
 			{
 				prc = width - (strlen (ufmt->decpt) + bptr - oldp);
 			}
-			bptr = pr_flt (cp->gFlt(), ufmt, -prc);
+			bptr = pr_flt (get<num_t>(cp->get_value_2019()), ufmt, -prc);
 			len = strlen (bptr);
 			if (len > width && prc > 0)
 			{
-				bptr = pr_flt (cp->gFlt(), ufmt, -(prc - 1));
+				bptr = pr_flt (get<num_t>(cp->get_value_2019()), ufmt, -(prc - 1));
 				len = strlen (bptr);
 			}
 			if (len > width)
 				return numb_oflo;
 			break;
-
+			
 		case FMT_EXP:
 handle_exp:
 			{
-				double f;
-
-				f = fabs (cp->gFlt());
+				num_t flt = get<num_t>(cp->get_value_2019());
+				double f = fabs (flt);
 				if (f > 9.99999e99 || f < 1e-99)
 					len = width - 7;
 				else			/* if(f>9.9999999e9 || f<1e-9) */
 					len = width - 6;
 				/* else
 				   len=width-5; */
-				if (cp->gFlt() < 0)
+				if (flt < 0)
 					--len;
 				if (len > 0)
 				{
-					sprintf (oldp, "%.*e", len, (double) cp->gFlt());
+					sprintf (oldp, "%.*e", len, (double) flt);
 					len = strlen (oldp);
 					if (len <= width)
 					{
