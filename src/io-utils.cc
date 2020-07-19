@@ -24,7 +24,8 @@
 #include <math.h>
 #include <signal.h>
 #include <sstream>
-#include <string.h>
+#include <cstring>
+#include <string>
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -46,6 +47,8 @@
 #include "utils.h"
 
 using namespace std::literals;
+using std::get;
+using std::string;
 
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void
@@ -281,58 +284,62 @@ std::string print_cell (CELL * cp)
 		j = default_fmt;
 		p = default_prc;
 	}
-	if (j == FMT_HID || is_nul(cp->get_value_2019()))
+
+	value_t val = cp->get_value_2019();
+	auto typ = cp->get_type();
+
+	if (j == FMT_HID || is_nul(val))
 		return CCC("");
 
-	if (cp->get_type() == TYP_STR)
-		return cp->gString();
+	if (typ == TYP_STR)
+		return get<string>(val);
 
-	if (cp->get_type() == TYP_BOL) {
-		return bool_name(cp->gBol());
+	if (typ == TYP_BOL) {
+		return bool_name(get<bool_t>(val));
 	}
-	if (cp->get_type() == TYP_ERR) {
-		return ename[cp->gErr().num];
+	if (typ == TYP_ERR) {
+		return ename[get<err_t>(val).num];
 	}
-	if (cp->get_type() == TYP_FLT) {
+	if (typ == TYP_FLT) {
+		num_t flt = get<num_t>(val);
 		switch (j)
 		{
 
 			case FMT_USR:
-				return pr_flt (cp->gFlt(), &u[p], u[p].prec);
+				return pr_flt (flt, &u[p], u[p].prec);
 
 			case FMT_GEN:
 				{
 					double f;
-
-					f = fabs (cp->gFlt());
+					f = fabs (flt);
 
 					if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
 						goto handle_exp;
-					return pr_flt (cp->gFlt(), &fxt, p, false);
+					return pr_flt (flt, &fxt, p, false);
 				}
 
 			case FMT_DOL:
-				return pr_flt (cp->gFlt(), &dol, p);
+				return pr_flt (flt, &dol, p);
 
 			case FMT_CMA:
-				return pr_flt (cp->gFlt(), &cma, p);
+				return pr_flt (flt, &cma, p);
 
 			case FMT_PCT:
-				return pr_flt (cp->gFlt(), &pct, p);
+				return pr_flt (flt, &pct, p);
 
 			case FMT_FXT:
-				return pr_flt (cp->gFlt(), &fxt, p);
+				return pr_flt (flt, &fxt, p);
 
 			case FMT_EXP:
 handle_exp:
-				if ((double) cp->gFlt() == __plinf)
+				if ((double) flt == __plinf)
 					return iname;
-				if ((double) cp->gFlt() == __neinf)
+				if ((double) flt == __neinf)
 					return mname;
 				if (p == FLOAT_PRECISION)
-					sprintf (print_buf, "%e", (double) cp->gFlt());
+					sprintf (print_buf, "%e", (double) flt);
 				else
-					sprintf (print_buf, "%.*e", p, (double) cp->gFlt());
+					sprintf (print_buf, "%.*e", p, (double) flt);
 				return print_buf;
 #ifdef TEST
 			default:
@@ -342,16 +349,15 @@ handle_exp:
 		}
 	}
 
-	if (cp->get_type() == TYP_INT) {
+	if (typ == TYP_INT) {
 		p = GET_PRECISION (cp);
-		int v = cp->gFlt();
+		int v = get<num_t>(val);
 		switch (j)
 		{
 
 #ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 			case FMT_DATE:
 				{
-					//time_t t = cp->gInt();
 					time_t t = v;
 					//int	f = GET_PRECISION(cp);		/* Determines date format */
 					struct tm *tmp = localtime(&t);
