@@ -72,58 +72,6 @@ static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
 
-void
-show_main_menu()
-{
-	struct choice {
-		char shortcut;
-		std::string text;
-	};
-
-	std::vector<struct choice> choices1 { 
-		{'0', "Close window"},
-			{'c', "Copy cell"},
-			{'v', "Paste cell"}
-	};
-
-	keypad(stdscr, TRUE);
-	WINDOW *w = newwin(5, 30, 0, 0);
-	box(w, 0, 0);
-	PANEL  *p = new_panel(w);
-	update_panels();
-	doupdate();
-
-	int r =0;
-	for(const auto & c:choices1){
-		r++;
-		mvwprintw(w, r, 1, "%c %s", c.shortcut, c.text.c_str());
-	}
-
-	wrefresh(w);
-
-	char sel = '\0';
-	while(!sel) {
-		const char c = wgetch(w);
-		if( c == '0' || c == 'c' || c == 'v') sel =c;
-	}
-
-	// TODO we prolly have to delete the win, too.
-	del_panel(p);
-	keypad(stdscr, FALSE);
-
-	// now actually do something
-	switch(sel) {
-		case 'c': // copy
-			copy_this_cell_formula();
-			break;
-		case 'v': // paste
-			paste_this_cell_formula();
-			break;
-		case '0': // just close the window. No action required
-		default:
-			break; 
-	}
-}
 
 
 
