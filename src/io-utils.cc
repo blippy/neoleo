@@ -457,10 +457,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 }
 
 	static char *
-pr_int (
-		long val,
-		struct user_fmt *fmt,
-		int prec)
+pr_int (long val, struct user_fmt *fmt, int prec)
 {
 	char *pf, *pff, *pt;
 	long int n;
