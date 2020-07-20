@@ -105,7 +105,6 @@ class cell
 		void set_value_2019(value_t newval);
 		num_t to_num();
 		ValType get_type();
-		err_t  gErr();
 
 		// formula stuff
 		void set_formula_text(const std::string& str);

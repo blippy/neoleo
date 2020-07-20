@@ -449,7 +449,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return bool_name(get<bool_t>(val).v);
 
 		case TYP_ERR:
-			return ename[cp->gErr().num];
+			return ename[get<err_t>(val).num];
 		default:
 			panic ("unknown type %d in cell_value_string", typ);
 	}
