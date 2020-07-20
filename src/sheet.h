@@ -59,3 +59,4 @@ void delete_sheet_row(coord_t row);
 void copy_row(CELLREF dst_row, CELLREF src_row);
 
 void dump_sheet();
+void delete_all_cells();

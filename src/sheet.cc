@@ -127,6 +127,7 @@ cell_t* find_cell (coord_t coord)
 	return cp;
 	*/
 }
+
 cell_t* find_cell (CELLREF r, CELLREF c) { return find_cell(to_coord(r, c)); }
 
 cell_t* find_or_make_cell (coord_t coord)

@@ -343,15 +343,15 @@ value_t do_if (Tour& tour, args_t args)
 value_t do_ctime (Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
-        time_t tim = num_eval(tour, args[0]);
-        //strcpy_c s1(ctime(&tim));
-        //s1.data()[24] = 0;
+	time_t tim = num_eval(tour, args[0]);
+	//strcpy_c s1(ctime(&tim));
+	//s1.data()[24] = 0;
 	char* s1 = ctime(&tim);
 	s1[24] = 0;
 	//string s{ctime(&tim)};
 	//s[24] = 0;
 	return string{s1};
-        //p->sString(s1.data());
+	//p->sString(s1.data());
 }
 
 
@@ -1028,3 +1028,14 @@ int run_parser_2019_tests ()
 	cout << "INFO: Completely finished parser2019\n";
 	return 0;
 }
+
+int run_clear_test()
+{
+	interpret(1,1, "16", "16");
+	clear_spreadsheet();
+	CELL* cp = find_or_make_cell(1, 1);
+	string res = print_cell(cp); 
+	cout << (res == "" ? "PASS" : "FAIL") << endl;
+	return 0;			
+}
+

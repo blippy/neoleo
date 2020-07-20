@@ -961,6 +961,7 @@ clear_spreadsheet (void)
 	default_jst = base_default_jst;
 	default_fmt = FMT_GEN;
 	default_lock = LCK_UNL;
+	delete_all_cells();
 }
 
 

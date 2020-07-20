@@ -33,6 +33,7 @@ static bool all_pass = true; // all the checks have passed so far
 
 int run_parser_2019_tests ();
 int run_bug44_tests();
+int run_clear_test();
 
 extern int test_values();
 
@@ -69,6 +70,7 @@ test_formatting()
 
 
 
+
 bool
 run_regular_tests()
 {
@@ -96,6 +98,8 @@ int format_tests()
 	return 1;
 }
 
+
+
 bool
 headless_tests()
 {
@@ -104,6 +108,7 @@ headless_tests()
 
 	map<string, std::function<bool()> > func_map = {
 		{"44",		run_bug44_tests},
+		{"clear",	run_clear_test},
 		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
 		{"regular", 	run_regular_tests},
