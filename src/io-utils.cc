@@ -446,7 +446,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return cp->get_formula_text();
 
 		case TYP_BOL:
-			return bool_name(cp->gBol());
+			return bool_name(get<bool_t>(val).v);
 
 		case TYP_ERR:
 			return ename[cp->gErr().num];

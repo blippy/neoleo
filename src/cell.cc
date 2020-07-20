@@ -44,10 +44,6 @@ ValType cell::get_type()
 	return get_value_t_type(value_2019);
 }
 
-bool_t cell::gBol()
-{
-	return get<bool_t>(value_2019);
-}
 err_t cell::gErr()
 {
 	return get<err_t>(value_2019);
