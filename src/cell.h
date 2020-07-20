@@ -206,7 +206,6 @@ extern void no_more_cells (void);
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input);
 void edit_cell (const char* input);
-void edit_cell_str (const std::string& new_formula);
 void copy_this_cell_formula();
 void paste_this_cell_formula();
 

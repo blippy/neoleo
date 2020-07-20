@@ -196,7 +196,8 @@ static void cursor_up()    { io_shift_cell_cursor(0, 1); }
 // TODO this may be more useful that you think
 static void clear_cell_formula()
 {
-	edit_cell_str("");
+	//edit_cell_str(""); // this doesn't work properly
+	set_and_eval(curow, cucol, "", true);
 	recalculate(1);
 }
 

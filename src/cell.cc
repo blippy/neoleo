@@ -199,10 +199,6 @@ void edit_cell (const char* input)
 }
 
 
-void edit_cell_str (const std::string& new_formula)
-{
-	edit_cell(new_formula.c_str());
-}
 
 /*
  * highest_row() and highest_col() should be expected to 
