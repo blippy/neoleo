@@ -3,20 +3,28 @@
 neoleo \- ncurses spreadsheet
 .SH SYNOPSIS
 .B neoleo
-[\fB\-n\fR \fIBITS\fR]
-[\fB\-\-bits\fR \fIBITS\fR]
-.IR file ...
+[\fIOPTION\fR]
+[\fIFILE\fR]
 .SH DESCRIPTION
-.B corrupt
-modifies files by toggling a randomly chosen bit.
+.B neoleo
+is a lightweight spreadsheet based on the venerable GNU Oleo project. Keybindings are styled after vim.
 .SH OPTIONS
 .TP
-.BR \-n ", " \-\-bits =\fIBITS\fR
-Set the number of bits to modify.
-Default ios one bit.
+.BR \-H ", " \-\-headless
+Run in headless mode (without ncurses front-end)
+.TP
+.BR \-h ", " \-\-help
+Show command\-line options
+.TP
+.BR \-T ", " \-\-tests =\fBX\fR
+Run test suite X.
+.TP
+.BR \-V ", " \-\-version
+Show version
 
-OK, so lots for me to fill out here.
 
+
+.SH KEY BINDINGS
 TABLES:
 
 .ie c \[shc] \
@@ -26,21 +34,17 @@ TABLES:
 .na
 .TS
 tab (@);
-l c c c.
-Description@Octal@latin1@ascii
+l l.
+Key@Meaning
 _
-T{
-continuation hyphen
-T}@255@\*[softhyphen]@-
-T{
-bullet (middle dot)
-T}@267@\(bu@o
-T{
-acute accent
-T}@264@\(aa@'
-T{
-multiplication sign
-T}@327@\(mu@x
+\[eq]@Edit a cell
+r@Perform row command
+C-c@copy cell formula to clipboard
+C-l@set cell alignment left
+C-q@quit
+C-r@set cell alignment right
+C-s@save document
+C-v@paste cell formula from clipboard
 .TE
 .ad
 
