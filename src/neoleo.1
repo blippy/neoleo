@@ -25,7 +25,7 @@ Show version
 
 
 .SH KEY BINDINGS
-TABLES:
+Main window commands:
 
 .ie c \[shc] \
 .  ds softhyphen \[shc]
@@ -47,4 +47,25 @@ C-s@save document
 C-v@paste cell formula from clipboard
 .TE
 .ad
+
+Up, down, left, right and delete keys should work as expected.
+
+Row sub-commands are activated by `r':
+
+.ie c \[shc] \
+.  ds softhyphen \[shc]
+.el \
+.  ds softhyphen \(hy
+.na
+.TS
+tab (@);
+l l.
+Key@Meaning
+_
+d@Delete row
+i@insert row above
+p@paste row
+.TE
+.ad
+
 

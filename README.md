@@ -28,50 +28,21 @@ either `Alt` or `ESC`.
 
 Up, down, left right and delete keys should work as expected.
 
-Row commands are activated by `r`:
-
-| Key | Purpose          |
-| --- |------------------|
-| d   | delete row       |
-| i   | insert row above |
-| p   | paste row        |
-
+For further keybindings, see the `man` page.
 
 ## Documents and examples
 
-Documentation is available [online](https://blippy.github.io/neoleo/).
 Neoleo installs examples in a shared directory, typically
-`/usr/local/share/neoleo`. The exact directory is determined by:
-```
-	neoleo --version | grep Datadir
-```
-
-You should explore that directory to see what is available.
-
-## Features
-
-* Ncurses interface
-* Macro language
-* Sizeable library of expressions (but not statistical regressions)
-* Primitive file format conversions
 
 
 ## Compiling/installing
 
 Read INSTALL, which contains general instructions, plus specific 
-instructions like compiling from git, as well as trouble-shooting. 
+instructions like compiling from git, as well as **trouble-shooting**. 
 Platform-specific comments are contained in INSTALL-${platform} 
 files. INSTALL-debian covers Debian-derived distros like Ubuntu
 and Mint.
 
-
-## Screenshots
-
-![screenshot](screenshot.png "screenshot")
-
-![plotting](examples/plot/plot.gif "plot")
-<br>A plot created using gnuplot, output to a dumb terminal (in
-examples/plot)
 
 ## Getting fancy
 
