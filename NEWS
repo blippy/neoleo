@@ -44,6 +44,7 @@ https://github.com/blippy/neoleo/issues/44 (-Werror=stringop-overflow in col_to_
 VERSION: 10.0
 STATUS:  RELEASED
 DATE:    2020-05-27
+NAME:    BREAKING BAD
 
 * Compilation fixes for g++ 10.1.0 and pesky Arch Linux fortifications
 
