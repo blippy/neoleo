@@ -66,4 +66,9 @@ may have some bearing on users, so they may be advised to read them.
 *  bug-oleo archives: http://lists.gnu.org/archive/html/bug-oleo/
 *  html documentation: https://blippy.github.io/neoleo/
 *  Freshcode announcement: http://freshcode.club/projects/neoleo
-*  papoanaya has a version of oleo on github: https://github.com/papoanaya/oleo
+
+Implementations of oleo:
+
+*  [edorig](https://github.com/edorig/oleo) 
+*  [papoanaya](https://github.com/papoanaya/oleo)
+
