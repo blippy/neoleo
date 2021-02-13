@@ -1,14 +1,20 @@
 ===========================================================================
 VERSION: 11.0
-STATUS:  DEV
-DATE:    ONGOING
+STATUS:  RELEASED
+DATE:    2021-02-13
 NAME:    SKINNY PETE
 
-NEARLY EVERYONE SHOULD DOWNLOAD THE FILE "neoleo-x.y.tar.gz" INSTEAD OF
-THE ONES LABELLED "Source code". THE FORMER IS A GNU-STANDARD RELEASE
-TARBALL, THE LATTER ONES ARE JUST ARCHIVES OF THE REPO.
-
 This release is a clean-up and configuration nuisance cleanup.
+
+Time for an annual release. I'm now not releasing GNU tarballs, as
+it adds more complexity, and not much convenience. If you are on
+Linux, then download the tar-gz source code, unpack it (this will
+create a dir called neoleo), then
+
+cd neoleo
+autoreconf -iv
+./configure # or whatever options you require
+
 
 CODEBASE
 
