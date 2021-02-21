@@ -2,10 +2,6 @@
 
 Lightweight curses spreadsheet based on GNU oleo.
 
-If you are downloading the file from github, most people, especially
-distro packagers wanting to do typical configure && make && make install
-should download the file neoleo-X.Y.Z.tar.gz, rather than the
-source files.
 
 ## Quick start
 
@@ -36,6 +32,16 @@ Neoleo installs examples in a shared directory, typically
 
 
 ## Compiling/installing
+
+In short (as from v10.0+), download from github, unpack
+if appropriate, then
+```
+cd neoleo
+autoreconf -iv
+./configure # adding relevant options
+make
+make install
+```
 
 Read INSTALL, which contains general instructions, plus specific 
 instructions like compiling from git, as well as **trouble-shooting**. 
