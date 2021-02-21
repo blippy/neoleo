@@ -178,8 +178,11 @@ static bool invoke_std_form(const char* desc, std::string& text_field)
 void edit_cell2019()
 {
 	std::string formula{ formula_text(curow, cucol)};
+	std::string old_formula{formula};
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
+	if(old_formula == formula) return;
+	Global->modified = true;
 	set_and_eval(curow, cucol, formula, true);
 	recalculate(1);
 }
