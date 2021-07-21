@@ -388,9 +388,10 @@ enum Tokens : unsigned char { EOI = 128, NUMBER, ID, STR, SYM, NE, GE, LE };
 
 
 	static tokens_t 
-tokenise (string str)
+tokenise (string str, bool& unclosed_string)
 {
 	tokens_t tokens;
+	unclosed_string = false; // sometimes the user doesn't close the string
 
 	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
 	const char* cstr = str.c_str();
@@ -425,7 +426,10 @@ loop:
 	} else if(ch == '"') {
 		while(1) {
 			ch = cstr[++pos];
-			if(ch == 0) break;
+			if(ch == 0) {
+				unclosed_string = true;
+				break;
+			}
 			if(ch == '"') {pos++; break; }
 			token += ch;
 		}
@@ -841,10 +845,12 @@ string str_eval (Tour& tour, Expr expr)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-Expr parse_string (const std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
+Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 	predecs.clear();
-	tokens_t tokes{tokenise(s)};
+	bool unclosed_string = false;
+	tokens_t tokes{tokenise(s, unclosed_string)};
+	if(unclosed_string) s += '"';
 
 	if constexpr (0) {
 		for(auto& t:tokes) {
