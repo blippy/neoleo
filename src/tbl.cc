@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "cell.h"
 #include "io-utils.h"
@@ -6,6 +7,7 @@
 #include "tbl.h"
 
 using std::cout;
+using std::string;
 
 
 
@@ -57,8 +59,15 @@ tbl()
 
 }
 
-void 
-save_dsv(FILE *fpout, char* file_name)
+void save_csv (const std::string& filename, char sep)
+{
+	//std::string filename = FileGetCurrentFileName() + ".csv";
+	FILE *fp = fopen(filename.c_str(), "w");
+	save_dsv(fp, sep);
+	fclose(fp);
+}
+
+void save_dsv (FILE *fpout, char sep)
 {
 
 	auto out = [&](const std::string& s) { fprintf(fpout, "%s", s.c_str()); };
@@ -72,7 +81,7 @@ save_dsv(FILE *fpout, char* file_name)
 			else
 				out(print_cell(cp));
 				
-			if(c+1<end.c) out("\t");
+			if(c+1<end.c) out(string{sep});
 		}
 		out("\n");
 	}

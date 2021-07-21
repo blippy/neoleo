@@ -4,6 +4,8 @@ STATUS:	DEV
 DATE:	TBD
 NAME:	BADGER MAYHEW
 
+* Added C-t to save document as CSV file
+* Fix for unclosed strings in formula
 * Fix for saving of modified sheets
 
 ===========================================================================

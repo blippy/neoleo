@@ -23,6 +23,7 @@ using namespace std::string_literals;
 #include "ref.h"
 #include "regions.h"
 #include "sheet.h"
+#include "tbl.h"
 #include "window.h"
 
 using std::cout;
@@ -190,6 +191,7 @@ void edit_cell2019()
 static void maybe_quit_spreadsheet2019(bool& quit);
 static void row_cmd2019();
 static void save_spreadsheet2019();
+static void save_csv2019();
 
 static void cursor_left()  { io_shift_cell_cursor(3, 1); }
 static void cursor_right() { io_shift_cell_cursor(2, 1); }
@@ -235,6 +237,7 @@ void main_command_loop_for2019()
 			{CTRL('l'), 	set_cell_alignment_left},
 			{CTRL('r'), 	set_cell_alignment_right},
 			{CTRL('s'), 	save_spreadsheet2019},
+			{CTRL('t'), 	save_csv2019},
 			{CTRL('v'), 	paste_this_cell_formula},
 
 	};
@@ -245,6 +248,20 @@ void main_command_loop_for2019()
 	endwin();
 	exit(0);
 
+}
+
+static void save_csv2019(){
+	std::string filename = FileGetCurrentFileName();
+	size_t lastindex = filename.find_last_of(".");
+	if(lastindex != std::string::npos)
+		filename = filename.substr(0, lastindex);
+	filename += ".csv";
+
+	//log("Filename before:<", filename, ">");
+	if(!invoke_std_form("Save spreadsheet as CSV:", filename)) return;
+	//FileSetCurrentFileName(filename);
+	//log("Filename after:<", FileGetCurrentFileName(), ">");
+	save_csv(filename, ',');
 }
 
 static void save_spreadsheet2019(){
