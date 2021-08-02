@@ -7,6 +7,8 @@ NAME:	BADGER MAYHEW
 * Added C-t to save document as CSV file
 * Fix for unclosed strings in formula
 * Fix for saving of modified sheets
+* Fix bug 46: llvm compilation
+
 
 ===========================================================================
 VERSION: 11.0

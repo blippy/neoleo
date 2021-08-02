@@ -110,11 +110,13 @@ const char *date_formats[] = {
 };
 
 
+#if 0
 	static RETSIGTYPE
 ignore_sig (int sig)
 {
 	(void) signal (SIGFPE, ignore_sig);
 }
+#endif
 
 /* It's ok of this fails and generates signals.  In that case, 
  * the same signal will occur when evaluating formulas and a

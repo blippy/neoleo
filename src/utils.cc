@@ -46,6 +46,7 @@
 
 // very useful function!
 // https://stackoverflow.com/questions/15106102/how-to-use-c-stdostream-with-printf-like-formatting
+/*
 std::string format(const std::string& format, ...)
 {
 	va_list args;
@@ -58,6 +59,7 @@ std::string format(const std::string& format, ...)
 	va_end(args);
 	return &vec[0];
 }
+*/
 
 
 extern int sys_nerr;

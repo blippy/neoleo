@@ -59,10 +59,10 @@ check_fmt(num_t v, const std::string& s)
 void
 test_formatting()
 {
-	check_fmt(24.6DD, "24.60");
-	check_fmt(16.36DD, "16.36"); // a source of potential rounding oddities
-	check_fmt(0.0DD,  "0.00");   // issue #10
-	check_fmt(1.0DD,  "1.00");
+	check_fmt(24.6f, "24.60");
+	check_fmt(16.36f, "16.36"); // a source of potential rounding oddities
+	check_fmt(0.0f,  "0.00");   // issue #10
+	check_fmt(1.0f,  "1.00");
 }
 
 

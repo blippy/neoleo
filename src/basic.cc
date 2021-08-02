@@ -47,9 +47,6 @@ using std::endl;
 #define S (char *)
 
 
-/* Indexed by MAGIC + 1 */
-const int boundrymagic[3] = { MIN_ROW, NON_ROW, MAX_ROW };
-
 
 /* A very basic command. */
 
