@@ -104,11 +104,3 @@ void set_height (CELLREF row, int hgt)
 {
 	the_hgts[row] = hgt;
 }
-
-
-
-
-void shift_spans (span_t&  spans, int over, CELLREF lo, CELLREF hi)
-{
-	log_debug("lists:cc:TODO:shift_spans: this actually needs to do something");
-}
