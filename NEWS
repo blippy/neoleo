@@ -10,6 +10,15 @@ NAME:	BADGER MAYHEW
 * Fix bug 46: llvm compilation
 
 
+COMPILING ON DEBIAN BULLSEYE
+
+Debian Bullseye uses g++  10.2.1 (or better), which has better C++17
+compliance. There is no need to resort to the compilation tricks as stated
+in NEWS for release version 11.0. Just configure the software in the
+regular way.
+
+
+
 ===========================================================================
 VERSION: 11.0
 STATUS:  RELEASED
