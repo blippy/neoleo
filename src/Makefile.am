@@ -24,7 +24,7 @@ dist_man_MANS = neoleo.1
 #BUILT_SOURCES = parse.cc parse.hh
 #CLEANFILES = $(BUILT_SOURCES)
 
-neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm -lncurses -lpanel -lform
+neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
 
 
 neoleo_SOURCES = \

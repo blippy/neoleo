@@ -1,23 +1,67 @@
 ===========================================================================
-VERSION:
-STATUS:	DEV
-DATE:	TBD
-NAME:	BADGER MAYHEW
+VERSION:	12.0
+STATUS:		RELEASED
+DATE:		2022-01-01
+NAME:		BADGER MAYHEW
+
+"It's a bad carpenter that blames his hammer; yo."
+
+Time for an annual release. I wish you all a happy new year for 2022.
+
+
+## WHAT'S NEW
 
 * Added C-t to save document as CSV file
 * Fix for unclosed strings in formula
 * Fix for saving of modified sheets
 * Fix bug 46: llvm compilation
-* If compile fails on Arch Linux, then please file a bug report,
-indicating what special flag Arch sets which causes the problem.
+* Fix bug 47: Arch build fix (fingers crossed) 
+https://github.com/blippy/neoleo/issues/47
 
 
-COMPILING ON DEBIAN BULLSEYE
+## INSTALLATION
+
+Every Linux distro seems to invent its own way of screwing up the
+build process. It is known to build on Debian Bullseye as of
+2022-01-01. If it fouls up on your machine, then please raise an
+issue. Fixing the build is likely to be a collaborative process,
+as it will be unlikely that I will have your distro installed.
+
+
+### DISTRO PACKAGE MAINTAINERS AND REGULAR USERS
+
+You should download neoleo-12.0.tar.gz, untar it, and issue
+the usual:
+	./configure --prefix=/usr && make && make install
+Or words to that effect. Different distros will have their
+own secret sauce as to how to construct packages.
+
+
+### GIT
+
+You can also use git, if you like:
+	git clone https://github.com/blippy/neoleo.git
+	cd neoleo
+	autoreconf -iv
+	./configure && make && make install
+
+
+### COMPILING ON DEBIAN BULLSEYE
 
 Debian Bullseye uses g++  10.2.1 (or better), which has better C++17
 compliance. There is no need to resort to the compilation tricks as stated
 in NEWS for release version 11.0. Just configure the software in the
 regular way.
+
+Dependencies are listed in the file INSTALL-debian, and you can
+install them by issuing the command:
+	bash INSTALL-debian
+
+
+### DEBIAN-ESQUE DISTROS
+
+The Ubuntus, Mints, and other derivatives of Debian can probably
+apply the notes for Debian as given above.
 
 
 
