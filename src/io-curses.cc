@@ -541,7 +541,7 @@ _io_repaint (void)
 			//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
 			static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 			static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
-			printw ("#%*d ", win->lh_wid - 2, 1 + win - wins);
+			printw ("#%*ld ", win->lh_wid - 2, 1 + win - wins);
 			if (win->flags & WIN_EDGE_REV)
 				s_display.cdstandout();
 			cc = win->screen.lc;
