@@ -25,6 +25,20 @@ Compiling from Git
 Trouble-shooting
 ================
 
+* error adding symbols: DSO missing from command line
+
+To fix:
+make clean
+Install ncurses libraries (e.g. sudo apt install libncurses-dev)
+make
+
+
+* fatal error: ncurses.h: No such file or directory
+
+On Debian-based distros:
+	sudo apt install libncurses-dev
+
+
 * error: ld undefined refence to `std::filesystem::__cxx11::path::...'
 
 This is due to an older version of g++ that does not fully support

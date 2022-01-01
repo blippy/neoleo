@@ -8,6 +8,7 @@ AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@
 AM_CXXFLAGS += -Wall
 AM_CXXFLAGS += -Wfatal-errors
+AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
 
 # try to add in some stuff that Arch trips up on
 AM_CXXFLAGS += -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security 
@@ -23,7 +24,7 @@ dist_man_MANS = neoleo.1
 #BUILT_SOURCES = parse.cc parse.hh
 #CLEANFILES = $(BUILT_SOURCES)
 
-neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm @CURSES_LIBS@ -lpanel -lform
+neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm -lncurses -lpanel -lform
 
 
 neoleo_SOURCES = \
