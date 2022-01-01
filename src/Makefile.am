@@ -9,6 +9,11 @@ AM_CXXFLAGS += @FORTIFY_CXXFLAGS@
 AM_CXXFLAGS += -Wall
 AM_CXXFLAGS += -Wfatal-errors
 
+# try to add in some stuff that Arch trips up on
+AM_CXXFLAGS += -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security 
+AM_CXXFLAGS += -D_GLIBCXX_ASSERTIONS
+
+
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
 
