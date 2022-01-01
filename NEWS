@@ -8,6 +8,8 @@ NAME:	BADGER MAYHEW
 * Fix for unclosed strings in formula
 * Fix for saving of modified sheets
 * Fix bug 46: llvm compilation
+* If compile fails on Arch Linux, then please file a bug report,
+indicating what special flag Arch sets which causes the problem.
 
 
 COMPILING ON DEBIAN BULLSEYE
