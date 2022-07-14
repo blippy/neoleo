@@ -1,4 +1,17 @@
 ===========================================================================
+VERSION:	12.1
+STATUS:		RELEASED
+DATE:		2022-07-14
+NAME:		WALT JUNIOR
+
+"Do I look like a skater?"
+
+Compilation fixes aimed at Arch Linux. Those guys are always fiddling with
+compilation flags and causing build failures.
+https://github.com/blippy/neoleo/issues/48
+
+
+===========================================================================
 VERSION:	12.0
 STATUS:		RELEASED
 DATE:		2022-01-01
