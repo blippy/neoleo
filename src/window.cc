@@ -1238,14 +1238,6 @@ io_read_window_config (char * line)
 	}
 }
 
-static void 
-init_mouse (void)
-{
-	Global->current_mouse = Global->free_mouse =
-		(struct mouse_event *) ck_malloc (sizeof (struct mouse_event));
-	Global->free_mouse->next = Global->free_mouse;
-	Global->free_mouse->prev = Global->free_mouse;
-}
 
 
 void 
@@ -1277,7 +1269,4 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc)
 	wins->win_curow = MIN_ROW;
 	wins->win_cucol = MIN_COL;
 	wins->win_slops = 0;
-	init_mouse ();
 }
-
-

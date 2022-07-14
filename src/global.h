@@ -99,7 +99,6 @@ struct OleoGlobal {
 	int				info_rows, info_line, info_over;
 	int				default_right_border, default_bottom_border;
 	int				win_id;
-	struct mouse_event		*current_mouse, *free_mouse;
 };
 
 inline struct OleoGlobal *Global = new struct OleoGlobal;

@@ -79,19 +79,6 @@ struct window
   void* *win_slops;	/* Slops in this window (tty only) */
 };
 
-struct mouse_event
-{
-  int seq;
-  int row;
-  int col;
-  int button;
-  int downp;
-  int location;			/* See #defines, below. */
-  CELLREF r;
-  CELLREF c;
-  struct mouse_event * next;
-  struct mouse_event * prev;
-};
 
 /* Window flags:
    0x01	Locked horizontally
