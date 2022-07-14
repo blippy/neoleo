@@ -47,7 +47,7 @@ using std::cout;
 char *
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
-	char* text;
+	char* text = 0;
 	if(val) text = val;
 	if(form) text = form;
 	assert(text);
