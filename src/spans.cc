@@ -10,14 +10,6 @@ void flush_spans ()
 	the_hgts.clear();
 }
 
-void
-set_user_scales (double hs, double ws)
-{
-	Global->user_height_scale = hs;
-	Global->user_width_scale = ws;
-	io_repaint ();
-}
-
 int
 get_scaled_height (CELLREF r)
 {
