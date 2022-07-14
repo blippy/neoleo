@@ -219,13 +219,6 @@ xclose ( FILE *fp)
 	return ret;
 }
 
-/* Fclose or panic */
-	void
-ck_fclose ( FILE *stream)
-{
-	if (fclose (stream) == EOF)
-		panic ("Couldn't close %s", __fp_name (stream));
-}
 
 /* fopen or panic */
 void *

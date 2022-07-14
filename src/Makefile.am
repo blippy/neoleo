@@ -7,6 +7,8 @@ AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
 
+AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection -fcf-protection -Wp,-D_GLIBCXX_ASSERTIONS
+
 
 
 AM_CXXFLAGS += -Wuninitialized
