@@ -1,5 +1,4 @@
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
-AM_CXXFLAGS += -Werror # treats warnings as errors
 AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -Wno-psabi # turn off ABI 7.1 changes
 #AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
@@ -15,6 +14,10 @@ AM_CXXFLAGS += -Wuninitialized
 #AM_CXXFLAGS += -Wfatal-errors  # aborts compilation on first error
 AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
 AM_CXXFLAGS += -Wall -Wuse-after-free
+
+#AM_CXXFLAGS += -Werror # treats warnings as errors. See "-Werror is not your friend":
+# https://embeddedartistry.com/blog/2017/05/22/werror-is-not-your-friend/
+
 
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
