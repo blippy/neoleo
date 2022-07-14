@@ -44,16 +44,20 @@ using std::cout;
 /* We're reading in a cell, whose formula is FORM, and whose current value
    is VAL.  Parse both of them. . .  (Parsing of VAL is quite primitive)
  */
-char *
+void
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
-	char* text = 0;
-	if(val) text = val;
-	if(form) text = form;
-	assert(text);
-	set_cell_input(row, col, text);
-	//my_cell = 0;
-	return 0;
+	if(form) {
+		set_cell_input(row, col, form);
+		return;
+	}
+
+	if(val) {
+                set_cell_input(row, col, val);
+		return;
+	}
+	assert(false);
+
 }
 
 void
@@ -501,33 +505,11 @@ oleo_read_file (FILE *fp, int ismerge)
 					}
 				}
 				*ptr = '\0';
-				if (cexp && cval && strcmp (cexp, cval))
-				{
-					ptr = read_new_value (crow, ccol, cexp, cval);
-					if (ptr)
-					{
-						io_error_msg ("Line %d: %d,%d: Read '%s' %s", lineno, crow, ccol, cexp, ptr);
-						break;
-					}
+				if(cexp || cval) {
+					read_new_value (crow, ccol, cexp, cval);
+					ptr = 0;
 				}
-				else if (cval)
-				{
-					ptr = read_new_value (crow, ccol, 0, cval);
-					if (ptr)
-					{
-						io_error_msg ("Line %d: %d,%d: Val '%s' %s", lineno, crow, ccol, cexp, ptr);
-						break;
-					}
-				}
-				else if (cexp)
-				{
-					ptr = read_new_value (crow, ccol, cexp, 0);
-					if (ptr)
-					{
-						io_error_msg ("Line %d: %d,%d: Exp '%s' %s", lineno, crow, ccol, cexp, ptr);
-						break;
-					}
-				}
+
 				if (cprot)
 					SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
 				if (ismerge) {
