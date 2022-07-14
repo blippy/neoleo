@@ -23,7 +23,6 @@ int next_span(span_find_t& sp, CELLREF& n);
 extern int get_height (CELLREF row);
 extern void set_height (CELLREF row, int hgt);
 extern int get_width (CELLREF col);
-extern int get_nodef_width (CELLREF col);
 extern void set_width (CELLREF col, int wid);
 extern int get_scaled_height (CELLREF r);
 extern int get_scaled_width (CELLREF c);

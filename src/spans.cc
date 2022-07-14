@@ -41,14 +41,6 @@ get_width (CELLREF col)
 	return get_span(the_wids, col, -1, default_width);
 }
 
-
-int 
-get_nodef_width (CELLREF col)
-{
-	return get_span(the_wids, col, 0, 0);
-
-}
-
 void 
 set_width (CELLREF col, int wid)
 {
