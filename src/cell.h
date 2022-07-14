@@ -109,7 +109,6 @@ class cell
 		// formula stuff
 		void set_formula_text(const std::string& str);
 
-		void update_cell();
 		void dump_cell();
 		void reparse();
 

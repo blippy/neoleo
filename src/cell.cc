@@ -34,11 +34,6 @@ using std::endl;
 using std::get;
 
 
-void
-cell::update_cell()
-{
-}
-
 ValType cell::get_type()
 {
 	return get_value_t_type(value_2019);
