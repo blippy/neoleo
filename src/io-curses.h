@@ -20,4 +20,3 @@
 extern void cont_curses(void);
 extern void stop_curses(void);
 extern void tty_graphics (void);
-void show_curses_view();

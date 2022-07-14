@@ -451,7 +451,7 @@ _io_redisp (void)
 {
 	if (!term_cursor_claimed)
 	{
-		_io_redraw_input ();
+		_io_redraw_input();
 		if (!(input_view.current_info || input_active ||
 					input_view.expanded_keymap_prompt))
 			move_cursor_to (cwin, curow, cucol, 0);
@@ -607,7 +607,7 @@ _io_repaint (void)
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;
-	_io_redraw_input ();
+	_io_redraw_input();
 	io_update_status ();
 }
 
@@ -1040,21 +1040,6 @@ _io_command_loop (int a)
 	main_command_loop_for2019();
 }
 
-
-/* try to just pain the curses screen without doing anything else
- * Doesn't seem to work
- */
-void 
-show_curses_view()
-{
-	_io_open_display();
-	//redraw_info();
-	input_view.redraw_needed = FULL_REDRAW;
-	_io_redraw_input ();
-	//_io_redisp();
-	sleep(2);
-	_io_close_display(0);
-}
 
 
 void
