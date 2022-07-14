@@ -86,11 +86,6 @@ get_height (CELLREF row)
 	return get_span(the_hgts, row, incr, default_height);
 }
 
-int 
-get_nodef_height (CELLREF row)
-{
-	return get_span(the_hgts, row, 0, 0);
-}
 
 void set_height (CELLREF row, int hgt)
 {

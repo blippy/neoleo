@@ -21,7 +21,6 @@ inline span_t the_wids, the_hgts;
 span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi);
 int next_span(span_find_t& sp, CELLREF& n);
 extern int get_height (CELLREF row);
-extern int get_nodef_height (CELLREF row);
 extern void set_height (CELLREF row, int hgt);
 extern int get_width (CELLREF col);
 extern int get_nodef_width (CELLREF col);
