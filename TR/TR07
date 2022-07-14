@@ -1,9 +1,12 @@
 TR07: coverage testing
 ===========================================================================
-2018-05-05
+2018-05-05 
+Updated 2022-07-14
 
 
 Compile and link using the flag `--coverage'
+or
+	./configure --with-coverage
 
 Run the program as usual. This will create a bunch of files of files in
 the `src' directory.
