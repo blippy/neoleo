@@ -14,7 +14,7 @@ AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection -fcf-protection
 AM_CXXFLAGS += -Wuninitialized
 #AM_CXXFLAGS += -Wfatal-errors  # aborts compilation on first error
 AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
-AM_CXXFLAGS += -Wall
+AM_CXXFLAGS += -Wall -Wuse-after-free
 
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i

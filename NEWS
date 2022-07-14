@@ -1,4 +1,18 @@
 ===========================================================================
+VERSION:	12.2
+STATUS:		RELEASED
+DATE:		2022-07-14
+NAME:		FRANCESCA LIDDY
+
+"You're gonna have to start paying me more."
+
+Compilation bug fix for utils.cc: -Werror=use-after-free 
+https://github.com/blippy/neoleo/issues/48
+
+Hopefully things compile on Arch now, fingers crossed.
+
+
+===========================================================================
 VERSION:	12.1
 STATUS:		RELEASED
 DATE:		2022-07-14
