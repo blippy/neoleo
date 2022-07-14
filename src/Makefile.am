@@ -5,15 +5,14 @@ AM_CXXFLAGS += -std=c++17
 #AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
 AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
-AM_CXXFLAGS += @FORTIFY_CXXFLAGS@
-AM_CXXFLAGS += -Wall
-AM_CXXFLAGS += -Wfatal-errors
+AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
+
+
+
+AM_CXXFLAGS += -Wuninitialized
+AM_CXXFLAGS += -Wfatal-errors 
 AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
-
-# try to add in some stuff that Arch trips up on
-AM_CXXFLAGS += -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security 
-AM_CXXFLAGS += -D_GLIBCXX_ASSERTIONS
-
+AM_CXXFLAGS += -Wall
 
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i

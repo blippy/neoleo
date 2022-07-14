@@ -35,6 +35,7 @@ case "$ID" in
 	arch)	OPTS="--with-fortify" ;;
 	#arch) source /etc/makepkg.conf ;;
 	#debian) export  LIBS=-lstdc++fs ;;
+	debian) OPTS="--with-fortify" ;;
 	#raspbian) export  LIBS=-lstdc++fs CXXFLAGS='-Wno-psabi' ;;
 	ubuntu) OPTS="--with-debug --with-coverage --with-asan" ;;
 	slackware) OPTS="--with-debug" ;;
