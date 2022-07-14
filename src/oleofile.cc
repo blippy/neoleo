@@ -671,16 +671,6 @@ static void oleo_write_var (const char *name, struct var *var)
 	}
 }
 
-static void write_mp_windows ( FILE *fp)
-{
-	//struct line line;
-
-	//line.alloc = 0;
-	//line.buf = 0;
-	std::string str = io_write_window_config();
-	fputs(str.c_str(), fp);
-	//free (line.buf);
-}
 
 void write_spans(FILE* fp, span_find_t& s_find, char typechar)
 {
@@ -831,7 +821,8 @@ oleo_write_file(FILE *fp, struct rng *rng)
 
 	write_cells(fp);
 
-	write_mp_windows (fp);
+	std::string str = io_write_window_config();
+	fputs(str.c_str(), fp);
 	(void) fprintf (fp, "E\n");
 	Global->a0 = old_a0;
 }
