@@ -5,6 +5,7 @@ TR05: Legacy Oleo
 TR06: Magic numbers
 TR07: coverage testing
 TR08: cloc
+TR09: terminal output (esc codes, etc.)
 
 
 OBSOLETE:

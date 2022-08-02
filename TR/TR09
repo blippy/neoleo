@@ -1,0 +1,8 @@
+TR09: terminal output (esc codes, etc.)
+===========================================================================
+2022-08-02
+
+print out terminfo descriptions:
+infocmp (-L)
+
+
