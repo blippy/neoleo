@@ -1,8 +1,15 @@
 ===========================================================================
-VERSION:	??
-STATUS:		DEV
+VERSION:	13.0
+STATUS:		RELEASED
+DATE:		2023-01-30
+NAME:		WAALTER WHITE
 
-C++20 bump. Even Debian Stable has C++20 support, so let's use it.
+"If you believe that there’s a hell, we’re pretty much already going 
+there."
+
+
+* C++20 bump. Even Debian Stable has C++20 support, so let's use it.
+* Code cleanups
 
 
 ===========================================================================
