@@ -13,7 +13,8 @@ AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection -fcf-protection
 AM_CXXFLAGS += -Wuninitialized
 #AM_CXXFLAGS += -Wfatal-errors  # aborts compilation on first error
 AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
-AM_CXXFLAGS += -Wall -Wuse-after-free
+AM_CXXFLAGS += -Wall 
+#AM_CXXFLAGS += -Wuse-after-free # Slackware 15.0 doesn't like this flag
 
 #AM_CXXFLAGS += -Werror # treats warnings as errors. See "-Werror is not your friend":
 # https://embeddedartistry.com/blog/2017/05/22/werror-is-not-your-friend/

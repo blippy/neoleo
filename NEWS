@@ -1,4 +1,18 @@
 ===========================================================================
+VERSION:	13.1
+STATUS:		DEV
+DATE:		
+NAME: 		HUELL BABINEAUX
+
+"I'm gonna say 'no'."
+
+* Build fix for Slackware 15.0. It doesn't like `-Wuse-after-free'.
+G++ is at version 11.2.0 on Slacky. Quite old.
+Build issues really get my goat. 
+
+* Fixed size warnings in warnings in fmt_to_str()
+
+===========================================================================
 VERSION:	13.0
 STATUS:		RELEASED
 DATE:		2023-01-30

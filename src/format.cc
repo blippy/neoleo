@@ -35,26 +35,30 @@ fmt_to_str (int format, int precision)
 
 	nbuf[0] = '\0';
 
+	auto set_nbuf = [&](int prec) {
+		snprintf(nbuf, sizeof(nbuf), "%d", prec);
+	};
+
 	switch (format) {
 		case FMT_USR:
 			ptr = "user-";
-			sprintf (nbuf, "%d", precision + 1);
+			set_nbuf(precision + 1);
 			break;
 		case FMT_GEN:
 			ptr = "general.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		case FMT_DOL:
 			ptr = "dollar.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		case FMT_CMA:
 			ptr = "comma.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		case FMT_PCT:
 			ptr = "percent.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		case FMT_FXT:
 			if (precision == 0)
@@ -64,18 +68,18 @@ fmt_to_str (int format, int precision)
 				return "decimal";				/* What's a decimal ? */
 #endif
 			ptr = "fixed.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		case FMT_EXP:
 			ptr = "exponent.";
-			sprintf (nbuf, "%d", precision);
+			set_nbuf(precision);
 			break;
 		default:
 			io_error_msg ("Unknown format %d (%x)", format, format);
 			ptr = "UNKNOWN";
 			break;
 	}
-	sprintf (buf, "%s%s", ptr, nbuf);
+	snprintf(buf, sizeof(buf), "%s%s", ptr, nbuf);
 	return buf;
 }
 
