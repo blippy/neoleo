@@ -10,6 +10,9 @@ NAME: 		SKYLER WHITE
 should be packaged. I rarely use Slack, so it's like starting from scratch
 each time. 
 
+* FAQ updated, just a little.
+
+
 ===========================================================================
 VERSION:	13.1
 STATUS:		RELEASED
@@ -23,6 +26,7 @@ G++ is at version 11.2.0 on Slacky. Quite old.
 Build issues really get my goat. 
 
 * Fixed size warnings in warnings in fmt_to_str()
+
 
 ===========================================================================
 VERSION:	13.0
