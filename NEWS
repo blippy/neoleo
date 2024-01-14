@@ -2,7 +2,9 @@
 VERSION:	??
 STATUS:		DEV
 DATE:		TBD
-NAME: 		TBD
+NAME: 		SKYLER WHITE
+
+"We've Come This Far ... What's One More?"
 
 * Added INSTALL-slack to give me some clues as to how Slackware sbo pkgs
 should be packaged. I rarely use Slack, so it's like starting from scratch
