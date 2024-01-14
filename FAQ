@@ -19,15 +19,16 @@ Answers
 
 1. What is Neoleo?
 
-	It's a spreadsheet program.
+	It's a spreadsheet program that uses ncurses and C++.
 
 2. How do I build and install it?
 
-	See the file README.md and the file INSTALL.
+	See the file README.md and the file INSTALL. There are also specialised versions: 
+	INSTALL-cygwin, INSTALL-debian, INSTALL-slack.
 
 3. Who are the perpetrators of this application?
 
-	See the file THANKS.
+	See the file THANKS. It is a fork of the GNU Oleo spreadsheet.
 
 4. But I have heard that Neoleo is defunct?
 
@@ -44,7 +45,7 @@ Answers
 
 7. What are the licensing terms for Neoleo?
 
-	See the file COPYING.
+	See the file COPYING. GPL 2, basically.
 
 8. What other free spreadsheets are out there?
 
