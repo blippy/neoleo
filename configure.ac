@@ -12,7 +12,8 @@ AX_DEBUG
 AX_GPROF
 AX_COVERAGE
 AX_FORTIFY
-AC_SUBST(CURSES_LIBS, `pkg-config --libs ncurses`)
+#AC_SUBST(CURSES_LIBS, `pkg-config --libs ncurses`)
+PKG_CHECK_MODULES(NCURSES, ncurses)
 
 AC_PROG_CXX
 #AC_PROG_YACC
