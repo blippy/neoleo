@@ -9,6 +9,9 @@ NAME: 		FRANCESCA LIDDY
 
 * Fedora compilation fixes
 
+* Link to ncursesw instead of ncurses to help Void Linux build
+https://github.com/blippy/neoleo/issues/50
+
 
 
 ===========================================================================
