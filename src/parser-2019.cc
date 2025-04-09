@@ -1030,6 +1030,7 @@ int run_parser_2019_tests ()
 
 	interpret(15, 1, "15.2", "15.2");
 	interpret(15, 2, "rc[-1]", "15.2");
+	interpret(16, 2, "r14c+r15c", "-1.1");
 
 
 	cout << "INFO: Completely finished parser2019\n";
