@@ -10,7 +10,8 @@
 #include "neotypes.h"
 #include "value.h"
 
-typedef std::pair<int, std::string> token_t;
+//typedef std::pair<int, std::string> token_t;
+typedef struct {int type; std::string val;} token_t;
 typedef std::deque<token_t> tokens_t;
 
 class Expr;

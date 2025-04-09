@@ -10,6 +10,8 @@ After what was mostly bugfixes, we now have new features
 
 * menu feature added. Type 'm' to invoke menu.
 
+* Enhanced cell referencing so that something like R12C implicitly 
+refers to current column.
 
 
 

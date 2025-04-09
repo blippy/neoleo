@@ -385,8 +385,28 @@ map<string, parse_function_t> funcmap= {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
 
-enum Tokens : unsigned char { EOI = 128, NUMBER, ID, STR, SYM, NE, GE, LE };
+// 25/4 Added EMPTY ∵ token might not exist
+enum Tokens : unsigned char { EOI = 128, NUMBER, ID, STR, SYM, NE, GE, LE, EMPTY }; 
 
+
+static token_t peek(const tokens_t& tokes)
+{
+	if(tokes.size() == 0)
+		return token_t{EMPTY, "NULL"};
+	return tokes.front();
+
+}
+
+bool operator==(const token_t t, const string& str)
+{
+	return t.val == str;
+
+}
+bool operator==(const token_t t, char c)
+{
+	return t.val == std::string{c};
+
+}
 
 	static tokens_t 
 tokenise (string str, bool& unclosed_string)
@@ -394,7 +414,7 @@ tokenise (string str, bool& unclosed_string)
 	tokens_t tokens;
 	unclosed_string = false; // sometimes the user doesn't close the string
 
-	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
+	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(token_t{toketype, token}); };
 	const char* cstr = str.c_str();
 	int pos = 0;
 	string token;
@@ -465,7 +485,7 @@ finis:
 
 void consume(char ch, tokens_t& tokes)
 {
-	if(ch == tokes.front().first)
+	if(ch == tokes.front().type)
 		tokes.pop_front();
 	else
 		parse_error();
@@ -522,12 +542,12 @@ Expr parse_fn (string fname, tokens_t& tokes, ranges_t& predecs, CELLREF r, CELL
 	FunCall fc;
 	fc.fn = fn;
 loop:
-	if(tokes.front().first == ')') goto finis;
+	if(tokes.front().type == ')') goto finis;
 	fc.args.push_back(parse_e(tokes, predecs, r, c));
-	if(tokes.front().first == ',') {
+	if(tokes.front().type == ',') {
 		consume(',', tokes);
 		goto loop;
-	} else if(tokes.front().first != ')')
+	} else if(tokes.front().type != ')')
 		parse_error();
 
 finis:
@@ -542,7 +562,7 @@ finis:
 bool is_char(tokens_t& tokes, char c)
 {
 
-	if( tokes.front().first != c)
+	if( tokes.front().type != c)
 		return false;
 	pop(tokes);
 	return true;
@@ -552,9 +572,9 @@ bool is_cellref(tokens_t& tokes, CELLREF& ref)
 {
 	bool neg = is_char(tokes, '-');
 
-	if(tokes.front().first != NUMBER)
+	if(tokes.front().type != NUMBER)
 		return false;
-	ref = stoi(tokes.front().second);
+	ref = stoi(tokes.front().val);
 	if(neg) ref = - ref;
 	pop(tokes);
 	return true;
@@ -586,6 +606,7 @@ Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, cons
 
 	bool lr_rel = false, hr_rel = false, lc_rel = false, hc_rel = false;
 
+	//cout << "\nCommand:" << command << endl;
 	if(command != "rc") {
 		parse_slice(tokes, rng.lr, lr_rel, rng.hr, hr_rel);
 		if(lr_rel) 
@@ -595,13 +616,24 @@ Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, cons
 	}
 
 
-	if(tolower(tokes.front().second[0]) == 'c') {
+	if(tolower(peek(tokes) == 'c')) {
 		pop(tokes);
 	} else if (command != "rc") {
 		parse_error();
 	}
 
-	parse_slice(tokes, rng.lc, lc_rel, rng.hc, hc_rel);
+	// so we've parsed the C, next may be LSB, slice, or something else
+	token_t t = peek(tokes);
+	if(t.type == NUMBER || t.type == '[') {
+		// it's a regular slice, e.g. R12C13:14 or R1212C[13]
+		parse_slice(tokes, rng.lc, lc_rel, rng.hc, hc_rel);
+	} else {
+		// there is nothing beyond the C. E.g. R12C, so we don't need to do anything
+		//cout << "hit the new bit\n";
+		//lc_rel = hc_rel = true;
+	}
+
+	//cout << "\nA:" << t.val << endl;
 	if(lc_rel) 
 		rng.lc += c;
 	if(hc_rel) 
@@ -616,28 +648,28 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 	token_t toke = tokes.front();
 	tokes.pop_front();
-	switch(toke.first) {
+	switch(toke.type) {
 		case NUMBER:
-			return Expr(stod(toke.second));
+			return Expr(stod(toke.val));
 		case STR:
-			return Expr(toke.second);
+			return Expr(toke.val);
 		case ID:  {
-				  string lower = toke.second;
+				  string lower = toke.val;
 				  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
 				  if(lower== "r" || lower == "rc" )
 					  return parse_rc_1(tokes, predecs, r, c, lower);
-				  if(tokes.front().first == '(')
-					  return parse_fn(toke.second, tokes, predecs, r, c);
+				  if(tokes.front().type == '(')
+					  return parse_fn(toke.val, tokes, predecs, r, c);
 				  else
 					  parse_error(); // although could be a variable name
 			  }
 		case SYM: {
 				  bool_t b;
-				  if(toke.second == "#TRUE") { 
+				  if(toke == "#TRUE") { 
 					  b.v = true;
 					  return Expr(b);
 				  }
-				  if(toke.second == "#FALSE") { 
+				  if(toke == "#FALSE") { 
 					  b.v = false;
 					  return Expr(b);
 				  }
@@ -646,7 +678,7 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 			  }
 		case '(': {
 				  Expr x1{parse_e(tokes, predecs,r ,c)};
-				  if(tokes.front().first == ')')
+				  if(peek(tokes) == ')')
 					  tokes.pop_front();
 				  else
 					  parse_error();
@@ -670,7 +702,7 @@ Expr expr_funcall (FunCall fc)
 Expr parse_f (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c) 
 { 
 	Expr x = parse_p(tokes, predecs, r, c); 
-	if(tokes.front().first == '^') {
+	if(peek(tokes) == '^') {
 		tokes.pop_front();
 		Expr y = parse_p(tokes, predecs, r, c);
 		FunCall fc;
@@ -709,7 +741,7 @@ parse_t (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 
 	fc.args.push_back(parse_f(tokes, predecs, r , c));
 	while(1) {
-		auto nid = tokes.front().first;
+		auto nid = tokes.front().type;
 		if(nid == '*') {
 			tokes.pop_front();
 			fc.args.push_back(parse_f(tokes, predecs, r, c));
@@ -737,7 +769,7 @@ parse_e1 (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 
 	fc.args.push_back(parse_t(tokes, predecs, r, c));
 	while(1) {
-		auto nid = tokes.front().first;
+		auto nid = tokes.front().type;
 		if(nid == '+') {
 			tokes.pop_front();
 			fc.args.push_back(parse_t(tokes, predecs, r ,c));
@@ -762,11 +794,11 @@ parse_e (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 
 	Expr x = parse_e1(tokes,  predecs,r ,c);
 	static unsigned char rel[] = { '=', NE, LE, GE, '<', '>' };
-	auto nid = tokes.front().first;
+	auto nid = tokes.front().type;
 	unsigned char *pos = std::find(rel, rel + sizeof(rel),  nid);
 	if(pos != rel + sizeof(rel)) {
 		FunCall fc;
-		fc.fn = &funcmap[tokes.front().second];
+		fc.fn = &funcmap[tokes.front().val];
 		tokes.pop_front();
 		fc.args.push_back(x);
 		x = parse_e1(tokes, predecs, r, c);
@@ -855,7 +887,7 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 
 	if constexpr (0) {
 		for(auto& t:tokes) {
-			cout << "Found: " << t.first << " " << t.second << "\n";
+			cout << "Found: " << t.type << " " << t.val << "\n";
 
 		}
 	}
@@ -1030,7 +1062,7 @@ int run_parser_2019_tests ()
 
 	interpret(15, 1, "15.2", "15.2");
 	interpret(15, 2, "rc[-1]", "15.2");
-	interpret(16, 2, "r14c+r15c", "-1.1");
+	interpret(16, 2, "r14c+r15c2", "29.3");
 
 
 	cout << "INFO: Completely finished parser2019\n";
