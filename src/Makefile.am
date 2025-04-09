@@ -41,6 +41,7 @@ neoleo_SOURCES = \
 		 io-2019.cc io-headless.cc io-curses.cc io-term.cc \
 		 io-utils.cc \
 		 logging.cc \
+		 menu-2025.cc \
 		 oleofile.cc \
 		 parser-2019.cc \
 		 ref.cc regions.cc \
@@ -62,6 +63,7 @@ noinst_HEADERS = basic.h cell.h \
 		 io-2019.h io-abstract.h io-headless.h io-curses.h \
 		 io-term.h io-utils.h \
 		 logging.h \
+		 menu-2025.h \
 		 neotypes.h  \
 		 oleofile.h  \
 		 parser-2019.h \

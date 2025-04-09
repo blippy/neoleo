@@ -379,6 +379,9 @@ curses_display::~curses_display()
 
 }
 
+
+
+/* called by _io_open_display() */
 void curses_display::activate()
 {
 	if(m_activated) return;
@@ -393,8 +396,16 @@ void curses_display::activate()
 	raw ();
 	noecho ();
 	nonl ();
+	start_color();
 	/* Must be after initscr() */
-	io_init_windows (LINES, COLS, 1, 2, 1, 1, 1, 1);
+
+
+	//sleep(5);
+
+
+	io_init_windows(LINES, COLS, 1, 2, 1, 1, 1, 1);
+	//create_and_show_main_menu(COLS);
+
 	// io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
 	info_rows = 1;
 	//print_width = columns;		/* Make ascii print width == terminal width. */

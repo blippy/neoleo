@@ -18,6 +18,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <optional>
 #include <string>
 #include <stdio.h>
 #include "global.h"
@@ -46,3 +47,26 @@ std::string pad_left(const std::string& n, int width);
 std::string spaces(int n);
 size_t strlen(const std::string& s);
 int stricmp (const char *, const char *);
+
+
+// 25/4 A defer statement by Ginger Bill 
+// https://www.gingerbill.org/article/2015/08/19/defer-in-cpp/
+template <typename F>
+struct privDefer {
+	F f;
+	privDefer(F f) : f(f) {}
+	~privDefer() { f(); }
+};
+
+template <typename F>
+privDefer<F> defer_func(F f) {
+	return privDefer<F>(f);
+}
+
+#define DEFER_1(x, y) x##y
+#define DEFER_2(x, y) DEFER_1(x, y)
+#define DEFER_3(x)    DEFER_2(x, __COUNTER__)
+#define defer(code)   auto DEFER_3(_defer_) = defer_func([&](){code;})
+
+// 25/4
+std::optional<int> to_int(const std::string& str);

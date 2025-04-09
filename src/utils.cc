@@ -1,7 +1,7 @@
 /*
  * $Id: utils.c,v 1.20 2001/02/13 23:38:06 danny Exp $
  *
- * Copyright © 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright ï¿½ 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -61,6 +61,17 @@ std::string format(const std::string& format, ...)
 }
 */
 
+// 25/4 You can use it like
+// auto v = to_int(mystr);
+
+std::optional<int> to_int(const std::string& str)
+{
+	try {
+		return stoi(str);
+	} catch(...) {
+		return std::nullopt;
+	}
+}
 
 extern int sys_nerr;
 

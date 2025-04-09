@@ -1,4 +1,19 @@
 ===========================================================================
+VERSION:	16.0
+STATUS:		DEV
+DATE:		TBD
+NAME: 		HANK SCHRADER
+
+"Guess that's progress."
+
+After what was mostly bugfixes, we now have new features
+
+* menu feature added. Type 'm' to invoke menu.
+
+
+
+
+===========================================================================
 VERSION:	15.0
 STATUS:		RELEASE
 DATE:		2025-01-04

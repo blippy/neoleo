@@ -7,6 +7,8 @@ Lightweight curses spreadsheet based on GNU oleo.
 
 Keybindings work in the style of vim.
 
+Type `m' to bring up a menu. You can dismiss it by hitting any non-bound key.
+
 Here, `C-` means the `Control character`, `M-` is the mod key, which is
 either `Alt` or `ESC`.
 

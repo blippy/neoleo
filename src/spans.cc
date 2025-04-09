@@ -2,6 +2,7 @@
 #include "io-term.h"
 #include "logging.h"
 #include "spans.h"
+#include "cmd.h"
 
 
 void flush_spans ()
@@ -35,6 +36,12 @@ int get_span(const span_t& span, int ref, int incr, int def)
 		return def;
 }
 
+#define COL  cucol
+
+int get_width() { return get_width(COL);}
+
+void set_width (int wid) { 	set_width(COL, wid); }
+
 int 
 get_width (CELLREF col)
 {
@@ -47,6 +54,7 @@ set_width (CELLREF col, int wid)
 	the_wids[col] = wid;
 	io_update_width(col, wid);
 }
+
 
 
 span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi)

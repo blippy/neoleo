@@ -44,3 +44,4 @@ void recalculate (int all);
 void write_cmd (FILE *fp, const char * name);
 void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name);
 int set_window_option (int set_opt, char *text);
+void redraw_screen (void);

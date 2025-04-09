@@ -20,6 +20,7 @@ using namespace std::string_literals;
 #include "io-utils.h"
 #include "logging.h"
 //#include "mem.h"
+#include "menu-2025.h"
 #include "ref.h"
 #include "regions.h"
 #include "sheet.h"
@@ -28,7 +29,7 @@ using namespace std::string_literals;
 
 using std::cout;
 
-constexpr int CTRL(int c) { return c & 037; }
+static constexpr int CTRL(int c) { return c & 037; }
 
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;
@@ -46,6 +47,8 @@ int scr_width() {
 class nwin_c {
 	public:
 		nwin_c() { 
+			
+
 			m_w = newwin(1, scr_width(), 0, 0);
 			assert(m_w);
 			wrefresh(m_w);
@@ -227,6 +230,7 @@ void main_command_loop_for2019()
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 			{'=', 		edit_cell2019},
+			{'m',		menu_display},
 			{'r',		row_cmd2019},
 			{KEY_DC, 	clear_cell_formula}, // delete key
 			{KEY_DOWN,	cursor_down},
