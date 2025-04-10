@@ -26,7 +26,9 @@ either `Alt` or `ESC`.
 
 Up, down, left right and delete keys should work as expected.
 
-For further keybindings, see the `man` page.
+For further keybindings, see the `man neoleo-keys` page. 
+You should definitely read that manpage!
+
 
 ## Documents and examples
 

@@ -188,7 +188,6 @@ void edit_cell2019()
 	if(old_formula == formula) return;
 	Global->modified = true;
 	set_and_eval(curow, cucol, formula, true);
-	recalculate(1);
 }
 
 static void maybe_quit_spreadsheet2019(bool& quit);
@@ -196,22 +195,58 @@ static void row_cmd2019();
 static void save_spreadsheet2019();
 static void save_csv2019();
 
-static void cursor_left()  { io_shift_cell_cursor(3, 1); }
+//static void cursor_col_0()  { io_shift_cell_cursor(3, 2 + 0*(cucol-1)); } // repeat cucol times to bring cursor to column 0
+static void cursor_left()  { io_shift_cell_cursor(3,1); }
 static void cursor_right() { io_shift_cell_cursor(2, 1); }
 static void cursor_down()  { io_shift_cell_cursor(1, 1); }
 static void cursor_up()    { io_shift_cell_cursor(0, 1); }
+
+// needed for handling Ctl leftarrow and uparrow
+static void complex_key_sequence_27()
+{
+	// key 27 has already been obtained by process_key(). We need to determine the rest
+
+	int c;
+	auto get = [&](){ 
+		c = getch(); 
+		//log(c);
+		return c;
+	};
+	if(get() != 91) goto fail;
+	if(get() != 49) goto fail;
+	if(get() != 59) goto fail;
+	if(get() != 53) goto fail;
+
+	
+	switch(get()) {
+		case 68: // Ctr leftarrow
+			io_shift_cell_cursor(3, cucol-1); // repeat cucol-1 times to bring cursor to column 1
+			break;
+		case 65: // Ctrl uparrow
+			io_shift_cell_cursor(0, curow-1); // repeat curol-1 times to bring cursor to row 1
+			break;
+		default:
+			goto fail;		
+	}
+	return;
+
+fail:
+	//failed, so just put back the last read failed char
+	ungetch(c);
+}
+
 
 // TODO this may be more useful that you think
 static void clear_cell_formula()
 {
 	//edit_cell_str(""); // this doesn't work properly
 	set_and_eval(curow, cucol, "", true);
-	recalculate(1);
 }
 
 void process_key(const keymap_t& keymap)
 {
 	int c = getch();
+	//log("process_key:", c);
 	auto search = keymap.find(c);
 	if(search == keymap.end()) { beep(); return; }
 	auto fn = search->second;
@@ -235,6 +270,7 @@ void main_command_loop_for2019()
 			{KEY_DC, 	clear_cell_formula}, // delete key
 			{KEY_DOWN,	cursor_down},
 			{KEY_LEFT,  	cursor_left},
+			{27,  		complex_key_sequence_27},
 			{KEY_RIGHT, 	cursor_right},
 			{KEY_UP, 	cursor_up},
 			{CTRL('c'), 	copy_this_cell_formula},

@@ -1,0 +1,66 @@
+.TH NEOLEO-KEYS 1
+.SH NAME
+neoleo-keys \- neoleo key bindings for main window
+
+.SH SYNOPSIS
+
+Main window commands:
+
+.ie c \[shc] \
+.  ds softhyphen \[shc]
+.el \
+.  ds softhyphen \(hy
+.na
+.TS
+tab (@);
+l r l.
+Key@NB@Meaning
+_
+\[eq]@@Edit a cell
+m@@Show menu
+r@@Perform row command
+C-\[<-]@1@move to first column (Ctrl-leftarrow)
+C-\[ua]@1@move to first row (Ctrl-uparrow)
+C-c@@copy cell formula to clipboard
+C-l@@set cell alignment left
+C-q@@quit
+C-r@2@set cell alignment right
+C-s@@save document
+C-t@@save document as CSV file
+C-v@@paste cell formula from clipboard
+.TE
+.ad
+
+
+.SH NOTE 1 - ARROWS
+
+Up, down, left, right and delete keys should work as expected.
+
+Ctrl- left and up arrows are not guaranteed to work on all terminals due to some of their limitations.
+
+.SH NOTE 2 - ROW COMMANDS
+
+Row sub-commands are activated by `r':
+
+.ie c \[shc] \
+.  ds softhyphen \[shc]
+.el \
+.  ds softhyphen \(hy
+.na
+.TS
+tab (@);
+l l.
+Key@Meaning
+_
+d@Delete row
+i@insert row above
+p@paste row
+.TE
+.ad
+
+.SH EXAMPLES
+
+Type `\fBri\fP' to insert a row above the current cell position
+
+.SH SEE ALSO
+\fBneoleo\fP(1)

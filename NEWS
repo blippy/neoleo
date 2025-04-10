@@ -13,6 +13,9 @@ After what was mostly bugfixes, we now have new features
 * Enhanced cell referencing so that something like R12C implicitly 
 refers to current column.
 
+* Added support for Ctrl-uparrow (move the 1st row) and Ctl-leftarrow
+(move to 1st column). Note that this is not supported on all terminals.
+
 
 
 ===========================================================================
