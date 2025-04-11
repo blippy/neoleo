@@ -72,6 +72,7 @@ struct cell_flags_s {
 	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;	
 	bool		bold = false;
+	bool		italic = false;
 }; 
 
 typedef unsigned char* formula_t;

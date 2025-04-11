@@ -423,6 +423,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 	int fmt = 0, prc = 0;
 	int jst = 0;
 	bool is_bold = false;
+	bool is_italic = false;
 	
 
 
@@ -535,6 +536,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			}
 			vlen = 1;
 			break;
+		case 'I':
+			is_italic = true;
 		case 'R': /* Row from cols 1 to 63 */
 			czrow = astol(&ptr);
 			vlen = 4;
@@ -573,6 +576,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		SET_PRECISION(cp, prc);
 		SET_JST(cp, jst);
 		cp->cell_flags.bold = is_bold;
+		cp->cell_flags.italic = is_italic;
 	};
 
 	switch (vlen)
@@ -704,7 +708,8 @@ void write_cells(FILE* fp)
 		f1 = GET_FORMAT (cp);
 		j1 = GET_JST (cp);
 		bool is_bold = cp->cell_flags.bold;
-		if (f1 != FMT_DEF || j1 != JST_DEF || is_bold)
+		bool is_italic = cp->cell_flags.italic;
+		if (f1 != FMT_DEF || j1 != JST_DEF || is_bold || is_italic)
 		{
 			(void) fprintf (fp, "F;");
 			if (c != ccol) {
@@ -717,6 +722,7 @@ void write_cells(FILE* fp)
 			}
 
 			if(is_bold) fprintf(fp, "B;");
+			if(is_italic) fprintf(fp, "I;");
 			fprintf (fp, "F");
 			
 			fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));

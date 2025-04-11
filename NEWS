@@ -8,6 +8,9 @@ NAME: 		HANK SCHRADER
 
 After what was mostly bugfixes, we now have new features
 
+* italic feature added via C-i. WARNING: If you save a cell with a bold
+format, the file will not be compatible with previous versions.
+
 * bold feature added via C-b. WARNING: If you save a cell with a bold
 format, the file will not be compatible with previous versions.
 

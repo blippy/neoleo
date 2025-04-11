@@ -895,6 +895,8 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		wattr_on(stdscr, WA_BOLD, 0);
 	 	//wprint("\033[1m");
 	}
+	bool is_italic = cp->cell_flags.italic;
+	if(is_italic) wattr_on(stdscr, WA_ITALIC, 0);
 
 
 
@@ -1057,7 +1059,8 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}
 
-	wattr_off(stdscr, WA_BOLD, 0);
+	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
+	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
 	if (glowing) _io_update_status ();
 	move (yy, xx);
 }

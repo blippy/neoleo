@@ -539,6 +539,17 @@ void set_cell_toggle_bold()
 	io_repaint();
 }
 
+void set_cell_toggle_italic()
+{
+	
+	auto cp = find_or_make_cell();
+	cp->cell_flags.italic = ! cp->cell_flags.italic;
+	Global->modified = true;
+	io_repaint();
+}
+
+
+
 void set_cell_alignment_left()
 {
 	set_cell_alignment('L');
