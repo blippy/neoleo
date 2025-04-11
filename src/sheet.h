@@ -35,7 +35,7 @@ cell* find_cell(CELLREF row, CELLREF col);
 cell* find_cell(coord_t coord);
 cell* find_or_make_cell(CELLREF row, CELLREF col);
 cell_t* find_or_make_cell (coord_t coord);
-
+cell_t* find_or_make_cell ();
 
 void init_cells();
 celldeq_t get_cells_in_range(struct rng *r);

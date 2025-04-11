@@ -25,6 +25,7 @@
 #include "logging.h"
 #include "ref.h"
 #include "sheet.h"
+#include "cmd.h"
 
 using std::cout;
 using std::endl;
@@ -147,6 +148,7 @@ cell_t* find_or_make_cell (coord_t coord)
 	return ptr;
 }
 cell_t* find_or_make_cell (CELLREF row, CELLREF col) { return find_or_make_cell(to_coord(row, col)); }
+cell_t* find_or_make_cell() {return find_or_make_cell(curow, cucol);}
 
 
 void init_cells ()

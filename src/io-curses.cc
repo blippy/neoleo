@@ -35,7 +35,8 @@ using std::string;
 using std::vector;
 using namespace std::string_literals;
 
-#include <ncurses.h>
+//#include <ncurses.h>
+//#include <curses.h>
 #include <menu.h>
 #include <panel.h>
 
@@ -61,6 +62,17 @@ using namespace std::string_literals;
 #include "logging.h"
 #include "ref.h"
 
+
+void wprint(WINDOW *w, const char* str)
+{
+	waddstr(w, str);
+}
+
+void wprint(const char* str)
+{
+	addstr(str);
+}
+
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
 
@@ -71,7 +83,7 @@ static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
-
+static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 
 
 
@@ -612,7 +624,7 @@ _io_repaint (void)
 		for(CELL* cp: get_cells_in_range(&(win->screen))) {
 			decoord(cp, rr, cc);
 			if (cp->get_type() != TYP_NUL)
-				io_pr_cell_win(win, rr, cc, cp);
+				_io_pr_cell_win(win, rr, cc, cp);
 		}
 	}
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
@@ -838,9 +850,11 @@ _io_clear_input_after (void)
 }
 
 
-static void
-_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
+
+
+static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
+	//log("_io_pr_cell_win:", cp);
 	int glowing;
 	int lenstr;
 	int j;
@@ -873,8 +887,17 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	//char* ptr = str.c_str();
 
 	move_cursor_to (win, r, c, 0);
-	if (glowing)
-		standout ();
+	if (glowing) standout ();
+
+	bool is_bold = cp->cell_flags.bold;
+	if(is_bold)  {
+		//log("Found bolds");
+		wattr_on(stdscr, WA_BOLD, 0);
+	 	//wprint("\033[1m");
+	}
+
+
+
 	j = GET_JST (cp);
 	if (j == JST_DEF)
 		j = default_jst;
@@ -1033,11 +1056,21 @@ _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		//log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}
-	if (glowing)
-		io_update_status ();
+
+	//if(is_bold) wprint("\e[0m");
+	if (glowing) _io_update_status ();
 	move (yy, xx);
 }
 
+/*
+static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) 
+{
+	bool is_bold = cp->cell_flags.bold;
+	if(is_bold) wattron(win, A_BOLD); "\e[1m"
+	inner_io_pr_cell_win (win, r,c,cp);
+	if(is_bold) attroff(A_BOLD);
+}
+*/
 
 static void
 _io_flush (void)

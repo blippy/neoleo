@@ -39,6 +39,7 @@
 #include "sheet.h"
 #include "spans.h"
 #include "utils.h"
+#include "logging.h"
 
 using std::cout;
 using std::endl;
@@ -524,6 +525,17 @@ static void set_cell_alignment(char align)
 {
 	rng_t rng = {curow, cucol, curow, cucol};
 	set_region_alignment(&rng, align);
+}
+
+
+// NB probably belongs somewhere else
+void set_cell_toggle_bold()
+{
+	
+	auto cp = find_or_make_cell();
+	cp->cell_flags.bold = ! cp->cell_flags.bold;
+	//log("set_cell_toggle_bold:", cp, ":", cp->cell_flags.bold );
+	io_repaint();
 }
 
 void set_cell_alignment_left()

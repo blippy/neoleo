@@ -17,6 +17,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <ncurses.h>
+
 extern void cont_curses(void);
 extern void stop_curses(void);
 extern void tty_graphics (void);
+
+void wprint(WINDOW *w, const char* str); // let's be generic
+void wprint(const char* str);

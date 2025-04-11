@@ -6,6 +6,7 @@
 #include <map>
 
 #include <ncurses.h>
+//#include <curses.h>
 #include <form.h>
 #include <panel.h>
 
@@ -273,6 +274,7 @@ void main_command_loop_for2019()
 			{27,  		complex_key_sequence_27},
 			{KEY_RIGHT, 	cursor_right},
 			{KEY_UP, 	cursor_up},
+			{CTRL('b'),	set_cell_toggle_bold},
 			{CTRL('c'), 	copy_this_cell_formula},
 			{CTRL('l'), 	set_cell_alignment_left},
 			{CTRL('r'), 	set_cell_alignment_right},
