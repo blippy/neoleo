@@ -86,10 +86,14 @@ void cell::set_row(CELLREF r)
 }
 
 
+/*
 void cell::clear_flags()
 {
+	//cell_flags = {};
+
 	this->cell_flags.clear();
 }
+	*/
 
 
 
