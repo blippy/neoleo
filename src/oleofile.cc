@@ -1,5 +1,5 @@
 /*
- * Copyright © 1990-2000, 2001 Free Software Foundation, Inc.
+ * Copyright ï¿½ 1990-2000, 2001 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+ #include <string>
 #include <ctype.h>
 #include <cmath>
 #include <stdlib.h>
@@ -38,6 +39,7 @@ using std::cout;
 #include "window.h"
 #include "spans.h"
 #include "utils.h"
+#include "logging.h"
 
 /* These functions read and write OLEO style files. */
 
@@ -60,6 +62,8 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 }
 
+static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col);
+
 void
 oleo_read_file (FILE *fp, int ismerge)
 {
@@ -68,13 +72,13 @@ oleo_read_file (FILE *fp, int ismerge)
 	int lineno;
 	char cbuf[1024];
 	char expbuf[1024];
-	int vlen = 0;
+	//int vlen = 0;
 	int cprot;
 	char *cexp, *cval;
-	CELL *cp;
-	struct rng rng;
-	int fmt = 0, prc = 0;
-	int jst = 0;
+	//CELL *cp;
+	//struct rng rng;
+	//int fmt = 0, prc = 0;
+	//int jst = 0;
 	struct font_memo ** fnt_map = 0;
 	int fnt_map_size = 0;
 	int fnt_map_alloc = 0;
@@ -146,231 +150,8 @@ oleo_read_file (FILE *fp, int ismerge)
 				}
 				break;
 			case 'F':		/* Format field */
-				vlen = 0;
-				ptr++;
-				//fnt = 0;	/* The font must be explicitly overriden for a cell. */
-				while (*ptr)
-				{
-					if (*ptr != ';')
-						goto bad_field;
-					ptr++;
-					switch (*ptr++) {
-						int clo, chi, cwid;
-						case 'C':	/* Column from rows 1 to 255 */
-						czcol = astol (&ptr);
-						vlen = 2;
-						break;
-
-						case 'D':	/* Default format */
-						switch (*ptr++)
-						{
-							case 'G':
-								default_fmt = FMT_GEN;
-								break;
-							case 'E':
-								default_fmt = FMT_EXP;
-								break;
-							case 'F':
-								default_fmt = FMT_FXT;
-								break;
-							case '$':
-								default_fmt = FMT_DOL;
-								break;
-							case ',':	/* JF */
-								default_fmt = FMT_CMA;
-								break;
-							case 'U':
-								default_fmt = FMT_USR;
-								break;
-							case '%':
-								default_fmt = FMT_PCT;
-								break;
-							case 'H':
-								default_fmt = FMT_HID;
-								break;
-							case 'd':	/* Date */
-								default_fmt = FMT_DATE;
-								break;
-								/* End of JF */
-							default:
-								io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
-								break;
-						}
-						if (*ptr == 'F')
-						{
-							prc = default_prc = FLOAT_PRECISION;
-							ptr++;
-						}
-						else
-							default_prc = prc = astol (&ptr);
-
-						switch (*ptr++)
-						{
-							case 'C':
-								default_jst = JST_CNT;
-								break;
-							case 'L':
-								default_jst = JST_LFT;
-								break;
-							case 'R':
-								default_jst = JST_RGT;
-								break;
-							case 'G':	/* General format not supported */
-							default:
-								io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-								break;
-						}
-						default_width = astol (&ptr);
-						break;
-
-						case 'f': /* Font specification */
-						{
-							int id;
-							id = astol(&ptr);
-							if (id < 0 || id >= fnt_map_size)
-							{
-								io_error_msg ("Line %d: Undefined font (%d)\n",
-										lineno, id);
-								break;
-							}
-							//fnt = fnt_map[id];
-							break;
-						}
-
-						case 'F':
-						switch (*ptr++)
-						{
-							case 'D':
-								fmt = FMT_DEF;
-								break;
-							case 'G':
-								fmt = FMT_GEN;
-								break;
-							case 'E':
-								fmt = FMT_EXP;
-								break;
-							case 'F':
-								fmt = FMT_FXT;
-								break;
-							case '$':
-								fmt = FMT_DOL;
-								break;
-							case ',':	/* JF */
-								fmt = FMT_CMA;
-								break;
-							case 'U':
-								fmt = FMT_USR;
-								break;
-							case '%':
-								fmt = FMT_PCT;
-								break;
-							case 'H':
-								fmt = FMT_HID;
-								break;	/* END of JF */
-							case 'd':
-								fmt = FMT_DATE;
-								break;
-							case 'C':
-							default:
-								io_error_msg ("Line %d: format %c not supported", lineno, ptr[-1]);
-								fmt = FMT_DEF;
-								break;
-						}
-						if (*ptr == 'F') {
-							prc = FLOAT_PRECISION;
-							ptr++;
-						} else {
-							prc = astol(&ptr);
-						}
-						switch (*ptr++)
-						{
-							case 'C':
-								jst = JST_CNT;
-								break;
-							case 'L':
-								jst = JST_LFT;
-								break;
-							case 'R':
-								jst = JST_RGT;
-								break;
-							case 'D':
-								jst = JST_DEF;
-								break;
-							default:
-								io_error_msg ("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-								jst = JST_DEF;
-								break;
-						}
-						vlen = 1;
-						break;
-						case 'R':	/* Row from cols 1 to 63 */
-						czrow = astol (&ptr);
-						vlen = 4;
-						break;
-
-						case 'W':	/* Width of clo to chi is cwid */
-						clo = astol (&ptr);
-						chi = astol (&ptr);
-						cwid = astol (&ptr) + 1;
-						for (; clo <= chi; clo++) {
-							set_width (clo, cwid);
-						}
-						break;
-
-						case 'H':	/* JF: extension */
-						clo = astol (&ptr);
-						chi = astol (&ptr);
-						cwid = astol (&ptr) + 1;
-						for (; clo <= chi; clo++)
-							set_height (clo, cwid);
-						break;
-						case 'c':
-						ccol = astol (&ptr);
-						break;
-						case 'r':
-						crow = astol (&ptr);
-						break;
-
-						default:
-						goto bad_field;
-					}
-				}
-				switch (vlen)
-				{
-					case 1:
-						cp = find_or_make_cell (crow, ccol);
-						SET_FORMAT (cp, fmt);
-						SET_PRECISION(cp, prc);
-						SET_JST (cp, jst);
-						//if (font_spec_in_format) cp->cell_font = fnt;
-						break;
-					case 2:
-						rng.lr = MIN_ROW;
-						rng.lc = czcol;
-						rng.hr = mx_row;
-						rng.hc = czcol;
-						make_cells_in_range (&rng);
-						for(CELL* cp:get_cells_in_range(&rng))
-						{
-							SET_FORMAT (cp, fmt);
-							SET_PRECISION(cp, prc);
-							SET_JST (cp, jst);
-						}
-						break;
-					case 4:
-						rng.lr = czrow;
-						rng.lc = MIN_COL;
-						rng.hr = czrow;
-						rng.hc = mx_col;
-						make_cells_in_range (&rng);
-						for(CELL* cp:get_cells_in_range(&rng))
-						{
-							SET_FORMAT (cp, fmt);
-							SET_JST (cp, jst);
-						}
-						break;
-					default:
-						break;
+				if(!(read_fmt_line(&ptr, crow, ccol, czrow, czcol, lineno, fnt_map_size, mx_row, mx_col))) {
+					goto bad_field;
 				}
 				break;
 
@@ -623,6 +404,260 @@ static char * oleo_fmt_to_str (int f1, int p1)
 			break;
 	}
 	return p_buf;
+}
+
+/*
+25/4
+A line beginning with F (for format)
+
+*/
+static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col)
+{
+	//log_debug(std::string{"works"});
+	#define ptr (*cptr) // do some refactoring fudging
+	ptr++; // The 'F' is already read in, so skip it
+
+	CELL *cp;
+	struct rng rng;
+	int vlen =0;
+	int fmt = 0, prc = 0;
+	int jst = 0;
+	
+
+
+	// fnt = 0;	/* The font must be explicitly overriden for a cell. */
+	while (*ptr)
+	{
+		if (*ptr != ';')
+			goto bad_field;
+		ptr++;
+		switch (*ptr++)
+		{
+			int clo, chi, cwid;
+		case 'C': /* Column from rows 1 to 255 */
+			czcol = astol(&ptr);
+			vlen = 2;
+			break;
+
+		case 'D': /* Default format */
+			switch (*ptr++)
+			{
+			case 'G':
+				default_fmt = FMT_GEN;
+				break;
+			case 'E':
+				default_fmt = FMT_EXP;
+				break;
+			case 'F':
+				default_fmt = FMT_FXT;
+				break;
+			case '$':
+				default_fmt = FMT_DOL;
+				break;
+			case ',': /* JF */
+				default_fmt = FMT_CMA;
+				break;
+			case 'U':
+				default_fmt = FMT_USR;
+				break;
+			case '%':
+				default_fmt = FMT_PCT;
+				break;
+			case 'H':
+				default_fmt = FMT_HID;
+				break;
+			case 'd': /* Date */
+				default_fmt = FMT_DATE;
+				break;
+				/* End of JF */
+			default:
+				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
+				break;
+			}
+			if (*ptr == 'F')
+			{
+				prc = default_prc = FLOAT_PRECISION;
+				ptr++;
+			}
+			else
+				default_prc = prc = astol(&ptr);
+
+			switch (*ptr++)
+			{
+			case 'C':
+				default_jst = JST_CNT;
+				break;
+			case 'L':
+				default_jst = JST_LFT;
+				break;
+			case 'R':
+				default_jst = JST_RGT;
+				break;
+			case 'G': /* General format not supported */
+			default:
+				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+				break;
+			}
+			default_width = astol(&ptr);
+			break;
+
+		case 'f': /* Font specification */
+		{
+			int id;
+			id = astol(&ptr);
+			if (id < 0 || id >= fnt_map_size)
+			{
+				io_error_msg("Line %d: Undefined font (%d)\n",
+					     lineno, id);
+				break;
+			}
+			// fnt = fnt_map[id];
+			break;
+		}
+
+		case 'F':
+			switch (*ptr++)
+			{
+			case 'D':
+				fmt = FMT_DEF;
+				break;
+			case 'G':
+				fmt = FMT_GEN;
+				break;
+			case 'E':
+				fmt = FMT_EXP;
+				break;
+			case 'F':
+				fmt = FMT_FXT;
+				break;
+			case '$':
+				fmt = FMT_DOL;
+				break;
+			case ',': /* JF */
+				fmt = FMT_CMA;
+				break;
+			case 'U':
+				fmt = FMT_USR;
+				break;
+			case '%':
+				fmt = FMT_PCT;
+				break;
+			case 'H':
+				fmt = FMT_HID;
+				break; /* END of JF */
+			case 'd':
+				fmt = FMT_DATE;
+				break;
+			case 'C':
+			default:
+				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
+				fmt = FMT_DEF;
+				break;
+			}
+			if (*ptr == 'F')
+			{
+				prc = FLOAT_PRECISION;
+				ptr++;
+			}
+			else
+			{
+				prc = astol(&ptr);
+			}
+			switch (*ptr++)
+			{
+			case 'C':
+				jst = JST_CNT;
+				break;
+			case 'L':
+				jst = JST_LFT;
+				break;
+			case 'R':
+				jst = JST_RGT;
+				break;
+			case 'D':
+				jst = JST_DEF;
+				break;
+			default:
+				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+				jst = JST_DEF;
+				break;
+			}
+			vlen = 1;
+			break;
+		case 'R': /* Row from cols 1 to 63 */
+			czrow = astol(&ptr);
+			vlen = 4;
+			break;
+
+		case 'W': /* Width of clo to chi is cwid */
+			clo = astol(&ptr);
+			chi = astol(&ptr);
+			cwid = astol(&ptr) + 1;
+			for (; clo <= chi; clo++)
+			{
+				set_width(clo, cwid);
+			}
+			break;
+
+		case 'H': /* JF: extension */
+			clo = astol(&ptr);
+			chi = astol(&ptr);
+			cwid = astol(&ptr) + 1;
+			for (; clo <= chi; clo++)
+				set_height(clo, cwid);
+			break;
+		case 'c':
+			ccol = astol(&ptr);
+			break;
+		case 'r':
+			crow = astol(&ptr);
+			break;
+
+		default:
+			goto bad_field;
+		}
+	}
+	switch (vlen)
+	{
+	case 1:
+		cp = find_or_make_cell(crow, ccol);
+		SET_FORMAT(cp, fmt);
+		SET_PRECISION(cp, prc);
+		SET_JST(cp, jst);
+		// if (font_spec_in_format) cp->cell_font = fnt;
+		break;
+	case 2:
+		rng.lr = MIN_ROW;
+		rng.lc = czcol;
+		rng.hr = mx_row;
+		rng.hc = czcol;
+		make_cells_in_range(&rng);
+		for (CELL *cp : get_cells_in_range(&rng))
+		{
+			SET_FORMAT(cp, fmt);
+			SET_PRECISION(cp, prc);
+			SET_JST(cp, jst);
+		}
+		break;
+	case 4:
+		rng.lr = czrow;
+		rng.lc = MIN_COL;
+		rng.hr = czrow;
+		rng.hc = mx_col;
+		make_cells_in_range(&rng);
+		for (CELL *cp : get_cells_in_range(&rng))
+		{
+			SET_FORMAT(cp, fmt);
+			SET_JST(cp, jst);
+		}
+		break;
+	default:
+		break;
+	}
+
+	return true;
+bad_field:
+	return false;
 }
 
 static char jst_to_chr ( int just)

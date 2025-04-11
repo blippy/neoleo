@@ -86,17 +86,6 @@ void cell::set_row(CELLREF r)
 }
 
 
-/*
-void cell::clear_flags()
-{
-	//cell_flags = {};
-
-	this->cell_flags.clear();
-}
-	*/
-
-
-
 coord_t cell::get_coord() const { return coord;} 
 
 void cell::set_coord(coord_t coord) {	this->coord = coord; }

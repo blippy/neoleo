@@ -24,7 +24,7 @@ AM_CXXFLAGS += -Wall
 #EXTRA_DIST = $(srcdir)/neoleo.i
 
 bin_PROGRAMS = neoleo 
-dist_man_MANS = neoleo.1 neoleo-keys.1
+dist_man_MANS = neoleo.1 neoleo-keys.1 neoleo-file.5
 
 #BUILT_SOURCES = parse.cc parse.hh
 #CLEANFILES = $(BUILT_SOURCES)
