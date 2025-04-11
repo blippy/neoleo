@@ -1057,7 +1057,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		printw ("%.*s ", wid - 1, formula.c_str());
 	}
 
-	//if(is_bold) wprint("\e[0m");
+	wattr_off(stdscr, WA_BOLD, 0);
 	if (glowing) _io_update_status ();
 	move (yy, xx);
 }

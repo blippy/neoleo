@@ -535,6 +535,7 @@ void set_cell_toggle_bold()
 	auto cp = find_or_make_cell();
 	cp->cell_flags.bold = ! cp->cell_flags.bold;
 	//log("set_cell_toggle_bold:", cp, ":", cp->cell_flags.bold );
+	Global->modified = true;
 	io_repaint();
 }
 

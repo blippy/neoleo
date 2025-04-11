@@ -8,6 +8,9 @@ NAME: 		HANK SCHRADER
 
 After what was mostly bugfixes, we now have new features
 
+* bold feature added via C-b. WARNING: If you save a cell with a bold
+format, the file will not be compatible with previous versions.
+
 * menu feature added. Type 'm' to invoke menu.
 
 * Enhanced cell referencing so that something like R12C implicitly 

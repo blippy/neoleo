@@ -422,14 +422,14 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 	int vlen =0;
 	int fmt = 0, prc = 0;
 	int jst = 0;
+	bool is_bold = false;
 	
 
 
 	// fnt = 0;	/* The font must be explicitly overriden for a cell. */
 	while (*ptr)
 	{
-		if (*ptr != ';')
-			goto bad_field;
+		if (*ptr != ';') return false; // oh-oh spaghettio
 		ptr++;
 		switch (*ptr++)
 		{
@@ -490,7 +490,13 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 		}
 
+		case 'B': 
+			//log("Found bold in oleo");
+			is_bold = true;
+			break;
 		case 'F':
+			
+
 			switch (*ptr++)
 			{
 			case 'D': fmt = FMT_DEF; break;
@@ -555,16 +561,28 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		case 'r': crow = astol(&ptr); break;
 
 		default:
-			goto bad_field;
+			//goto bad_field;
+			return false;
 		}
 	}
+
+
+	auto set_cell_flags = [&](CELL *cp) { //25/4
+
+		SET_FORMAT(cp, fmt);
+		SET_PRECISION(cp, prc);
+		SET_JST(cp, jst);
+		cp->cell_flags.bold = is_bold;
+	};
+
 	switch (vlen)
 	{
 	case 1:
 		cp = find_or_make_cell(crow, ccol);
-		SET_FORMAT(cp, fmt);
-		SET_PRECISION(cp, prc);
-		SET_JST(cp, jst);
+		set_cell_flags(cp);
+		//SET_FORMAT(cp, fmt);
+		//SET_PRECISION(cp, prc);
+		//SET_JST(cp, jst);
 		// if (font_spec_in_format) cp->cell_font = fnt;
 		break;
 	case 2:
@@ -575,9 +593,10 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		make_cells_in_range(&rng);
 		for (CELL *cp : get_cells_in_range(&rng))
 		{
-			SET_FORMAT(cp, fmt);
-			SET_PRECISION(cp, prc);
-			SET_JST(cp, jst);
+			set_cell_flags(cp);
+			//SET_FORMAT(cp, fmt);
+			//SET_PRECISION(cp, prc);
+			//SET_JST(cp, jst);
 		}
 		break;
 	case 4:
@@ -588,8 +607,9 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		make_cells_in_range(&rng);
 		for (CELL *cp : get_cells_in_range(&rng))
 		{
-			SET_FORMAT(cp, fmt);
-			SET_JST(cp, jst);
+			set_cell_flags(cp);
+			//SET_FORMAT(cp, fmt);
+			//SET_JST(cp, jst);
 		}
 		break;
 	default:
@@ -597,8 +617,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 	}
 
 	return true;
-bad_field:
-	return false;
+//bad_field:
+//	return false;
 }
 
 static char jst_to_chr ( int just)
@@ -683,7 +703,8 @@ void write_cells(FILE* fp)
 
 		f1 = GET_FORMAT (cp);
 		j1 = GET_JST (cp);
-		if (f1 != FMT_DEF || j1 != JST_DEF )
+		bool is_bold = cp->cell_flags.bold;
+		if (f1 != FMT_DEF || j1 != JST_DEF || is_bold)
 		{
 			(void) fprintf (fp, "F;");
 			if (c != ccol) {
@@ -694,8 +715,12 @@ void write_cells(FILE* fp)
 				(void) fprintf (fp, "r%u;", r);
 				crow = r;
 			}
-			(void) fprintf (fp, "F%s%c\n",
-					oleo_fmt_to_str (f1, GET_PRECISION(cp)), jst_to_chr (j1));
+
+			if(is_bold) fprintf(fp, "B;");
+			fprintf (fp, "F");
+			
+			fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));
+			fprintf(fp, "%c\n", jst_to_chr (j1));
 		}
 
 		//if (!GET_TYP (cp) && !cp->get_cell_formula()) continue;
@@ -742,7 +767,7 @@ oleo_write_file(FILE *fp, struct rng *rng)
 	/* All versions of the oleo file format should have a 
 	 * version cookie on the second line.
 	 */
-	(void) fprintf (fp, "# format 3.0 (requires Neoleo 8.0 or higher)\n");
+	(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
 
 	int n;
 	int fmts;
