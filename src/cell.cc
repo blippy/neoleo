@@ -91,16 +91,6 @@ void cell::clear_flags()
 	this->cell_flags.clear();
 }
 
-bool cell::zeroed_1()
-{
-	return (cell_flags.cell_format == 0)
-		&& (cell_flags.cell_precision == 0)
-		&& (cell_flags.cell_justify == 0)
-		//&& (get_type() == 0)
-		&& is_nul(value_2019) 
-		&& (cell_flags.cell_lock == 0);
-
-}
 
 
 coord_t cell::get_coord() const { return coord;} 

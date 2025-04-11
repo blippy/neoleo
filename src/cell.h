@@ -121,8 +121,7 @@ class cell
 
 
 		Expr parse_tree;
-
-		bool zeroed_1();
+	
 		bool locked() const;
 		ranges_t predecs; // the ranges that the cell needs to evaluate
 		crefs_t deps_2019;
