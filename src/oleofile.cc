@@ -538,6 +538,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 		case 'I':
 			is_italic = true;
+			break;
 		case 'R': /* Row from cols 1 to 63 */
 			czrow = astol(&ptr);
 			vlen = 4;
