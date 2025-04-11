@@ -442,34 +442,15 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		case 'D': /* Default format */
 			switch (*ptr++)
 			{
-			case 'G':
-				default_fmt = FMT_GEN;
-				break;
-			case 'E':
-				default_fmt = FMT_EXP;
-				break;
-			case 'F':
-				default_fmt = FMT_FXT;
-				break;
-			case '$':
-				default_fmt = FMT_DOL;
-				break;
-			case ',': /* JF */
-				default_fmt = FMT_CMA;
-				break;
-			case 'U':
-				default_fmt = FMT_USR;
-				break;
-			case '%':
-				default_fmt = FMT_PCT;
-				break;
-			case 'H':
-				default_fmt = FMT_HID;
-				break;
-			case 'd': /* Date */
-				default_fmt = FMT_DATE;
-				break;
-				/* End of JF */
+			case 'G': default_fmt = FMT_GEN; break;
+			case 'E': default_fmt = FMT_EXP; break;
+			case 'F': default_fmt = FMT_FXT; break;
+			case '$': default_fmt = FMT_DOL; break;
+			case ',': default_fmt = FMT_CMA; break;
+			case 'U': default_fmt = FMT_USR; break;
+			case '%': default_fmt = FMT_PCT; break;
+			case 'H': default_fmt = FMT_HID; break;
+			case 'd': default_fmt = FMT_DATE; break;
 			default:
 				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
 				break;
@@ -484,15 +465,9 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 
 			switch (*ptr++)
 			{
-			case 'C':
-				default_jst = JST_CNT;
-				break;
-			case 'L':
-				default_jst = JST_LFT;
-				break;
-			case 'R':
-				default_jst = JST_RGT;
-				break;
+			case 'C': default_jst = JST_CNT; break;
+			case 'L': default_jst = JST_LFT; break;
+			case 'R': default_jst = JST_RGT; break;
 			case 'G': /* General format not supported */
 			default:
 				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
@@ -518,36 +493,16 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		case 'F':
 			switch (*ptr++)
 			{
-			case 'D':
-				fmt = FMT_DEF;
-				break;
-			case 'G':
-				fmt = FMT_GEN;
-				break;
-			case 'E':
-				fmt = FMT_EXP;
-				break;
-			case 'F':
-				fmt = FMT_FXT;
-				break;
-			case '$':
-				fmt = FMT_DOL;
-				break;
-			case ',': /* JF */
-				fmt = FMT_CMA;
-				break;
-			case 'U':
-				fmt = FMT_USR;
-				break;
-			case '%':
-				fmt = FMT_PCT;
-				break;
-			case 'H':
-				fmt = FMT_HID;
-				break; /* END of JF */
-			case 'd':
-				fmt = FMT_DATE;
-				break;
+			case 'D': fmt = FMT_DEF; break;
+			case 'G': fmt = FMT_GEN; break;
+			case 'E': fmt = FMT_EXP; break;
+			case 'F': fmt = FMT_FXT; break;
+			case '$': fmt = FMT_DOL; break;
+			case ',': fmt = FMT_CMA; break;
+			case 'U': fmt = FMT_USR; break;
+			case '%': fmt = FMT_PCT; break;
+			case 'H': fmt = FMT_HID; break;
+			case 'd': fmt = FMT_DATE; break;
 			case 'C':
 			default:
 				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
@@ -558,25 +513,15 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			{
 				prc = FLOAT_PRECISION;
 				ptr++;
-			}
-			else
-			{
+			} else {
 				prc = astol(&ptr);
 			}
 			switch (*ptr++)
 			{
-			case 'C':
-				jst = JST_CNT;
-				break;
-			case 'L':
-				jst = JST_LFT;
-				break;
-			case 'R':
-				jst = JST_RGT;
-				break;
-			case 'D':
-				jst = JST_DEF;
-				break;
+			case 'C': jst = JST_CNT; break;
+			case 'L': jst = JST_LFT; break;
+			case 'R': jst = JST_RGT; break;
+			case 'D': jst = JST_DEF; break;
 			default:
 				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
 				jst = JST_DEF;
@@ -606,12 +551,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			for (; clo <= chi; clo++)
 				set_height(clo, cwid);
 			break;
-		case 'c':
-			ccol = astol(&ptr);
-			break;
-		case 'r':
-			crow = astol(&ptr);
-			break;
+		case 'c': ccol = astol(&ptr); break;
+		case 'r': crow = astol(&ptr); break;
 
 		default:
 			goto bad_field;
