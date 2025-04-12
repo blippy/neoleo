@@ -890,7 +890,7 @@ io_shift_cell_cursor (int dirn, int repeat)
 		}
 		if (over < 0 || c == cucol || w == 0)
 		{
-			io_error_msg ("Can't go left");
+			io_error_msg ("Can't go %s", "left");
 			return;
 		}
 	}

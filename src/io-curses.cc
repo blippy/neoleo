@@ -1079,15 +1079,16 @@ _io_command_loop (int a)
 
 void _io_error_msg (const char *str, ...)
 {
-	va_list foo;
+	va_list args;
 	char buf[1000];
 
 	//io_bell(); // 25/4 del
-	va_start (foo, str);
-	vsprintf (buf, str, foo);
+	va_start (args, str);
+	vsprintf (buf, str, args);
+	va_end(args);
 
 	// 25/4 Persist the error messages
-	wprint(0, 0, str);
+	wprint(0, 0, buf);
 	clrtoeol();
 	//io_error_msg2019_str(buf);
 
