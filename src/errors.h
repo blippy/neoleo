@@ -22,6 +22,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <stdarg.h>
 #include <string>
 
 //#include "format.h"
@@ -108,3 +109,5 @@ class ValErr : public std::exception
 	       int n = 0;
 	       std::string msg;
 };
+
+void raise_error (const char *str, ...);

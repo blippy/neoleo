@@ -28,6 +28,8 @@ using std::vector;
 
 using namespace std::literals;
 
+void headless_main();
+void curses_main();
 
 static bool	option_tests = false;
 //std::string	option_tests_argument = "regular";
@@ -164,6 +166,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 			try {
 				read_file_and_run_hooks (fp, 0, argv[optind]);
 			} catch (OleoJmp& e) {
+				cerr << e.what() << endl;
 				fprintf (stderr, ", error occured reading '%s'\n", argv[optind]);
 				exit(1);
 			} 
@@ -180,7 +183,11 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	io_recenter_cur_win ();
 	Global->display_opened = 1;
 	Global->modified = 0;
-	io_run_main_loop();
+	if(user_wants_headless)
+		headless_main();
+	else
+		curses_main();
+	
 }
 
 

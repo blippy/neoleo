@@ -1070,39 +1070,13 @@ _io_flush (void)
 	refresh ();
 }
 
-void
-_io_command_loop (int a)
-{
-	main_command_loop_for2019();
-}
 
 
-void _io_error_msg (const char *str, ...)
-{
-	va_list args;
-	char buf[1000];
 
-	//io_bell(); // 25/4 del
-	va_start (args, str);
-	vsprintf (buf, str, args);
-	va_end(args);
-
-	// 25/4 Persist the error messages
-	wprint(0, 0, buf);
-	clrtoeol();
-	//io_error_msg2019_str(buf);
-
-	throw OleoJmp("OleoJmp from io_error_msg()");
-
-}
-
-
-void
-tty_graphics (void)
+void tty_graphics (void)
 {
 	FD_SET (0, &read_fd_set);
 	FD_SET (0, &exception_fd_set);
-	io_command_loop = _io_command_loop;
 	io_open_display = _io_open_display;
 	io_redisp = _io_redisp;
 	io_repaint = _io_repaint;
@@ -1126,8 +1100,4 @@ tty_graphics (void)
 	io_inputize_cursor = _io_inputize_cursor;
 	io_display_cell_cursor = _io_display_cell_cursor;
 
-	// added by mcarter:
-	//io_run_main_loop = _io_run_curses_main_loop;
-	io_run_main_loop = fairly_std_main_loop;
-	io_error_msg = _io_error_msg; // eventually we'll want to replace this in a 2019 ui
 }

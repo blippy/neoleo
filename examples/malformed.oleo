@@ -1,0 +1,16 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+
+THIS FILE IS DELIBERATELY UNREADABLE
+
+F;DGFR8
+O;auto;background;noa0
+F;c1;r1;B;FDD
+C;E12;K12
+F;r2;I;FDD
+C;E"hi";K"hi"
+C;c2;r1;E13;K13
+C;r2;E12;K12
+O;status 2
+W;N1;A2 2;C7 0 7;Ostandout
+E

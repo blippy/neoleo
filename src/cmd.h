@@ -47,7 +47,6 @@ extern SELECT_TYPE exception_pending_fd_set;
 extern SELECT_TYPE write_pending_fd_set;
 
 int real_get_chr (void);
-void cmd_io_error_msg (const char *str,...);
 
 
 void set_curow(int nrow);

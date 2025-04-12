@@ -159,7 +159,7 @@ oleo_read_file (FILE *fp, int ismerge)
 							mx_col = astol (&ptr);
 							if (mx_col > MAX_COL)
 							{
-								io_error_msg ("Boundry column %lu too large!", mx_col);
+								raise_error ("Boundry column %lu too large!", mx_col);
 								mx_col = MAX_COL;
 							}
 							break;
@@ -167,7 +167,7 @@ oleo_read_file (FILE *fp, int ismerge)
 							mx_row = astol (&ptr);
 							if (mx_row > MAX_ROW)
 							{
-								io_error_msg ("Boundry row %lu too large!", mx_row);
+								raise_error ("Boundry row %lu too large!", mx_row);
 								mx_row = MAX_ROW;
 							}
 							break;
@@ -213,7 +213,7 @@ oleo_read_file (FILE *fp, int ismerge)
 				*ptr = '\0';
 				ptr = old_new_var_value (vname, vlen, vval);
 				if (ptr)
-					io_error_msg ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
+					raise_error ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
 #endif
 				break;
 
@@ -330,7 +330,7 @@ bad_field:
 		if (!ismerge)
 			clear_spreadsheet ();
 		io_recenter_all_win ();
-		io_error_msg ("read-file: read-error near line %d.", lineno);
+		raise_error ("read-file: read-error near line %d.", lineno);
 		Global->return_from_error = 0;
 		return;
 	}
@@ -444,7 +444,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			case 'H': default_fmt = FMT_HID; break;
 			case 'd': default_fmt = FMT_DATE; break;
 			default:
-				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
+				raise_error("Line %d: format %c not supported", lineno, ptr[-1]);
 				break;
 			}
 			if (*ptr == 'F')
@@ -462,7 +462,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			case 'R': default_jst = JST_RGT; break;
 			case 'G': /* General format not supported */
 			default:
-				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
 				break;
 			}
 			default_width = astol(&ptr);
@@ -493,7 +493,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			case 'd': fmt = FMT_DATE; break;
 			case 'C':
 			default:
-				io_error_msg("Line %d: format %c not supported", lineno, ptr[-1]);
+				raise_error("Line %d: format %c not supported", lineno, ptr[-1]);
 				fmt = FMT_DEF;
 				break;
 			}
@@ -511,7 +511,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			case 'R': jst = JST_RGT; break;
 			case 'D': jst = JST_DEF; break;
 			default:
-				io_error_msg("Line %d: Alignment %c not supported", lineno, ptr[-1]);
+				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
 				jst = JST_DEF;
 				break;
 			}

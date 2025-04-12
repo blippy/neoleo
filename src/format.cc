@@ -74,7 +74,7 @@ static const char * fmt_to_str (int format, int precision)
 			set_nbuf(precision);
 			break;
 		default:
-			io_error_msg ("Unknown format %d (%x)", format, format);
+			raise_error ("Unknown format %d (%x)", format, format);
 			ptr = "UNKNOWN";
 			break;
 	}

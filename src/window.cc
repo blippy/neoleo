@@ -63,7 +63,7 @@ do_close_window (int num)
 
 	if (nwin == 1)
 	{
-		io_error_msg ("Attempt to delete sole ordinary window.");
+		raise_error ("Attempt to delete sole ordinary window.");
 		return;
 	}
 	tmpptr =  (struct tmp_s*) ck_malloc (sizeof (struct tmp_s) * nwin);
@@ -229,7 +229,7 @@ page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *
 		w = ww;
 	}
 	if (lo > cur || hi > MAX_ROW)
-		io_error_msg ("Can't find a non-zero-sized cell page_axis");
+		raise_error ("Can't find a non-zero-sized cell page_axis");
 	*loP = lo;
 	*hiP = hi;
 }
@@ -629,9 +629,9 @@ io_set_input_status (int inp, int stat, int redraw)
 	int new_stat;
 
 	if (inpv == 0 || inpv > 2)
-		io_error_msg ("Bad input location %d; it should be +/- 1, or 2", inp);
+		raise_error ("Bad input location %d; it should be +/- 1, or 2", inp);
 	else if (statv > 2)
-		io_error_msg ("Bad status location %d; it should be +/- 0, 1, or 2",
+		raise_error ("Bad status location %d; it should be +/- 0, 1, or 2",
 				inp);
 	else
 	{
@@ -780,7 +780,7 @@ io_win_open (int hv, int where)
 						+ (cwin->lh_wid ? label_rows : 0) - where
 						< MIN_CWIN_HEIGHT))))
 	{
-		io_error_msg ("Window won't fit!");
+		raise_error ("Window won't fit!");
 		return;
 	}
 
@@ -875,7 +875,7 @@ io_shift_cell_cursor (int dirn, int repeat)
 		}
 		if (over > 0 || c == cucol || w == 0)
 		{
-			io_error_msg ("Can't go right");
+			raise_error ("Can't go right");
 			return;
 		}
 	}
@@ -890,7 +890,7 @@ io_shift_cell_cursor (int dirn, int repeat)
 		}
 		if (over < 0 || c == cucol || w == 0)
 		{
-			io_error_msg ("Can't go %s", "left");
+			raise_error ("Can't go %s", "left");
 			return;
 		}
 	}
@@ -908,7 +908,7 @@ io_shift_cell_cursor (int dirn, int repeat)
 		}
 		if (down > 0 || r == curow || w == 0)
 		{
-			io_error_msg ("Can't go down");
+			raise_error ("Can't go down");
 			return;
 		}
 	}
@@ -923,7 +923,7 @@ io_shift_cell_cursor (int dirn, int repeat)
 		}
 		if (down < 0 || r == curow || w == 0)
 		{
-			io_error_msg ("Can't go up");
+			raise_error ("Can't go up");
 			return;
 		}
 	}
@@ -959,7 +959,7 @@ io_scroll_cell_cursor (int magic, int repeat)
 				(curow, down, cwin->numr, get_scaled_height, &(s.lr), &(s.hr), &off_dn);
 		cr = (off_dn > s.hr - s.lr) ? s.hr : s.lr + off_dn;
 		if (ret)
-			io_error_msg ("Can't scroll that far");
+			raise_error ("Can't scroll that far");
 		set_numcols (cwin, s.hr);
 	}
 	else
@@ -977,7 +977,7 @@ io_scroll_cell_cursor (int magic, int repeat)
 		else
 			ret = scroll_axis (cucol, over, cwin->numc, get_scaled_width, &(s.lc), &(s.hc), &off_rt);
 		if (ret)
-			io_error_msg ("Can't scroll that far");
+			raise_error ("Can't scroll that far");
 		cc = (s.hc - s.lc < off_rt) ? s.hc : s.lc + off_rt;
 	}
 	else if ((cwin->flags & WIN_PAG_HZ) == 0)
@@ -1012,7 +1012,7 @@ io_set_win_flags (struct window *w, int f)
 	if ((f & WIN_EDGES) && !(w->flags & WIN_EDGES))
 	{
 		if (w->numr < 2 || w->numc < 6)
-			io_error_msg ("Edges wouldn't fit!");
+			raise_error ("Edges wouldn't fit!");
 		w->win_down++;
 		w->numr--;
 		set_numcols (w, w->screen.hr);
@@ -1133,7 +1133,7 @@ io_read_window_config (char * line)
 				text++;
 			if (*text)
 				*text++ = '\0';
-			io_error_msg ("Unknown SYLK window cmd: %s", bad);
+			raise_error ("Unknown SYLK window cmd: %s", bad);
 			if (!*text)
 				break;
 		}
@@ -1142,7 +1142,7 @@ io_read_window_config (char * line)
 	}
 	if (wnum < 1 || wnum > nwin)
 	{
-		io_error_msg ("Window %d out of range in SYLK line %s", wnum, line);
+		raise_error ("Window %d out of range in SYLK line %s", wnum, line);
 		return;
 	}
 	--wnum;
@@ -1179,7 +1179,7 @@ io_read_window_config (char * line)
 				break;
 			case 't':
 			case 'T':
-				io_error_msg ("Window split titles not supported");
+				raise_error ("Window split titles not supported");
 				return;
 			default:
 				break;
@@ -1195,7 +1195,7 @@ io_read_window_config (char * line)
 		where = astol (&split);
 
 		if (hv ? where >= win->numr : where >= win->numc)
-			io_error_msg ("Can't split window: screen too small");
+			raise_error ("Can't split window: screen too small");
 
 		nwin++;
 		wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));

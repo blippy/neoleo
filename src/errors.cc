@@ -22,3 +22,16 @@ const int ValErr::num() const throw()
 {
 	return n;
 }
+
+
+void raise_error (const char *str, ...)
+{
+	va_list args;
+	char buf[1000];
+
+	va_start (args, str);
+	vsprintf (buf, str, args);
+	va_end(args);
+
+	throw OleoJmp(buf);
+}

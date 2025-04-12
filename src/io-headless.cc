@@ -26,6 +26,7 @@
 
 using std::cin;
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::function;
 using std::map;
@@ -336,17 +337,19 @@ bool process_headless_line(std::string line, int fildes)
 	return true;
 }
 
-static void _io_run_main_loop()
+void headless_main()
 {
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
 	bool cont = true;
 	while(cont) {
-		bool eof;
-		line = getline_from_fildes(fildes, eof);
-		cont =	process_headless_line(line, fildes);
-		if(eof) {
-			cont = false;
+		try {
+			bool eof;
+			line = getline_from_fildes(fildes, eof);
+			cont =	process_headless_line(line, fildes);
+			if(eof) { cont = false; }
+		} catch (OleoJmp& e) {
+			cerr << e.what() << endl;
 		}
 	}
 
@@ -369,6 +372,5 @@ void headless_graphics(void)
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = do_nothing;
 	io_display_cell_cursor = do_nothing;
-	io_run_main_loop = _io_run_main_loop;
 }
 

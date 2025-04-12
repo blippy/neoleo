@@ -71,15 +71,10 @@ EXTERN void (*io_pr_cell_win) (struct window *, CELLREF, CELLREF, CELL *);
 EXTERN void (*io_cellize_cursor) (void);
 EXTERN void (*io_inputize_cursor) (void);
 
-/* The main loop */
-EXTERN void (*io_command_loop) (int);
 
 
 EXTERN void (*io_set_window_name)(const char *s);
-EXTERN void (*io_run_main_loop)(void);
-EXTERN void fairly_std_main_loop(void);
 EXTERN void (*io_do_button)(int r, int c, char *lbl, char *cmd);
 EXTERN void (*io_append_message)(bool beep, char *fmt, ...);
 EXTERN void (*io_update_width)(int col, int wid);
 
-EXTERN void (*io_error_msg)(const char* str, ...);

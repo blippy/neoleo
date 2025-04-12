@@ -30,6 +30,7 @@ using namespace std::string_literals;
 #include "io-curses.h"
 
 using std::cout;
+using std::cerr;
 
 static constexpr int CTRL(int c) { return c & 037; }
 
@@ -256,12 +257,12 @@ void process_key(const keymap_t& keymap)
 	fn();
 }
 
-void main_command_loop_for2019()
+
+
+
+static bool curses_loop()
 {
-	// Tell ncurses to interpret "special keys". It means
-	// that KEY_DOWN etc. will work, but ESC won't be
-	// read separately
-	keypad(stdscr, TRUE);
+
 
 	bool quit = false;
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
@@ -288,8 +289,29 @@ void main_command_loop_for2019()
 
 	};
 
+	process_key(keymap);
+	return quit;
 
-	while(!quit) process_key(keymap);
+
+}
+
+void curses_main()
+{
+	// Tell ncurses to interpret "special keys". It means
+	// that KEY_DOWN etc. will work, but ESC won't be
+	// read separately
+	keypad(stdscr, TRUE);
+
+	bool quit = false;
+	while(!quit) {
+		try {
+			quit = curses_loop();
+		} catch (OleoJmp& e) {	
+			// 25/4 Persist the error messages
+			wprint(0, 0, e.what());
+			clrtoeol();
+		}	
+	}
 
 	endwin();
 	exit(0);

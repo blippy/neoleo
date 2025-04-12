@@ -99,7 +99,7 @@ open_window (char *text)
 		hv = 1;
 	else
 	{
-		io_error_msg ("Open 'h'orizontal or 'v'ertical window, not '%s'", text);
+		raise_error ("Open 'h'orizontal or 'v'ertical window, not '%s'", text);
 		return;
 	}
 	where = atoi (text + 1);
@@ -142,12 +142,12 @@ close_window (char *text)
 
 	if (num < 0 || num >= nwin)
 	{
-		io_error_msg ("Window %num?", text);
+		raise_error ("Window %num?", text);
 		return;
 	}
 	if (nwin == 1)
 	{
-		io_error_msg ("You can't close the last window!");
+		raise_error ("You can't close the last window!");
 		return;
 	}
 	io_win_close (&wins[num]);
@@ -207,7 +207,7 @@ int set_window_option (int set_opt, char *text)
 		{
 			n = atoi (text + 4) - 1;
 			if (n < 0 || n > nwin)
-				io_error_msg ("Can't '%s': window # out of range", text);
+				raise_error ("Can't '%s': window # out of range", text);
 			else
 				cwin->link = n;
 		}
@@ -333,7 +333,7 @@ void set_region_protection (struct rng * rng, int prot)
 			lock_region (rng, LCK_UNL);
 			break;
 		default:
-			io_error_msg ("Bad argument to protect-region %c.", prot);
+			raise_error ("Bad argument to protect-region %c.", prot);
 			break;
 	}
 }
@@ -344,7 +344,7 @@ void set_region_alignment (struct rng * rng, int align)
 	if (fun != -1)
 		format_region (rng, -1, fun);
 	else			/* if (main_map[align]!=BREAK_CMD) */
-		io_error_msg ("Unknown Justify '%c'", align);
+		raise_error ("Unknown Justify '%c'", align);
 }
 
 static void set_cell_alignment(char align)

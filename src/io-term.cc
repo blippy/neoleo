@@ -66,15 +66,6 @@ void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 
 
-EXTERN void fairly_std_main_loop(void)
-{
-loop:
-	try {
-		main_command_loop_for2019();
-	} catch (OleoJmp& e) { }
-	goto loop;
-}
-
 
 
 /*
@@ -217,13 +208,13 @@ static int do_set_option (char *ptr)
 			//show_file_opts = oleo_show_options;
 		}
 		else
-			io_error_msg ("Unknown file format %s", ptr);
+			raise_error ("Unknown file format %s", ptr);
 		return 0;
 	}
 	if (set_window_option (set_opt, ptr) == 0)
 	{
 		if ((*set_file_opts) (set_opt, ptr))
-			io_error_msg ("Unknown option '%s'", ptr);
+			raise_error ("Unknown option '%s'", ptr);
 		return 0;
 	}
 	return 1;
@@ -316,7 +307,7 @@ count_chars:
 
 			default:
 badline:
-				io_error_msg ("Unknown OLEO line %s", ptr);
+				raise_error ("Unknown OLEO line %s", ptr);
 				return;
 		}
 	}
@@ -388,7 +379,6 @@ void InitializeGlobals(void)
 	__make_backups = 1;
 
 	io_set_window_name = _do_nothing_const_char_s;
-	io_run_main_loop = _do_nothing;
 	io_do_button = _io_do_button_nothing;
 	io_append_message = _io_append_message_nothing;
 	io_update_width = _io_update_width_nothing;
