@@ -159,7 +159,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 
 	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
 
-	init_maps_and_macros();
+	//init_maps_and_macros();
 
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
@@ -180,7 +180,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 		optind++;
 	}
 
-	rebuild_command_frame();
+	//rebuild_command_frame();
 
 	io_recenter_cur_win ();
 	Global->display_opened = 1;

@@ -106,5 +106,5 @@ void cmd_io_error_msg (const char *str,...);
 void set_curow(int nrow);
 void set_cucol(int nrow);
 
-void rebuild_command_frame();
-void init_maps_and_macros();
+//void rebuild_command_frame();
+//void init_maps_and_macros();
