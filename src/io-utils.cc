@@ -1104,29 +1104,6 @@ void FileCloseCurrentFile(void)
 	_FileName =  "";
 }
 
-void OleoSetEncoding(const char *s)
-{
-	extern void PrintSetEncoding(const char *encoding);  /* in print.c */
-
-	if (Global && Global->encoding)
-		free(Global->encoding);
-	Global->encoding = strdup(s);
-
-	//PrintSetEncoding(s);
-}
-
-char *OleoGetEncoding(void)
-{
-	return Global->encoding;
-}
-
-void OleoUserPrefEncoding(char *s)
-{
-	char	*p = s + 9;	/* Get past "encoding" */
-
-	for (; *p && isspace(*p); p++) ;
-	OleoSetEncoding(p);
-}
 
 std::string stringify_value_file_style(const value_t& val)	
 {

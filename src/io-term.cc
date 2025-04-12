@@ -92,7 +92,7 @@ struct UserPreferences {
 	char	*file_type,
 		*bgcolor;
 	int	run_load_hooks;
-	char	*encoding;
+	//char	*encoding;
 };
 
 struct UserPreferences UserPreferences;
@@ -127,7 +127,7 @@ static struct pref {
 	{ "noa0",	&UserPreferences.a0,		0,	NULL,	0, 1, 1},
 	{ "bgcolor",	&UserPreferences.bgcolor,	0,	NULL,	1, 0, 1},
 	{ "file",	&UserPreferences.file_type,	0,	NULL,	1, 1, 1},
-	{ "encoding",	&UserPreferences.encoding,	0,	OleoUserPrefEncoding,	1, 1, 0},
+	//{ "encoding",	&UserPreferences.encoding,	0,	OleoUserPrefEncoding,	1, 1, 0},
 	{ NULL,	0 }
 };
 

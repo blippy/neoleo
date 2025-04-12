@@ -157,9 +157,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	choose_display(force_cmd_graphics);
 	io_open_display ();
 
-	OleoSetEncoding(OLEO_DEFAULT_ENCODING);
-
-	//init_maps_and_macros();
 
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
