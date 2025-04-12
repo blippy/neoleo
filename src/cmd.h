@@ -26,68 +26,10 @@
 #include "global.h"
 
 
-struct command_frame;
-
-typedef void (*direction_function) (int magic, int repeat);
-
-
-struct command_frame 
-{
-	//struct command_frame * next;
-	//struct command_frame * prev;
-
-	//CELLREF _setrow = NON_ROW;
-	//CELLREF _setcol = NON_COL;
-
-	//long	buf1;
-	CELLREF _curow = MIN_ROW;
-	//long	buf2;
-	CELLREF _cucol = MIN_COL;
-	//long	buf3;
-	//CELLREF _mkrow = NON_ROW;
-	//long	buf4;
-	//CELLREF _mkcol = NON_COL;
-	//long	buf5;
-
-	int _window_after_input = -1;
-	int _input_active = 0;
-	//int top_keymap;
-	//int _cur_keymap;
-	//int saved_cur_keymap;
-	//struct cmd_func *_cur_cmd;
-	//short _cur_vector;
-	//int _cur_chr;
-	//int _how_many;
-	//int _cmd_argc;
-	//int _cur_arg;
-	//struct cmd_func * cmd;
-
-};
-
-/* When a command is executing, this points to the frame it should operate
- * on:
- */
-
-inline struct command_frame cmd_frame;
-inline struct command_frame * the_cmd_frame = &cmd_frame;
-//extern struct command_frame * running_frames;
-
-/* For most code, the structure of command loops and input streams
- * is unimportant.  To that code, we make it appear that there is just
- * a set of global variables.
- */
-
-//#define curow			the_cmd_frame->_curow
 inline CELLREF curow = MIN_ROW;
-//#define cucol			the_cmd_frame->_cucol
 inline CELLREF cucol = MIN_COL;
-//#define mkrow			the_cmd_frame->_mkrow
 inline  CELLREF mkrow = NON_ROW;
 inline CELLREF mkcol = NON_COL;
-//#define mkcol			the_cmd_frame->_mkcol
-
-//#define window_after_input	the_cmd_frame->_window_after_input
-//#define input_active		the_cmd_frame->_input_active
 inline int window_after_input = -1;
 inline int input_active = 0;
 
@@ -110,6 +52,3 @@ void cmd_io_error_msg (const char *str,...);
 
 void set_curow(int nrow);
 void set_cucol(int nrow);
-
-//void rebuild_command_frame();
-//void init_maps_and_macros();

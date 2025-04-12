@@ -289,7 +289,7 @@ void
 io_recenter_cur_win (void)
 {
 	//if(!cwin || !the_cmd_frame || ! curow) return; // maybe running headless
-	if(!the_cmd_frame) return; // maybe running headless
+	//if(!the_cmd_frame) return; // maybe running headless
 
 	cwin->win_curow = curow;
 	cwin->win_cucol = cucol;
@@ -302,7 +302,7 @@ io_recenter_cur_win (void)
 void
 io_recenter_all_win(void)
 {
-	if(!the_cmd_frame) return; // maybe running headless
+	//if(!the_cmd_frame) return; // maybe running headless
 	int n;
 	if (!nwin)
 		return;
@@ -739,7 +739,7 @@ io_set_cwin (struct window *win)
 void 
 io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	if(!the_cmd_frame) return; // maybe running headless
+	//if(!the_cmd_frame) return; // maybe running headless
 	//if(running_headless()) return;
 	if(!wins) return; // maybe we're running headless
 	struct window *win;

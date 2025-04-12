@@ -58,14 +58,16 @@ int ioerror = 0;
 
 void set_curow(int nrow)
 {
-       if(!the_cmd_frame) return; // maybe running headless
-       the_cmd_frame->_curow = nrow;
+	curow = nrow;
+       //if(!the_cmd_frame) return; // maybe running headless
+      // the_cmd_frame->_curow = nrow;
 }
 
 
 void set_cucol(int ncol)
 {
-       if(!the_cmd_frame) return; // maybe running headless
-       the_cmd_frame->_cucol = ncol;
+	cucol = ncol;
+       //if(!the_cmd_frame) return; // maybe running headless
+	//the_cmd_frame->_cucol = ncol;
 }
 
