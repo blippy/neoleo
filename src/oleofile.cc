@@ -79,9 +79,8 @@ oleo_read_file (FILE *fp, int ismerge)
 	//struct rng rng;
 	//int fmt = 0, prc = 0;
 	//int jst = 0;
-	struct font_memo ** fnt_map = 0;
+	//struct font_memo ** fnt_map = 0;
 	int fnt_map_size = 0;
-	int fnt_map_alloc = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
 	int old_a0;
@@ -114,15 +113,7 @@ oleo_read_file (FILE *fp, int ismerge)
 				ptr++;
 				switch (*ptr) {
 					case 'F':		/* %F font-name */
-						if (fnt_map_size == fnt_map_alloc)
-						{
-							fnt_map_alloc = (fnt_map_alloc + 1) * 2;
-							fnt_map =
-								((struct font_memo **)
-								 ck_remalloc
-								 (fnt_map, fnt_map_alloc * sizeof (struct font_memo *)));
-						}
-						//fnt_map[fnt_map_size++] = parsed_matching_font (ptr + 1);
+						throw SyntaxError("Font name no longer handled");
 						break;
 					case 'f':		/* %f range font-name */
 						{
@@ -478,18 +469,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'f': /* Font specification */
-		{
-			int id;
-			id = astol(&ptr);
-			if (id < 0 || id >= fnt_map_size)
-			{
-				io_error_msg("Line %d: Undefined font (%d)\n",
-					     lineno, id);
-				break;
-			}
-			// fnt = fnt_map[id];
+			throw SyntaxError("Font specification no longer handled");
 			break;
-		}
 
 		case 'B': 
 			//log("Found bold in oleo");
