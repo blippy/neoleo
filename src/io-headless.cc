@@ -34,8 +34,7 @@ using std::vector;
 
 typedef int T;
 
-	void
-set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
+void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
 	curow = r;
 	cucol = c;
@@ -64,15 +63,13 @@ string to_oct(long n)
 	return ss.str();
 }
 
-	static void 
-do_nothing(void)
+static void do_nothing(void)
 {
 	return;
 }
 
 
-	static void
-_io_open_display(void)
+static void _io_open_display(void)
 {
 	/* We fake having a window. This is important because io_init_windows()
 	 * will do things like set nwin = 1
@@ -86,22 +83,19 @@ _io_open_display(void)
 }
 
 
-	static void
-_io_update_status(void)
+static void _io_update_status(void)
 {
 	//puts("Called _io_update_status()");
 }
 
-	static void
-_io_repaint_win (struct window *win)
+static void _io_repaint_win (struct window *win)
 {
 	//io_repaint ();
 }
 
 
 
-	static void
-_io_fix_input(void)
+static void _io_fix_input(void)
 {
 	//puts("Entering _io_fix_input()");
 }
@@ -114,8 +108,7 @@ _io_fix_input(void)
 } while (retvar == -1 && errno == EINTR);
 
 
-	static int
-_io_input_avail(void)
+static int _io_input_avail(void)
 {
 	int filedes = STDIN_FILENO;
 	unsigned int seconds = 0;
@@ -147,8 +140,7 @@ _io_input_avail(void)
 
 
 
-	static int
-_io_read_kbd(char *buf, int size)
+static int _io_read_kbd(char *buf, int size)
 {        
 	//int r = read (0, buf, size);
 	int r = read (STDIN_FILENO, buf, size);
@@ -157,19 +149,16 @@ _io_read_kbd(char *buf, int size)
 	return r;
 }      
 
-	static void
-_io_insert (int len)
+static void _io_insert (int len)
 { 
 	//iv_insert (&input_view, len);
 } 
 
-	static void
-_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
+static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
 
-	static void 
-info(int fildes)
+static void info(int fildes)
 {
 	// print diagnostic information
 
@@ -188,8 +177,7 @@ info(int fildes)
 			<< "     # " << i.desc << "\n";
 }
 
-	static void
-insert_columnwise(T fildes)
+static void insert_columnwise(T fildes)
 {
 	std::string line;
 	while(true) {
@@ -216,15 +204,13 @@ insert_columnwise(T fildes)
 }
 
 
-	static void
-hless_dump_sheet(T fildes)
+static void hless_dump_sheet(T fildes)
 {
 	extern void dump_sheet();
 	dump_sheet();
 }
 
-	static void
-insert_rowwise(T fildes)
+static void insert_rowwise(T fildes)
 {
 	std::string line;
 	while(true) {
@@ -327,8 +313,7 @@ static map<string, function<void(T)> > func_map = {
 	{"w", _write_file}
 };
 
-	bool
-process_headless_line(std::string line, int fildes)
+bool process_headless_line(std::string line, int fildes)
 {
 	//cout << "process_headless_line: " << line << endl;
 
@@ -351,8 +336,7 @@ process_headless_line(std::string line, int fildes)
 	return true;
 }
 
-	static void
-_io_run_main_loop()
+static void _io_run_main_loop()
 {
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
@@ -368,14 +352,9 @@ _io_run_main_loop()
 
 }
 
-	static void
-_io_bell()
-{
-	//cout << "BELL" << endl;
-}
 
-	void
-headless_graphics(void)
+
+void headless_graphics(void)
 {
 	io_open_display = _io_open_display;
 	io_redisp = do_nothing;
@@ -383,7 +362,6 @@ headless_graphics(void)
 	io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
 	io_read_kbd = _io_read_kbd;
-	//io_bell = _io_bell;
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_insert = _io_insert;

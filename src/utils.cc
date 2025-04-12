@@ -118,62 +118,8 @@ __fp_name (FILE *fp)
 	return "{Unknown file pointer}";
 }
 
-	void
-__set_fp ( FILE *fp, const char *name, int flag)
-{
-	if (__id_s == 0)
-	{
-		__id_s = (id*) ck_malloc (20 * sizeof (struct id));
-		__id_n = 0;
-		__id_f = 20;
-	}
-	else
-	{
-		int n;
 
-		for (n = 0; n < __id_n; n++)
-			if (__id_s[n].fp == fp)
-			{
-				free (__id_s[n].name);
-				__id_s[n] = __id_s[--__id_n];
-				__id_f++;
-				break;
-			}
-	}
-	if (__id_f == 0)
-	{
-		__id_f = 20;
-		__id_s = (id*) ck_realloc (__id_s, (__id_f + __id_n) * sizeof (struct id));
-	}
-	__id_s[__id_n].flag = flag;
-	__id_s[__id_n].name = strdup (name);
-	__id_s[__id_n].fp = fp;
-	__id_n++;
-	__id_f--;
-}
 
-/* Open a file or a pipe */
-	FILE *
-xopen ( const char *name, const char *mode)
-{
-	int flag = 0;
-	FILE *ret;
-
-	while (*name == ' ')
-		name++;
-	if (*name == '!')
-	{
-		name++;
-		ret = popen (name, mode);
-		flag = 1;
-	}
-	else
-		ret = fopen (name, mode);
-	if (ret == 0)
-		return ret;
-	__set_fp (ret, name, flag);
-	return ret;
-}
 
 /* Open a file, creating a backup file if needed. . . */
 // mcarter 2019-01-23 Eliminate the backup functionality
@@ -181,52 +127,6 @@ xopen ( const char *name, const char *mode)
 fopen_with_backup (char *name, const char *mode)
 {
 	FILE * ret = fopen (name, mode);
-	return ret;
-}
-
-/* Open a file or a pipe, creating a backup file if it's a file */
-	FILE *
-xopen_with_backup (char *name, const char *mode)
-{
-	int flag;
-	FILE *ret;
-
-	while (*name == ' ')
-		name++;
-	if (*name == '|')
-	{
-		ret = popen (name + 1, mode);
-		flag = 1;
-	}
-	else
-	{
-		ret = fopen_with_backup (name, mode);
-		flag = 0;
-	}
-	if (ret == 0)
-		return ret;
-	__set_fp (ret, name, flag);
-	return ret;
-}
-
-/* Close something opened with xopen. . . */
-	int
-xclose ( FILE *fp)
-{
-	int ret;
-	int n;
-
-	for (n = 0; n < __id_n; n++)
-	{
-		if (__id_s[n].fp == fp)
-			break;
-	}
-	if (n == __id_n)
-		panic ("Unknown file pointer %p given to xclose", fp);
-	if (__id_s[n].flag)
-		ret = pclose (fp);
-	else
-		ret = fclose (fp);
 	return ret;
 }
 
