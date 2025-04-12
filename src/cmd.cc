@@ -110,8 +110,8 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 {
 	auto new_cf = new struct command_frame;
 
-	new_cf->next = new_cf;
-	new_cf->prev = new_cf;
+	//new_cf->next = new_cf;
+	//new_cf->prev = new_cf;
 
 	//new_cf->input = (rng ? macro_only_input_stream (rng, first_line, len, new_cf) : default_input_stream ());
 
@@ -125,25 +125,25 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	new_cf->_window_after_input = -1;
 
 	/* These may be reset later. */
-	new_cf->saved_cur_keymap = -1;
-	new_cf->_how_many = 1;
-	new_cf->_cur_cmd = 0;
-	new_cf->_cur_vector = 0;
+	//new_cf->saved_cur_keymap = -1;
+	//new_cf->_how_many = 1;
+	//new_cf->_cur_cmd = 0;
+	//new_cf->_cur_vector = 0;
 	//new_cf->_cur_chr = the_cmd_frame ? cur_chr : 0;
 
-	new_cf->_cmd_argc = 0;
+	//new_cf->_cmd_argc = 0;
 
 	if (!the_cmd_frame)
 	{
 		/* This is a new top-level frame. */
 		the_cmd_frame = new_cf;
-		new_cf->cmd = 0;
+		//new_cf->cmd = 0;
 	}
 
-	new_cf->prev = the_cmd_frame;
-	new_cf->next = the_cmd_frame->next;
-	new_cf->prev->next = new_cf;
-	new_cf->next->prev = new_cf;
+	//new_cf->prev = the_cmd_frame;
+	//new_cf->next = the_cmd_frame->next;
+	//new_cf->prev->next = new_cf;
+	//new_cf->next->prev = new_cf;
 	the_cmd_frame = new_cf;
 }
 
@@ -151,16 +151,16 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	void
 remove_cmd_frame (struct command_frame *frame)
 {
-	frame->next->prev = frame->prev;
-	frame->prev->next = frame->next;
-	if (the_cmd_frame == frame)
-		the_cmd_frame = frame->prev;
+	//frame->next->prev = frame->prev;
+	//frame->prev->next = frame->next;
+	//if (the_cmd_frame == frame)
+	//	the_cmd_frame = frame->prev;
 	if (the_cmd_frame == frame)
 	{
 		the_cmd_frame = 0;
 		push_command_frame (0, 0, 0);
 	}
-	frame->next = frame->prev = 0;
+	//frame->next = frame->prev = 0;
 }
 
 
@@ -171,9 +171,9 @@ remove_cmd_frame (struct command_frame *frame)
 	void
 free_cmd_frame (struct command_frame *frame)
 {
-	if (frame->next)
-		remove_cmd_frame (frame);
-	delete frame;
+	//if (frame->next)
+	//	remove_cmd_frame (frame);
+	//delete frame;
 }
 
 
@@ -236,10 +236,10 @@ set_cucol(int ncol)
 void rebuild_command_frame()
 {
 	/* Force the command frame to be rebuilt now that the keymaps exist. */
-	struct command_frame * last_of_the_old = the_cmd_frame->next;
-	while (the_cmd_frame != last_of_the_old)
-		free_cmd_frame (the_cmd_frame);
-	free_cmd_frame (last_of_the_old);
+	//struct command_frame * last_of_the_old = the_cmd_frame->next;
+	//while (the_cmd_frame != last_of_the_old)
+	//	free_cmd_frame (the_cmd_frame);
+	//free_cmd_frame (last_of_the_old);
 }
 
 	void

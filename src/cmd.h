@@ -33,34 +33,34 @@ typedef void (*direction_function) (int magic, int repeat);
 
 struct command_frame 
 {
-	struct command_frame * next;
-	struct command_frame * prev;
+	//struct command_frame * next;
+	//struct command_frame * prev;
 
 	CELLREF _setrow;
 	CELLREF _setcol;
 
-	long	buf1;
+	//long	buf1;
 	CELLREF _curow;
-	long	buf2;
+	//long	buf2;
 	CELLREF _cucol;
-	long	buf3;
+	//long	buf3;
 	CELLREF _mkrow;
-	long	buf4;
+	//long	buf4;
 	CELLREF _mkcol;
-	long	buf5;
+	//long	buf5;
 
 	int _window_after_input;
 	int _input_active;
-	int top_keymap;
-	int _cur_keymap;
-	int saved_cur_keymap;
-	struct cmd_func *_cur_cmd;
-	short _cur_vector;
-	int _cur_chr;
-	int _how_many;
-	int _cmd_argc;
-	int _cur_arg;
-	struct cmd_func * cmd;
+	//int top_keymap;
+	//int _cur_keymap;
+	//int saved_cur_keymap;
+	//struct cmd_func *_cur_cmd;
+	//short _cur_vector;
+	//int _cur_chr;
+	//int _how_many;
+	//int _cmd_argc;
+	//int _cur_arg;
+	//struct cmd_func * cmd;
 
 };
 
@@ -81,25 +81,14 @@ extern struct command_frame * running_frames;
 #define mkrow			the_cmd_frame->_mkrow
 #define mkcol			the_cmd_frame->_mkcol
 
-#define window_after_input	the_cmd_frame->_window_after_input
+//#define window_after_input	the_cmd_frame->_window_after_input
 #define input_active		the_cmd_frame->_input_active
 
-#ifdef FD_SET
 
 #define SELECT_TYPE fd_set
 #define SELECT_SET_SIZE FD_SETSIZE
 
-#else /* no FD_SET */
 
-/* Define the macros to access a single-int bitmap of descriptors.  */
-#define SELECT_SET_SIZE 32
-#define SELECT_TYPE int
-#define FD_SET(n, p) (*(p) |= (1 << (n)))
-#define FD_CLR(n, p) (*(p) &= ~(1 << (n)))
-#define FD_ISSET(n, p) (*(p) & (1 << (n)))
-#define FD_ZERO(p) (*(p) = 0)
-
-#endif /* no FD_SET */
 
 /* The fd's that are selected on in the interact loop. */
 extern SELECT_TYPE read_fd_set;
