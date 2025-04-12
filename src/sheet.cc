@@ -151,9 +151,6 @@ cell_t* find_or_make_cell (CELLREF row, CELLREF col) { return find_or_make_cell(
 cell_t* find_or_make_cell() {return find_or_make_cell(curow, cucol);}
 
 
-void init_cells ()
-{
-}
 
 bool inside(int val, int lo, int hi) { return (lo <= val) && (val <= hi) ; } //definition
 
