@@ -26,8 +26,7 @@
 #include "io-term.h"
 #include "io-abstract.h"
 
-	static const char *
-fmt_to_str (int format, int precision)
+static const char * fmt_to_str (int format, int precision)
 {
 	const char *ptr;
 	static char buf[30];
@@ -92,8 +91,8 @@ fmt_to_str (int format, int precision)
  * This was one of the calls. Nice huh ?
  * p->String = fmt_to_str ((cell_ptr = find_cell (row, col)) ? GET_FORMAT (cell_ptr) : 0);
  */
-	const char *
-cell_format_string(CELL *cp)
+
+ const char *cell_format_string(CELL *cp)
 {
 	static char no_default[] = "";
 
@@ -112,20 +111,8 @@ struct fmt
 	const char **strs;
 };
 
-static const char *def_names[] =	{"default", "def", "D", 0};
-static const char *hid_names[] =	{"hidden", "hid", "H", 0};
-static const char *int_names[] =	{"integer", "int", "I", 0};
 
-static struct fmt simple[] =
-{
-	{FMT_DEF,	def_names},
-	{FMT_HID,	hid_names},
-	{FMT_FXT,	int_names},
-#if 0
-	{FMT_FXT,	dec_names},
-#endif
-	{0, 0}
-};
+
 
 const char *gen_names[] =	{"general.",	"gen.", "G", 0};
 const char *dol_names[] =	{"dollar.",	"dol.", "$", 0};
@@ -134,102 +121,9 @@ const char *pct_names[] =	{"percent.",	"pct.", "%", 0};
 const char *fxt_names[] =	{"fixed.",	"fxt.", "F", 0};
 const char *exp_names[] =	{"exponent.",	"exp.", "E", 0};
 
-static struct fmt withprec[] =
-{
-	{FMT_GEN, gen_names},
-	{FMT_DOL, dol_names},
-	{FMT_CMA, cma_names},
-	{FMT_PCT, pct_names},
-	{FMT_FXT, fxt_names},
-	{FMT_EXP, exp_names},
-	{0, 0}
-};
 
-/*
- * This function still has the messy mixup between format and precision
- * that I'm trying to get rid of.
- *
- * I'm leaving it here because I don't know how to pass two variables over
- * the command loop. Look at set_region_format for the other piece of
- * this mess.
- *
- * FIX ME.
- */
-	int
-str_to_fmt (char *ptr)
-{
-	struct fmt *f;
-	char **strs;
-	int n;
-	int ret;
-	char *p1, *p2;
 
-	for (f = simple; f->strs; f++)
-	{
-		for (strs = (char**) f->strs; *strs; strs++)
-		{
-			if (*ptr != **strs)
-				continue;
-			for (p1 = ptr, p2 = *strs; *p1 == *p2 && *p1; p1++, p2++)
-				;
-			if (*p1 == '\0' && *p2 == '\0')
-#if 0
-				return f->fmt;		/* AHAAS had a different version here */
-#else
-			return ((f->fmt) << FMT_SHIFT);
-#endif
-		}
-	}
-	if (!strncmp (ptr, "user-", 5))
-	{
-		ptr += 5;
-		n = astol (&ptr);
-		if (*ptr || n < 1 || n > 16)
-			return -1;
-#if 0
-		return n - 1 - FLOAT_PRECISION + FMT_USR;		/* AHAAS had a different version here */
-#else
-		return (FMT_USR << FMT_SHIFT) + n;
-#endif
-	}
-	for (f = withprec, ret = 0; !ret && f->strs; f++)
-	{
-		for (strs = (char**) f->strs; *strs; strs++)
-		{
-			if (*ptr != **strs)
-				continue;
-			for (p1 = ptr, p2 = *strs; *p2 && *p1 == *p2; p1++, p2++)
-				;
-			if (!*p2)
-			{
-				ret = f->fmt;
-				ptr = p1;
-				break;
-			}
-		}
-	}
-
-	if (!ret || !*ptr)
-		return -1;
-	if (!strcmp (ptr, "float") || !strcmp (ptr, "f"))
-	{
-		n = FLOAT_PRECISION;		/* AHAAS had a different version here */
-	}
-	else
-	{
-		n = astol (&ptr);
-		if (*ptr || n < 0 || n > 14)
-			return -1;
-	}
-#if 0
-	return ret + n;		/* AHAAS had a different version here */
-#else
-	return (ret << FMT_SHIFT) + n;
-#endif
-}
-
-	const char *
-jst_to_str (int jst)
+const char * jst_to_str (int jst)
 {
 	if (jst == JST_DEF)
 		return "default";
