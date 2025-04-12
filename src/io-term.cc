@@ -66,8 +66,7 @@ void (*write_file) (FILE *, struct rng *) = oleo_write_file;
 int (*set_file_opts) (int, char *) = oleo_set_options;
 
 
-	EXTERN void
-fairly_std_main_loop(void)
+EXTERN void fairly_std_main_loop(void)
 {
 loop:
 	try {
@@ -134,8 +133,8 @@ static struct pref {
 
 /* An parser for the language grokked by option setting commands. */
 
-	static int 
-do_set_option (char *ptr)
+	
+static int do_set_option (char *ptr)
 {
 	int	set_opt = 1;
 	int	i, l;
@@ -231,8 +230,7 @@ do_set_option (char *ptr)
 }
 
 
-	void
-set_options (char * ptr)
+void set_options (char * ptr)
 {
 	if (do_set_option (ptr))
 		io_recenter_cur_win ();
@@ -240,8 +238,7 @@ set_options (char * ptr)
 
 
 
-	void
-read_mp_usr_fmt (char *ptr)
+void read_mp_usr_fmt (char *ptr)
 {
 	int usr_n = -1;
 	int n_chrs = 0;
@@ -330,8 +327,7 @@ badline:
 }
 
 /* Modify this to write out *all* the options */
-	void
-write_mp_options (FILE *fp)
+void write_mp_options (FILE *fp)
 {
 	fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
 			Global->auto_recalc ? "" : "no",
@@ -339,8 +335,7 @@ write_mp_options (FILE *fp)
 			Global->a0 ? "" : "no");
 }
 
-	void 
-read_mp_options (char *str)
+void read_mp_options (char *str)
 {
 	char *np;
 
@@ -360,13 +355,11 @@ read_mp_options (char *str)
 /* Commands related to variables. */
 
 /* set an adapter stub that does nothing */
-	void
-_do_nothing_const_char_s(const char *s)
+void _do_nothing_const_char_s(const char *s)
 {
 }
 
-void
-_do_nothing() { }; /* stub */
+void _do_nothing() { }; /* stub */
 
 void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
 
@@ -374,8 +367,7 @@ void _io_append_message_nothing(bool beep, char *fmt, ...) {};
 
 void _io_update_width_nothing(int col, int wid) {};
 
-	void 
-InitializeGlobals(void)
+void InitializeGlobals(void)
 {
 	FileSetCurrentFileName("unnamed.oleo");
 
@@ -404,8 +396,7 @@ InitializeGlobals(void)
 }
 
 
-	void
-choose_display(bool force_cmd_graphics)
+void choose_display(bool force_cmd_graphics)
 {
 	using_curses = false;
 

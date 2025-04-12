@@ -173,8 +173,7 @@ delete_other_windows (void)
 }
 
 
-int
-set_window_option (int set_opt, char *text)
+int set_window_option (int set_opt, char *text)
 {
 	int stat;
 	int n;
@@ -255,22 +254,7 @@ recenter_window (void)
 /* Trivial front-end commands. */
 
 
-void
-suspend_oleo (void)
-{
-	if (using_curses)
-	{
-		stop_curses ();
-#ifdef SIGTSTP
-		kill (getpid (), SIGTSTP);
-#else
-#ifdef SIGSTOP
-		kill (getpid (), SIGSTOP);
-#endif
-#endif
-		cont_curses ();
-	}
-}
+
 
 void
 recalculate (int all)
@@ -278,23 +262,10 @@ recalculate (int all)
 }
 
 
-void
-kill_oleo (void)
-{
-	io_close_display(0);
-	exit (0);
-}
 
 
-void
-kill_all_cmd (void)
-{
-	clear_spreadsheet ();
-	io_repaint ();
-}
 
-void
-redraw_screen (void)
+void redraw_screen (void)
 {
 	io_repaint ();
 }
@@ -309,154 +280,12 @@ shift_cell_cursor (int dir, int repeat)
 }
 
 
-void
-scroll_cell_cursor (int dir, int repeat)
-{
-	io_scroll_cell_cursor (dir, repeat);
-}
-
-
-
-void
-goto_region (struct rng *r)
-{
-	(void) io_move_cell_cursor (r->lr, r->lc);
-
-	if (r->hr != r->lr || r->hc != r->lc) {
-		mkrow = r->hr;
-		mkcol = r->hc;
-	} else if (mkrow != NON_ROW) {
-		mkrow = NON_ROW;
-	}
-
-	io_update_status ();
-}
-
-void
-mark_cell_cmd (int popmk)
-{
-	if (popmk)
-	{
-		if (mkrow != NON_ROW)
-		{
-			struct rng rng;
-			rng.lr = mkrow;
-			rng.lc = mkcol;
-			rng.hr = NON_ROW;
-			rng.hc = NON_COL;
-			goto_region (&rng);
-		}
-	} else {
-		mkrow = curow;
-		mkcol = cucol;
-		io_update_status ();
-	}
-}
-
-void
-unmark_cmd (void)
-{
-	mkrow = NON_ROW;
-	mkcol = NON_COL;
-
-	io_update_status ();
-}
-
-
-
-/* Commands used to modify cell formulas. */
-
-
-
-void
-imove (struct rng * rng, int ch)
-{
-	//if ((ch > 0) && (ch != 27)) pushed_back_char = ch;
-
-	goto_region (rng);
-}
-
-/* Incremental navigation
- *
- * This should be called in edit mode while gathering arguments 
- * for a complex command.  The expected the_cmd_arg.
- */
-
-#define MIN(A,B)	((A) < (B) ? (A) : (B))
-
-
-
-/* The commands that move to the extreme of a row[col] may also move
- * forward or backward some number of col[row], according to the prefix
- * arg.  This is the logic of that.  This function returns the new col[row]
- * and operates on the presumption that MIN_ROW == MIN_COL and
- * MAX_ROW == MAX_COL.
- */
-
-static CELLREF
-extreme_cmd_orth_motion (int count, CELLREF current)
-{
-  --count;
-  if (count > (MAX_ROW - current))
-    count =  (MAX_ROW - current);
-  else if (-count > (current - MIN_ROW))
-    count = (MIN_ROW - current);
-  return current + count;
-}
-
-
-void
-beginning_of_row (int count)
-{
-	struct rng rng;
-	rng.lr = extreme_cmd_orth_motion (count, curow);
-	rng.lc = MIN_COL;
-	rng.hr = mkrow;
-	rng.hc = mkcol;
-	goto_region (&rng);
-}
-
-
-void
-beginning_of_col (int count)
-{
-	struct rng rng;
-	rng.lr = MIN_ROW;
-	rng.lc = extreme_cmd_orth_motion (count, cucol);
-	rng.hr = mkrow;
-	rng.hc = mkcol;
-	goto_region (&rng);
-}
-
-
-
-void
-set_region_formula (struct rng * rng, char * str)
-{
-	CELLREF row, col;
-
-	for (row = rng->lr; row <= rng->hr; ++row)
-		for (col = rng->lc; col <= rng->hc; ++col)
-		{
-			char * error = new_value (row, col, str);
-			if (!error)
-				Global->modified = 1;
-			if (error)
-			{
-				io_error_msg (error);
-				return;
-			}
-		}
-}
-
-
 
 /*
  * Extended this to detect the extension of a file and have the right
  * read function process this.
  */
-void
-read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
+void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 {
 	char	*ext = NULL;
 	if (!ismerge)
@@ -474,8 +303,7 @@ read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 }
 
 
-void
-write_cmd (FILE *fp, const char * name)
+void write_cmd (FILE *fp, const char * name)
 {
 	if(name)
 		FileSetCurrentFileName(name);
@@ -489,8 +317,7 @@ write_cmd (FILE *fp, const char * name)
 
 /* PROT may be `d', `p', or `u'. */
 
-void
-set_region_protection (struct rng * rng, int prot)
+void set_region_protection (struct rng * rng, int prot)
 {
 	if (isupper (prot))
 		prot = tolower (prot);
@@ -511,8 +338,7 @@ set_region_protection (struct rng * rng, int prot)
 	}
 }
 
-void
-set_region_alignment (struct rng * rng, int align)
+void set_region_alignment (struct rng * rng, int align)
 {
 	int fun = chr_to_jst (align);
 	if (fun != -1)
@@ -571,67 +397,8 @@ void set_cell_alignment_right()
 	set_cell_alignment('R');
 }
 
-/*
- * Lacking more knowledge of Oleo internals, we're hacking this thing to
- *	clean up the mess concerning the mixup of format and precision.
- *
- * The function set_region_format is a pass-through between the command
- *	loop and format_region(). As I don't know how to pass more than
- *	one parameter from str_to_fmt over the command loop into
- *	set_region_format, I'm leaving the mixup mentioned above as it
- *	is in that area. But *only* for passing the information to here.
- * Here the first thing we do is take the two values apart and call the
- *	clean API's with the right values.
- *
- * Sigh.
- * FIX ME
- *
- * Another place turned up that needs this : set_def_format().
- */
-void
-set_region_format (struct rng * rng, int fmt)
-{
-	int format = (fmt & FMT_MASK) >> FMT_SHIFT;
-	//int precision = fmt & PREC_MASK;
-
-	format_region (rng, format, -1); 
-	//precision_region(rng, precision);
-}
 
 
-
-
-/* PROT may be `d', `p', or `u'. */
-
-void
-set_def_protection (int prot)
-{
-	if (isupper (prot))
-		prot = tolower (prot);
-	switch (prot)
-	{
-		case 'p':
-			default_lock = LCK_LCK;
-			break;
-		case 'u':
-			default_lock = LCK_UNL;
-			break;
-		default:
-			io_error_msg ("Bad argument to set-default-protection %c.", prot);
-			break;
-	}
-}
-
-void
-set_def_alignment (int align)
-{
-	int fun = chr_to_jst (align);
-	if (fun == -1)
-		io_error_msg ("Unknown justification.");
-
-	default_jst = fun;
-	io_repaint ();
-}
 
 void
 set_def_format (int fmt)
@@ -644,38 +411,4 @@ set_def_format (int fmt)
 
 	io_repaint ();
 }
-
-void
-define_usr_fmt (int fmt, char * pos_h, char * neg_h, char * pos_t,
-		char * neg_t, char * zero, char * comma, char * decimal,
-		char * precision, char * scale)
-{
-	char * usr_buf[9];
-	if (fmt < 1 || fmt > 16)
-	{
-		io_error_msg ("Format number out of range %d (should be in [1..16].",
-				fmt);
-		/* no return */
-	}
-	/* Vector to an older interface... */
-	--fmt;
-	usr_buf[0] = pos_h;
-	usr_buf[1] = neg_h;
-	usr_buf[2] = pos_t;
-	usr_buf[3] = neg_t;
-	usr_buf[4] = zero;
-	usr_buf[5] = comma;
-	usr_buf[6] = decimal;
-	usr_buf[7] = precision;
-	usr_buf[8] = scale;
-	set_usr_stats (fmt, usr_buf);
-}
-
-
-void
-auto_move (void)
-{
-	shift_cell_cursor (Global->auto_motion_direction, 1);
-}
-
 
