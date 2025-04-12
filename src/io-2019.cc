@@ -27,6 +27,7 @@ using namespace std::string_literals;
 #include "sheet.h"
 #include "tbl.h"
 #include "window.h"
+#include "io-curses.h"
 
 using std::cout;
 
@@ -247,6 +248,7 @@ static void clear_cell_formula()
 void process_key(const keymap_t& keymap)
 {
 	int c = getch();
+	clear_status_line();
 	//log("process_key:", c);
 	auto search = keymap.find(c);
 	if(search == keymap.end()) { beep(); return; }
@@ -330,16 +332,26 @@ static void maybe_quit_spreadsheet2019(bool& quit)
 
 void io_error_msg2019_str(const std::string& str)
 {
-	//log("TODO:io_error_msg2019_str:", str);
-	npanel_c pan;
-	wprintw(pan.m_w, "%s", str.c_str());
-	update_panels();
-	doupdate();
-	//sleep(1);
-	usleep(0.5 * 1'000'000); // half a second
+	// 25/4 Changed so that the message persists on the status line 
+
+	//npanel_c pan;
+	//wprintw(pan.m_w, "%s", str.c_str());
+	//move(0, 0);
+	wprint(0, 0, str);
+	clrtoeol();
+
+	//update_panels();	
+	//doupdate();
+	
+	//usleep(0.5 * 1'000'000); // half a second. 
 
 }
 
+void clear_status_line()
+{
+	move(0, 0);
+	clrtoeol();
+}
 
 static void delete_1row() { delete_row(1); }
 
