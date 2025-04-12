@@ -36,17 +36,17 @@ struct command_frame
 	//struct command_frame * next;
 	//struct command_frame * prev;
 
-	CELLREF _setrow = NON_ROW;
-	CELLREF _setcol = NON_COL;
+	//CELLREF _setrow = NON_ROW;
+	//CELLREF _setcol = NON_COL;
 
 	//long	buf1;
 	CELLREF _curow = MIN_ROW;
 	//long	buf2;
 	CELLREF _cucol = MIN_COL;
 	//long	buf3;
-	CELLREF _mkrow = NON_ROW;
+	//CELLREF _mkrow = NON_ROW;
 	//long	buf4;
-	CELLREF _mkcol = NON_COL;
+	//CELLREF _mkcol = NON_COL;
 	//long	buf5;
 
 	int _window_after_input = -1;
@@ -77,14 +77,19 @@ inline struct command_frame * the_cmd_frame = &cmd_frame;
  * a set of global variables.
  */
 
-#define curow			the_cmd_frame->_curow
-#define cucol			the_cmd_frame->_cucol
-#define mkrow			the_cmd_frame->_mkrow
-#define mkcol			the_cmd_frame->_mkcol
+//#define curow			the_cmd_frame->_curow
+inline CELLREF curow = MIN_ROW;
+//#define cucol			the_cmd_frame->_cucol
+inline CELLREF cucol = MIN_COL;
+//#define mkrow			the_cmd_frame->_mkrow
+inline  CELLREF mkrow = NON_ROW;
+inline CELLREF mkcol = NON_COL;
+//#define mkcol			the_cmd_frame->_mkcol
 
 //#define window_after_input	the_cmd_frame->_window_after_input
-#define input_active		the_cmd_frame->_input_active
-
+//#define input_active		the_cmd_frame->_input_active
+inline int window_after_input = -1;
+inline int input_active = 0;
 
 #define SELECT_TYPE fd_set
 #define SELECT_SET_SIZE FD_SETSIZE
