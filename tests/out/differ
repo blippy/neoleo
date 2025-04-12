@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#show what the difference is
+diff $1 ../verified/$1

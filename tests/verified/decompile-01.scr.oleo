@@ -1,7 +1,7 @@
 # This file was created by Neoleo
-# format 3.0 (requires Neoleo 8.0 or higher)
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
 F;DGFR8
-O;auto;background;noa0;ticks 1
+O;auto;background;noa0
 C;c1;r1;E"expect hello:";K"expect hello:"
 C;r2;Eif(#TRUE, "hello", -3);K"hello"
 C;r3;E"---";K"---"
