@@ -135,7 +135,6 @@ parse_command_line(int argc, char **argv)
 
 void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 {
-	init_infinity ();
 	init_cells ();
 	headless_graphics(); // fallback position
 

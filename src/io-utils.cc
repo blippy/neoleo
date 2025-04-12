@@ -73,8 +73,8 @@ std::string bool_name(bool_t b)
 
 char numb_oflo[] = "########################################";
 
-double __plinf;
-double __neinf;
+double __plinf = MAXFLOAT;
+double __neinf = -MAXFLOAT;
 //double __nan;
 
 num_t fabs(num_t x)
@@ -109,35 +109,6 @@ const char *date_formats[] = {
 	NULL
 };
 
-
-#if 0
-	static RETSIGTYPE
-ignore_sig (int sig)
-{
-	(void) signal (SIGFPE, ignore_sig);
-}
-#endif
-
-/* It's ok of this fails and generates signals.  In that case, 
- * the same signal will occur when evaluating formulas and a
- * (less informative) error value substituted.  Note that this 
- * should be called before init_eval.
- */
-	void
-init_infinity (void)
-{
-#ifdef	MAXFLOAT
-	__plinf = MAXFLOAT;
-	__neinf = - MAXFLOAT;
-#else
-	(void) signal (SIGFPE, ignore_sig);
-	__plinf = divide (1., 0.);
-	(void) signal (SIGFPE, ignore_sig);
-	__neinf = divide (-1., 0.);
-	(void) signal (SIGFPE, ignore_sig);
-#endif
-	//__nan = __plinf + __neinf; // mcarter
-}
 
 
 
