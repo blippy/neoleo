@@ -1001,41 +1001,6 @@ file_get_default_format(void)
 	return defaultformat;
 }
 
-	int
-write_file_generic_2(FILE *fp, struct rng *rng, char *format)
-{
-	if (!stricmp ("oleo", format)) {
-		oleo_write_file(fp, rng);
-#ifdef	HAVE_PANIC_SAVE
-	} else if (!stricmp ("panic", format)) {
-		panic_write_file(fp, rng);
-#endif
-	} else {
-		return -1;
-	}
-
-	return 0;
-}
-
-	void
-write_file_generic(FILE *fp, struct rng *rng, char *format)
-{
-	if (format == NULL) {
-		if (defaultformat)
-			(void) write_file_generic_2(fp, rng, defaultformat);
-		else
-			oleo_write_file(fp, rng);
-
-		return;
-	}
-#if 0
-	fprintf(stderr, PACKAGE " write_file_generic : format %s\n", format);
-#endif
-	if (write_file_generic_2(fp, rng, format) != 0) {
-		if (write_file_generic_2(fp, rng, defaultformat) != 0)
-			oleo_write_file(fp, rng);
-	}
-}
 
 	int
 read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
