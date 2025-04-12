@@ -330,22 +330,10 @@ static void maybe_quit_spreadsheet2019(bool& quit)
 
 }
 
-void io_error_msg2019_str(const std::string& str)
-{
-	// 25/4 Changed so that the message persists on the status line 
 
-	//npanel_c pan;
-	//wprintw(pan.m_w, "%s", str.c_str());
-	//move(0, 0);
-	wprint(0, 0, str);
-	clrtoeol();
 
-	//update_panels();	
-	//doupdate();
-	
-	//usleep(0.5 * 1'000'000); // half a second. 
 
-}
+
 
 void clear_status_line()
 {

@@ -730,30 +730,7 @@ hit:
 
 #define BUFFER 10
 
-static void 
-_io_bell (void)
-{
-#ifndef HAVE_GETCAP
-	putchar ('\007');
-#else
-	static char *vb;
-	static int called = 0;
 
-	if (!called)
-	{
-		called++;
-		vb = getcap ("vb");
-	}
-	if (vb)
-	{
-		local_puts (vb);
-	}
-	else
-	{
-		local_putchar ('\007');
-	}
-#endif
-}
 
 static void
 move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
@@ -1100,6 +1077,24 @@ _io_command_loop (int a)
 }
 
 
+void _io_error_msg (const char *str, ...)
+{
+	va_list foo;
+	char buf[1000];
+
+	//io_bell(); // 25/4 del
+	va_start (foo, str);
+	vsprintf (buf, str, foo);
+
+	// 25/4 Persist the error messages
+	wprint(0, 0, str);
+	clrtoeol();
+	//io_error_msg2019_str(buf);
+
+	throw OleoJmp("OleoJmp from io_error_msg()");
+
+}
+
 
 void
 tty_graphics (void)
@@ -1115,7 +1110,6 @@ tty_graphics (void)
 	io_input_avail = _io_input_avail;
 	io_wait_for_input = _io_wait_for_input;
 	io_read_kbd = _io_read_kbd;
-	io_bell = _io_bell;
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_move_cursor = _io_move_cursor;
@@ -1134,5 +1128,5 @@ tty_graphics (void)
 	// added by mcarter:
 	//io_run_main_loop = _io_run_curses_main_loop;
 	io_run_main_loop = fairly_std_main_loop;
-	io_error_msg = cmd_io_error_msg; // eventually we'll want to replace this in a 2019 ui
+	io_error_msg = _io_error_msg; // eventually we'll want to replace this in a 2019 ui
 }

@@ -223,32 +223,7 @@ get_chr (void)
 
 
 
-	void
-cmd_io_error_msg (const char *str, ...)
-{
-	va_list foo;
-	char buf[1000];
 
-	io_bell();
-	va_start (foo, str);
-	vsprintf (buf, str, foo);
-
-	io_error_msg2019_str(buf);
-	throw OleoJmp("OleoJmp from io_error_msg()");
-
-}
-
-
-	void
-io_info_msg (const char *str, ...)
-{
-	va_list foo;
-	char buf[1000];
-
-	va_start (foo, str);
-	vsprintf (buf, str, foo);
-	io_error_msg2019_str(buf);
-}
 
 
 

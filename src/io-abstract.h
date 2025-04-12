@@ -2,7 +2,7 @@
 /*
  * $Id: io-abstract.h,v 1.8 2000/08/10 21:02:50 danny Exp $
  *
- * Copyright © 1992, 1993 Free Software Foundation, Inc.
+ * Copyright ï¿½ 1992, 1993 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ EXTERN void (*io_wait_for_input) (void);
 EXTERN int (*io_read_kbd) (char *buf, int size);
 
 /* Annoy the user: */
-EXTERN void (*io_bell) (void);
+//EXTERN void (*io_bell) (void);
 
 /* High level i/o. */
 
