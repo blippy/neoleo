@@ -86,12 +86,12 @@ int ioerror = 0;
 /* The active command frame. This is the head of a queue which is used as a
  * stack. 
  */
-struct command_frame *the_cmd_frame = 0;
+//struct command_frame *the_cmd_frame = 0;
 
 /* This is a list (next field) of frames that are currently running (their 
  * commands are active on the c stack below the error_exception jump buffer).
  */
-struct command_frame *running_frames = 0;
+//struct command_frame *running_frames = 0;
 
 
 /*
@@ -108,6 +108,7 @@ struct command_frame *running_frames = 0;
 	void
 push_command_frame (struct rng *rng, char *first_line, int len)
 {
+	return ;
 	auto new_cf = new struct command_frame;
 
 	//new_cf->next = new_cf;
@@ -151,6 +152,7 @@ push_command_frame (struct rng *rng, char *first_line, int len)
 	void
 remove_cmd_frame (struct command_frame *frame)
 {
+	return ;
 	//frame->next->prev = frame->prev;
 	//frame->prev->next = frame->next;
 	//if (the_cmd_frame == frame)
@@ -171,6 +173,7 @@ remove_cmd_frame (struct command_frame *frame)
 	void
 free_cmd_frame (struct command_frame *frame)
 {
+	return; 
 	//if (frame->next)
 	//	remove_cmd_frame (frame);
 	//delete frame;
@@ -245,6 +248,7 @@ void rebuild_command_frame()
 	void
 init_maps_and_macros()
 {
+	return; 
 	try {
 		push_command_frame (0, 0, 0);
 	} catch (OleoJmp& e) {

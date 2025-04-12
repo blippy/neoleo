@@ -36,21 +36,21 @@ struct command_frame
 	//struct command_frame * next;
 	//struct command_frame * prev;
 
-	CELLREF _setrow;
-	CELLREF _setcol;
+	CELLREF _setrow = NON_ROW;
+	CELLREF _setcol = NON_COL;
 
 	//long	buf1;
-	CELLREF _curow;
+	CELLREF _curow = MIN_ROW;
 	//long	buf2;
-	CELLREF _cucol;
+	CELLREF _cucol = MIN_COL;
 	//long	buf3;
-	CELLREF _mkrow;
+	CELLREF _mkrow = NON_ROW;
 	//long	buf4;
-	CELLREF _mkcol;
+	CELLREF _mkcol = NON_COL;
 	//long	buf5;
 
-	int _window_after_input;
-	int _input_active;
+	int _window_after_input = -1;
+	int _input_active = 0;
 	//int top_keymap;
 	//int _cur_keymap;
 	//int saved_cur_keymap;
@@ -68,8 +68,9 @@ struct command_frame
  * on:
  */
 
-extern struct command_frame * the_cmd_frame;
-extern struct command_frame * running_frames;
+inline struct command_frame cmd_frame;
+inline struct command_frame * the_cmd_frame = &cmd_frame;
+//extern struct command_frame * running_frames;
 
 /* For most code, the structure of command loops and input streams
  * is unimportant.  To that code, we make it appear that there is just
