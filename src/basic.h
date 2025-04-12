@@ -47,3 +47,4 @@ int set_window_option (int set_opt, char *text);
 void redraw_screen (void);
 void set_cell_toggle_bold();
 void set_cell_toggle_italic();
+void set_cell_toggle_percent();

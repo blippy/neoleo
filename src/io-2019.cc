@@ -266,6 +266,7 @@ void main_command_loop_for2019()
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 			{'=', 		edit_cell2019},
+			{'%',		set_cell_toggle_percent},			
 			{'m',		menu_display},
 			{'r',		row_cmd2019},
 			{KEY_DC, 	clear_cell_formula}, // delete key
@@ -273,7 +274,7 @@ void main_command_loop_for2019()
 			{KEY_LEFT,  	cursor_left},
 			{27,  		complex_key_sequence_27},
 			{KEY_RIGHT, 	cursor_right},
-			{KEY_UP, 	cursor_up},
+			{KEY_UP, 	cursor_up},			
 			{CTRL('b'),	set_cell_toggle_bold},
 			{CTRL('c'), 	copy_this_cell_formula},
 			{CTRL('i'),	set_cell_toggle_italic},

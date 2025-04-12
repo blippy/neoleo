@@ -8,6 +8,8 @@ NAME: 		HANK SCHRADER
 
 After what was mostly bugfixes, we now have new features
 
+* Added keystroke `%' for percentage format
+
 * italic feature added via C-i. WARNING: If you save a cell with a bold
 format, the file will not be compatible with previous versions.
 

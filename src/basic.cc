@@ -530,11 +530,23 @@ static void set_cell_alignment(char align)
 
 // NB probably belongs somewhere else
 void set_cell_toggle_bold()
-{
-	
+{	
 	auto cp = find_or_make_cell();
 	cp->cell_flags.bold = ! cp->cell_flags.bold;
-	//log("set_cell_toggle_bold:", cp, ":", cp->cell_flags.bold );
+	Global->modified = true;
+	io_repaint();
+}
+
+void set_cell_toggle_percent()
+{
+	auto cp = find_or_make_cell();
+
+	auto &fmt = cp->cell_flags.cell_format;
+	if(fmt ==  FMT_PCT)
+		fmt = FMT_DEF;
+	else
+		fmt = FMT_PCT;
+
 	Global->modified = true;
 	io_repaint();
 }
