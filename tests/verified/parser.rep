@@ -82,4 +82,5 @@ Pret: R14C1: `14.1' => `14.1' PASS
 Pret: R14C2: `r14c[-1]' => `14.1' PASS
 Pret: R15C1: `15.2' => `15.2' PASS
 Pret: R15C2: `rc[-1]' => `15.2' PASS
+Pret: R16C2: `r14c+r15c2' => `29.3' PASS
 INFO: Completely finished parser2019

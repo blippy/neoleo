@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <cassert>
-#include <ctype.h>
+#include <cctype>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -408,8 +408,16 @@ bool operator==(const token_t t, char c)
 
 }
 
-	static tokens_t 
-tokenise (string str, bool& unclosed_string)
+static string tolower(const token_t& t)
+{
+	string s{t.val};
+	std::transform(s.begin(), s.end(), s.begin(),
+	   [](unsigned char c){ return std::tolower(c); } // correct
+	  );
+	return s;
+}
+
+static tokens_t tokenise (string str, bool& unclosed_string)
 {
 	tokens_t tokens;
 	unclosed_string = false; // sometimes the user doesn't close the string
@@ -616,7 +624,8 @@ Expr parse_rc_1 (tokens_t& tokes, ranges_t& predecs,  CELLREF r, CELLREF c, cons
 	}
 
 
-	if(tolower(peek(tokes) == 'c')) {
+	auto c1 = peek(tokes).val;
+	if(c1 == "c" || c1 == "C") {
 		pop(tokes);
 	} else if (command != "rc") {
 		parse_error();
@@ -654,8 +663,8 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 		case STR:
 			return Expr(toke.val);
 		case ID:  {
-				  string lower = toke.val;
-				  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+				  string lower = tolower(toke); //toke.val;
+				  //std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
 				  if(lower== "r" || lower == "rc" )
 					  return parse_rc_1(tokes, predecs, r, c, lower);
 				  if(tokes.front().type == '(')
