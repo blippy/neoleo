@@ -17,16 +17,6 @@
  */
 
 #include <assert.h>
-#include <ctype.h>
-#include <errno.h>
-#include <memory>
-#include <stdarg.h>
-#include <termios.h>
-#include <malloc.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-
 
 #include "sheet.h"
 #include "logging.h"
