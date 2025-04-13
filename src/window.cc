@@ -266,6 +266,7 @@ recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLR
 	*hiP = hi;
 }
 
+// FN recenter_window 
 void  recenter_window (struct window *win)
 {
 	if (win->flags & WIN_PAG_VT)
@@ -282,6 +283,7 @@ void  recenter_window (struct window *win)
 		recenter_axis (win->win_cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
 }
+// FN-END
 
 void 
 io_recenter_cur_win (void)

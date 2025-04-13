@@ -16,7 +16,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
- #include <string>
+#include <string>
 #include <ctype.h>
 #include <cmath>
 #include <stdlib.h>
@@ -41,7 +41,7 @@ using std::cout;
 #include "utils.h"
 #include "logging.h"
 #include "cmd.h"
-#include "window.h"
+//#include "window.h"
 
 
 /* These functions read and write OLEO style files. */
@@ -147,7 +147,7 @@ void oleo_read_window_config (char * line)
 			//cucol = ncol;
 			set_cucol(ncol);
 		}
-		recenter_window (win);
+		recenter_window(win);
 	}
 	if (opts)
 	{
@@ -161,7 +161,7 @@ void oleo_read_window_config (char * line)
 		}
 		if ((np = (char *)rindex (opts, '\n')))
 			*np = '\0';
-		set_options (opts);
+		set_options(opts);
 	}
 }
 

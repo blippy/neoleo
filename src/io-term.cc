@@ -125,6 +125,7 @@ static struct pref {
 /* An parser for the language grokked by option setting commands. */
 
 	
+// FN do_set_option
 static int do_set_option (char *ptr)
 {
 	int	set_opt = 1;
@@ -219,13 +220,15 @@ static int do_set_option (char *ptr)
 	}
 	return 1;
 }
+// FN-END 
 
-
+// FN set_options 
 void set_options (char * ptr)
 {
 	if (do_set_option (ptr))
 		io_recenter_cur_win ();
 }
+// FN-END
 
 
 
