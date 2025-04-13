@@ -32,7 +32,7 @@
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
-#include "utils.h"
+
 
 /* Used by motion commands. */
 const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
@@ -195,8 +195,7 @@ win_label_rows (struct window * win)
 	return (win->flags & WIN_EDGES) ? label_rows : 0;
 }
 
-static void 
-set_numcols (struct window *win, CELLREF hr)
+void set_numcols (struct window *win, CELLREF hr)
 {
 	int lh = win_label_cols (win, hr);
 	win->win_over -= win->lh_wid - lh;
@@ -267,8 +266,7 @@ recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLR
 	*hiP = hi;
 }
 
-static void 
-recenter_window (struct window *win)
+void  recenter_window (struct window *win)
 {
 	if (win->flags & WIN_PAG_VT)
 		page_axis (win->win_curow, get_scaled_height, win->numr,
@@ -709,215 +707,7 @@ io_set_win_flags (struct window *w, int f)
 	w->flags = f;
 }
 
-std::string
-io_write_window_config ()
-{
-	std::ostringstream oss;
 
-	int n;
-	char buf[90];
-	//struct line scratch;
-	//scratch.alloc = 0;
-	//scratch.buf = 0;
-
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
-	//sprint_line (&out, "O;status %d\n", user_status);
-	oss << "O;status " << user_status << "\n";
-	if (nwin > 1)
-	{
-		/* ... */ /* fixme ? */
-	}
-	for (n = 0; n < nwin; n++)
-	{
-		buf[0] = '\0';
-		if (wins[n].flags & WIN_LCK_HZ)
-			strcat (buf, ",lockh");
-		if (wins[n].flags & WIN_LCK_VT)
-			strcat (buf, ",lockv");
-		if (wins[n].flags & WIN_PAG_HZ)
-			strcat (buf, ",pageh");
-		if (wins[n].flags & WIN_PAG_VT)
-			strcat (buf, ",pagev");
-		if (wins[n].flags & WIN_EDGE_REV)
-			strcat (buf, ",standout");
-		if ((wins[n].flags & WIN_EDGES) == 0)
-			strcat (buf, ",noedges");
-		//scratch = *out;
-		//out->alloc = 0;
-		//out->buf = 0;
-		//sprint_line (out, "%sW;N%d;A%u %u;C%d %d %d;O%s\n", scratch.buf, n + 1, wins[n].win_curow, wins[n].win_cucol, 7, 0, 7, buf + 1);
-		oss << "W;N" << n+1 << ";A" << wins[n].win_curow << " " << wins[n].win_cucol 
-			<< ";C7 0 7;O" << buf+1 << "\n";
-		//free (scratch.buf);
-	}
-
-	return oss.str();
-}
-
-void 
-io_read_window_config (char * line)
-{
-	int wnum = 0;
-	char *text;
-	CELLREF nrow = NON_ROW, ncol = NON_COL;
-	char *split = 0;
-	char *opts = 0;
-	struct window *win;
-
-	text = line;
-	for (;;)
-	{
-		switch (*text++)
-		{
-			/* Window Number */
-			case 'N':
-				wnum = astol (&text);
-				break;
-				/* Cursor At */
-			case 'A':
-				nrow = astol (&text);
-				ncol = astol (&text);
-				break;
-				/* JF: Window options */
-			case 'O':
-				opts = text;
-				while (*text && *text != ';')
-					text++;
-				break;
-				/* Split into two windows */
-			case 'S':
-				split = text;
-				while (*text && *text != ';')
-					text++;
-				break;
-				/* Set Colors NOT supported */
-			case 'C':
-				while (*text && *text != ';')
-					text++;
-				break;
-				/* Alternate border NOT supported. . . */
-			case 'B':
-				break;
-			default:
-				--text;
-				break;
-		}
-		if (*text == '\0' || *text == '\n')
-			break;
-		if (*text != ';')
-		{
-			char *bad;
-
-			bad = text;
-			while (*text && *text != ';')
-				text++;
-			if (*text)
-				*text++ = '\0';
-			raise_error("Unknown SYLK window cmd: %s", bad);
-			if (!*text)
-				break;
-		}
-		else
-			*text++ = '\0';
-	}
-	if (wnum < 1 || wnum > nwin)
-	{
-		raise_error("Window %d out of range in SYLK line %s", wnum, line);
-		return;
-	}
-	--wnum;
-	win = &wins[wnum];
-	if (nrow != NON_ROW)
-	{
-		win->win_curow = nrow;
-		win->win_cucol = ncol;
-		if (win == cwin)
-		{
-			//curow = nrow;
-			set_curow(nrow);
-			//cucol = ncol;
-			set_cucol(ncol);
-		}
-		recenter_window (win);
-	}
-	if (split)
-	{
-		int hv = 0;
-		int where;
-		int link;
-		struct window *neww;
-
-		switch (*split++)
-		{
-			case 'H':
-			case 'h':
-				hv = 1;
-				break;
-			case 'v':
-			case 'V':
-				hv = 0;
-				break;
-			case 't':
-			case 'T':
-				raise_error("Window split titles not supported");
-				return;
-			default:
-				break;
-		}
-		if (*split == 'L')
-		{
-			link = wnum;
-			split++;
-		}
-		else
-			link = -1;
-
-		where = astol (&split);
-
-		if (hv ? where >= win->numr : where >= win->numc)
-			raise_error("Can't split window: screen too small");
-
-		nwin++;
-		wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));
-		cwin = wins;
-		win = &wins[wnum];
-		neww = &wins[nwin - 1];
-
-		win->numc -= (hv ? 0 : where);
-		win->numr -= (hv ? where : 0);
-		win->win_curow = curow;
-		win->win_cucol = cucol;
-
-		neww->flags = WIN_EDGES | WIN_EDGE_REV;	/* Mplan defaults */
-		neww->lh_wid = 0;		/* For now */
-		neww->link = link;
-
-		neww->win_over = win->win_over + (hv ? -win->lh_wid : win->numc);
-		neww->win_down = win->win_down + (hv ? win->numr + 1 : 0);
-		neww->numc = (hv ? win->numc + win->lh_wid : where);
-		neww->numr = (hv ? where - 1 : win->numr);
-		neww->win_curow = curow;
-		neww->win_cucol = cucol;
-		set_numcols (neww, curow);
-		recenter_window (win);
-		recenter_window (neww);
-	}
-	if (opts)
-	{
-		char *np;
-		while ((np =(char *) index (opts, ',')))
-		{
-			*np = '\0';
-			set_options (opts);
-			*np++ = ';';
-			opts = np;
-		}
-		if ((np = (char *)rindex (opts, '\n')))
-			*np = '\0';
-		set_options (opts);
-	}
-}
 
 
 

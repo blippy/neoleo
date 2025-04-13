@@ -155,6 +155,6 @@ extern void io_recenter_cur_win (void);
 extern void io_recenter_named_window(struct window *w);
 extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
-std::string io_write_window_config ();
-extern void io_read_window_config (char * line);
 extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc) ;
+void  recenter_window (struct window *win);
+void set_numcols (struct window *win, CELLREF hr);
