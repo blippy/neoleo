@@ -98,6 +98,7 @@ void oleo_read_window_config (char * line)
 				break;
 				/* Split into two windows */
 			case 'S':
+				ASSERT_UNCALLED();
 				split = text;
 				while (*text && *text != ';')
 					text++;
@@ -154,6 +155,7 @@ void oleo_read_window_config (char * line)
 	}
 	if (split)
 	{
+		ASSERT_UNCALLED();
 		int hv = 0;
 		int where;
 		int link;
