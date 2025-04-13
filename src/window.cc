@@ -392,19 +392,6 @@ io_set_label_size (int r, int c)
 
 
 
-void 
-io_set_input_rows (int n)
-{
-	input_rows = n;
-	io_set_input_status (user_input, user_status, 1);
-}
-
-void 
-io_set_status_rows (int n)
-{
-	status_rows = n;
-	io_set_input_status (user_input, user_status, 1);
-}
 
 void 
 io_set_input_status (int inp, int stat, int redraw)
@@ -543,15 +530,7 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 	}
 }
 
-void
-io_redo_region (struct rng * rng)
-{
-	for(CELL* cp:get_cells_in_range(rng))
-	{
-		auto [r, c] = decoord(cp);
-		io_pr_cell (r, c, cp);
-	}
-}
+
 
 /* Create a new window by splitting the current one. */
 void 

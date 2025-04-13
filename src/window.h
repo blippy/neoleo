@@ -145,13 +145,9 @@ struct window
 extern int win_label_cols (struct window * win, CELLREF hr);
 extern int win_label_rows (struct window * win);
 extern void io_set_label_size (int r, int c);
-extern void io_set_scr_size (int lines, int cols);
-extern void io_set_input_rows (int n);
-extern void io_set_status_rows (int n);
 extern void io_set_input_status (int inp, int stat, int redraw);
 extern void io_set_cwin (struct window *win);
 extern void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
-extern void io_redo_region (struct rng * rng);
 extern void io_win_open (int hv, int where);
 extern void io_win_close (struct window *win);
 extern void io_move_cell_cursor (CELLREF rr, CELLREF cc);
