@@ -72,7 +72,6 @@ void oleo_read_window_config (char * line)
 	int wnum = 0;
 	char *text;
 	CELLREF nrow = NON_ROW, ncol = NON_COL;
-	char *split = 0;
 	char *opts = 0;
 	struct window *win;
 
@@ -98,7 +97,6 @@ void oleo_read_window_config (char * line)
 				break;
 				
 			case 'S': /* Split into two windows. 25/4 unsupported */
-				split = text;
 				while (*text && *text != ';')
 					text++;
 				break;
@@ -150,69 +148,6 @@ void oleo_read_window_config (char * line)
 			set_cucol(ncol);
 		}
 		recenter_window (win);
-	}
-	if (split)
-	{
-		ASSERT_UNCALLED();
-		int hv = 0;
-		int where;
-		int link;
-		struct window *neww;
-
-		switch (*split++)
-		{
-			case 'H':
-			case 'h':
-				hv = 1;
-				break;
-			case 'v':
-			case 'V':
-				hv = 0;
-				break;
-			case 't':
-			case 'T':
-				raise_error("Window split titles not supported");
-				return;
-			default:
-				break;
-		}
-		if (*split == 'L')
-		{
-			link = wnum;
-			split++;
-		}
-		else
-			link = -1;
-
-		where = astol (&split);
-
-		if (hv ? where >= win->numr : where >= win->numc)
-			raise_error("Can't split window: screen too small");
-
-		nwin++;
-		wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));
-		cwin = wins;
-		win = &wins[wnum];
-		neww = &wins[nwin - 1];
-
-		win->numc -= (hv ? 0 : where);
-		win->numr -= (hv ? where : 0);
-		win->win_curow = curow;
-		win->win_cucol = cucol;
-
-		neww->flags = WIN_EDGES | WIN_EDGE_REV;	/* Mplan defaults */
-		neww->lh_wid = 0;		/* For now */
-		neww->link = link;
-
-		neww->win_over = win->win_over + (hv ? -win->lh_wid : win->numc);
-		neww->win_down = win->win_down + (hv ? win->numr + 1 : 0);
-		neww->numc = (hv ? win->numc + win->lh_wid : where);
-		neww->numr = (hv ? where - 1 : win->numr);
-		neww->win_curow = curow;
-		neww->win_cucol = cucol;
-		set_numcols (neww, curow);
-		recenter_window (win);
-		recenter_window (neww);
 	}
 	if (opts)
 	{
