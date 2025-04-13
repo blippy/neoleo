@@ -133,44 +133,6 @@ vsplit_window (void)
 }
 
 
-void 
-close_window (char *text)
-{
-	int num;
-
-	num = atoi (text) - 1;
-
-	if (num < 0 || num >= nwin)
-	{
-		raise_error("Window %num?", text);
-		return;
-	}
-	if (nwin == 1)
-	{
-		raise_error("You can't close the last window!");
-		return;
-	}
-	io_win_close (&wins[num]);
-}
-
-void 
-delete_window (void)
-{
-	io_win_close (cwin);
-}
-
-void
-delete_other_windows (void)
-{
-	if (nwin > 1)
-	{
-		CELLREF r = curow;
-		CELLREF c = cucol;
-		while (nwin > 1)
-			io_win_close (cwin);
-		io_move_cell_cursor (r, c);
-	}
-}
 
 
 int set_window_option (int set_opt, char *text)

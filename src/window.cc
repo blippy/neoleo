@@ -384,11 +384,6 @@ find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
 
 /* External window interface */
 
-void 
-io_set_label_size (int r, int c)
-{
-	/* fixme */
-}
 
 
 
@@ -498,18 +493,6 @@ re:
 		Global->input = new_inp;
 		Global->status = new_stat;
 	}
-}
-
-void 
-io_set_cwin (struct window *win)
-{
-	io_hide_cell_cursor ();
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
-	cwin = win;
-	curow = cwin->win_curow;
-	cucol = cwin->win_cucol;
-	io_display_cell_cursor ();
 }
 
 
