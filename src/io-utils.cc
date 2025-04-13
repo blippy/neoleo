@@ -954,7 +954,8 @@ parray_len (char **array)
 
 static char *defaultformat = NULL;
 
-void file_set_default_format(char *s)
+	void
+file_set_default_format(char *s)
 {
 	if (defaultformat)
 		free(defaultformat);
@@ -965,25 +966,34 @@ void file_set_default_format(char *s)
 		defaultformat = s;
 }
 
-char * file_get_default_format(void)
+	char *
+file_get_default_format(void)
 {
 	return defaultformat;
 }
 
 
-int read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
+	int
+read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 {
 	if (stricmp ("oleo", format) == 0) {
 		oleo_read_file(fp, ismerge);
-		return 0;
+#ifdef	HAVE_PANIC_SAVE
+	} else if (stricmp ("panic", format) == 0) {
+		panic_read_file(fp, ismerge);
+#endif
+	} else if (stricmp("dbf", format) == 0) {
+		raise_error("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
+		return -1;
+	} else {
+		return -1;
 	}
-
-	raise_error("Can only read file in OLEO format");
-	return -1;
+	return 0;
 }
 
 
-void read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
+	void
+read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
 {
 	if (format == NULL) {
 		if (defaultformat)

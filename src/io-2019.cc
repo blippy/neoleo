@@ -314,8 +314,6 @@ void curses_main()
 	}
 
 	endwin();
-	exit(0);
-
 }
 
 static void save_csv2019(){

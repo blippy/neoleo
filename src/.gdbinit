@@ -1,6 +1,5 @@
 file neoleo
-#b execute_command
 #b io-curses.cc:399
-#b oleofile.cc:554
-#r /home/pi/Documents/cgt1.oleo
-r
+#b process_headless_line
+b _write_file
+r -H < ../tests/ctime.scr

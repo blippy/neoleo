@@ -206,5 +206,5 @@ main (int argc, char **argv)
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv, command_line_file);
 
-	return (0); /* Never Reached! */
+	return (0);
 }
