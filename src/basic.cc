@@ -84,55 +84,6 @@ delete_row (int repeat)
 
 /* Front end to the window functions. */
 
-void 
-open_window (char *text)
-{
-	int hv;
-	int where;
-
-	while (*text == ' ')
-		text++;
-
-	if (*text == 'h' || *text == 'H')
-		hv = 0;
-	else if (*text == 'v' || *text == 'V')
-		hv = 1;
-	else
-	{
-		raise_error("Open 'h'orizontal or 'v'ertical window, not '%s'", text);
-		return;
-	}
-	where = atoi (text + 1);
-	while (isspace (*text))
-		++text;
-	while (isalnum (*text))
-		++text;
-	while (isspace (*text))
-		++text;
-	if (*text == '%')
-	{
-		where *= (hv
-				? (cwin->numr + (cwin->lh_wid ? label_rows : 0))
-				: (cwin->numc + cwin->lh_wid));
-		where /= 100;
-	}
-	io_win_open (hv, where);
-}
-
-void
-hsplit_window (void)
-{
-	open_window (S "h50%");
-}
-
-
-void
-vsplit_window (void)
-{
-	open_window (S "v50%");
-}
-
-
 
 
 int set_window_option (int set_opt, char *text)

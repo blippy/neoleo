@@ -514,63 +514,6 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 }
 
 
-
-/* Create a new window by splitting the current one. */
-void 
-io_win_open (int hv, int where)
-{
-	int tmp;
-	struct window *win;
-
-	if (   (!hv
-				&& (where < MIN_CWIN_WIDTH
-					|| (cwin->numc + cwin->lh_wid + cwin->right_edge_c - where
-						< MIN_CWIN_WIDTH)))
-			|| (hv
-				&& (where < MIN_CWIN_HEIGHT
-					|| (cwin->numr + cwin->bottom_edge_r
-						+ (cwin->lh_wid ? label_rows : 0) - where
-						< MIN_CWIN_HEIGHT))))
-	{
-		raise_error("Window won't fit!");
-		return;
-	}
-
-	nwin++;
-	tmp = cwin - wins;
-	wins = (window *) ck_realloc (wins, nwin * sizeof (struct window));
-	win = &wins[nwin - 1];
-	cwin = &wins[tmp];
-	win->id = win_id++;
-	win->bottom_edge_r = cwin->bottom_edge_r;
-	win->right_edge_c = cwin->right_edge_c;
-	/* set_numcols will take care of fixing win_over if edges are on. */
-	win->win_over = cwin->win_over + (hv ? 0 : where) - cwin->lh_wid;
-	win->win_down = cwin->win_down + (hv ? where : 0);
-	win->flags = cwin->flags;
-	win->link = -1;
-	win->lh_wid = 0;
-	win->win_slops = 0;
-	win->numc = cwin->numc + cwin->lh_wid + (hv ? 0 : -where);
-	win->numr = cwin->numr + (hv ? -where : 0);
-	win->win_curow = curow;
-	win->win_cucol = cucol;
-	set_numcols (win, curow);
-	cwin->numc -= (hv ? 0 : win->numc + win->lh_wid + win->right_edge_c);
-	cwin->numr -=
-		(hv ? win->numr + (win->lh_wid ? label_rows : 0) + win->bottom_edge_r
-		 : 0);
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
-	io_hide_cell_cursor ();
-	win = cwin;
-	cwin = &wins[nwin - 1];
-	recenter_window (cwin);
-	recenter_window (win);
-	io_display_cell_cursor ();
-	io_repaint ();
-}
-
 void 
 io_win_close (struct window *win)
 {
