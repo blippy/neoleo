@@ -137,7 +137,7 @@ parse_command_line(int argc, char **argv)
 
 void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 {
-	headless_graphics(); // fallback position
+	//headless_graphics(); // fallback position // 25/4 seems unnecessary
 
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();

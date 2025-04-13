@@ -318,101 +318,6 @@ io_recenter_named_window(struct window *w)
 	recenter_window(w);
 }
 
-/*
- * RESIZE_SCREEN adjusts the windows list after a screen size change.
- * It presumes that Global->scr_lines and Global->scr_cols are the new values.  DR and DC
- * are the changes that just occured to those values.
- */
-static void 
-resize_screen (int dr, int dc)
-{
-	int x, n;
-	int lines;
-	int firstln;
-	int ncols;
-	int firstcol;
-	int old_lines;
-
-	if (!nwin)
-		return;
-
-	lines = Global->scr_lines - (!!user_status * status_rows) - input_rows;
-	old_lines = lines - dr;
-	firstln = (user_input > 0) * input_rows + (user_status > 0) * status_rows;
-
-	/* First, delete windows that will shrink too much. */
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
-	if (dr < 0)
-		for (x = 0; x < nwin; x++)
-		{
-			int rlow =
-				(wins[x].win_down - (wins[x].lh_wid ? label_rows : 0) - firstln);
-			int rhi = ((wins[x].win_down + wins[x].numr + wins[x].bottom_edge_r)
-					- firstln);
-			int sqbelow = dr * rlow;
-			int sqtohere = dr * rhi;
-			sqbelow /= old_lines;
-			sqtohere /= old_lines;
-			if (wins[x].numr <= sqbelow - sqtohere)
-			{
-				do_close_window (x);
-				x--;
-			}
-		}
-	for (x = 0; x < nwin; ++x)
-	{
-		int rlow =
-			(wins[x].win_down - (wins[x].lh_wid ? label_rows : 0) - firstln);
-		int rhi = ((wins[x].win_down + wins[x].numr + wins[x].bottom_edge_r)
-				- firstln);
-		int sqbelow = dr * rlow;
-		int sqtohere = dr * rhi;
-		sqbelow /= old_lines;
-		sqtohere /= old_lines;
-		wins[x].win_down += sqbelow;
-		wins[x].numr += sqtohere - sqbelow;
-	}
-
-	/* then columns */
-	firstcol = 0;
-	ncols = Global->scr_cols;
-	ncols -= dc;
-
-	/* First, delete windows that will shrink too much. */
-	if (dc < 0)
-		for (x = 0; x < nwin; x++)
-		{
-			int clow = (wins[x].win_over - wins[x].lh_wid) - firstcol;
-			int chi = (wins[x].win_over + wins[x].numc + wins[x].right_edge_c
-					- firstcol);
-			int sqbelow = dc * clow;
-			int sqtohere = dc * chi;
-			sqbelow /= ncols;
-			sqtohere /= ncols;
-			if (wins[x].numc <= sqbelow - sqtohere)
-			{
-				do_close_window (x);
-				x--;
-			}
-		}
-	for (x = 0; x < nwin; ++x)
-	{
-		int clow = (wins[x].win_over - wins[x].lh_wid) - firstcol;
-		int chi = (wins[x].win_over + wins[x].numc + wins[x].right_edge_c
-				- firstcol);
-		int sqbelow = dc * clow;
-		int sqtohere = dc * chi;
-		sqbelow /= ncols;
-		sqtohere /= ncols;
-		wins[x].win_over += sqbelow;
-		wins[x].numc += sqtohere - sqbelow;
-	}
-	for (n = 0; n < nwin; n++)
-		recenter_window (&wins[n]);
-	io_repaint ();
-}
-
 static void
 shift_linked_window (long dn, long ov)
 {
@@ -590,17 +495,7 @@ io_set_label_size (int r, int c)
 	/* fixme */
 }
 
-void 
-io_set_scr_size (int lines, int cols)
-{
-	int dl = lines - Global->scr_lines;
-	int dc = cols - Global->scr_cols;
 
-	Global->scr_lines = lines;
-	Global->scr_cols = cols;
-
-	resize_screen (dl, dc);
-}
 
 void 
 io_set_input_rows (int n)
