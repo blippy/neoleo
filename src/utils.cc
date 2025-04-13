@@ -86,7 +86,7 @@ struct id *__id_s;
 int __id_n;
 int __id_f;
 
-int __make_backups;
+//int __make_backups = 1;
 int __backup_by_copying;
 
 /* Blow chunks! */

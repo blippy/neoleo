@@ -178,7 +178,7 @@ static int do_set_option (char *ptr)
 	}
 	if (!stricmp ("backup", ptr))
 	{
-		__make_backups = set_opt;
+		//__make_backups = set_opt; // 25/4 ignore this. We won't do backups
 		return 0;
 	}
 	if (!stricmp ("bkup_copy", ptr))
@@ -348,45 +348,14 @@ void read_mp_options (char *str)
 
 /* Commands related to variables. */
 
-/* set an adapter stub that does nothing */
-void _do_nothing_const_char_s(const char *s)
-{
-}
 
-void _do_nothing() { }; /* stub */
-
+// some stubs
+void _do_nothing_const_char_s(const char *s) { }
+void _do_nothing() { };
 void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
-
 void _io_append_message_nothing(bool beep, char *fmt, ...) {};
-
 void _io_update_width_nothing(int col, int wid) {};
 
-void InitializeGlobals(void)
-{
-	FileSetCurrentFileName("unnamed.oleo");
-
-	/* From window.c */
-	//user_input = 1;
-	//user_status = 2;
-	//input_rows = 1;
-	//status_rows = 1;
-	//default_right_border = 0;
-	//default_bottom_border = 0;
-	//nwin = 0;
-	//cwin = 0;
-	//wins = 0;
-	//win_id = 1;
-
-	Global->auto_motion_direction = magic_down;
-
-	__make_backups = 1;
-
-	io_set_window_name = _do_nothing_const_char_s;
-	io_do_button = _io_do_button_nothing;
-	io_append_message = _io_append_message_nothing;
-	io_update_width = _io_update_width_nothing;
-
-}
 
 
 void choose_display(bool force_cmd_graphics)

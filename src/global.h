@@ -83,7 +83,7 @@ struct OleoGlobal {
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 	int				modified = 0;
 	int				nwin = 0;
-	int				auto_motion_direction;
+	//int				auto_motion_direction;
 	int				display_formula_mode = 0;
 	int				return_from_error = 0;
 	//char** argv;

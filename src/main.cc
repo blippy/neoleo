@@ -196,7 +196,13 @@ main (int argc, char **argv)
 {
 	int command_line_file = 0;	/* was there one? */
 
-	InitializeGlobals();
+
+	//InitializeGlobals();
+	io_set_window_name = _do_nothing_const_char_s;
+	io_do_button = _io_do_button_nothing;
+	io_append_message = _io_append_message_nothing;
+	io_update_width = _io_update_width_nothing;
+
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv, command_line_file);
 
