@@ -86,8 +86,8 @@ struct OleoGlobal {
 	int				auto_motion_direction;
 	int				display_formula_mode = 0;
 	int				return_from_error = 0;
-	char** argv;
-	int argc;
+	//char** argv;
+	//int argc;
 	int				display_opened = 0;
 	float				user_height_scale = 1.0, user_width_scale = 1.0,
 					height_scale = 1.0, width_scale = 1.0;

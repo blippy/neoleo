@@ -61,7 +61,6 @@ print_version()
 	printf("see the files named COPYING.\n");
 	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
 	printf("Auxval: %s\n", (char *)getauxval(AT_EXECFN));
-	printf("Exe: %s\n", Global->argv[0]);
 	printf("Datadir: %s/neoleo\n", DATADIR);
 }
 
@@ -198,11 +197,6 @@ main (int argc, char **argv)
 	int command_line_file = 0;	/* was there one? */
 
 	InitializeGlobals();
-	Global->argc = argc;
-	Global->argv = argv;
-
-	//log("logging seems"s, "to work"s, 666);
-
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv, command_line_file);
 
