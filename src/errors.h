@@ -110,4 +110,4 @@ class ValErr : public std::exception
 	       std::string msg;
 };
 
-void raise_error (const char *str, ...);
+void raise_error(const char *str, ...);

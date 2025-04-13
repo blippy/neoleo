@@ -208,13 +208,13 @@ static int do_set_option (char *ptr)
 			//show_file_opts = oleo_show_options;
 		}
 		else
-			raise_error ("Unknown file format %s", ptr);
+			raise_error("Unknown file format %s", ptr);
 		return 0;
 	}
 	if (set_window_option (set_opt, ptr) == 0)
 	{
 		if ((*set_file_opts) (set_opt, ptr))
-			raise_error ("Unknown option '%s'", ptr);
+			raise_error("Unknown option '%s'", ptr);
 		return 0;
 	}
 	return 1;
@@ -307,7 +307,7 @@ count_chars:
 
 			default:
 badline:
-				raise_error ("Unknown OLEO line %s", ptr);
+				raise_error("Unknown OLEO line %s", ptr);
 				return;
 		}
 	}

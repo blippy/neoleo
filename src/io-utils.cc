@@ -983,7 +983,7 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 		panic_read_file(fp, ismerge);
 #endif
 	} else if (stricmp("dbf", format) == 0) {
-		raise_error ("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
+		raise_error("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
 		return -1;
 	} else {
 		return -1;

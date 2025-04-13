@@ -159,7 +159,7 @@ oleo_read_file (FILE *fp, int ismerge)
 							mx_col = astol (&ptr);
 							if (mx_col > MAX_COL)
 							{
-								raise_error ("Boundry column %lu too large!", mx_col);
+								raise_error("Boundry column %lu too large!", mx_col);
 								mx_col = MAX_COL;
 							}
 							break;
@@ -167,7 +167,7 @@ oleo_read_file (FILE *fp, int ismerge)
 							mx_row = astol (&ptr);
 							if (mx_row > MAX_ROW)
 							{
-								raise_error ("Boundry row %lu too large!", mx_row);
+								raise_error("Boundry row %lu too large!", mx_row);
 								mx_row = MAX_ROW;
 							}
 							break;
@@ -213,7 +213,7 @@ oleo_read_file (FILE *fp, int ismerge)
 				*ptr = '\0';
 				ptr = old_new_var_value (vname, vlen, vval);
 				if (ptr)
-					raise_error ("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
+					raise_error("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
 #endif
 				break;
 
@@ -330,7 +330,7 @@ bad_field:
 		if (!ismerge)
 			clear_spreadsheet ();
 		io_recenter_all_win ();
-		raise_error ("read-file: read-error near line %d.", lineno);
+		raise_error("read-file: read-error near line %d.", lineno);
 		Global->return_from_error = 0;
 		return;
 	}
