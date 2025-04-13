@@ -683,7 +683,7 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc)
 	cwin->numc = Global->scr_cols - default_right_border;
 	cwin->bottom_edge_r = default_bottom_border;
 	cwin->right_edge_c = default_right_border;
-	cwin->link = -1;
+	//cwin->link = -1;
 	cwin->lh_wid = 0;
 	cwin->win_curow = MIN_ROW;
 	cwin->win_cucol = MIN_COL;
