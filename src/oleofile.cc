@@ -96,21 +96,19 @@ void oleo_read_window_config (char * line)
 				while (*text && *text != ';')
 					text++;
 				break;
-				/* Split into two windows */
-			case 'S':
-				ASSERT_UNCALLED();
+				
+			case 'S': /* Split into two windows. 25/4 unsupported */
 				split = text;
 				while (*text && *text != ';')
 					text++;
 				break;
-				/* Set Colors NOT supported */
-			case 'C':
+				
+			case 'C': /* Set Colors NOT supported */
 				while (*text && *text != ';')
 					text++;
 				break;
-				/* Alternate border NOT supported. . . */
-			case 'B':
-				break;
+				
+			case 'B': /* Alternate border NOT supported. . . */
 			default:
 				--text;
 				break;
