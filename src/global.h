@@ -79,7 +79,7 @@ struct var; /* in case it hasn't been declared yet */
  * around all over.
  */
 struct OleoGlobal {
-	struct window			*cwin = 0, *wins = 0;
+	struct window			*cwin = 0; //, *wins = 0;
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 	int				modified = 0;
 	int				nwin = 0;

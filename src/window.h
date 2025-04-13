@@ -129,8 +129,9 @@ struct window
 
 /* The window list. */
 #define	nwin		Global->nwin
-#define	cwin		Global->cwin
-#define	wins		Global->wins
+//#define	cwin		Global->cwin
+inline window* cwin = nullptr;
+//#define	wins		Global->wins
 #define	win_id		Global->win_id
 
 /* This is stored as the button number when a dequeue failes. */

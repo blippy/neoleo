@@ -558,7 +558,7 @@ _io_repaint (void)
 	CELLREF cc, rr;
 	int n, n1;
 	CELL *cp;
-	struct window *win;
+	struct window *win = cwin;
 
 	clear ();
 	io_fix_input ();
@@ -568,15 +568,15 @@ _io_repaint (void)
 	if(input_view.current_info)
 		return;
 
-	for (win = wins; win < &wins[nwin]; win++)
-	{
+	//for (win = wins; win < &wins[nwin]; win++)
+	//{
 		if (win->lh_wid)
 		{
 			move (win->win_down - 1, win->win_over - win->lh_wid);
 			//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
 			static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 			static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
-			printw ("#%*ld ", win->lh_wid - 2, 1 + win - wins);
+			printw ("#%*ld ", win->lh_wid - 2, (long int)1);
 			if (win->flags & WIN_EDGE_REV)
 				s_display.cdstandout();
 			cc = win->screen.lc;
@@ -638,7 +638,7 @@ _io_repaint (void)
 			if (cp->get_type() != TYP_NUL)
 				_io_pr_cell_win(win, rr, cc, cp);
 		}
-	}
+	//}
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;

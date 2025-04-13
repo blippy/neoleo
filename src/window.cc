@@ -54,29 +54,33 @@ struct tmp_s { int l, r, u, b; };
 static void 
 do_close_window (int num)
 {
+	#if 0
 	int n;
 	struct window *win, *kwin;
-	int nlf, nrt, nup, nbl;
+	int nlf, nrt, nup, nbl;0 0
 	int klo, kho, kld, khd;
 	int lo, ho, ld, hd;
 	static tmp_s *tmpptr;
-
+	#endif
 	if (nwin == 1)
 	{
 		raise_error("Attempt to delete sole ordinary window.");
 		return;
 	}
+	#if 0
 	tmpptr =  (struct tmp_s*) ck_malloc (sizeof (struct tmp_s) * nwin);
 
-	kwin = &wins[num];
+	//kwin = &wins[num];
+	kwin = cwin;
 	nlf = nrt = nup = nbl = 0;
 	klo = kwin->win_over - kwin->lh_wid;
 	kho = kwin->win_over + kwin->numc + kwin->right_edge_c - 1;
 	kld = kwin->win_down - (kwin->lh_wid ? label_rows : 0);
 	khd = kwin->win_down + kwin->numr + kwin->bottom_edge_r - 1;
 
-	for (win = wins; win < &wins[nwin]; win++)
-	{
+	win = cwin;
+	//for (win = wins; win < &wins[nwin]; win++)
+	//{
 		lo = win->win_over - win->lh_wid;
 		ho = win->win_over + win->numc + win->right_edge_c - 1;
 		ld = win->win_down - (win->lh_wid ? label_rows : 0);
@@ -86,33 +90,33 @@ do_close_window (int num)
 		if (lo == kho + 1)
 		{
 			if (ld >= kld && hd <= khd)
-				tmpptr[nrt++].r = win - wins;
+				tmpptr[nrt++].r = win - cwin;
 			else if (hd >= kld && ld <= khd)
 				nrt = nwin;
 		}
 		else if (ho == klo - 1)
 		{
 			if (ld >= kld && hd <= khd)
-				tmpptr[nlf++].l = win - wins;
+				tmpptr[nlf++].l = win - cwin;
 			else if (hd >= kld && ld <= khd)
 				nlf = nwin;
 		}
 		else if (ld == khd + 1)
 		{
 			if (lo >= klo && ho <= kho)
-				tmpptr[nbl++].b = win - wins;
+				tmpptr[nbl++].b = win - cwin;
 			else if (ho >= kho && lo <= kho)
 				nbl = nwin;
 		}
 		else if (hd == kld - 1)
 		{
 			if (lo >= klo && ho <= kho)
-				tmpptr[nup++].u = win - wins;
+				tmpptr[nup++].u = win - cwin;
 			else if (ho >= kho && lo <= kho)
 				nup = nwin;
 		}
 
-	}
+	//}
 	if (nrt == 0)
 		nrt = nwin;
 	if (nlf == 0)
@@ -149,7 +153,7 @@ do_close_window (int num)
 			wins[tmpptr[n].u].numr
 				+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows;
 
-	if (kwin == cwin && kwin != wins)
+	if (kwin == cwin && kwin != cwin)
 		--cwin;
 	if (cwin == &wins[nwin - 1])
 		--cwin;
@@ -159,6 +163,7 @@ do_close_window (int num)
 		kwin++;
 	}
 	--nwin;
+	#endif
 	io_recenter_all_win ();
 	return;
 }
@@ -295,21 +300,21 @@ io_recenter_cur_win (void)
 	cwin->win_cucol = cucol;
 	io_recenter_named_window (cwin);
 	io_repaint_win (cwin);
-	if (cwin->link > 0)
-		io_repaint_win (&wins[cwin->link]);
+	//if (cwin->link > 0)
+	//	io_repaint_win (&wins[cwin->link]);
 }
 
 void
 io_recenter_all_win(void)
 {
 	//if(!the_cmd_frame) return; // maybe running headless
-	int n;
+	//int n;
 	if (!nwin)
 		return;
 	cwin->win_curow = curow;
 	cwin->win_cucol = cucol;
-	for (n = 0; n < nwin; n++)
-		io_recenter_named_window (&wins[n]);
+	//for (n = 0; n < nwin; n++)
+		io_recenter_named_window (cwin);
 	io_repaint ();
 }
 void
@@ -321,6 +326,7 @@ io_recenter_named_window(struct window *w)
 static void
 shift_linked_window (long dn, long ov)
 {
+	#if 0
 	struct window *win;
 
 	win = cwin;
@@ -337,6 +343,7 @@ shift_linked_window (long dn, long ov)
 				|| win->win_cucol < win->screen.lc || win->win_cucol > win->screen.hc)
 			recenter_window (win);
 	}
+	#endif
 }
 
 
@@ -460,8 +467,8 @@ io_set_input_status (int inp, int stat, int redraw)
 re:
 				for (x = 0; x < nwin; ++x)
 				{
-					int top = wins[x].win_down - win_label_rows(&wins[x]);
-					if (cell_top == top && (wins[x].numr <= -grow))
+					int top = cwin->win_down - win_label_rows(cwin);
+					if (cell_top == top && (cwin->numr <= -grow))
 					{
 						do_close_window (x);
 						goto re;
@@ -471,20 +478,19 @@ re:
 
 			if (grow)
 			{
-				int x;
-				for (x = 0; x < nwin; ++x)
-				{
-					int top =
-						wins[x].win_down - win_label_rows (&wins[x]);
-					if (cell_top == top)
-						wins[x].numr -= vchange;
-				}
+				//int x;
+				//for (x = 0; x < nwin; ++x)
+				//{
+					int top = cwin->win_down - win_label_rows (cwin);
+					if (cell_top == top) 
+						cwin->numr -= vchange;
+				//}
 			}
 			if (vchange)
 			{
-				int x;
-				for (x = 0; x < nwin; ++x)
-					wins[x].win_down += vchange;
+				//int x;
+				//for (x = 0; x < nwin; ++x)
+					cwin->win_down += vchange;
 			}
 			io_repaint ();
 		}
@@ -501,23 +507,21 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
 	//if(!the_cmd_frame) return; // maybe running headless
 	//if(running_headless()) return;
-	if(!wins) return; // maybe we're running headless
-	struct window *win;
+	if(cwin == 0) return; // maybe we're running headless
+	//struct window *win;
 
-	for (win = wins; win < &wins[nwin]; win++)
-	{
-		if (r < win->screen.lr || r > win->screen.hr
-				|| c < win->screen.lc || c > win->screen.hc)
-			continue;
-		io_pr_cell_win (win, r, c, cp);
-	}
+	//for (win = wins; win < &wins[nwin]; win++)
+	//{
+		if (r < cwin->screen.lr || r > cwin->screen.hr || c < cwin->screen.lc || c > cwin->screen.hc) return;
+		io_pr_cell_win (cwin, r, c, cp);
+	//}
 }
 
 
 void 
 io_win_close (struct window *win)
 {
-	do_close_window (win - wins);
+	do_close_window (0); // 25/4
 }
 
 void 
@@ -532,8 +536,7 @@ io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		cwin->win_cucol = cucol = cc;
 		recenter_window (cwin);
 		io_repaint_win (cwin);
-		if (cwin->link > 0)
-			io_repaint_win (&wins[cwin->link]);
+		//if (cwin->link > 0) 			io_repaint_win (&wins[cwin->link]);
 	}
 	else
 	{
@@ -668,21 +671,21 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc)
 	label_emcols = lc;
 	io_set_input_status (ui, us, 0);
 	nwin = 1;
-	wins = cwin = (window *) ck_malloc (sizeof (struct window));
-	wins->id = win_id++;
-	wins->win_over = 0;		/* This will be fixed by a future set_numcols */
-	wins->win_down = (label_rows
+	cwin = (window *) ck_malloc (sizeof (struct window));
+	cwin->id = win_id++;
+	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
+	cwin->win_down = (label_rows
 			+ (user_status > 0) * status_rows
 			+ (user_input > 0) * input_rows);
-	wins->flags = WIN_EDGES | WIN_EDGE_REV;
-	wins->numr = (Global->scr_lines - label_rows - !!user_status * status_rows
+	cwin->flags = WIN_EDGES | WIN_EDGE_REV;
+	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows
 			- input_rows - default_bottom_border);
-	wins->numc = Global->scr_cols - default_right_border;
-	wins->bottom_edge_r = default_bottom_border;
-	wins->right_edge_c = default_right_border;
-	wins->link = -1;
-	wins->lh_wid = 0;
-	wins->win_curow = MIN_ROW;
-	wins->win_cucol = MIN_COL;
-	wins->win_slops = 0;
+	cwin->numc = Global->scr_cols - default_right_border;
+	cwin->bottom_edge_r = default_bottom_border;
+	cwin->right_edge_c = default_right_border;
+	cwin->link = -1;
+	cwin->lh_wid = 0;
+	cwin->win_curow = MIN_ROW;
+	cwin->win_cucol = MIN_COL;
+	cwin->win_slops = 0;
 }

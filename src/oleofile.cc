@@ -73,7 +73,7 @@ void oleo_read_window_config (char * line)
 	char *text;
 	CELLREF nrow = NON_ROW, ncol = NON_COL;
 	char *opts = 0;
-	struct window *win;
+	//struct window *win;
 
 	text = line;
 	for (;;)
@@ -135,11 +135,12 @@ void oleo_read_window_config (char * line)
 		return;
 	}
 	--wnum;
-	win = &wins[wnum];
+	//win = &wins[wnum];
 	if (nrow != NON_ROW)
 	{
-		win->win_curow = nrow;
-		win->win_cucol = ncol;
+		curow = nrow;
+		cucol = ncol;
+		/*
 		if (win == cwin)
 		{
 			//curow = nrow;
@@ -147,7 +148,8 @@ void oleo_read_window_config (char * line)
 			//cucol = ncol;
 			set_cucol(ncol);
 		}
-		recenter_window(win);
+			*/
+		recenter_window(cwin);
 	}
 	if (opts)
 	{
@@ -849,43 +851,44 @@ static std::string oleo_write_window_config ()
 {
 	std::ostringstream oss;
 
-	int n;
+	//int n;
 	char buf[90];
 	//struct line scratch;
 	//scratch.alloc = 0;
 	//scratch.buf = 0;
 
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
+	//cwin->win_curow = curow;
+	//cwin->win_cucol = cucol;
 	//sprint_line (&out, "O;status %d\n", user_status);
 	oss << "O;status " << user_status << "\n";
 	if (nwin > 1)
 	{
 		/* ... */ /* fixme ? */
 	}
-	for (n = 0; n < nwin; n++)
-	{
+	//for (n = 0; n < nwin; n++)
+	//{
+	auto flags = cwin->flags;
 		buf[0] = '\0';
-		if (wins[n].flags & WIN_LCK_HZ)
+		if (flags & WIN_LCK_HZ)
 			strcat (buf, ",lockh");
-		if (wins[n].flags & WIN_LCK_VT)
+		if (flags & WIN_LCK_VT)
 			strcat (buf, ",lockv");
-		if (wins[n].flags & WIN_PAG_HZ)
+		if (flags & WIN_PAG_HZ)
 			strcat (buf, ",pageh");
-		if (wins[n].flags & WIN_PAG_VT)
+		if (flags & WIN_PAG_VT)
 			strcat (buf, ",pagev");
-		if (wins[n].flags & WIN_EDGE_REV)
+		if (flags & WIN_EDGE_REV)
 			strcat (buf, ",standout");
-		if ((wins[n].flags & WIN_EDGES) == 0)
+		if ((flags & WIN_EDGES) == 0)
 			strcat (buf, ",noedges");
 		//scratch = *out;
 		//out->alloc = 0;
 		//out->buf = 0;
 		//sprint_line (out, "%sW;N%d;A%u %u;C%d %d %d;O%s\n", scratch.buf, n + 1, wins[n].win_curow, wins[n].win_cucol, 7, 0, 7, buf + 1);
-		oss << "W;N" << n+1 << ";A" << wins[n].win_curow << " " << wins[n].win_cucol 
+		oss << "W;N" << 1 << ";A" << curow << " " << cucol 
 			<< ";C7 0 7;O" << buf+1 << "\n";
 		//free (scratch.buf);
-	}
+	//}
 
 	return oss.str();
 }
