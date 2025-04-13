@@ -350,11 +350,12 @@ void read_mp_options (char *str)
 
 
 // some stubs
+/*
 void _do_nothing_const_char_s(const char *s) { }
-void _do_nothing() { };
+
 void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
 void _io_append_message_nothing(bool beep, char *fmt, ...) {};
-void _io_update_width_nothing(int col, int wid) {};
+*/
 
 
 

@@ -72,13 +72,15 @@ EXTERN void (*io_cellize_cursor) (void);
 EXTERN void (*io_inputize_cursor) (void);
 
 
-void _do_nothing_const_char_s(const char *s);
-void _do_nothing();
-void _io_do_button_nothing(int r, int c, char *lbl, char *cmd);
-void _io_append_message_nothing(bool beep, char *fmt, ...);
-void _io_update_width_nothing(int col, int wid);
-inline void (*io_set_window_name)(const char *s) = _do_nothing_const_char_s;
-inline void (*io_do_button)(int r, int c, char *lbl, char *cmd) = _io_do_button_nothing;
-inline void (*io_append_message)(bool beep, char *fmt, ...) = _io_append_message_nothing;
+//void _do_nothing_const_char_s(const char *s);
+//void _do_nothing();
+//void _io_do_button_nothing(int r, int c, char *lbl, char *cmd);
+//void _io_append_message_nothing(bool beep, char *fmt, ...);
+//void _io_update_width_nothing(int col, int wid);
+inline void _io_update_width_nothing(int col, int wid) {};
+inline void _do_nothing() { };
+//inline void (*io_set_window_name)(const char *s) = _do_nothing_const_char_s;
+//inline void (*io_do_button)(int r, int c, char *lbl, char *cmd) = _io_do_button_nothing;
+//inline void (*io_append_message)(bool beep, char *fmt, ...) = _io_append_message_nothing;
 inline void (*io_update_width)(int col, int wid) = _io_update_width_nothing;
 
