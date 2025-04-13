@@ -366,16 +366,16 @@ void InitializeGlobals(void)
 	FileSetCurrentFileName("unnamed.oleo");
 
 	/* From window.c */
-	user_input = 1;
-	user_status = 2;
-	input_rows = 1;
-	status_rows = 1;
-	default_right_border = 0;
-	default_bottom_border = 0;
-	nwin = 0;
-	cwin = 0;
-	wins = 0;
-	win_id = 1;
+	//user_input = 1;
+	//user_status = 2;
+	//input_rows = 1;
+	//status_rows = 1;
+	//default_right_border = 0;
+	//default_bottom_border = 0;
+	//nwin = 0;
+	//cwin = 0;
+	//wins = 0;
+	//win_id = 1;
 
 	Global->auto_motion_direction = magic_down;
 

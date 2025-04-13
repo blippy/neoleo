@@ -79,10 +79,10 @@ struct var; /* in case it hasn't been declared yet */
  * around all over.
  */
 struct OleoGlobal {
-	struct window			*cwin, *wins;
+	struct window			*cwin = 0, *wins = 0;
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 	int				modified = 0;
-	int				nwin;
+	int				nwin = 0;
 	int				auto_motion_direction;
 	int				display_formula_mode = 0;
 	int				return_from_error = 0;
@@ -92,12 +92,14 @@ struct OleoGlobal {
 	float				user_height_scale = 1.0, user_width_scale = 1.0,
 					height_scale = 1.0, width_scale = 1.0;
 /* From Window.c */
-	int				scr_lines = 24, scr_cols = 80, user_input, user_status, input = 0,
-					status = 1, input_rows, status_rows, label_rows, label_emcols;
+	int				scr_lines = 24, scr_cols = 80, user_input =1, user_status = 2, input = 0,
+					status = 1, input_rows = 1, status_rows = 1, label_rows, label_emcols;
 	struct info_buffer		*current_info;
 	int				info_rows, info_line, info_over;
-	int				default_right_border, default_bottom_border;
-	int				win_id;
+	int				default_right_border = 0, default_bottom_border = 0;
+	int				win_id = 1;
 };
 
-inline struct OleoGlobal *Global = new struct OleoGlobal;
+inline OleoGlobal global;
+//inline struct OleoGlobal *Global = new struct OleoGlobal;
+inline struct OleoGlobal *Global = &global;
