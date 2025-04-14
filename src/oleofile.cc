@@ -833,41 +833,6 @@ static std::string oleo_write_window_config ()
 }
 
 
-static int usr_set_fmts (void)
-{
-	int n;
-	int ret = 0;
-
-	for (n = 0; n < NUM_USER_FMT; n++)
-		if (u[n].p_hdr)
-			ret |= 1 << n;
-	return ret;
-}
-
-static void get_usr_stats (int usr_num, char **usr_buf)
-{
-	static char buf1[30];
-	static char buf2[30];
-	static char NullStr[] = "";
-
-	usr_buf[0] = u[usr_num].p_hdr ? u[usr_num].p_hdr : NullStr;
-	usr_buf[1] = u[usr_num].n_hdr ? u[usr_num].n_hdr : NullStr;
-	usr_buf[2] = u[usr_num].p_trl ? u[usr_num].p_trl : NullStr;
-	usr_buf[3] = u[usr_num].n_trl ? u[usr_num].n_trl : NullStr;
-	usr_buf[4] = u[usr_num].zero ? u[usr_num].zero : NullStr;
-	usr_buf[5] = u[usr_num].comma ? u[usr_num].comma : NullStr;
-	usr_buf[6] = u[usr_num].decpt ? u[usr_num].decpt : NullStr;
-	if (u[usr_num].prec == 15)
-		usr_buf[7] = CCC("float");
-	else
-	{
-		sprintf (buf1, "%u", u[usr_num].prec);
-		usr_buf[7] = buf1;
-	}
-	sprintf (buf2, "%.12g", u[usr_num].scale);
-	usr_buf[8] = buf2;
-}
-
 
 
 /* Modify this to write out *all* the options */
@@ -891,10 +856,6 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	 */
 	(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
 
-	int n;
-	int fmts;
-	char *data[9];
-
 	rng = &all_rng;
 
 	(void) fprintf (fp, "F;D%s%c%u\n",
@@ -902,30 +863,6 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 			jst_to_chr (default_jst),
 			default_width);
 
-	fmts = usr_set_fmts ();
-	for (n = 0; n < 16; n++)
-	{
-		if (fmts & (1 << n))
-		{
-			get_usr_stats (n, data);
-			fprintf (fp, "U;N%u;P%s;S%s", n + 1, data[7], data[8]);
-			if (data[0][0])
-				fprintf (fp, ";HP%s", data[0]);
-			if (data[1][0])
-				fprintf (fp, ";HN%s", data[1]);
-			if (data[2][0])
-				fprintf (fp, ";TP%s", data[2]);
-			if (data[3][0])
-				fprintf (fp, ";TN%s", data[3]);
-			if (data[4][0])
-				fprintf (fp, ";Z%s", data[4]);
-			if (data[5][0])
-				fprintf (fp, ";C%s", data[5]);
-			if (data[6])
-				fprintf (fp, ";D%s", data[6]);
-			putc ('\n', fp);
-		}
-	}
 	write_mp_options (fp);
 
 

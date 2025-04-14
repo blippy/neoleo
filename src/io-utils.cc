@@ -30,7 +30,7 @@
 #include <ctype.h>
 #include <unistd.h>
 
-#include "config.h"
+//#include "config.h"
 
 #include "basic.h"
 #include "cell.h"
@@ -138,28 +138,6 @@ struct user_fmt pct =
 struct user_fmt fxt =
 { CCC("fixed"), 0, CCC("-"), 0, 0, CCC("D"), 0, DOT(), FLOAT_PRECISION, 1};
 
-
-
-
-struct user_fmt u[NUM_USER_FMT] =
-{
-	{CCC("user1"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user2"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user3"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user4"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user5"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user6"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user7"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user8"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user9"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user10"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user11"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user12"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user13"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user14"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user15"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-	{CCC("user16"), 0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
-};
 
 
 
@@ -279,7 +257,8 @@ std::string print_cell (CELL * cp)
 		{
 
 			case FMT_USR:
-				return pr_flt (flt, &u[p], u[p].prec);
+				ASSERT_UNCALLED();
+				//return pr_flt (flt, &u[p], u[p].prec);
 
 			case FMT_GEN:
 				{
@@ -350,7 +329,8 @@ handle_exp:
 #endif
 
 			case FMT_USR:
-				return pr_int (v, &u[p], u[p].prec);
+				ASSERT_UNCALLED();
+				//return pr_int (v, &u[p], u[p].prec);
 
 			case FMT_GEN:
 				sprintf (print_buf, "%ld", (long) v);
@@ -580,8 +560,7 @@ adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 			goto deal_fmt;
 
 		case FMT_USR:
-			ufmt = &u[prc];
-			prc = ufmt->prec;
+			ASSERT_UNCALLED();
 			goto deal_fmt;
 
 		case FMT_GEN:
@@ -680,96 +659,6 @@ handle_exp:
 }
 
 
-	void
-set_usr_stats (int usr_n, char **usr_buf)
-{
-	int len;
-	int i;
-	char *p_in, *p_out;
-
-	len = 0;
-	for (i = 0; i < 7; i++)
-		len += strlen (usr_buf[i]);
-	u[usr_n].p_hdr = (char*) ck_malloc (len + 7);
-	p_out = u[usr_n].p_hdr;
-	if (usr_buf[0][0])
-	{
-		p_in = usr_buf[0];
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		*p_out++ = '\0';
-
-	if (usr_buf[1][0])
-	{
-		p_in = usr_buf[1];
-		u[usr_n].n_hdr = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].n_hdr = 0;
-
-	if (usr_buf[2][0])
-	{
-		p_in = usr_buf[2];
-		u[usr_n].p_trl = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].p_trl = 0;
-
-	if (usr_buf[3][0])
-	{
-		p_in = usr_buf[3];
-		u[usr_n].n_trl = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].n_trl = 0;
-
-	if (usr_buf[4][0])
-	{
-		p_in = usr_buf[4];
-		u[usr_n].zero = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].zero = 0;
-
-	if (usr_buf[5][0])
-	{
-		p_in = usr_buf[5];
-		u[usr_n].comma = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].comma = 0;
-
-	if (usr_buf[6][0])
-	{
-		p_in = usr_buf[6];
-		u[usr_n].decpt = p_out;
-		while ((*p_out++ = *p_in++))
-			;
-	}
-	else
-		u[usr_n].decpt = 0;
-
-	if (!stricmp (usr_buf[7], "float") || !stricmp (usr_buf[7], "f"))
-		u[usr_n].prec = 15;
-	else
-		u[usr_n].prec = astol (&usr_buf[7]);
-
-	u[usr_n].scale = astof (&usr_buf[8]);
-}
-
-	
 
 /* Functions for printing out the names of cells and ranges */
 
@@ -875,20 +764,8 @@ range_name (struct rng *rng)
 
 void clear_spreadsheet (void)
 {
-	int n;
-
 	flush_cols ();
 	flush_spans();
-	for (n = 0; n < NUM_USER_FMT; n++)
-	{
-		if (u[n].p_hdr)
-		{
-			free (u[n].p_hdr);
-			u[n].p_hdr = 0;
-			u[n].prec = FLOAT_PRECISION;
-			u[n].scale = 1;
-		}
-	}
 	default_width = saved_default_width;
 	default_height = saved_default_height;
 	default_jst = base_default_jst;
@@ -946,7 +823,7 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 		panic_read_file(fp, ismerge);
 #endif
 	} else if (stricmp("dbf", format) == 0) {
-		raise_error("Cannot read XBASE file (xbase not compiled into " PACKAGE ")");
+		raise_error("Cannot read XBASE file (xbase not compiled)");
 		return -1;
 	} else {
 		return -1;

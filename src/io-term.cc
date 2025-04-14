@@ -236,13 +236,8 @@ void read_mp_usr_fmt (char *ptr)
 {
 	int usr_n = -1;
 	int n_chrs = 0;
-	char *p;
-	char *buf[9];
-	int i;
+	char *p = ptr;
 
-	for (i = 0; i < 9; i++)
-		buf[i] = 0; // TODO Audit this for correctness.
-	p = ptr;
 	while (*p == ';')
 	{
 		*p++ = '\0';
@@ -255,10 +250,10 @@ void read_mp_usr_fmt (char *ptr)
 				switch (*p++)
 				{
 					case 'P':
-						i = 0;
+						//i = 0;
 						break;
 					case 'N':
-						i = 1;
+						//i = 1;
 						break;
 					default:
 						goto badline;
@@ -268,10 +263,10 @@ void read_mp_usr_fmt (char *ptr)
 				switch (*p++)
 				{
 					case 'P':
-						i = 2;
+						//i = 2;
 						break;
 					case 'N':
-						i = 3;
+						//i = 3;
 						break;
 					default:
 						goto badline;
@@ -279,27 +274,26 @@ void read_mp_usr_fmt (char *ptr)
 				goto count_chars;
 
 			case 'Z':
-				i = 4;
+				//i = 4;
 				goto count_chars;
 
 			case 'C':
-				i = 5;
+				//i = 5;
 				goto count_chars;
 
 			case 'D':
-				i = 6;
+				//i = 6;
 				goto count_chars;
 
 			case 'P':
-				i = 7;
+				//i = 7;
 				goto count_chars;
 
 			case 'S':
-				i = 8;
+				//i = 8;
 				goto count_chars;
 
 count_chars:
-				buf[i] = p;
 				n_chrs++;
 				while (*p && *p != ';')
 				{
@@ -317,7 +311,7 @@ badline:
 	if (*p || usr_n < 0 || usr_n > 15)
 		goto badline;
 
-	set_usr_stats (usr_n, buf);
+	
 }
 
 

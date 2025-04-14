@@ -66,7 +66,6 @@ extern struct user_fmt pct;
 extern struct user_fmt fxt;
 
 #define NUM_USER_FMT (16)
-extern struct user_fmt u[NUM_USER_FMT];
 constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 
 char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
