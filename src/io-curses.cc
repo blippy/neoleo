@@ -1039,14 +1039,6 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		else
 			set_slop ((VOIDSTAR *) (&(win->win_slops)), r, c, cc);
 	}
-	if ((hgt > 1) && Global->display_formula_mode)
-	{
-		move_cursor_to (win, r, c, 1);
-		//std::string formula = decomp_str(r, c);
-		std::string formula = formula_text(r, c);
-		//log_debug_1("curses:_io_pr_cell_win:formula:"s + formula);
-		printw ("%.*s ", wid - 1, formula.c_str());
-	}
 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
