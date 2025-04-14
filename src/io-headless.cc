@@ -78,8 +78,7 @@ static void _io_open_display(void)
 	 * The init was cribbed from io-curses.c
 	 */
 
-	int assumed_lines = 24, assumed_cols = 80;
-	io_init_windows(assumed_lines, assumed_cols, 1, 2, 1, 1, 1, 1);
+	io_init_windows();
 
 }
 

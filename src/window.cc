@@ -555,17 +555,11 @@ io_set_win_flags (struct window *w, int f)
 
 window the_cwin;
 
-void 
-io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc) 
+void  io_init_windows () 
 {
 	//print_width = 80;		/* default ascii print width */
-	Global->scr_lines = sl;
-	Global->scr_cols = sc;
-	input_rows = ir;
-	status_rows = sr;
-	label_rows = lr;
-	label_emcols = lc;
-	io_set_input_status (ui, us, 0);
+
+	io_set_input_status (1, 2, 0);
 	nwin = 1;
 	cwin = &the_cwin;
 	cwin->id = win_id++;

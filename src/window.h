@@ -134,6 +134,7 @@ inline window* cwin = nullptr;
 //#define	wins		Global->wins
 #define	win_id		Global->win_id
 
+#if 0
 /* This is stored as the button number when a dequeue failes. */
 #define MOUSE_QERROR	-1
 /* These are the possible mouse locations. */
@@ -142,6 +143,7 @@ inline window* cwin = nullptr;
 #define MOUSE_ON_EDGE	  -3
 
 #define MOUSE_CHAR '\034'
+#endif
 
 extern int win_label_cols (struct window * win, CELLREF hr);
 extern int win_label_rows (struct window * win);
@@ -156,6 +158,6 @@ extern void io_recenter_cur_win (void);
 extern void io_recenter_named_window(struct window *w);
 extern void io_recenter_all_win (void);
 extern void io_set_win_flags (struct window *w, int f);
-extern void io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc) ;
+extern void io_init_windows () ;
 void  recenter_window (struct window *win);
 void set_numcols (struct window *win, CELLREF hr);

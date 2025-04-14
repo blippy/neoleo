@@ -87,8 +87,10 @@ struct OleoGlobal {
 	int				display_opened = 0;
 	//const float			user_height_scale = 1.0, user_width_scale = 1.0, height_scale = 1.0, width_scale = 1.0;
 /* From Window.c */
-	int				scr_lines = 24, scr_cols = 80, user_input =1, user_status = 2, input = 0,
-					status = 1, input_rows = 1, status_rows = 1, label_rows, label_emcols;
+	const int			scr_lines = 24, scr_cols = 80,  input_rows = 1, status_rows = 1; 
+	int 				user_input =1, user_status = 2;
+	int				input = 0, status = 1;
+	const int			label_rows = 1, label_emcols =1;
 	struct info_buffer		*current_info;
 	int				info_rows, info_line, info_over;
 	int				default_right_border = 0, default_bottom_border = 0;

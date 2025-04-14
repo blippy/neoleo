@@ -421,18 +421,9 @@ void curses_display::activate()
 	noecho ();
 	nonl ();
 	start_color();
-	/* Must be after initscr() */
 
-
-	//sleep(5);
-
-
-	io_init_windows(LINES, COLS, 1, 2, 1, 1, 1, 1);
-	//create_and_show_main_menu(COLS);
-
-	// io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
+	io_init_windows();
 	info_rows = 1;
-	//print_width = columns;		/* Make ascii print width == terminal width. */
 
 }
 
