@@ -6,10 +6,10 @@
 #include <unistd.h>
 #include <vector>
 
+#include "config.h"
 #include "assert.h"
 #include "basic.h"
 #include "cmd.h"
-#include "config.h"
 #include "io-abstract.h"
 #include "io-headless.h"
 #include "io-term.h"
@@ -49,8 +49,19 @@ static struct option long_options[] =
 };
 
 
-void
-print_version()
+void panic (const char *s,...)
+{
+	va_list iggy;
+
+	va_start (iggy, s);
+	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
+	vfprintf (stderr, s, iggy);
+	putc ('\n', stderr);
+	va_end (iggy);
+	exit (2);
+}
+
+void print_version()
 {
 	printf("%s %s\n", PACKAGE_NAME, VERSION);
 	printf("Copyright (c) 1992-2000 Free Software Foundation, Inc.\n");
@@ -61,7 +72,6 @@ print_version()
 	printf("see the files named COPYING.\n");
 	printf("\nCompiled: %s %s\n", __DATE__, __TIME__);
 	printf("Auxval: %s\n", (char *)getauxval(AT_EXECFN));
-	printf("Datadir: %s/neoleo\n", DATADIR);
 }
 
 

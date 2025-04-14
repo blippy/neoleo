@@ -32,11 +32,8 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <vector>
-
-
-#include "config.h"
-
 #include <ctype.h>
+
 #include "utils.h"
 
 
@@ -89,19 +86,6 @@ int __id_f;
 //int __make_backups = 1;
 int __backup_by_copying;
 
-/* Blow chunks! */
-	void
-panic (const char *s,...)
-{
-	va_list iggy;
-
-	va_start (iggy, s);
-	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
-	vfprintf (stderr, s, iggy);
-	putc ('\n', stderr);
-	va_end (iggy);
-	exit (2);
-}
 
 
 

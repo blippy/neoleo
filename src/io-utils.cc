@@ -30,7 +30,6 @@
 #include <ctype.h>
 #include <unistd.h>
 
-//#include "config.h"
 
 #include "basic.h"
 #include "cell.h"

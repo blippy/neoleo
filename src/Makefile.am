@@ -2,18 +2,19 @@ AM_CXXFLAGS = @ASAN_CXXFLAGS@
 AM_CXXFLAGS += -std=c++23
 #AM_CXXFLAGS += -Wno-psabi # turn off ABI 7.1 changes
 #AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
-AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
+#AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
 
 AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection -fcf-protection -Wp,-D_GLIBCXX_ASSERTIONS
+#AM_CXXFLAGS += -fmodules-ts
 
 
 
 AM_CXXFLAGS += -Wuninitialized
 #AM_CXXFLAGS += -Wfatal-errors  # aborts compilation on first error
-AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
-AM_CXXFLAGS += -Wall 
+#AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
+AM_CXXFLAGS += -Wall # now included in AM_INIT_AUTOMAKE
 #AM_CXXFLAGS += -Wuse-after-free # Slackware 15.0 doesn't like this flag
 
 #AM_CXXFLAGS += -Werror # treats warnings as errors. See "-Werror is not your friend":
@@ -72,5 +73,6 @@ noinst_HEADERS = basic.h cell.h \
 		 tbl.h tests.h \
 		 utils.h \
 		 value.h \
-		 window.h
+		 window.h \
+		 config.h
 
