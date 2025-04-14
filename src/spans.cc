@@ -11,20 +11,14 @@ void flush_spans ()
 	the_hgts.clear();
 }
 
-int
-get_scaled_height (CELLREF r)
+int get_scaled_height (CELLREF r)
 {
-	return ((Global->user_height_scale <= 0.)
-			? 1
-			:  (int) (get_height (r) * Global->height_scale * Global->user_height_scale));
+	return get_height(r);
 }
 
-int
-get_scaled_width (CELLREF c)
+int get_scaled_width (CELLREF c)
 {
-	return ((Global->user_width_scale <= 0.)
-			? 1
-			: (int)(get_width (c) * Global->width_scale * Global->user_width_scale));
+	return get_width(c);
 }
 
 int get_span(const span_t& span, int ref, int incr, int def)
@@ -40,7 +34,7 @@ int get_span(const span_t& span, int ref, int incr, int def)
 
 int get_width() { return get_width(COL);}
 
-void set_width (int wid) { 	set_width(COL, wid); }
+void set_width (int wid) { set_width(COL, wid); }
 
 int 
 get_width (CELLREF col)
