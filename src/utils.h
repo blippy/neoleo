@@ -37,7 +37,7 @@ extern void ck_free (void*);
 extern num_t astof(char **sp);
 extern int strincmp (const char *, const char *, size_t);
 
-extern void get_usr_stats (int, char **);
+//extern void get_usr_stats (int, char **);
 extern void set_usr_stats (int, char **);
 extern char *err_msg (void);
 std::string pad_right(const std::string& s, int width);

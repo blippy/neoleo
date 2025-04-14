@@ -320,14 +320,6 @@ badline:
 	set_usr_stats (usr_n, buf);
 }
 
-/* Modify this to write out *all* the options */
-void write_mp_options (FILE *fp)
-{
-	fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
-			Global->auto_recalc ? "" : "no",
-			Global->bkgrnd_recalc ? "" : "no",
-			Global->a0 ? "" : "no");
-}
 
 void read_mp_options (char *str)
 {

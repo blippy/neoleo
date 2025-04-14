@@ -47,7 +47,7 @@ inline std::string option_tests_argument = "regular";
 extern void set_options (char * ptr);
 extern void show_options (void);
 extern void read_mp_usr_fmt (char *ptr);
-extern void write_mp_options (FILE *fp);
+//extern void write_mp_options (FILE *fp);
 extern void read_mp_options (char *str);
 extern void show_all_var (void);
 extern void write_variables (FILE * fp);

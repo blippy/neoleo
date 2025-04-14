@@ -54,7 +54,7 @@ using std::string;
 #define RETSIGTYPE void
 #endif /* RETSIGTYPE */
 
-constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
+
 
 /* Routines for formatting cell values */
 static char *pr_int (long, struct user_fmt *, int);
@@ -140,7 +140,7 @@ struct user_fmt fxt =
 
 
 
-#define NUM_USER_FMT (16)
+
 struct user_fmt u[NUM_USER_FMT] =
 {
 	{CCC("user1"),  0, CCC("-"), 0, 0, CCC("0"), 0, DOT(), FLOAT_PRECISION, 1},
@@ -770,32 +770,6 @@ set_usr_stats (int usr_n, char **usr_buf)
 }
 
 	
-
-
-	void
-get_usr_stats (int usr_num, char **usr_buf)
-{
-	static char buf1[30];
-	static char buf2[30];
-	static char NullStr[] = "";
-
-	usr_buf[0] = u[usr_num].p_hdr ? u[usr_num].p_hdr : NullStr;
-	usr_buf[1] = u[usr_num].n_hdr ? u[usr_num].n_hdr : NullStr;
-	usr_buf[2] = u[usr_num].p_trl ? u[usr_num].p_trl : NullStr;
-	usr_buf[3] = u[usr_num].n_trl ? u[usr_num].n_trl : NullStr;
-	usr_buf[4] = u[usr_num].zero ? u[usr_num].zero : NullStr;
-	usr_buf[5] = u[usr_num].comma ? u[usr_num].comma : NullStr;
-	usr_buf[6] = u[usr_num].decpt ? u[usr_num].decpt : NullStr;
-	if (u[usr_num].prec == 15)
-		usr_buf[7] = CCC("float");
-	else
-	{
-		sprintf (buf1, "%u", u[usr_num].prec);
-		usr_buf[7] = buf1;
-	}
-	sprintf (buf2, "%.12g", u[usr_num].scale);
-	usr_buf[8] = buf2;
-}
 
 /* Functions for printing out the names of cells and ranges */
 

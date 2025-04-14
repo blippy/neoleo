@@ -858,7 +858,7 @@ static std::string oleo_write_window_config ()
 }
 
 
-int usr_set_fmts (void)
+static int usr_set_fmts (void)
 {
 	int n;
 	int ret = 0;
@@ -867,6 +867,41 @@ int usr_set_fmts (void)
 		if (u[n].p_hdr)
 			ret |= 1 << n;
 	return ret;
+}
+
+static void get_usr_stats (int usr_num, char **usr_buf)
+{
+	static char buf1[30];
+	static char buf2[30];
+	static char NullStr[] = "";
+
+	usr_buf[0] = u[usr_num].p_hdr ? u[usr_num].p_hdr : NullStr;
+	usr_buf[1] = u[usr_num].n_hdr ? u[usr_num].n_hdr : NullStr;
+	usr_buf[2] = u[usr_num].p_trl ? u[usr_num].p_trl : NullStr;
+	usr_buf[3] = u[usr_num].n_trl ? u[usr_num].n_trl : NullStr;
+	usr_buf[4] = u[usr_num].zero ? u[usr_num].zero : NullStr;
+	usr_buf[5] = u[usr_num].comma ? u[usr_num].comma : NullStr;
+	usr_buf[6] = u[usr_num].decpt ? u[usr_num].decpt : NullStr;
+	if (u[usr_num].prec == 15)
+		usr_buf[7] = CCC("float");
+	else
+	{
+		sprintf (buf1, "%u", u[usr_num].prec);
+		usr_buf[7] = buf1;
+	}
+	sprintf (buf2, "%.12g", u[usr_num].scale);
+	usr_buf[8] = buf2;
+}
+
+
+
+/* Modify this to write out *all* the options */
+static void write_mp_options (FILE *fp)
+{
+	fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
+			Global->auto_recalc ? "" : "no",
+			Global->bkgrnd_recalc ? "" : "no",
+			Global->a0 ? "" : "no");
 }
 
 void oleo_write_file(FILE *fp, struct rng *rng)
