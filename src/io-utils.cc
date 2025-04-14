@@ -388,7 +388,7 @@ handle_exp:
 #ifdef TEST
 	panic ("Unknown cell type %d", GET_TYP (cp));
 #endif
-	return 0;
+	return "";
 }
 
 /* Return the value of ROW,COL in a human-readable fashion
@@ -426,7 +426,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 		default:
 			panic ("unknown type %d in cell_value_string", typ);
 	}
-	return 0;
+	return "";
 }
 
 	static char *
