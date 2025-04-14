@@ -54,116 +54,11 @@ struct tmp_s { int l, r, u, b; };
 static void 
 do_close_window (int num)
 {
-	#if 0
-	int n;
-	struct window *win, *kwin;
-	int nlf, nrt, nup, nbl;0 0
-	int klo, kho, kld, khd;
-	int lo, ho, ld, hd;
-	static tmp_s *tmpptr;
-	#endif
 	if (nwin == 1)
 	{
 		raise_error("Attempt to delete sole ordinary window.");
 		return;
 	}
-	#if 0
-	tmpptr =  (struct tmp_s*) ck_malloc (sizeof (struct tmp_s) * nwin);
-
-	//kwin = &wins[num];
-	kwin = cwin;
-	nlf = nrt = nup = nbl = 0;
-	klo = kwin->win_over - kwin->lh_wid;
-	kho = kwin->win_over + kwin->numc + kwin->right_edge_c - 1;
-	kld = kwin->win_down - (kwin->lh_wid ? label_rows : 0);
-	khd = kwin->win_down + kwin->numr + kwin->bottom_edge_r - 1;
-
-	win = cwin;
-	//for (win = wins; win < &wins[nwin]; win++)
-	//{
-		lo = win->win_over - win->lh_wid;
-		ho = win->win_over + win->numc + win->right_edge_c - 1;
-		ld = win->win_down - (win->lh_wid ? label_rows : 0);
-		hd = win->win_down + win->numr + win->bottom_edge_r - 1;
-
-		/* Match to the left ? */
-		if (lo == kho + 1)
-		{
-			if (ld >= kld && hd <= khd)
-				tmpptr[nrt++].r = win - cwin;
-			else if (hd >= kld && ld <= khd)
-				nrt = nwin;
-		}
-		else if (ho == klo - 1)
-		{
-			if (ld >= kld && hd <= khd)
-				tmpptr[nlf++].l = win - cwin;
-			else if (hd >= kld && ld <= khd)
-				nlf = nwin;
-		}
-		else if (ld == khd + 1)
-		{
-			if (lo >= klo && ho <= kho)
-				tmpptr[nbl++].b = win - cwin;
-			else if (ho >= kho && lo <= kho)
-				nbl = nwin;
-		}
-		else if (hd == kld - 1)
-		{
-			if (lo >= klo && ho <= kho)
-				tmpptr[nup++].u = win - cwin;
-			else if (ho >= kho && lo <= kho)
-				nup = nwin;
-		}
-
-	//}
-	if (nrt == 0)
-		nrt = nwin;
-	if (nlf == 0)
-		nlf = nwin;
-	if (nbl == 0)
-		nbl = nwin;
-	if (nup == 0)
-		nup = nwin;
-	if (nrt <= nlf && nrt <= nbl && nrt <= nup)
-		for (n = 0; n < nrt; n++)
-		{
-			wins[tmpptr[n].r].numc
-				+= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-			wins[tmpptr[n].r].win_over
-				-= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-		}
-	else if (nlf <= nbl && nlf <= nup)
-		for (n = 0; n < nlf; n++)
-			wins[tmpptr[n].l].numc
-				+= kwin->lh_wid + kwin->numc + kwin->right_edge_c;
-	else if (nbl <= nup)
-		for (n = 0; n < nbl; n++)
-		{
-			wins[tmpptr[n].b].numr
-				+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
-				+ kwin->bottom_edge_r;
-
-			wins[tmpptr[n].b].win_down
-				-= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows
-				+ kwin->bottom_edge_r;
-		}
-	else
-		for (n = 0; n < nup; n++)
-			wins[tmpptr[n].u].numr
-				+= kwin->numr + (kwin->lh_wid ? 1 : 0) * label_rows;
-
-	if (kwin == cwin && kwin != cwin)
-		--cwin;
-	if (cwin == &wins[nwin - 1])
-		--cwin;
-	while (kwin < &wins[nwin])
-	{
-		*kwin = kwin[1];
-		kwin++;
-	}
-	--nwin;
-	#endif
 	io_recenter_all_win ();
 	return;
 }
@@ -658,6 +553,7 @@ io_set_win_flags (struct window *w, int f)
 
 
 
+window the_cwin;
 
 void 
 io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc) 
@@ -671,7 +567,7 @@ io_init_windows (int sl, int sc, int ui, int us, int ir, int sr, int lr, int lc)
 	label_emcols = lc;
 	io_set_input_status (ui, us, 0);
 	nwin = 1;
-	cwin = (window *) ck_malloc (sizeof (struct window));
+	cwin = &the_cwin;
 	cwin->id = win_id++;
 	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
 	cwin->win_down = (label_rows
