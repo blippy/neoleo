@@ -49,6 +49,7 @@ static struct option long_options[] =
 };
 
 
+// FN panic 
 void panic (const char *s,...)
 {
 	va_list iggy;
@@ -60,6 +61,7 @@ void panic (const char *s,...)
 	va_end (iggy);
 	exit (2);
 }
+// FN-END
 
 void print_version()
 {
