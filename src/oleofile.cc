@@ -694,31 +694,6 @@ static char jst_to_chr ( int just)
 static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
-static void oleo_write_var (const char *name, struct var *var)
-{
-	if (var->var_flags == VAR_UNDEF
-			&& (!var->var_ref_fm || var->var_ref_fm->refs_used == 0))
-		return;
-
-	switch (var->var_flags) {
-		case VAR_UNDEF:
-			break;
-		case VAR_CELL:
-			if (var->v_rng.lr >= oleo_rng->lr && var->v_rng.lr <= oleo_rng->hr
-					&& var->v_rng.lc >= oleo_rng->lc && var->v_rng.lc <= oleo_rng->hc)
-				(void) fprintf(oleo_fp, "NN;N%s;E%s\n",
-						var->var_name.c_str(), cell_name(var->v_rng.lr, var->v_rng.lc));
-			break;
-		case VAR_RANGE:
-			if (var->v_rng.lr < oleo_rng->lr || var->v_rng.hr > oleo_rng->hr
-					|| var->v_rng.lc < oleo_rng->lc || var->v_rng.hc > oleo_rng->hc)
-				break;
-
-			(void) fprintf(oleo_fp, "NN;N%s;E%s\n", var->var_name.c_str(), 
-					range_name (&(var->v_rng)));
-			break;
-	}
-}
 
 
 void write_spans(FILE* fp, span_find_t& s_find, char typechar)
@@ -965,7 +940,6 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 
 	oleo_fp = fp;
 	oleo_rng = rng;
-	for_all_vars (oleo_write_var);
 
 	write_cells(fp);
 

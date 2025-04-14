@@ -22,8 +22,6 @@
 #include "cell.h"
 
 char * new_value (CELLREF row, CELLREF col, const char *string);
-void for_all_vars (void (*func) (const char *, struct var *));
-struct var * find_var (char *string, int len);
 char * new_var_value (char *v_name, int v_namelen, struct rng *tmp_rng);
 void flush_variables (void);
 void push_cell (CELLREF row, CELLREF col);

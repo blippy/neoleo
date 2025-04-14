@@ -132,23 +132,6 @@ std::string get_cell_formula_at(int r, int c);
 typedef cell CELL;
 typedef cell cell_t;
 
-#define VAR_UNDEF 1
-#define VAR_CELL 2
-#define VAR_RANGE 3
-typedef struct var
-{
-	short var_flags = VAR_UNDEF;
-	struct rng v_rng{0, 0 ,0 ,0};
-
-	/* This is a list of the cells that reference this variable.  If the 
-	 * variable changes, all the cells in the vars new range must be given
-	 * ref_froms that point to these variables
-	 */
-	struct ref_fm *var_ref_fm = nullptr;
-
-	/* A variable sized array that holds the var-name. */
-	std::string var_name;
-} var_t;
 
 
 #define	GET_LCK(p)	((p)->cell_flags.cell_lock)

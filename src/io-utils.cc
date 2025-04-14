@@ -873,13 +873,11 @@ range_name (struct rng *rng)
 
 
 
-	void
-clear_spreadsheet (void)
+void clear_spreadsheet (void)
 {
 	int n;
 
 	flush_cols ();
-	flush_variables ();
 	flush_spans();
 	for (n = 0; n < NUM_USER_FMT; n++)
 	{

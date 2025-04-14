@@ -42,9 +42,6 @@ using std::cout;
 using std::endl;
 
 
-/* Functions for dealing exclusively with variables */
-std::map<std::string, struct var>the_vars_1;
-
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
@@ -84,71 +81,4 @@ new_value (CELLREF row, CELLREF col, const char *string)
 }
 
 
-/* --------- Routines for dealing with cell references to other cells ------ */
 
-
-/* like add_ref, except over a range of arguments and with memory
- * management weirdness. 
- */
-void add_range_ref (struct rng *rng)
-{
-	make_cells_in_range (rng);
-}
-
-
-	void
-add_ref_to (cell* cp, int whereto)
-{
-}
-
-
-
-
-/* ---------- Routines and vars for dealing with the eval FIFO ------------ */
-
-
-void push_refs (cell *cp)
-{
-}
-
-
-	void
-push_cell (CELLREF row, CELLREF col)
-{
-	ASSERT_UNCALLED();
-}
-
-
-
-
-/* This sets the variable V_NAME to V_NEWVAL
- * It returns error msg, or 0 on success.
- * all the appropriate cells have their ref_fm arrays adjusted appropriately
- * This could be smarter; when changing a range var, only the cells that
- * were in the old value but not in the new one need their references flushed,
- * and only the cells that are new need references added.
- * This might also be changed to use add_range_ref()?
- */
-
-
-	void
-for_all_vars (void (*func) (const char *, struct var *))
-{
-	for(auto it = the_vars_1.begin(); it != the_vars_1.end() ; ++it) {
-		auto s1{it->first};
-		const char* s3 = s1.c_str();
-		func(s3, &(it->second));
-	}
-}
-
-
-/* Free up all the variables, and (if SPLIT_REFS) the ref_fm structure
-   associated with each variable.  Note that this does not get rid of
-   the struct var *s in cell expressions, so it can only be used when all
-   the cells are being freed also
-   */
-	void
-flush_variables (void)
-{
-	the_vars_1.clear();
-}
