@@ -282,42 +282,6 @@ void oleo_read_file (FILE *fp, int ismerge)
 
 			case 'N':		/* A Name field */
 				ASSERT_UNCALLED();
-#if 0
-				if (ptr[1] != 'N')
-					goto bad_field;
-				ptr += 2;
-				vname = 0;
-				vval = 0;
-				while (*ptr)
-				{
-					if (*ptr != ';')
-						goto bad_field;
-					*ptr++ = '\0';
-					switch (*ptr++)
-					{
-						case 'N':	/* Name is */
-							vname = ptr;
-							while (*ptr && *ptr != ';')
-								ptr++;
-							vlen = ptr - vname;
-							break;
-						case 'E':	/* Expression is */
-							vval = ptr;
-							while (*ptr && *ptr != ';')
-								ptr++;
-							break;
-						default:
-							--ptr;
-							goto bad_field;
-					}
-				}
-				if (!vname || !vval)
-					goto bad_field;
-				*ptr = '\0';
-				ptr = old_new_var_value (vname, vlen, vval);
-				if (ptr)
-					raise_error("Line %d: Couldn't set %.*s to %s: %s", lineno, vlen, vname, vval, ptr);
-#endif
 				break;
 
 			case 'C':		/* A Cell entry */
@@ -893,6 +857,17 @@ static std::string oleo_write_window_config ()
 	return oss.str();
 }
 
+
+int usr_set_fmts (void)
+{
+	int n;
+	int ret = 0;
+
+	for (n = 0; n < NUM_USER_FMT; n++)
+		if (u[n].p_hdr)
+			ret |= 1 << n;
+	return ret;
+}
 
 void oleo_write_file(FILE *fp, struct rng *rng)
 {

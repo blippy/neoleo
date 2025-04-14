@@ -769,17 +769,8 @@ set_usr_stats (int usr_n, char **usr_buf)
 	u[usr_n].scale = astof (&usr_buf[8]);
 }
 
-	int
-usr_set_fmts (void)
-{
-	int n;
-	int ret = 0;
+	
 
-	for (n = 0; n < NUM_USER_FMT; n++)
-		if (u[n].p_hdr)
-			ret |= 1 << n;
-	return ret;
-}
 
 	void
 get_usr_stats (int usr_num, char **usr_buf)
