@@ -115,57 +115,11 @@ fopen_with_backup (char *name, const char *mode)
 }
 
 
-/* fopen or panic */
-void *
-ck_malloc( size_t size)
-{
-	void *ret = malloc (size);
-	if (ret == (void *) 0)
-		panic ("Couldn't allocate %u bytes", size);
-	return ret;
-}
-
-
-	void
-ck_free (void * mem)
-{
-	if (mem) free (mem);
-}
-
-
-
-
-	void *
-ck_calloc (size_t size)
-{
-	void *ret  = calloc (size, 1);
-	if (ret == (void *) 0)
-		panic ("Couldn't allocate %u bytes", size);
-	return ret;
-}
-
-/* Realloc or panic */
-	void *
-ck_realloc (void *ptr, size_t size)
-{
-	void *ret;
-
-	if (!ptr)
-		ret = malloc (size);
-	else
-		ret = realloc (ptr, size);
-	if (ret == (void *) 0)
-		panic ("Couldn't re-allocate %u bytes from %p", size, ptr);
-	return ret;
-}
-
-
 /*
  * stricmp - compare string s1 to s2, ignoring case
  */
 
-	int
-stricmp (const char * s1, const char * s2)
+int stricmp (const char * s1, const char * s2)
 {
 	const char *scan1;
 	const char *scan2;
