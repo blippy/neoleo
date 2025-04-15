@@ -276,16 +276,19 @@ _io_hide_cell_cursor (void)
 /* Functions, etc for dealing with cell contents being displayed
 	on top of other cells. */
 
-struct s { CELLREF row, clo, chi; } ;
+struct s { CELLREF row, clo, chi; };
+int slops_alloc = 0; // the number of slops allocated
+int slops_used = 0; // the number of slops actually used
 struct slops
 {
-	int s_alloc, s_used;
+	//int s_alloc, s_used;
+	//vector<slop_t> vec; 
 	struct s s_b[1];
 } the_slops;
 
 static void flush_slops ()
 {
-	the_slops.s_used = 0;
+	slops_used = 0;
 }
 
 static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
@@ -296,7 +299,7 @@ static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 	auto s = &the_slops;
 	if (!s)
 		return 0;
-	for (n = 0; n < s->s_used; n++)
+	for (n = 0; n < slops_used; n++)
 	{
 		if (s->s_b[n].row == r && s->s_b[n].clo <= c && s->s_b[n].chi >= c)
 		{
@@ -314,12 +317,12 @@ static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 	struct slops *s = &the_slops;
 
 	//s = (slops *) where;
-	for (n = 0; n < s->s_used; n++)
+	for (n = 0; n < slops_used; n++)
 	{
 		if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
 		{
-			--(s->s_used);
-			s->s_b[n] = s->s_b[s->s_used];
+			--slops_used;
+			s->s_b[n] = s->s_b[slops_used];
 			return;
 		}
 	}
@@ -334,16 +337,16 @@ static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 	if (!*sp)
 	{
 		(*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
-		(*sp)->s_alloc = 2;
-		(*sp)->s_used = 1;
+		slops_alloc = 2;
+		slops_used = 1;
 		n = 0;
 	}
 	else
 	{
-		n = (*sp)->s_used++;
-		if ((*sp)->s_alloc == n)
+		n = slops_used++;
+		if (slops_alloc == n)
 		{
-			(*sp)->s_alloc = n * 2;
+			slops_alloc = n * 2;
 			(*sp) = (slops*) ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
 		}
 	}
@@ -358,7 +361,7 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 	struct slops *s = &the_slops;
 
 
-	for (n = 0; n < s->s_used; n++)
+	for (n = 0; n < slops_used; n++)
 	{
 		if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
 		{
