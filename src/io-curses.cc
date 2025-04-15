@@ -281,25 +281,19 @@ struct slops
 {
 	int s_alloc, s_used;
 	struct s s_b[1];
-};
+} the_slops;
 
-static void 
-flush_slops (VOIDSTAR where)
+static void flush_slops ()
 {
-	struct slops *s;
-
-	s = (slops *) where;
-	if (s)
-		s->s_used = 0;
+	the_slops.s_used = 0;
 }
 
-static int 
-find_slop (VOIDSTAR where, CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
+static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 {
 	int n;
-	struct slops *s;
-
-	s = (slops*) where;
+	//struct slops *s;
+	//s = (slops*) where;
+	auto s = &the_slops;
 	if (!s)
 		return 0;
 	for (n = 0; n < s->s_used; n++)
@@ -314,13 +308,12 @@ find_slop (VOIDSTAR where, CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 	return 0;
 }
 
-static void 
-kill_slop (VOIDSTAR where, CELLREF r, CELLREF clo, CELLREF chi)
+static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
 	int n;
-	struct slops *s;
+	struct slops *s = &the_slops;
 
-	s = (slops *) where;
+	//s = (slops *) where;
 	for (n = 0; n < s->s_used; n++)
 	{
 		if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
@@ -332,13 +325,12 @@ kill_slop (VOIDSTAR where, CELLREF r, CELLREF clo, CELLREF chi)
 	}
 }
 
-static void 
-set_slop (VOIDSTAR *wherep, CELLREF r, CELLREF clo, CELLREF chi)
+static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
-	int n;
-	struct slops **sp;
 
-	sp = (struct slops **) wherep;
+	int n;
+	struct slops* wherep = &the_slops;
+	struct slops **sp = (struct slops **) wherep;
 	if (!*sp)
 	{
 		(*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
@@ -360,13 +352,12 @@ set_slop (VOIDSTAR *wherep, CELLREF r, CELLREF clo, CELLREF chi)
 	(*sp)->s_b[n].chi = chi;
 }
 
-static void 
-change_slop (VOIDSTAR where, CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
+static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
 {
 	int n;
-	struct slops *s;
+	struct slops *s = &the_slops;
 
-	s = (slops*)where;
+
 	for (n = 0; n < s->s_used; n++)
 	{
 		if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
@@ -623,7 +614,7 @@ _io_repaint (void)
 			if (win->flags & WIN_EDGE_REV)
 				standend ();
 		}
-		flush_slops (win->win_slops);
+		flush_slops();
 		for(CELL* cp: get_cells_in_range(&(win->screen))) {
 			decoord(cp, rr, cc);
 			if (cp->get_type() != TYP_NUL)
@@ -906,13 +897,13 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 			standend ();
 
 		if (lenstr == 0 && c > win->screen.lc
-				&& find_slop (win->win_slops, r, c - 1, &ccl, &cch))
+				&& find_slop(r, c - 1, &ccl, &cch))
 		{
 			CELLREF ccdl, ccdh;
 
-			if (find_slop (win->win_slops, r, c, &ccdl, &ccdh) && ccdl == c)
+			if (find_slop(r, c, &ccdl, &ccdh) && ccdl == c)
 			{
-				kill_slop (win->win_slops, r, ccdl, ccdh);
+				kill_slop(r, ccdl, ccdh);
 				for (; ccdh != ccdl; --ccdh)
 					if (ccdh != c && (wwid = get_width (ccdh)))
 					{
@@ -920,12 +911,12 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 						printw ("%*s", wwid, "");
 					}
 			}
-			kill_slop (win->win_slops, r, ccl, cch);
+			kill_slop(r, ccl, cch);
 			io_pr_cell (r, ccl, find_cell (r, ccl));
 		}
-		else if (find_slop (win->win_slops, r, c, &ccl, &cch))
+		else if (find_slop(r, c, &ccl, &cch))
 		{
-			kill_slop (win->win_slops, r, ccl, cch);
+			kill_slop(r, ccl, cch);
 			for (; cch != ccl; --cch)
 				if (cch != c && (wwid = get_width (cch)))
 				{
@@ -1009,9 +1000,9 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 		else
 			printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
 
-		if (find_slop (win->win_slops, r, c, &ccl, &cch))
+		if (find_slop(r, c, &ccl, &cch))
 		{
-			change_slop (win->win_slops, r, ccl, cch, c, cc);
+			change_slop(r, ccl, cch, c, cc);
 			for (; cch > cc; --cch)
 				if ((wwid = get_width (cch)))
 				{
@@ -1028,7 +1019,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 				io_pr_cell (r, ccl, find_cell (r, ccl));
 		}
 		else
-			set_slop ((VOIDSTAR *) (&(win->win_slops)), r, c, cc);
+			set_slop(r, c, cc);
 	}
 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);

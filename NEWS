@@ -6,6 +6,9 @@ NAME: 		HANK SCHRADER
 
 "Guess that's progress."
 
+BUG menu doesn't show. This is because the status line blanking overwrites i
+it.
+
 After what was mostly bugfixes, we now have new features
 
 * Compiler requirement bumped to --std=c++23 from C++20
