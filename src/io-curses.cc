@@ -105,8 +105,7 @@ curses_metric (char * str, int len)
 	return len;
 }
 
-static struct input_view input_view
-  = {0, curses_metric, curses_metric, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static struct input_view input_view  = {0, curses_metric, curses_metric, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 static void
 _io_redraw_input (void)
@@ -276,23 +275,35 @@ _io_hide_cell_cursor (void)
 /* Functions, etc for dealing with cell contents being displayed
 	on top of other cells. */
 
-struct s { CELLREF row, clo, chi; };
-int slops_alloc = 0; // the number of slops allocated
-int slops_used = 0; // the number of slops actually used
+typedef struct slop { CELLREF row, clo, chi; } slop_t;
+//int slops_alloc = 0; // the number of slops allocated
+//int slops_used = 0; // the number of slops actually used
+typedef vector<slop_t> slops_t;
+slops_t the_slops;
+/*
 struct slops
 {
 	//int s_alloc, s_used;
 	//vector<slop_t> vec; 
 	struct s s_b[1];
 } the_slops;
+*/
 
 static void flush_slops ()
 {
-	slops_used = 0;
+	the_slops.clear();
 }
+
+/*/
+static auto find_slop(const slop_t& s)
+{
+	return find(the_slops.begin(), the_slops.end(), s);
+}
+	*/
 
 static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 {
+	#if 0
 	int n;
 	//struct slops *s;
 	//s = (slops*) where;
@@ -309,10 +320,21 @@ static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 		}
 	}
 	return 0;
+	#endif
+
+	for(auto &s : the_slops) {
+		if(s.row == r && s.clo <= c && s.chi >= c) {
+			*cclp = s.clo;
+			*cchp = s.chi;
+			return 1;
+		}
+	}
+	return 0;
 }
 
 static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
+	#if 0
 	int n;
 	struct slops *s = &the_slops;
 
@@ -326,11 +348,23 @@ static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 			return;
 		}
 	}
+	#endif
+
+	// slop_t s{r, clo, chi};
+	//auto it = find_slop();
+	//the_slops.erase(it, s);
+	for(auto it = the_slops.begin(); it != the_slops.end() ; ++it)  {
+		if(it->row == r && it->clo == clo && it->chi == chi) {
+			the_slops.erase(it);
+			return;
+		}
+	}
 }
 
 static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
 
+	#if 0
 	int n;
 	struct slops* wherep = &the_slops;
 	struct slops **sp = (struct slops **) wherep;
@@ -353,10 +387,15 @@ static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 	(*sp)->s_b[n].row = r;
 	(*sp)->s_b[n].clo = clo;
 	(*sp)->s_b[n].chi = chi;
+	#endif
+
+	slop_t s{r, clo, chi};
+	the_slops.push_back(s);
 }
 
 static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
 {
+	#if 0
 	int n;
 	struct slops *s = &the_slops;
 
@@ -369,6 +408,16 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 			s->s_b[n].chi = hi;
 			return;
 		}
+	}
+	#endif
+
+	for(auto &s : the_slops) {
+		if(s.row == r && s.clo == olo && s.chi == ohi) {
+			s.clo = lo;
+			s.chi = hi;
+			return;
+		}
+
 	}
 }
 
