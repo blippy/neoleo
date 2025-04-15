@@ -10,44 +10,27 @@
 //#include "window.h"
 //#include "global.h"
 #include "cmd.h"
+#include "io-2019.h"
 
 using namespace std;
 
 static bool col_width_form();
 
+
 // shown when you hit the menu button (m key)
-void menu_display()
+void process_menu() // FN
 {
-	int cp = 1; // color pair
-	init_pair(cp, COLOR_BLACK, COLOR_CYAN);
 	
-	
-				/* show the menu */
-	WINDOW *main_menu = newwin(1, COLS, 0 , 0);
-	PANEL *panel = new_panel(main_menu);
-	wattron(main_menu, COLOR_PAIR(cp));
-	string s{pad_right("Col c | Dismiss x", COLS)};
-	wprintw(main_menu,"%s", s.c_str());
-	wattroff(main_menu, COLOR_PAIR(cp));
-	doupdate();
-	wrefresh(main_menu);
-
-
-	switch(getch()) {
+	switch(get_ch()) {
 		case 'c': col_width_form(); break;
 	}
-	
-
-	del_panel(panel);
-	
-	delwin(main_menu);
 }
 
 static constexpr int CTRL(int c) { return c & 037; }
 
 
 // the examplar is io-2019.cc:nform_c
-bool col_width_form()
+bool col_width_form() 
 {
 	string input{to_string(get_width())};
 	//input = "hello";

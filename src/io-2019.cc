@@ -1,6 +1,7 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <string>
 #include <sstream> // for ostringstream
 #include <unistd.h> // for sleep
 #include <map>
@@ -47,12 +48,21 @@ int scr_width() {
 	return getmaxx(stdscr);
 }
 
+// FN get_ch 
+int get_ch ()
+{
+	int c = getch();
+	write_status(""); // clear the status line
+	return c;
+}
+// FN-END
+
 class nwin_c {
 	public:
 		nwin_c() { 
 			
 
-			m_w = newwin(1, scr_width(), 0, 0);
+			m_w = newwin(1, scr_width(), 1, 0);
 			assert(m_w);
 			wrefresh(m_w);
 		}
@@ -211,7 +221,7 @@ static void complex_key_sequence_27()
 
 	int c;
 	auto get = [&](){ 
-		c = getch(); 
+		c = get_ch(); 
 		//log(c);
 		return c;
 	};
@@ -235,7 +245,7 @@ static void complex_key_sequence_27()
 
 fail:
 	//failed, so just put back the last read failed char
-	ungetch(c);
+	//ungetch(c); // 25/4 I don't we really need this
 }
 
 
@@ -248,8 +258,8 @@ static void clear_cell_formula()
 
 void process_key(const keymap_t& keymap)
 {
-	int c = getch();
-	clear_status_line();
+	int c = get_ch();
+	//clear_status_line();
 	//log("process_key:", c);
 	auto search = keymap.find(c);
 	if(search == keymap.end()) { beep(); return; }
@@ -260,17 +270,18 @@ void process_key(const keymap_t& keymap)
 
 
 
-static bool curses_loop()
+static bool curses_loop () // FN
 {
 
 
 	bool quit = false;
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
+	show_menu();
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 			{'=', 		edit_cell2019},
 			{'%',		set_cell_toggle_percent},			
-			{'m',		menu_display},
+			{'m',		process_menu},
 			{'r',		row_cmd2019},
 			{KEY_DC, 	clear_cell_formula}, // delete key
 			{KEY_DOWN,	cursor_down},
@@ -295,24 +306,52 @@ static bool curses_loop()
 
 }
 
-void curses_main()
+
+// FN write_status 
+void write_status (const std::string& str)
+{
+	// 25/4 Persist the error messages
+	wprint(1, 0, str);
+	clrtoeol();
+
+}
+// FN-END
+
+void show_menu () // FN
+{
+	// display menu
+	int cp = 1; // color pair
+	init_pair(cp, COLOR_BLACK, COLOR_CYAN);
+	WINDOW *main_menu = stdscr;
+	//WINDOW* main_menu = newwin(1, COLS, 0, 0);
+	wmove(main_menu, 0, 0);
+	wattron(main_menu, COLOR_PAIR(cp));
+	std::string s{pad_right("Col c", COLS)};
+	wprintw(main_menu,"%s", s.c_str());
+	wattroff(main_menu, COLOR_PAIR(cp));
+	//refresh();
+}
+
+void curses_main () // FN
 {
 	// Tell ncurses to interpret "special keys". It means
 	// that KEY_DOWN etc. will work, but ESC won't be
 	// read separately
 	keypad(stdscr, TRUE);
 
+	show_menu();
+	//doupdate();
+
 	bool quit = false;
 	while(!quit) {
 		try {
 			quit = curses_loop();
 		} catch (OleoJmp& e) {	
-			// 25/4 Persist the error messages
-			wprint(0, 0, e.what());
-			clrtoeol();
+			write_status(e.what());
 		}	
 	}
 
+	//delwin(main_menu);
 	endwin();
 }
 
@@ -357,8 +396,7 @@ static void maybe_quit_spreadsheet2019(bool& quit)
 
 void clear_status_line()
 {
-	move(0, 0);
-	clrtoeol();
+	write_status("");
 }
 
 static void delete_1row() { delete_row(1); }

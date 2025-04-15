@@ -61,6 +61,7 @@ using namespace std::string_literals;
 #include <term.h>
 #include "logging.h"
 #include "ref.h"
+#include "menu-2025.h"
 
 
 
@@ -589,6 +590,7 @@ int run_bug44_tests ()
 static void 
 _io_repaint (void)
 {
+	
 	CELLREF cc, rr;
 	int n, n1;
 	CELL *cp;
@@ -597,11 +599,13 @@ _io_repaint (void)
 	clear ();
 	io_fix_input ();
 	redrew++;
-
+	show_menu();
+	
 	// basically, this functionality just shouldn't exist
 	if(input_view.current_info)
 		return;
 
+	//menu_display();
 	//for (win = wins; win < &wins[nwin]; win++)
 	//{
 		if (win->lh_wid)
@@ -698,13 +702,6 @@ _io_input_avail (void)
 			|| FD_ISSET (0, &exception_pending_fd_set));
 }
 
-
-static void 
-_io_wait_for_input (void)
-{
-	int ch = getch();
-	ungetch(ch);
-}
 
 static int 
 _io_read_kbd (char *buf, int size)
@@ -1109,7 +1106,6 @@ void tty_graphics (void)
 	io_repaint_win = _io_repaint_win;
 	io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
-	io_wait_for_input = _io_wait_for_input;
 	io_read_kbd = _io_read_kbd;
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
