@@ -158,17 +158,17 @@ recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLR
 void  recenter_window (struct window *win)
 {
 	if (win->flags & WIN_PAG_VT)
-		page_axis (win->win_curow, get_scaled_height, win->numr,
+		page_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
 	else
-		recenter_axis (win->win_curow, get_scaled_height, win->numr,
+		recenter_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
 	set_numcols (win, win->screen.hr);
 	if (win->flags & WIN_PAG_HZ)
-		page_axis (win->win_cucol, get_scaled_width, win->numc,
+		page_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
 	else
-		recenter_axis (win->win_cucol, get_scaled_width, win->numc,
+		recenter_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
 }
 // FN-END
@@ -176,8 +176,8 @@ void  recenter_window (struct window *win)
 void 
 io_recenter_cur_win (void)
 {
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
+	//cwin->win_curow = curow;
+	//cwin->win_cucol = cucol;
 	io_recenter_named_window (cwin);
 	io_repaint_win (cwin);
 }
@@ -185,14 +185,8 @@ io_recenter_cur_win (void)
 void
 io_recenter_all_win(void)
 {
-	//if(!the_cmd_frame) return; // maybe running headless
-	//int n;
-	if (!nwin)
-		return;
-	cwin->win_curow = curow;
-	cwin->win_cucol = cucol;
-	//for (n = 0; n < nwin; n++)
-		io_recenter_named_window (cwin);
+	if (!nwin) return;
+	io_recenter_named_window (cwin);
 	io_repaint ();
 }
 void
@@ -388,8 +382,8 @@ io_move_cell_cursor (CELLREF rr, CELLREF cc)
 	if (rr < cwin->screen.lr || rr > cwin->screen.hr
 			|| cc < cwin->screen.lc || cc > cwin->screen.hc)
 	{
-		cwin->win_curow = curow = rr;
-		cwin->win_cucol = cucol = cc;
+		curow = rr;
+		cucol = cc;
 		recenter_window (cwin);
 		io_repaint_win (cwin);
 	}
@@ -510,7 +504,5 @@ void  io_init_windows ()
 	cwin->bottom_edge_r = default_bottom_border;
 	cwin->right_edge_c = default_right_border;
 	cwin->lh_wid = 0;
-	cwin->win_curow = MIN_ROW;
-	cwin->win_cucol = MIN_COL;
-	//cwin->win_slops = 0;
+
 }

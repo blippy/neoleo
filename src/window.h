@@ -68,8 +68,8 @@ struct window
      the currently active cursor position, so if you want
      cwin->curow and cwin->cucol to be accurate, you have to
      set them yourself. */
-  CELLREF win_curow;
-  CELLREF win_cucol;
+  //CELLREF win_curow;
+  //CELLREF win_cucol;
 
   //void* *win_slops;	/* Slops in this window (tty only) */
 };
