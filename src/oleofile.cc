@@ -531,7 +531,9 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
 				break;
 			}
-			default_width = astol(&ptr);
+			// 25/4
+			//default_width = astol(&ptr);
+			(void) astol(&ptr);
 			break;
 
 		case 'f': /* Font specification */

@@ -765,7 +765,7 @@ void clear_spreadsheet (void)
 {
 	flush_cols ();
 	flush_spans();
-	default_width = saved_default_width;
+	//default_width = saved_default_width;
 	default_height = saved_default_height;
 	default_jst = base_default_jst;
 	default_fmt = FMT_GEN;

@@ -485,7 +485,7 @@ int run_bug44_tests ()
 	return 1;
 }
 
-static void _io_repaint (void)
+void _io_repaint (void)
 {
 	
 	CELLREF cc, rr;

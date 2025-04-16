@@ -25,11 +25,11 @@ inline bool using_curses = false;
 inline bool user_wants_headless = false;
 
 /* Cell size paramaters. */
-inline unsigned int default_width = 8;
+inline const unsigned int default_width = 8;
 inline unsigned int default_height = 1;
 
 /* clear_spreadsheet () uses these to restore default */
-inline unsigned int saved_default_width = 8;
+//inline unsigned int saved_default_width = 8;
 inline unsigned int saved_default_height = 1;
 
 /* Other cell defaults: */

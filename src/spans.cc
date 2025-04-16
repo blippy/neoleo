@@ -32,18 +32,16 @@ int get_span(const span_t& span, int ref, int incr, int def)
 
 #define COL  cucol
 
-int get_width() { return get_width(COL);}
+int get_width() { return get_width(COL);} // FN
 
-void set_width (int wid) { set_width(COL, wid); }
+void set_width (int wid) { set_width(COL, wid); } // FN
 
-int 
-get_width (CELLREF col)
+int get_width (CELLREF col) // FN
 {
-	return get_span(the_wids, col, -1, default_width);
+	return get_span(the_wids, col, 0, default_width);
 }
 
-void 
-set_width (CELLREF col, int wid)
+void set_width (CELLREF col, int wid) // FN
 {
 	the_wids[col] = wid;
 	io_update_width(col, wid);
@@ -51,7 +49,7 @@ set_width (CELLREF col, int wid)
 
 
 
-span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi)
+span_find_t find_span (span_t& spans, CELLREF lo, CELLREF hi) // FN
 {
 	span_find_t res;
 	for(int i=lo; i<=hi; ++i)
@@ -64,7 +62,7 @@ span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi)
 
 
 
-int next_span(span_find_t& sp, CELLREF& n)
+int next_span (span_find_t& sp, CELLREF& n) // FN
 {
 	if(sp.dq.empty()) return 0;
 	auto [n1, span]  = sp.dq[0];
@@ -73,15 +71,14 @@ int next_span(span_find_t& sp, CELLREF& n)
 	return span;
 }
 
-int 
-get_height (CELLREF row)
+int get_height (CELLREF row) // FN
 {
-	int incr = - 1;
+	int incr = - 1; // NB Why?
 	return get_span(the_hgts, row, incr, default_height);
 }
 
 
-void set_height (CELLREF row, int hgt)
+void set_height (CELLREF row, int hgt) // FN
 {
 	the_hgts[row] = hgt;
 }

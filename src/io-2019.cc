@@ -38,6 +38,7 @@ static constexpr int CTRL(int c) { return c & 037; }
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;
 
+extern void _io_repaint();
 
 int scr_width() {
 	/*
@@ -201,6 +202,7 @@ void edit_cell2019()
 	if(old_formula == formula) return;
 	Global->modified = true;
 	set_and_eval(curow, cucol, formula, true);
+	_io_repaint();
 }
 
 static void maybe_quit_spreadsheet2019(bool& quit);
@@ -254,6 +256,7 @@ static void clear_cell_formula()
 {
 	//edit_cell_str(""); // this doesn't work properly
 	set_and_eval(curow, cucol, "", true);
+	_io_repaint();
 }
 
 void process_key(const keymap_t& keymap)

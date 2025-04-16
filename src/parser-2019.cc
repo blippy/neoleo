@@ -13,7 +13,7 @@
 #include "cell.h"
 
 #include "format.h"
-#include "io-abstract.h"
+//#include "io-abstract.h"
 #include "io-utils.h"
 #include "regions.h"
 #include "sheet.h"
@@ -832,9 +832,9 @@ void eval_dependents (CELL* root)
 		Tour tour; // we need to start again due to possible diamond shapes mucking things up
 		tour.freeze(root); // we already know its value
 		eval_cell(tour, cp);
-		CELLREF r = get_row(rc);
-		CELLREF c = get_col(rc);
-		io_pr_cell(r, c, cp);
+		//CELLREF r = get_row(rc);
+		//CELLREF c = get_col(rc);
+		//io_pr_cell(r, c, cp);
 	}
 }
 
@@ -915,7 +915,8 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 }
 
 
-std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it = false)
+/* user is responsible for repainting the changed sheet, maybe calling something like _io_repaint() */
+std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it = false) // FN
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
@@ -928,8 +929,8 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 		cp->set_value_2019(err_t{ex.num()});
 	}
 
-	if(display_it) // this is really cack-handed
-		io_pr_cell(r, c, cp);
+	//if(display_it) // this is really cack-handed
+	//	io_pr_cell(r, c, cp);
 
 	return print_cell(cp);
 }
