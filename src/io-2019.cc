@@ -209,10 +209,10 @@ static void save_spreadsheet2019();
 static void save_csv2019();
 
 //static void cursor_col_0()  { io_shift_cell_cursor(3, 2 + 0*(cucol-1)); } // repeat cucol times to bring cursor to column 0
-static void cursor_left()  { io_shift_cell_cursor(3,1); }
-static void cursor_right() { io_shift_cell_cursor(2, 1); }
-static void cursor_down()  { io_shift_cell_cursor(1, 1); }
-static void cursor_up()    { io_shift_cell_cursor(0, 1); }
+static void cursor_left()  { io_shift_cell_cursor(dirn::left,1); }
+static void cursor_right() { io_shift_cell_cursor(dirn::right, 1); }
+static void cursor_down()  { io_shift_cell_cursor(dirn::down, 1); }
+static void cursor_up()    { io_shift_cell_cursor(dirn::up, 1); }
 
 // needed for handling Ctl leftarrow and uparrow
 static void complex_key_sequence_27()
@@ -233,10 +233,10 @@ static void complex_key_sequence_27()
 	
 	switch(get()) {
 		case 68: // Ctr leftarrow
-			io_shift_cell_cursor(3, cucol-1); // repeat cucol-1 times to bring cursor to column 1
+			io_shift_cell_cursor(dirn::left, cucol-1); // repeat cucol-1 times to bring cursor to column 1
 			break;
 		case 65: // Ctrl uparrow
-			io_shift_cell_cursor(0, curow-1); // repeat curol-1 times to bring cursor to row 1
+			io_shift_cell_cursor(dirn::up, curow-1); // repeat curol-1 times to bring cursor to row 1
 			break;
 		default:
 			goto fail;		

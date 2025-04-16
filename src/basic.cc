@@ -186,15 +186,6 @@ void redraw_screen (void)
 }
 
 
-/* Motion commands. */
-
-void
-shift_cell_cursor (int dir, int repeat)
-{
-	io_shift_cell_cursor (dir, repeat);
-}
-
-
 
 /*
  * Extended this to detect the extension of a file and have the right
@@ -220,8 +211,7 @@ void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
 
 void write_cmd (FILE *fp, const char * name)
 {
-	if(name)
-		FileSetCurrentFileName(name);
+	if(name) FileSetCurrentFileName(name);
 	oleo_write_file(fp, 0);
 	Global->modified = 0;
 }

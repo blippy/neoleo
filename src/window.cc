@@ -35,8 +35,11 @@
 
 
 /* Used by motion commands. */
-const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
-const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
+//const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
+//const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
+
+
+
 
 /* Low level window operators. */
 
@@ -447,81 +450,57 @@ io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		find_nonzero (&curow, cwin->screen.lr, cwin->screen.hr, get_scaled_height);
 }
 
-void 
-io_shift_cell_cursor (int dirn, int repeat)
+void io_shift_cell_cursor (dirn way, int repeat) // FN
 {
-	CELLREF c;
-	CELLREF r;
+	CELLREF c = cucol;
+	CELLREF r = curow;
 	int w = 0;
-	int over, down;
+	int over;
+	int down;
 
-	over = colmagic[dirn] * repeat;
-	down = rowmagic[dirn] * repeat;
-	if (over > 0)
-	{
-		c = cucol;
+	//over = colmagic[dirn] * repeat;
+	//down = rowmagic[dirn] * repeat;
+	switch (way) {
+		case dirn::right:
+		over = repeat;
 		while (c < MAX_COL && over-- > 0)
 		{
 			c++;
-			while ((w = get_scaled_width (c)) == 0 && c < MAX_COL)
-				c++;
+			while ((w = get_scaled_width (c)) == 0 && c < MAX_COL) c++;
 		}
-		if (over > 0 || c == cucol || w == 0)
-		{
-			raise_error("Can't go right");
-			return;
-		}
-	}
-	else if (over < 0)
-	{
-		c = cucol;
+		if (over > 0 || c == cucol || w == 0) raise_error("Can't go right");
+		break;
+		
+		case dirn::left :
+		over = -repeat;		
 		while (c > MIN_COL && over++ < 0)
 		{
 			--c;
-			while ((w = get_scaled_width (c)) == 0 && c > MIN_COL)
-				--c;
+			while ((w = get_scaled_width (c)) == 0 && c > MIN_COL) --c;
 		}
-		if (over < 0 || c == cucol || w == 0)
-		{
-			raise_error("Can't go %s", "left");
-			return;
-		}
-	}
-	else
-		c = cucol;
-
-	if (down > 0)
-	{
-		r = curow;
+		if (over < 0 || c == cucol || w == 0) raise_error("Can't go %s", "left");
+		break;
+		
+		case dirn::down:
+		down = repeat;
 		while (r < MAX_ROW && down-- > 0)
 		{
 			r++;
-			while ((w = get_scaled_height (r)) == 0 && r < MAX_ROW)
-				r++;
+			while ((w = get_scaled_height (r)) == 0 && r < MAX_ROW) r++;
 		}
-		if (down > 0 || r == curow || w == 0)
-		{
-			raise_error("Can't go down");
-			return;
-		}
-	}
-	else if (down < 0)
-	{
-		r = curow;
+		if (down > 0 || r == curow || w == 0) raise_error("Can't go down");
+		break;
+
+		case dirn::up:
+		down = -repeat;
 		while (r > MIN_ROW && down++ < 0)
 		{
 			--r;
-			while ((w = get_scaled_height (r)) == 0 && r > MIN_ROW)
-				--r;
+			while ((w = get_scaled_height (r)) == 0 && r > MIN_ROW) --r;
 		}
-		if (down < 0 || r == curow || w == 0)
-		{
-			raise_error("Can't go up");
-			return;
-		}
+		if (down < 0 || r == curow || w == 0) raise_error("Can't go up");
+		break;
 	}
-	else
-		r = curow;
 
 	io_move_cell_cursor (r, c);
 }
