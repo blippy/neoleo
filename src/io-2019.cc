@@ -38,7 +38,7 @@ static constexpr int CTRL(int c) { return c & 037; }
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;
 
-extern void _io_repaint();
+
 
 int scr_width() {
 	/*

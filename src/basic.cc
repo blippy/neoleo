@@ -30,7 +30,7 @@
 #include "regions.h"
 #include "window.h"
 #include "io-term.h"
-#include "io-abstract.h"
+//#include "io-abstract.h"
 #include "io-utils.h"
 #include "io-curses.h"
 #include "ref.h"
@@ -62,8 +62,6 @@ void
 insert_row (int repeat)
 {
 	insert_row_above(curow);
-	//recalculate(1); // for things like areas
-	io_repaint();
 }
 
 void
@@ -77,8 +75,6 @@ void
 delete_row (int repeat)
 {
 	delete_sheet_row(curow);
-	io_repaint();
-
 }
 
 
@@ -162,14 +158,6 @@ recalculate (int all)
 
 
 
-
-void redraw_screen (void)
-{
-	io_repaint ();
-}
-
-
-
 /*
  * Extended this to detect the extension of a file and have the right
  * read function process this.
@@ -248,7 +236,6 @@ void set_cell_toggle_bold()
 	auto cp = find_or_make_cell();
 	cp->cell_flags.bold = ! cp->cell_flags.bold;
 	Global->modified = true;
-	io_repaint();
 }
 
 void set_cell_toggle_percent()
@@ -262,7 +249,6 @@ void set_cell_toggle_percent()
 		fmt = FMT_PCT;
 
 	Global->modified = true;
-	io_repaint();
 }
 
 void set_cell_toggle_italic()
@@ -271,7 +257,6 @@ void set_cell_toggle_italic()
 	auto cp = find_or_make_cell();
 	cp->cell_flags.italic = ! cp->cell_flags.italic;
 	Global->modified = true;
-	io_repaint();
 }
 
 
@@ -297,6 +282,5 @@ set_def_format (int fmt)
 	default_fmt = format;
 	default_prc = precision;
 
-	io_repaint ();
 }
 

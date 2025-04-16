@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include <ncurses.h>
+
 #include <form.h>
 #include <panel.h>
 #include "menu-2025.h"
@@ -11,6 +11,7 @@
 //#include "global.h"
 #include "cmd.h"
 #include "io-2019.h"
+#include "io-curses.h"
 
 using namespace std;
 
@@ -102,7 +103,7 @@ bool col_width_form()
 	del_panel(p);
 	delwin(w);
 	//log("current col:", cucol);
-	redraw_screen();
+	_io_repaint();
 	return true;
 
 }
