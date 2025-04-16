@@ -524,5 +524,5 @@ void  io_init_windows ()
 	cwin->lh_wid = 0;
 	cwin->win_curow = MIN_ROW;
 	cwin->win_cucol = MIN_COL;
-	cwin->win_slops = 0;
+	//cwin->win_slops = 0;
 }
