@@ -34,13 +34,6 @@
 #include "spans.h"
 
 
-/* Used by motion commands. */
-//const int colmagic[] = {0, 0, 1, -1, 1, -1, 1, -1, 0};
-//const int rowmagic[] = {-1, 1, 0, 0, -1, -1, 1, 1, 0};
-
-
-
-
 /* Low level window operators. */
 
 #define MIN_WIN_HEIGHT(W) (W->bottom_edge_r \
@@ -73,17 +66,9 @@ win_label_cols (struct window * win, CELLREF hr)
 
 	if ((win->flags & WIN_EDGES) == 0)
 		lh = 0;
-#if BITS_PER_CELLREF>8
-	else if ((win->flags & WIN_PAG_HZ) || hr >= 10000)
-		lh = 7;
-	else if (hr >= 1000)
-		lh = 6;
-	else if (hr >= 100)
-		lh = 5;
-#else
+
 	else if ((win->flags & WIN_PAG_HZ) || hr >= 100)
 		lh = 5;
-#endif
 	else if (hr > 10)
 		lh = 4;
 	else
@@ -331,7 +316,9 @@ io_set_input_status (int inp, int stat, int redraw)
 				((user_status > 0 ? status_rows : 0)
 				 + (user_input > 0 ? input_rows : 0));
 
-			if (grow < 0)
+			assert(grow>=0) ;
+#if 0
+			 if (grow < 0)
 			{
 				int x;
 re:
@@ -345,6 +332,7 @@ re:
 					}
 				}
 			}
+#endif 
 
 			if (grow)
 			{
@@ -508,7 +496,7 @@ void  io_init_windows ()
 	//print_width = 80;		/* default ascii print width */
 
 	io_set_input_status (1, 2, 0);
-	nwin = 1;
+	//nwin = 1;
 	cwin = &the_cwin;
 	cwin->id = win_id++;
 	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */

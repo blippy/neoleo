@@ -84,7 +84,7 @@ struct OleoGlobal {
 	struct window			*cwin = 0; //, *wins = 0;
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 	int				modified = 0;
-	int				nwin = 0;
+	//const int				nwin = 0;
 	int				return_from_error = 0;
 	int				display_opened = 0;
 	//const float			user_height_scale = 1.0, user_width_scale = 1.0, height_scale = 1.0, width_scale = 1.0;
@@ -102,3 +102,4 @@ struct OleoGlobal {
 inline OleoGlobal global;
 //inline struct OleoGlobal *Global = new struct OleoGlobal;
 inline struct OleoGlobal *Global = &global;
+inline int nwin = 1; // 25/4 Elminate this

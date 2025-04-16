@@ -90,10 +90,6 @@ struct window
 #define WIN_EDGES	0x10
 #define WIN_EDGE_REV	0x20
 
-#if 0
-#define	scr_lines	Global->scr_lines
-#define	scr_cols	Global->scr_cols
-#endif
 
 /* These control the layout of input and status lines. */
 #define	user_input	Global->user_input
@@ -123,22 +119,12 @@ struct window
 #define	default_bottom_border	Global->default_bottom_border
 
 /* The window list. */
-#define	nwin		Global->nwin
+//#define	nwin		Global->nwin
 //#define	cwin		Global->cwin
 inline window* cwin = nullptr;
 //#define	wins		Global->wins
 #define	win_id		Global->win_id
 
-#if 0
-/* This is stored as the button number when a dequeue failes. */
-#define MOUSE_QERROR	-1
-/* These are the possible mouse locations. */
-#define MOUSE_ON_INPUT    -1
-#define MOUSE_ON_STATUS   -2
-#define MOUSE_ON_EDGE	  -3
-
-#define MOUSE_CHAR '\034'
-#endif
 
 enum class dirn { left, right, up, down};
 
