@@ -19,6 +19,7 @@
 
 #include <string>
 #include "global.h"
+#include "cell.h"
 
 
 inline bool using_curses = false;

@@ -592,7 +592,7 @@ static int _io_input_avail (void)
 			|| FD_ISSET (0, &exception_pending_fd_set));
 }
 
-
+#if 0
 static int _io_read_kbd (char *buf, int size)
 {
 
@@ -643,7 +643,7 @@ hit:
 
 	return r;
 }
-
+#endif
 
 
 
@@ -975,7 +975,7 @@ void tty_graphics (void)
 	io_repaint_win = _io_repaint_win;
 	io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
-	io_read_kbd = _io_read_kbd;
+	//io_read_kbd = _io_read_kbd;
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_move_cursor = _io_move_cursor;

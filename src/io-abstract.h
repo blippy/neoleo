@@ -39,7 +39,7 @@ EXTERN void (*io_close_display) (int);
  */
 EXTERN int (*io_input_avail) (void);/* How many chars can be read? */
 EXTERN void (*io_scan_for_input) (int ok_to_block);
-EXTERN int (*io_read_kbd) (char *buf, int size);
+//EXTERN int (*io_read_kbd) (char *buf, int size);
 
 /* Annoy the user: */
 //EXTERN void (*io_bell) (void);
@@ -71,7 +71,7 @@ EXTERN void (*io_cellize_cursor) (void);
 EXTERN void (*io_inputize_cursor) (void);
 
 
-inline void _io_update_width_nothing(int col, int wid) {};
+//inline void _io_update_width_nothing(int col, int wid) {};
 inline void _do_nothing() { };
-inline void (*io_update_width)(int col, int wid) = _io_update_width_nothing;
+//inline void (*io_update_width)(int col, int wid) = _io_update_width_nothing;
 

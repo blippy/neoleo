@@ -1,4 +1,4 @@
-#include "io-abstract.h"
+//#include "io-abstract.h"
 #include "io-term.h"
 #include "logging.h"
 #include "spans.h"
@@ -44,7 +44,7 @@ int get_width (CELLREF col) // FN
 void set_width (CELLREF col, int wid) // FN
 {
 	the_wids[col] = wid;
-	io_update_width(col, wid);
+	//io_update_width(col, wid);
 }
 
 
