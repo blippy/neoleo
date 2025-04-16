@@ -139,7 +139,7 @@ static int _io_input_avail(void)
 
 
 
-
+#if 0
 static int _io_read_kbd(char *buf, int size)
 {        
 	//int r = read (0, buf, size);
@@ -148,6 +148,7 @@ static int _io_read_kbd(char *buf, int size)
 	//FD_CLR (0, &exception_pending_fd_set);
 	return r;
 }      
+#endif
 
 static void _io_insert (int len)
 { 
@@ -367,7 +368,7 @@ void headless_graphics(void)
 	io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_insert = _io_insert;
-	io_flush = do_nothing;
+	//io_flush = do_nothing;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = do_nothing;
 	io_display_cell_cursor = do_nothing;

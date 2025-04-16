@@ -46,7 +46,7 @@ EXTERN void (*io_scan_for_input) (int ok_to_block);
 
 /* High level i/o. */
 
-EXTERN void (*io_flush) (void); 
+//EXTERN void (*io_flush) (void); 
 
 /* Input and status areas: */
 EXTERN void (*io_clear_input_before) (void);

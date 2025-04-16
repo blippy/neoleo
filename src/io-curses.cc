@@ -956,11 +956,13 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 
 
 
+#if 0
 static void
 _io_flush (void)
 {
 	refresh ();
 }
+#endif
 
 
 
@@ -982,7 +984,7 @@ void tty_graphics (void)
 	io_erase = _io_erase;
 	io_insert = _io_insert;
 	io_over = _io_over;
-	io_flush = _io_flush;
+	//io_flush = _io_flush;
 	io_clear_input_before = _io_clear_input_before;
 	io_clear_input_after = _io_clear_input_after;
 	io_pr_cell_win = _io_pr_cell_win;
