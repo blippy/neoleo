@@ -29,7 +29,7 @@ using std::cout;
 
 #include "convert.h"
 #include "format.h"
-#include "io-abstract.h"
+//#include "io-abstract.h"
 #include "io-utils.h"
 #include "io-term.h"
 #include "global.h"
@@ -40,8 +40,7 @@ using std::cout;
 #include "spans.h"
 #include "utils.h"
 #include "logging.h"
-#include "cmd.h"
-//#include "window.h"
+//#include "cmd.h"
 
 
 /* These functions read and write OLEO style files. */
@@ -800,12 +799,6 @@ static std::string oleo_write_window_config ()
 	//cwin->win_cucol = cucol;
 	//sprint_line (&out, "O;status %d\n", user_status);
 	oss << "O;status " << user_status << "\n";
-	if (nwin > 1)
-	{
-		/* ... */ /* fixme ? */
-	}
-	//for (n = 0; n < nwin; n++)
-	//{
 	auto flags = cwin->flags;
 		buf[0] = '\0';
 		if (flags & WIN_LCK_HZ)

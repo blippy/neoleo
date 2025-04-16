@@ -32,6 +32,8 @@ typedef unsigned short CELLREF;
 #define MAX_ROW 65535
 #define MAX_COL 65535
 
+inline CELLREF curow = MIN_ROW;
+inline CELLREF cucol = MIN_COL;
 inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
 /* A ref_fm structure contains a list of all cells that reference some

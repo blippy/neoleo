@@ -26,8 +26,7 @@
 #include "global.h"
 
 
-inline CELLREF curow = MIN_ROW;
-inline CELLREF cucol = MIN_COL;
+
 inline  CELLREF mkrow = NON_ROW;
 inline CELLREF mkcol = NON_COL;
 inline int window_after_input = -1;
