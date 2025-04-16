@@ -27,7 +27,6 @@
 #include <stdio.h>
 
 #include "global.h"
-#include "io-abstract.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "ref.h"
@@ -86,6 +85,7 @@ lock_region (struct rng *where, int locked)
 		SET_LCK (cp, locked);
 }
 
+
 void change_region(struct rng* a_rng, std::function<void(CELL*)> fn)
 {
 
@@ -96,7 +96,7 @@ void change_region(struct rng* a_rng, std::function<void(CELL*)> fn)
 		CELLREF r, c;
 		decoord(cp, r, c);
 		fn(cp);
-		io_pr_cell (r, c, cp);		
+		//io_pr_cell (r, c, cp);		
 	}
 }
 void
