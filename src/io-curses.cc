@@ -277,51 +277,17 @@ _io_hide_cell_cursor (void)
 	on top of other cells. */
 
 typedef struct slop { CELLREF row, clo, chi; } slop_t;
-//int slops_alloc = 0; // the number of slops allocated
-//int slops_used = 0; // the number of slops actually used
 typedef vector<slop_t> slops_t;
 slops_t the_slops;
-/*
-struct slops
-{
-	//int s_alloc, s_used;
-	//vector<slop_t> vec; 
-	struct s s_b[1];
-} the_slops;
-*/
 
 static void flush_slops ()
 {
 	the_slops.clear();
 }
 
-/*/
-static auto find_slop(const slop_t& s)
-{
-	return find(the_slops.begin(), the_slops.end(), s);
-}
-	*/
 
 static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 {
-	#if 0
-	int n;
-	//struct slops *s;
-	//s = (slops*) where;
-	auto s = &the_slops;
-	if (!s)
-		return 0;
-	for (n = 0; n < slops_used; n++)
-	{
-		if (s->s_b[n].row == r && s->s_b[n].clo <= c && s->s_b[n].chi >= c)
-		{
-			*cclp = s->s_b[n].clo;
-			*cchp = s->s_b[n].chi;
-			return 1;
-		}
-	}
-	return 0;
-	#endif
 
 	for(auto &s : the_slops) {
 		if(s.row == r && s.clo <= c && s.chi >= c) {
@@ -335,25 +301,6 @@ static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
 
 static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
-	#if 0
-	int n;
-	struct slops *s = &the_slops;
-
-	//s = (slops *) where;
-	for (n = 0; n < slops_used; n++)
-	{
-		if (s->s_b[n].row == r && s->s_b[n].clo == clo && s->s_b[n].chi == chi)
-		{
-			--slops_used;
-			s->s_b[n] = s->s_b[slops_used];
-			return;
-		}
-	}
-	#endif
-
-	// slop_t s{r, clo, chi};
-	//auto it = find_slop();
-	//the_slops.erase(it, s);
 	for(auto it = the_slops.begin(); it != the_slops.end() ; ++it)  {
 		if(it->row == r && it->clo == clo && it->chi == chi) {
 			the_slops.erase(it);
@@ -364,54 +311,12 @@ static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 
 static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
-
-	#if 0
-	int n;
-	struct slops* wherep = &the_slops;
-	struct slops **sp = (struct slops **) wherep;
-	if (!*sp)
-	{
-		(*sp) = (slops *) ck_malloc (sizeof (struct slops) + 2 * sizeof (struct s));
-		slops_alloc = 2;
-		slops_used = 1;
-		n = 0;
-	}
-	else
-	{
-		n = slops_used++;
-		if (slops_alloc == n)
-		{
-			slops_alloc = n * 2;
-			(*sp) = (slops*) ck_realloc ((*sp), sizeof (struct slops) + n * 2 * sizeof (struct s));
-		}
-	}
-	(*sp)->s_b[n].row = r;
-	(*sp)->s_b[n].clo = clo;
-	(*sp)->s_b[n].chi = chi;
-	#endif
-
 	slop_t s{r, clo, chi};
 	the_slops.push_back(s);
 }
 
 static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
 {
-	#if 0
-	int n;
-	struct slops *s = &the_slops;
-
-
-	for (n = 0; n < slops_used; n++)
-	{
-		if (s->s_b[n].row == r && s->s_b[n].clo == olo && s->s_b[n].chi == ohi)
-		{
-			s->s_b[n].clo = lo;
-			s->s_b[n].chi = hi;
-			return;
-		}
-	}
-	#endif
-
 	for(auto &s : the_slops) {
 		if(s.row == r && s.clo == olo && s.chi == ohi) {
 			s.clo = lo;
@@ -478,8 +383,7 @@ void curses_display::cdstandout()
 }
 
 
-void
-cont_curses(void)
+void cont_curses(void)
 {
 #ifdef HAVE_CBREAK
 	cbreak ();
@@ -492,8 +396,7 @@ cont_curses(void)
 }
 
 
-void
-stop_curses(void)
+void stop_curses(void)
 {
 #ifdef HAVE_CBREAK
 	nocbreak ();
@@ -506,18 +409,15 @@ stop_curses(void)
 	io_redisp ();
 }
 
-static void 
-_io_cellize_cursor (void)
+static void _io_cellize_cursor (void)
 {
 }
 
-static void 
-_io_inputize_cursor (void)
+static void _io_inputize_cursor (void)
 {
 }
 
-static void 
-_io_redisp (void)
+static void _io_redisp (void)
 {
 	if (!term_cursor_claimed)
 	{
@@ -541,14 +441,12 @@ _io_redisp (void)
 	refresh ();
 }
 
-static void 
-_io_repaint_win (struct window *win)
+static void _io_repaint_win (struct window *win)
 {
 	io_repaint ();
 }
 
-static char*
-col_to_str (CELLREF col)
+static char* col_to_str (CELLREF col)
 {
 	static char buf[10];
 	string str = "";
@@ -587,8 +485,7 @@ int run_bug44_tests ()
 	return 1;
 }
 
-static void 
-_io_repaint (void)
+static void _io_repaint (void)
 {
 	
 	CELLREF cc, rr;
@@ -601,82 +498,77 @@ _io_repaint (void)
 	redrew++;
 	show_menu();
 	
-	// basically, this functionality just shouldn't exist
-	if(input_view.current_info)
-		return;
+	if(input_view.current_info) return;
 
-	//menu_display();
-	//for (win = wins; win < &wins[nwin]; win++)
-	//{
-		if (win->lh_wid)
+	if (win->lh_wid)
+	{
+		move (win->win_down - 1, win->win_over - win->lh_wid);
+		//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
+		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
+		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
+		printw ("#%*ld ", win->lh_wid - 2, (long int)1);
+		if (win->flags & WIN_EDGE_REV)
+			s_display.cdstandout();
+		cc = win->screen.lc;
+		do
 		{
-			move (win->win_down - 1, win->win_over - win->lh_wid);
-			//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
-			static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
-			static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
-			printw ("#%*ld ", win->lh_wid - 2, (long int)1);
-			if (win->flags & WIN_EDGE_REV)
-				s_display.cdstandout();
-			cc = win->screen.lc;
-			do
+			n = get_width (cc);
+			if (n > win->numc)
+				n = win->numc;
+			if (n > 1)
 			{
-				n = get_width (cc);
-				if (n > win->numc)
-					n = win->numc;
-				if (n > 1)
-				{
-					char *ptr;
-					char buf[30];
+				char *ptr;
+				char buf[30];
 
-					if (Global->a0)
-						ptr = col_to_str (cc);
-					else
-					{
-						sprintf (buf, "C%u", cc);
-						ptr = buf;
-					}
-					--n;
-					n1 = strlen (ptr);
-					if (n < n1)
-						printw ("%.*s ", n, "###############");
-					else
-					{
-						n1 = (n - n1) / 2;
-						printw ("%*s%-*s ", n1, "", n - n1, ptr);
-					}
+				if (Global->a0)
+					ptr = col_to_str (cc);
+				else
+				{
+					sprintf (buf, "C%u", cc);
+					ptr = buf;
 				}
-				else if (n == 1)
-					addstr ("#");
-			}
-			while (cc++ < win->screen.hc);
-
-			rr = win->screen.lr;
-			n = win->win_down;
-			do
-			{
-				n1 = get_height (rr);
-				if (n1)
+				--n;
+				n1 = strlen (ptr);
+				if (n < n1)
+					printw ("%.*s ", n, "###############");
+				else
 				{
-					move (n, win->win_over - win->lh_wid);
-					if (Global->a0)
-						printw ("%-*d ", win->lh_wid - 1, rr);
-					else
-						printw ("R%-*d", win->lh_wid - 1, rr);
-					n += n1;
+					n1 = (n - n1) / 2;
+					printw ("%*s%-*s ", n1, "", n - n1, ptr);
 				}
 			}
-			while (rr++ < win->screen.hr);
+			else if (n == 1)
+				addstr ("#");
+		}
+		while (cc++ < win->screen.hc);
 
-			if (win->flags & WIN_EDGE_REV)
-				standend ();
+		rr = win->screen.lr;
+		n = win->win_down;
+		do
+		{
+			n1 = get_height (rr);
+			if (n1)
+			{
+				move (n, win->win_over - win->lh_wid);
+				if (Global->a0)
+					printw ("%-*d ", win->lh_wid - 1, rr);
+				else
+					printw ("R%-*d", win->lh_wid - 1, rr);
+				n += n1;
+			}
 		}
-		flush_slops();
-		for(CELL* cp: get_cells_in_range(&(win->screen))) {
-			decoord(cp, rr, cc);
-			if (cp->get_type() != TYP_NUL)
-				_io_pr_cell_win(win, rr, cc, cp);
-		}
-	//}
+		while (rr++ < win->screen.hr);
+
+		if (win->flags & WIN_EDGE_REV)
+			standend ();
+	}
+	flush_slops();
+	for(CELL* cp: get_cells_in_range(&(win->screen))) {
+		decoord(cp, rr, cc);
+		if (cp->get_type() != TYP_NUL)
+			_io_pr_cell_win(win, rr, cc, cp);
+	}
+	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;
@@ -684,8 +576,7 @@ _io_repaint (void)
 	io_update_status ();
 }
 
-static void 
-_io_close_display (int e)
+static void _io_close_display (int e)
 {
 	if (e == 0) {
 		clear ();
@@ -695,16 +586,14 @@ _io_close_display (int e)
 	(void) endwin ();
 }
 
-static int 
-_io_input_avail (void)
+static int _io_input_avail (void)
 {
 	return (FD_ISSET (0, &read_pending_fd_set)
 			|| FD_ISSET (0, &exception_pending_fd_set));
 }
 
 
-static int 
-_io_read_kbd (char *buf, int size)
+static int _io_read_kbd (char *buf, int size)
 {
 
 	if(false) log_debug("io-curses.cc:_io_read_kbd() called");
@@ -763,8 +652,7 @@ hit:
 
 
 
-static void
-move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
+static void move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 {
 	int cc;
 	int cell_cursor_col;
@@ -780,8 +668,7 @@ move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 	move (cell_cursor_row, cell_cursor_col);
 }
 
-static void
-_io_update_status (void)
+static void _io_update_status (void)
 {
 	const char *ptr;
 	int wid;
@@ -858,8 +745,7 @@ _io_clear_input_before (void)
 	move (0, 0);
 }
 
-static void
-_io_clear_input_after (void)
+static void _io_clear_input_after (void)
 {
 	if (Global->topclear)
 	{
@@ -899,22 +785,16 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	getyx (stdscr, yy, xx);
 	glowing = (r == curow && c == cucol && win == cwin);
 	
-	//strcpy_c str{print_cell(cp).c_str()};
-	//ptr = str.data();
 	const std::string& str = print_cell(cp);
 	char ptr1[str.size()+1];
 	char* ptr = strcpy(ptr1, str.c_str());
-	//char* ptr = str.c_str();
 
 	move_cursor_to (win, r, c, 0);
 	if (glowing) standout ();
 
 	bool is_bold = cp->cell_flags.bold;
-	if(is_bold)  {
-		//log("Found bolds");
-		wattr_on(stdscr, WA_BOLD, 0);
-	 	//wprint("\033[1m");
-	}
+	if(is_bold) wattr_on(stdscr, WA_BOLD, 0);
+
 	bool is_italic = cp->cell_flags.italic;
 	if(is_italic) wattr_on(stdscr, WA_ITALIC, 0);
 
@@ -938,10 +818,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 			wwid = (wid - 1) - lenstr;
 			printw ("%*s%*s ", (wwid + 1) / 2 + lenstr, ptr, wwid / 2, "");
 		}
-#ifdef TEST
-		else
-			panic ("Unknown justification");
-#endif
+
 		if (glowing)
 			standend ();
 
@@ -995,7 +872,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 			}
 		}
 
-		if (lenstr > wwid - 1) {  /* FIXME: This construct needs to be checked */
+		if (lenstr > wwid - 1) { 
 			if (cp->get_type() == TYP_FLT)
 				ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
 			else if (cp->get_type() == TYP_INT)
@@ -1077,15 +954,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	move (yy, xx);
 }
 
-/*
-static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) 
-{
-	bool is_bold = cp->cell_flags.bold;
-	if(is_bold) wattron(win, A_BOLD); "\e[1m"
-	inner_io_pr_cell_win (win, r,c,cp);
-	if(is_bold) attroff(A_BOLD);
-}
-*/
+
 
 static void
 _io_flush (void)
