@@ -25,30 +25,6 @@
 #include "window.h"
 #include "io-abstract.h"
 #include "utils.h"
-//#include "xcept.h"
-
-
-/* In the functions below, we only ever deal with one input_view at a 
- * time.  By convention, call a pointer to it THIS_IV and use these
- * macros: 
- */
-#define Redraw_needed 		(this_iv->redraw_needed)
-#define Prompt_metric 		(this_iv->prompt_metric)
-#define Input_metric 		(this_iv->input_metric)
-#define Keymap_prompt 		(this_iv->keymap_prompt)
-#define Expanded_keymap_prompt 	(this_iv->expanded_keymap_prompt)
-#define Prompt_wid 		(this_iv->prompt_wid)
-#define Must_fix_input 		(this_iv->must_fix_input)
-#define Input_area 		(this_iv->input_area)
-#define Prompt 			(this_iv->prompt)
-#define Visibility_begin 	(this_iv->visibility_begin)
-#define Visibility_end 		(this_iv->visibility_end)
-#define Current_info		(this_iv->current_info)
-#define Info_pos		(this_iv->info_pos)
-#define Info_redraw_needed	(this_iv->info_redraw_needed)
-#define Vis_wid			(this_iv->vis_wid)
-#define Input_cursor 		(this_iv->input_cursor)
-
 
 
 
