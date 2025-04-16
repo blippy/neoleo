@@ -221,29 +221,6 @@ io_recenter_named_window(struct window *w)
 	recenter_window(w);
 }
 
-static void
-shift_linked_window (long dn, long ov)
-{
-	#if 0
-	struct window *win;
-
-	win = cwin;
-	while (win->link != -1)
-	{
-		win = &wins[win->link];
-		if (win == cwin)		/* Loop check! */
-			return;
-		if ((win->flags & WIN_LCK_VT) == 0)
-			win->win_curow += dn;
-		if ((win->flags & WIN_LCK_HZ) == 0)
-			win->win_cucol += ov;
-		if (win->win_curow < win->screen.lr || win->win_curow > win->screen.hr
-				|| win->win_cucol < win->screen.lc || win->win_cucol > win->screen.hc)
-			recenter_window (win);
-	}
-	#endif
-}
-
 
 static void 
 find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
@@ -425,8 +402,6 @@ io_win_close (struct window *win)
 void 
 io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
-	if (cwin->link != -1)
-		shift_linked_window ((long) rr - curow, (long) cc - cucol);
 	if (rr < cwin->screen.lr || rr > cwin->screen.hr
 			|| cc < cwin->screen.lc || cc > cwin->screen.hc)
 	{
@@ -434,7 +409,6 @@ io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		cwin->win_cucol = cucol = cc;
 		recenter_window (cwin);
 		io_repaint_win (cwin);
-		//if (cwin->link > 0) 			io_repaint_win (&wins[cwin->link]);
 	}
 	else
 	{

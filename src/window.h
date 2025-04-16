@@ -53,11 +53,6 @@ struct window
   int bottom_edge_r;
   int right_edge_c;
 
-  /* These values may be changed at any time. */
-  /* -1 if this window isn't linked to any others, else
-     contains the index into wins of the window this one is
-     linked to */
-  const int link = -1; // 25/4 this can be removed
 
   /* Number of columns taken up by the row numbers at the
      left hand edge of the screen.  Zero if edges is
