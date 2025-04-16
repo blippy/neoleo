@@ -191,15 +191,10 @@ void  recenter_window (struct window *win)
 void 
 io_recenter_cur_win (void)
 {
-	//if(!cwin || !the_cmd_frame || ! curow) return; // maybe running headless
-	//if(!the_cmd_frame) return; // maybe running headless
-
 	cwin->win_curow = curow;
 	cwin->win_cucol = cucol;
 	io_recenter_named_window (cwin);
 	io_repaint_win (cwin);
-	//if (cwin->link > 0)
-	//	io_repaint_win (&wins[cwin->link]);
 }
 
 void
@@ -526,7 +521,6 @@ void  io_init_windows ()
 	cwin->numc = Global->scr_cols - default_right_border;
 	cwin->bottom_edge_r = default_bottom_border;
 	cwin->right_edge_c = default_right_border;
-	//cwin->link = -1;
 	cwin->lh_wid = 0;
 	cwin->win_curow = MIN_ROW;
 	cwin->win_cucol = MIN_COL;

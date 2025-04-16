@@ -114,23 +114,6 @@ int set_window_option (int set_opt, char *text)
 		int new_stat = stat ? n : user_status;
 		io_set_input_status (new_inp, new_stat, 1);
 	}
-	#if 0 // 25/4 In single windows, links don't apply
-	else if (!strincmp (text, "link", 4))
-	{
-		if (set_opt)
-		{
-			n = atoi (text + 4) - 1;
-			if (n < 0 || n > nwin)
-				raise_error("Can't '%s': window # out of range", text);
-			else
-				cwin->link = n;
-		}
-		else
-			cwin->link = -1;
-	}
-	else if (set_opt && !stricmp (text, "unlink"))
-		cwin->link = -1;
-	#endif
 	else if (set_opt && !strincmp (text, "row ", 4))
 	{
 		text += 4;
