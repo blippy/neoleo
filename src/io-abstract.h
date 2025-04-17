@@ -29,7 +29,7 @@
 #include "window.h"
 
 EXTERN void (*io_open_display) (void);
-EXTERN void (*io_redisp) (void);	/* Refresh the existing image. */
+//EXTERN void (*io_redisp) (void);	/* Refresh the existing image. */
 EXTERN void (*io_repaint) (void);	/* $$$ Recompute the image. */
 EXTERN void (*io_repaint_win) (struct window *);
 EXTERN void (*io_close_display) (int);

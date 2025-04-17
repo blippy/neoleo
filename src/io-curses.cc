@@ -395,28 +395,6 @@ void cont_curses(void)
 	nonl ();
 }
 
-
-void stop_curses(void)
-{
-#ifdef HAVE_CBREAK
-	nocbreak ();
-#else
-	nocrmode ();
-#endif
-	noraw ();
-	echo ();
-	nl ();
-	io_redisp ();
-}
-
-static void _io_cellize_cursor (void)
-{
-}
-
-static void _io_inputize_cursor (void)
-{
-}
-
 static void _io_redisp (void)
 {
 	if (!term_cursor_claimed)
@@ -440,6 +418,28 @@ static void _io_redisp (void)
 	}
 	refresh ();
 }
+
+void stop_curses(void)
+{
+#ifdef HAVE_CBREAK
+	nocbreak ();
+#else
+	nocrmode ();
+#endif
+	noraw ();
+	echo ();
+	nl ();
+	_io_redisp ();
+}
+
+static void _io_cellize_cursor (void)
+{
+}
+
+static void _io_inputize_cursor (void)
+{
+}
+
 
 static void _io_repaint_win (struct window *win)
 {
@@ -976,7 +976,7 @@ void tty_graphics (void)
 	FD_SET (0, &read_fd_set);
 	FD_SET (0, &exception_fd_set);
 	io_open_display = _io_open_display;
-	io_redisp = _io_redisp;
+	//io_redisp = _io_redisp;
 	io_repaint = _io_repaint;
 	io_repaint_win = _io_repaint_win;
 	io_close_display = _io_close_display;

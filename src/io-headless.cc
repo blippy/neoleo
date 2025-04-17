@@ -350,7 +350,7 @@ void headless_main()
 void headless_graphics(void)
 {
 	io_open_display = _io_open_display;
-	io_redisp = do_nothing;
+	//io_redisp = do_nothing;
 	io_repaint = do_nothing;
 	io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
