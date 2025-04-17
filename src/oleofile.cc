@@ -42,7 +42,8 @@ using std::cout;
 #include "io-term.h"
 
 
-// let's try to abstract away some stuff
+// 25/4 let's try to abstract away some stuff
+// olf_ prefix refers to "oleo file"
 void olf_set_options (char *opts)
 {
 

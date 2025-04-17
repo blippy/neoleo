@@ -58,7 +58,6 @@ using std::cout;
 using std::endl;
 
 
-const int base_default_jst = JST_RGT;
 
 /* These are the hooks used to do file-io. */
 //void (*read_file) (FILE *, int) = oleo_read_file;

@@ -33,11 +33,7 @@ inline unsigned int default_height = 1;
 //inline unsigned int saved_default_width = 8;
 inline unsigned int saved_default_height = 1;
 
-/* Other cell defaults: */
-inline int default_jst = base_default_jst;
-inline int default_fmt = FMT_GEN;
-inline int default_prc = 0x0F;		/* FIX ME */
-inline int default_lock = LCK_UNL;
+
 
 /* When printing ascii output, this controls page width. */
 //inline int modified;

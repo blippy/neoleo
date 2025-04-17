@@ -48,6 +48,11 @@ constexpr auto JST_DEF = 0;
 #define JST_LFT		1
 #define JST_RGT		2
 #define JST_CNT		3
+#define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
+#define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
+inline const int base_default_jst = JST_RGT;
+
+
 
 #define FMT_DEF		0	/* Default */
 #define FMT_HID		1	/* Hidden */
@@ -74,6 +79,16 @@ struct cell_flags_s {
 	bool		bold = false;
 	bool		italic = false;
 }; 
+
+#define LCK_DEF		0
+#define LCK_UNL		1
+#define LCK_LCK		2
+
+/* Other cell defaults: */
+inline int default_jst = base_default_jst;
+inline int default_fmt = FMT_GEN;
+inline int default_prc = 0x0F;		/* FIX ME */
+inline int default_lock = LCK_UNL;
 
 typedef unsigned char* formula_t;
 
@@ -137,16 +152,12 @@ typedef cell cell_t;
 #define	GET_LCK(p)	((p)->cell_flags.cell_lock)
 #define SET_LCK(p,x)	((p)->cell_flags.cell_lock = (x))
 
-#define LCK_DEF		0
-#define LCK_UNL		1
-#define LCK_LCK		2
+
 
 /* The type of a cell, or of a eval_expression() value */
 //#define GET_TYP(p)	((p)->get_type())
 
-#define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
-#define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
-extern const int base_default_jst;
+
 
 /*
  * Actually get/set both Format *and* precision
