@@ -54,7 +54,7 @@ EXTERN void (*io_scan_for_input) (int ok_to_block);
 //EXTERN void (*io_update_status) (void);
 //EXTERN int (*io_get_chr) (char *prompt);
 
-EXTERN void (*io_fix_input) (void);
+//EXTERN void (*io_fix_input) (void);
 EXTERN void (*io_move_cursor) (void);
 EXTERN void (*io_erase) (int len);
 EXTERN void (*io_insert) (int len);

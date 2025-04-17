@@ -557,7 +557,7 @@ void _io_repaint (void)
 	struct window *win = cwin;
 
 	clear ();
-	io_fix_input ();
+	_io_fix_input ();
 	redrew++;
 	show_menu();
 	
@@ -983,7 +983,7 @@ void tty_graphics (void)
 	io_input_avail = _io_input_avail;
 	//io_read_kbd = _io_read_kbd;
 	//io_update_status = _io_update_status;
-	io_fix_input = _io_fix_input;
+	//io_fix_input = _io_fix_input;
 	io_move_cursor = _io_move_cursor;
 	io_erase = _io_erase;
 	io_insert = _io_insert;

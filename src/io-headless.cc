@@ -90,11 +90,6 @@ static void _io_repaint_win (struct window *win)
 
 
 
-static void _io_fix_input(void)
-{
-	//puts("Entering _io_fix_input()");
-}
-
 
 // suggested at
 // http://stackoverflow.com/questions/8302547/temp-failure-retry-and-use-gnu
@@ -361,7 +356,7 @@ void headless_graphics(void)
 	io_input_avail = _io_input_avail;
 	//io_read_kbd = _io_read_kbd;
 	//io_update_status = _io_update_status;
-	io_fix_input = _io_fix_input;
+	//io_fix_input = _io_fix_input;
 	io_insert = _io_insert;
 	//io_flush = do_nothing;
 	io_pr_cell_win = _io_pr_cell_win;
