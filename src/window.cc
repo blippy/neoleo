@@ -32,6 +32,7 @@
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
+#include "io-curses.h"
 
 
 /* Low level window operators. */
@@ -393,7 +394,7 @@ io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		curow = rr;
 		cucol = cc;
 		io_display_cell_cursor ();
-		io_update_status ();
+		cur_io_update_status ();
 	}
 	if (get_scaled_width (cucol) == 0)
 		find_nonzero (&cucol, cwin->screen.lc, cwin->screen.hc, get_scaled_width);

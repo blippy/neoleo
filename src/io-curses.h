@@ -30,3 +30,4 @@ void wprint(const std::string& str);
 void wprint(int y, int x, const std::string& str);
 
 void _io_repaint();
+void cur_io_update_status (void);

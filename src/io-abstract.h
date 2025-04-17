@@ -49,9 +49,9 @@ EXTERN void (*io_scan_for_input) (int ok_to_block);
 //EXTERN void (*io_flush) (void); 
 
 /* Input and status areas: */
-EXTERN void (*io_clear_input_before) (void);
-EXTERN void (*io_clear_input_after) (void);
-EXTERN void (*io_update_status) (void);
+//EXTERN void (*io_clear_input_before) (void);
+//EXTERN void (*io_clear_input_after) (void);
+//EXTERN void (*io_update_status) (void);
 //EXTERN int (*io_get_chr) (char *prompt);
 
 EXTERN void (*io_fix_input) (void);

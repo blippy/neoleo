@@ -92,7 +92,7 @@ void wprint(int y, int x, const std::string& str)
 #define VOIDSTAR void*
 
 static int redrew = 0;
-static int textout = 0;
+//static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
@@ -485,6 +485,69 @@ int run_bug44_tests ()
 	return 1;
 }
 
+void cur_io_update_status (void) // FN
+{
+	const char *ptr;
+	int wid;
+	int plen;
+	int yy, xx;
+
+	if (!user_status || input_view.current_info)
+		return;
+	getyx (stdscr, yy, xx);
+	move (Global->status, 0);
+	wid = columns - 2;
+
+	if (mkrow != NON_ROW)
+	{
+		struct rng r;
+
+		addch ('*');
+		--wid;
+		set_rng (&r, curow, cucol, mkrow, mkcol);
+		ptr = range_name (&r);
+	}
+	else
+		ptr = cell_name (curow, cucol);
+
+	addstr (ptr);
+	wid -= strlen (ptr);
+
+
+	std::string dec = formula_text(curow, cucol);
+	const std::string& cvs = cell_value_string(curow, cucol, 1);
+	ptr = cvs.c_str();
+
+	plen = strlen (ptr);
+
+	int dlen = dec.size();
+	if(dlen>0)
+	{
+		wid -= 4;
+		if (dlen + plen > wid)
+		{
+			if (plen + 3 > wid)
+				printw (" %.*s... [...]", wid - 6, ptr);
+			else
+				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec.c_str());
+		}
+		else
+			printw (" %s [%s]", ptr, dec.c_str());
+	}
+	else if (plen)
+	{
+		--wid;
+		if (plen > wid)
+			printw (" %.*s...", wid - 3, ptr);
+		else
+			printw (" %s", ptr);
+	}
+
+	clrtoeol ();
+	move (yy, xx);
+}
+
+
 void _io_repaint (void)
 {
 	
@@ -573,7 +636,7 @@ void _io_repaint (void)
 		io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;
 	_io_redraw_input();
-	io_update_status ();
+	cur_io_update_status ();
 }
 
 static void _io_close_display (int e)
@@ -668,70 +731,10 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 	move (cell_cursor_row, cell_cursor_col);
 }
 
-static void _io_update_status (void)
-{
-	const char *ptr;
-	int wid;
-	int plen;
-	int yy, xx;
-
-	if (!user_status || input_view.current_info)
-		return;
-	getyx (stdscr, yy, xx);
-	move (Global->status, 0);
-	wid = columns - 2;
-
-	if (mkrow != NON_ROW)
-	{
-		struct rng r;
-
-		addch ('*');
-		--wid;
-		set_rng (&r, curow, cucol, mkrow, mkcol);
-		ptr = range_name (&r);
-	}
-	else
-		ptr = cell_name (curow, cucol);
-
-	addstr (ptr);
-	wid -= strlen (ptr);
-
-
-	std::string dec = formula_text(curow, cucol);
-	const std::string& cvs = cell_value_string(curow, cucol, 1);
-	ptr = cvs.c_str();
-
-	plen = strlen (ptr);
-
-	int dlen = dec.size();
-	if(dlen>0)
-	{
-		wid -= 4;
-		if (dlen + plen > wid)
-		{
-			if (plen + 3 > wid)
-				printw (" %.*s... [...]", wid - 6, ptr);
-			else
-				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec.c_str());
-		}
-		else
-			printw (" %s [%s]", ptr, dec.c_str());
-	}
-	else if (plen)
-	{
-		--wid;
-		if (plen > wid)
-			printw (" %.*s...", wid - 3, ptr);
-		else
-			printw (" %s", ptr);
-	}
-
-	clrtoeol ();
-	move (yy, xx);
-}
 
 extern int auto_recalc;
 
+#if 0
 static void
 _io_clear_input_before (void)
 {
@@ -754,6 +757,7 @@ static void _io_clear_input_after (void)
 		Global->topclear = 0;
 	}
 }
+#endif 
 
 
 
@@ -950,7 +954,7 @@ static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
-	if (glowing) _io_update_status ();
+	if (glowing) cur_io_update_status ();
 	move (yy, xx);
 }
 
@@ -978,15 +982,15 @@ void tty_graphics (void)
 	io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
 	//io_read_kbd = _io_read_kbd;
-	io_update_status = _io_update_status;
+	//io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_move_cursor = _io_move_cursor;
 	io_erase = _io_erase;
 	io_insert = _io_insert;
 	io_over = _io_over;
 	//io_flush = _io_flush;
-	io_clear_input_before = _io_clear_input_before;
-	io_clear_input_after = _io_clear_input_after;
+	//io_clear_input_before = _io_clear_input_before;
+	//io_clear_input_after = _io_clear_input_after;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = _io_hide_cell_cursor;
 	io_cellize_cursor = _io_cellize_cursor;

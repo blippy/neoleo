@@ -83,11 +83,6 @@ static void _io_open_display(void)
 }
 
 
-static void _io_update_status(void)
-{
-	//puts("Called _io_update_status()");
-}
-
 static void _io_repaint_win (struct window *win)
 {
 	//io_repaint ();
@@ -365,7 +360,7 @@ void headless_graphics(void)
 	io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
 	//io_read_kbd = _io_read_kbd;
-	io_update_status = _io_update_status;
+	//io_update_status = _io_update_status;
 	io_fix_input = _io_fix_input;
 	io_insert = _io_insert;
 	//io_flush = do_nothing;
