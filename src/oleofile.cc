@@ -39,14 +39,18 @@ using std::cout;
 #include "utils.h"
 #include "logging.h"
 
-#include "io-term.h"
+//#include "io-term.h"
 
 
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
-void olf_set_options (char *opts)
+void olf_set_options (char *opts) // FN
 {
-
+	// 25/4 We should probably do soemthing here
+}
+void olf_do_set_option (char *str) // FN
+{
+	// 25/4 We should probably do soemthing here
 }
 
 
@@ -140,13 +144,13 @@ void read_mp_options (char *str) // FN
 	while ((np = (char *)index (str, ';')))
 	{
 		*np = '\0';
-		(void) do_set_option (str);
+		olf_do_set_option (str);
 		*np++ = ';';
 		str = np;
 	}
 	if ((np = (char *)rindex (str, '\n')))
 		*np = '\0';
-	(void) do_set_option (str);
+	olf_do_set_option (str);
 }
 
 
