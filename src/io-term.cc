@@ -61,8 +61,8 @@ using std::endl;
 
 /* These are the hooks used to do file-io. */
 //void (*read_file) (FILE *, int) = oleo_read_file;
-//void (*write_file) (FILE *, struct rng *) = oleo_write_file;
-int (*set_file_opts) (int, char *) = oleo_set_options;
+//void (*c) (FILE *, struct rng *) = oleo_write_file;
+//int (*set_file_opts) (int, char *) = oleo_set_options;
 
 
 
@@ -204,7 +204,7 @@ int do_set_option (char *ptr) // FN
 		{
 			//read_file = oleo_read_file;
 			//write_file = oleo_write_file;
-			set_file_opts = oleo_set_options;
+			//set_file_opts = oleo_set_options;
 			//show_file_opts = oleo_show_options;
 		}
 		else
@@ -213,8 +213,7 @@ int do_set_option (char *ptr) // FN
 	}
 	if (set_window_option (set_opt, ptr) == 0)
 	{
-		if ((*set_file_opts) (set_opt, ptr))
-			raise_error("Unknown option '%s'", ptr);
+		//if ((*set_file_opts) (set_opt, ptr)) raise_error("Unknown option '%s'", ptr);
 		return 0;
 	}
 	return 1;
