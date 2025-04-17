@@ -52,6 +52,10 @@ constexpr auto JST_DEF = 0;
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
 inline const int base_default_jst = JST_RGT;
 
+/* Cell size paramaters. */
+inline const unsigned int default_width = 8;
+inline unsigned int default_height = 1;
+inline unsigned int saved_default_height = 1;
 
 
 #define FMT_DEF		0	/* Default */

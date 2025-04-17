@@ -125,7 +125,7 @@ static struct pref {
 
 	
 // FN do_set_option
-static int do_set_option (char *ptr)
+int do_set_option (char *ptr) // FN
 {
 	int	set_opt = 1;
 	int	i, l;
@@ -229,106 +229,6 @@ void set_options (char * ptr)
 }
 // FN-END
 
-
-
-void read_mp_usr_fmt (char *ptr)
-{
-	int usr_n = -1;
-	int n_chrs = 0;
-	char *p = ptr;
-
-	while (*p == ';')
-	{
-		*p++ = '\0';
-		switch (*p++)
-		{
-			case 'N':
-				usr_n = astol (&p) - 1;
-				break;
-			case 'H':
-				switch (*p++)
-				{
-					case 'P':
-						//i = 0;
-						break;
-					case 'N':
-						//i = 1;
-						break;
-					default:
-						goto badline;
-				}
-				goto count_chars;
-			case 'T':
-				switch (*p++)
-				{
-					case 'P':
-						//i = 2;
-						break;
-					case 'N':
-						//i = 3;
-						break;
-					default:
-						goto badline;
-				}
-				goto count_chars;
-
-			case 'Z':
-				//i = 4;
-				goto count_chars;
-
-			case 'C':
-				//i = 5;
-				goto count_chars;
-
-			case 'D':
-				//i = 6;
-				goto count_chars;
-
-			case 'P':
-				//i = 7;
-				goto count_chars;
-
-			case 'S':
-				//i = 8;
-				goto count_chars;
-
-count_chars:
-				n_chrs++;
-				while (*p && *p != ';')
-				{
-					p++;
-					n_chrs++;
-				}
-				break;
-
-			default:
-badline:
-				raise_error("Unknown OLEO line %s", ptr);
-				return;
-		}
-	}
-	if (*p || usr_n < 0 || usr_n > 15)
-		goto badline;
-
-	
-}
-
-
-void read_mp_options (char *str)
-{
-	char *np;
-
-	while ((np = (char *)index (str, ';')))
-	{
-		*np = '\0';
-		(void) do_set_option (str);
-		*np++ = ';';
-		str = np;
-	}
-	if ((np = (char *)rindex (str, '\n')))
-		*np = '\0';
-	(void) do_set_option (str);
-}
 
 
 /* Commands related to variables. */

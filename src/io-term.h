@@ -25,20 +25,8 @@
 inline bool using_curses = false;
 inline bool user_wants_headless = false;
 
-/* Cell size paramaters. */
-inline const unsigned int default_width = 8;
-inline unsigned int default_height = 1;
-
-/* clear_spreadsheet () uses these to restore default */
-//inline unsigned int saved_default_width = 8;
-inline unsigned int saved_default_height = 1;
 
 
-
-/* When printing ascii output, this controls page width. */
-//inline int modified;
-
-//inline int option_filter;
 inline std::string option_tests_argument = "regular";
 
 extern void set_options (char * ptr);
@@ -52,7 +40,7 @@ extern void read_variables (FILE * fp);
 extern void InitializeGlobals(void);
 void choose_display(bool force_cmd_graphics);
 bool get_option_tests();
-
+int do_set_option (char *ptr);
 
 
 
