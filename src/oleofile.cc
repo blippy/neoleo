@@ -29,9 +29,7 @@ using std::cout;
 
 #include "convert.h"
 #include "format.h"
-//#include "io-abstract.h"
 #include "io-utils.h"
-#include "io-term.h"
 #include "global.h"
 #include "sheet.h"
 #include "ref.h"
@@ -40,7 +38,15 @@ using std::cout;
 #include "spans.h"
 #include "utils.h"
 #include "logging.h"
-//#include "cmd.h"
+
+#include "io-term.h"
+
+
+// let's try to abstract away some stuff
+void olf_set_options (char *opts)
+{
+
+}
 
 
 /* These functions read and write OLEO style files. */
@@ -156,13 +162,13 @@ void oleo_read_window_config (char * line)
 		while ((np =(char *) index (opts, ',')))
 		{
 			*np = '\0';
-			set_options (opts);
+			olf_set_options (opts);
 			*np++ = ';';
 			opts = np;
 		}
 		if ((np = (char *)rindex (opts, '\n')))
 			*np = '\0';
-		set_options(opts);
+		olf_set_options(opts);
 	}
 }
 
