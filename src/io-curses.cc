@@ -199,8 +199,7 @@ static void _io_over (const char * str, int len)
 }
 #endif
 
-static void 
-_io_display_cell_cursor (void)
+void cur_io_display_cell_cursor (void)
 {
 	int cell_cursor_row;
 	int cell_cursor_col;
@@ -642,7 +641,7 @@ void _io_repaint (void)
 	}
 	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
-		io_display_cell_cursor ();
+		cur_io_display_cell_cursor ();
 	input_view.redraw_needed = FULL_REDRAW;
 	_io_redraw_input();
 	cur_io_update_status ();
@@ -991,6 +990,6 @@ void tty_graphics (void)
 	io_open_display = _io_open_display;
 	//io_close_display = _io_close_display;
 	io_pr_cell_win = _io_pr_cell_win;
-	io_display_cell_cursor = _io_display_cell_cursor;
+	//io_display_cell_cursor = _io_display_cell_cursor;
 
 }

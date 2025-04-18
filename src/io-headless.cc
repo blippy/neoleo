@@ -65,10 +65,12 @@ string to_oct(long n)
 	return ss.str();
 }
 
+#if 0
 static void do_nothing(void)
 {
 	return;
 }
+#endif
 
 
 static void _io_open_display(void)
@@ -364,6 +366,6 @@ void headless_graphics(void)
 	// 25/4 none of the following function appear to be necessary
 	//io_input_avail = _io_input_avail;
 	io_pr_cell_win = _io_pr_cell_win;
-	io_display_cell_cursor = do_nothing;
+	//io_display_cell_cursor = do_nothing;
 }
 

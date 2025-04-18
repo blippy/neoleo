@@ -388,7 +388,7 @@ void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		win_io_hide_cell_cursor ();
 		curow = rr;
 		cucol = cc;
-		io_display_cell_cursor ();
+		cur_io_display_cell_cursor ();
 		cur_io_update_status ();
 	}
 	if (get_scaled_width (cucol) == 0)
