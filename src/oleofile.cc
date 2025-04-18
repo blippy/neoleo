@@ -914,19 +914,18 @@ static std::string oleo_write_window_config ()
 	//cwin->win_cucol = cucol;
 	//sprint_line (&out, "O;status %d\n", user_status);
 	oss << "O;status " << user_status << "\n";
-	auto flags = cwin->flags;
 		buf[0] = '\0';
-		if (flags & WIN_LCK_HZ)
+		if (win_flags & WIN_LCK_HZ)
 			strcat (buf, ",lockh");
-		if (flags & WIN_LCK_VT)
+		if (win_flags & WIN_LCK_VT)
 			strcat (buf, ",lockv");
-		if (flags & WIN_PAG_HZ)
+		if (win_flags & WIN_PAG_HZ)
 			strcat (buf, ",pageh");
-		if (flags & WIN_PAG_VT)
+		if (win_flags & WIN_PAG_VT)
 			strcat (buf, ",pagev");
-		if (flags & WIN_EDGE_REV)
+		if (win_flags & WIN_EDGE_REV)
 			strcat (buf, ",standout");
-		if ((flags & WIN_EDGES) == 0)
+		if ((win_flags & WIN_EDGES) == 0)
 			strcat (buf, ",noedges");
 		//scratch = *out;
 		//out->alloc = 0;

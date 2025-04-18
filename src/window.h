@@ -30,7 +30,7 @@ struct window
   int win_over;			/* Where the data in this window starts */
   int win_down;			/*   on the screen.  */
   struct rng screen;		/* Cells visible. recenter_* updates this. */
-  int flags;			/* You must use io_set_win_flags and perhaps */
+  //int flags;			/* You must use io_set_win_flags and perhaps */
 				/*   io_recenter_cur_win */
 
   /* Number of lines of spreadsheet that can fit in this window.
@@ -89,6 +89,7 @@ struct window
 #define WIN_PAG_VT	0x08
 #define WIN_EDGES	0x10
 #define WIN_EDGE_REV	0x20
+inline int win_flags = 0;
 
 
 /* These control the layout of input and status lines. */

@@ -164,9 +164,10 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	FD_ZERO (&exception_fd_set);
 	FD_ZERO (&exception_pending_fd_set);
 
+	constexpr bool pesky_abstract = true;
 	bool force_cmd_graphics = false;
 	choose_display(force_cmd_graphics);
-	io_open_display ();
+	if constexpr(pesky_abstract) io_open_display ();
 
 
 	using namespace std::literals;
@@ -191,7 +192,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 
 	//rebuild_command_frame();
 
-	io_recenter_cur_win ();
+	if constexpr(pesky_abstract) io_recenter_cur_win ();
 	Global->display_opened = 1;
 	Global->modified = 0;
 	if(user_wants_headless)

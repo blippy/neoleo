@@ -65,10 +65,10 @@ win_label_cols (struct window * win, CELLREF hr)
 {
 	int lh;
 
-	if ((win->flags & WIN_EDGES) == 0)
+	if ((win_flags & WIN_EDGES) == 0)
 		lh = 0;
 
-	else if ((win->flags & WIN_PAG_HZ) || hr >= 100)
+	else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
 		lh = 5;
 	else if (hr > 10)
 		lh = 4;
@@ -81,7 +81,7 @@ win_label_cols (struct window * win, CELLREF hr)
 int
 win_label_rows (struct window * win)
 {
-	return (win->flags & WIN_EDGES) ? label_rows : 0;
+	return (win_flags & WIN_EDGES) ? label_rows : 0;
 }
 
 void set_numcols (struct window *win, CELLREF hr)
@@ -158,14 +158,14 @@ recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLR
 // FN recenter_window 
 void  recenter_window (struct window *win)
 {
-	if (win->flags & WIN_PAG_VT)
+	if (win_flags & WIN_PAG_VT)
 		page_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
 	else
 		recenter_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
 	set_numcols (win, win->screen.hr);
-	if (win->flags & WIN_PAG_HZ)
+	if (win_flags & WIN_PAG_HZ)
 		page_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
 	else
@@ -177,8 +177,6 @@ void  recenter_window (struct window *win)
 void 
 io_recenter_cur_win (void)
 {
-	//cwin->win_curow = curow;
-	//cwin->win_cucol = cucol;
 	io_recenter_named_window (cwin);
 	io_repaint_win (cwin);
 }
@@ -462,7 +460,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 void 
 io_set_win_flags (struct window *w, int f)
 {
-	if ((f & WIN_EDGES) && !(w->flags & WIN_EDGES))
+	if ((f & WIN_EDGES) && !(win_flags & WIN_EDGES))
 	{
 		if (w->numr < 2 || w->numc < 6)
 			raise_error("Edges wouldn't fit!");
@@ -470,7 +468,7 @@ io_set_win_flags (struct window *w, int f)
 		w->numr--;
 		set_numcols (w, w->screen.hr);
 	}
-	else if (!(f & WIN_EDGES) && (w->flags & WIN_EDGES))
+	else if (!(f & WIN_EDGES) && (win_flags & WIN_EDGES))
 	{
 		w->win_over -= w->lh_wid;
 		w->numc += w->lh_wid;
@@ -478,7 +476,7 @@ io_set_win_flags (struct window *w, int f)
 		w->win_down--;
 		w->numr++;
 	}
-	w->flags = f;
+	win_flags = f;
 }
 
 
@@ -498,7 +496,7 @@ void  io_init_windows ()
 	cwin->win_down = (label_rows
 			+ (user_status > 0) * status_rows
 			+ (user_input > 0) * input_rows);
-	cwin->flags = WIN_EDGES | WIN_EDGE_REV;
+	win_flags = WIN_EDGES | WIN_EDGE_REV;
 	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows
 			- input_rows - default_bottom_border);
 	cwin->numc = Global->scr_cols - default_right_border;

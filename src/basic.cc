@@ -127,9 +127,9 @@ int set_window_option (int set_opt, char *text)
 			if (!stricmp (text, opts[n].text))
 			{
 				if (set_opt)
-					cwin->flags |= opts[n].bits;
+					win_flags |= opts[n].bits;
 				else
-					cwin->flags &= ~opts[n].bits;
+					win_flags &= ~opts[n].bits;
 				break;
 			}
 

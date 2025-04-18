@@ -570,7 +570,7 @@ void _io_repaint (void)
 		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
 		printw ("#%*ld ", win->lh_wid - 2, (long int)1);
-		if (win->flags & WIN_EDGE_REV)
+		if (win_flags & WIN_EDGE_REV)
 			s_display.cdstandout();
 		cc = win->screen.lc;
 		do
@@ -622,7 +622,7 @@ void _io_repaint (void)
 		}
 		while (rr++ < win->screen.hr);
 
-		if (win->flags & WIN_EDGE_REV)
+		if (win_flags & WIN_EDGE_REV)
 			standend ();
 	}
 	flush_slops();
