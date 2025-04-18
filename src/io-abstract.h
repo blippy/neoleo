@@ -60,7 +60,7 @@ EXTERN int (*io_input_avail) (void);/* How many chars can be read? */
 //EXTERN void (*io_move_cursor) (void);
 //EXTERN void (*io_erase) (int len);
 //EXTERN void (*io_insert) (int len);
-EXTERN void (*io_over) (const char *, int len);
+//EXTERN void (*io_over) (const char *, int len);
 
 
 /* Cell values */

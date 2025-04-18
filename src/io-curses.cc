@@ -192,11 +192,12 @@ static void _io_insert (int len)
 #endif
 
 	   
-static void
-_io_over (const char * str, int len)
+#if 0
+static void _io_over (const char * str, int len)
 {
 	iv_over (&input_view, len);
 }
+#endif
 
 static void 
 _io_display_cell_cursor (void)
@@ -992,7 +993,7 @@ void tty_graphics (void)
 	//io_move_cursor = _io_move_cursor;
 	//io_erase = _io_erase;
 	//io_insert = _io_insert;
-	io_over = _io_over;
+	//io_over = _io_over;
 	//io_flush = _io_flush;
 	//io_clear_input_before = _io_clear_input_before;
 	//io_clear_input_after = _io_clear_input_after;
