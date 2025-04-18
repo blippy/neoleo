@@ -177,11 +177,12 @@ _io_move_cursor (void)
 }
 #endif
 
-static void
-_io_erase (int len)
+#if 0
+static void _io_erase (int len)
 {
 	iv_erase (&input_view, len);
 }
+#endif
 
 static void
 _io_insert (int len)
@@ -987,7 +988,7 @@ void tty_graphics (void)
 	//io_update_status = _io_update_status;
 	//io_fix_input = _io_fix_input;
 	//io_move_cursor = _io_move_cursor;
-	io_erase = _io_erase;
+	//io_erase = _io_erase;
 	io_insert = _io_insert;
 	io_over = _io_over;
 	//io_flush = _io_flush;
