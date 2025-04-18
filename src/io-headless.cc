@@ -330,7 +330,7 @@ bool process_headless_line(std::string line, int fildes)
 
 void headless_main()
 {
-	//cout << mod_hi() << endl;
+	//cout << mod_hi_sv() << endl;
 
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
