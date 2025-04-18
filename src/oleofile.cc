@@ -53,6 +53,15 @@ void olf_do_set_option (char *str) // FN
 	// 25/4 We should probably do soemthing here
 }
 
+void olf_recenter_window(window* win)
+{
+
+}
+
+void olf_io_recenter_all_win ()
+{
+
+}
 
 void read_mp_usr_fmt (char *ptr) // FN
 {
@@ -261,7 +270,7 @@ void oleo_read_window_config (char * line)
 			set_cucol(ncol);
 		}
 			*/
-		recenter_window(cwin);
+		olf_recenter_window(cwin);
 	}
 	if (opts)
 	{
@@ -495,7 +504,7 @@ bad_field:
 					Global->a0 = old_a0;
 					if (!ismerge)
 						clear_spreadsheet ();
-					io_recenter_all_win ();
+					olf_io_recenter_all_win ();
 					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
 					std::string msg{string_format(fmt, lineno, input_line.c_str())};
 					msg = trim(msg);
@@ -508,13 +517,13 @@ bad_field:
 	if (!feof (fp)) {
 		if (!ismerge)
 			clear_spreadsheet ();
-		io_recenter_all_win ();
+		olf_io_recenter_all_win ();
 		raise_error("read-file: read-error near line %d.", lineno);
 		Global->return_from_error = 0;
 		return;
 	}
 	Global->a0 = next_a0;
-	io_recenter_all_win ();
+	olf_io_recenter_all_win ();
 
 	Global->return_from_error = 0;
 }
