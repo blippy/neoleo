@@ -41,26 +41,6 @@ inline CELLREF curow = MIN_ROW;
 inline CELLREF cucol = MIN_COL;
 inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
-/* A ref_fm structure contains a list of all cells that reference some
- * value.  The value can be another cell or some global (such as the system
- * time).
- *
- * These structures are hash-consed and shared.  The hash-cons procedure
- * will re-use a particular structure if there is only one reference to it.
- */
-struct ref_array
-{
-	CELLREF ref_row;
-	CELLREF ref_col;
-};
-
-struct ref_fm
-{
-	struct ref_fm *refs_next;
-	unsigned short refs_refcnt;
-	unsigned short refs_used;
-	struct ref_array  fm_refs[1];
-};
 
 
 /* These have two uses.  During parsing, these contain the 
@@ -108,7 +88,3 @@ inline OleoGlobal global;
 //inline struct OleoGlobal *Global = new struct OleoGlobal;
 inline struct OleoGlobal *Global = &global;
 inline int nwin = 1; // 25/4 Elminate this
-
-
-// 25/4 Work-around for Intellisense poor support
-//std::string_view  mod_hi();
