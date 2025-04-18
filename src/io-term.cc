@@ -56,7 +56,7 @@ using std::endl;
 using std::cout;
 using std::endl;
 
-
+#if 0
 
 /* These are the hooks used to do file-io. */
 //void (*read_file) (FILE *, int) = oleo_read_file;
@@ -123,6 +123,7 @@ static struct pref {
 /* An parser for the language grokked by option setting commands. */
 
 	
+
 // FN do_set_option
 int do_set_option (char *ptr) // FN
 {
@@ -229,17 +230,6 @@ void set_options (char * ptr)
 
 
 
-/* Commands related to variables. */
-
-
-// some stubs
-/*
-void _do_nothing_const_char_s(const char *s) { }
-
-void _io_do_button_nothing(int r, int c, char *lbl, char *cmd) {};
-void _io_append_message_nothing(bool beep, char *fmt, ...) {};
-*/
-
 
 
 void choose_display(bool force_cmd_graphics)
@@ -255,3 +245,4 @@ void choose_display(bool force_cmd_graphics)
 	using_curses = true;
 }
 
+#endif

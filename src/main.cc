@@ -99,7 +99,7 @@ Report bugs to https://github.com/blippy/neoleo/issues
 
 
 void
-parse_command_line(int argc, char **argv)
+parse_command_line(int argc, char **argv, bool& user_wants_headless)
 {
 	int opt, optindex;
 
@@ -145,7 +145,7 @@ parse_command_line(int argc, char **argv)
 }
 
 
-void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
+void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool use_headless)
 {
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();
@@ -164,8 +164,10 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	*/
 
 	//constexpr bool pesky_abstract = true;
-	bool force_cmd_graphics = false;
-	choose_display(force_cmd_graphics);
+	//bool force_cmd_graphics = false;
+	//using_curses = !user_wants_headless;
+
+	//choose_display(force_cmd_graphics);
 
 
 	using namespace std::literals;
@@ -191,7 +193,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	io_init_windows();
 	Global->display_opened = 1;
 	Global->modified = 0;
-	if(user_wants_headless)
+	if(use_headless)
 		headless_main();
 	else {
 		//io_init_windows();
@@ -206,8 +208,9 @@ int
 main (int argc, char **argv)
 {
 	int command_line_file = 0;	/* was there one? */
-	parse_command_line(argc, argv);
-	run_nonexperimental_mode(argc, argv, command_line_file);
+	bool use_headless = false;
+	parse_command_line(argc, argv, use_headless);
+	run_nonexperimental_mode(argc, argv, command_line_file, use_headless);
 
-	return (0);
+	return 0;
 }

@@ -22,8 +22,8 @@
 #include "cell.h"
 
 
-inline bool using_curses = false;
-inline bool user_wants_headless = false;
+//inline bool using_curses = false;
+//inline bool user_wants_headless = false;
 
 
 
