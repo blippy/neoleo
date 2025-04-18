@@ -31,7 +31,7 @@
 inline void _do_nothing() { };
 
 inline void (*io_open_display) () = _do_nothing;
-EXTERN void (*io_close_display) (int);
+//EXTERN void (*io_close_display) (int);
 
 /* Low level input. */
 //EXTERN int (*io_input_avail) (void);/* How many chars can be read? */

@@ -648,6 +648,7 @@ void _io_repaint (void)
 	cur_io_update_status ();
 }
 
+#if 0
 static void _io_close_display (int e)
 {
 	if (e == 0) {
@@ -657,6 +658,7 @@ static void _io_close_display (int e)
 
 	(void) endwin ();
 }
+#endif
 
 #if 0
 static int _io_input_avail (void)
@@ -987,7 +989,7 @@ void tty_graphics (void)
 	FD_SET (0, &read_fd_set);
 	FD_SET (0, &exception_fd_set);
 	io_open_display = _io_open_display;
-	io_close_display = _io_close_display;
+	//io_close_display = _io_close_display;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_display_cell_cursor = _io_display_cell_cursor;
 
