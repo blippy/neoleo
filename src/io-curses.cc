@@ -184,11 +184,13 @@ static void _io_erase (int len)
 }
 #endif
 
-static void
-_io_insert (int len)
+#if 0
+static void _io_insert (int len)
 {
 	iv_insert (&input_view, len);
 }
+#endif
+
 	   
 static void
 _io_over (const char * str, int len)
@@ -989,7 +991,7 @@ void tty_graphics (void)
 	//io_fix_input = _io_fix_input;
 	//io_move_cursor = _io_move_cursor;
 	//io_erase = _io_erase;
-	io_insert = _io_insert;
+	//io_insert = _io_insert;
 	io_over = _io_over;
 	//io_flush = _io_flush;
 	//io_clear_input_before = _io_clear_input_before;

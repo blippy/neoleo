@@ -143,10 +143,12 @@ static int _io_read_kbd(char *buf, int size)
 }      
 #endif
 
+#if 0
 static void _io_insert (int len)
 { 
 	//iv_insert (&input_view, len);
 } 
+#endif
 
 static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
@@ -361,7 +363,7 @@ void headless_graphics(void)
 	//io_repaint = do_nothing;
 	//io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
-	io_insert = _io_insert;
+	//io_insert = _io_insert;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = do_nothing;
 	io_display_cell_cursor = do_nothing;
