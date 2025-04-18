@@ -73,6 +73,7 @@ static void do_nothing(void)
 #endif
 
 
+#if 0
 static void _io_open_display(void)
 {
 	/* We fake having a window. This is important because io_init_windows()
@@ -84,6 +85,7 @@ static void _io_open_display(void)
 	io_init_windows();
 
 }
+#endif
 
 
 #if 0
@@ -362,7 +364,7 @@ void headless_main()
 
 void headless_graphics(void)
 {
-	io_open_display = _io_open_display;
+	//io_open_display = _io_open_display;
 	return;
 
 	// 25/4 none of the following function appear to be necessary

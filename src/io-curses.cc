@@ -343,7 +343,7 @@ class curses_display {
 
 static curses_display s_display;
 
-static void _io_open_display() { s_display.activate(); }
+void cur_io_open_display() { s_display.activate(); }
 
 curses_display::curses_display()
 {
@@ -987,7 +987,7 @@ void tty_graphics (void)
 {
 	FD_SET (0, &read_fd_set);
 	FD_SET (0, &exception_fd_set);
-	io_open_display = _io_open_display;
+	//io_open_display = _io_open_display;
 	//io_close_display = _io_close_display;
 	//io_pr_cell_win = _io_pr_cell_win;
 	//io_display_cell_cursor = _io_display_cell_cursor;

@@ -19,6 +19,7 @@
 #include "sheet.h"
 #include "tests.h"
 #include "utils.h"
+#include "io-curses.h"
 
 using std::cerr;
 using std::cout;
@@ -164,7 +165,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	FD_ZERO (&exception_fd_set);
 	FD_ZERO (&exception_pending_fd_set);
 
-	constexpr bool pesky_abstract = true;
+	//constexpr bool pesky_abstract = true;
 	bool force_cmd_graphics = false;
 	choose_display(force_cmd_graphics);
 
@@ -190,13 +191,14 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	}
 
 	//rebuild_command_frame();
-	if constexpr(pesky_abstract) io_open_display ();
-
+	//if constexpr(pesky_abstract) io_open_display ();
+	io_init_windows();
 	Global->display_opened = 1;
 	Global->modified = 0;
 	if(user_wants_headless)
 		headless_main();
 	else {
+		cur_io_open_display();
 		//io_open_display();
 		io_recenter_cur_win();
 		curses_main();
