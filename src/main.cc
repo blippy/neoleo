@@ -10,7 +10,6 @@
 #include "assert.h"
 #include "basic.h"
 #include "cmd.h"
-#include "io-abstract.h"
 #include "io-headless.h"
 #include "io-term.h"
 #include "io-utils.h"
@@ -20,6 +19,7 @@
 #include "tests.h"
 #include "utils.h"
 #include "io-curses.h"
+#include "window.h"
 
 using std::cerr;
 using std::cout;
@@ -190,8 +190,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 		optind++;
 	}
 
-	//rebuild_command_frame();
-	//if constexpr(pesky_abstract) io_open_display ();
 	io_init_windows();
 	Global->display_opened = 1;
 	Global->modified = 0;
@@ -199,7 +197,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 		headless_main();
 	else {
 		cur_io_open_display();
-		//io_open_display();
 		io_recenter_cur_win();
 		curses_main();
 	}

@@ -25,7 +25,6 @@
 #include "convert.h"
 #include "io-2019.h"
 #include "io-term.h"
-#include "io-abstract.h"
 #include "io-utils.h"
 #include "ref.h"
 #include "utils.h"

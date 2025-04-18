@@ -19,7 +19,6 @@ using namespace std::string_literals;
 
 #include "tests.h"
 #include "format.h"
-#include "io-abstract.h"
 #include "basic.h"
 #include "io-headless.h"
 #include "io-term.h"

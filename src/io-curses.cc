@@ -51,7 +51,6 @@ using namespace std::string_literals;
 #include "io-curses.h"
 #include "io-2019.h"
 #include "io-term.h"
-#include "io-abstract.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "regions.h"
@@ -92,7 +91,6 @@ void wprint(int y, int x, const std::string& str)
 #define VOIDSTAR void*
 
 static int redrew = 0;
-//static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
@@ -100,16 +98,14 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 
 
 
-static int
-curses_metric (char * str, int len)
+static int curses_metric (char * str, int len)
 {
 	return len;
 }
 
 static struct input_view input_view  = {0, curses_metric, curses_metric, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static void
-_io_redraw_input (void)
+static void _io_redraw_input (void)
 {
 	int pos;
 	int row = (input_view.current_info ? 0 : Global->input);
@@ -169,35 +165,7 @@ _io_fix_input (void)
 	iv_fix_input (&input_view);
 }
 
-#if 0
-static void
-_io_move_cursor (void)
-{
-	iv_move_cursor (&input_view);
-}
-#endif
 
-#if 0
-static void _io_erase (int len)
-{
-	iv_erase (&input_view, len);
-}
-#endif
-
-#if 0
-static void _io_insert (int len)
-{
-	iv_insert (&input_view, len);
-}
-#endif
-
-	   
-#if 0
-static void _io_over (const char * str, int len)
-{
-	iv_over (&input_view, len);
-}
-#endif
 
 void cur_io_display_cell_cursor (void)
 {
@@ -365,11 +333,7 @@ void curses_display::activate()
 	m_activated = true;
 	initscr ();
 	scrollok (stdscr, 0);
-#ifdef HAVE_CBREAK
-	cbreak ();
-#else
 	crmode ();
-#endif
 	raw ();
 	noecho ();
 	nonl ();
@@ -389,11 +353,7 @@ void curses_display::cdstandout()
 
 void cont_curses(void)
 {
-#ifdef HAVE_CBREAK
-	cbreak ();
-#else
 	crmode ();
-#endif
 	raw ();
 	noecho ();
 	nonl ();
@@ -425,28 +385,13 @@ static void _io_redisp (void)
 
 void stop_curses(void)
 {
-#ifdef HAVE_CBREAK
-	nocbreak ();
-#else
 	nocrmode ();
-#endif
 	noraw ();
 	echo ();
 	nl ();
 	_io_redisp ();
 }
 
-#if 0
-static void _io_cellize_cursor (void)
-{
-}
-#endif
-
-#if 0
-static void _io_inputize_cursor (void)
-{
-}
-#endif
 
 
 void win_io_repaint_win (struct window *win)
@@ -647,83 +592,7 @@ void _io_repaint (void)
 	cur_io_update_status ();
 }
 
-#if 0
-static void _io_close_display (int e)
-{
-	if (e == 0) {
-		clear ();
-		refresh ();
-	}
 
-	(void) endwin ();
-}
-#endif
-
-#if 0
-static int _io_input_avail (void)
-{
-	return (FD_ISSET (0, &read_pending_fd_set)
-			|| FD_ISSET (0, &exception_pending_fd_set));
-}
-#endif
-
-#if 0
-static int _io_read_kbd (char *buf, int size)
-{
-
-	if(false) log_debug("io-curses.cc:_io_read_kbd() called");
-	assert(size>0);
-
-	int r = read (0, buf, size);
-	FD_CLR (0, &read_pending_fd_set);
-	FD_CLR (0, &exception_pending_fd_set);
-
-	// mcarter 19-Aug-2017
-	// Fix issue#22 wrt home, end and delete key. 
-	// Detailed discussion in the manual, chapter Keymapms
-	// section Special keys (home, delete, etc.)
-	// remap home, and and delete keys
-	if(r == 4 && buf[0] == '\033' && buf[3] == '~') {
-		switch(buf[2]) {
-			case '1' : buf[2] = 'H'; goto hit; // remap home key
-			case '3' : goto hit; // delete key needs no change except length
-			case '4' : buf[2] = 'F'; // remap end key
-hit:
-				   r = 3;
-		}
-	}
-
-	auto log_buffer = [&]() -> void {
-		std::string msg = "io-curses.cc:_io_read_kbd(): chars: ";
-		for(int i=0; i<r; ++i)
-			msg += "<" + std::to_string(buf[i]) + ">";
-		msg += "read: " + std::to_string(r) + ", ";
-		//msg += std::to_string(KEY_NPAGE);
-		log_debug(msg);
-	};
-
-	// mcarter 19-Aug-2017
-	// Log it when the buffer has more than 4 characters in it.
-	// The function keys (F1, F2, ...) do this, which is not
-	// a problem; I just wanted to guard against big sequences
-	// being read in, which I am not expecting.
-	// Actually, the function keys are good ones to map. I would
-	// especially like to use F1 for menus or help
-	if(r>4) {
-		log_debug("io-curses.cc:_io_read_kbd() seems to have read suspiciously too many chars ...");
-		log_buffer();
-	}
-
-	if(false) log_buffer(); // for debugging
-
-	return r;
-}
-#endif
-
-
-
-
-#define BUFFER 10
 
 
 
@@ -746,35 +615,14 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 
 extern int auto_recalc;
 
-#if 0
-static void
-_io_clear_input_before (void)
+
+
+void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp) // FN
 {
-	textout = 0;
-	if (Global->topclear == 2)
-	{
-		move (Global->input, 0);
-		clrtoeol ();
-		Global->topclear = 0;
-	}
-	move (0, 0);
+	cur_io_pr_cell_win(cwin, r, c, cp);
 }
 
-static void _io_clear_input_after (void)
-{
-	if (Global->topclear)
-	{
-		move (Global->input, 0);
-		clrtoeol ();
-		Global->topclear = 0;
-	}
-}
-#endif 
-
-
-
-
-void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
+void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 	//log("_io_pr_cell_win:", cp);
 	int glowing;
@@ -969,14 +817,3 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 	if (glowing) cur_io_update_status ();
 	move (yy, xx);
 }
-
-
-
-#if 0
-static void
-_io_flush (void)
-{
-	refresh ();
-}
-#endif
-

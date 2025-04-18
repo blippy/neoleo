@@ -23,7 +23,6 @@
 #include "input.h"
 #include "cmd.h"
 #include "window.h"
-#include "io-abstract.h"
 #include "utils.h"
 
 
@@ -36,8 +35,7 @@
  * now it also updates the info_fields of the input view.
  */
 
-	void
-iv_fix_input (struct input_view * this_iv)
+void iv_fix_input (struct input_view * this_iv)
 {
 
 }

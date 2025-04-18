@@ -35,7 +35,6 @@
 #include "cell.h"
 #include "cmd.h"
 #include "convert.h"
-#include "io-abstract.h"
 #include "io-term.h"
 #include "io-utils.h"
 #include "sheet.h"

@@ -147,3 +147,4 @@ void  recenter_window (struct window *win);
 void set_numcols (struct window *win, CELLREF hr);
 void win_io_repaint_win(struct window *win);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp);

@@ -32,11 +32,11 @@
 
 
 #include "global.h"
-#include "io-abstract.h"
 #include "ref.h"
 #include "cmd.h"
 #include "sheet.h"
 #include "logging.h"
+#include "window.h"
 
 using std::cout;
 using std::endl;
@@ -75,7 +75,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	}
 
 	cp = set_cell(row, col, string);
-	io_pr_cell (row, col, cp);
+	cur_io_pr_cell (row, col, cp);
 	Global->modified = 1;
 	return 0;
 }
