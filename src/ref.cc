@@ -75,7 +75,7 @@ new_value (CELLREF row, CELLREF col, const char *string)
 	}
 
 	cp = set_cell(row, col, string);
-	cur_io_pr_cell (row, col, cp);
+	//cur_io_pr_cell (row, col, cp);
 	Global->modified = 1;
 	return 0;
 }

@@ -39,7 +39,7 @@ using std::cout;
 #include "utils.h"
 #include "logging.h"
 
-//#include "io-term.h"
+#include "io-curses.h"
 
 
 // 25/4 let's try to abstract away some stuff
@@ -53,10 +53,12 @@ void olf_do_set_option (char *str) // FN
 	// 25/4 We should probably do soemthing here
 }
 
+/*
 void olf_recenter_window(window* win)
 {
 
 }
+*/
 
 void olf_io_recenter_all_win ()
 {
@@ -270,7 +272,7 @@ void oleo_read_window_config (char * line)
 			set_cucol(ncol);
 		}
 			*/
-		olf_recenter_window(cwin);
+		//olf_recenter_window(cwin);
 	}
 	if (opts)
 	{
