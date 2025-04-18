@@ -15,8 +15,8 @@
 #include "convert.h"
 #include "io-headless.h"
 #include "cmd.h"
-#include "window.h"
-#include "io-curses.h"
+//#include "window.h"
+//#include "io-curses.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "tbl.h"
@@ -63,15 +63,6 @@ string to_oct(long n)
 	ss << "0o" << std::oct << n;
 	return ss.str();
 }
-
-
-
-
-// suggested at
-// http://stackoverflow.com/questions/8302547/temp-failure-retry-and-use-gnu
-#define CALL_RETRY(retvar, expression) do { \
-	retvar = (expression); \
-} while (retvar == -1 && errno == EINTR);
 
 
 static void info(int fildes)
