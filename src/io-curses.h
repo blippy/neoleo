@@ -20,9 +20,9 @@
 #include <ncurses.h>
 #include <string>
 
-extern void cont_curses(void);
-extern void stop_curses(void);
-extern void tty_graphics (void);
+//extern void cont_curses(void);
+//extern void stop_curses(void);
+//extern void tty_graphics (void);
 
 void wprint(WINDOW *w, const char* str); // let's be generic
 void wprint(const char* str);
