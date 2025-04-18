@@ -28,7 +28,9 @@
 #include "global.h"
 #include "window.h"
 
-EXTERN void (*io_open_display) (void);
+inline void _do_nothing() { };
+
+inline void (*io_open_display) () = _do_nothing;
 //EXTERN void (*io_redisp) (void);	/* Refresh the existing image. */
 EXTERN void (*io_repaint) (void);	/* $$$ Recompute the image. */
 EXTERN void (*io_repaint_win) (struct window *);
@@ -72,6 +74,6 @@ EXTERN void (*io_inputize_cursor) (void);
 
 
 //inline void _io_update_width_nothing(int col, int wid) {};
-inline void _do_nothing() { };
+
 //inline void (*io_update_width)(int col, int wid) = _io_update_width_nothing;
 
