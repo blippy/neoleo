@@ -315,7 +315,7 @@ static bool curses_loop () // FN
 void write_status (const std::string& str)
 {
 	// 25/4 Persist the error messages
-	wprint(1, 0, str);
+	win_print(1, 0, str);
 	clrtoeol();
 
 }

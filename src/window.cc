@@ -34,6 +34,31 @@
 #include "io-curses.h"
 
 
+
+// these should be nice generic functions
+void win_print(WINDOW *w, const char* str) // FN
+{
+	waddstr(w, str);
+}
+
+void win_print(const char* str) // FN
+{
+	addstr(str);
+}
+
+void win_print(const std::string& str) // FN
+{
+	win_print(str.c_str());
+}
+void win_print(int y, int x, const std::string& str) // FN 
+{
+	move(y, x);
+	win_print(str);
+}
+
+
+// everything below here belongs in io-curses
+
 /* Low level window operators. */
 
 #define MIN_WIN_HEIGHT(W) (W->bottom_edge_r \

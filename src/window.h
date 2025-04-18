@@ -18,6 +18,17 @@
  */
 
 
+// these should be nice generic functions
+#include <ncurses.h>
+void win_print(WINDOW *w, const char* str); // let's be generic
+void win_print(const char* str);
+void win_print(const std::string& str);
+void win_print(int y, int x, const std::string& str);
+
+
+// everything below here belongs in io-curses
+
+
 #include "cell.h"
 
 /* The tty windows datastructures: */

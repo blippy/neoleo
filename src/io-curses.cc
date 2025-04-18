@@ -64,31 +64,11 @@ using namespace std::string_literals;
 
 
 
-void wprint(WINDOW *w, const char* str)
-{
-	waddstr(w, str);
-}
-
-void wprint(const char* str)
-{
-	addstr(str);
-}
-
-void wprint(const std::string& str)
-{
-	wprint(str.c_str());
-}
-void wprint(int y, int x, const std::string& str)
-{
-	move(y, x);
-	wprint(str);
-}
 
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
 
-#define VOIDSTAR void*
 
 static int redrew = 0;
 static int term_cursor_claimed = 0;

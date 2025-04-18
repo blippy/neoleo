@@ -24,10 +24,7 @@
 //extern void stop_curses(void);
 //extern void tty_graphics (void);
 
-void wprint(WINDOW *w, const char* str); // let's be generic
-void wprint(const char* str);
-void wprint(const std::string& str);
-void wprint(int y, int x, const std::string& str);
+
 
 void _io_repaint();
 void cur_io_update_status (void);
