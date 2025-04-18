@@ -43,5 +43,5 @@ EXTERN void (*io_pr_cell_win) (struct window *, CELLREF, CELLREF, CELL *);
 
 /* The terminal's cursor may be in the current cell or the input area. */
 //EXTERN void (*io_cellize_cursor) (void);
-EXTERN void (*io_inputize_cursor) (void);
+//EXTERN void (*io_inputize_cursor) (void);
 

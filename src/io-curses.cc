@@ -443,9 +443,11 @@ static void _io_cellize_cursor (void)
 }
 #endif
 
+#if 0
 static void _io_inputize_cursor (void)
 {
 }
+#endif
 
 
 void win_io_repaint_win (struct window *win)
@@ -986,8 +988,6 @@ void tty_graphics (void)
 	io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
 	io_pr_cell_win = _io_pr_cell_win;
-	//io_cellize_cursor = _io_cellize_cursor;
-	io_inputize_cursor = _io_inputize_cursor;
 	io_display_cell_cursor = _io_display_cell_cursor;
 
 }
