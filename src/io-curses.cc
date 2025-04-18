@@ -55,7 +55,6 @@ using namespace std::string_literals;
 #include "regions.h"
 #include "spans.h"
 #include "window.h"
-#include "input.h"
 #include <term.h>
 #include "logging.h"
 #include "ref.h"
@@ -81,6 +80,67 @@ static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+
+
+/* Display-generic updating logic for the input area. */
+typedef int (*text_measure) (char * str, int len);
+
+/* These are for the field REDRAW_NEEDED */
+#define NO_REDRAW               -2
+#define FULL_REDRAW      	-1
+
+struct input_view
+{
+        /* If this is less than 0, see the #defines above.
+         * >= 0, this is the index of a character in the 
+         * input string.  All characters at that index and 
+         * greater need to be redrawn.
+         */
+        int redraw_needed;
+
+        /* These are provided by io-{curses,x11} and tell how to convert
+         * strings to widths.
+         */
+        text_measure prompt_metric;
+        text_measure input_metric;
+
+        /* If the currently mapped keymap has a prompt, the display of that
+         * prompt takes precedence.
+         */
+        char * keymap_prompt;
+        char * expanded_keymap_prompt;
+
+        /* This is the width of either the keymap_prompt or the input text
+         * prompt, whichever is current (0 if neither is).
+         */
+
+        int prompt_wid;
+
+        /* The parameters below are a cache.  If this flag is true,
+         * the cache is known to be wrong.
+         */
+        int must_fix_input;
+
+        struct line * input_area;       /* The text editted in the input area or 0. */
+        char * prompt;
+        int visibility_begin;           /* Index of first visible char or 0. */
+        int visibility_end;             /* Index of last visible char or 0. */
+        int input_cursor;               /* Index of the cursor position or 0. */
+        int vis_wid;                    /* This is the width of the visible text 
+                                         * with extra space for the cursor, if it 
+                                         * happens to be past the end of the string.
+                                         */
+
+        /* A command_arg can specify an info buffer which should be displayed 
+         * while prompting for that arg.
+         */
+        struct info_buffer * current_info;
+        int info_pos;           /* In the current info, the first vis. line */ 
+        int info_redraw_needed; /* != 0 if redraw needed */
+};
+
+
+
 
 
 
@@ -143,14 +203,14 @@ static void _io_redraw_input (void)
 
 
 
-
+#if 0
 
 static void
 _io_fix_input (void)
 {
 	iv_fix_input (&input_view);
 }
-
+#endif
 
 
 void cur_io_display_cell_cursor (void)
@@ -496,7 +556,7 @@ void _io_repaint (void)
 	struct window *win = cwin;
 
 	clear ();
-	_io_fix_input ();
+	//_io_fix_input ();
 	redrew++;
 	show_menu();
 	

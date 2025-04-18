@@ -38,7 +38,6 @@ neoleo_SOURCES = \
 		 basic.cc \
                  cell.cc convert.cc \
 		 errors.cc format.cc \
-		 input.cc \
 		 mod.cc \
 		 io-2019.cc io-headless.cc io-curses.cc io-term.cc \
 		 io-utils.cc \
@@ -61,7 +60,6 @@ noinst_HEADERS = basic.h cell.h \
 		convert.h  \
 		 errors.h format.h \
 		 global.h \
-		 input.h \
 		 io-2019.h io-curses.h \
 		 io-term.h io-utils.h \
 		 logging.h \
