@@ -658,11 +658,13 @@ static void _io_close_display (int e)
 	(void) endwin ();
 }
 
+#if 0
 static int _io_input_avail (void)
 {
 	return (FD_ISSET (0, &read_pending_fd_set)
 			|| FD_ISSET (0, &exception_pending_fd_set));
 }
+#endif
 
 #if 0
 static int _io_read_kbd (char *buf, int size)
@@ -986,7 +988,6 @@ void tty_graphics (void)
 	FD_SET (0, &exception_fd_set);
 	io_open_display = _io_open_display;
 	io_close_display = _io_close_display;
-	io_input_avail = _io_input_avail;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_display_cell_cursor = _io_display_cell_cursor;
 

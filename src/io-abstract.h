@@ -34,14 +34,9 @@ inline void (*io_open_display) () = _do_nothing;
 EXTERN void (*io_close_display) (int);
 
 /* Low level input. */
-EXTERN int (*io_input_avail) (void);/* How many chars can be read? */
+//EXTERN int (*io_input_avail) (void);/* How many chars can be read? */
 
 
 /* Cell values */
 EXTERN void (*io_display_cell_cursor) (void);
 EXTERN void (*io_pr_cell_win) (struct window *, CELLREF, CELLREF, CELL *);
-
-/* The terminal's cursor may be in the current cell or the input area. */
-//EXTERN void (*io_cellize_cursor) (void);
-//EXTERN void (*io_inputize_cursor) (void);
-

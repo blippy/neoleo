@@ -101,6 +101,7 @@ static void _io_repaint_win (struct window *win)
 } while (retvar == -1 && errno == EINTR);
 
 
+#if 0
 static int _io_input_avail(void)
 {
 	int filedes = STDIN_FILENO;
@@ -129,6 +130,7 @@ static int _io_input_avail(void)
 				&timeout));
 	return res;
 }
+#endif
 
 
 
@@ -360,7 +362,7 @@ void headless_graphics(void)
 	return;
 
 	// 25/4 none of the following function appear to be necessary
-	io_input_avail = _io_input_avail;
+	//io_input_avail = _io_input_avail;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_display_cell_cursor = do_nothing;
 }
