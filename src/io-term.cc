@@ -248,11 +248,11 @@ void choose_display(bool force_cmd_graphics)
 	using_curses = false;
 
 	if(force_cmd_graphics || user_wants_headless) {
-		headless_graphics();
+		//headless_graphics(); // 25/4 No longer required
 		return;
 	}
 
-	tty_graphics ();
+	//tty_graphics ();
 	using_curses = true;
 }
 

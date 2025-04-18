@@ -360,16 +360,3 @@ void headless_main()
 
 }
 
-
-
-void headless_graphics(void)
-{
-	//io_open_display = _io_open_display;
-	return;
-
-	// 25/4 none of the following function appear to be necessary
-	//io_input_avail = _io_input_avail;
-	//io_pr_cell_win = _io_pr_cell_win;
-	//io_display_cell_cursor = do_nothing;
-}
-
