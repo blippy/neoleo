@@ -154,9 +154,11 @@ static void _io_insert (int len)
 } 
 #endif
 
+#if 0
 static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 }
+#endif
 
 static void info(int fildes)
 {
@@ -365,7 +367,7 @@ void headless_graphics(void)
 
 	// 25/4 none of the following function appear to be necessary
 	//io_input_avail = _io_input_avail;
-	io_pr_cell_win = _io_pr_cell_win;
+	//io_pr_cell_win = _io_pr_cell_win;
 	//io_display_cell_cursor = do_nothing;
 }
 

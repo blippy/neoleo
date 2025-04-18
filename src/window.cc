@@ -363,7 +363,7 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 	//for (win = wins; win < &wins[nwin]; win++)
 	//{
 		if (r < cwin->screen.lr || r > cwin->screen.hr || c < cwin->screen.lc || c > cwin->screen.hc) return;
-		io_pr_cell_win (cwin, r, c, cp);
+		cur_io_pr_cell_win (cwin, r, c, cp);
 	//}
 }
 

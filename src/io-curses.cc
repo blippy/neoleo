@@ -96,7 +96,7 @@ static int redrew = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
-static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 
 
 
@@ -637,7 +637,7 @@ void _io_repaint (void)
 	for(CELL* cp: get_cells_in_range(&(win->screen))) {
 		decoord(cp, rr, cc);
 		if (cp->get_type() != TYP_NUL)
-			_io_pr_cell_win(win, rr, cc, cp);
+			cur_io_pr_cell_win(win, rr, cc, cp);
 	}
 	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
@@ -774,7 +774,7 @@ static void _io_clear_input_after (void)
 
 
 
-static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
+void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
 {
 	//log("_io_pr_cell_win:", cp);
 	int glowing;
@@ -989,7 +989,7 @@ void tty_graphics (void)
 	FD_SET (0, &exception_fd_set);
 	io_open_display = _io_open_display;
 	//io_close_display = _io_close_display;
-	io_pr_cell_win = _io_pr_cell_win;
+	//io_pr_cell_win = _io_pr_cell_win;
 	//io_display_cell_cursor = _io_display_cell_cursor;
 
 }
