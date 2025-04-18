@@ -31,3 +31,4 @@ void wprint(int y, int x, const std::string& str);
 
 void _io_repaint();
 void cur_io_update_status (void);
+void win_io_hide_cell_cursor ();

@@ -385,7 +385,7 @@ void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 	}
 	else
 	{
-		io_hide_cell_cursor ();
+		win_io_hide_cell_cursor ();
 		curow = rr;
 		cucol = cc;
 		io_display_cell_cursor ();
