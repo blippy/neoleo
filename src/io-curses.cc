@@ -1065,115 +1065,6 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 
 
-void io_set_input_status (int inp, int stat, int redraw)
-{
-	int inpv = inp < 0 ? -inp : inp;
-	int inpsgn = inp == inpv ? 1 : -1;
-	int statv = stat < 0 ? -stat : stat;
-	int statsgn = stat == statv ? 1 : -1;
-	int new_ui;
-	int new_us;
-	int new_inp;
-	int new_stat;
-
-	if (inpv == 0 || inpv > 2)
-		raise_error("Bad input location %d; it should be +/- 1, or 2", inp);
-	else if (statv > 2)
-		raise_error("Bad status location %d; it should be +/- 0, 1, or 2",
-				inp);
-	else
-	{
-		new_ui = inp;
-		new_us = stat;
-		if (inpsgn != statsgn)
-		{
-			if (inpsgn > 0)
-			{
-				new_inp = 0;
-				new_stat = Global->scr_lines - status_rows;
-			}
-			else
-			{
-				new_inp = Global->scr_lines - input_rows;
-				new_stat = 0;
-			}
-		}
-		else
-		{
-			if (inpv > statv)
-			{
-				new_inp = new_us ? status_rows : 0;
-				new_stat = 0;
-			}
-			else
-			{
-				new_inp = 0;
-				new_stat = input_rows;
-			}
-			if (inpsgn < 0)
-			{
-				new_stat = Global->scr_lines - new_stat - status_rows;
-				new_inp = Global->scr_lines - new_inp - input_rows;
-			}
-		}
-		if (redraw)
-		{
-			int vchange =
-				(((new_ui > 0 ? input_rows : 0)
-				  + (new_us > 0 ? status_rows : 0))
-				 - ((user_input > 0 ? input_rows : 0)
-					 + (user_status > 0 ? status_rows : 0)));
-			int grow = (user_status
-					? (new_us ? 0 : status_rows)
-					: (new_us ? -status_rows : 0));
-			int cell_top =
-				((user_status > 0 ? status_rows : 0)
-				 + (user_input > 0 ? input_rows : 0));
-
-			assert(grow>=0) ;
-#if 0
-			 if (grow < 0)
-			{
-				int x;
-re:
-				for (x = 0; x < nwin; ++x)
-				{
-					int top = cwin->win_down - win_label_rows(cwin);
-					if (cell_top == top && (cwin->numr <= -grow))
-					{
-						do_close_window (x);
-						goto re;
-					}
-				}
-			}
-#endif 
-
-			if (grow)
-			{
-				//int x;
-				//for (x = 0; x < nwin; ++x)
-				//{
-					int top = cwin->win_down - win_label_rows (cwin);
-					if (cell_top == top) 
-						cwin->numr -= vchange;
-				//}
-			}
-			if (vchange)
-			{
-				//int x;
-				//for (x = 0; x < nwin; ++x)
-					cwin->win_down += vchange;
-			}
-			win_io_repaint ();
-		}
-		user_input = new_ui;
-		user_status = new_us;
-		Global->input = new_inp;
-		Global->status = new_stat;
-	}
-}
-
-
 void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
 	//if(!the_cmd_frame) return; // maybe running headless
@@ -1300,6 +1191,116 @@ void io_set_win_flags (struct window *w, int f)
 
 
 window the_cwin;
+
+
+
+void io_set_input_status (int inp, int stat, int redraw)
+{
+	int inpv = inp < 0 ? -inp : inp;
+	int inpsgn = inp == inpv ? 1 : -1;
+	int statv = stat < 0 ? -stat : stat;
+	int statsgn = stat == statv ? 1 : -1;
+	int new_ui;
+	int new_us;
+	int new_inp;
+	int new_stat;
+
+	if (inpv == 0 || inpv > 2)
+		raise_error("Bad input location %d; it should be +/- 1, or 2", inp);
+	else if (statv > 2)
+		raise_error("Bad status location %d; it should be +/- 0, 1, or 2",
+				inp);
+	else
+	{
+		new_ui = inp;
+		new_us = stat;
+		if (inpsgn != statsgn)
+		{
+			if (inpsgn > 0)
+			{
+				new_inp = 0;
+				new_stat = Global->scr_lines - status_rows;
+			}
+			else
+			{
+				new_inp = Global->scr_lines - input_rows;
+				new_stat = 0;
+			}
+		}
+		else
+		{
+			if (inpv > statv)
+			{
+				new_inp = new_us ? status_rows : 0;
+				new_stat = 0;
+			}
+			else
+			{
+				new_inp = 0;
+				new_stat = input_rows;
+			}
+			if (inpsgn < 0)
+			{
+				new_stat = Global->scr_lines - new_stat - status_rows;
+				new_inp = Global->scr_lines - new_inp - input_rows;
+			}
+		}
+		if (redraw)
+		{
+			int vchange =
+				(((new_ui > 0 ? input_rows : 0)
+				  + (new_us > 0 ? status_rows : 0))
+				 - ((user_input > 0 ? input_rows : 0)
+					 + (user_status > 0 ? status_rows : 0)));
+			int grow = (user_status
+					? (new_us ? 0 : status_rows)
+					: (new_us ? -status_rows : 0));
+			int cell_top =
+				((user_status > 0 ? status_rows : 0)
+				 + (user_input > 0 ? input_rows : 0));
+
+			assert(grow>=0) ;
+#if 0
+			 if (grow < 0)
+			{
+				int x;
+re:
+				for (x = 0; x < nwin; ++x)
+				{
+					int top = cwin->win_down - win_label_rows(cwin);
+					if (cell_top == top && (cwin->numr <= -grow))
+					{
+						do_close_window (x);
+						goto re;
+					}
+				}
+			}
+#endif 
+
+			if (grow)
+			{
+				//int x;
+				//for (x = 0; x < nwin; ++x)
+				//{
+					int top = cwin->win_down - win_label_rows (cwin);
+					if (cell_top == top) 
+						cwin->numr -= vchange;
+				//}
+			}
+			if (vchange)
+			{
+				//int x;
+				//for (x = 0; x < nwin; ++x)
+					cwin->win_down += vchange;
+			}
+			win_io_repaint ();
+		}
+		user_input = new_ui;
+		user_status = new_us;
+		Global->input = new_inp;
+		Global->status = new_stat;
+	}
+}
 
 void  io_init_windows () 
 {
