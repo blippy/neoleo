@@ -45,8 +45,7 @@ using std::endl;
 
 
 /* Set the cell ROW,COL to STRING, parsing string as needed */
-	static CELL*
-set_cell (CELLREF row, CELLREF col, const std::string& in_string)
+static CELL* set_cell (CELLREF row, CELLREF col, const std::string& in_string) // FN
 {
 	cur_row = row;
 	cur_col = col;
@@ -59,14 +58,12 @@ set_cell (CELLREF row, CELLREF col, const std::string& in_string)
 
 }
 
-extern int default_lock;
 
 /* new_value() calls set_cell, but refuses to change locked cells, and
    updates and prints the results.  It returns an error msg on error. . .
    */
 
-	char *
-new_value (CELLREF row, CELLREF col, const char *string)
+char * new_value (CELLREF row, CELLREF col, const char *string) // FN
 {
 	CELL *cp = find_cell (row, col);
 	if (((!cp || GET_LCK (cp) == LCK_DEF) && default_lock == LCK_LCK) || (cp && GET_LCK (cp) == LCK_LCK))
