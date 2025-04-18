@@ -157,10 +157,12 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 
 
 
+	/*
 	FD_ZERO (&read_fd_set);
 	FD_ZERO (&read_pending_fd_set);
 	FD_ZERO (&exception_fd_set);
 	FD_ZERO (&exception_pending_fd_set);
+	*/
 
 	//constexpr bool pesky_abstract = true;
 	bool force_cmd_graphics = false;

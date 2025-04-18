@@ -29,9 +29,10 @@
 
 inline  CELLREF mkrow = NON_ROW;
 inline CELLREF mkcol = NON_COL;
-inline int window_after_input = -1;
 inline int input_active = 0;
 
+#if 0
+inline int window_after_input = -1;
 #define SELECT_TYPE fd_set
 #define SELECT_SET_SIZE FD_SETSIZE
 
@@ -46,3 +47,4 @@ extern SELECT_TYPE exception_pending_fd_set;
 extern SELECT_TYPE write_pending_fd_set;
 
 int real_get_chr (void);
+#endif

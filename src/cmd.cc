@@ -31,7 +31,7 @@
 
 using namespace std::literals::string_literals;
 
-
+#if 0
 /* Bogus mapping from KEY->CODE to ranges.  This is how bound
  * macros are represented.
  * This is bogus because the ranges will not be adjusted in 
@@ -54,3 +54,4 @@ SELECT_TYPE exception_pending_fd_set;
 SELECT_TYPE write_pending_fd_set;
 
 int ioerror = 0;
+#endif
