@@ -167,7 +167,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	constexpr bool pesky_abstract = true;
 	bool force_cmd_graphics = false;
 	choose_display(force_cmd_graphics);
-	if constexpr(pesky_abstract) io_open_display ();
 
 
 	using namespace std::literals;
@@ -191,6 +190,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	}
 
 	//rebuild_command_frame();
+	if constexpr(pesky_abstract) io_open_display ();
 
 	Global->display_opened = 1;
 	Global->modified = 0;
