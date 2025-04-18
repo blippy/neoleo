@@ -339,6 +339,9 @@ void show_menu () // FN
 
 void curses_main () // FN
 {
+	cur_io_open_display();
+	io_recenter_cur_win();
+	
 	// Tell ncurses to interpret "special keys". It means
 	// that KEY_DOWN etc. will work, but ESC won't be
 	// read separately
