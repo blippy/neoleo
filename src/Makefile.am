@@ -62,7 +62,7 @@ noinst_HEADERS = basic.h cell.h \
 		 errors.h format.h \
 		 global.h \
 		 input.h \
-		 io-2019.h io-headless.h io-curses.h \
+		 io-2019.h io-curses.h \
 		 io-term.h io-utils.h \
 		 logging.h \
 		 menu-2025.h \

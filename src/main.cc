@@ -10,7 +10,6 @@
 #include "assert.h"
 #include "basic.h"
 #include "cmd.h"
-#include "io-headless.h"
 #include "io-term.h"
 #include "io-utils.h"
 #include "logging.h"
@@ -29,7 +28,7 @@ using std::vector;
 
 using namespace std::literals;
 
-void headless_main();
+extern void headless_main();
 void curses_main();
 
 static bool	option_tests = false;
@@ -149,8 +148,6 @@ parse_command_line(int argc, char **argv)
 
 void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 {
-	//headless_graphics(); // fallback position // 25/4 seems unnecessary
-
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();
 		int ret = all_pass ? EXIT_SUCCESS : EXIT_FAILURE;

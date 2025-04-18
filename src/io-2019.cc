@@ -17,7 +17,6 @@ using namespace std::string_literals;
 #include "cmd.h"
 #include "convert.h"
 #include "io-2019.h"
-#include "io-headless.h"
 #include "parser-2019.h"
 #include "io-utils.h"
 #include "logging.h"
@@ -32,6 +31,8 @@ using namespace std::string_literals;
 
 using std::cout;
 using std::cerr;
+
+extern void hl_write_file();
 
 static constexpr int CTRL(int c) { return c & 037; }
 

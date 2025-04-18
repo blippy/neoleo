@@ -38,7 +38,6 @@
 #include "format.h"
 //#define DEFINE_IO_VARS 1
 //#include "io-abstract.h"
-#include "io-headless.h"
 #include "io-2019.h"
 #include "io-curses.h"
 #include "io-term.h"

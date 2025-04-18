@@ -13,7 +13,6 @@
 #include "basic.h"
 #include "cell.h"
 #include "convert.h"
-#include "io-headless.h"
 #include "cmd.h"
 //#include "window.h"
 //#include "io-curses.h"
@@ -222,7 +221,6 @@ static map<string, function<void(T)> > func_map = {
 
 bool process_headless_line(std::string line, int fildes)
 {
-	//cout << "process_headless_line: " << line << endl;
 
 	// try to find a canned function and execute it
 	auto it = func_map.find(line);
@@ -243,7 +241,7 @@ bool process_headless_line(std::string line, int fildes)
 	return true;
 }
 
-void headless_main()
+void headless_main() // FN
 {
 	//cout << mod_hi_sv() << endl;
 
