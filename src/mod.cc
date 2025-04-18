@@ -1,6 +1,5 @@
 // 2025-04-18 Created for testing purposes
 // 25/4 Intellisense doesn't support modules yet
-module;
 
 #include <string_view>
 
