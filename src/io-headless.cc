@@ -65,36 +65,6 @@ string to_oct(long n)
 	return ss.str();
 }
 
-#if 0
-static void do_nothing(void)
-{
-	return;
-}
-#endif
-
-
-#if 0
-static void _io_open_display(void)
-{
-	/* We fake having a window. This is important because io_init_windows()
-	 * will do things like set nwin = 1
-	 *
-	 * The init was cribbed from io-curses.c
-	 */
-
-	io_init_windows();
-
-}
-#endif
-
-
-#if 0
-static void _io_repaint_win (struct window *win)
-{
-	//io_repaint ();
-}
-#endif
-
 
 
 
@@ -104,63 +74,6 @@ static void _io_repaint_win (struct window *win)
 	retvar = (expression); \
 } while (retvar == -1 && errno == EINTR);
 
-
-#if 0
-static int _io_input_avail(void)
-{
-	int filedes = STDIN_FILENO;
-	unsigned int seconds = 0;
-
-	// taken from https://www.gnu.org/software/libc/manual/html_node/Waiting-for-I_002fO.html
-
-
-	fd_set set;
-	struct timeval timeout;
-
-
-	/* Initialize the file descriptor set. */
-	FD_ZERO (&set);
-	FD_SET (filedes, &set);
-
-	/* Initialize the timeout data structure. */
-	timeout.tv_sec = seconds;
-	timeout.tv_usec = 0;
-
-	/* select returns 0 if timeout, 1 if input available, -1 if error. 
-	 * Use CALL_RETRY rather than TEMP_FAILURE_RETRY (see above) */
-	int res;
-	CALL_RETRY (res, select (FD_SETSIZE,
-				&set, NULL, NULL,
-				&timeout));
-	return res;
-}
-#endif
-
-
-
-#if 0
-static int _io_read_kbd(char *buf, int size)
-{        
-	//int r = read (0, buf, size);
-	int r = read (STDIN_FILENO, buf, size);
-	//FD_CLR (0, &read_pending_fd_set);
-	//FD_CLR (0, &exception_pending_fd_set);
-	return r;
-}      
-#endif
-
-#if 0
-static void _io_insert (int len)
-{ 
-	//iv_insert (&input_view, len);
-} 
-#endif
-
-#if 0
-static void _io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp)
-{
-}
-#endif
 
 static void info(int fildes)
 {
@@ -359,4 +272,3 @@ void headless_main()
 	}
 
 }
-
