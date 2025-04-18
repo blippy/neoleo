@@ -13,7 +13,6 @@
 #include "basic.h"
 #include "cell.h"
 #include "convert.h"
-#include "cmd.h"
 //#include "window.h"
 //#include "io-curses.h"
 #include "io-utils.h"

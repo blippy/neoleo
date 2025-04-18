@@ -25,7 +25,6 @@
 #include "logging.h"
 #include "ref.h"
 #include "sheet.h"
-#include "cmd.h"
 
 using std::cout;
 using std::endl;

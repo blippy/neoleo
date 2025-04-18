@@ -33,7 +33,6 @@
 
 #include "basic.h"
 #include "cell.h"
-#include "cmd.h"
 #include "convert.h"
 #include "io-term.h"
 #include "io-utils.h"

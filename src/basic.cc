@@ -26,7 +26,6 @@
 
 #include "basic.h"
 #include "convert.h"
-#include "cmd.h"
 #include "regions.h"
 #include "window.h"
 #include "io-term.h"

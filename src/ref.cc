@@ -33,7 +33,6 @@
 
 #include "global.h"
 #include "ref.h"
-#include "cmd.h"
 #include "sheet.h"
 #include "logging.h"
 #include "window.h"

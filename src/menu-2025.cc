@@ -7,9 +7,6 @@
 #include "spans.h"
 #include "basic.h"
 #include "logging.h"
-//#include "window.h"
-//#include "global.h"
-#include "cmd.h"
 #include "io-2019.h"
 #include "io-curses.h"
 

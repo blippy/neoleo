@@ -9,7 +9,6 @@
 #include "config.h"
 #include "assert.h"
 #include "basic.h"
-#include "cmd.h"
 #include "io-term.h"
 #include "io-utils.h"
 #include "logging.h"

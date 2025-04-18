@@ -23,7 +23,6 @@
 #include <string>
 
 #include "cell.h"
-#include "cmd.h"
 #include "ref.h"
 #include "regions.h"
 #include "sheet.h"

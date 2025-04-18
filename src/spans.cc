@@ -1,7 +1,6 @@
 #include "io-term.h"
 #include "logging.h"
 #include "spans.h"
-#include "cmd.h"
 
 
 void flush_spans ()

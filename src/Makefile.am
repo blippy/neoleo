@@ -36,7 +36,7 @@ neoleo_LDADD += @NCURSES_LIBS@ -lpanel -lform
 
 neoleo_SOURCES = \
 		 basic.cc \
-                 cell.cc cmd.cc  convert.cc \
+                 cell.cc convert.cc \
 		 errors.cc format.cc \
 		 input.cc \
 		 mod.cc \
@@ -58,7 +58,7 @@ neoleo_SOURCES = \
 
 
 noinst_HEADERS = basic.h cell.h \
-		 cmd.h convert.h  \
+		convert.h  \
 		 errors.h format.h \
 		 global.h \
 		 input.h \

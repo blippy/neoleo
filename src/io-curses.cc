@@ -47,7 +47,6 @@ using namespace std::string_literals;
 #undef NULL
 #include "global.h"
 #include "cell.h"
-#include "cmd.h"
 #include "io-curses.h"
 #include "io-2019.h"
 #include "io-term.h"
@@ -64,7 +63,9 @@ using namespace std::string_literals;
 
 
 
-
+CELLREF mkrow = NON_ROW;
+CELLREF mkcol = NON_COL;
+const int input_active = 0;
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)

@@ -21,7 +21,6 @@
 #include "global.h"
 #include "errors.h"
 #include "input.h"
-#include "cmd.h"
 #include "window.h"
 #include "utils.h"
 

@@ -33,7 +33,6 @@
 #include "regions.h"
 #include "io-term.h"
 #include "window.h"
-#include "cmd.h"
 #include "basic.h"
 #include "spans.h"
 
