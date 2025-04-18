@@ -169,11 +169,13 @@ _io_fix_input (void)
 	iv_fix_input (&input_view);
 }
 
+#if 0
 static void
 _io_move_cursor (void)
 {
 	iv_move_cursor (&input_view);
 }
+#endif
 
 static void
 _io_erase (int len)
@@ -984,7 +986,7 @@ void tty_graphics (void)
 	//io_read_kbd = _io_read_kbd;
 	//io_update_status = _io_update_status;
 	//io_fix_input = _io_fix_input;
-	io_move_cursor = _io_move_cursor;
+	//io_move_cursor = _io_move_cursor;
 	io_erase = _io_erase;
 	io_insert = _io_insert;
 	io_over = _io_over;

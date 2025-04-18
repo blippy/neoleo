@@ -524,12 +524,12 @@ pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 	return buffer;
 }
 
-	char *
-adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
+char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 {
 	int fmt;
 	int prc;
-	struct user_fmt *ufmt;
+	struct user_fmt suspicious; // 25/4 Very dodgy
+	struct user_fmt *ufmt = &suspicious;
 	char *bptr;
 	char *eptr;
 	int len;
