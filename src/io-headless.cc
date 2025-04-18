@@ -22,7 +22,8 @@
 #include "sheet.h"
 #include "tbl.h"
 #include "utils.h"
-
+//#include "global.h"
+//import mod;
 
 using std::cin;
 using std::cout;
@@ -329,6 +330,8 @@ bool process_headless_line(std::string line, int fildes)
 
 void headless_main()
 {
+	//cout << mod_hi() << endl;
+
 	std::string line;
 	constexpr int fildes = STDIN_FILENO;
 	bool cont = true;

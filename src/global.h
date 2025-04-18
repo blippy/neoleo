@@ -17,6 +17,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <string_view>
+
 #include "neotypes.h"
 
 inline constexpr auto BITS_PER_CELLREF = 16;
@@ -106,3 +108,7 @@ inline OleoGlobal global;
 //inline struct OleoGlobal *Global = new struct OleoGlobal;
 inline struct OleoGlobal *Global = &global;
 inline int nwin = 1; // 25/4 Elminate this
+
+
+// 25/4 Work-around for Intellisense poor support
+//std::string_view  mod_hi();

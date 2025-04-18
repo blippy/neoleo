@@ -246,6 +246,7 @@ static void complex_key_sequence_27()
 	return;
 
 fail:
+	return;
 	//failed, so just put back the last read failed char
 	//ungetch(c); // 25/4 I don't we really need this
 }
