@@ -40,7 +40,7 @@ EXTERN void (*io_close_display) (int);
  * Low level input.
  */
 EXTERN int (*io_input_avail) (void);/* How many chars can be read? */
-EXTERN void (*io_scan_for_input) (int ok_to_block);
+//EXTERN void (*io_scan_for_input) (int ok_to_block);
 //EXTERN int (*io_read_kbd) (char *buf, int size);
 
 /* Annoy the user: */
