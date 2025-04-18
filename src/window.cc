@@ -182,7 +182,7 @@ void  recenter_window (struct window *win)
 void io_recenter_cur_win (void)
 {
 	io_recenter_named_window (cwin);
-	io_repaint_win (cwin);
+	win_io_repaint_win(cwin);
 }
 
 void io_recenter_all_win(void)
@@ -381,7 +381,7 @@ void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		curow = rr;
 		cucol = cc;
 		recenter_window (cwin);
-		io_repaint_win (cwin);
+		win_io_repaint_win (cwin);
 	}
 	else
 	{

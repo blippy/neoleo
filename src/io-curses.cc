@@ -441,7 +441,7 @@ static void _io_inputize_cursor (void)
 }
 
 
-static void _io_repaint_win (struct window *win)
+void win_io_repaint_win (struct window *win)
 {
 	_io_repaint ();
 }
@@ -978,7 +978,7 @@ void tty_graphics (void)
 	io_open_display = _io_open_display;
 	//io_redisp = _io_redisp;
 	//io_repaint = _io_repaint;
-	io_repaint_win = _io_repaint_win;
+	//io_repaint_win = _io_repaint_win;
 	io_close_display = _io_close_display;
 	io_input_avail = _io_input_avail;
 	//io_read_kbd = _io_read_kbd;

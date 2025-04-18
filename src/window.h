@@ -145,3 +145,4 @@ extern void io_set_win_flags (struct window *w, int f);
 extern void io_init_windows () ;
 void  recenter_window (struct window *win);
 void set_numcols (struct window *win, CELLREF hr);
+void win_io_repaint_win(struct window *win);

@@ -84,10 +84,12 @@ static void _io_open_display(void)
 }
 
 
+#if 0
 static void _io_repaint_win (struct window *win)
 {
 	//io_repaint ();
 }
+#endif
 
 
 
@@ -357,7 +359,7 @@ void headless_graphics(void)
 
 	// 25/4 none of the following function appear to be necessary
 	//io_repaint = do_nothing;
-	io_repaint_win = _io_repaint_win;
+	//io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
 	io_insert = _io_insert;
 	io_pr_cell_win = _io_pr_cell_win;
