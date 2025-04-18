@@ -8,9 +8,9 @@ NAME: 		HANK SCHRADER
 
 BUG: Deleting a cell doesn't mark the sheet as modified
 
-After what was mostly bugfixes, we now have new features
+BUG: Bold an italic doesn't seem to work anymore
 
-* Compiler requirement bumped to --std=c++23 from C++20
+After what was mostly bugfixes, we now have new features
 
 * Added keystroke `%' for percentage format
 

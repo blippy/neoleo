@@ -197,7 +197,8 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file)
 	if(user_wants_headless)
 		headless_main();
 	else {
-		io_recenter_cur_win ();
+		//io_open_display();
+		io_recenter_cur_win();
 		curses_main();
 	}
 	

@@ -32,7 +32,7 @@ inline void _do_nothing() { };
 
 inline void (*io_open_display) () = _do_nothing;
 //EXTERN void (*io_redisp) (void);	/* Refresh the existing image. */
-EXTERN void (*io_repaint) (void);	/* $$$ Recompute the image. */
+//EXTERN void (*io_repaint) (void);	/* $$$ Recompute the image. */
 EXTERN void (*io_repaint_win) (struct window *);
 EXTERN void (*io_close_display) (int);
 

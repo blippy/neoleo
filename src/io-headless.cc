@@ -352,17 +352,14 @@ void headless_main()
 
 void headless_graphics(void)
 {
-	//return;
 	io_open_display = _io_open_display;
-	//io_redisp = do_nothing;
-	io_repaint = do_nothing;
+	return;
+
+	// 25/4 none of the following function appear to be necessary
+	//io_repaint = do_nothing;
 	io_repaint_win = _io_repaint_win;
 	io_input_avail = _io_input_avail;
-	//io_read_kbd = _io_read_kbd;
-	//io_update_status = _io_update_status;
-	//io_fix_input = _io_fix_input;
 	io_insert = _io_insert;
-	//io_flush = do_nothing;
 	io_pr_cell_win = _io_pr_cell_win;
 	io_hide_cell_cursor = do_nothing;
 	io_display_cell_cursor = do_nothing;

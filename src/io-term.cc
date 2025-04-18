@@ -172,7 +172,7 @@ int do_set_option (char *ptr) // FN
 	if (!stricmp ("a0", ptr))
 	{
 		Global->a0 = set_opt;
-		io_repaint ();
+		//io_repaint (); // 25/4 del
 		return 0;
 	}
 	if (!stricmp ("backup", ptr))

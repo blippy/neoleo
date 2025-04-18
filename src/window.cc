@@ -48,6 +48,11 @@
 
 struct tmp_s { int l, r, u, b; };
 
+static void win_io_repaint()
+{
+
+}
+
 static void 
 do_close_window (int num)
 {
@@ -174,29 +179,25 @@ void  recenter_window (struct window *win)
 }
 // FN-END
 
-void 
-io_recenter_cur_win (void)
+void io_recenter_cur_win (void)
 {
 	io_recenter_named_window (cwin);
 	io_repaint_win (cwin);
 }
 
-void
-io_recenter_all_win(void)
+void io_recenter_all_win(void)
 {
 	if (!nwin) return;
 	io_recenter_named_window (cwin);
-	io_repaint ();
+	win_io_repaint ();
 }
-void
-io_recenter_named_window(struct window *w)
+void io_recenter_named_window(struct window *w)
 {
 	recenter_window(w);
 }
 
 
-static void 
-find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
+static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
 {
 	CELLREF cc;
 	int n;
@@ -243,8 +244,7 @@ find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
 
 
 
-void 
-io_set_input_status (int inp, int stat, int redraw)
+void io_set_input_status (int inp, int stat, int redraw)
 {
 	int inpv = inp < 0 ? -inp : inp;
 	int inpsgn = inp == inpv ? 1 : -1;
@@ -343,7 +343,7 @@ re:
 				//for (x = 0; x < nwin; ++x)
 					cwin->win_down += vchange;
 			}
-			io_repaint ();
+			win_io_repaint ();
 		}
 		user_input = new_ui;
 		user_status = new_us;
@@ -353,8 +353,7 @@ re:
 }
 
 
-void 
-io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
+void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
 	//if(!the_cmd_frame) return; // maybe running headless
 	//if(running_headless()) return;
@@ -369,14 +368,12 @@ io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 }
 
 
-void 
-io_win_close (struct window *win)
+void io_win_close (struct window *win)
 {
 	do_close_window (0); // 25/4
 }
 
-void 
-io_move_cell_cursor (CELLREF rr, CELLREF cc)
+void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
 	if (rr < cwin->screen.lr || rr > cwin->screen.hr
 			|| cc < cwin->screen.lc || cc > cwin->screen.hc)
@@ -457,8 +454,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 
 
-void 
-io_set_win_flags (struct window *w, int f)
+void io_set_win_flags (struct window *w, int f)
 {
 	if ((f & WIN_EDGES) && !(win_flags & WIN_EDGES))
 	{
