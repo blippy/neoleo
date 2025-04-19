@@ -24,5 +24,6 @@ class cell;
 typedef cell cell_t;
 typedef cell CELL;
 typedef uint32_t coord_t; // definition cell location
+static_assert(sizeof(CELLREF) == 2, "coord_t won't work properly otherwise");
 
 typedef std::vector<rng_t> ranges_t;
