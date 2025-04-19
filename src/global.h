@@ -21,7 +21,7 @@
 
 #include "neotypes.h"
 
-inline constexpr auto BITS_PER_CELLREF = 16;
+//inline constexpr auto BITS_PER_CELLREF = 16;
 
 /* The location of a cell that can never be referenced */
 #define NON_ROW		0
@@ -30,9 +30,8 @@ inline constexpr auto BITS_PER_CELLREF = 16;
 #define MIN_ROW		1
 #define MIN_COL 	1
 
-typedef unsigned short CELLREF;
-#define MAX_ROW 65535
-#define MAX_COL 65535
+//typedef unsigned short CELLREF;
+
 
 
 

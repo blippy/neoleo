@@ -459,30 +459,6 @@ static char* col_to_str (CELLREF col)
 }
 
 
-int run_bug44_tests ()
-{
-	auto f = [](CELLREF c, const char* expected) { 
-		const char* out = col_to_str(c); 
-		if(strcmp(out, expected) == 0) {
-			cout << "PASS ";
-		} else {
-			cout << "FAIL ";
-		}
-		cout << c << " " << expected << " vs " << col_to_str(c) << "\n";
-	};
-
-	f(MIN_COL, "A");
-	f(26, "Z");
-	f(27, "AA");
-	f(600, "WB");
-	f(MIN_COL + 702 -1, "ZZ");
-	f(MIN_COL + 702 , "AAA");
-	f(1000, "ALL");
-	f(MIN_COL + 18278-1, "ZZZ");
-	f(MIN_COL + 18278, "AAAA");
-	f(20000, "ACOF");
-	return 1;
-}
 
 void cur_io_update_status (void) // FN
 {

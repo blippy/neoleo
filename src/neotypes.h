@@ -1,20 +1,20 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 #include <string>
 #include <variant>
 #include <vector>
 
 #include "errors.h"
 
-typedef double num_t;
-typedef unsigned short CELLREF;
+using num_t = double;
+using CELLREF = uint16_t;
+//static_assert(sizeof(unsigned short) == 2);
+constexpr auto MAX_ROW = std::numeric_limits<CELLREF>::max();
+constexpr auto MAX_COL = std::numeric_limits<CELLREF>::max();
 
-#if 1
 typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
-#else
-typedef struct rng { CELLREF lr, lc, hr, hc; int mask = 0; } rng_t;
-#endif
 
 typedef struct { bool v; } bool_t;
 
