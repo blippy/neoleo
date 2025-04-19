@@ -72,7 +72,9 @@ int next_span (span_find_t& sp, CELLREF& n) // FN
 int get_height (CELLREF row) // FN
 {
 	int incr = - 1; // NB Why?
-	return get_span(the_hgts, row, incr, default_height);
+	int h = get_span(the_hgts, row, incr, default_height);
+	assert(h==1);
+	return h;
 }
 
 
