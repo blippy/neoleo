@@ -63,8 +63,17 @@ test_formatting()
 }
 
 
+// a test that always fails
+bool fail()
+{
+	return false;
+}
 
-
+// a test that always passes
+bool pass()
+{
+	return true;
+}
 
 
 
@@ -100,14 +109,16 @@ int format_tests()
 bool
 headless_tests()
 {
-	bool all_pass = true;
+	//bool all_pass = true;
 	cout << "Running tests: " << option_tests_argument << "\n";
 
 	using func_t = struct { string name; std::function<bool()> func; };
 	vector<func_t> funcs = {
 		{"clear",	run_clear_test},
+		{"fail",	fail},
 		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
+		{"pass",	pass},
 		{"regular", 	run_regular_tests},
 		{"vals", 	test_values}
 	};
@@ -118,16 +129,14 @@ headless_tests()
 	int fsize = static_cast<int>(funcs.size());
 	if(0 <= idx && idx < fsize ) {
 		auto fn = funcs[idx].func;
-		(void) fn();
-		return all_pass;
+		return fn();
 	}
 
 	// Wasn't referred by number, so possibly a name
 	for(const auto &f : funcs) {
 		if(f.name == option_tests_argument) {
 			auto fn = f.func;
-			(void) fn();
-			return all_pass;
+			return fn();
 		}
 	}
 	
@@ -140,6 +149,6 @@ headless_tests()
 	}
 
 
-	return all_pass;
+	return false;
 }
 
