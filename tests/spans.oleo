@@ -1,0 +1,18 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+F;DGFR8
+O;auto;background;noa0
+F;W1 1 14
+F;W2 3 9
+F;W4 4 17
+C;c1;r1;Ectime(1548076419);K"Mon Jan 21 13:13:39 2019"
+C;r2;E13;K13
+F;c2;r1;B;FDD
+C;E12;K12
+F;c3;I;FDD
+C;E12;K12
+C;c4;E"width 18";K"width 18"
+C;c5;E5;K5
+O;status 2
+W;N1;A1 5;C7 0 7;Ostandout
+E
