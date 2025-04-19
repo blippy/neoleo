@@ -82,3 +82,31 @@ void set_height (CELLREF row, int hgt) // FN
 {
 	the_hgts[row] = hgt;
 }
+
+
+/* ****************************************************************************************** */
+// 25/4/ some test code that I will eventually want to replace a lot of the code above with
+
+#include <iostream>
+
+template<int WIDTH>
+struct span1_t {
+        //std::array<int, 10> vals;
+        int vals[WIDTH];
+        span1_t(int init_val) { for(int i = 0; i<WIDTH; i++) vals[i] =init_val; };
+        int& operator[](int i) { return vals[i]; };
+        //void operator[](std::size_t i, int i) { };
+};
+
+int example_2025()
+{
+	using std::cout;
+	using std::endl;
+        struct span1_t<10> arr(43);
+        //cout << "hi" << endl;
+        cout << arr[5] << endl;
+        arr[7] = 12;
+        cout << arr[7] << endl;
+        //cout << "Hello from clang" << bar() << endl;
+        return 0;
+}
