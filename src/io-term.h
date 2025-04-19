@@ -27,7 +27,7 @@
 
 
 
-inline std::string option_tests_argument = "regular";
+inline std::string option_tests_argument = "";
 
 extern void set_options (char * ptr);
 extern void show_options (void);

@@ -103,7 +103,8 @@ headless_tests()
 	bool all_pass = true;
 	cout << "Running tests: " << option_tests_argument << "\n";
 
-	map<string, std::function<bool()> > func_map = {
+	using func_t = struct { string name; std::function<bool()> func; };
+	vector<func_t> funcs = {
 		{"clear",	run_clear_test},
 		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
@@ -111,16 +112,31 @@ headless_tests()
 		{"vals", 	test_values}
 	};
 
-	//format_tests();
 
-	auto it = func_map.find(option_tests_argument);
-	if(it != func_map.end()) {
-		auto fn = it->second;
-		fn();
-	} else {
-		cout << "Test not found\nTests available are:\n";
-		for(auto it=func_map.begin(); it != func_map.end(); ++it)
-			cout << it->first << "\n";
+	// maybe test is referred by a number
+	auto idx = to_int(option_tests_argument).value_or(-1);
+	int fsize = static_cast<int>(funcs.size());
+	if(0 <= idx && idx < fsize ) {
+		auto fn = funcs[idx].func;
+		(void) fn();
+		return all_pass;
+	}
+
+	// Wasn't referred by number, so possibly a name
+	for(const auto &f : funcs) {
+		if(f.name == option_tests_argument) {
+			auto fn = f.func;
+			(void) fn();
+			return all_pass;
+		}
+	}
+	
+	using std::cerr;
+	// use input was neither a number or valid description
+	if(option_tests_argument != "") cerr << "Test not found: `" << option_tests_argument << "'\n";
+	cerr << "Available tests are:\n";
+	for(auto idx1 =0; idx1 < fsize; idx1++) {
+		cerr << "\t" << idx1 << " " << funcs[idx1].name << "\n";
 	}
 
 
