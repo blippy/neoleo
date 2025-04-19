@@ -7,4 +7,5 @@ EXTRA_DIST = \
 	issue18.scr.oleo \
 	issue25.rep \
 	nohead-01.scr.oleo \
-	parser.rep
+	parser.rep \
+	spans.oleo

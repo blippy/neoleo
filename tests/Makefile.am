@@ -14,7 +14,7 @@ TESTS = ctime.scr \
 	issue16.scr issue18.scr issue25.sh \
 	nohead-01.scr \
 	parser.sh \
-	spans.scr
+	spans.sh
 
 
 TEST_EXTENSIONS = .scr
