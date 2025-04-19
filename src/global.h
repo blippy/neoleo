@@ -27,8 +27,7 @@
 #define NON_ROW		0
 #define NON_COL		0
 
-#define MIN_ROW		1
-#define MIN_COL 	1
+
 
 //typedef unsigned short CELLREF;
 
