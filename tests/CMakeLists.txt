@@ -16,7 +16,7 @@ macro(tst name cmd)
 		WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 endmacro()
 
-tst(basic1, basic.sh)
+tst(basic1, basic.sh hello)
 #add_test(NAME basic1 COMMAND basic.sh)
 #add_test(NAME basic COMMAND ${CMAKE_CURRENT_LIST_DIR}/basic.sh 
 #	WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
