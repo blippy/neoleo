@@ -38,6 +38,7 @@ using std::cout;
 #include "spans.h"
 #include "utils.h"
 #include "logging.h"
+#include "oleofile.h"
 
 #include "io-curses.h"
 
@@ -960,6 +961,11 @@ static void write_mp_options (FILE *fp)
 			Global->auto_recalc ? "" : "no",
 			Global->bkgrnd_recalc ? "" : "no",
 			Global->a0 ? "" : "no");
+}
+
+void oleo_write_file(FILE *fp)
+{
+	oleo_write_file(fp, nullptr);
 }
 
 void oleo_write_file(FILE *fp, struct rng *rng)

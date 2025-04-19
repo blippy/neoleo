@@ -19,6 +19,7 @@
 #include "sheet.h"
 #include "tbl.h"
 #include "utils.h"
+#include "oleofile.h"
 //#include "global.h"
 //import mod;
 
@@ -204,6 +205,12 @@ static void hl_insert_row(int fildes)
 	insert_1row();
 }
 
+// type the sheet as an oleo file to stdout
+static void _type_sheet(int fildes) 
+{
+	oleo_write_file(stdout);
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"dump-sheet", hless_dump_sheet},
 	{"g", hl_goto_cell},
@@ -211,6 +218,7 @@ static map<string, function<void(T)> > func_map = {
 	{"i", insert_columnwise},
 	{"info", info},
 	{"ri", hl_insert_row},
+	{"t", _type_sheet},
 	{"tbl", hless_tbl},
 	{"recalc", hl_recalc},
 	{"type-cell", type_cell},
