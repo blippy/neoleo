@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <vector>
 
-#include "config.h"
 #include "assert.h"
 #include "basic.h"
 #include "io-term.h"
@@ -18,6 +17,10 @@
 #include "utils.h"
 #include "io-curses.h"
 #include "window.h"
+
+#define VERSION "16.0"
+#define PACKAGE "neoleo"
+#define PACKAGE_NAME PACKAGE
 
 using std::cerr;
 using std::cout;
