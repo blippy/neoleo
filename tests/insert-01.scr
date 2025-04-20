@@ -1,5 +1,4 @@
-set-option noa0
-
+! rm out/insert-01.oleo
 i
 12
 13.1
@@ -15,6 +14,7 @@ g
 i
 42
 .
-dump-sheet
-w
-q
+#dump-sheet
+w out/insert-01.oleo
+! ./differ insert-01
+exit $?

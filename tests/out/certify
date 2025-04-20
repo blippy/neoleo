@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# certify a file as being verified
-cp $1 ../verified
