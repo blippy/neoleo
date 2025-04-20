@@ -1,10 +1,11 @@
 # test decompile
-
+! rm out/decompile-01.oleo
 i
 "expect hello:"
 if(#TRUE, "hello", -3)
 "---"
 .
 
-w
-q
+w out/decompile-01.oleo
+! diff out/decompile-01.oleo verified/decompile-01.scr.oleo  >diffs/decompile-01.diffs 2>&1
+exit $?
