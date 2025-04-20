@@ -17,5 +17,5 @@ ceil(1.2)
 2
 .
 w out/floor.oleo
-! diff out/floor.oleo verified/floor.scr.oleo  >diffs/floor.diffs 2>&1
+! ./differ floor
 exit $?

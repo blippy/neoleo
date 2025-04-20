@@ -7,5 +7,6 @@ if(#TRUE, "hello", -3)
 .
 
 w out/decompile-01.oleo
-! diff out/decompile-01.oleo verified/decompile-01.scr.oleo  >diffs/decompile-01.diffs 2>&1
+#! diff out/decompile-01.oleo verified/decompile-01.scr.oleo  >diffs/decompile-01.diffs 2>&1
+! ./differ decompile-01
 exit $?
