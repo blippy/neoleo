@@ -1,7 +1,10 @@
 # see if a segfault happens with ctime()
 
+! rm out/ctime.oleo
 i
 ctime(1548076419)
 .
-t
-q
+w out/ctime.oleo
+! diff out/ctime.oleo verified/ctime.scr.oleo  >diffs/ctime.diffs 2>&1
+exit $?
+
