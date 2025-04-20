@@ -15,6 +15,7 @@ set(NEO ${CMAKE_BINARY_DIR}/neoleo) # need to inform test where exe is
 add_test(NAME basic COMMAND basic.sh)
 add_test(NAME ctime COMMAND ctime.sh ${NEO})
 add_test(NAME pass  COMMAND ${NEO} -T pass) # a test that always passes
+add_test(NAME write COMMAND ${NEO} -s write.scr)
 
 # Tests that always fail, so dont' run them
 # (I made them just for testing purposes)
