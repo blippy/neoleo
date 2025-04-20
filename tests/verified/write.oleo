@@ -1,0 +1,10 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+F;DGFR8
+O;auto;background;noa0
+C;c1;r1;E1;K1
+C;c2;E2;K2
+C;c3;E3;K3
+O;status 2
+W;N1;A1 4;C7 0 7;Ostandout
+E

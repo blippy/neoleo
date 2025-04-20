@@ -21,6 +21,7 @@
 #include "tbl.h"
 #include "utils.h"
 #include "oleofile.h"
+#include "logging.h"
 //#include "global.h"
 //import mod;
 
@@ -158,23 +159,26 @@ static void type_cell(int fildes)
 
 static void _write_file(int fildes)
 {
+	log("_write_file:called");
 	if(_arg.size() > 0) FileSetCurrentFileName(_arg);
 	string name = FileGetCurrentFileName();
-	// CAVEAT: We should be setting the current name, but _arg might also incorporate dire
+	
+	log("writing file:", name);
 	
 	FILE *fp = fopen(name.c_str(), "w");
 	if(!fp) {
 		_sys_ret = 1; 
-		cerr << "? Couldn't open file:" << name << endl;
+		cerr << "? Couldn't oleo file for writing:" << name << endl;
 		return;
 	}
-	
+
 	//assert(fp);
 	write_cmd(fp, name.c_str());
 	fclose(fp);
 
 }
 void hl_write_file(){
+	log("hl_write_file:called");
 	_write_file(0);
 }
 
@@ -228,7 +232,10 @@ static void _type_sheet(int fildes)
 static void hl_exit(int fildes)
 {	
 	//cout << "exit called\n";
-	if(_arg == "$?") exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
+	if(_arg == "$?") {
+		log("calling hl_exit with status ", _sys_ret);
+		exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
+	}
 	auto ret = to_int(_arg);
 	if(ret.has_value()) exit(ret.value());
 	exit(0);
@@ -238,6 +245,7 @@ static void _exc(int fildes)
 {
 	//system("ls");
 	_sys_ret = system(_arg.c_str());
+	log("system status:", _sys_ret, ", arg:", _arg);
 	//cout << _sys_ret << "\n";
 }
 
@@ -262,6 +270,8 @@ bool process_headless_line(std::string line, int fildes)
 {
 	// break line down into a command and arguments
 	int len = line.size();
+	if(len == 0) return true;
+	if(line[0] == '#') return true;
 	int i = 0;
 	string cmd;
 	_arg = ""; // same it for use by any function
@@ -271,7 +281,7 @@ bool process_headless_line(std::string line, int fildes)
 	while(i<len) _arg += line[i++];
 	//cout << "'" << cmd << "'\n";
 
-
+	log("process_headless_line cmd;", cmd, ";arg:", _arg);
 	// try to find a canned function and execute it
 	auto it = func_map.find(cmd);
 	if(it != func_map.end()) {
@@ -279,10 +289,13 @@ bool process_headless_line(std::string line, int fildes)
 		fn(fildes);
 		cout << std::flush;
 		return true;
+	} else {
+		cerr << "? command not found:" << cmd << endl;
 	}
 
 
 	if(line == "q") {
+		log("quit found");
 		return false;
 	}
 
@@ -293,12 +306,15 @@ bool process_headless_line(std::string line, int fildes)
 
 static void _repl(int fildes)
 {
+	log("_repl:start");
 	bool cont = true;
 	while(cont) {
 		try {
+			log(".");
 			bool eof;
 			string line = getline_from_fildes(fildes, eof);
 			cont =	process_headless_line(line, fildes);
+			if(!cont) close(fildes);
 			if(eof) { cont = false; }
 		} catch (OleoJmp& e) {
 			cerr << e.what() << endl;
@@ -315,13 +331,16 @@ void headless_main() // FN
 
 int headless_script(const char* script_file)
 {
+	log("headless_script:started");
 	int fildes = open(script_file, O_RDONLY);
 	if(fildes == -1) {
-		cerr << "? Couldn't open file:" << script_file << endl;
+		cerr << "? Couldn't script file:" << script_file << endl;
 		return 1;
 	}
 
+	log("headless_script:calling repl");
 	_repl(fildes);
+	log("headless_script:finished repl");
 	close(fildes);
 	return 0;
 }

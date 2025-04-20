@@ -1,7 +1,10 @@
 # 2025-04-20 A simple script to see if headless writing works
-i
+! rm out/write.oleo
+I
 1
 2
 3
+.
 w out/write.oleo
-q
+! diff out/write.oleo verified/write.oleo  >diffs/write.diffs 2>&1
+exit $?

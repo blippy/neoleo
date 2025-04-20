@@ -205,7 +205,9 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	Global->display_opened = 1;
 	Global->modified = 0;
 	if(opt_script_file) {
-		exit(headless_script(opt_script_file));
+		int ret = headless_script(opt_script_file);
+		log("ret is ", ret);
+		exit(ret);
 	}
 	if(use_headless)
 		headless_main();
