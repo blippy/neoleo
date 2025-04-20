@@ -1,7 +1,7 @@
-
 # run when you do cmake .. :
 #message("Hello from tests/CmakeLists.txt")
 
+set(CTEST_OUTPUT_ON_FAILURE ON)
 file(GLOB SHELLS *.sh)
 file(COPY ${SHELLS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(GLOB SCRIPTS *.scr certify differ)
