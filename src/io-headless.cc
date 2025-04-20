@@ -158,9 +158,18 @@ static void type_cell(int fildes)
 
 static void _write_file(int fildes)
 {
+	if(_arg.size() > 0) FileSetCurrentFileName(_arg);
 	string name = FileGetCurrentFileName();
+	// CAVEAT: We should be setting the current name, but _arg might also incorporate dire
+	
 	FILE *fp = fopen(name.c_str(), "w");
-	assert(fp);
+	if(!fp) {
+		_sys_ret = 1; 
+		cerr << "? Couldn't open file:" << name << endl;
+		return;
+	}
+	
+	//assert(fp);
 	write_cmd(fp, name.c_str());
 	fclose(fp);
 
