@@ -20,6 +20,7 @@ add_test(NAME decompile COMMAND ${NEO} -s decompile-01.scr)
 add_test(NAME floor COMMAND ${NEO} -s floor.scr)
 add_test(NAME insert	COMMAND ${NEO} -s insert-01.scr)
 add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
+add_test(NAME iss18	COMMAND ${NEO} -s issue18.scr)
 add_test(NAME pass  COMMAND ${NEO} -T pass) # a test that always passes
 add_test(NAME write COMMAND ${NEO} -s write.scr)
 

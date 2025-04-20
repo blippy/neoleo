@@ -1,12 +1,11 @@
 # test of issue 18
 # cell referencing parsing bug
 
-set-option noa0
-
-
+! rm out/issue18.oleo
 i
 10
 r1c1+1
 .
-w
-q
+w out/issue18.oleo
+! ./differ issue18
+exit $?
