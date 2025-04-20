@@ -35,6 +35,8 @@ using std::vector;
 typedef int T;
 
 static string _arg; // holds any argument found by process_headless_line()
+static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
+
 
 void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
@@ -216,25 +218,34 @@ static void _type_sheet(int fildes)
 static void hl_exit(int fildes)
 {	
 	//cout << "exit called\n";
+	if(_arg == "$?") exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
 	auto ret = to_int(_arg);
 	if(ret.has_value()) exit(ret.value());
 	exit(0);
 }
 
+static void _exc(int fildes)
+{
+	//system("ls");
+	_sys_ret = system(_arg.c_str());
+	//cout << _sys_ret << "\n";
+}
+
 static map<string, function<void(T)> > func_map = {
-	{"dump-sheet", hless_dump_sheet},
-	{"exit", hl_exit},
-	{"g", hl_goto_cell},
-	{"I", insert_rowwise},
-	{"i", insert_columnwise},
-	{"info", info},
-	{"ri", hl_insert_row},
-	{"t", _type_sheet},
-	{"tbl", hless_tbl},
-	{"recalc", hl_recalc},
-	{"type-cell", type_cell},
-	{"type-dsv", type_dsv},
-	{"w", _write_file}
+	{"!",		_exc},
+	{"dump-sheet", 	hless_dump_sheet},
+	{"exit", 	hl_exit},
+	{"g", 		hl_goto_cell},
+	{"I", 		insert_rowwise},
+	{"i", 		insert_columnwise},
+	{"info", 	info},
+	{"ri", 		hl_insert_row},
+	{"t", 		_type_sheet},
+	{"tbl", 	hless_tbl},
+	{"recalc", 	hl_recalc},
+	{"type-cell", 	type_cell},
+	{"type-dsv", 	type_dsv},
+	{"w", 		_write_file}
 };
 
 bool process_headless_line(std::string line, int fildes)
@@ -247,7 +258,7 @@ bool process_headless_line(std::string line, int fildes)
 	while(i<len && isspace(line[i])) i++;
 	while(i<len && !isspace(line[i])) cmd += line[i++];
 	while(i<len && isspace(line[i])) i++;
-	while(i<len && !isspace(line[i])) _arg += line[i++];
+	while(i<len) _arg += line[i++];
 	//cout << "'" << cmd << "'\n";
 
 
