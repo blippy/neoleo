@@ -1,10 +1,10 @@
 #!/bin/sh
 
-NEO=$1
-echo "NEO=$NEO"
+NEO=$1 #this is passed in by the add_test command
+echo "NEO=$NEO # for neoleo exe"
 O=out/ctime.oleo
 
-$NEO -H  << EOF 
+$NEO -H > $O << EOF 
 # see if a segfault happens with ctime()
 
 i
@@ -14,4 +14,5 @@ t
 q
 EOF
 
-exit 1
+diff $O verified/ctime.scr.oleo > diffs/ctime.diffs
+exit $?
