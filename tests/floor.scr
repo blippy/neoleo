@@ -1,5 +1,5 @@
 # # fix bug in floor which caused infinited loop
-
+! rm out/floor.oleo
 I
 "Func"
 "In"
@@ -16,7 +16,6 @@ floor(1.2)
 ceil(1.2)
 2
 .
-
-
-w
-q
+w out/floor.oleo
+! diff out/floor.oleo verified/floor.scr.oleo  >diffs/floor.diffs 2>&1
+exit $?
