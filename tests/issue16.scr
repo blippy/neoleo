@@ -1,9 +1,11 @@
 # BUG#16 blank line test
+! rm out/issue16.oleo
 i
 1
 
 2
 .
 
-w
-q
+w out/issue16.oleo
+! ./differ issue16
+exit $?
