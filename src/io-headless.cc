@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <algorithm>
 #include <errno.h>
+#include <fcntl.h>
 #include <functional>
 #include <map>
 #include <ncurses.h>
@@ -281,22 +282,37 @@ bool process_headless_line(std::string line, int fildes)
 	return true;
 }
 
-void headless_main() // FN
+static void _repl(int fildes)
 {
-	//cout << mod_hi_sv() << endl;
-
-	std::string line;
-	constexpr int fildes = STDIN_FILENO;
 	bool cont = true;
 	while(cont) {
 		try {
 			bool eof;
-			line = getline_from_fildes(fildes, eof);
+			string line = getline_from_fildes(fildes, eof);
 			cont =	process_headless_line(line, fildes);
 			if(eof) { cont = false; }
 		} catch (OleoJmp& e) {
 			cerr << e.what() << endl;
 		}
 	}
+}
 
+void headless_main() // FN
+{
+	//cout << mod_hi_sv() << endl;
+	constexpr int fildes = STDIN_FILENO;
+	_repl(fildes);
+}
+
+int headless_script(const char* script_file)
+{
+	int fildes = open(script_file, O_RDONLY);
+	if(fildes == -1) {
+		cerr << "? Couldn't open file:" << script_file << endl;
+		return 1;
+	}
+
+	_repl(fildes);
+	close(fildes);
+	return 0;
 }

@@ -31,20 +31,24 @@ using std::vector;
 using namespace std::literals;
 
 extern void headless_main();
+extern int headless_script(const char* script_file);
 void curses_main();
 
 static bool	option_tests = false;
+//static int	opt_script = 0;
+static char*	opt_script_file = 0;
 //std::string	option_tests_argument = "regular";
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "VHhpTv";
+static char short_options[] = "VHhps:Tv";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,	'V'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
 	{"parser",		0,	NULL,	'p'},
+	{"script",		required_argument,	NULL,	's'},
 	{"tests",		optional_argument,	NULL,	'T'},
 	{"version",		0,	NULL,	'v'},
 	{NULL,			0,	NULL,	0}
@@ -90,6 +94,7 @@ show_usage (void)
 const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
+  -s, --script FILE        execute a script
   -V, --version            output version information and exit
   -T, --tests [x]          run test suite x
 
@@ -124,6 +129,9 @@ parse_command_line(int argc, char **argv, bool& user_wants_headless)
 			case 'h':
 				show_usage ();
 				exit (0);
+				break;
+			case 's':
+				opt_script_file = optarg; // Do I need the ++ ?
 				break;
 			case 'T':
 				option_tests = true;
@@ -193,9 +201,12 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 		optind++;
 	}
 
-	io_init_windows();
+	io_init_windows();	
 	Global->display_opened = 1;
 	Global->modified = 0;
+	if(opt_script_file) {
+		exit(headless_script(opt_script_file));
+	}
 	if(use_headless)
 		headless_main();
 	else {
@@ -207,8 +218,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 
 
 
-int 
-main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	int command_line_file = 0;	/* was there one? */
 	bool use_headless = false;

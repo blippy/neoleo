@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.25.0)
 project(neoleo)
 
-set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-fmodules-ts")
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
+set(CMAKE_BUILD_TYPE Debug)
 file(GLOB_RECURSE sources src/*.cc)
 
 add_executable(neoleo ${sources})

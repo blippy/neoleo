@@ -4,9 +4,9 @@ define hook-quit
 end
 
 set pagination off
-file neoleo
+file ../build/neoleo
 #b io-curses.cc:399
 #b process_headless_line
 #b _write_file
-b headless_main
-r -H < ../tests/ctime.scr
+#b headless_main
+r -s ../tests/ctime.scr
