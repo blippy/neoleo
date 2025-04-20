@@ -34,6 +34,8 @@ using std::vector;
 
 typedef int T;
 
+static string _arg; // holds any argument found by process_headless_line()
+
 void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
 	curow = r;
@@ -211,8 +213,17 @@ static void _type_sheet(int fildes)
 	oleo_write_file(stdout);
 }
 
+static void hl_exit(int fildes)
+{	
+	//cout << "exit called\n";
+	auto ret = to_int(_arg);
+	if(ret.has_value()) exit(ret.value());
+	exit(0);
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"dump-sheet", hless_dump_sheet},
+	{"exit", hl_exit},
 	{"g", hl_goto_cell},
 	{"I", insert_rowwise},
 	{"i", insert_columnwise},
@@ -228,9 +239,20 @@ static map<string, function<void(T)> > func_map = {
 
 bool process_headless_line(std::string line, int fildes)
 {
+	// break line down into a command and arguments
+	int len = line.size();
+	int i = 0;
+	string cmd;
+	_arg = ""; // same it for use by any function
+	while(i<len && isspace(line[i])) i++;
+	while(i<len && !isspace(line[i])) cmd += line[i++];
+	while(i<len && isspace(line[i])) i++;
+	while(i<len && !isspace(line[i])) _arg += line[i++];
+	//cout << "'" << cmd << "'\n";
+
 
 	// try to find a canned function and execute it
-	auto it = func_map.find(line);
+	auto it = func_map.find(cmd);
 	if(it != func_map.end()) {
 		auto fn = it->second;
 		fn(fildes);
