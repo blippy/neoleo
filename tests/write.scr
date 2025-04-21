@@ -6,5 +6,5 @@ I
 3
 .
 w out/write.oleo
-! diff out/write.oleo verified/write.oleo  >diffs/write.diffs 2>&1
+! ./differ write
 exit $?

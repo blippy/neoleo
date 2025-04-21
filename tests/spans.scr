@@ -1,5 +1,12 @@
-# a test of spans mechanism
+# 2025-04-19 created
+# simple test of the spans functionality
+# Can it simply put out what it sucked in?
 
-w
-q
+! rm out/spans.oleo
+I
+.
+
+w out/spans.oleo
+! ./differ spans
+exit $?
 
