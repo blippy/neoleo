@@ -1284,12 +1284,8 @@ void  io_init_windows ()
 	io_set_input_status (1, 2, 0);
 	cwin->id = win_id++;
 	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
-	cwin->win_down = (label_rows
-			+ (user_status > 0) * status_rows
-			+ (user_input > 0) * input_rows);
-	win_flags = WIN_EDGES | WIN_EDGE_REV;
-	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows
-			- input_rows - default_bottom_border);
+	cwin->win_down = (label_rows + (user_status > 0) * status_rows + (user_input > 0) * input_rows);
+	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
 	cwin->numc = Global->scr_cols - default_right_border;
 	cwin->bottom_edge_r = default_bottom_border;
 	cwin->right_edge_c = default_right_border;

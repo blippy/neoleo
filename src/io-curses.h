@@ -105,7 +105,7 @@ struct window
 #define WIN_PAG_VT	0x08
 #define WIN_EDGES	0x10
 #define WIN_EDGE_REV	0x20
-inline int win_flags = 0;
+inline int win_flags = WIN_EDGES | WIN_EDGE_REV; 
 
 
 /* These control the layout of input and status lines. */
