@@ -729,11 +729,13 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'H': /* JF: extension */
+			// 25/4 all heights are assumed to be 1
+			#if 0
 			clo = astol(&ptr);
 			chi = astol(&ptr);
 			cwid = astol(&ptr) + 1;
-			for (; clo <= chi; clo++)
-				set_height(clo, cwid);
+			for (; clo <= chi; clo++) set_height(clo, cwid);
+			#endif
 			break;
 		case 'c': ccol = astol(&ptr); break;
 		case 'r': crow = astol(&ptr); break;

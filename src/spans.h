@@ -16,10 +16,9 @@ typedef struct span_find {
 	std::deque<std::pair<int, int>> dq;
 } span_find_t;
 
-inline span_t the_wids, the_hgts;
+inline span_t the_wids; // , the_hgts;
 
 void set_width (CELLREF col, int wid);
-void set_height (CELLREF row, int hgt);
 span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi);
 void flush_spans();
 int next_span(span_find_t& sp, CELLREF& n);

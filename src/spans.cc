@@ -6,7 +6,7 @@
 void flush_spans ()
 {
 	the_wids.clear();
-	the_hgts.clear();
+	//the_hgts.clear();
 }
 
 int get_scaled_height (CELLREF r)
@@ -71,17 +71,16 @@ int next_span (span_find_t& sp, CELLREF& n) // FN
 
 int get_height (CELLREF row) // FN
 {
+	return 1; // all heights are assumed 1
+	#if 0
 	int incr = - 1; // NB Why?
 	int h = get_span(the_hgts, row, incr, default_height);
 	assert(h==1);
 	return h;
+	#endif
 }
 
 
-void set_height (CELLREF row, int hgt) // FN
-{
-	the_hgts[row] = hgt;
-}
 
 
 /* ****************************************************************************************** */
