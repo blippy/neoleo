@@ -821,25 +821,26 @@ static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
 
-
-void write_spans(FILE* fp, span_find_t& s_find, char typechar)
+void write_widths(FILE* fp)
 {
-	CELLREF c;
-	unsigned short w = next_span(s_find, c);
+	//fprintf(fp, "W");
+	span_find_t w_find = find_span(the_wids, MIN_COL, MAX_COL);
+	CELLREF c{0};
+	unsigned short w = next_span(w_find, c);
 	while (w)
 	{
 		CELLREF cc, ccc;
 		unsigned short ww;
 		cc = c;
 		do
-			ww = next_span(s_find, ccc);
+			ww = next_span(w_find, ccc);
 		while (ccc == ++cc && ww == w);
-		(void) fprintf (fp, "F;%c%u %u %u\n", typechar, c, cc - 1, w - 1);
+		(void) fprintf (fp, "F;%c%u %u %u\n", 'W', c, cc - 1, w - 1);
 		c = ccc;
 		w = ww;
 	}
-}
 
+}
 
 
 void write_cells(FILE* fp)
@@ -980,7 +981,7 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	 */
 	(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
 
-	rng = &all_rng;
+	//rng = &all_rng;
 
 	(void) fprintf (fp, "F;D%s%c%u\n",
 			oleo_fmt_to_str (default_fmt, default_prc),
@@ -993,11 +994,13 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	old_a0 = Global->a0;
 	Global->a0 = 0;
 
-	span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
-	write_spans(fp, w_find, 'W');
+	//span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
+	//write_spans(fp, w_find, 'W');
+	write_widths(fp);
 
-	span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
-	write_spans(fp, h_find, 'H');
+	// 25/4 We no longer write the heights, because they are always 1
+	//span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
+	//write_spans(fp, h_find, 'H');
 
 	oleo_fp = fp;
 	oleo_rng = rng;
