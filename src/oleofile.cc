@@ -16,16 +16,20 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <format>
 #include <string>
 #include <ctype.h>
 #include <cmath>
+#include <map>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <iostream>
 
+//using std::format;
 using std::cout;
+using std::map;
 
 #include "convert.h"
 #include "format.h"
@@ -623,6 +627,15 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'D': /* Default format */
+			{ 
+				const map<char, int>  m{{'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
+					{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
+				
+				auto msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
+				default_fmt = map_or_raise(m, *ptr++, msg);
+
+			}
+			/*
 			switch (*ptr++)
 			{
 			case 'G': default_fmt = FMT_GEN; break;
@@ -638,6 +651,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				raise_error("Line %d: format %c not supported", lineno, ptr[-1]);
 				break;
 			}
+			*/
 			if (*ptr == 'F')
 			{
 				prc = default_prc = FLOAT_PRECISION;

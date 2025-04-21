@@ -18,7 +18,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <map>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <stdio.h>
 #include "global.h"
@@ -47,3 +49,15 @@ size_t strlen(const std::string& s);
 int stricmp (const char *, const char *);
 
 std::optional<int> to_int(const std::string& str); // 25/4
+
+// look up an item in a map. If not, raise an error
+template<typename S, typename T>
+T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
+{
+	try {
+		return m.at(key);
+	} catch (std::out_of_range e) {
+		//raise_error(msg_if_fail);
+		throw OleoJmp(msg_if_fail);
+	}
+}

@@ -25,7 +25,7 @@ const int ValErr::num() const throw()
 
 
 // FN raise_error 
-void raise_error (const char *str, ...)
+void raise_error (const char *str, ...) // FN
 {
 	va_list args;
 	char buf[1000];
@@ -36,3 +36,8 @@ void raise_error (const char *str, ...)
 	throw OleoJmp(buf);
 }
 // FN-END
+
+void raise_error (const std::string& msg) // FN
+{
+	raise_error("%s", msg.c_str());
+}
