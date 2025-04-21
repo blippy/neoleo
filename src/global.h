@@ -64,7 +64,7 @@ struct var; /* in case it hasn't been declared yet */
  * around all over.
  */
 struct OleoGlobal {
-	struct window			*cwin = 0; //, *wins = 0;
+	//struct window			*cwin = 0; //, *wins = 0;
 	int				bkgrnd_recalc = 1, auto_recalc = 1, a0 = 0, topclear = 0, sylk_a0 = 1;
 	int				modified = 0;
 	//const int				nwin = 0;
@@ -76,7 +76,7 @@ struct OleoGlobal {
 	int 				user_input =1, user_status = 2;
 	int				input = 0, status = 1;
 	const int			label_rows = 1, label_emcols =1;
-	struct info_buffer		*current_info;
+	//struct info_buffer		*current_info;
 	int				info_rows, info_line, info_over;
 	int				default_right_border = 0, default_bottom_border = 0;
 	int				win_id = 1;

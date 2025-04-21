@@ -135,10 +135,9 @@ inline int win_flags = 0;
 #define	default_right_border	Global->default_right_border
 #define	default_bottom_border	Global->default_bottom_border
 
-/* The window list. */
-//#define	nwin		Global->nwin
-//#define	cwin		Global->cwin
-inline window* cwin = nullptr;
+
+inline window the_cwin;
+inline window* cwin = &the_cwin;
 //#define	wins		Global->wins
 #define	win_id		Global->win_id
 

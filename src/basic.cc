@@ -107,7 +107,7 @@ int set_window_option (int set_opt, char *text)
 		int n = set_opt ? atoi (text + 6 + stat) : 0;	/* A little pun. */
 		int new_inp = stat ? user_input : n;
 		int new_stat = stat ? n : user_status;
-		io_set_input_status (new_inp, new_stat, 1);
+		//io_set_input_status (new_inp, new_stat, 1); // 25/4 ignore this
 	}
 	else if (set_opt && !strincmp (text, "row ", 4))
 	{

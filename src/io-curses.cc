@@ -1166,7 +1166,7 @@ void io_set_win_flags (struct window *w, int f)
 
 
 
-window the_cwin;
+
 
 
 
@@ -1280,11 +1280,8 @@ re:
 
 void  io_init_windows () 
 {
-	//print_width = 80;		/* default ascii print width */
 
 	io_set_input_status (1, 2, 0);
-	//nwin = 1;
-	cwin = &the_cwin;
 	cwin->id = win_id++;
 	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
 	cwin->win_down = (label_rows

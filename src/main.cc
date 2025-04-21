@@ -201,7 +201,8 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 		optind++;
 	}
 
-	io_init_windows();	
+	constexpr bool pre_init_io = true;
+	if constexpr(pre_init_io) io_init_windows();	
 	Global->display_opened = 1;
 	Global->modified = 0;
 	if(opt_script_file) {
@@ -212,7 +213,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	if(use_headless)
 		headless_main();
 	else {
-		//io_init_windows();
+		if (!pre_init_io) io_init_windows();
 		curses_main();
 	}
 	
