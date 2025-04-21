@@ -341,6 +341,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 			case '#':		/* comment line -- ignored */
 				break;
 			case '%':		/* Font or pixel size data. */
+				ASSERT_UNCALLED();
 				ptr++;
 				switch (*ptr) {
 					case 'F':		/* %F font-name */
@@ -378,6 +379,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 				break;
 
 			case 'B':		/* Boundry field, ignored */
+				ASSERT_UNCALLED();
 				ptr++;
 				while (*ptr)
 				{
