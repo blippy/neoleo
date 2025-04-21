@@ -37,14 +37,22 @@ Neoleo installs examples in a shared directory, typically
 
 ## Compiling/installing
 
-In short (as from v10.0+), download from github, unpack
-if appropriate, then
+Post v15.0, cmake is used.
+
+Distro packagers should download and use the latest released tarball,
+e.g. neoleo-X.Y.tar.gz . Others who are feeling brave can clone the
+repo in the traditional fashion:
 ```
-cd neoleo
-autoreconf -iv
-./configure # adding relevant options
+git clone git@github.com:blippy/neoleo.git
+```
+
+Whichever way you choose, cd to the root directory. In typical style:
+```
+mkdir build
+cd build
+cmake ..
 make
-make install
+sudo make install
 ```
 
 Read INSTALL, which contains general instructions, plus specific 
