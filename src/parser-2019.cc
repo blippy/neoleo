@@ -934,24 +934,27 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 	return print_cell(cp);
 }
 
-void check_result(CELLREF r, CELLREF c, string expecting)
+bool check_result(CELLREF r, CELLREF c, string expecting)
 {
 
 	string res = cell_value_string(r, c, 0);
 	cout << "Result  of " << string_coord(r, c) << " is `" << res << "' " ;
-	cout << (res == expecting ? "PASS"s : "FAIL") << "\n";
+	bool pass = res == expecting;
+	cout << (pass ? "PASS"s : "FAIL") << "\n";
+	return pass;
 }
 
-int interpret (int r, int c, string s, string expecting)
+bool interpret (int r, int c, string s, string expecting)
 {
 	cout << "Pret: R" << r << "C" << c << ": `" << s << "'";
 	string res = set_and_eval(r,c, s);
 	cout << " => `" << res << "' ";
-	cout << (res == expecting ? "PASS"s : "FAIL") << "\n";
-	return 1;
+	bool pass = res == expecting;
+	cout << (pass ? "PASS"s : "FAIL") << "\n";
+	return pass;
 }
 
-int interpret(string s, string expected)
+bool interpret(string s, string expected)
 {
 	return interpret(1, 1, s, expected);
 }
@@ -967,115 +970,132 @@ void print_predecs(CELLREF r, CELLREF c)
 
 void done() { cout << "Done\n"; }
 
-int run_parser_2019_tests ()
+bool run_parser_2019_tests ()
 {
 	cout << "Running parser 2019 tests\n";
+	bool all_pass = true;
+
+	auto interpret1 = [&](auto& frm, auto& expect) {
+		bool pass = interpret(1, 1, frm, expect);
+		if(!pass) all_pass = false;
+	};
+	auto interpret2 = [&](int r, int c, auto& frm, auto& expect) {
+		bool pass = interpret(r, c, frm, expect);
+		if(!pass) all_pass = false;
+	};
+	auto check = [&](int r, int c, auto& val) {
+		bool pass = check_result(r, c, val);
+		if(!pass) all_pass = false;
+	};
+
 
 #if 1
-	interpret("sqrt(4+5)+2", "5");
+	interpret1("sqrt(4+5)+2", "5");
 	//return 0;
-	interpret("42", "42");
-	interpret("42+3", "45");
-	interpret("1+3+5+7", "16");
-	interpret("1-3-5-7", "-14");
-	interpret("1-3+5-7", "-4");
-	interpret("1+2*3", "7");
-	interpret("1+12/3", "5");
-	interpret("1+12/3*2/2", "5");
-	interpret("(1+2)*3", "9");
-	interpret("-(1+2)*-3", "9");
-	interpret("hypot(3,4)+1", "6");
-	interpret("plus()+1", "1");
-	interpret("plus(2)+1", "3");
-	interpret("plus(2,3  +4  )  + 1", "10");
-	interpret(" strlen(\"hello world\") ", "11");
-	interpret("1+", "#PARSE_ERROR");
-	interpret(" strlen(1) ", "#NON_STRING");
-	interpret("strlen(", "#PARSE_ERROR");
-	interpret("life()", "42");
+	interpret1("42", "42");
+	interpret1("42+3", "45");
+	interpret1("1+3+5+7", "16");
+	interpret1("1-3-5-7", "-14");
+	interpret1("1-3+5-7", "-4");
+	interpret1("1+2*3", "7");
+	interpret1("1+12/3", "5");
+	interpret1("1+12/3*2/2", "5");
+	interpret1("(1+2)*3", "9");
+	interpret1("-(1+2)*-3", "9");
+	interpret1("hypot(3,4)+1", "6");
+	interpret1("plus()+1", "1");
+	interpret1("plus(2)+1", "3");
+	interpret1("plus(2,3  +4  )  + 1", "10");
+	interpret1(" strlen(\"hello world\") ", "11");
+	interpret1("1+", "#PARSE_ERROR");
+	interpret1(" strlen(1) ", "#NON_STRING");
+	interpret1("strlen(", "#PARSE_ERROR");
+	interpret1("life()", "42");
 
-	interpret(1,1, "1+2", "3");
-	interpret(1,1, "1+", "#PARSE_ERROR");
-	interpret(1,1, "strlen(1)", "#NON_STRING");
-	interpret(1,1, "1 2", "#PARSE_ERROR");
-	interpret(1,1, "", "");
+	interpret2(1,1, "1+2", "3");
+	interpret2(1,1, "1+", "#PARSE_ERROR");
+	interpret2(1,1, "strlen(1)", "#NON_STRING");
+	interpret2(1,1, "1 2", "#PARSE_ERROR");
+	interpret2(1,1, "", "");
 
 	// check on propagation of point cells
-	interpret(2,2, "2+3", "5");
-	interpret(3,2, "R2C2+1", "6");
-	interpret(3,2, "R2C2", "5");
-	interpret(3,3, "R3C2", "5");
+	interpret2(2,2, "2+3", "5");
+	interpret2(3,2, "R2C2+1", "6");
+	interpret2(3,2, "R2C2", "5");
+	interpret2(3,3, "R3C2", "5");
 
 	// check on sum
-	interpret(1,1, "2+3", "5");
-	interpret(1,2, "6", "6");
-	interpret(1,3, "sum(r1c1:2)", "11");
-	interpret(1,4, "r1c3", "11");
+	interpret2(1,1, "2+3", "5");
+	interpret2(1,2, "6", "6");
+	interpret2(1,3, "sum(r1c1:2)", "11");
+	interpret2(1,4, "r1c3", "11");
 	print_predecs(1,3);
 
 	cout << "Check that dependent cells are updated\n";
-	interpret(1, 1, "7", "7");
-	check_result(1, 3, "13");
-	check_result(1, 4, "13");
+	interpret2(1, 1, "7", "7");
+	check(1, 3, "13");
+	check(1, 4, "13");
 	done();
 
 	cout << "Cyclic check \n";
-	interpret(10, 1, "r10c1", "#CYCLE");
-	interpret(11, 1, "r10c1", "#CYCLE");
+	interpret2(10, 1, "r10c1", "#CYCLE");
+	interpret2(11, 1, "r10c1", "#CYCLE");
 	done();
 
 	cout << "Diamond cycle check\n";
-	interpret(1, 1, "4", "4");
-	interpret(2, 1, "r1c1", "4");
-	interpret(2, 2, "r1c1", "4");
-	interpret(3, 1, "r2c1 + r2c2", "8");
-	interpret(1, 1, "10", "10");
-	check_result(2, 1, "10");
-	check_result(2, 2, "10");
-	check_result(3, 1, "20");
+	interpret2(1, 1, "4", "4");
+	interpret2(2, 1, "r1c1", "4");
+	interpret2(2, 2, "r1c1", "4");
+	interpret2(3, 1, "r2c1 + r2c2", "8");
+	interpret2(1, 1, "10", "10");
+	check(2, 1, "10");
+	check(2, 2, "10");
+	check(3, 1, "20");
 	done();
 
 	cout << "Check triangular cyclicity\n";
-	interpret(12, 1 , "r12c3", "");
-	interpret(12, 2 , "r12c1", "");
-	interpret(12, 3 , "r12c2", "#CYCLE");
+	interpret2(12, 1 , "r12c3", "");
+	interpret2(12, 2 , "r12c1", "");
+	interpret2(12, 3 , "r12c2", "#CYCLE");
 	done();
 
-	interpret(13,1, "12.2", "12.2"); // check floats
-	interpret(13,1, "badfunc(12.2)", "#UNK_FUNC"); // an unknown function
-	interpret(13,1, "ceil(\"oops\")", "#NON_NUMBER"); 
-	interpret(13,1, "ceil(12 + 0.2)", "13"); 
-	interpret(13,1, "floor(12.2)", "12"); 
-	interpret(13,1, "2^(1+1+1)", "8"); 
+	interpret2(13,1, "12.2", "12.2"); // check floats
+	interpret2(13,1, "badfunc(12.2)", "#UNK_FUNC"); // an unknown function
+	interpret2(13,1, "ceil(\"oops\")", "#NON_NUMBER"); 
+	interpret2(13,1, "ceil(12 + 0.2)", "13"); 
+	interpret2(13,1, "floor(12.2)", "12"); 
+	interpret2(13,1, "2^(1+1+1)", "8"); 
 
-	interpret(13,1, "#TRUE", "#TRUE"); 
-	interpret(13,1, "#FALSE", "#FALSE"); 
-	interpret(13,1, "#OOPS", "#PARSE_ERROR"); 
-
-
-	interpret(13,1, "1<2", "#TRUE"); 
-	interpret(13,1, "1+1=2", "#TRUE"); 
-	interpret(13,1, "1+10!=2", "#TRUE"); 
-	interpret(13,1, "1<=2", "#TRUE"); 
-	interpret(13,1, "2>=1", "#TRUE"); 
-	interpret(13,1, "2>1", "#TRUE"); 
-	interpret(13,1, "1>2", "#FALSE"); 
+	interpret2(13,1, "#TRUE", "#TRUE"); 
+	interpret2(13,1, "#FALSE", "#FALSE"); 
+	interpret2(13,1, "#OOPS", "#PARSE_ERROR"); 
 
 
-	interpret(13,1, "if(1>2, 10, 11)", "11"); 
-	interpret(13,1, "if(#TRUE, \"hello\", \"world\")", "hello"); 
+	interpret2(13,1, "1<2", "#TRUE"); 
+	interpret2(13,1, "1+1=2", "#TRUE"); 
+	interpret2(13,1, "1+10!=2", "#TRUE"); 
+	interpret2(13,1, "1<=2", "#TRUE"); 
+	interpret2(13,1, "2>=1", "#TRUE"); 
+	interpret2(13,1, "2>1", "#TRUE"); 
+	interpret2(13,1, "1>2", "#FALSE"); 
 
-	interpret(14, 1, "14.1", "14.1");
-	interpret(14, 2, "r14c[-1]", "14.1");
+
+	interpret2(13,1, "if(1>2, 10, 11)", "11"); 
+	interpret2(13,1, "if(#TRUE, \"hello\", \"world\")", "hello"); 
+
+	interpret2(14, 1, "14.1", "14.1");
+	interpret2(14, 2, "r14c[-1]", "14.1");
 #endif
 
-	interpret(15, 1, "15.2", "15.2");
-	interpret(15, 2, "rc[-1]", "15.2");
-	interpret(16, 2, "r14c+r15c2", "29.3");
+	interpret2(15, 1, "15.2", "15.2");
+	interpret2(15, 2, "rc[-1]", "15.2");
+	interpret2(16, 2, "r14c+r15c2", "29.3");
 
 
-	cout << "INFO: Completely finished parser2019\n";
-	return 0;
+	cout << "INFO: Completely finished parser2019 with overall result ";
+	cout << (all_pass? "PASS" : "FAIL");
+	cout << "\n";
+	return all_pass;
 }
 
 int run_clear_test()
