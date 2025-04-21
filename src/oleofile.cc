@@ -317,7 +317,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 	int old_a0;
 	int next_a0;
 
-	Global->return_from_error = 1;
+	//Global->return_from_error = 1;
 
 	old_a0 = Global->a0;
 	next_a0 = old_a0;
@@ -516,7 +516,7 @@ bad_field:
 					std::string msg{string_format(fmt, lineno, input_line.c_str())};
 					msg = trim(msg);
 					throw SyntaxError(msg);
-					Global->return_from_error = 0;
+					//Global->return_from_error = 0;
 					return;
 					}
 		}	/* End of switch */
@@ -526,13 +526,13 @@ bad_field:
 			clear_spreadsheet ();
 		olf_io_recenter_all_win ();
 		raise_error("read-file: read-error near line %d.", lineno);
-		Global->return_from_error = 0;
+		//Global->return_from_error = 0;
 		return;
 	}
 	Global->a0 = next_a0;
 	olf_io_recenter_all_win ();
 
-	Global->return_from_error = 0;
+	//Global->return_from_error = 0;
 }
 
 static char * oleo_fmt_to_str (int f1, int p1)
