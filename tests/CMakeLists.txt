@@ -24,6 +24,7 @@ add_test(NAME insert	COMMAND ${NEO} -s insert-01.scr)
 add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
 add_test(NAME iss18	COMMAND ${NEO} -s issue18.scr)
 add_test(NAME iss25	COMMAND issue25.sh)
+add_test(NAME nohead	COMMAND ${NEO} -s nohead-01.scr)
 add_test(NAME pass  COMMAND ${NEO} -T pass) # a test that always passes
 add_test(NAME write COMMAND ${NEO} -s write.scr)
 

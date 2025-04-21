@@ -1,5 +1,4 @@
-set-option noa0
-
+! rm out/nohead-01.oleo
 i
 12
 13.1
@@ -8,5 +7,6 @@ i
 rc[-1] + 2
 rc[-1] + 3.3
 .
-w
-q
+w out/nohead-01.oleo
+! ./differ nohead-01
+exit $?
