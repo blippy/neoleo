@@ -1,10 +1,13 @@
-    right        centred        left
-       12                  13               14
-long text   hopefully centred   more long text
-     12.2
-
-
-
-
-
-
+.TS
+rcl.
+right	centred	left
+.T&
+rrr.
+12	13	14
+.T&
+rrr.
+long text	hopefully centred	more long text
+.T&
+rrr.
+12.2		
+.TE

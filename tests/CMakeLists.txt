@@ -4,8 +4,10 @@
 set(CTEST_OUTPUT_ON_FAILURE ON)
 file(GLOB SHELLS *.sh)
 file(COPY ${SHELLS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(GLOB SCRIPTS *.scr certify differ)
+file(GLOB SCRIPTS *.scr)
 file(COPY ${SCRIPTS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY certify differ issue25.oleo DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 file(GLOB VERIF verified/*.oleo verified/*.rep)
 file(COPY ${VERIF}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/verified)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out) 
@@ -21,6 +23,7 @@ add_test(NAME floor COMMAND ${NEO} -s floor.scr)
 add_test(NAME insert	COMMAND ${NEO} -s insert-01.scr)
 add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
 add_test(NAME iss18	COMMAND ${NEO} -s issue18.scr)
+add_test(NAME iss25	COMMAND issue25.sh)
 add_test(NAME pass  COMMAND ${NEO} -T pass) # a test that always passes
 add_test(NAME write COMMAND ${NEO} -s write.scr)
 

@@ -1,17 +1,22 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # tests groff functionality
 # RFE#25
 
-# OFILE=`mktemp`
-TMPFILE=`mktemp`
-SS=$ASRCDIR/issue25.oleo
-echo "SS=$SS"
-#REP=issue25.rep
-NEO=$ABUILDDIR/../src/neoleo
-echo "NEO=$NEO"
-$NEO $SS -H <<< tbl | groff -T ascii -t | head -10 > $TMPFILE
-set_productions issue25.rep
-#mv $OFILE out/ref.oleo
-mv $TMPFILE $OUTFILE
-diff $OUTFILE $VERFILE
+# produces a groff file
+# You can view it via:
+# groff -T ascii -t verified/issue25.rep
+
+REP=issue25.rep
+
+NEO=../neoleo
+if [ -f ../build/neoleo ] ; then
+	NEO=../build/neoleo
+fi
+
+#NEO=neoleo
+$NEO -H issue25.oleo > out/$REP << EOF
+tbl
+EOF
+
+diff out/$REP verified/$REP >diffs/$REP.diffs
 exit $?
