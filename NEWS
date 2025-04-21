@@ -14,6 +14,9 @@ BUG: Bold an italic doesn't seem to work anymore
 
 After what was mostly bugfixes, we now have new features
 
+* Switched to cmake. Autotools ditched. You will therefore need cmake
+installed. I have found cmake easier to deal with.
+
 * Added keystroke `%' for percentage format
 
 * italic feature added via C-i. WARNING: If you save a cell with a bold
