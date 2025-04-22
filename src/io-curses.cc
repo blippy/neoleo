@@ -109,25 +109,12 @@ struct input_view
 
         int prompt_wid;
 
-        /* The parameters below are a cache.  If this flag is true,
-         * the cache is known to be wrong.
-         */
 
-        struct line * input_area;       /* The text editted in the input area or 0. */
-        char * prompt;
-        int visibility_begin;           /* Index of first visible char or 0. */
-        int visibility_end;             /* Index of last visible char or 0. */
-        int input_cursor;               /* Index of the cursor position or 0. */
-        int vis_wid;                    /* This is the width of the visible text 
-                                         * with extra space for the cursor, if it 
-                                         * happens to be past the end of the string.
-                                         */
 
         /* A command_arg can specify an info buffer which should be displayed 
          * while prompting for that arg.
          */
         struct info_buffer * current_info;
-        int info_redraw_needed; /* != 0 if redraw needed */
 };
 
 
@@ -135,73 +122,11 @@ struct input_view
 
 
 
-static int curses_metricXXX (char * str, int len)
-{
-	return len;
-}
 
 static struct input_view input_view{0};
 
-static void _io_redraw_input (void)
-{
-	int pos;
-	int row = (input_view.current_info ? 0 : Global->input);
-
-	if (input_view.info_redraw_needed)
-	{
-		input_view.info_redraw_needed = 0;
-		_io_repaint ();
-		return;
-	}
-
-	if (input_view.redraw_needed == NO_REDRAW)
-		return;
-
-	if (input_view.redraw_needed == FULL_REDRAW)
-	{
-		/* Redraw	the prompt. */ 
-		move (row, 0);
-		if (input_view.expanded_keymap_prompt)
-		{
-			addstr (input_view.expanded_keymap_prompt);
-			clrtoeol ();
-			input_view.redraw_needed = NO_REDRAW;
-			return;
-		}
-		if (input_view.prompt_wid)
-			addstr (input_view.prompt);
-		pos = input_view.visibility_begin;
-	}
-	else
-	{
-		pos = input_view.redraw_needed;
-		move (row,
-				input_view.prompt_wid + pos - input_view.visibility_begin);
-	}
-
-	if (   input_view.input_area
-			&& (input_view.visibility_end >= input_view.visibility_begin)
-			&& (1))
-	{
-		int x;
-		for (x = pos; x <= input_view.visibility_end; ++x) {
-			//addch (input_view.input_area->buf[x]);
-		}
-	}
-	clrtoeol ();
-	input_view.redraw_needed = NO_REDRAW;
-}
 
 
-
-#if 0
-
-static void
-_io_fix_input (void)
-{
-	iv_fix_input (&input_view);
-}
-#endif
 
 
 void cur_io_display_cell_cursor (void)
@@ -398,6 +323,7 @@ void cont_curses(void)
 
 static void _io_redisp (void)
 {
+	/*
 	if (!term_cursor_claimed)
 	{
 		_io_redraw_input();
@@ -409,6 +335,7 @@ static void _io_redisp (void)
 					input_view.prompt_wid + input_view.input_cursor -
 					input_view.visibility_begin); 
 	}
+	*/
 	{
 		struct rng * rng = &cwin->screen;
 		if (   (curow > rng->hr)
@@ -600,8 +527,8 @@ void _io_repaint (void)
 	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		cur_io_display_cell_cursor ();
-	input_view.redraw_needed = FULL_REDRAW;
-	_io_redraw_input();
+	//input_view.redraw_needed = FULL_REDRAW;
+	//_io_redraw_input();
 	cur_io_update_status ();
 }
 
