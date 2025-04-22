@@ -97,16 +97,10 @@ struct input_view
          */
         int redraw_needed;
 
-        /* These are provided by io-{curses,x11} and tell how to convert
-         * strings to widths.
-         */
-        text_measure prompt_metric;
-        text_measure input_metric;
 
         /* If the currently mapped keymap has a prompt, the display of that
          * prompt takes precedence.
          */
-        char * keymap_prompt;
         char * expanded_keymap_prompt;
 
         /* This is the width of either the keymap_prompt or the input text
@@ -118,7 +112,6 @@ struct input_view
         /* The parameters below are a cache.  If this flag is true,
          * the cache is known to be wrong.
          */
-        int must_fix_input;
 
         struct line * input_area;       /* The text editted in the input area or 0. */
         char * prompt;
@@ -134,7 +127,6 @@ struct input_view
          * while prompting for that arg.
          */
         struct info_buffer * current_info;
-        int info_pos;           /* In the current info, the first vis. line */ 
         int info_redraw_needed; /* != 0 if redraw needed */
 };
 
@@ -143,12 +135,12 @@ struct input_view
 
 
 
-static int curses_metric (char * str, int len)
+static int curses_metricXXX (char * str, int len)
 {
 	return len;
 }
 
-static struct input_view input_view  = {0, curses_metric, curses_metric, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static struct input_view input_view{0};
 
 static void _io_redraw_input (void)
 {
