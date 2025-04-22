@@ -63,71 +63,16 @@ using namespace std::string_literals;
 
 CELLREF mkrow = NON_ROW;
 CELLREF mkcol = NON_COL;
-const int input_active = 0;
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
-//#define MIN_WIN_HEIGHT(W) (W->bottom_edge_r + label_rows * (W->flags & WIN_EDGES ? 2 : 1))
-
-//#define MIN_WIN_WIDTH(W) (W->right_edge_c + label_emcols * (W->flags & WIN_EDGES ? 6 : 1))
 #define MIN_CWIN_HEIGHT  MIN_WIN_HEIGHT(cwin)
 #define MIN_CWIN_WIDTH  MIN_WIN_WIDTH(cwin)
 
 
-//static int redrew = 0;
-//static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
-
-
-/* Display-generic updating logic for the input area. */
-
-/* These are for the field REDRAW_NEEDED */
-//#define NO_REDRAW               -2
-//#define FULL_REDRAW      	-1
-
-#if 0
-struct input_view
-{
-        /* If this is less than 0, see the #defines above.
-         * >= 0, this is the index of a character in the 
-         * input string.  All characters at that index and 
-         * greater need to be redrawn.
-         */
-        //int redraw_needed;
-
-
-        /* If the currently mapped keymap has a prompt, the display of that
-         * prompt takes precedence.
-         */
-        //char * expanded_keymap_prompt;
-
-        /* This is the width of either the keymap_prompt or the input text
-         * prompt, whichever is current (0 if neither is).
-         */
-
-        //int prompt_wid;
-
-
-
-        /* A command_arg can specify an info buffer which should be displayed 
-         * while prompting for that arg.
-         */
-        //struct info_buffer * current_info;
-};
-#endif
-
-
-
-
-
-
-
-//static struct input_view input_view{0};
-
-
-
 
 
 void cur_io_display_cell_cursor (void)
@@ -139,8 +84,6 @@ void cur_io_display_cell_cursor (void)
 	int cwid;
 	int n;
 	int x, y;
-
-	//if (input_view.current_info)		return;
 
 	if (   (curow < cwin->screen.lr)
 			|| (cucol < cwin->screen.lc)
@@ -161,11 +104,7 @@ void cur_io_display_cell_cursor (void)
 	move (cell_cursor_row, cell_cursor_col);
 	standout ();
 	for (n = cwid; n; n--)
-#ifdef A_STANDOUT
 		addch (inch () | A_STANDOUT);
-#else
-	addch (inch ());
-#endif
 	standend ();
 	move (y, x);
 }
@@ -322,27 +261,11 @@ void cont_curses(void)
 
 static void _io_redisp (void)
 {
-	/*
-	if (!term_cursor_claimed)
-	{
-		_io_redraw_input();
-		if (!(input_view.current_info || input_active ||
-					input_view.expanded_keymap_prompt))
-			move_cursor_to (cwin, curow, cucol);
-		else
-			move ((input_view.current_info ? 0 : Global->input), 
-					input_view.prompt_wid + input_view.input_cursor -
-					input_view.visibility_begin); 
-	}
-	*/
-	{
-		struct rng * rng = &cwin->screen;
-		if (   (curow > rng->hr)
-				|| (curow < rng->lr)
-				|| (cucol > rng->hc)
-				|| (cucol < rng->lc))
-			io_recenter_cur_win ();
-	}
+
+	struct rng * rng = &cwin->screen;
+	if ((curow > rng->hr) || (curow < rng->lr) || (cucol > rng->hc)	|| (cucol < rng->lc))
+		io_recenter_cur_win ();
+
 	refresh ();
 }
 
@@ -384,7 +307,6 @@ void cur_io_update_status (void) // FN
 	int plen;
 	int yy, xx;
 
-	//if (!user_status || input_view.current_info)		return;
 	getyx (stdscr, yy, xx);
 	move (Global->status, 0);
 	wid = columns - 2;
@@ -448,12 +370,8 @@ void _io_repaint (void)
 	struct window *win = cwin;
 
 	clear ();
-	//_io_fix_input ();
-	//redrew++;
 	show_menu();
 	
-	//if(input_view.current_info) return;
-
 	if (win->lh_wid)
 	{
 		move (win->win_down - 1, win->win_over - win->lh_wid);
@@ -1143,22 +1061,6 @@ void io_set_input_statusXXX (int inp, int stat, int redraw)
 				 + (user_input > 0 ? input_rows : 0));
 
 			assert(grow>=0) ;
-#if 0
-			 if (grow < 0)
-			{
-				int x;
-re:
-				for (x = 0; x < nwin; ++x)
-				{
-					int top = cwin->win_down - win_label_rows(cwin);
-					if (cell_top == top && (cwin->numr <= -grow))
-					{
-						do_close_window (x);
-						goto re;
-					}
-				}
-			}
-#endif 
 
 			if (grow)
 			{
