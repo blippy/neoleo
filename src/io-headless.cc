@@ -159,11 +159,11 @@ static void type_cell(int fildes)
 
 static void _write_file(int fildes)
 {
-	log("_write_file:called");
+	//log("_write_file:called");
 	if(_arg.size() > 0) FileSetCurrentFileName(_arg);
 	string name = FileGetCurrentFileName();
 	
-	log("writing file:", name);
+	//log("writing file:", name);
 	
 	FILE *fp = fopen(name.c_str(), "w");
 	if(!fp) {
@@ -178,7 +178,7 @@ static void _write_file(int fildes)
 
 }
 void hl_write_file(){
-	log("hl_write_file:called");
+	//log("hl_write_file:called");
 	_write_file(0);
 }
 
@@ -233,7 +233,7 @@ static void hl_exit(int fildes)
 {	
 	//cout << "exit called\n";
 	if(_arg == "$?") {
-		log("calling hl_exit with status ", _sys_ret);
+		//log("calling hl_exit with status ", _sys_ret);
 		exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
 	}
 	auto ret = to_int(_arg);
@@ -245,7 +245,7 @@ static void _exc(int fildes)
 {
 	//system("ls");
 	_sys_ret = system(_arg.c_str());
-	log("system status:", _sys_ret, ", arg:", _arg);
+	//log("system status:", _sys_ret, ", arg:", _arg);
 	//cout << _sys_ret << "\n";
 }
 
@@ -281,7 +281,7 @@ bool process_headless_line(std::string line, int fildes)
 	while(i<len) _arg += line[i++];
 	//cout << "'" << cmd << "'\n";
 
-	log("process_headless_line cmd;", cmd, ";arg:", _arg);
+	//log("process_headless_line cmd;", cmd, ";arg:", _arg);
 	// try to find a canned function and execute it
 	auto it = func_map.find(cmd);
 	if(it != func_map.end()) {
@@ -306,11 +306,11 @@ bool process_headless_line(std::string line, int fildes)
 
 static void _repl(int fildes)
 {
-	log("_repl:start");
+	//log("_repl:start");
 	bool cont = true;
 	while(cont) {
 		try {
-			log(".");
+			//log(".");
 			bool eof;
 			string line = getline_from_fildes(fildes, eof);
 			cont =	process_headless_line(line, fildes);
@@ -331,16 +331,16 @@ void headless_main() // FN
 
 int headless_script(const char* script_file)
 {
-	log("headless_script:started");
+	//log("headless_script:started");
 	int fildes = open(script_file, O_RDONLY);
 	if(fildes == -1) {
 		cerr << "? Couldn't script file:" << script_file << endl;
 		return 1;
 	}
 
-	log("headless_script:calling repl");
+	//log("headless_script:calling repl");
 	_repl(fildes);
-	log("headless_script:finished repl");
+	//log("headless_script:finished repl");
 	close(fildes);
 	return 0;
 }

@@ -199,7 +199,7 @@ void oleo_read_window_config (char * line)
 {
 	int wnum = 0;
 	char *text;
-	CELLREF nrow = NON_ROW, ncol = NON_COL;
+	//CELLREF nrow = NON_ROW, ncol = NON_COL;
 	char *opts = 0;
 	//struct window *win;
 
@@ -214,8 +214,9 @@ void oleo_read_window_config (char * line)
 				break;
 				/* Cursor At */
 			case 'A':
-				nrow = astol (&text);
-				ncol = astol (&text);
+				//log("oleo_read_window_config:A");
+				curow = astol (&text);
+				cucol = astol (&text);
 				break;
 				/* JF: Window options */
 			case 'O':
@@ -264,21 +265,7 @@ void oleo_read_window_config (char * line)
 	}
 	--wnum;
 	//win = &wins[wnum];
-	if (nrow != NON_ROW)
-	{
-		curow = nrow;
-		cucol = ncol;
-		/*
-		if (win == cwin)
-		{
-			//curow = nrow;
-			set_curow(nrow);
-			//cucol = ncol;
-			set_cucol(ncol);
-		}
-			*/
-		//olf_recenter_window(cwin);
-	}
+
 	if (opts)
 	{
 		char *np;
@@ -601,7 +588,6 @@ A line beginning with F (for format)
 */
 static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col)
 {
-	//log_debug(std::string{"works"});
 	#define ptr (*cptr) // do some refactoring fudging
 	ptr++; // The 'F' is already read in, so skip it
 
@@ -682,7 +668,6 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'B': 
-			//log("Found bold in oleo");
 			is_bold = true;
 			break;
 		case 'F':
