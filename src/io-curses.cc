@@ -74,19 +74,18 @@ const int input_active = 0;
 #define MIN_CWIN_WIDTH  MIN_WIN_WIDTH(cwin)
 
 
-static int redrew = 0;
-static int term_cursor_claimed = 0;
+//static int redrew = 0;
+//static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 
 
 /* Display-generic updating logic for the input area. */
-typedef int (*text_measure) (char * str, int len);
 
 /* These are for the field REDRAW_NEEDED */
-#define NO_REDRAW               -2
-#define FULL_REDRAW      	-1
+//#define NO_REDRAW               -2
+//#define FULL_REDRAW      	-1
 
 #if 0
 struct input_view
@@ -450,7 +449,7 @@ void _io_repaint (void)
 
 	clear ();
 	//_io_fix_input ();
-	redrew++;
+	//redrew++;
 	show_menu();
 	
 	//if(input_view.current_info) return;
