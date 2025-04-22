@@ -47,8 +47,10 @@ using std::map;
 #include "io-curses.h"
 
 
-const map<char, int>  format_map{{'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL}, 
+const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
+
+
 
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
@@ -549,6 +551,8 @@ static char * oleo_fmt_to_str (int f1, int p1)
 			else
 				sprintf (&p_buf[1], "%d", p1);
 
+			p_buf[0] = map_reverse(format_map, f1);
+			/*
 			switch (f1)
 			{
 				case FMT_USR:
@@ -579,6 +583,7 @@ static char * oleo_fmt_to_str (int f1, int p1)
 					p_buf[0] = '?';
 					break;
 			}
+			*/
 			break;
 	}
 	return p_buf;
@@ -653,8 +658,9 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			is_bold = true;
 			break;
 		case 'F':
+			fmt = format_map.at(*ptr++);
 			
-
+			/*
 			switch (*ptr++)
 			{
 			case 'D': fmt = FMT_DEF; break;
@@ -673,6 +679,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				fmt = FMT_DEF;
 				break;
 			}
+			*/
 			if (*ptr == 'F')
 			{
 				prc = FLOAT_PRECISION;

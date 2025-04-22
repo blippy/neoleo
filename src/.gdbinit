@@ -10,5 +10,5 @@ file ../build/neoleo
 #b _write_file
 #b headless_main
 #r -s ../tests/ctime.scr
-b write_widths
+#b write_widths
 r -H ../build/tests/out/spans.oleo

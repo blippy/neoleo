@@ -61,3 +61,16 @@ T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
 		throw OleoJmp(msg_if_fail);
 	}
 }
+
+
+// perform a reverse look-up on a map
+template<typename K, typename V>
+K map_reverse(const std::map<K,V> &m, V val)
+{
+	for (auto const& [key, v] : m) {
+		if(v == val)  return key;
+	}
+
+	throw OleoJmp("map_reverse failed");
+
+}
