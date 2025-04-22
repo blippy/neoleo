@@ -77,7 +77,7 @@ const int input_active = 0;
 static int redrew = 0;
 static int term_cursor_claimed = 0;
 
-static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
+static void move_cursor_to (struct window *, CELLREF, CELLREF);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 
 
@@ -411,7 +411,7 @@ static void _io_redisp (void)
 		_io_redraw_input();
 		if (!(input_view.current_info || input_active ||
 					input_view.expanded_keymap_prompt))
-			move_cursor_to (cwin, curow, cucol, 0);
+			move_cursor_to (cwin, curow, cucol);
 		else
 			move ((input_view.current_info ? 0 : Global->input), 
 					input_view.prompt_wid + input_view.input_cursor -
@@ -617,7 +617,7 @@ void _io_repaint (void)
 
 
 
-static void move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
+static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 {
 	int cc;
 	int cell_cursor_col;
@@ -627,7 +627,7 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c, int dn)
 	cell_cursor_col = win->win_over;
 	for (cc = win->screen.lc; cc < c; cc++)
 		cell_cursor_col += get_width (cc);
-	cell_cursor_row = win->win_down + dn;
+	cell_cursor_row = win->win_down;
 	for (rr = win->screen.lr; rr < r; rr++)
 		cell_cursor_row += get_height (rr);
 	move (cell_cursor_row, cell_cursor_col);
@@ -674,7 +674,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	char ptr1[str.size()+1];
 	char* ptr = strcpy(ptr1, str.c_str());
 
-	move_cursor_to (win, r, c, 0);
+	move_cursor_to (win, r, c);
 	if (glowing) standout ();
 
 	bool is_bold = cp->cell_flags.bold;
@@ -718,7 +718,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 				for (; ccdh != ccdl; --ccdh)
 					if (ccdh != c && (wwid = get_width (ccdh)))
 					{
-						move_cursor_to (win, r, ccdh, 0);
+						move_cursor_to (win, r, ccdh);
 						printw ("%*s", wwid, "");
 					}
 			}
@@ -731,7 +731,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 			for (; cch != ccl; --cch)
 				if (cch != c && (wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch, 0);
+					move_cursor_to (win, r, cch);
 					printw ("%*s", wwid, "");
 				}
 			io_pr_cell (r, ccl, find_cell (r, ccl));
@@ -817,13 +817,13 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 			for (; cch > cc; --cch)
 				if ((wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch, 0);
+					move_cursor_to (win, r, cch);
 					printw ("%*s", wwid, "");
 				}
 			for (cch = c - 1; cch > ccl; --cch)
 				if ((wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch, 0);
+					move_cursor_to (win, r, cch);
 					printw ("%*s", wwid, "");
 				}
 			if (ccl != c)
