@@ -798,22 +798,6 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 //	return false;
 }
 
-static char jst_to_chr ( int just)
-{
-	switch (just)
-	{
-		case JST_DEF:
-			return 'D';
-		case JST_LFT:
-			return 'L';
-		case JST_RGT:
-			return 'R';
-		case JST_CNT:
-			return 'C';
-		default:
-			return '?';
-	}
-}
 
 static FILE *oleo_fp;
 static struct rng *oleo_rng;
@@ -875,7 +859,8 @@ void write_cells(FILE* fp)
 			fprintf (fp, "F");
 			
 			fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));
-			fprintf(fp, "%c\n", jst_to_chr (j1));
+			//fprintf(fp, "%c\n", jst_to_chr (j1));
+			fprintf(fp, "%c\n", map_reverse(jst_map, j1));
 		}
 
 		//if (!GET_TYP (cp) && !cp->get_cell_formula()) continue;
@@ -983,7 +968,8 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 
 	(void) fprintf (fp, "F;D%s%c%u\n",
 			oleo_fmt_to_str (default_fmt, default_prc),
-			jst_to_chr (default_jst),
+			//jst_to_chr (default_jst),
+			map_reverse(jst_map, default_jst),
 			default_width);
 
 	write_mp_options (fp);
