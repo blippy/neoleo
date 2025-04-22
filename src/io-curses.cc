@@ -1170,7 +1170,7 @@ void io_set_win_flags (struct window *w, int f)
 
 
 
-void io_set_input_status (int inp, int stat, int redraw)
+void io_set_input_statusXXX (int inp, int stat, int redraw)
 {
 	int inpv = inp < 0 ? -inp : inp;
 	int inpsgn = inp == inpv ? 1 : -1;
@@ -1281,7 +1281,7 @@ re:
 void  io_init_windows () 
 {
 
-	io_set_input_status (1, 2, 0);
+	//io_set_input_status (1, 2, 0);
 	cwin->id = win_id++;
 	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
 	cwin->win_down = (label_rows + (user_status > 0) * status_rows + (user_input > 0) * input_rows);
@@ -1291,4 +1291,11 @@ void  io_init_windows ()
 	cwin->right_edge_c = default_right_border;
 	cwin->lh_wid = 0;
 
+	/* at the end of this process
+	 	 (gdb) p the_cwin
+		$3 = {id = 1, win_over = 0, win_down = 3, screen = {lr = 0, lc = 0, hr = 0,
+    	hc = 0}, numr = 21, numc = 80, bottom_edge_r = 0, right_edge_c = 0,
+  	  lh_wid = 0}
+		(gdb) n
+	 */
 }
