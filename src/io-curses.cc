@@ -845,14 +845,6 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-
-struct tmp_s { int l, r, u, b; };
-
-static void win_io_repaint()
-{
-
-}
-
 static void 
 do_close_window (int num)
 {
@@ -988,7 +980,7 @@ void io_recenter_all_win(void)
 {
 	if (!nwin) return;
 	io_recenter_named_window (cwin);
-	win_io_repaint ();
+	//win_io_repaint ();
 }
 void io_recenter_named_window(struct window *w)
 {
@@ -1268,7 +1260,7 @@ re:
 				//for (x = 0; x < nwin; ++x)
 					cwin->win_down += vchange;
 			}
-			win_io_repaint ();
+			//win_io_repaint ();
 		}
 		user_input = new_ui;
 		user_status = new_us;
