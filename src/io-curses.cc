@@ -88,6 +88,7 @@ typedef int (*text_measure) (char * str, int len);
 #define NO_REDRAW               -2
 #define FULL_REDRAW      	-1
 
+#if 0
 struct input_view
 {
         /* If this is less than 0, see the #defines above.
@@ -95,27 +96,28 @@ struct input_view
          * input string.  All characters at that index and 
          * greater need to be redrawn.
          */
-        int redraw_needed;
+        //int redraw_needed;
 
 
         /* If the currently mapped keymap has a prompt, the display of that
          * prompt takes precedence.
          */
-        char * expanded_keymap_prompt;
+        //char * expanded_keymap_prompt;
 
         /* This is the width of either the keymap_prompt or the input text
          * prompt, whichever is current (0 if neither is).
          */
 
-        int prompt_wid;
+        //int prompt_wid;
 
 
 
         /* A command_arg can specify an info buffer which should be displayed 
          * while prompting for that arg.
          */
-        struct info_buffer * current_info;
+        //struct info_buffer * current_info;
 };
+#endif
 
 
 
@@ -123,7 +125,7 @@ struct input_view
 
 
 
-static struct input_view input_view{0};
+//static struct input_view input_view{0};
 
 
 
@@ -139,8 +141,7 @@ void cur_io_display_cell_cursor (void)
 	int n;
 	int x, y;
 
-	if (input_view.current_info)
-		return;
+	//if (input_view.current_info)		return;
 
 	if (   (curow < cwin->screen.lr)
 			|| (cucol < cwin->screen.lc)
@@ -180,8 +181,7 @@ void win_io_hide_cell_cursor (void)
 	int n;
 	int x, y;
 
-	if (input_view.current_info)
-		return;
+	//if (input_view.current_info)	return;
 	if (   (curow < cwin->screen.lr)
 			|| (cucol < cwin->screen.lc)
 			|| (curow > cwin->screen.hr)
@@ -385,8 +385,7 @@ void cur_io_update_status (void) // FN
 	int plen;
 	int yy, xx;
 
-	if (!user_status || input_view.current_info)
-		return;
+	//if (!user_status || input_view.current_info)		return;
 	getyx (stdscr, yy, xx);
 	move (Global->status, 0);
 	wid = columns - 2;
@@ -454,7 +453,7 @@ void _io_repaint (void)
 	redrew++;
 	show_menu();
 	
-	if(input_view.current_info) return;
+	//if(input_view.current_info) return;
 
 	if (win->lh_wid)
 	{
@@ -572,8 +571,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	int hgt;
 	int yy, xx;
 
-	if (input_view.current_info)
-		return;
+	//if (input_view.current_info)		return;
 
 	wid = get_width (c);
 	if (!wid)
