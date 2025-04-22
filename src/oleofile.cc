@@ -311,9 +311,9 @@ void oleo_read_file (FILE *fp, int ismerge)
 
 	//Global->return_from_error = 1;
 
-	old_a0 = Global->a0;
-	next_a0 = old_a0;
-	Global->a0 = 0;
+	//old_a0 = Global->a0;
+	//next_a0 = old_a0;
+	//Global->a0 = 0;
 	lineno = 0;
 	if (!ismerge)
 		clear_spreadsheet ();
@@ -340,26 +340,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 						throw SyntaxError("Font name no longer handled");
 						break;
 					case 'f':		/* %f range font-name */
-						{
-#if 0
-							struct rng rng;
-							/* This field only occurs in files written by 1.1
-							 * oleo.  It's presense indicates that when parsing
-							 * format fields, we should *not* reset cell fonts to 0.
-							 */
-							font_spec_in_format = 0;
-							++ptr;
-							while (isspace (*ptr))
-								++ptr;
-							if (!parse_cell_or_range (&ptr, &rng))
-								goto bad_field;
-							while (isspace (*ptr))
-								++ptr;
-							{
-							}
-#endif
-							break;
-						}
+						break;
 					default:		/* % with something invalid */
 						goto bad_field;
 				}
@@ -490,10 +471,10 @@ void oleo_read_file (FILE *fp, int ismerge)
 				/* JF extension: read uset-settable options */
 			case 'O':
 				//break;
-				Global->a0 = next_a0;
+				//Global->a0 = next_a0;
 				read_mp_options (ptr + 2);
-				next_a0 = Global->a0;
-				Global->a0 = 0;
+				//next_a0 = Global->a0;
+				//Global->a0 = 0;
 				break;
 			case 'G':	/* Graph data */
 				break;
@@ -502,7 +483,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 			default:
 bad_field:
 				{
-					Global->a0 = old_a0;
+					//Global->a0 = old_a0;
 					if (!ismerge)
 						clear_spreadsheet ();
 					olf_io_recenter_all_win ();
@@ -523,7 +504,7 @@ bad_field:
 		//Global->return_from_error = 0;
 		return;
 	}
-	Global->a0 = next_a0;
+	//Global->a0 = next_a0;
 	olf_io_recenter_all_win ();
 
 	//Global->return_from_error = 0;
@@ -552,38 +533,6 @@ static char * oleo_fmt_to_str (int f1, int p1)
 				sprintf (&p_buf[1], "%d", p1);
 
 			p_buf[0] = map_reverse(format_map, f1);
-			/*
-			switch (f1)
-			{
-				case FMT_USR:
-					p_buf[0] = 'U';
-					break;
-				case FMT_GEN:
-					p_buf[0] = 'G';
-					break;
-				case FMT_DOL:
-					p_buf[0] = '$';
-					break;
-				case FMT_PCT:
-					p_buf[0] = '%';
-					break;
-				case FMT_FXT:
-					p_buf[0] = 'F';
-					break;
-				case FMT_CMA:
-					p_buf[0] = ',';
-					break;
-				case FMT_EXP:
-					p_buf[0] = 'E';
-					break;
-				case FMT_DATE:
-					p_buf[0] = 'd';
-					break;
-				default:
-					p_buf[0] = '?';
-					break;
-			}
-			*/
 			break;
 	}
 	return p_buf;
@@ -636,18 +585,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				default_prc = prc = astol(&ptr);
 
 			default_jst = jst_map.at(*ptr++);
-			/*
-			switch (*ptr++)
-			{
-			case 'C': default_jst = JST_CNT; break;
-			case 'L': default_jst = JST_LFT; break;
-			case 'R': default_jst = JST_RGT; break;
-			case 'G':  // General format not supported
-			default:
-				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-				break;
-			}
-			*/
+
 			// 25/4
 			//default_width = astol(&ptr);
 			(void) astol(&ptr);
@@ -923,14 +861,9 @@ static std::string oleo_write_window_config ()
 			strcat (buf, ",standout");
 		if ((win_flags & WIN_EDGES) == 0)
 			strcat (buf, ",noedges");
-		//scratch = *out;
-		//out->alloc = 0;
-		//out->buf = 0;
-		//sprint_line (out, "%sW;N%d;A%u %u;C%d %d %d;O%s\n", scratch.buf, n + 1, wins[n].win_curow, wins[n].win_cucol, 7, 0, 7, buf + 1);
+
 		oss << "W;N" << 1 << ";A" << curow << " " << cucol 
 			<< ";C7 0 7;O" << buf+1 << "\n";
-		//free (scratch.buf);
-	//}
 
 	return oss.str();
 }
@@ -975,8 +908,8 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	write_mp_options (fp);
 
 
-	old_a0 = Global->a0;
-	Global->a0 = 0;
+	//old_a0 = Global->a0;
+	//Global->a0 = 0;
 
 	//span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
 	//write_spans(fp, w_find, 'W');
@@ -994,7 +927,7 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	std::string str = oleo_write_window_config();
 	fputs(str.c_str(), fp);
 	(void) fprintf (fp, "E\n");
-	Global->a0 = old_a0;
+	//Global->a0 = old_a0;
 }
 
 int oleo_set_options( int set_opt, char *option)

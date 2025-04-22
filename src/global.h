@@ -64,7 +64,7 @@ struct var; /* in case it hasn't been declared yet */
  * around all over.
  */
 struct OleoGlobal {
-	int				bkgrnd_recalc = 1, a0 = 0 , auto_recalc = 1; // , a0 = 0, topclear = 0, sylk_a0 = 1;
+	const int				bkgrnd_recalc = 1, a0 = 0 , auto_recalc = 1;
 	int				modified = 0;
 	//int				return_from_error = 0;
 	int				display_opened = 0;

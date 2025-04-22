@@ -44,7 +44,7 @@ using namespace std::string_literals;
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>
-#undef NULL
+//#undef NULL
 #include "global.h"
 #include "cell.h"
 #include "io-curses.h"
@@ -469,7 +469,7 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 }
 
 
-extern int auto_recalc;
+//extern int auto_recalc;
 
 
 
