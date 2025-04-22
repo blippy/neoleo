@@ -50,7 +50,7 @@ using std::map;
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
 
-const map<char, int>  jst_map{{'C', JST_CNT}, {'L', JST_LFT}, {'R', JST_RGT}};
+const map<char, int>  jst_map{{'C', JST_CNT}, {'D', JST_DEF}, {'L', JST_LFT}, {'R', JST_RGT}};
 
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
@@ -690,6 +690,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			} else {
 				prc = astol(&ptr);
 			}
+			jst = jst_map.at(*ptr++);
+			/*
 			switch (*ptr++)
 			{
 			case 'C': jst = JST_CNT; break;
@@ -701,6 +703,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				jst = JST_DEF;
 				break;
 			}
+			*/
 			vlen = 1;
 			break;
 		case 'I':
