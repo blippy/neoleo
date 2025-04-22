@@ -166,19 +166,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 
 
 
-	/*
-	FD_ZERO (&read_fd_set);
-	FD_ZERO (&read_pending_fd_set);
-	FD_ZERO (&exception_fd_set);
-	FD_ZERO (&exception_pending_fd_set);
-	*/
-
-	//constexpr bool pesky_abstract = true;
-	//bool force_cmd_graphics = false;
-	//using_curses = !user_wants_headless;
-
-	//choose_display(force_cmd_graphics);
-
 
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
@@ -200,9 +187,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 		optind++;
 	}
 
-	//constexpr bool pre_init_io = false;
-	//if constexpr(pre_init_io) io_init_windows();	
-	Global->display_opened = 1;
+	//Global->display_opened = 1;
 	Global->modified = 0;
 	if(opt_script_file) {
 		int ret = headless_script(opt_script_file);
