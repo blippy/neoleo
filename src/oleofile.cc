@@ -47,6 +47,9 @@ using std::map;
 #include "io-curses.h"
 
 
+const map<char, int>  format_map{{'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL}, 
+	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
+
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
 void olf_set_options (char *opts) // FN
@@ -598,6 +601,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 	int jst = 0;
 	bool is_bold = false;
 	bool is_italic = false;
+	std::string err_msg;
 	
 
 
@@ -615,31 +619,9 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'D': /* Default format */
-			{ 
-				const map<char, int>  m{{'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
-					{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
-				
-				auto msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
-				default_fmt = map_or_raise(m, *ptr++, msg);
+ 			err_msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
+			default_fmt = map_or_raise(format_map, *ptr++, err_msg);
 
-			}
-			/*
-			switch (*ptr++)
-			{
-			case 'G': default_fmt = FMT_GEN; break;
-			case 'E': default_fmt = FMT_EXP; break;
-			case 'F': default_fmt = FMT_FXT; break;
-			case '$': default_fmt = FMT_DOL; break;
-			case ',': default_fmt = FMT_CMA; break;
-			case 'U': default_fmt = FMT_USR; break;
-			case '%': default_fmt = FMT_PCT; break;
-			case 'H': default_fmt = FMT_HID; break;
-			case 'd': default_fmt = FMT_DATE; break;
-			default:
-				raise_error("Line %d: format %c not supported", lineno, ptr[-1]);
-				break;
-			}
-			*/
 			if (*ptr == 'F')
 			{
 				prc = default_prc = FLOAT_PRECISION;
