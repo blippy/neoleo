@@ -14,8 +14,8 @@
 #include "sheet.h"
 #include "tests.h"
 #include "utils.h"
-#include "io-curses.h"
-#include "window.h"
+//#include "io-curses.h"
+//#include "window.h"
 
 #define VERSION "16.0"
 #define PACKAGE "neoleo"
@@ -212,7 +212,6 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	if(use_headless)
 		headless_main();
 	else {
-		io_init_windows();
 		curses_main();
 	}
 	

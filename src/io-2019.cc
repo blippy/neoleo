@@ -338,6 +338,7 @@ void show_menu () // FN
 
 void curses_main () // FN
 {
+	io_init_windows();
 	cur_io_open_display();
 	io_recenter_cur_win();
 	

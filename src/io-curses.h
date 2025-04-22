@@ -31,6 +31,7 @@ void cur_io_update_status (void);
 void win_io_hide_cell_cursor ();
 void cur_io_display_cell_cursor();
 void cur_io_open_display();
+void  io_init_windows ();
 
 
 
@@ -45,7 +46,7 @@ struct window
   int id;
   int win_over;			/* Where the data in this window starts */
   int win_down;			/*   on the screen.  */
-  struct rng screen;		/* Cells visible. recenter_* updates this. */
+  struct rng screen{0};		/* Cells visible. recenter_* updates this. */
   //int flags;			/* You must use io_set_win_flags and perhaps */
 				/*   io_recenter_cur_win */
 
