@@ -15,7 +15,8 @@ BUG: Bold an italic doesn't seem to work anymore
 After what was mostly bugfixes, we now have new features
 
 * Switched to cmake. Autotools ditched. You will therefore need cmake
-installed. I have found cmake easier to deal with.
+v3.30 or better installed. I have found cmake easier to deal with.
+v3.30 is required for C++23 `import std`.
 
 * Added keystroke `%' for percentage format
 

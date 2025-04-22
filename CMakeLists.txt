@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.25.0)
+# cmake v3.28 allows for  C++23 import std;
+cmake_minimum_required(VERSION 3.28)
 project(neoleo)
 
 set(CMAKE_CXX_STANDARD 20)
