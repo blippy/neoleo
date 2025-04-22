@@ -50,7 +50,7 @@ using std::map;
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
 
-
+const map<char, int>  jst_map{{'C', JST_CNT}, {'L', JST_LFT}, {'R', JST_RGT}};
 
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
@@ -635,16 +635,19 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			else
 				default_prc = prc = astol(&ptr);
 
+			default_jst = jst_map.at(*ptr++);
+			/*
 			switch (*ptr++)
 			{
 			case 'C': default_jst = JST_CNT; break;
 			case 'L': default_jst = JST_LFT; break;
 			case 'R': default_jst = JST_RGT; break;
-			case 'G': /* General format not supported */
+			case 'G':  // General format not supported
 			default:
 				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
 				break;
 			}
+			*/
 			// 25/4
 			//default_width = astol(&ptr);
 			(void) astol(&ptr);
