@@ -31,7 +31,6 @@
 #include "sheet.h"
 #include "ref.h"
 #include "regions.h"
-#include "io-term.h"
 #include "window.h"
 #include "basic.h"
 #include "spans.h"

@@ -34,7 +34,6 @@
 #include "basic.h"
 #include "cell.h"
 #include "convert.h"
-#include "io-term.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "logging.h"

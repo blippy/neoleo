@@ -8,7 +8,6 @@
 
 #include "assert.h"
 #include "basic.h"
-#include "io-term.h"
 #include "io-utils.h"
 #include "logging.h"
 #include "parser-2019.h"

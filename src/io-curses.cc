@@ -49,7 +49,6 @@ using namespace std::string_literals;
 #include "cell.h"
 #include "io-curses.h"
 #include "io-2019.h"
-#include "io-term.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "regions.h"

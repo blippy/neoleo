@@ -20,7 +20,6 @@ using namespace std::string_literals;
 #include "tests.h"
 #include "format.h"
 #include "basic.h"
-#include "io-term.h"
 #include "io-utils.h"
 #include "cell.h"
 #include "neotypes.h"

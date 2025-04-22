@@ -23,7 +23,6 @@
 #include "format.h"
 #include "cell.h"
 #include "convert.h"
-#include "io-term.h"
 
 static const char * fmt_to_str (int format, int precision)
 {

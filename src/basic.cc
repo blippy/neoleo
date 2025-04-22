@@ -28,8 +28,6 @@
 #include "convert.h"
 #include "regions.h"
 #include "window.h"
-#include "io-term.h"
-//#include "io-abstract.h"
 #include "io-utils.h"
 #include "io-curses.h"
 #include "ref.h"

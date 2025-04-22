@@ -1,6 +1,6 @@
-#include "io-term.h"
 #include "logging.h"
 #include "spans.h"
+#include "cell.h"
 
 
 void flush_spans ()

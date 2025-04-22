@@ -39,7 +39,7 @@ inline CELLREF curow = MIN_ROW;
 inline CELLREF cucol = MIN_COL;
 inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
-
+inline std::string option_tests_argument = "";
 
 /* These have two uses.  During parsing, these contain the 
  * base address of all relative references.  During evaluation,
