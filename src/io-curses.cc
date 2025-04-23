@@ -246,7 +246,7 @@ void curses_display::activate()
 	nonl ();
 	start_color();
 
-	io_init_windows();
+	//sio_init_windows();
 	//info_rows = 1;
 
 }
@@ -1075,7 +1075,7 @@ void curses_main () // FN
 }
 
 
-void  io_init_windows () 
+void  io_init_windows ()
 {
 
 	//io_set_input_status (1, 2, 0);
