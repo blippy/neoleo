@@ -391,10 +391,13 @@ static void paste_1row ()
 { 
 	std::string response;
 	if(!invoke_std_form("Row to copy from?", response)) return;
-	bool ok;
-	CELLREF src_row = to_long(response, ok);
-	if(!ok) { beep(); return;}
-	copy_row(curow, src_row);
+	try {
+		size_t idx;
+		CELLREF src_row = std::stol(response, &idx);
+		copy_row(curow, src_row);
+	} catch(...) {
+		beep();
+	}
 }
 
 // user has typed 'r' to perform a row action. This function

@@ -202,15 +202,15 @@ static void type_dsv(int fildes)
 
 static void hl_goto_cell(int fildes)
 {
-	bool ok;
-	auto r = (CELLREF) to_long(hl_getline(fildes), ok);
-	if(!ok) return;
-	auto c = (CELLREF) to_long(hl_getline(fildes), ok);
-	if(!ok) return;
-	curow = r;
-	cucol = c;
-	//rng_t a_rng{r, c, r, c};
-	//goto_cell(&a_rng);
+	std::size_t pos{};
+	try {
+		auto r = (CELLREF) stol(hl_getline(fildes), &pos);
+		auto c = (CELLREF) stol(hl_getline(fildes), &pos);
+		curow = r;
+		cucol = c;
+	} catch(...) {
+		return;
+	}
 }
 
 static void hl_recalc(int fildes)
