@@ -32,6 +32,7 @@ using std::cout;
 using std::cerr;
 
 extern void hl_write_file();
+extern void io_shift_cell_cursor (dirn way, int repeat);
 
 static constexpr int CTRL(int c) { return c & 037; }
 
@@ -274,7 +275,7 @@ void process_key(const keymap_t& keymap)
 
 
 
-static bool curses_loop () // FN
+bool curses_loop () // FN
 {
 
 	//log("win_over:" ,  cwin->win_over);
@@ -336,32 +337,7 @@ void show_menu () // FN
 	//refresh();
 }
 
-void curses_main () // FN
-{
-	io_init_windows();
-	cur_io_open_display();
-	io_recenter_cur_win();
-	
-	// Tell ncurses to interpret "special keys". It means
-	// that KEY_DOWN etc. will work, but ESC won't be
-	// read separately
-	keypad(stdscr, TRUE);
 
-	show_menu();
-	//doupdate();
-
-	bool quit = false;
-	while(!quit) {
-		try {
-			quit = curses_loop();
-		} catch (OleoJmp& e) {	
-			write_status(e.what());
-		}	
-	}
-
-	//delwin(main_menu);
-	endwin();
-}
 
 static void save_csv2019(){
 	std::string filename = FileGetCurrentFileName();

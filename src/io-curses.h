@@ -145,6 +145,7 @@ inline window* cwin = &the_cwin;
 
 enum class dirn { left, right, up, down};
 
+#if 0
 extern int win_label_cols (struct window * win, CELLREF hr);
 extern int win_label_rows (struct window * win);
 extern void io_set_input_status (int inp, int stat, int redraw);
@@ -163,3 +164,4 @@ void set_numcols (struct window *win, CELLREF hr);
 void win_io_repaint_win(struct window *win);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
+#endif

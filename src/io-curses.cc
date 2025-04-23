@@ -75,6 +75,11 @@ CELLREF mkcol = NON_COL;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+void io_recenter_cur_win (void);
+void io_recenter_named_window(struct window *w);
+void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
+
+extern bool curses_loop ();
 
 
 void cur_io_display_cell_cursor (void)
@@ -1040,6 +1045,33 @@ int set_window_option (int set_opt, char *text)
 void recenter_window (void)
 {
 	io_recenter_cur_win ();
+}
+
+void curses_main () // FN
+{
+	io_init_windows();
+	cur_io_open_display();
+	io_recenter_cur_win();
+
+	// Tell ncurses to interpret "special keys". It means
+	// that KEY_DOWN etc. will work, but ESC won't be
+	// read separately
+	keypad(stdscr, TRUE);
+
+	show_menu();
+	//doupdate();
+
+	bool quit = false;
+	while(!quit) {
+		try {
+			quit = curses_loop();
+		} catch (OleoJmp& e) {
+			write_status(e.what());
+		}
+	}
+
+	//delwin(main_menu);
+	endwin();
 }
 
 
