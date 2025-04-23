@@ -57,7 +57,7 @@ extern char *range_name (struct rng *);
 extern char *cell_name (CELLREF, CELLREF);
 
 
-struct var; /* in case it hasn't been declared yet */
+//struct var; /* in case it hasn't been declared yet */
 
 /*
  * This structure is a start at cleaning up global variables that are
@@ -80,4 +80,4 @@ struct OleoGlobal {
 inline OleoGlobal global;
 //inline struct OleoGlobal *Global = new struct OleoGlobal;
 inline struct OleoGlobal *Global = &global;
-inline int nwin = 1; // 25/4 Elminate this
+//inline int nwin = 1; // 25/4 Elminate this

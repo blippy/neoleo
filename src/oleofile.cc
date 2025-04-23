@@ -202,21 +202,20 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 
 void oleo_read_window_config (char * line)
 {
-	int wnum = 0;
+	//int wnum = 0;
 	char *text;
 	//CELLREF nrow = NON_ROW, ncol = NON_COL;
 	char *opts = 0;
 	//struct window *win;
 
 	text = line;
+	auto eat = [&]() { while (*text && *text != ';') text++; };
 	for (;;)
 	{
 		switch (*text++)
 		{
 			/* Window Number */
-			case 'N':
-				wnum = astol (&text);
-				break;
+
 				/* Cursor At */
 			case 'A':
 				//log("oleo_read_window_config:A");
@@ -226,21 +225,15 @@ void oleo_read_window_config (char * line)
 				/* JF: Window options */
 			case 'O':
 				opts = text;
-				while (*text && *text != ';')
-					text++;
+				eat();
 				break;
 				
 			case 'S': /* Split into two windows. 25/4 unsupported */
-				while (*text && *text != ';')
-					text++;
-				break;
-				
 			case 'C': /* Set Colors NOT supported */
-				while (*text && *text != ';')
-					text++;
-				break;
-				
+			case 'N': // window number
 			case 'B': /* Alternate border NOT supported. . . */
+				eat();
+				break;
 			default:
 				--text;
 				break;
@@ -263,13 +256,15 @@ void oleo_read_window_config (char * line)
 		else
 			*text++ = '\0';
 	}
+#if 0
 	if (wnum < 1 || wnum > nwin)
 	{
 		raise_error("Window %d out of range in SYLK line %s", wnum, line);
 		return;
 	}
 	--wnum;
-	//win = &wins[wnum];
+	win = &wins[wnum];
+#endif
 
 	if (opts)
 	{

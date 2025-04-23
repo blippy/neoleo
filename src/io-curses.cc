@@ -805,7 +805,7 @@ void io_recenter_cur_win (void)
 
 void io_recenter_all_win(void)
 {
-	if (!nwin) return;
+	//if (!nwin) return;
 	io_recenter_named_window (cwin);
 	//win_io_repaint ();
 }
