@@ -54,11 +54,11 @@ const map<char, int>  jst_map{{'C', JST_CNT}, {'D', JST_DEF}, {'L', JST_LFT}, {'
 
 // 25/4 let's try to abstract away some stuff
 // olf_ prefix refers to "oleo file"
-void olf_set_options (char *opts) // FN
+void olf_set_optionsXXX (char *opts) // FN
 {
 	// 25/4 We should probably do soemthing here
 }
-void olf_do_set_option (char *str) // FN
+void olf_do_set_optionXXX (char *str) // FN
 {
 	// 25/4 We should probably do soemthing here
 }
@@ -165,13 +165,13 @@ void read_mp_options (char *str) // FN
 	while ((np = (char *)index (str, ';')))
 	{
 		*np = '\0';
-		olf_do_set_option (str);
+		//olf_do_set_option (str);
 		*np++ = ';';
 		str = np;
 	}
 	if ((np = (char *)rindex (str, '\n')))
 		*np = '\0';
-	olf_do_set_option (str);
+	//olf_do_set_option (str);
 }
 
 
@@ -214,20 +214,13 @@ void oleo_read_window_config (char * line)
 	{
 		switch (*text++)
 		{
-			/* Window Number */
-
-				/* Cursor At */
-			case 'A':
+			case 'A': // cursor at
 				//log("oleo_read_window_config:A");
 				curow = astol (&text);
 				cucol = astol (&text);
 				break;
 				/* JF: Window options */
-			case 'O':
-				opts = text;
-				eat();
-				break;
-				
+			case 'O': // options
 			case 'S': /* Split into two windows. 25/4 unsupported */
 			case 'C': /* Set Colors NOT supported */
 			case 'N': // window number
@@ -255,30 +248,6 @@ void oleo_read_window_config (char * line)
 		}
 		else
 			*text++ = '\0';
-	}
-#if 0
-	if (wnum < 1 || wnum > nwin)
-	{
-		raise_error("Window %d out of range in SYLK line %s", wnum, line);
-		return;
-	}
-	--wnum;
-	win = &wins[wnum];
-#endif
-
-	if (opts)
-	{
-		char *np;
-		while ((np =(char *) index (opts, ',')))
-		{
-			*np = '\0';
-			olf_set_options (opts);
-			*np++ = ';';
-			opts = np;
-		}
-		if ((np = (char *)rindex (opts, '\n')))
-			*np = '\0';
-		olf_set_options(opts);
 	}
 }
 
