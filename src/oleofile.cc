@@ -27,7 +27,6 @@
 #include <ctype.h>
 #include <iostream>
 
-//using std::format;
 using std::cout;
 using std::map;
 
@@ -44,7 +43,7 @@ using std::map;
 #include "logging.h"
 #include "oleofile.h"
 
-#include "io-curses.h"
+//#include "io-curses.h"
 
 
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
@@ -732,7 +731,7 @@ static std::string oleo_write_window_config ()
 	std::ostringstream oss;
 
 	//int n;
-	char buf[90];
+	//char buf[90];
 	//struct line scratch;
 	//scratch.alloc = 0;
 	//scratch.buf = 0;
@@ -740,7 +739,8 @@ static std::string oleo_write_window_config ()
 	//cwin->win_curow = curow;
 	//cwin->win_cucol = cucol;
 	//sprint_line (&out, "O;status %d\n", user_status);
-	oss << "O;status " << user_status << "\n";
+	oss << "O;status 2\n";
+	/*
 		buf[0] = '\0';
 		if (win_flags & WIN_LCK_HZ)
 			strcat (buf, ",lockh");
@@ -754,9 +754,10 @@ static std::string oleo_write_window_config ()
 			strcat (buf, ",standout");
 		if ((win_flags & WIN_EDGES) == 0)
 			strcat (buf, ",noedges");
+			*/
 
 		oss << "W;N" << 1 << ";A" << curow << " " << cucol 
-			<< ";C7 0 7;O" << buf+1 << "\n";
+			<< ";C7 0 7;Ostandout\n";
 
 	return oss.str();
 }
