@@ -52,28 +52,7 @@ const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP},
 
 const map<char, int>  jst_map{{'C', JST_CNT}, {'D', JST_DEF}, {'L', JST_LFT}, {'R', JST_RGT}};
 
-// 25/4 let's try to abstract away some stuff
-// olf_ prefix refers to "oleo file"
-void olf_set_optionsXXX (char *opts) // FN
-{
-	// 25/4 We should probably do soemthing here
-}
-void olf_do_set_optionXXX (char *str) // FN
-{
-	// 25/4 We should probably do soemthing here
-}
 
-/*
-void olf_recenter_window(window* win)
-{
-
-}
-*/
-
-void olf_io_recenter_all_win ()
-{
-
-}
 
 void read_mp_usr_fmt (char *ptr) // FN
 {
@@ -447,10 +426,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 			default:
 bad_field:
 				{
-					//Global->a0 = old_a0;
-					if (!ismerge)
-						clear_spreadsheet ();
-					olf_io_recenter_all_win ();
+					if (!ismerge) clear_spreadsheet ();
 					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
 					std::string msg{string_format(fmt, lineno, input_line.c_str())};
 					msg = trim(msg);
@@ -461,17 +437,10 @@ bad_field:
 		}	/* End of switch */
 	}
 	if (!feof (fp)) {
-		if (!ismerge)
-			clear_spreadsheet ();
-		olf_io_recenter_all_win ();
+		if (!ismerge) clear_spreadsheet ();
 		raise_error("read-file: read-error near line %d.", lineno);
-		//Global->return_from_error = 0;
 		return;
 	}
-	//Global->a0 = next_a0;
-	olf_io_recenter_all_win ();
-
-	//Global->return_from_error = 0;
 }
 
 static char * oleo_fmt_to_str (int f1, int p1)
@@ -564,27 +533,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 		case 'F':
 			fmt = format_map.at(*ptr++);
-			
-			/*
-			switch (*ptr++)
-			{
-			case 'D': fmt = FMT_DEF; break;
-			case 'G': fmt = FMT_GEN; break;
-			case 'E': fmt = FMT_EXP; break;
-			case 'F': fmt = FMT_FXT; break;
-			case '$': fmt = FMT_DOL; break;
-			case ',': fmt = FMT_CMA; break;
-			case 'U': fmt = FMT_USR; break;
-			case '%': fmt = FMT_PCT; break;
-			case 'H': fmt = FMT_HID; break;
-			case 'd': fmt = FMT_DATE; break;
-			case 'C':
-			default:
-				raise_error("Line %d: format %c not supported", lineno, ptr[-1]);
-				fmt = FMT_DEF;
-				break;
-			}
-			*/
+
 			if (*ptr == 'F')
 			{
 				prc = FLOAT_PRECISION;
@@ -593,19 +542,6 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 				prc = astol(&ptr);
 			}
 			jst = jst_map.at(*ptr++);
-			/*
-			switch (*ptr++)
-			{
-			case 'C': jst = JST_CNT; break;
-			case 'L': jst = JST_LFT; break;
-			case 'R': jst = JST_RGT; break;
-			case 'D': jst = JST_DEF; break;
-			default:
-				raise_error("Line %d: Alignment %c not supported", lineno, ptr[-1]);
-				jst = JST_DEF;
-				break;
-			}
-			*/
 			vlen = 1;
 			break;
 		case 'I':
@@ -626,14 +562,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			}
 			break;
 
-		case 'H': /* JF: extension */
-			// 25/4 all heights are assumed to be 1
-			#if 0
-			clo = astol(&ptr);
-			chi = astol(&ptr);
-			cwid = astol(&ptr) + 1;
-			for (; clo <= chi; clo++) set_height(clo, cwid);
-			#endif
+		case 'H': // set heights. Assumed always to be 1
 			break;
 		case 'c': ccol = astol(&ptr); break;
 		case 'r': crow = astol(&ptr); break;
