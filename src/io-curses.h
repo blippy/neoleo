@@ -128,9 +128,9 @@ inline int win_flags = WIN_EDGES | WIN_EDGE_REV;
  */
 /* #define	current_info	Global->current_info */
 
-#define	info_rows	Global->info_rows
+//#define	info_rows	Global->info_rows
 /* #define	info_line	Global->info_line */
-#define	info_over	Global->info_over
+//#define	info_over	Global->info_over
 
 /* Window borders: */
 #define	default_right_border	Global->default_right_border

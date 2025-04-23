@@ -242,7 +242,7 @@ void curses_display::activate()
 	start_color();
 
 	io_init_windows();
-	info_rows = 1;
+	//info_rows = 1;
 
 }
 
