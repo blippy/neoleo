@@ -73,8 +73,8 @@ struct OleoGlobal {
 	const int				input = 0, status = 1;
 	const int			label_rows = 1, label_emcols =1;
 	//int				info_rows, info_line, info_over;
-	int				default_right_border = 0, default_bottom_border = 0;
-	int				win_id = 1;
+	const int				default_right_border = 0, default_bottom_border = 0;
+	const int				win_id = 1;
 };
 
 inline OleoGlobal global;
