@@ -368,7 +368,7 @@ static void maybe_quit_spreadsheet2019(bool& quit)
 	quit = false;
 	if(Global->modified == false) { quit = true ; return; }
 	std::string response = ""; 
-	if(!invoke_std_form("Spreadsheet modifield; kill anyway? (y/[n])? ", response)) return;
+	if(!invoke_std_form("Spreadsheet modified; kill anyway? (y/[n])? ", response)) return;
 	if(response == "y" || response == "yes") quit = true;
 
 }
