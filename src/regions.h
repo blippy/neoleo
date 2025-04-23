@@ -18,6 +18,7 @@
  */
 
 #include "global.h"
+#include "cell.h"
 
 extern struct rng all_rng;
 

@@ -27,6 +27,8 @@
 #include <unistd.h>
 #include <vector>
 
+#include "cell.h"
+#include "convert.h"
 #include "utils.h"
 
 using std::cout;
@@ -1087,12 +1089,76 @@ void io_set_input_statusXXX (int inp, int stat, int redraw)
 	}
 }
 
+
+int set_window_option (int set_opt, char *text)
+{
+	int stat;
+	int n;
+	#define S (char *)
+	static struct opt {	char *text; int bits; } opts[] =
+	{
+		{ S "reverse", WIN_EDGE_REV } ,
+		{ S "standout", WIN_EDGE_REV } ,
+		{ S "page", WIN_PAG_HZ | WIN_PAG_VT } ,
+		{ S "pageh", WIN_PAG_HZ } ,
+		{ S "pagev", WIN_PAG_VT } ,
+		{ S "lockh", WIN_LCK_HZ } ,
+		{ S "lockv", WIN_LCK_VT } ,
+		{ S "edges", WIN_EDGES }
+	};
+	if ((stat = (!strincmp (text, "status", 6) && isspace (text[6])))
+			|| (!strincmp (text, "input", 5) && isspace (text[5])))
+	{
+		int n = set_opt ? atoi (text + 6 + stat) : 0;	/* A little pun. */
+		int new_inp = stat ? user_input : n;
+		int new_stat = stat ? n : user_status;
+		//io_set_input_status (new_inp, new_stat, 1); // 25/4 ignore this
+	}
+	else if (set_opt && !strincmp (text, "row ", 4))
+	{
+		text += 4;
+		curow = astol (&text);
+	}
+	else if (set_opt && !strincmp (text, "col ", 4))
+	{
+		text += 4;
+		cucol = astol (&text);
+	}
+	else
+	{
+		constexpr int nopts = sizeof (opts) / sizeof (struct opt);
+		for (n = 0; n < nopts; n++)
+			if (!stricmp (text, opts[n].text))
+			{
+				if (set_opt)
+					win_flags |= opts[n].bits;
+				else
+					win_flags &= ~opts[n].bits;
+				break;
+			}
+
+		if (n == nopts)
+			return 0;
+	}
+	return 1;
+}
+
+
+
+
+
+void recenter_window (void)
+{
+	io_recenter_cur_win ();
+}
+
+
 void  io_init_windows () 
 {
 
 	//io_set_input_status (1, 2, 0);
 	//cwin->id = win_id++;
-	cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
+	//cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
 	cwin->win_down = (label_rows + (user_status > 0) * status_rows + (user_input > 0) * input_rows);
 	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
 	cwin->numc = Global->scr_cols - default_right_border;
