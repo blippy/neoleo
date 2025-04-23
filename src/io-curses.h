@@ -151,7 +151,6 @@ extern void io_set_input_status (int inp, int stat, int redraw);
 extern void io_set_cwin (struct window *win);
 extern void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 extern void io_win_open (int hv, int where);
-extern void io_win_close (struct window *win);
 extern void io_move_cell_cursor (CELLREF rr, CELLREF cc);
 extern void io_recenter_cur_win (void);
 extern void io_recenter_named_window(struct window *w);

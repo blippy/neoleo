@@ -681,20 +681,6 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-static void 
-do_close_window (int num)
-{
-	if (nwin == 1)
-	{
-	raise_error("Attempt to delete sole ordinary window.");
-	return;
-	}
-	io_recenter_all_win ();
-	return;
-}
-
-
-
 
 int win_label_cols (struct window * win, CELLREF hr)
 {
@@ -883,10 +869,6 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 }
 
 
-void io_win_close (struct window *win)
-{
-	do_close_window (0); // 25/4
-}
 
 void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
