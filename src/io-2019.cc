@@ -277,7 +277,7 @@ void process_key(const keymap_t& keymap)
 static bool curses_loop () // FN
 {
 
-
+	//log("win_over:" ,  cwin->win_over);
 	bool quit = false;
 	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
 	show_menu();

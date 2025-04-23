@@ -44,7 +44,7 @@ struct window
 {
   /* Do not change these directly. */
   const int id = 1; // a window id
-  int win_over = 0;			/* Where the data in this window starts */
+  int win_over = 0;			// x-posiition Where the data in this window starts. Can change due to row number
   const int win_down = 3;	// y-position where data grid starts
   struct rng screen{0};		/* Cells visible. recenter_* updates this. */
   //int flags;			/* You must use io_set_win_flags and perhaps */

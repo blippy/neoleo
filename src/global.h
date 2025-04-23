@@ -69,7 +69,7 @@ struct OleoGlobal {
 	//int				display_opened = 0;
 
 	const int			scr_lines = 24, scr_cols = 80,  input_rows = 1, status_rows = 1; 
-	int 				user_input =1, user_status = 2;
+	const int 				user_input =1, user_status = 2;
 	int				input = 0, status = 1;
 	const int			label_rows = 1, label_emcols =1;
 	int				info_rows, info_line, info_over;
