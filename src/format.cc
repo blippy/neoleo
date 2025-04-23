@@ -120,21 +120,7 @@ const char *exp_names[] =	{"exponent.",	"exp.", "E", 0};
 
 
 
-const char * jst_to_str (int jst)
-{
-	if (jst == JST_DEF)
-		return "default";
-	if (jst == JST_LFT)
-		return "left";
-	if (jst == JST_RGT)
-		return "right";
-	if (jst == JST_CNT)
-		return "center";
-	return "unknown";
-}
-
-	int
-chr_to_jst (int chr)
+int chr_to_jst (int chr)
 {
 	if (chr == 'd' || chr == 'D')
 		return JST_DEF;
