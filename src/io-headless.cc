@@ -13,9 +13,6 @@
 
 #include "basic.h"
 #include "cell.h"
-#include "convert.h"
-//#include "window.h"
-//#include "io-curses.h"
 #include "io-utils.h"
 #include "sheet.h"
 #include "tbl.h"
