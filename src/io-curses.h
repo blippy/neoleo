@@ -20,10 +20,6 @@
 #include <ncurses.h>
 #include <string>
 
-//extern void cont_curses(void);
-//extern void stop_curses(void);
-//extern void tty_graphics (void);
-
 
 
 void _io_repaint();
@@ -47,8 +43,6 @@ struct window
   int win_over = 0;			// x-posiition Where the data in this window starts. Can change due to row number
   const int win_down = 3;	// y-position where data grid starts
   struct rng screen{0};		/* Cells visible. recenter_* updates this. */
-  //int flags;			/* You must use io_set_win_flags and perhaps */
-				/*   io_recenter_cur_win */
 
   /* Number of lines of spreadsheet that can fit in this window.
      This only changes when the screen is resized,
@@ -78,42 +72,22 @@ struct window
      Ranges between three "R9 " to seven "R32767 " depending on
      the number of the highest row on the screen.  */
   int lh_wid;
-
   
-  /* Cursor row/column in this window */
-  /* Note that the external variables curow, cucol are used for
-     the currently active cursor position, so if you want
-     cwin->curow and cwin->cucol to be accurate, you have to
-     set them yourself. */
-  //CELLREF win_curow;
-  //CELLREF win_cucol;
-
-  //void* *win_slops;	/* Slops in this window (tty only) */
 };
 
 
-/* Window flags:
-   0x01	Locked horizontally
-   0x02	Locked vertically
-   0x04	Page Horizontally
-   0x08	Page Vertically
-   0x10	Edges disabled
-   0x20	Edges standout
-   */
-#define WIN_LCK_HZ	0x01
-#define WIN_LCK_VT	0x02
-#define WIN_PAG_HZ	0x04
-#define WIN_PAG_VT	0x08
-#define WIN_EDGES	0x10
-#define WIN_EDGE_REV	0x20
+#define WIN_LCK_HZ		0x01 // locked horizontally
+#define WIN_LCK_VT		0x02 // locked vertically
+#define WIN_PAG_HZ		0x04 // page horizontally
+#define WIN_PAG_VT		0x08 // page vertically
+#define WIN_EDGES		0x10 // edged disabled
+#define WIN_EDGE_REV	0x20 // edges standout
 inline int win_flags = WIN_EDGES | WIN_EDGE_REV; 
 
 
 /* These control the layout of input and status lines. */
 #define	user_input	Global->user_input
 #define	user_status	Global->user_status
-/* #define	input		Global->input */
-/* #define	status		Global->status */
 #define	input_rows	Global->input_rows
 #define	status_rows	Global->status_rows
 
@@ -121,16 +95,6 @@ inline int win_flags = WIN_EDGES | WIN_EDGE_REV;
 #define	label_rows	Global->label_rows
 #define	label_emcols	Global->label_emcols
 
-/* Temporary hacks for displaying multi-line messages. */
-/* If this is non-0, it should be displayed instead of 
- * the windows of cells.  This is a temporary hack.
- * Use set_info to change this.
- */
-/* #define	current_info	Global->current_info */
-
-//#define	info_rows	Global->info_rows
-/* #define	info_line	Global->info_line */
-//#define	info_over	Global->info_over
 
 /* Window borders: */
 #define	default_right_border	Global->default_right_border
@@ -139,29 +103,8 @@ inline int win_flags = WIN_EDGES | WIN_EDGE_REV;
 
 inline window the_cwin;
 inline window* cwin = &the_cwin;
-//#define	wins		Global->wins
 #define	win_id		Global->win_id
 
 
 enum class dirn { left, right, up, down};
 
-#if 0
-extern int win_label_cols (struct window * win, CELLREF hr);
-extern int win_label_rows (struct window * win);
-extern void io_set_input_status (int inp, int stat, int redraw);
-extern void io_set_cwin (struct window *win);
-extern void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
-extern void io_win_open (int hv, int where);
-extern void io_move_cell_cursor (CELLREF rr, CELLREF cc);
-extern void io_recenter_cur_win (void);
-extern void io_recenter_named_window(struct window *w);
-extern void io_recenter_all_win (void);
-void io_shift_cell_cursor (dirn way, int repeat);
-extern void io_set_win_flags (struct window *w, int f);
-extern void io_init_windows () ;
-void  recenter_window (struct window *win);
-void set_numcols (struct window *win, CELLREF hr);
-void win_io_repaint_win(struct window *win);
-void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
-void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
-#endif

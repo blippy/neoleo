@@ -206,6 +206,7 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 	}
 }
 
+#if 0
 class curses_display {
 	public:
 		curses_display();
@@ -257,7 +258,7 @@ void curses_display::cdstandout()
 	standout(); 
 }
 
-
+#endif
 void cont_curses(void)
 {
 	crmode ();
@@ -386,8 +387,7 @@ void _io_repaint (void)
 		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
 		printw ("#%*ld ", win->lh_wid - 2, (long int)1);
-		if (win_flags & WIN_EDGE_REV)
-			s_display.cdstandout();
+		if (win_flags & WIN_EDGE_REV) standout(); // s_display.cdstandout();
 		cc = win->screen.lc;
 		do
 		{
@@ -1039,7 +1039,14 @@ int set_window_option (int set_opt, char *text)
 }
 
 
-
+class defer {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
+	~defer() {m_unwind();};
+private:
+	std::function<void()> m_unwind;
+};
 
 
 void recenter_window (void)
@@ -1050,7 +1057,18 @@ void recenter_window (void)
 void curses_main () // FN
 {
 	io_init_windows();
-	cur_io_open_display();
+	//cur_io_open_display();
+	initscr ();
+	defer d{endwin};
+	//defer d;
+	scrollok (stdscr, 0);
+	crmode ();
+	raw ();
+	noecho ();
+	nonl ();
+	start_color();
+
+
 	io_recenter_cur_win();
 
 	// Tell ncurses to interpret "special keys". It means
@@ -1071,7 +1089,7 @@ void curses_main () // FN
 	}
 
 	//delwin(main_menu);
-	endwin();
+	//endwin();
 }
 
 
