@@ -262,26 +262,18 @@ handle_exp:
 		switch (j)
 		{
 
-#ifdef	FMT_DATE	/* Still depends on new style cell_flags */
 			case FMT_DATE:
 				{
 					time_t t = v;
 					//int	f = GET_PRECISION(cp);		/* Determines date format */
 					struct tm *tmp = localtime(&t);
-
-#ifdef	HAVE_STRFTIME
-					(void)strftime(print_buf, sizeof(print_buf),
-							date_formats[f], tmp);
-#else
 					sprintf(print_buf,
 							"%04d/%02d/%02d",
 							tmp->tm_year + 1900,
 							tmp->tm_mon + 1,
 							tmp->tm_mday);
-#endif
 					return print_buf;
 				}
-#endif
 
 			case FMT_USR:
 				ASSERT_UNCALLED();
