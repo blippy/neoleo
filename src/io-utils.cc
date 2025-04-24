@@ -169,6 +169,13 @@ std::string flt_to_str (num_t val)
 }
 
 
+std::string  fmt_std_date(int t)
+{
+	time_t t1 = t;
+	struct tm *tmp = localtime(&t1);
+	return std::format("{:04}-{:02}-{:02}",tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
+}
+
 
 /* create the human-readable version of the contents of a cell
    This scribbles on print-buf bigtime */
@@ -263,18 +270,7 @@ handle_exp:
 		{
 
 			case FMT_DATE:
-				{
-					time_t t = v;
-					//int	f = GET_PRECISION(cp);		/* Determines date format */
-					struct tm *tmp = localtime(&t);
-					sprintf(print_buf,
-							"%04d/%02d/%02d",
-							tmp->tm_year + 1900,
-							tmp->tm_mon + 1,
-							tmp->tm_mday);
-					return print_buf;
-				}
-
+				return fmt_std_date(v);
 			case FMT_USR:
 				ASSERT_UNCALLED();
 				//return pr_int (v, &u[p], u[p].prec);

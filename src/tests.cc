@@ -76,6 +76,13 @@ bool format_tests()
 	//cout << s2 << "\n";
 	check(s2 ==  "Hello world, meaning of life is 42", "format_sub_test");
 
+	time_t t =1745492070;
+	check(fmt_std_date(t) == "2025-04-24", "fmt_std_date");
+	//struct tm *tmp = localtime(&t);
+	//string s3 = std::format("{:04}-{:02}-{:02}",tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
+
+			//return print_buf;
+
 	return all_pass;
 }
 

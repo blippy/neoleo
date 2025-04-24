@@ -40,6 +40,8 @@ void FileSetCurrentFileName(const std::string& s);
 void write_file_generic(FILE *, struct rng *, char *);
 void read_file_generic(FILE *, int, char *, const char *);
 
+std::string  fmt_std_date(int t);
+
 std::string stringify_value_file_style(const value_t& val);
 std::string cell_name (CELLREF, CELLREF);
 std::string range_name (struct rng *);
