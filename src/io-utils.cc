@@ -622,16 +622,16 @@ std::string cell_name (CELLREF rr, CELLREF cc)
 	return std::format("r{}c{}", rr, cc);
 }
 
-	char *
-range_name (struct rng *rng)
+
+std::string range_name (struct rng *rng)
 {
 	CELLREF lr, lc, hr, hc;
-	static char buf[2][40];
-	static int num;
-	char *ptr;
+	//static char buf[2][40];
+	//static int num;
+	//const char *ptr;
 
-	ptr = &buf[num][0];
-	num = num ? 0 : 1;
+	//ptr = &buf[num][0];
+	//num = num ? 0 : 1;
 
 	lr = rng->lr;
 	lc = rng->lc;
@@ -641,25 +641,24 @@ range_name (struct rng *rng)
 	/* Return empty string when invalid */
 	if (lr == 0 || lc == 0 || hc == 0 || hr == 0 ||
 			lr >= MAX_ROW || lc >= MAX_COL || hc >= MAX_COL || hr >= MAX_ROW) {
-		ptr[0] = '\0';
-		return ptr;
+		return "";
+		//ptr[0] = '\0';
+		//return ptr;
 	}
 
 	if ((lr == hr) && (lc == hc)) {
-		sprintf (ptr, "%s", cell_name (lr, lc));
-	} else {
-		if (Global->a0)
-			sprintf (ptr, "%s:%s", cell_name (lr, lc), cell_name (hr, hc));
-		else {
-			if (lr == hr && lc != hc)
-				sprintf (ptr, "r%uc%u:%u", lr, lc, hc);
-			else if (lr != hr && lc == hc)
-				sprintf (ptr, "r%u:%uc%u", lr, hr, lc);
-			else
-				sprintf (ptr, "r%u:%uc%u:%u", lr, hr, lc, hc);
-		}
+		//sprintf (ptr, "%s", cell_name (lr, lc));
+		return cell_name(lr, lc);
 	}
-	return ptr;
+
+
+	if (lr == hr && lc != hc)
+		return std::format("r{}c{}:{}", lr, lc, hc);
+	else if (lr != hr && lc == hc)
+		return std::format("r{}:{}c{}", lr, hr, lc);
+
+	return std::format("r{}:{}c{}:{}", lr, hr, lc, hc);
+
 }
 
 

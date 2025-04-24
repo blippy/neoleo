@@ -42,6 +42,7 @@ void read_file_generic(FILE *, int, char *, const char *);
 
 std::string stringify_value_file_style(const value_t& val);
 std::string cell_name (CELLREF, CELLREF);
+std::string range_name (struct rng *);
 //std::string stringify_value_file_style(value* val);
 
 /* Structures/vars/functions for dealing with formatting floating-point

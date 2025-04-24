@@ -325,7 +325,7 @@ void cur_io_update_status (void) // FN
 		addch ('*');
 		--wid;
 		set_rng (&r, curow, cucol, mkrow, mkcol);
-		ptr = range_name (&r);
+		ptr = range_name (&r).c_str();
 	}
 	else
 		ptr = cell_name (curow, cucol).c_str();
