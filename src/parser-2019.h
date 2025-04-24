@@ -17,7 +17,7 @@ typedef std::deque<token_t> tokens_t;
 class Expr;
 
 typedef std::vector<Expr> args_t;
-typedef double num_t;
+
 
 class Tour;
 
