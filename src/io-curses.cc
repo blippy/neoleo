@@ -205,66 +205,6 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 	}
 }
 
-#if 0
-class curses_display {
-	public:
-		curses_display();
-		void activate();
-		~curses_display();
-		void cdstandout();
-	private:
-		bool m_activated = false;
-};
-
-static curses_display s_display;
-
-void cur_io_open_display() { s_display.activate(); }
-
-curses_display::curses_display()
-{
-}
-
-
-curses_display::~curses_display()
-{
-	log_debug("TODO Calling curses_display::~curses_display()");
-
-}
-
-
-
-/* called by _io_open_display() */
-void curses_display::activate()
-{
-	if(m_activated) return;
-	m_activated = true;
-	initscr ();
-	scrollok (stdscr, 0);
-	crmode ();
-	raw ();
-	noecho ();
-	nonl ();
-	start_color();
-
-	//sio_init_windows();
-	//info_rows = 1;
-
-}
-
-void curses_display::cdstandout()
-{
-	this->activate(); // ASAN complains otherwise
-	standout(); 
-}
-
-#endif
-void cont_curses(void)
-{
-	crmode ();
-	raw ();
-	noecho ();
-	nonl ();
-}
 
 static void _io_redisp (void)
 {
@@ -276,15 +216,6 @@ static void _io_redisp (void)
 	refresh ();
 }
 
-void stop_curses(void)
-{
-	nocrmode ();
-	noraw ();
-	echo ();
-	nl ();
-	_io_redisp ();
-}
-
 
 
 void win_io_repaint_win (struct window *win)
@@ -292,7 +223,7 @@ void win_io_repaint_win (struct window *win)
 	_io_repaint ();
 }
 
-static char* col_to_str (CELLREF col)
+static char* col_to_strXXXs (CELLREF col)
 {
 	static char buf[10];
 	string str = "";
@@ -398,13 +329,10 @@ void _io_repaint (void)
 				char *ptr;
 				char buf[30];
 
-				if (Global->a0)
-					ptr = col_to_str (cc);
-				else
-				{
-					sprintf (buf, "C%u", cc);
-					ptr = buf;
-				}
+
+				sprintf (buf, "C%u", cc);
+				ptr = buf;
+
 				--n;
 				n1 = strlen (ptr);
 				if (n < n1)
@@ -473,9 +401,6 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 		cell_cursor_row += get_height (rr);
 	move (cell_cursor_row, cell_cursor_col);
 }
-
-
-//extern int auto_recalc;
 
 
 
