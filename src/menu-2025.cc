@@ -10,6 +10,8 @@
 #include "io-2019.h"
 #include "io-curses.h"
 
+
+
 using namespace std;
 
 static bool col_width_form();
@@ -33,6 +35,7 @@ bool col_width_form()
 	string input{to_string(get_width())};
 	//input = "hello";
 	WINDOW *w = newwin(7, 30, 2 , 0); // lines cols y x
+	defer1 d1(delwin, w);
 	box(w, 0 ,0);
 
 	PANEL *p = new_panel(w);
@@ -98,7 +101,7 @@ bool col_width_form()
 
 	delwin(win);
 	del_panel(p);
-	delwin(w);
+	//delwin(w);
 	//log("current col:", cucol);
 	_io_repaint();
 	return true;

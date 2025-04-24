@@ -223,18 +223,6 @@ void win_io_repaint_win (struct window *win)
 	_io_repaint ();
 }
 
-static char* col_to_strXXXs (CELLREF col)
-{
-	static char buf[10];
-	string str = "";
-	while(col>=MIN_COL) {
-		char ch = 'A' + (col-MIN_COL) % 26 ;
-		str = string{ch} + str;
-		col = (col-MIN_COL)/26;
-	}
-	strncpy(buf, str.c_str(), sizeof(buf)-1);
-	return buf;
-}
 
 
 
@@ -879,14 +867,6 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 }
 
 
-class defer {
-public:
-	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
-	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
-	~defer() {m_unwind();};
-private:
-	std::function<void()> m_unwind;
-};
 
 
 void recenter_window (void)

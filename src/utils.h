@@ -19,6 +19,7 @@
  */
 
 #include <map>
+#include <functional>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -74,3 +75,27 @@ K map_reverse(const std::map<K,V> &m, V val)
 	throw OleoJmp("map_reverse failed");
 
 }
+
+
+class defer {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
+	~defer() {m_unwind();};
+private:
+	std::function<void()> m_unwind;
+};
+
+
+template <typename R, typename T>
+class defer1 {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer1(R fn_unwind, T param)  : m_unwind{fn_unwind}, m_param{param}  {};
+	~defer1() { m_unwind(m_param) ; };
+private:
+	R m_unwind;
+	T m_param;
+};
+
+
