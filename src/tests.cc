@@ -33,8 +33,7 @@ int run_clear_test();
 
 extern int test_values();
 
-void 
-check(bool ok, std::string msg)
+void check(bool ok, std::string msg)
 {
 	if(!ok) all_pass = false;
 	std::string s = ok? "PASS" : "FAIL";
@@ -44,21 +43,40 @@ check(bool ok, std::string msg)
 
 
 
-void
-check_fmt(num_t v, const std::string& s)
+void check_fmtXXX(num_t v, const std::string& s)
 {
-	bool ok = string(pr_flt(v, &fxt, 2)) == s;
-	check(ok, "check_fmt: " + s);
+
 
 }
-	
-void
-test_formatting()
+
+
+template<typename... Args>
+std::string format_sub_test(Args... args)
 {
+	return string_format(args...);
+}
+
+bool format_tests()
+{
+	auto check_fmt = [](num_t v, const std::string& s) {
+		bool ok = string(pr_flt(v, &fxt, 2)) == s;
+		check(ok, "check_fmt: " + s);
+	};
 	check_fmt(24.6f, "24.60");
 	check_fmt(16.36f, "16.36"); // a source of potential rounding oddities
 	check_fmt(0.0f,  "0.00");   // issue #10
 	check_fmt(1.0f,  "1.00");
+
+
+	check(pad_left("hello", 7) == "  hello", "padleft");
+	check(pad_right("hello", 7) == "hello  ", "padright");
+
+	string s1{"Hello %s, meaning of life is %d"};
+	string s2 = format_sub_test(s1, "world", 42);
+	//cout << s2 << "\n";
+	check(s2 ==  "Hello world, meaning of life is 42", "format_sub_test");
+
+	return all_pass;
 }
 
 
@@ -76,32 +94,8 @@ bool pass()
 
 
 
-bool
-run_regular_tests()
-{
-	test_formatting();
-
-	check(pad_left("hello", 7) == "  hello", "padleft");
-	check(pad_right("hello", 7) == "hello  ", "padright");
-
-	cout << "Finished regular test\n";
-	return all_pass;
-}
 
 
-
-
-template<typename... Args>
-std::string format_sub_test(Args... args)
-{
-	return string_format(args...);
-}
-int format_tests()
-{
-	cout << "Format tests ...\n";
-	cout << format_sub_test("Hello %s, meaning of life is %d\n", "world", 42);
-	return 1;
-}
 
 
 
@@ -118,7 +112,7 @@ headless_tests()
 		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
 		{"pass",	pass},
-		{"regular", 	run_regular_tests},
+		//{"regular", 	run_regular_tests},
 		{"vals", 	test_values}
 	};
 
