@@ -617,61 +617,9 @@ handle_exp:
 
 /* Functions for printing out the names of cells and ranges */
 
-	char *
-cell_name (CELLREF rr, CELLREF cc)
+std::string cell_name (CELLREF rr, CELLREF cc)
 {
-	static char strs[2][20];
-	static int num = 0;
-	char *ptr;
-
-	num = num ? 0 : 1;
-
-	if (Global->a0)
-	{
-		ptr = &strs[num][9];
-		sprintf (ptr, "%u", rr);
-		if (cc < MIN_COL + 26)
-			*--ptr = 'A' - MIN_COL + cc;
-#if MAX_COL>702
-		else if (cc < MIN_COL + 702)
-		{
-			cc -= MIN_COL + 26;
-			*--ptr = 'A' + cc % 26;
-			*--ptr = 'A' + cc / 26;
-		}
-		else if (cc < MIN_COL + 18278)
-		{
-			cc -= MIN_COL + 702;
-			*--ptr = 'A' + cc % 26;
-			cc /= 26;
-			*--ptr = 'A' + cc % 26;
-			*--ptr = 'A' + cc / 26;
-		}
-		else
-		{
-			cc -= MIN_COL + 18278;
-			*--ptr = 'A' + cc % 26;
-			cc /= 26;
-			*--ptr = 'A' + cc % 26;
-			cc /= 26;
-			*--ptr = 'A' + cc % 26;
-			*--ptr = 'A' + cc / 26;
-		}
-#else
-		else
-		{
-			cc -= MIN_COL + 26;
-			*--ptr = 'A' + cc % 26;
-			*--ptr = 'A' + cc / 26;
-		}
-#endif
-	}
-	else
-	{
-		ptr = &strs[num][0];
-		sprintf (ptr, "r%uc%u", rr, cc);
-	}
-	return ptr;
+	return std::format("r{}c{}", rr, cc);
 }
 
 	char *

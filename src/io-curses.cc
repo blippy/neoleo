@@ -328,7 +328,7 @@ void cur_io_update_status (void) // FN
 		ptr = range_name (&r);
 	}
 	else
-		ptr = cell_name (curow, cucol);
+		ptr = cell_name (curow, cucol).c_str();
 
 	addstr (ptr);
 	wid -= strlen (ptr);

@@ -54,7 +54,7 @@ inline CELLREF cur_row, cur_col;
 
 extern void panic (const char *, ...);
 extern char *range_name (struct rng *);
-extern char *cell_name (CELLREF, CELLREF);
+
 
 
 //struct var; /* in case it hasn't been declared yet */
