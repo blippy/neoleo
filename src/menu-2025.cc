@@ -128,7 +128,7 @@ bool col_width_form()
 
 	//delwin(w);
 	//log("current col:", cucol);
-	_io_repaint();
+	cur_io_repaint();
 	return true;
 
 }

@@ -6,11 +6,10 @@ NAME: 		HANK SCHRADER
 
 "Guess that's progress."
 
-BUG#51 OPENED 2025-04-20: Hanging on bad script insertion
+BUG#51 OPENED 2025-04-20: Hangs on bad script insertion
 
 BUG: Deleting a cell doesn't mark the sheet as modified
 
-BUG: Bold an italic doesn't seem to work anymore
 
 After what was mostly bugfixes, we now have new features
 

@@ -220,7 +220,7 @@ static void _io_redisp (void)
 
 void win_io_repaint_win (struct window *win)
 {
-	_io_repaint ();
+	cur_io_repaint ();
 }
 
 
@@ -287,9 +287,9 @@ void cur_io_update_status (void) // FN
 }
 
 
-void _io_repaint (void)
+void cur_io_repaint (void)
 {
-	
+	//io_recenter_cur_win();
 	CELLREF cc, rr;
 	int n, n1;
 	CELL *cp;
@@ -890,6 +890,7 @@ void curses_main () // FN
 
 
 	io_recenter_cur_win();
+
 
 	// Tell ncurses to interpret "special keys". It means
 	// that KEY_DOWN etc. will work, but ESC won't be
