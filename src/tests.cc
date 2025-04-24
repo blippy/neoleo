@@ -33,6 +33,20 @@ int run_clear_test();
 
 extern int test_values();
 
+void check(std::string got, std::string expected, std::string msg)
+{
+	//cout << msg << "\t";
+	bool ok = got == expected;
+	if(ok) {
+		cout << "PASS";
+	} else {
+		cout << "FAIL";
+		all_pass = false;
+	}
+	cout << " " << msg << " Expected "  << expected << ", got " << got << "\n";
+
+}
+
 void check(bool ok, std::string msg)
 {
 	if(!ok) all_pass = false;
@@ -74,15 +88,10 @@ bool format_tests()
 	string s1{"Hello %s, meaning of life is %d"};
 	string s2 = format_sub_test(s1, "world", 42);
 	//cout << s2 << "\n";
-	check(s2 ==  "Hello world, meaning of life is 42", "format_sub_test");
+	check(s2,  "Hello world, meaning of life is 42", "format_sub_test");
 
 	time_t t =1745492070;
-	check(fmt_std_date(t) == "2025-04-24", "fmt_std_date");
-	//struct tm *tmp = localtime(&t);
-	//string s3 = std::format("{:04}-{:02}-{:02}",tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
-
-			//return print_buf;
-
+	check(fmt_std_date(t), "2025-04-24", "fmt_std_date");
 	return all_pass;
 }
 
