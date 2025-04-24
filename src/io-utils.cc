@@ -147,19 +147,13 @@ bool use_specified_zero_p(const T val, const char* fmt)
 	return val == 0 && fmt && fmt[0] != 'D';
 }
 
-/* deduce the zero specifier from the fmt */
-char* zero_specifier(char* fmt)
-{
-	if(!fmt) return CCC("");
-	if(fmt[0] == 'S') fmt++; 
-	return fmt;
-}
 
 /* Turn a floating-point number into the canonical text form.  This scribbles
    on print_buf */
 
-char *flt_to_str (num_t val)
+std::string flt_to_str (num_t val)
 {
+	//log("flt_to_str called");
 	if (val == (num_t) __plinf)
 		return iname;
 	if (val == (num_t) __neinf)
@@ -169,8 +163,7 @@ char *flt_to_str (num_t val)
 
 	double f = fabs (val);
 	if (f >= 1e6 || (f > 0 && f <= 9.9999e-6)) {
-		sprintf (print_buf, "%e", (double) val);
-		return print_buf;
+		return std::format("{}",(double) val);
 	}
 	return  pr_flt (val, &fxt, FLOAT_PRECISION, false);
 }

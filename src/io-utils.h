@@ -69,7 +69,8 @@ extern struct user_fmt fxt;
 constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 
 char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
-char *flt_to_str (num_t val);
+//char *flt_to_str (num_t val);
+std::string flt_to_str (num_t val);
 std::string trim(const std::string& str);
 
 #define	OLEO_DEFAULT_ENCODING	"ISOLatin1"
