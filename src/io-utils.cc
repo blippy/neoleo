@@ -696,23 +696,7 @@ parray_len (char **array)
 
 static char *defaultformat = NULL;
 
-	void
-file_set_default_format(char *s)
-{
-	if (defaultformat)
-		free(defaultformat);
 
-	if (s == NULL)
-		defaultformat = strdup("oleo");
-	else
-		defaultformat = s;
-}
-
-	char *
-file_get_default_format(void)
-{
-	return defaultformat;
-}
 
 
 	int
