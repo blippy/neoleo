@@ -17,9 +17,32 @@ using namespace std;
 static bool col_width_form();
 
 
+void show_menu (bool active) // FN
+{
+	std::string text{"m to activate menu"};
+	if(active) text = "Col c";
+	text = pad_right(text, COLS);
+
+	// display menu
+	int cp = 1; // color pair
+	init_pair(cp, COLOR_BLACK, COLOR_CYAN);
+	WINDOW *main_menu = stdscr;
+	//WINDOW* main_menu = newwin(1, COLS, 0, 0);
+	wmove(main_menu, 0, 0);
+	wattron(main_menu, COLOR_PAIR(cp));
+
+	wprintw(main_menu,"%s", text.c_str());
+	wattroff(main_menu, COLOR_PAIR(cp));
+	//refresh();
+}
+
+
+
 // shown when you hit the menu button (m key)
 void process_menu() // FN
 {
+	show_menu(true);
+	defer1 d(show_menu, false);
 	
 	switch(get_ch()) {
 		case 'c': col_width_form(); break;

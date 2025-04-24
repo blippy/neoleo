@@ -321,21 +321,6 @@ void write_status (const std::string& str)
 }
 // FN-END
 
-void show_menu () // FN
-{
-	// display menu
-	int cp = 1; // color pair
-	init_pair(cp, COLOR_BLACK, COLOR_CYAN);
-	WINDOW *main_menu = stdscr;
-	//WINDOW* main_menu = newwin(1, COLS, 0, 0);
-	wmove(main_menu, 0, 0);
-	wattron(main_menu, COLOR_PAIR(cp));
-	std::string s{pad_right("Col c", COLS)};
-	wprintw(main_menu,"%s", s.c_str());
-	wattroff(main_menu, COLOR_PAIR(cp));
-	//refresh();
-}
-
 
 
 static void save_csv2019(){
