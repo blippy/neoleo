@@ -158,8 +158,7 @@ char* zero_specifier(char* fmt)
 /* Turn a floating-point number into the canonical text form.  This scribbles
    on print_buf */
 
-	char *
-flt_to_str (num_t val)
+char *flt_to_str (num_t val)
 {
 	if (val == (num_t) __plinf)
 		return iname;
@@ -176,39 +175,7 @@ flt_to_str (num_t val)
 	return  pr_flt (val, &fxt, FLOAT_PRECISION, false);
 }
 
-/* This is used to return a formatted float for editing.
- * It is called as an alternative to flt_to_str, but
- * requires the cell array instead of the value to
- * do its work.  POSSIBLY this could be merged with
- * flt_to_str, if the cell arraw cp is available wherever
- * flt_to_str is used.  For now, though, this does the job.
- */
 
-	char *
-flt_to_str_fmt (CELL *cp)
-{
-	int j = GET_FORMAT(cp);	/* Only format, not precision */
-	if (j == FMT_DEF)
-		j = default_fmt;
-
-	int p = GET_PRECISION(cp);
-	switch (j)
-	{
-		case FMT_FXT:
-		case FMT_DOL:
-		case FMT_PCT:
-			return pr_flt (cp->to_num(), &fxt, p);
-		default:
-			return flt_to_str (cp->to_num());
-	}
-}
-
-	char *
-long_to_str (long val)
-{
-	sprintf (print_buf, "%ld", val);
-	return print_buf;
-}
 
 /* create the human-readable version of the contents of a cell
    This scribbles on print-buf bigtime */
