@@ -39,10 +39,12 @@ bool col_width_form()
 	box(w, 0 ,0);
 
 	PANEL *p = new_panel(w);
+	defer1 d2(del_panel, p);
 	show_panel(p);
 
 
 	
+
 	wrefresh(w);
 	
 
@@ -54,6 +56,7 @@ bool col_width_form()
 
 	
 	WINDOW *win = subwin(w, 1, 6, 3, 16); // lines cols y x
+	defer1 d3(delwin, win);
 	int pos = input.size(), len = 5;
 	mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
@@ -99,8 +102,7 @@ bool col_width_form()
 	}
 	//getch();
 
-	delwin(win);
-	del_panel(p);
+
 	//delwin(w);
 	//log("current col:", cucol);
 	_io_repaint();
