@@ -13,6 +13,8 @@ BUG: Deleting a cell doesn't mark the sheet as modified
 
 After what was mostly bugfixes, we now have new features
 
+* Added manpages: neoleo-file, neoleo-headless, neoleo-keys
+
 * Switched to cmake. Autotools ditched. You will therefore need cmake
 v3.30 or better installed. I have found cmake easier to deal with.
 v3.30 is required for C++23 `import std`.
