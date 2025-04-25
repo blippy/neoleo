@@ -20,7 +20,7 @@
 #include "oleofile.h"
 #include "logging.h"
 //#include "global.h"
-//import mod;
+import mod;
 
 using std::cin;
 using std::cout;

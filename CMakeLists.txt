@@ -1,15 +1,25 @@
 # cmake v3.28 allows for  C++23 import std;
-cmake_minimum_required(VERSION 3.28)
+#cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 4.0)
 project(neoleo)
 
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
+set(CMAKE_CXX_COMPILER c++)
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_FLAGS "-fmodules-ts")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_MODULE_STD 1)
+
+#set(CMAKE_CXX_FLAGS "-fmodules -fsearch-include-path bits/std.cc")
+set(CMAKE_CXX_FLAGS "-fmodules")
+
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)
 file(GLOB_RECURSE sources src/*.cc)
 
 add_executable(neoleo ${sources})
-target_link_libraries(neoleo cursesw panel form)
+#target_link_libraries(neoleo cursesw panel form)
 
 enable_testing()
 add_subdirectory(tests)
