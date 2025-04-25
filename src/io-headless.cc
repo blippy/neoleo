@@ -321,7 +321,7 @@ static void _repl(int fildes)
 
 void headless_main() // FN
 {
-	//cout << mod_hi_sv() << endl;
+	//cout << mod_hi() << endl;
 	constexpr int fildes = STDIN_FILENO;
 	_repl(fildes);
 }

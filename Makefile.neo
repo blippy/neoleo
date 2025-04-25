@@ -5,47 +5,32 @@ CXXFLAGS =  -std=gnu++23 -fmodules
 #OBJS = build/basic.o build/cell.o
 #SRCS = $(wildcard src/*.cc)
 OBJS = $(patsubst src/%.cc,%.o,$(wildcard src/*.cc))
-#OBJS = basic.o cell.o errors.o format.o io-2019.o io-curses.o io-utils.o logging.o
 
 
 VPATH=src
 STD = gcm.cache/std.gcm
 
-.DEFAULT_GOAL =  gcm.cache/mod.gcm 
+.DEFAULT_GOAL =  neoleo 
 
 
 $(STD) : # build the std module
 	-mkdir build
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
-neoleo : $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ -lncursesw -lpanel -lform 
+neoleo : $(OBJS) mod.o
+	$(CXX) $^  -o $@ -lncursesw -lpanel -lform 
 	
 
 $(OBJS) : $(SRCS)
 
-
-#build/%.o : src/%.cc gcm.cache/mod.gcm
-#	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
 
 gcm.cache/mod.gcm : src/mod.cxx $(STD)
 	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
 
-#io-headless.o : io-headless.cc  gcm.cache/mod.gcm
+io-headless.o : gcm.cache/mod.gcm
 
-#basic.o : basic.cc
-
-#cell.o : cell.cc
-
-#errors.o : errors.cc
-
-#format.o : format.cc
-
-#io-2019.o : io-2019.cc
-
-#io-curses.o : io-curses.cc
 
 clean :
-	-rm $(OBJS)
+	rm -f $(OBJS) neoleo
