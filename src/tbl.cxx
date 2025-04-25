@@ -1,10 +1,16 @@
-#include <iostream>
-#include <string>
+module;
 
 #include "cell.h"
 #include "io-utils.h"
 #include "sheet.h"
-#include "tbl.h"
+
+export module tbl;
+
+import std;
+
+
+export void save_dsv (FILE *fpout, char sep);
+//#include "tbl.h"
 
 using std::cout;
 using std::string;
@@ -25,8 +31,7 @@ char jst_char(cell* cp)
 	}
 }
 
-void 
-tbl()
+export void tbl()
 {
 	cout << ".TS\n";
 
@@ -59,7 +64,7 @@ tbl()
 
 }
 
-void save_csv (const std::string& filename, char sep)
+export void save_csv (const std::string& filename, char sep)
 {
 	//std::string filename = FileGetCurrentFileName() + ".csv";
 	FILE *fp = fopen(filename.c_str(), "w");

@@ -44,7 +44,7 @@ typedef uint32_t coord_t;
 typedef std::set<coord_t> crefs_t;
 
 
-constexpr auto JST_DEF = 0;
+#define JST_DEF 	0
 #define JST_LFT		1
 #define JST_RGT		2
 #define JST_CNT		3

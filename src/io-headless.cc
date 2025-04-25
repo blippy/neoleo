@@ -15,12 +15,13 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "sheet.h"
-#include "tbl.h"
+//#include "tbl.h"
 #include "utils.h"
 #include "oleofile.h"
 #include "logging.h"
 //#include "global.h"
 import mod;
+import tbl;
 
 using std::cin;
 using std::cout;

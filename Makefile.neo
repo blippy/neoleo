@@ -17,7 +17,7 @@ $(STD) : # build the std module
 	-mkdir build
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
-neoleo : $(OBJS) mod.o
+neoleo : $(OBJS) mod.o tbl.o
 	$(CXX) $^  -o $@ -lncursesw -lpanel -lform 
 	
 
@@ -29,7 +29,13 @@ $(OBJS) : $(SRCS)
 gcm.cache/mod.gcm : src/mod.cxx $(STD)
 	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
 
-io-headless.o : gcm.cache/mod.gcm
+gcm.cache/tbl.gcm : src/tbl.cxx $(STD)
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
+
+
+io-headless.o : gcm.cache/mod.gcm gcm.cache/tbl.gcm
+
+io-2019.o : gcm.cache/tbl.gcm
 
 
 clean :

@@ -23,10 +23,11 @@ using namespace std::string_literals;
 #include "ref.h"
 #include "regions.h"
 #include "sheet.h"
-#include "tbl.h"
+//#include "tbl.h"
 #include "window.h"
 #include "io-curses.h"
 
+import tbl;
 using std::cout;
 using std::cerr;
 

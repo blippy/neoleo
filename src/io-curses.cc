@@ -45,7 +45,6 @@ using namespace std::string_literals;
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>
-//#undef NULL
 #include "global.h"
 #include "cell.h"
 #include "io-curses.h"
