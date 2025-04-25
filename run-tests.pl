@@ -5,28 +5,59 @@ use v5.30;
 my $ntests = 0;
 my $npasses = 0;
 
-sub scr {
+sub update_score {
+	my $ret = shift(@_);
 	$ntests++;
-	my $name = shift(@_);
-	my $cmd = "cd tests ; ../neoleo -s $name.scr";
-	print "Running $name: "; #  $cmd";
-	my $ret = system $cmd ;
-	if($ret == 0) {
+		if($ret == 0) {
 		say "PASS";
 		$npasses++;
 	} else {
 		say "FAIL";
 	} 
+}
+
+# run a script-type file
+sub scr {
+	my $name = shift(@_);
+	my $arg = shift(@_);
+	my $cmd = "cd tests ; ../neoleo $arg -s $name.scr";
+	print "Running $name: "; #  $cmd";
+	my $ret = system $cmd ;
+	update_score($ret);
 	#say $ret; 
 }
 
+# shell script
+sub bsh {
+	my $name = shift(@_);
+	print "Running $name: ";
+	my $ret = system "cd tests ; ./$name";
+	update_score($ret);
+
+}
+
+
+sub tst {
+	my $name = shift(@_);
+	print "Running $name: ";
+	my $ret = system "cd tests; ../neoleo -T $name";
+	update_score($ret);
+}
+
+bsh "basic.sh";
 scr "ctime";
 scr "decompile-01";
+#tst "fail"; # this should ALWAYS fail
+tst "fmt";
 scr "floor";
 scr "insert-01";
 scr "issue16";
 scr "issue18";
+bsh "issue25.sh";
 scr "nohead-01";
+tst "parser2019";
+tst "pass";
+scr "spans", "verified/spans.scr.oleo";
 scr "write";
 
 #add_test(NAME basic     COMMAND basic.sh)
