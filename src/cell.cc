@@ -23,7 +23,6 @@
 #include <string>
 
 #include "cell.h"
-#include "ref.h"
 #include "regions.h"
 #include "sheet.h"
 
@@ -165,6 +164,43 @@ void edit_cell (const char* input)
 	cp->set_formula_text(input);
 	new_value(curow, cucol, input);
 }
+
+
+
+/* Set the cell ROW,COL to STRING, parsing string as needed */
+static CELL* set_cell (CELLREF row, CELLREF col, const std::string& in_string) // FN
+{
+	cur_row = row;
+	cur_col = col;
+
+	std::string s2{in_string};
+	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
+
+	//my_cell = find_cell (cur_row, cur_col);
+	return find_or_make_cell(cur_row, cur_col);
+
+}
+
+
+/* new_value() calls set_cell, but refuses to change locked cells, and
+   updates and prints the results.  It returns an error msg on error. . .
+   */
+
+char * new_value (CELLREF row, CELLREF col, const char *string) // FN
+{
+	CELL *cp = find_cell (row, col);
+	if (((!cp || GET_LCK (cp) == LCK_DEF) && default_lock == LCK_LCK) || (cp && GET_LCK (cp) == LCK_LCK))
+	{
+		return (char *) "cell is locked";
+	}
+
+	cp = set_cell(row, col, string);
+	//cur_io_pr_cell (row, col, cp);
+	Global->modified = 1;
+	return 0;
+}
+
+
 
 
 

@@ -196,6 +196,7 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input);
 void edit_cell (const char* input);
 void copy_this_cell_formula();
 void paste_this_cell_formula();
+char * new_value (CELLREF row, CELLREF col, const char *string);
 
 
 typedef struct point_t {int r; int c;} point_t;

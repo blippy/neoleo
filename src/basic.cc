@@ -25,12 +25,9 @@
 
 
 #include "basic.h"
-//#include "convert.h"
 #include "regions.h"
 #include "window.h"
 #include "io-utils.h"
-//#include "io-curses.h"
-#include "ref.h"
 #include "format.h"
 #include "oleofile.h"
 #include "sheet.h"

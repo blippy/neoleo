@@ -23,7 +23,6 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "logging.h"
-#include "ref.h"
 #include "sheet.h"
 
 using std::cout;

@@ -37,7 +37,6 @@
 #include "sheet.h"
 #include "logging.h"
 #include "oleofile.h"
-#include "ref.h"
 #include "spans.h"
 #include "utils.h"
 

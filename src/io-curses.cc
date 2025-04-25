@@ -36,8 +36,6 @@ using std::string;
 using std::vector;
 using namespace std::string_literals;
 
-//#include <ncurses.h>
-//#include <curses.h>
 #include <menu.h>
 #include <panel.h>
 
@@ -56,7 +54,6 @@ using namespace std::string_literals;
 #include "window.h"
 #include <term.h>
 #include "logging.h"
-#include "ref.h"
 #include "menu-2025.h"
 
 

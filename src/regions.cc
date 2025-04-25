@@ -29,7 +29,6 @@
 #include "global.h"
 #include "io-utils.h"
 #include "sheet.h"
-#include "ref.h"
 #include "regions.h"
 #include "window.h"
 #include "basic.h"
@@ -64,8 +63,7 @@ struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
 /* Take a struct rng (R) and init its elements to R1 C1 R2 C2, making sure
    they are put in in the right order.
  */
-void
-set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
+void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 {
 	r->lr = std::min(r1, r2);
 	r->hr = std::max(r1, r2);
@@ -74,8 +72,7 @@ set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 }
 
 /* Turn on/off the locked bits in a region */
-void
-lock_region (struct rng *where, int locked)
+void lock_region (struct rng *where, int locked)
 {
 	Global->modified = 1;
 	make_cells_in_range (where);
@@ -97,8 +94,7 @@ void change_region(struct rng* a_rng, std::function<void(CELL*)> fn)
 		//io_pr_cell (r, c, cp);		
 	}
 }
-void
-format_region (struct rng *where, int fmt, int just)
+void format_region (struct rng *where, int fmt, int just)
 {
 	auto fn = [=](CELL* cp) {
 		if (fmt != -1) 
@@ -112,8 +108,7 @@ format_region (struct rng *where, int fmt, int just)
 }
 
 
-void
-precision_region (struct rng *where, int precision)
+void precision_region (struct rng *where, int precision)
 {
 	auto fn = [=](CELL* cp) {
 		if (precision != -1)

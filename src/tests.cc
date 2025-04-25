@@ -23,7 +23,6 @@ using namespace std::string_literals;
 #include "io-utils.h"
 #include "cell.h"
 #include "neotypes.h"
-#include "ref.h"
 #include "sheet.h"
 
 static bool all_pass = true; // all the checks have passed so far

@@ -7,7 +7,6 @@
 #include <map>
 
 #include <ncurses.h>
-//#include <curses.h>
 #include <form.h>
 #include <panel.h>
 
@@ -18,12 +17,9 @@ using namespace std::string_literals;
 #include "parser-2019.h"
 #include "io-utils.h"
 #include "logging.h"
-//#include "mem.h"
 #include "menu-2025.h"
-#include "ref.h"
 #include "regions.h"
 #include "sheet.h"
-//#include "tbl.h"
 #include "window.h"
 #include "io-curses.h"
 

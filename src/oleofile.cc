@@ -34,7 +34,6 @@ using std::map;
 #include "io-utils.h"
 #include "global.h"
 #include "sheet.h"
-#include "ref.h"
 #include "regions.h"
 #include "window.h"
 #include "spans.h"
