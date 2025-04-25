@@ -3,32 +3,49 @@ CXXFLAGS =  -std=gnu++23 -fmodules
 
 #SRCS = src/basic.cc src/cell.cc
 #OBJS = build/basic.o build/cell.o
-SRCS = $(wildcard src/*.cc)
-OBJS = $(patsubst src/%.cc,build/%.o,$(wildcard src/*.cc))
+#SRCS = $(wildcard src/*.cc)
+OBJS = $(patsubst src/%.cc,%.o,$(wildcard src/*.cc))
+#OBJS = basic.o cell.o errors.o format.o io-2019.o io-curses.o io-utils.o logging.o
 
-foo : $(OBJS)
-	echo $(S1)
-	echo O1 = $(O1)
+
+VPATH=src
+STD = gcm.cache/std.gcm
+
+.DEFAULT_GOAL =  gcm.cache/mod.gcm 
+
+
+$(STD) : # build the std module
+	-mkdir build
+	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
+
+neoleo : $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ -lncursesw -lpanel -lform 
+	
 
 $(OBJS) : $(SRCS)
 
-#build/basic.o : basic.cc
-#	$(CXX) -c $<
 
-build/%.o : src/%.cc gcm.cache/mod.gcm
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+#build/%.o : src/%.cc gcm.cache/mod.gcm
+#	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-#gcm.cache/string_view.gcm : 
-#	$(CXX) $(CXXFLAGS) -c -x c++-system-header string_view -o $@   # $< -o $@
 
-gcm.cache/std.cc :
-	c++ -std=c++23 -fmodules -fsearch-include-path bits/std.cc
 
-gcm.cache/mod.gcm : src/mod.cxx # build/gcm.cache/string_view.gcm 
-	$(CXX) $(CXXFLAGS)    -Wfatal-errors -c $< -o $@
-	#$(CXX) $(CXXFLAGS)  -fsearch-include-path bits/std.cc  -Wfatal-errors -c $< 
-	#$(CXX) $(CXXFLAGS)  -fsearch-include-path bits/string_view.tcc  -c $< 
-	#$(CXX) $(CXXFLAGS)  -fsearch-include-path bits/string_view.cc  -c $< 
-	
-#gcm.cache/mod.gcm : src/mod.cxx # build/gcm.cache/string_view.gcm 
-#	$(CXX) $(CXXFLAGS)    -c $< -o $@
+gcm.cache/mod.gcm : src/mod.cxx $(STD)
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
+
+#io-headless.o : io-headless.cc  gcm.cache/mod.gcm
+
+#basic.o : basic.cc
+
+#cell.o : cell.cc
+
+#errors.o : errors.cc
+
+#format.o : format.cc
+
+#io-2019.o : io-2019.cc
+
+#io-curses.o : io-curses.cc
+
+clean :
+	-rm $(OBJS)
