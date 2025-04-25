@@ -30,7 +30,6 @@
 #include "io-utils.h"
 #include "sheet.h"
 #include "regions.h"
-#include "window.h"
 #include "basic.h"
 #include "spans.h"
 

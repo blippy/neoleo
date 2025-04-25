@@ -26,7 +26,6 @@
 
 #include "basic.h"
 #include "regions.h"
-#include "window.h"
 #include "io-utils.h"
 #include "format.h"
 #include "oleofile.h"

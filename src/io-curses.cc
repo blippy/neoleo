@@ -51,7 +51,6 @@ using namespace std::string_literals;
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
-#include "window.h"
 #include <term.h>
 #include "logging.h"
 #include "menu-2025.h"

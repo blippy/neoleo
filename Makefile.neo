@@ -5,6 +5,8 @@ CXXFLAGS =  -std=gnu++23 -fmodules
 #OBJS = build/basic.o build/cell.o
 #SRCS = $(wildcard src/*.cc)
 OBJS = $(patsubst src/%.cc,%.o,$(wildcard src/*.cc))
+MOD_OBJS = mod.o tbl.o win.o # module objects
+
 
 
 VPATH=src
@@ -17,7 +19,7 @@ $(STD) : # build the std module
 	-mkdir build
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
-neoleo : $(OBJS) mod.o tbl.o
+neoleo : $(OBJS) $(MOD_OBJS)
 	$(CXX) $^  -o $@ -lncursesw -lpanel -lform 
 	
 
@@ -26,17 +28,23 @@ $(OBJS) : $(SRCS)
 
 
 
-gcm.cache/mod.gcm : src/mod.cxx $(STD)
+
+
+mod.o gcm.cache/mod.gcm : src/mod.cxx $(STD)
 	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
 
-gcm.cache/tbl.gcm : src/tbl.cxx $(STD)
+tbl.o gcm.cache/tbl.gcm : src/tbl.cxx $(STD)
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
+
+win.o gcm.cache/win.gcm : src/win.cxx $(STD)
 	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
 
 
 io-headless.o : gcm.cache/mod.gcm gcm.cache/tbl.gcm
 
-io-2019.o : gcm.cache/tbl.gcm
+# I think the source file might be correct way of doing it (??)
+src/io-2019.cc : gcm.cache/tbl.gcm gcm.cache/win.gcm
 
 
 clean :
-	rm -f $(OBJS) neoleo
+	rm -f $(OBJS) s neoleo

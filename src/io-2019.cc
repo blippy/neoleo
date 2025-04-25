@@ -20,10 +20,10 @@ using namespace std::string_literals;
 #include "menu-2025.h"
 #include "regions.h"
 #include "sheet.h"
-#include "window.h"
 #include "io-curses.h"
 
 import tbl;
+import win;
 using std::cout;
 using std::cerr;
 

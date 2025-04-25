@@ -16,45 +16,36 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+module;
 
- /*
-#include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "global.h"
-#include "convert.h"
-#include "window.h"
-#include "io-utils.h"
-#include "io-term.h"
-#include "cmd.h"
-#include "sheet.h"
-#include "regions.h"
-#include "spans.h"
-#include "io-curses.h"
-*/
-
-#include <string>
 #include <ncurses.h>
 
 
+
+//#include <string>
+
+export module win;
+
+import std;
+
+
 // these should be nice generic functions
-void win_print(WINDOW *w, const char* str) // FN
+export void win_print(WINDOW *w, const char* str) // FN
 {
 	waddstr(w, str);
 }
 
-void win_print(const char* str) // FN
+export void win_print(const char* str) // FN
 {
 	addstr(str);
 }
 
-void win_print(const std::string& str) // FN
+export void win_print(const std::string& str) // FN
 {
 	win_print(str.c_str());
 }
-void win_print(int y, int x, const std::string& str) // FN 
+
+export void win_print(int y, int x, const std::string& str) // FN
 {
 	move(y, x);
 	win_print(str);
