@@ -18,6 +18,10 @@
 
 
 
+#include <fcntl.h>
+#include <errno.h>
+#include <ctype.h>
+#include <signal.h>
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
@@ -26,6 +30,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <vector>
+#include <term.h>
+
+
 
 #include "cell.h"
 #include "utils.h"
@@ -39,10 +46,7 @@ using namespace std::string_literals;
 #include <menu.h>
 #include <panel.h>
 
-#include <fcntl.h>
-#include <errno.h>
-#include <ctype.h>
-#include <signal.h>
+
 #include "global.h"
 #include "cell.h"
 #include "io-curses.h"
@@ -51,7 +55,7 @@ using namespace std::string_literals;
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
-#include <term.h>
+
 #include "logging.h"
 #include "menu-2025.h"
 
@@ -60,8 +64,6 @@ using namespace std::string_literals;
 CELLREF mkrow = NON_ROW;
 CELLREF mkcol = NON_COL;
 
-#define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
-#define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
 
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
