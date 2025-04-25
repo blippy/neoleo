@@ -761,36 +761,8 @@ void write_cells(FILE* fp)
 static std::string oleo_write_window_config ()
 {
 	std::ostringstream oss;
-
-	//int n;
-	//char buf[90];
-	//struct line scratch;
-	//scratch.alloc = 0;
-	//scratch.buf = 0;
-
-	//cwin->win_curow = curow;
-	//cwin->win_cucol = cucol;
-	//sprint_line (&out, "O;status %d\n", user_status);
 	oss << "O;status 2\n";
-	/*
-		buf[0] = '\0';
-		if (win_flags & WIN_LCK_HZ)
-			strcat (buf, ",lockh");
-		if (win_flags & WIN_LCK_VT)
-			strcat (buf, ",lockv");
-		if (win_flags & WIN_PAG_HZ)
-			strcat (buf, ",pageh");
-		if (win_flags & WIN_PAG_VT)
-			strcat (buf, ",pagev");
-		if (win_flags & WIN_EDGE_REV)
-			strcat (buf, ",standout");
-		if ((win_flags & WIN_EDGES) == 0)
-			strcat (buf, ",noedges");
-			*/
-
-		oss << "W;N" << 1 << ";A" << curow << " " << cucol 
-			<< ";C7 0 7;Ostandout\n";
-
+	oss << "W;N" << 1 << ";A" << curow << " " << cucol 	<< ";C7 0 7;Ostandout\n";
 	return oss.str();
 }
 

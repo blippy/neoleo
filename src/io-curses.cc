@@ -62,9 +62,6 @@ CELLREF mkcol = NON_COL;
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
 #define MIN_WIN_WIDTH	(cwin->flags&WIN_EDGES ? 6 : 1)
-#define MIN_CWIN_HEIGHT  MIN_WIN_HEIGHT(cwin)
-#define MIN_CWIN_WIDTH  MIN_WIN_WIDTH(cwin)
-
 
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
