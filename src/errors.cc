@@ -2,6 +2,7 @@
 
 #include "format.h"
 #include "errors.h"
+#include "global.h"
 //#include "xcept.h"
 
 void  _assert_uncalled(const char* __file__, int __line__)
@@ -41,3 +42,17 @@ void raise_error (const std::string& msg) // FN
 {
 	raise_error("%s", msg.c_str());
 }
+
+// FN panic
+void panic (const char *s,...)
+{
+	va_list iggy;
+
+	va_start (iggy, s);
+	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
+	vfprintf (stderr, s, iggy);
+	putc ('\n', stderr);
+	va_end (iggy);
+	exit (2);
+}
+// FN-END

@@ -4,7 +4,10 @@
 #include <string>
 #include <sys/auxv.h>
 #include <unistd.h>
+//#include <stdexcept>
 #include <vector>
+//#include <stacktrace>
+//#include <execinfo.h>
 
 #include "assert.h"
 #include "basic.h"
@@ -17,9 +20,7 @@
 //#include "io-curses.h"
 //#include "window.h"
 
-#define VERSION "16.0"
-#define PACKAGE "neoleo"
-#define PACKAGE_NAME PACKAGE
+
 
 using std::cerr;
 using std::cout;
@@ -54,19 +55,7 @@ static struct option long_options[] =
 };
 
 
-// FN panic 
-void panic (const char *s,...)
-{
-	va_list iggy;
 
-	va_start (iggy, s);
-	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
-	vfprintf (stderr, s, iggy);
-	putc ('\n', stderr);
-	va_end (iggy);
-	exit (2);
-}
-// FN-END
 
 void print_version()
 {
@@ -206,6 +195,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 
 int main (int argc, char **argv)
 {
+
 	int command_line_file = 0;	/* was there one? */
 	bool use_headless = false;
 	parse_command_line(argc, argv, use_headless);

@@ -32,7 +32,9 @@
 //typedef unsigned short CELLREF;
 
 
-
+const auto VERSION = "16.0";
+const auto  PACKAGE = "neoleo";
+const auto PACKAGE_NAME = PACKAGE;
 
 
 inline CELLREF curow = MIN_ROW;

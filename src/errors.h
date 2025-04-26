@@ -98,3 +98,4 @@ class ValErr : public std::exception
 
 void raise_error(const char *str, ...);
 void raise_error(const std::string msg);
+void panic (const char *s,...);

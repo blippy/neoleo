@@ -17,7 +17,7 @@ $(STD) : # build the std module
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
 neoleo : $(OBJS) $(MOD_OBJS)
-	$(CXX) $^  -o $@ -lncursesw -lpanel -lform 
+	$(CXX) $^  -o $@ -lncursesw -lpanel -lform #-lstdc++_libbacktrace
 	
 
 $(OBJS) : $(SRCS)
