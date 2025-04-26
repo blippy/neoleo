@@ -51,16 +51,3 @@ export ValType get_value_t_type(const value_t& val)
 	return TYP_NUL;
 }
 
-
-
-#define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";
-export int test_values()
-{
-	cout << "test_values ... ";
-	value_t v1 =1.0, v2 = 1.0;
-	REQUIRE(v1==v2);
-	v2 = 3.0;
-	REQUIRE(v1!= v2);
-	cout << "done\n";
-	return 1;
-}

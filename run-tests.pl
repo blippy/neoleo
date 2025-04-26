@@ -59,6 +59,7 @@ scr "nohead-01";
 tst "parser2019";
 tst "pass";
 scr "spans", "verified/spans.scr.oleo";
+tst "vals";
 scr "write";
 
 #add_test(NAME basic     COMMAND basic.sh)

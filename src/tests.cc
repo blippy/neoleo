@@ -30,8 +30,7 @@ static bool all_pass = true; // all the checks have passed so far
 int run_parser_2019_tests ();
 int run_clear_test();
 
-import value;
-//extern int test_values();
+//import value;
 
 void check(std::string got, std::string expected, std::string msg)
 {
@@ -47,6 +46,7 @@ void check(std::string got, std::string expected, std::string msg)
 
 }
 
+
 void check(bool ok, std::string msg)
 {
 	if(!ok) all_pass = false;
@@ -57,11 +57,6 @@ void check(bool ok, std::string msg)
 
 
 
-void check_fmtXXX(num_t v, const std::string& s)
-{
-
-
-}
 
 
 template<typename... Args>
@@ -109,6 +104,18 @@ bool pass()
 }
 
 
+
+
+//#define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";
+bool test_values()
+{
+	//cout << "test_values ... ";
+	value_t v1 =1.0, v2 = 1.0;
+	check(v1==v2, "v1==v2");
+	v2 = 3.0;
+	check(v1!=v2, "v1!=v2");
+	return all_pass;
+}
 
 
 
