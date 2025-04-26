@@ -30,6 +30,10 @@ $(CC_OBJS) : $(SRCS)
 	
 %.cxx.o : src/%.cxx $(STD) 
 	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< -o $@
+	
+value.cxx.o : src/value.cxx errors.cxx.o $(STD) 
+	echo hello
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< -o $@
 	 
 
 

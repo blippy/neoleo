@@ -8,6 +8,7 @@ module;
 export module errors;
 
 import std;
+//import value;
 
 void  _assert_uncalledXXX(const char* __file__, int __line__)
 {
@@ -15,18 +16,6 @@ void  _assert_uncalledXXX(const char* __file__, int __line__)
 	throw std::logic_error(msg);
 }
 
-
-const char* ValErr::what() const throw()
-{
-	return ename[n];
-	//msg = std::string(ename[n]);
-	//return msg.c_str();
-	//return std::to_string(n).c_str();
-}
-const int ValErr::num() const throw()
-{
-	return n;
-}
 
 
 // FN raise_error 

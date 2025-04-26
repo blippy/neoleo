@@ -30,7 +30,8 @@ static bool all_pass = true; // all the checks have passed so far
 int run_parser_2019_tests ();
 int run_clear_test();
 
-extern int test_values();
+import value;
+//extern int test_values();
 
 void check(std::string got, std::string expected, std::string msg)
 {

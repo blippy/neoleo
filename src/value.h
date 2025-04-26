@@ -2,6 +2,9 @@
 
 //#include "errors.h"
 
+
+
+#if 0
 enum ValType { TYP_NUL=0, // taken to mean 'undefined'
 	TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
@@ -47,3 +50,5 @@ bool operator!=(const err_t& lhs, const err_t& rhs);
 bool operator!=(const rng_t& lhs, const rng_t& rhs);
 bool operator!=(const bool_t& lhs, const bool_t& rhs);
 //bool operator!=(const empty_t& lhs, const empty_t& rhs);
+
+#endif

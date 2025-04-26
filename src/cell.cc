@@ -22,10 +22,12 @@
 #include <string.h>
 #include <string>
 
+#include "neotypes.h"
 #include "cell.h"
 #include "regions.h"
 #include "sheet.h"
 
+import value;
 using std::cerr;
 using std::cout;
 using std::endl;
