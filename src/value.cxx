@@ -94,14 +94,9 @@ export ValType get_value_t_type(const value_t& val)
 }
 
 
-export bool operator!=(const err_t& lhs, const err_t& rhs)
-{
-	return lhs.num != rhs.num;
-}
-export bool operator==(const err_t& lhs, const err_t& rhs)
-{
-	return lhs.num == rhs.num;
-}
+//export auto operator<=>(const err_t& lhs, const err_t& rhs) = dafault;
+//export bool operator!=(const err_t& lhs, const err_t& rhs) { 	return lhs.num != rhs.num; }
+//export bool operator==(const err_t& lhs, const err_t& rhs) { 	return lhs.num == rhs.num; }
 
 export bool operator==(const rng_t& r1, const rng_t& r2)
 {
