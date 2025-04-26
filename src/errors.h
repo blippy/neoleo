@@ -30,26 +30,10 @@
 //#include "xcept.h"
 
 /* These are all the possible error codes that eval_expression() can return. */
-#define ERR_CMD		1
-#define BAD_INPUT	2
-#define NON_NUMBER	3
-#define NON_STRING	4
-#define NON_BOOL	5
-#define NON_RANGE	6
-#define OUT_OF_RANGE	7
-#define NO_VALUES	8
-#define DIV_ZERO	9
-#define BAD_NAME	10
-#define NOT_AVAL	11
-#define PARSE_ERR	12
-#define NO_OPEN		13
-#define NO_CLOSE	14
-#define NO_QUOTE	15
-#define BAD_CHAR	16
-#define BAD_FUNC	17
-#define CYCLE		18
+enum { ERR_CMD =1, BAD_INPUT,  NON_NUMBER,  NON_STRING, NON_BOOL, NON_RANGE,  OUT_OF_RANGE, NO_VALUES,
+	DIV_ZERO, BAD_NAME, NOT_AVAL, PARSE_ERR, NO_OPEN, NO_CLOSE, NO_QUOTE, BAD_CHAR, BAD_FUNC, CYCLE};
 
-#define ERR_MAX		18
+//#define ERR_MAX		18
 
 typedef struct err_t { int num; std::string what; } err_t;
 //extern char *ename[];
@@ -64,6 +48,8 @@ inline const char *ename[] =
 	CCC1("#UNK_FUNC"), CCC1("#CYCLE"),
 	CCC1(0)
 };
+
+
 
 
 
