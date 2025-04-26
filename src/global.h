@@ -54,7 +54,7 @@ inline std::string option_tests_argument = "";
  */
 inline CELLREF cur_row, cur_col;
 
-extern void panic (const char *, ...);
+//extern void panic (const char *, ...);
 
 
 

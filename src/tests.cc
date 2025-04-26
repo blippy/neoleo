@@ -114,8 +114,7 @@ bool pass()
 
 
 
-bool
-headless_tests()
+bool headless_tests()
 {
 	//bool all_pass = true;
 	cout << "Running tests: " << option_tests_argument << "\n";

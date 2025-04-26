@@ -59,6 +59,7 @@ using namespace std::string_literals;
 #include "logging.h"
 #include "menu-2025.h"
 
+import errors;
 
 
 CELLREF mkrow = NON_ROW;

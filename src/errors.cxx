@@ -1,11 +1,17 @@
-#include <string>
+module;
+
+//#include <string>
 
 #include "format.h"
 #include "errors.h"
 #include "global.h"
 //#include "xcept.h"
 
-void  _assert_uncalled(const char* __file__, int __line__)
+export module errors;
+
+import std;
+
+void  _assert_uncalledXXX(const char* __file__, int __line__)
 {
 	std::string msg{string_format("%s:%d:ASSERT_UNCALLED failure", __file__, __line__)};
 	throw std::logic_error(msg);
@@ -26,7 +32,7 @@ const int ValErr::num() const throw()
 
 
 // FN raise_error 
-void raise_error (const char *str, ...) // FN
+export void raise_error (const char *str, ...) // FN
 {
 	va_list args;
 	char buf[1000];
@@ -38,13 +44,13 @@ void raise_error (const char *str, ...) // FN
 }
 // FN-END
 
-void raise_error (const std::string& msg) // FN
+export void raise_error (const std::string& msg) // FN
 {
 	raise_error("%s", msg.c_str());
 }
 
 // FN panic
-void panic (const char *s,...)
+export void panic (const char *s,...)
 {
 	va_list iggy;
 

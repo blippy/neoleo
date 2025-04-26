@@ -1,9 +1,10 @@
 CXX = c++
 CXXFLAGS =  -std=gnu++23 -fmodules
+CXXFLAGS += -ggdb -O0
 HDRS = $(wilscard src/%.h)
 SRCS = $(wildcard src/%.cc)
-OBJS = $(patsubst src/%.cc,%.o,$(wildcard src/*.cc))
-MOD_OBJS = mod.o tbl.o win.o # module objects
+CC_OBJS = $(patsubst src/%.cc,%.cc.o,$(wildcard src/*.cc)) # regular .cc files
+CXX_OBJS =$(patsubst src/%.cxx,%.cxx.o,$(wildcard src/*.cxx)) # module objects
 
 
 
@@ -14,35 +15,32 @@ STD = gcm.cache/std.gcm
 
 
 $(STD) : # build the std module
-	-mkdir build
+	#-mkdir build
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
-neoleo : $(OBJS) $(MOD_OBJS)
+neoleo : $(CC_OBJS)  $(CXX_OBJS)
 	$(CXX) $^  -o $@ -lncursesw -lpanel -lform
 	
 
 $(OBJS) : $(SRCS)
 
 
+%.cc.o : src/%.cc $(CXX_OBJS)
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< -o $@
+	
+%.cxx.o : src/%.cxx $(STD) 
+	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< -o $@
+	 
 
 
 
-
-mod.o gcm.cache/mod.gcm : src/mod.cxx $(STD)
-	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
-
-tbl.o gcm.cache/tbl.gcm : src/tbl.cxx $(STD)
-	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
-
-win.o gcm.cache/win.gcm : src/win.cxx $(STD)
-	$(CXX) $(CXXFLAGS) -Wfatal-errors -c $< 
-
-
-io-headless.o : gcm.cache/mod.gcm gcm.cache/tbl.gcm
-
-# I think the source file might be correct way of doing it (??)
-src/io-2019.cc : gcm.cache/tbl.gcm gcm.cache/win.gcm
-
-
+info :
+	@echo "CC_OBJS = $(CC_OBJS)"
+	@echo "CXX_OBJS = $(CXX_OBJS)"
+	
 clean :
-	rm -f $(OBJS) s neoleo
+	rm -f $(CC_OBJS)  neoleo
+	
+cleaner : clean
+	rm -f *.o 
+	rm -rf gcm.cache

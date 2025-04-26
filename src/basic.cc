@@ -37,6 +37,7 @@
 using std::cout;
 using std::endl;
 
+import errors;
 
 //#define S (char *)
 

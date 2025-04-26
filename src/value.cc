@@ -6,6 +6,7 @@
 #include "sheet.h"
 #include "value.h"
 
+import errors;
 using namespace std;
 
 
@@ -20,7 +21,8 @@ ValType get_value_t_type(const value_t& val)
 	if(is_err(val))		return TYP_ERR;
 	if(is_range(val))	return TYP_RNG;
 	if(is_bool(val))	return TYP_BOL;
-	ASSERT_UNCALLED();
+	panic("Uncalled get_value_t_type");
+	//ASSERT_UNCALLED();
 	return TYP_NUL;
 }
 

@@ -40,6 +40,7 @@ using std::map;
 #include "logging.h"
 #include "oleofile.h"
 
+import errors;
 //#include "io-curses.h"
 
 
@@ -307,7 +308,8 @@ void oleo_read_file (FILE *fp, int ismerge)
 			case '#':		/* comment line -- ignored */
 				break;
 			case '%':		/* Font or pixel size data. */
-				ASSERT_UNCALLED();
+				panic("Unhandled case");
+				//ASSERT_UNCALLED();
 				ptr++;
 				switch (*ptr) {
 					case 'F':		/* %F font-name */
@@ -326,7 +328,8 @@ void oleo_read_file (FILE *fp, int ismerge)
 				break;
 
 			case 'B':		/* Boundry field, ignored */
-				ASSERT_UNCALLED();
+				panic("Unhandled case");
+				//ASSERT_UNCALLED();
 				ptr++;
 				while (*ptr)
 				{
@@ -358,7 +361,8 @@ void oleo_read_file (FILE *fp, int ismerge)
 				break;
 
 			case 'N':		/* A Name field */
-				ASSERT_UNCALLED();
+				panic("Unhandled case");
+				//ASSERT_UNCALLED();
 				break;
 
 			case 'C':		/* A Cell entry */
@@ -429,7 +433,8 @@ void oleo_read_file (FILE *fp, int ismerge)
 				if (cprot)
 					SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
 				if (ismerge) {
-					ASSERT_UNCALLED();
+					panic("Unhandled case");
+					//ASSERT_UNCALLED();
 					//push_cell (crow, ccol);
 				}
 				break;

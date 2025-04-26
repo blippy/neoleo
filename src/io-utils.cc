@@ -18,6 +18,7 @@
  * Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <format>
 #include <stdlib.h>
 #include <iomanip>
 #include <locale>
@@ -39,6 +40,8 @@
 #include "oleofile.h"
 #include "spans.h"
 #include "utils.h"
+
+import errors;
 
 using namespace std::literals;
 using std::get;
@@ -172,7 +175,11 @@ std::string  fmt_std_date(int t)
 {
 	time_t t1 = t;
 	struct tm *tmp = localtime(&t1);
-	return std::format("{:04}-{:02}-{:02}",tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
+	char str[100];
+	// std::format seems to cause problems
+	sprintf(str, "%04d-%02d-%02d", tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
+	//return std::format("{:04}-{:02}-{:02}",tmp->tm_year + 1900,tmp->tm_mon + 1,tmp->tm_mday);
+	return str;
 }
 
 
@@ -219,7 +226,8 @@ std::string print_cell (CELL * cp)
 		{
 
 			case FMT_USR:
-				ASSERT_UNCALLED();
+				panic("Uncalled FMT_USR");
+				//ASSERT_UNCALLED();
 				//return pr_flt (flt, &u[p], u[p].prec);
 
 			case FMT_GEN:
@@ -272,7 +280,8 @@ handle_exp:
 			case FMT_DATE:
 				return fmt_std_date(v);
 			case FMT_USR:
-				ASSERT_UNCALLED();
+				panic("Uncalled FMT_USR");
+				//ASSERT_UNCALLED();
 				//return pr_int (v, &u[p], u[p].prec);
 
 			case FMT_GEN:
@@ -503,7 +512,8 @@ char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 			goto deal_fmt;
 
 		case FMT_USR:
-			ASSERT_UNCALLED();
+			panic("Uncalled FMT_USR");
+			//ASSERT_UNCALLED();
 			goto deal_fmt;
 
 		case FMT_GEN:
@@ -762,7 +772,8 @@ std::string stringify_value_file_style(const value_t& val)
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
 	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];
 
-	ASSERT_UNCALLED();
+	panic("Uncalled stringify_value_file_style");
+	//ASSERT_UNCALLED();
 	return "BAD STRING";
 }
 
