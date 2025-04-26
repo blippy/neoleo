@@ -40,7 +40,7 @@ sub bsh {
 sub tst {
 	my $name = shift(@_);
 	print "Running $name: ";
-	my $ret = system "cd tests; ../neoleo -T $name";
+	my $ret = system "cd tests; ../neoleo -T $name >/dev/null";
 	update_score($ret);
 }
 

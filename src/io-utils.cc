@@ -176,6 +176,7 @@ std::string  fmt_std_date(int t)
 }
 
 
+std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_cell(cp); }
 /* create the human-readable version of the contents of a cell
    This scribbles on print-buf bigtime */
 
