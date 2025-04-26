@@ -6,13 +6,9 @@ NAME: 		HANK SCHRADER
 
 "Guess that's progress."
 
-BUG#51 OPENED 2025-04-20: Hangs on bad script insertion
-CLOSED 2025-04-26: FIXED
+After what was mostly compilation bugfixes in previous releases, we now have new features.
 
-BUG: Deleting a cell doesn't mark the sheet as modified
-
-
-After what was mostly bugfixes, we now have new features
+== FEATURES
 
 * Added manpages: neoleo-file, neoleo-headless, neoleo-keys
 
@@ -36,6 +32,13 @@ refers to current column.
 * Added support for Ctrl-uparrow (move the 1st row) and Ctl-leftarrow
 (move to 1st column). Note that this is not supported on all terminals.
 
+
+== BUGS
+
+BUG#51 OPENED 2025-04-20: Hangs on bad script insertion
+CLOSED 2025-04-26: FIXED
+
+BUG: Deleting a cell doesn't mark the sheet as modified
 
 
 ===========================================================================
