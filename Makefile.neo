@@ -18,11 +18,11 @@ $(STD) : # build the std module
 	#-mkdir build
 	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
-neoleo : $(CC_OBJS)  $(CXX_OBJS)
+neoleo : $(CC_OBJS) $(CXX_OBJS)
 	$(CXX) $^  -o $@ -lncursesw -lpanel -lform
 	
 
-$(OBJS) : $(SRCS)
+$(CC_OBJS) : $(SRCS) 
 
 
 %.cc.o : src/%.cc $(CXX_OBJS)

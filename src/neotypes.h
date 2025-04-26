@@ -6,7 +6,6 @@
 #include <variant>
 #include <vector>
 
-#include "errors.h"
 
 using num_t = double;
 using CELLREF = uint16_t;

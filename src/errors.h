@@ -1,8 +1,6 @@
 #pragma once
 
 /*
- * $Id: errors.h,v 1.3 2000/08/10 21:02:50 danny Exp $
- *
  * Copyright (c) 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
@@ -25,9 +23,6 @@
 #include <stdarg.h>
 #include <string>
 
-//#include "format.h"
-//#include "errors.h"
-//#include "xcept.h"
 
 /* These are all the possible error codes that eval_expression() can return. */
 enum { ERR_CMD =1, BAD_INPUT,  NON_NUMBER,  NON_STRING, NON_BOOL, NON_RANGE,  OUT_OF_RANGE, NO_VALUES,

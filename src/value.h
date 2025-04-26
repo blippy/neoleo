@@ -1,5 +1,7 @@
 #pragma once
 
+#include "errors.h"
+
 enum ValType { TYP_NUL=0, // taken to mean 'undefined'
 	TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
