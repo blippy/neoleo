@@ -43,4 +43,4 @@ clean :
 	
 cleaner : clean
 	rm -f *.o 
-	rm -rf gcm.cache
+	rm -rf gcm.cache build
