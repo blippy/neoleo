@@ -98,6 +98,7 @@ export ValType get_value_t_type(const value_t& val)
 //export bool operator!=(const err_t& lhs, const err_t& rhs) { 	return lhs.num != rhs.num; }
 //export bool operator==(const err_t& lhs, const err_t& rhs) { 	return lhs.num == rhs.num; }
 
+#if 0
 export bool operator==(const rng_t& r1, const rng_t& r2)
 {
 	return r1.lr == r2.lr && r1.hr == r2.hr && r1.lr == r2.lr && r1.hr == r2.hr;
@@ -105,6 +106,7 @@ export bool operator==(const rng_t& r1, const rng_t& r2)
 export bool operator!=(const rng_t& lhs, const rng_t& rhs) { return !(lhs==rhs); }
 export bool operator==(const bool_t& lhs, const bool_t& rhs) { return lhs.v==rhs.v; }
 export bool operator!=(const bool_t& lhs, const bool_t& rhs) { return !(lhs==rhs); }
+#endif
 
 
 #define REQUIRE(x) if(!(x)) cout << __FILE__ << ":" << __LINE__  << ":"<<  #x << " FAIL\n";

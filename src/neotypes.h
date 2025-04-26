@@ -15,9 +15,15 @@ constexpr auto MAX_COL = std::numeric_limits<CELLREF>::max();
 constexpr auto MIN_ROW = 1;
 constexpr auto MIN_COL = 1;
 
-typedef struct rng { CELLREF lr, lc, hr, hc; } rng_t;
+typedef struct rng {
+	CELLREF lr, lc, hr, hc;
+	bool operator==(const rng&) const = default;
+} rng_t;
 
-typedef struct { bool v; } bool_t;
+typedef struct boool {
+	bool v;
+	bool operator==(const boool&) const = default;
+} bool_t;
 
 typedef std::vector<std::string> strings;
 
