@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <functional>
+#include <generator>
 #include <map>
 #include <ncurses.h>
 #include <unistd.h>
@@ -87,31 +88,7 @@ static void info(int fildes)
 			<< "     # " << i.desc << "\n";
 }
 
-static void insert_columnwise(T fildes)
-{
-	std::string line;
-	while(true) {
-		bool eof;
-		line = getline_from_fildes(fildes, eof);
-		if(line == ".") break;
-		if(line == ";") {
-			curow = 1;
-			cucol++;
-			continue;
-		}
-		if(line.size() ==0) {
-			curow++;
-			continue;
-		}
-		if(line[0] == '#') continue;
 
-		set_cell_input_1(curow, cucol, line);
-		curow++;
-
-		//cout << "You said " << line <<  (line != "." ) << endl;
-		if(eof) return;
-	}
-}
 
 
 static void hless_dump_sheet(T fildes)
@@ -120,29 +97,39 @@ static void hless_dump_sheet(T fildes)
 	dump_sheet();
 }
 
-static void insert_rowwise(T fildes)
+
+
+std::generator<string> reading(T fildes)
 {
-	std::string line;
 	while(true) {
 		bool eof;
-		line = getline_from_fildes(fildes, eof);
+		string line = getline_from_fildes(fildes, eof);
 		if(line == ".") break;
-		if(line == ";") {
-			curow++;
-			cucol=1;
-			continue;
-		}
-		if(line.size() ==0) {
-			cucol++;
-			continue;
-		}
-		if(line[0] == '#') continue;
+		//if(line == ";") { co_yield line ; continue; }
+		if(line.size() == 0 && eof) break;
+		if(line.starts_with('#')) continue;
+		co_yield line;
+	}
 
+}
+
+static void insert_columnwise(T fildes)
+{
+	for(const string& line : reading(fildes)) {
+		if(line == ";") { cucol++; 	curow=1; continue;}
+		if(line == "")  { curow++; continue;}
+		set_cell_input_1(curow, cucol, line);
+		curow++;
+	}
+}
+
+static void insert_rowwise(T fildes)
+{
+	for(const string& line : reading(fildes)) {
+		if(line == ";") { curow++; 	cucol=1; continue;}
+		if(line == "")  { cucol++; continue;}
 		set_cell_input_1(curow, cucol, line);
 		cucol++;
-
-		//cout << "You said " << line <<  (line != "." ) << endl;
-		if(eof) return;
 	}
 }
 

@@ -7,6 +7,7 @@ NAME: 		HANK SCHRADER
 "Guess that's progress."
 
 BUG#51 OPENED 2025-04-20: Hangs on bad script insertion
+CLOSED 2025-04-26: FIXED
 
 BUG: Deleting a cell doesn't mark the sheet as modified
 
