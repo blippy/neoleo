@@ -18,7 +18,7 @@ using namespace std;
 
 const char* ValErr::what() const throw()
 {
-	return ename[n];
+	return ename_desc[n];
 	//msg = std::string(ename[n]);
 	//return msg.c_str();
 	//return std::to_string(n).c_str();
@@ -40,7 +40,7 @@ enum { ERR_CMD =1, BAD_INPUT,  NON_NUMBER,  NON_STRING, NON_BOOL, NON_RANGE,  OU
 
 //extern char *ename[];
 #define CCC1(x) x
-export inline const char *ename[] =
+export inline const char *ename_desc[] =
 {
 	CCC1("#WHAT?"),
 	CCC1("#ERROR"), CCC1("#BAD_INPUT"), CCC1("#NON_NUMBER"), CCC1("#NON_STRING"),

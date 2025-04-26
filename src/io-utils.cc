@@ -219,7 +219,7 @@ std::string print_cell (CELL * cp)
 		return bool_name(get<bool_t>(val));
 	}
 	if (typ == TYP_ERR) {
-		return ename[get<err_t>(val).num];
+		return ename_desc[get<err_t>(val).num];
 	}
 	if (typ == TYP_FLT) {
 		num_t flt = get<num_t>(val);
@@ -355,7 +355,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return bool_name(get<bool_t>(val).v);
 
 		case TYP_ERR:
-			return ename[get<err_t>(val).num];
+			return ename_desc[get<err_t>(val).num];
 		default:
 			panic ("unknown type %d in cell_value_string", typ);
 	}
@@ -771,7 +771,7 @@ std::string stringify_value_file_style(const value_t& val)
 	if(std::get_if<std::monostate>(&val)) return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
-	if(auto v = std::get_if<err_t>(&val)) 	return ename[v->num];
+	if(auto v = std::get_if<err_t>(&val)) 	return ename_desc[v->num];
 
 	panic("Uncalled stringify_value_file_style");
 	//ASSERT_UNCALLED();
