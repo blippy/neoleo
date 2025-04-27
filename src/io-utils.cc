@@ -294,11 +294,6 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return "";
 		case TYP_FLT:
 			return flt_to_str(get<num_t>(val));
-
-		case TYP_INT:
-			return std::to_string(get<num_t>(val));
-
-
 		case TYP_STR:
 			return cp->get_formula_text();
 

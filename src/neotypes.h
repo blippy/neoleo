@@ -20,9 +20,9 @@ typedef struct rng {
 	bool operator==(const rng&) const = default;
 } rng_t;
 
-typedef struct boool {
+typedef struct bol {
 	bool v;
-	bool operator==(const boool&) const = default;
+	bool operator==(const bol&) const = default;
 } bool_t;
 
 typedef std::vector<std::string> strings;
@@ -37,7 +37,7 @@ typedef std::vector<rng_t> ranges_t;
 
 
 enum ValType { TYP_NUL=0, // taken to mean 'undefined'
-	TYP_FLT=1, TYP_INT=2, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
+	TYP_FLT=1, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
 typedef struct err_t {
 	int num;
@@ -63,18 +63,3 @@ inline const char *ename_desc[] =
 
 // monostate basically means "empty" as a valid type
 typedef std::variant<std::monostate, num_t, std::string, err_t, rng_t, bool_t> value_t;
-
-#if 0
-bool is_bool(const value_t& val);
-bool is_err(const value_t& val);
-bool is_string(const value_t& val);
-bool is_nul(const value_t& val);
-bool is_range(const value_t& val);
-bool is_num(const value_t& val);
-
-
-bool operator==(const err_t& lhs, const err_t& rhs);
-bool operator!=(const err_t& lhs, const err_t& rhs);
-bool operator!=(const rng_t& lhs, const rng_t& rhs);
-bool operator!=(const bool_t& lhs, const bool_t& rhs);
-#endif

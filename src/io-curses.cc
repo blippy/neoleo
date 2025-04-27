@@ -402,6 +402,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	int hgt;
 	int yy, xx;
 
+
 	//if (input_view.current_info)		return;
 
 	wid = get_width (c);
@@ -508,8 +509,6 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 		if (lenstr > wwid - 1) { 
 			if (cp->get_type() == TYP_FLT)
 				ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
-			else if (cp->get_type() == TYP_INT)
-				ptr = (char *) numb_oflo;
 		}
 
 		if (wwid == 1)
