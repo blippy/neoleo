@@ -730,7 +730,6 @@ void write_cells(FILE* fp)
 			fprintf(fp, "%c\n", map_reverse(jst_map, j1));
 		}
 
-		//if (!GET_TYP (cp) && !cp->get_cell_formula()) continue;
 		if (cp->get_type() == TYP_NUL) continue;
 
 		(void) fprintf (fp, "C;");
@@ -744,18 +743,14 @@ void write_cells(FILE* fp)
 		}
 
 		
-		//const unsigned char* formula_1 = cp->get_bytecode();
-		//if (formula_1  && !is_constant(formula_1)  ) {
-			std::string formula = formula_text(r, c);
-			(void) fprintf (fp, "E%s;", formula.c_str());
-		//}
+		std::string formula = formula_text(r, c);
+		(void) fprintf (fp, "E%s;", formula.c_str());
 		
 
 
 		value_t val = cp->get_value_2019();
 		std::string strval = stringify_value_file_style(val) ;
-		if(cp->get_type() != TYP_NUL)
-			fprintf(fp, "K%s", strval.c_str());
+		fprintf(fp, "K%s", strval.c_str());
 
 		if(cp->locked()) fprintf (fp, ";P");
 
