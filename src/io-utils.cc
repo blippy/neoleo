@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <unistd.h>
-
+#include <variant>
 
 #include "basic.h"
 #include "cell.h"
@@ -40,6 +40,7 @@
 #include "oleofile.h"
 #include "spans.h"
 #include "utils.h"
+//#include "neotypes.h"
 
 import errors;
 import value;
@@ -228,6 +229,8 @@ std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 	}
 }
 
+
+
 std::string print_cell (CELL * cp)
 {
 
@@ -241,27 +244,16 @@ std::string print_cell (CELL * cp)
 		p = default_prc;
 	}
 
+	if (j == FMT_HID) return "";
+
 	value_t val = cp->get_value_2019();
-	auto typ = cp->get_type();
 
-	if (j == FMT_HID || is_nul(val)) return CCC("");
-
-	if (typ == TYP_STR)
-		return get<string>(val);
-
-	if (typ == TYP_BOL) {
-		return bool_name(get<bool_t>(val));
-	}
-	if (typ == TYP_ERR) {
-		return ename_desc[get<err_t>(val).num];
-	}
-	if (typ == TYP_FLT) {
-		return print_cell_flt(get<num_t>(val), p, j);
-
-	}
-
-	panic ("Unknown cell type");
-	return "";
+	if(std::holds_alternative<std::monostate>(val)) return "";
+	if(std::holds_alternative<num_t>(val)) return print_cell_flt(get<num_t>(val), p, j);
+	if(std::holds_alternative<std::string>(val)) return get<string>(val);
+	if(std::holds_alternative<bool_t>(val)) return bool_name(get<bool_t>(val));
+	if(std::holds_alternative<err_t>(val)) return ename_desc[get<err_t>(val).num];
+	throw std::logic_error("Unhandled variant type in print_cell");
 }
 
 /* Return the value of ROW,COL in a human-readable fashion
@@ -271,37 +263,23 @@ std::string print_cell (CELL * cp)
 
 std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 {
-	CELL *cp;
-
-	cp = find_cell (row, col);
+	CELL* cp = find_cell (row, col);
 	if(!cp) return "";
-	ValType typ = cp->get_type();
+
 	value_t val = cp->get_value_2019();
-	switch (typ)
-	{
-		case TYP_NUL:
-			return "";
-		case TYP_FLT:
-			return flt_to_str(get<num_t>(val));
-		case TYP_STR:
-			return cp->get_formula_text();
+	if(std::holds_alternative<std::monostate>(val)) return "";
+	if(std::holds_alternative<num_t>(val)) return flt_to_str(get<num_t>(val));
+	if(std::holds_alternative<std::string>(val)) return cp->get_formula_text();
+	if(std::holds_alternative<bool_t>(val)) return bool_name(get<bool_t>(val));
+	if(std::holds_alternative<err_t>(val)) return ename_desc[get<err_t>(val).num];
+	throw std::logic_error("Unhandled variant type in cell_value_string");
 
-		case TYP_BOL:
-			return bool_name(get<bool_t>(val).v);
-
-		case TYP_ERR:
-			return ename_desc[get<err_t>(val).num];
-		default:
-			panic ("unknown type %d in cell_value_string", typ);
-	}
-	return "";
 }
 
 
 
 
-	char *
-pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
+char *pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 {
 	//log_debug("pr_flt:prec:" + std::to_string(prec));
 	if(isnan(val)) return nname;
