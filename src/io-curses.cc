@@ -354,8 +354,8 @@ void cur_io_repaint (void)
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(&(win->screen))) {
 		decoord(cp, rr, cc);
-		if (cp->get_type() != TYP_NUL)
-			cur_io_pr_cell_win(win, rr, cc, cp);
+		//if(cp->get_type() == TYP_NUL) log("found null type");
+		if (cp->get_type() != TYP_NUL) cur_io_pr_cell_win(win, rr, cc, cp);
 	}
 	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
