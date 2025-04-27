@@ -270,50 +270,7 @@ handle_exp:
 		}
 	}
 
-	if (typ == TYP_INT) {
-		p = GET_PRECISION (cp);
-		int v = get<num_t>(val);
-		switch (j)
-		{
 
-			case FMT_DATE:
-				return fmt_std_date(v);
-			case FMT_USR:
-				panic("Uncalled FMT_USR");
-				//ASSERT_UNCALLED();
-				//return pr_int (v, &u[p], u[p].prec);
-
-			case FMT_GEN:
-				sprintf (print_buf, "%ld", (long) v);
-				return print_buf;
-
-			case FMT_DOL:
-				return pr_int (v, &dol, p);
-
-			case FMT_CMA:
-				return pr_int (v, &cma, p);
-
-			case FMT_PCT:
-				return pr_int (v, &pct, p);
-
-			case FMT_FXT:
-				if (p != FLOAT_PRECISION && p != 0)
-					sprintf (print_buf, "%ld.%.*s", (long) v, p, zeroes);
-				else
-					sprintf (print_buf, "%ld", (long) v);
-				return print_buf;
-
-			case FMT_EXP:
-				if (p != FLOAT_PRECISION)
-					sprintf (print_buf, "%.*e", p, (double) v);
-				else
-					sprintf (print_buf, "%e", (double) v);
-				return print_buf;
-			default:
-				panic ("Unknown format %d", j);
-				return "YUK";
-		}
-	}
 	panic ("Unknown cell type");
 	return "";
 }
