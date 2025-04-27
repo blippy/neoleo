@@ -183,19 +183,59 @@ std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_ce
 /* create the human-readable version of the contents of a cell
    This scribbles on print-buf bigtime */
 
+std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
+{
+	//num_t flt = get<num_t>(val);
+	switch (j)
+	{
+
+		case FMT_USR:
+			panic("Uncalled FMT_USR");
+
+		case FMT_GEN:
+			{
+				double f;
+				f = fabs (flt);
+
+				if (f >= 1e6 || (f > 0 && f <= 9.9999e-6)) goto handle_exp;
+				return pr_flt (flt, &fxt, precision, false);
+			}
+
+		case FMT_DOL:
+			return pr_flt (flt, &dol, precision);
+
+		case FMT_CMA:
+			return pr_flt (flt, &cma, precision);
+
+		case FMT_PCT:
+			return pr_flt (flt, &pct, precision);
+
+		case FMT_FXT:
+			return pr_flt (flt, &fxt, precision);
+
+		case FMT_EXP:
+	handle_exp:
+			if ((double) flt == __plinf) return iname;
+			if ((double) flt == __neinf) return mname;
+			if (precision == FLOAT_PRECISION)
+				sprintf (print_buf, "%e", (double) flt);
+			else
+				sprintf (print_buf, "%.*e", precision, (double) flt);
+			return print_buf;
+		default:
+			panic ("Unknown format: %d", j);
+			return "YUK";
+	}
+}
+
 std::string print_cell (CELL * cp)
 {
-	int j;
-	int p;
-	//long num;
-	static char zeroes[] = "000000000000000";
 
-	if (!cp)
-		return CCC("");
+	if (!cp) return CCC("");
 
-	j = GET_FORMAT (cp);
+	int j = GET_FORMAT (cp);
 
-	p = GET_PRECISION (cp);
+	int p = GET_PRECISION (cp);
 	if (j == FMT_DEF) {
 		j = default_fmt;
 		p = default_prc;
@@ -204,8 +244,7 @@ std::string print_cell (CELL * cp)
 	value_t val = cp->get_value_2019();
 	auto typ = cp->get_type();
 
-	if (j == FMT_HID || is_nul(val))
-		return CCC("");
+	if (j == FMT_HID || is_nul(val)) return CCC("");
 
 	if (typ == TYP_STR)
 		return get<string>(val);
@@ -217,54 +256,9 @@ std::string print_cell (CELL * cp)
 		return ename_desc[get<err_t>(val).num];
 	}
 	if (typ == TYP_FLT) {
-		num_t flt = get<num_t>(val);
-		switch (j)
-		{
+		return print_cell_flt(get<num_t>(val), p, j);
 
-			case FMT_USR:
-				panic("Uncalled FMT_USR");
-				//ASSERT_UNCALLED();
-				//return pr_flt (flt, &u[p], u[p].prec);
-
-			case FMT_GEN:
-				{
-					double f;
-					f = fabs (flt);
-
-					if (f >= 1e6 || (f > 0 && f <= 9.9999e-6))
-						goto handle_exp;
-					return pr_flt (flt, &fxt, p, false);
-				}
-
-			case FMT_DOL:
-				return pr_flt (flt, &dol, p);
-
-			case FMT_CMA:
-				return pr_flt (flt, &cma, p);
-
-			case FMT_PCT:
-				return pr_flt (flt, &pct, p);
-
-			case FMT_FXT:
-				return pr_flt (flt, &fxt, p);
-
-			case FMT_EXP:
-handle_exp:
-				if ((double) flt == __plinf)
-					return iname;
-				if ((double) flt == __neinf)
-					return mname;
-				if (p == FLOAT_PRECISION)
-					sprintf (print_buf, "%e", (double) flt);
-				else
-					sprintf (print_buf, "%.*e", p, (double) flt);
-				return print_buf;
-			default:
-				panic ("Unknown format %d", j);
-				return "YUK";
-		}
 	}
-
 
 	panic ("Unknown cell type");
 	return "";
