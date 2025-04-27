@@ -264,11 +264,9 @@ handle_exp:
 				else
 					sprintf (print_buf, "%.*e", p, (double) flt);
 				return print_buf;
-#ifdef TEST
 			default:
 				panic ("Unknown format %d", j);
-				return 0;
-#endif
+				return "YUK";
 		}
 	}
 
@@ -311,16 +309,12 @@ handle_exp:
 				else
 					sprintf (print_buf, "%e", (double) v);
 				return print_buf;
-#ifdef TEST
 			default:
 				panic ("Unknown format %d", j);
-				return 0;
-#endif
+				return "YUK";
 		}
 	}
-#ifdef TEST
-	panic ("Unknown cell type %d", GET_TYP (cp));
-#endif
+	panic ("Unknown cell type");
 	return "";
 }
 
@@ -345,8 +339,8 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 			return flt_to_str(get<num_t>(val));
 
 		case TYP_INT:
-			sprintf (print_buf, "%ld", (long) get<num_t>(val));
-			return print_buf;
+			return std::to_string(get<num_t>(val));
+
 
 		case TYP_STR:
 			return cp->get_formula_text();
@@ -362,8 +356,8 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 	return "";
 }
 
-	static char *
-pr_int (long val, struct user_fmt *fmt, int prec)
+
+static char * pr_int (long val, struct user_fmt *fmt, int prec)
 {
 	char *pf, *pff, *pt;
 	long int n;

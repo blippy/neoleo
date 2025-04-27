@@ -29,6 +29,7 @@ const int ValErr::num() const throw()
 }
 
 
+// https://en.cppreference.com/w/cpp/utility/variant/visit2
 
 export bool is_nul(const value_t& val) { return std::holds_alternative<std::monostate>(val); }
 export bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
