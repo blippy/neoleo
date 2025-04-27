@@ -54,9 +54,6 @@ using std::string;
 
 
 
-/* Routines for formatting cell values */
-static char *pr_int (long, struct user_fmt *, int);
-
 
 std::string bool_name(bool b)
 {
@@ -84,10 +81,8 @@ num_t fabs(num_t x)
 }
 
 
-num_t neo_floor(num_t x)
-{
-	return (num_t) floor( (double)x);
-}
+
+
 char nname[] = "#NAN";
 char iname[] = "#INFINITY";
 char mname[] = "#MINUS_INFINITY";
@@ -309,89 +304,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 }
 
 
-static char * pr_int (long val, struct user_fmt *fmt, int prec)
-{
-	char *pf, *pff, *pt;
-	long int n;
-	int nn = 0;
 
-	pt = &print_buf[sizeof (print_buf) - 1];
-	*pt = '\0';
-
-	n = fmt->scale * ((val < 0) ? -val : val);
-	if (n == 0)
-		return fmt->zero ? fmt->zero : (char*) "";
-
-	pf = pff = (val < 0) ? fmt->n_trl : fmt->p_trl;
-	if (pf && *pf)
-	{
-		while (*pf)
-			pf++;
-		do
-			*--pt = *--pf;
-		while (pf != pff);
-	}
-
-	if (prec != FLOAT_PRECISION && prec != 0)
-	{
-		while (prec-- > 0)
-			*--pt = '0';
-		pf = pff = fmt->decpt;
-		if (pf)
-		{
-			while (*pf)
-				pf++;
-			do
-				*--pt = *--pf;
-			while (pf != pff);
-		}
-		/* *--pt='.'; */
-	}
-	do
-	{
-		*--pt = (n % 10) + '0';
-		n /= 10;
-		if (nn++ == 2 && n > 0)
-		{
-			if (fmt->comma && *(fmt->comma))
-			{
-				for (pf = pff = fmt->comma; *pf; pf++)
-					;
-				do
-					*--pt = *--pf;
-				while (pf != pff);
-			}
-			nn = 0;
-		}
-	}
-	while (n > 0);
-
-	pf = pff = (val < 0) ? fmt->n_hdr : fmt->p_hdr;
-	if (pf && *pf)
-	{
-		while (*pf)
-			pf++;
-		do
-			*--pt = *--pf;
-		while (pf != pff);
-	}
-	return pt;
-}
-
-	num_t
-modn(num_t x, num_t *iptr)
-{
-	num_t sgn = 1;
-	num_t x1 = x;
-	if(x1 <0) { sgn = -1;}
-	x1 *= sgn;
-
-	num_t x2 = neo_floor(x1);
-	//*iptr = sgn * (x1-x2);
-	//return sgn * x2;
-	*iptr = sgn * x2;
-	return sgn * (x1-x2);
-}
 
 	char *
 pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
