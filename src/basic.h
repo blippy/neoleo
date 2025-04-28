@@ -17,23 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "global.h"
-
-enum motion_magic
-{
-  magic_up = 0,
-  magic_down = 1,
-  magic_right = 2,
-  magic_left = 3,
-  magic_up_right = 4,
-  magic_up_left = 5,
-  magic_down_right = 6,
-  magic_down_left = 7,
-  magic_no_motion = 8
-};
-
-extern const int colmagic[9];
-extern  const int rowmagic[9];
+//#include "global.h"
 
 void delete_row (int repeat);
 void set_def_format (int fmt);
