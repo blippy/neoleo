@@ -73,13 +73,6 @@ double __plinf = MAXFLOAT;
 double __neinf = -MAXFLOAT;
 //double __nan;
 
-num_t fabs(num_t x)
-{
-	if(x<0)
-		return -x;
-	else
-		return x;
-}
 
 
 
