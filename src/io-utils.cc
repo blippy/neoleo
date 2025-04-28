@@ -466,12 +466,9 @@ std::string range_name (struct rng *rng)
 	if (lr == 0 || lc == 0 || hc == 0 || hr == 0 ||
 			lr >= MAX_ROW || lc >= MAX_COL || hc >= MAX_COL || hr >= MAX_ROW) {
 		return "";
-		//ptr[0] = '\0';
-		//return ptr;
 	}
 
 	if ((lr == hr) && (lc == hc)) {
-		//sprintf (ptr, "%s", cell_name (lr, lc));
 		return cell_name(lr, lc);
 	}
 
@@ -561,10 +558,7 @@ std::string stringify_value_file_style(const value_t& val)
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
 	if(auto v = std::get_if<err_t>(&val)) 	return ename_desc[v->num];
-
-	panic("Uncalled stringify_value_file_style");
-	//ASSERT_UNCALLED();
-	return "BAD STRING";
+	throw std::logic_error("Unhandled stringify_value_file_style value type");
 }
 
 
