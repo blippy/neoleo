@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# convenience for gcov
-CC=$1.cc
-GCOV=$CC.gcov
-rm $GCOV
-gcov $CC
-less $GCOV

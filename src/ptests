@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# check that the new parser works
-neoleo -T parser2019 | perl -e '
-while(<>) {
-	print $_ if  m/FAIL/;
-	print $_ if m/INFO/;
-k
-}'
