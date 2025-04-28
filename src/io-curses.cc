@@ -225,7 +225,7 @@ void win_io_repaint_win (struct window *win)
 
 std::string status_line(int wid)
 {
-	log("status_line called");
+	//log("status_line called");
 	const char *ptr;
 	if (mkrow != NON_ROW)
 	{
