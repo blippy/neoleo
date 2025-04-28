@@ -554,9 +554,7 @@ read_file_generic(FILE *fp, char *format, const char *name)
 
 		return;
 	}
-#if 0
-	fprintf(stderr, PACKAGE " read_file_generic : format %s\n", format);
-#endif
+
 	if (read_file_generic_2(fp, format, name) != 0) {
 		if (defaultformat && read_file_generic_2(fp, defaultformat, name) != 0)
 			oleo_read_file(fp);
