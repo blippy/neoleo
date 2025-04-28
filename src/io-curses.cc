@@ -58,8 +58,10 @@ using namespace std::string_literals;
 
 #include "logging.h"
 #include "menu-2025.h"
+#include "format.h"
 
 import errors;
+import win;
 
 
 CELLREF mkrow = NON_ROW;
@@ -221,14 +223,10 @@ void win_io_repaint_win (struct window *win)
 
 
 
-void cur_io_update_status (void) // FN
+std::string status_line(int wid)
 {
+	log("status_line called");
 	const char *ptr;
-
-	move (Global->status, 0);
-	defer d{clrtoeol};
-	int wid = columns - 2;
-
 	if (mkrow != NON_ROW)
 	{
 		struct rng r;
@@ -258,23 +256,32 @@ void cur_io_update_status (void) // FN
 		if (dlen + plen > wid)
 		{
 			if (plen + 3 > wid)
-				printw (" %.*s... [...]", wid - 6, ptr);
+				return string_format(" %.*s... [...]", wid - 6, ptr);
 			else
-				printw (" %s [%.*s...]", ptr, wid - plen - 3, dec.c_str());
+				return string_format(" %s [%.*s...]", ptr, wid - plen - 3, dec.c_str());
 		}
 		else
-			printw (" %s [%s]", ptr, dec.c_str());
+			return string_format(" %s [%s]", ptr, dec.c_str());
 	}
 	else if (plen)
 	{
 		--wid;
 		if (plen > wid)
-			printw (" %.*s...", wid - 3, ptr);
+			return string_format(" %.*s...", wid - 3, ptr);
 		else
-			printw (" %s", ptr);
+			return string_format(" %s", ptr);
 	}
 
+	return "";
 
+}
+void cur_io_update_status (void) // FN
+{
+
+	move (Global->status, 0);
+	int wid = columns - 2;
+	win_print(status_line(wid));
+	clrtoeol();
 }
 
 
