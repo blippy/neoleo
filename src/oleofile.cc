@@ -284,22 +284,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 		ptr = cbuf;
 		switch (*ptr)
 		{
-			case '#':		/* comment line -- ignored */
-				break;
-			case '%':		/* Font or pixel size data. */
-				panic("Unhandled case");
-				//ASSERT_UNCALLED();
-				ptr++;
-				switch (*ptr) {
-					case 'F':		/* %F font-name */
-						throw SyntaxError("Font name no longer handled");
-						break;
-					case 'f':		/* %f range font-name */
-						break;
-					default:		/* % with something invalid */
-						goto bad_field;
-				}
-				break;
+
 			case 'F':		/* Format field */
 				if(!(read_fmt_line(&ptr, crow, ccol, czrow, czcol, lineno, fnt_map_size, mx_row, mx_col))) {
 					goto bad_field;
@@ -387,6 +372,8 @@ void oleo_read_file (FILE *fp, int ismerge)
 				break;
 				/* JF extension: read uset-settable options */
 
+			case '#':		/* comment line -- ignored */
+			case '%':		/* Font or pixel size data. */
 			case 'B':		/* Boundry field, ignored */
 			case 'D':	/* Database Access */
 			case 'E':	/* End of input ?? */
