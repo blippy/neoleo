@@ -312,6 +312,8 @@ char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
 	char *eptr;
 	int len;
 
+	num_t flt = get<num_t>(cp->get_value_2019());
+
 	fmt = GET_FORMAT (cp);
 	if (fmt == FMT_DEF)
 		fmt = default_fmt;
@@ -369,11 +371,11 @@ deal_fmt:
 			{
 				prc = width - (strlen (ufmt->decpt) + bptr - oldp);
 			}
-			bptr = pr_flt (get<num_t>(cp->get_value_2019()), ufmt, -prc);
+			bptr = pr_flt (flt, ufmt, -prc);
 			len = strlen (bptr);
 			if (len > width && prc > 0)
 			{
-				bptr = pr_flt (get<num_t>(cp->get_value_2019()), ufmt, -(prc - 1));
+				bptr = pr_flt (flt, ufmt, -(prc - 1));
 				len = strlen (bptr);
 			}
 			if (len > width)
@@ -383,7 +385,6 @@ deal_fmt:
 		case FMT_EXP:
 handle_exp:
 			{
-				num_t flt = get<num_t>(cp->get_value_2019());
 				double f = fabs (flt);
 				if (f > 9.99999e99 || f < 1e-99)
 					len = width - 7;
