@@ -12,7 +12,6 @@
 
 #include "cell.h"
 
-#include "format.h"
 #include "io-utils.h"
 #include "regions.h"
 #include "sheet.h"
@@ -116,7 +115,6 @@ value_t to_irreducible(Tour& tour, value_t val)
 		throw ValErr(BAD_NAME); 
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
 	//if(root == cp) throw ValErr(CYCLE);
-	//cout << "to_irreducible:" << string_coord(cp->coord) << "\n";
 	eval_cell(tour, cp); // maybe too much evaluation?
 	val = cp->get_value_2019();
 	//throw_if_cyclic(val); // doesn't help
@@ -939,7 +937,7 @@ bool check_result(CELLREF r, CELLREF c, string expecting)
 {
 
 	string res = cell_value_string(r, c, 0);
-	cout << "Result  of " << string_coord(r, c) << " is `" << res << "' " ;
+	cout << std::format("Result  of R{}C{} is`{}' " , r, c, res);
 	bool pass = res == expecting;
 	cout << (pass ? "PASS"s : "FAIL") << "\n";
 	return pass;

@@ -31,12 +31,14 @@
 extern int __make_backups;
 extern int __backup_by_copying;
 
+/*
 extern void* ck_malloc (size_t);
 extern void* ck_calloc (size_t);
 extern void* ck_realloc (void *,size_t);
 extern void ck_free (void*);
 #define ck_remalloc(OLD, SIZE) \
   ((OLD) ? ck_realloc ((OLD), (SIZE)) : ck_malloc (SIZE))
+*/
 
 extern num_t astof(char **sp);
 extern int strincmp (const char *, const char *, size_t);

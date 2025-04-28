@@ -58,7 +58,6 @@ using namespace std::string_literals;
 
 #include "logging.h"
 #include "menu-2025.h"
-#include "format.h"
 
 import errors;
 import win;

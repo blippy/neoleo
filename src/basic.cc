@@ -27,7 +27,6 @@
 #include "basic.h"
 #include "regions.h"
 #include "io-utils.h"
-#include "format.h"
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
@@ -138,6 +137,22 @@ void set_region_protection (struct rng * rng, int prot)
 			break;
 	}
 }
+
+
+static int chr_to_jst (int chr)
+{
+	if (chr == 'd' || chr == 'D')
+		return JST_DEF;
+	if (chr == 'l' || chr == 'L')
+		return JST_LFT;
+	if (chr == 'r' || chr == 'R')
+		return JST_RGT;
+	if (chr == 'c' || chr == 'C')
+		return JST_CNT;
+	return -1;
+}
+
+
 
 void set_region_alignment (struct rng * rng, int align)
 {

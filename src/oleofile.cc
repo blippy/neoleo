@@ -30,7 +30,6 @@
 using std::cout;
 using std::map;
 
-#include "format.h"
 #include "io-utils.h"
 #include "global.h"
 #include "sheet.h"

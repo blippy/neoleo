@@ -1,21 +1,19 @@
 module;
 
-//#include <string>
+#include <cstdarg>
 
-#include "format.h"
 #include "global.h"
+#include "errors.h"
 
 export module errors;
 
 import std;
 //import value;
 
-void  _assert_uncalledXXX(const char* __file__, int __line__)
-{
-	std::string msg{string_format("%s:%d:ASSERT_UNCALLED failure", __file__, __line__)};
-	throw std::logic_error(msg);
-}
 
+//using std::va_list;
+//using std::va_start;
+//using std::va_end;
 
 
 // FN raise_error 
