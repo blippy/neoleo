@@ -503,7 +503,7 @@ void clear_spreadsheet (void)
 
 
 
-static char *defaultformat = NULL;
+//static char *defaultformat = NULL;
 
 
 
@@ -522,31 +522,17 @@ int read_file_generic_2(FILE *fp, char *format, const char *name)
 }
 
 
-	void
-read_file_generic(FILE *fp, char *format, const char *name)
+
+void read_file_generic(FILE *fp, char *format, const char *name)
 {
-	if (format == NULL) {
-		if (defaultformat)
-			(void) read_file_generic_2(fp, defaultformat, name);
-		else
-			oleo_read_file(fp);
-
-		return;
-	}
-
-	if (read_file_generic_2(fp, format, name) != 0) {
-		if (defaultformat && read_file_generic_2(fp, defaultformat, name) != 0)
-			oleo_read_file(fp);
-	}
-
-	recalculate(1);
+		oleo_read_file(fp);
 }
 
 
 static std::string _FileName = "unnamed.oleo";
 
-	void 
-FileSetCurrentFileName(const char *s)
+
+void FileSetCurrentFileName(const char *s)
 {
 	FileCloseCurrentFile();
 	if(!s) return;
