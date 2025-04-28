@@ -169,22 +169,6 @@ badline:
 }
 
 
-void read_mp_options (char *str) // FN
-{
-	char *np;
-
-	while ((np = (char *)index (str, ';')))
-	{
-		*np = '\0';
-		//olf_do_set_option (str);
-		*np++ = ';';
-		str = np;
-	}
-	if ((np = (char *)rindex (str, '\n')))
-		*np = '\0';
-	//olf_do_set_option (str);
-}
-
 
 
 
@@ -273,11 +257,6 @@ void oleo_read_file (FILE *fp, int ismerge)
 	//int vlen = 0;
 	int cprot;
 	char *cexp, *cval;
-	//CELL *cp;
-	//struct rng rng;
-	//int fmt = 0, prc = 0;
-	//int jst = 0;
-	//struct font_memo ** fnt_map = 0;
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
@@ -327,43 +306,6 @@ void oleo_read_file (FILE *fp, int ismerge)
 				}
 				break;
 
-			case 'B':		/* Boundry field, ignored */
-				panic("Unhandled case");
-				//ASSERT_UNCALLED();
-				ptr++;
-				while (*ptr)
-				{
-					if (*ptr != ';')
-						goto bad_field;
-					ptr++;
-					switch (*ptr++)
-					{
-						case 'c':
-							mx_col = astol (&ptr);
-							if (mx_col > MAX_COL)
-							{
-								raise_error("Boundry column %lu too large!", mx_col);
-								mx_col = MAX_COL;
-							}
-							break;
-						case 'r':
-							mx_row = astol (&ptr);
-							if (mx_row > MAX_ROW)
-							{
-								raise_error("Boundry row %lu too large!", mx_row);
-								mx_row = MAX_ROW;
-							}
-							break;
-						default:
-							goto bad_field;
-					}
-				}
-				break;
-
-			case 'N':		/* A Name field */
-				panic("Unhandled case");
-				//ASSERT_UNCALLED();
-				break;
 
 			case 'C':		/* A Cell entry */
 				cprot = 0;
@@ -434,11 +376,7 @@ void oleo_read_file (FILE *fp, int ismerge)
 					SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
 				if (ismerge) {
 					panic("Unhandled case");
-					//ASSERT_UNCALLED();
-					//push_cell (crow, ccol);
 				}
-				break;
-			case 'E':	/* End of input ?? */
 				break;
 			case 'W':
 				oleo_read_window_config (ptr + 2);
@@ -448,16 +386,13 @@ void oleo_read_file (FILE *fp, int ismerge)
 				read_mp_usr_fmt (ptr + 1);
 				break;
 				/* JF extension: read uset-settable options */
-			case 'O':
-				//break;
-				//Global->a0 = next_a0;
-				read_mp_options (ptr + 2);
-				//next_a0 = Global->a0;
-				//Global->a0 = 0;
-				break;
-			case 'G':	/* Graph data */
-				break;
+
+			case 'B':		/* Boundry field, ignored */
 			case 'D':	/* Database Access */
+			case 'E':	/* End of input ?? */
+			case 'G':	/* Graph data */
+			case 'N':		/* A Name field */
+			case 'O':
 				break;
 			default:
 bad_field:
