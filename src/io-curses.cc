@@ -395,35 +395,25 @@ void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp) // FN
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 	//log("_io_pr_cell_win:", cp);
-	int glowing;
-	int lenstr;
-	int j;
-	int wid, wwid;
-	int hgt;
-	int yy, xx;
+	int wwid;
 
 
-	//if (input_view.current_info)		return;
+	int wid = get_width (c);
+	if (wid == 0) return;
+	wid = std::min(wid, win->numc);
 
-	wid = get_width (c);
-	if (!wid)
-		return;
-	if (wid > win->numc)
-		wid = win->numc;
-	hgt = get_height (r);
-	if (!hgt)
-		return;
-	if (hgt > win->numr)
-		hgt = win->numr;
+	int hgt = get_height (r);
+	if (hgt == 0) return;
+	hgt = std::min(hgt, win->numr);
 
-	getyx (stdscr, yy, xx);
-	glowing = (r == curow && c == cucol && win == cwin);
-	
-	const std::string& str = print_cell(cp);
-	char ptr1[str.size()+1];
-	char* ptr = strcpy(ptr1, str.c_str());
 
 	move_cursor_to (win, r, c);
+
+	int yy, xx;
+	getyx (stdscr, yy, xx);
+
+	assert(win == cwin);
+	int glowing = (r == curow && c == cucol && win == cwin);
 	if (glowing) standout ();
 
 	bool is_bold = cp->cell_flags.bold;
@@ -434,10 +424,13 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-	j = GET_JST (cp);
-	if (j == JST_DEF)
-		j = default_jst;
-	lenstr = strlen (ptr);
+	int j = GET_JST (cp);
+	if (j == JST_DEF) j = default_jst;
+
+	const std::string& str = print_cell(cp);
+	char ptr1[str.size()+1];
+	char* ptr = strcpy(ptr1, str.c_str());
+	int lenstr = strlen (ptr);
 
 	if (lenstr <= wid - 1)
 	{
