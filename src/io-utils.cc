@@ -502,21 +502,6 @@ void clear_spreadsheet (void)
 
 
 
-char tname[] = "#TRUE";
-char fname[] = "#FALSE";
-
-
-
-	int
-parray_len (char **array)
-{
-	int x;
-	for (x = 0; array[x]; ++x);
-	return x;
-}
-
-
-
 
 static char *defaultformat = NULL;
 
