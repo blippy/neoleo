@@ -247,8 +247,9 @@ void oleo_read_window_config (char * line)
 }
 
 
-void oleo_read_file (FILE *fp, int ismerge)
+void oleo_read_file (FILE *fp)
 {
+	const int ismerge = 0;
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
 	int lineno;

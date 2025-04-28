@@ -529,15 +529,10 @@ static char *defaultformat = NULL;
 
 
 
-	int
-read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
+int read_file_generic_2(FILE *fp, char *format, const char *name)
 {
 	if (stricmp ("oleo", format) == 0) {
-		oleo_read_file(fp, ismerge);
-#ifdef	HAVE_PANIC_SAVE
-	} else if (stricmp ("panic", format) == 0) {
-		panic_read_file(fp, ismerge);
-#endif
+		oleo_read_file(fp);
 	} else if (stricmp("dbf", format) == 0) {
 		raise_error("Cannot read XBASE file (xbase not compiled)");
 		return -1;
@@ -549,22 +544,22 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, const char *name)
 
 
 	void
-read_file_generic(FILE *fp, int ismerge, char *format, const char *name)
+read_file_generic(FILE *fp, char *format, const char *name)
 {
 	if (format == NULL) {
 		if (defaultformat)
-			(void) read_file_generic_2(fp, ismerge, defaultformat, name);
+			(void) read_file_generic_2(fp, defaultformat, name);
 		else
-			oleo_read_file(fp, ismerge);
+			oleo_read_file(fp);
 
 		return;
 	}
 #if 0
 	fprintf(stderr, PACKAGE " read_file_generic : format %s\n", format);
 #endif
-	if (read_file_generic_2(fp, ismerge, format, name) != 0) {
-		if (defaultformat && read_file_generic_2(fp, ismerge, defaultformat, name) != 0)
-			oleo_read_file(fp, ismerge);
+	if (read_file_generic_2(fp, format, name) != 0) {
+		if (defaultformat && read_file_generic_2(fp, defaultformat, name) != 0)
+			oleo_read_file(fp);
 	}
 
 	recalculate(1);

@@ -90,19 +90,16 @@ recalculate (int all)
  * Extended this to detect the extension of a file and have the right
  * read function process this.
  */
-void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name)
+void read_file_and_run_hooks (FILE * fp, const char * name)
 {
 	char	*ext = NULL;
-	if (!ismerge)
-	{
-		FileSetCurrentFileName(name); // callee duplicates string
-	}
+	FileSetCurrentFileName(name); // callee duplicates string
 	ext = strrchr((char*)  name, '.');
 	if (! ext) {
-		read_file_generic(fp, ismerge, NULL, name);
+		read_file_generic(fp,  NULL, name);
 	} else {
 		ext++;
-		read_file_generic(fp, ismerge, ext, name);
+		read_file_generic(fp,  ext, name);
 	}
 
 }

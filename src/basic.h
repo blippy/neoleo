@@ -42,7 +42,7 @@ void set_cell_alignment_right();
 void insert_1row();
 void recalculate (int all);
 void write_cmd (FILE *fp, const char * name);
-void read_file_and_run_hooks (FILE * fp, int ismerge, const char * name);
+void read_file_and_run_hooks (FILE * fp,  const char * name);
 int set_window_option (int set_opt, char *text);
 void set_cell_toggle_bold();
 void set_cell_toggle_italic();

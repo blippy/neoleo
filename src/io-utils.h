@@ -39,7 +39,7 @@ void clear_spreadsheet (void);
 void FileSetCurrentFileName(const char *s);
 void FileSetCurrentFileName(const std::string& s);
 void write_file_generic(FILE *, struct rng *, char *);
-void read_file_generic(FILE *, int, char *, const char *);
+void read_file_generic(FILE *, char *, const char *);
 
 std::string  fmt_std_date(int t);
 

@@ -162,7 +162,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	if (argc - optind == 1) {
 		if (FILE *fp = fopen (argv[optind], "r")) {
 			try {
-				read_file_and_run_hooks (fp, 0, argv[optind]);
+				read_file_and_run_hooks (fp, argv[optind]);
 			} catch (OleoJmp& e) {
 				cerr << e.what() << endl;
 				fprintf (stderr, ", error occured reading '%s'\n", argv[optind]);

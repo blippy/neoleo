@@ -22,7 +22,7 @@
 
 
 
-void	oleo_read_file (FILE *, int);
+void	oleo_read_file (FILE *);
 int	oleo_set_options (int, char *);
 void	oleo_write_file (FILE *);
 void	oleo_write_file (FILE *, struct rng *);
