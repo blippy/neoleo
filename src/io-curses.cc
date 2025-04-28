@@ -224,13 +224,10 @@ void win_io_repaint_win (struct window *win)
 void cur_io_update_status (void) // FN
 {
 	const char *ptr;
-	int wid;
-	int plen;
-	int yy, xx;
 
-	getyx (stdscr, yy, xx);
 	move (Global->status, 0);
-	wid = columns - 2;
+	defer d{clrtoeol};
+	int wid = columns - 2;
 
 	if (mkrow != NON_ROW)
 	{
@@ -252,7 +249,7 @@ void cur_io_update_status (void) // FN
 	const std::string& cvs = cell_value_string(curow, cucol, 1);
 	ptr = cvs.c_str();
 
-	plen = strlen (ptr);
+	int plen = strlen (ptr);
 
 	int dlen = dec.size();
 	if(dlen>0)
@@ -277,8 +274,7 @@ void cur_io_update_status (void) // FN
 			printw (" %s", ptr);
 	}
 
-	clrtoeol ();
-	move (yy, xx);
+
 }
 
 
