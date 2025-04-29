@@ -42,26 +42,9 @@ import value;
 //#define NUM_HUNDREDTH 0.01
 #define NUM_TEN 10.0
 
-// very useful function!
-// https://stackoverflow.com/questions/15106102/how-to-use-c-stdostream-with-printf-like-formatting
-/*
-std::string format(const std::string& format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	size_t len = std::vsnprintf(NULL, 0, format.c_str(), args);
-	va_end(args);
-	std::vector<char> vec(len + 1);
-	va_start(args, format);
-	std::vsnprintf(&vec[0], len + 1, format.c_str(), args);
-	va_end(args);
-	return &vec[0];
-}
-*/
 
 // 25/4 You can use it like
 // auto v = to_int(mystr);
-
 std::optional<int> to_int(const std::string& str)
 {
 	try {
@@ -71,7 +54,9 @@ std::optional<int> to_int(const std::string& str)
 	}
 }
 
-extern int sys_nerr;
+
+#if 0
+//extern int sys_nerr;
 
 struct id
 {
@@ -80,18 +65,17 @@ struct id
 	char *name;
 };
 
-struct id *__id_s;
-int __id_n;
-int __id_f;
+//struct id *__id_s;
+//int __id_n;
+//int __id_f;
 
 //int __make_backups = 1;
-int __backup_by_copying;
+//int __backup_by_copying;
 
 
 
 
-	const char *
-__fp_name (FILE *fp)
+const char *__fp_name (FILE *fp)
 {
 	int n;
 
@@ -105,15 +89,14 @@ __fp_name (FILE *fp)
 
 
 
-
 /* Open a file, creating a backup file if needed. . . */
 // mcarter 2019-01-23 Eliminate the backup functionality
-	FILE *
-fopen_with_backup (char *name, const char *mode)
+FILE *fopen_with_backup (char *name, const char *mode)
 {
 	FILE * ret = fopen (name, mode);
 	return ret;
 }
+#endif
 
 
 /*
@@ -254,8 +237,7 @@ static num_t exps0[10] = {1E0, 1E1, 1E2, 1E3, 1E4, 1E5, 1E6, 1E7, 1E8, 1E9};
 static num_t exps1[10] = {1E00, 1E10, 1E20, 1E30 ,1E40, 1E50, 1E60, 1E70, 1E80, 1E90 };
 
 
-	num_t
-astof (char **sp)
+num_t astof (char **sp)
 {
 	char *s;
 	char *cp;
