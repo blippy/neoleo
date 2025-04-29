@@ -19,9 +19,7 @@ using namespace std;
 const char* ValErr::what() const throw()
 {
 	return ename_desc[n];
-	//msg = std::string(ename[n]);
-	//return msg.c_str();
-	//return std::to_string(n).c_str();
+
 }
 const int ValErr::num() const throw()
 {

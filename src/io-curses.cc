@@ -77,6 +77,19 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 extern bool curses_loop ();
 
 
+static bool is_nul(CELL* cp)
+{
+	if(!cp) return true;
+	return std::holds_alternative<std::monostate>(cp->get_value_2019());
+}
+
+static bool is_flt(CELL* cp)
+{
+	if(!cp) return true;
+	return std::holds_alternative<num_t>(cp->get_value_2019());
+}
+
+
 void cur_io_display_cell_cursor (void)
 {
 
@@ -323,7 +336,7 @@ void cur_io_repaint (void)
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(&(win->screen))) {
 		decoord(cp, rr, cc);
-		if (cp->get_type() != TYP_NUL) cur_io_pr_cell_win(win, rr, cc, cp);
+		if (!is_nul(cp)) cur_io_pr_cell_win(win, rr, cc, cp);
 	}
 	
 	cur_io_display_cell_cursor ();
@@ -454,7 +467,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 		{
 			if (++cc > win->screen.hc
 					|| ((ccp = find_cell (r, cc))
-						&& (ccp->get_type() != TYP_NUL)
+						&& (!is_nul(ccp))
 						&& (GET_FORMAT (ccp) != FMT_HID
 							|| (GET_FORMAT (ccp) == FMT_DEF
 								&& default_fmt != FMT_HID))))
@@ -466,8 +479,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 		if (lenstr > wwid - 1) { 
-			if (cp->get_type() == TYP_FLT)
-				ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
+			if (is_flt(cp)) ptr = adjust_prc (ptr, cp, wwid - 1, wid - 1, j);
 		}
 
 		if (wwid == 1)
