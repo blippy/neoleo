@@ -139,11 +139,7 @@ void win_io_hide_cell_cursor (void)
 		cwid = cwin->numc;
 	move (cell_cursor_row, cell_cursor_col);
 	for (n = cwid; n; n--)
-#ifdef A_STANDOUT
 		addch (inch () & ~A_STANDOUT);
-#else
-	addch (inch ());
-#endif
 	move (y, x);
 }
 
@@ -356,14 +352,11 @@ void cur_io_repaint (void)
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(&(win->screen))) {
 		decoord(cp, rr, cc);
-		//if(cp->get_type() == TYP_NUL) log("found null type");
 		if (cp->get_type() != TYP_NUL) cur_io_pr_cell_win(win, rr, cc, cp);
 	}
 	
 	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
 		cur_io_display_cell_cursor ();
-	//input_view.redraw_needed = FULL_REDRAW;
-	//_io_redraw_input();
 	cur_io_update_status ();
 }
 
