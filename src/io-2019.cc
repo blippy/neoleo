@@ -1,16 +1,10 @@
-#include <cassert>
-#include <functional>
-#include <iostream>
-#include <string>
-#include <sstream> // for ostringstream
-#include <unistd.h> // for sleep
-#include <map>
+#include <string.h>
 
 #include <ncurses.h>
 #include <form.h>
 #include <panel.h>
 
-using namespace std::string_literals;
+
 
 #include "basic.h"
 #include "io-2019.h"
@@ -21,9 +15,12 @@ using namespace std::string_literals;
 #include "sheet.h"
 #include "io-curses.h"
 
+import std;
 import logging;
 import tbl;
 import win;
+
+using namespace std::string_literals;
 using std::cout;
 using std::cerr;
 
@@ -37,12 +34,8 @@ using keymap_t = std::map<int, fn_t>;
 
 
 
-int scr_width() {
-	/*
-	int x,y;
-	getmaxyx(stdscr, y, x);
-	return x;
-	*/
+int scr_width()
+{
 	return getmaxx(stdscr);
 }
 
@@ -96,8 +89,9 @@ class npanel_c : public nwin_c {
 class nform_c : public npanel_c {
 	public:
 		nform_c(const char* desc, std::string& text) {
-			m_fields[0] = new_field(1, strlen(desc), 0, 0, 0, 0);
-			m_fields[1] = new_field(1, scr_width() - strlen(desc), 0, strlen(desc), 0, 0);
+			int dlen = strlen(desc);
+			m_fields[0] = new_field(1, dlen, 0, 0, 0, 0);
+			m_fields[1] = new_field(1, scr_width() - dlen, 0, dlen, 0, 0);
 			m_fields[2] = nullptr;
 			m_f = new_form(m_fields);
 			assert(m_f);

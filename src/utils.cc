@@ -58,7 +58,7 @@ std::string pad_right(const std::string& s, int width)
 	return s + spaces(width-s.size());
 }
 
-size_t strlen(const std::string& s)
+size_t strlenXXX(const std::string& s)
 {
 	return s.size();
 }
