@@ -36,11 +36,11 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "sheet.h"
-#include "logging.h"
+import logging;
 #include "oleofile.h"
 #include "spans.h"
 #include "utils.h"
-//#include "neotypes.h"
+
 
 import errors;
 import value;

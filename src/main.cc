@@ -12,14 +12,13 @@
 #include "assert.h"
 #include "basic.h"
 #include "io-utils.h"
-#include "logging.h"
 #include "parser-2019.h"
 #include "sheet.h"
 #include "tests.h"
 #include "utils.h"
-//#include "io-curses.h"
-//#include "window.h"
 
+
+import logging;
 
 
 using std::cerr;

@@ -36,7 +36,7 @@ using std::map;
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-#include "logging.h"
+import logging;
 #include "oleofile.h"
 
 import errors;

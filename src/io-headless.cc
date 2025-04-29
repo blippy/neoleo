@@ -19,7 +19,7 @@
 //#include "tbl.h"
 #include "utils.h"
 #include "oleofile.h"
-#include "logging.h"
+import logging;
 //#include "global.h"
 import mod;
 import tbl;

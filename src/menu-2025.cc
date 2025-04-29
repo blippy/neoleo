@@ -6,7 +6,7 @@
 #include "utils.h"
 #include "spans.h"
 #include "basic.h"
-#include "logging.h"
+import logging;
 #include "io-2019.h"
 #include "io-curses.h"
 

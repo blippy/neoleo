@@ -31,7 +31,7 @@
 #include "sheet.h"
 #include "spans.h"
 #include "utils.h"
-#include "logging.h"
+import logging;
 
 using std::cout;
 using std::endl;

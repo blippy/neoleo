@@ -56,7 +56,7 @@ using namespace std::string_literals;
 #include "regions.h"
 #include "spans.h"
 
-#include "logging.h"
+import logging;
 #include "menu-2025.h"
 
 import errors;

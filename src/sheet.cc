@@ -22,7 +22,7 @@
 #include "basic.h"
 #include "cell.h"
 #include "io-utils.h"
-#include "logging.h"
+import logging;
 #include "sheet.h"
 
 using std::cout;

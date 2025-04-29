@@ -16,12 +16,12 @@ using namespace std::string_literals;
 #include "io-2019.h"
 #include "parser-2019.h"
 #include "io-utils.h"
-#include "logging.h"
 #include "menu-2025.h"
 #include "regions.h"
 #include "sheet.h"
 #include "io-curses.h"
 
+import logging;
 import tbl;
 import win;
 using std::cout;

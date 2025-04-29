@@ -1,7 +1,8 @@
-#include "logging.h"
 #include "spans.h"
 #include "cell.h"
 
+import std;
+import logging;
 
 void flush_spans ()
 {
@@ -86,7 +87,7 @@ int get_height (CELLREF row) // FN
 /* ****************************************************************************************** */
 // 25/4/ some test code that I will eventually want to replace a lot of the code above with
 
-#include <iostream>
+
 
 template<int WIDTH>
 struct span1_t {
