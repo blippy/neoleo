@@ -174,6 +174,7 @@ strincmp (const char * s1, const char * s2, size_t n)
 		return chr1 - chr2;
 }
 
+#if 0
 	char *
 err_msg (void)
 {
@@ -199,7 +200,7 @@ err_msg (void)
 
 	return buf;
 }
-
+#endif
 
 
 
