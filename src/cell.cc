@@ -34,9 +34,28 @@ using std::endl;
 using std::get;
 
 
+#if 0
 ValType cell::get_type()
 {
 	return get_value_t_type(value_2019);
+}
+#endif
+
+
+bool is_nul(CELL* cp)
+{
+	if(!cp) return true;
+	return std::holds_alternative<std::monostate>(cp->get_value_2019());
+}
+
+bool is_flt(CELL* cp)
+{
+	return (cp && std::holds_alternative<num_t>(cp->get_value_2019()));
+}
+
+bool is_range(CELL* cp)
+{
+	return (cp && std::holds_alternative<rng_t>(cp->get_value_2019()));
 }
 
 
@@ -141,10 +160,9 @@ cell::~cell()
 
 
 
-bool 
-vacuous(cell* cp)
+bool vacuous(cell* cp)
 {
-	return (cp == nullptr) || is_nul(cp->get_value_2019());
+	return is_nul(cp);
 }
 
 void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
@@ -216,8 +234,7 @@ char * new_value (CELLREF row, CELLREF col, const char *string) // FN
  *
  */
 
-RC_t
-ws_extent()
+RC_t ws_extent()
 {
 	int capacity_r = highest_row(), capacity_c = highest_col();
 	//cell* m[capacity_r][capacity_c] = {};

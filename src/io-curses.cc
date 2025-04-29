@@ -77,17 +77,7 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 extern bool curses_loop ();
 
 
-static bool is_nul(CELL* cp)
-{
-	if(!cp) return true;
-	return std::holds_alternative<std::monostate>(cp->get_value_2019());
-}
 
-static bool is_flt(CELL* cp)
-{
-	if(!cp) return true;
-	return std::holds_alternative<num_t>(cp->get_value_2019());
-}
 
 
 void cur_io_display_cell_cursor (void)

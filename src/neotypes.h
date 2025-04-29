@@ -36,8 +36,8 @@ static_assert(sizeof(CELLREF) == 2, "coord_t won't work properly otherwise");
 typedef std::vector<rng_t> ranges_t;
 
 
-enum ValType { TYP_NUL=0, // taken to mean 'undefined'
-	TYP_FLT=1, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
+//enum ValType { TYP_NUL=0, // taken to mean 'undefined'
+//	TYP_FLT=1, TYP_STR=3, TYP_BOL=4, TYP_ERR=5, TYP_RNG=7 };
 
 typedef struct err_t {
 	int num;

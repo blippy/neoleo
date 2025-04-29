@@ -1,9 +1,5 @@
 module;
-/*
-#include <cassert>
-#include <iostream>
-#include <string.h>
-*/
+
 
 #include "neotypes.h"
 #include "sheet.h"
@@ -26,13 +22,14 @@ const int ValErr::num() const throw()
 	return n;
 }
 
-
-// https://en.cppreference.com/w/cpp/utility/variant/visit2
-
-export bool is_nul(const value_t& val) { return std::holds_alternative<std::monostate>(val); }
-export bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
-export bool is_err(const value_t& val) { return std::holds_alternative<err_t>(val); }
 export bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
+export bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
+
+#if 0
+// https://en.cppreference.com/w/cpp/utility/variant/visit2
+export bool is_nul(const value_t& val) { return std::holds_alternative<std::monostate>(val); }
+export bool is_err(const value_t& val) { return std::holds_alternative<err_t>(val); }
+
 export bool is_string(const value_t& val) { return std::holds_alternative<string>(val); }
 export bool is_bool(const value_t& val) { return std::holds_alternative<bool_t>(val); }
 
@@ -50,3 +47,4 @@ export ValType get_value_t_type(const value_t& val)
 	return TYP_NUL;
 }
 
+#endif

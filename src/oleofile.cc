@@ -652,7 +652,7 @@ void write_cells(FILE* fp)
 			fprintf(fp, "%c\n", map_reverse(jst_map, j1));
 		}
 
-		if (cp->get_type() == TYP_NUL) continue;
+		if (is_nul(cp)) continue;
 
 		(void) fprintf (fp, "C;");
 		if (c != ccol) {

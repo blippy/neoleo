@@ -106,8 +106,7 @@ void eval_cell (Tour& tour, CELL* cp);
 
 value_t to_irreducible(Tour& tour, value_t val)
 {
-	if(!is_range(val))
-		return val;
+	if(!is_range(val)) return val;
 
 	// convert a point range to a value
 	rng_t rng{std::get<rng_t>(val)};
@@ -243,8 +242,7 @@ value_t do_sum (Tour& tour, args_t args)
 		if(!cp) continue;
 		eval_cell(tour, cp); // too much?
 		value_t v = cp->get_value_2019();
-		if(is_num(v))
-			sum += to_num(tour, v);
+		if(is_num(v)) sum += to_num(tour, v);
 	}
 
 	return sum;

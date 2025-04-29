@@ -117,7 +117,7 @@ class cell
 		value_t get_value_2019() const;
 		void set_value_2019(value_t newval);
 		num_t to_num();
-		ValType get_type();
+		//ValType get_type();
 
 		// formula stuff
 		void set_formula_text(const std::string& str);
@@ -155,10 +155,6 @@ typedef cell cell_t;
 #define	GET_LCK(p)	((p)->cell_flags.cell_lock)
 #define SET_LCK(p,x)	((p)->cell_flags.cell_lock = (x))
 
-
-
-/* The type of a cell, or of a eval_expression() value */
-//#define GET_TYP(p)	((p)->get_type())
 
 
 
@@ -202,3 +198,8 @@ typedef struct point_t {int r; int c;} point_t;
 typedef point_t RC_t;
 RC_t ws_extent();
 std::string formula_text(CELLREF r, CELLREF c);
+
+bool is_nul(CELL* cp);
+bool is_flt(CELL* cp);
+bool is_range(CELL* cp);
+
