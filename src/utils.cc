@@ -1,7 +1,5 @@
 /*
- * $Id: utils.c,v 1.20 2001/02/13 23:38:06 danny Exp $
- *
- * Copyright � 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -20,27 +18,11 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <cassert>
-#include <stdlib.h>
-#include <string.h>
-#include <string>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <fcntl.h>
-#include <vector>
-#include <ctype.h>
+
 
 #include "utils.h"
 
 import value;
-
-#define E100 1E100
-//#define NUM_HUNDREDTH 0.01
-#define NUM_TEN 10.0
 
 
 // 25/4 You can use it like
@@ -54,49 +36,6 @@ std::optional<int> to_int(const std::string& str)
 	}
 }
 
-
-#if 0
-//extern int sys_nerr;
-
-struct id
-{
-	int flag;
-	FILE *fp;
-	char *name;
-};
-
-//struct id *__id_s;
-//int __id_n;
-//int __id_f;
-
-//int __make_backups = 1;
-//int __backup_by_copying;
-
-
-
-
-const char *__fp_name (FILE *fp)
-{
-	int n;
-
-	for (n = 0; n < __id_n; n++)
-	{
-		if (__id_s[n].fp == fp)
-			return __id_s[n].name;
-	}
-	return "{Unknown file pointer}";
-}
-
-
-
-/* Open a file, creating a backup file if needed. . . */
-// mcarter 2019-01-23 Eliminate the backup functionality
-FILE *fopen_with_backup (char *name, const char *mode)
-{
-	FILE * ret = fopen (name, mode);
-	return ret;
-}
-#endif
 
 
 /*
