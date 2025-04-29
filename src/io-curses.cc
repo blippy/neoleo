@@ -82,8 +82,6 @@ void cur_io_display_cell_cursor (void)
 
 	if(!inside(curow, cucol, cwin->screen)) return;
 
-	int x, y;
-	getyx (stdscr, y, x);
 	int cell_cursor_col = cwin->win_over;
 	for (int cc = cwin->screen.lc; cc < cucol; cc++)
 		cell_cursor_col += get_width (cc);
@@ -96,7 +94,6 @@ void cur_io_display_cell_cursor (void)
 	for (int n = cwid; n; n--)
 		addch (inch () | A_STANDOUT);
 	standend ();
-	move (y, x);
 }
 
 void win_io_hide_cell_cursor (void)
@@ -105,8 +102,6 @@ void win_io_hide_cell_cursor (void)
 
 	if(!inside(curow, cucol, cwin->screen)) return;
 
-	int x, y;
-	getyx (stdscr, y, x);
 	int cell_cursor_col = cwin->win_over;
 	for (int cc = cwin->screen.lc; cc < cucol; cc++)
 		cell_cursor_col += get_width (cc);
@@ -117,7 +112,6 @@ void win_io_hide_cell_cursor (void)
 	move (cell_cursor_row, cell_cursor_col);
 	for (int n = cwid; n; n--)
 		addch (inch () & ~A_STANDOUT);
-	move (y, x);
 }
 
 /* Functions, etc for dealing with cell contents being displayed
