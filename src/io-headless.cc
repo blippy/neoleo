@@ -22,7 +22,6 @@
 import logging;
 //#include "global.h"
 import mod;
-import tbl;
 
 using std::cin;
 using std::cout;
@@ -173,15 +172,7 @@ function<void(int)> with_int(function<void()> fn)
 	return [&](int i) { fn(); };
 }
 
-static void hless_tbl(int fildes)
-{
-	tbl();
-}
 
-static void type_dsv(int fildes)
-{
-	save_dsv(stdout, 0);
-}
 
 static void hl_goto_cell(int fildes)
 {
@@ -242,10 +233,8 @@ static map<string, function<void(T)> > func_map = {
 	{"info", 	info},
 	{"ri", 		hl_insert_row},
 	{"t", 		_type_sheet},
-	{"tbl", 	hless_tbl},
 	{"recalc", 	hl_recalc},
 	{"type-cell", 	type_cell},
-	{"type-dsv", 	type_dsv},
 	{"w", 		_write_file}
 };
 

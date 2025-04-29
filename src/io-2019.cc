@@ -17,7 +17,6 @@
 
 import std;
 import logging;
-import tbl;
 import win;
 
 using namespace std::string_literals;
@@ -289,7 +288,6 @@ bool curses_loop () // FN
 			{CTRL('l'), 	set_cell_alignment_left},
 			{CTRL('r'), 	set_cell_alignment_right},
 			{CTRL('s'), 	save_spreadsheet2019},
-			{CTRL('t'), 	save_csv2019},
 			{CTRL('v'), 	paste_this_cell_formula},
 
 	};
@@ -314,19 +312,6 @@ void write_status (const std::string& str)
 
 
 
-static void save_csv2019(){
-	std::string filename = FileGetCurrentFileName();
-	size_t lastindex = filename.find_last_of(".");
-	if(lastindex != std::string::npos)
-		filename = filename.substr(0, lastindex);
-	filename += ".csv";
-
-	//log("Filename before:<", filename, ">");
-	if(!invoke_std_form("Save spreadsheet as CSV:", filename)) return;
-	//FileSetCurrentFileName(filename);
-	//log("Filename after:<", FileGetCurrentFileName(), ">");
-	save_csv(filename, ',');
-}
 
 static void save_spreadsheet2019(){
 	std::string filename = FileGetCurrentFileName();

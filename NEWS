@@ -10,6 +10,9 @@ After what was mostly compilation bugfixes in previous releases, we now have new
 
 == FEATURES
 
+* Removed functionality to create csv and dsv files. examples/mkcsv.py
+contains an example of converting an oleo file to csv.
+
 * Added manpages: neoleo-file, neoleo-headless, neoleo-keys
 
 * Switched to cmake. Autotools ditched. You will therefore need cmake

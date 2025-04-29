@@ -53,7 +53,6 @@ scr "floor";
 scr "insert-01";
 scr "issue16";
 scr "issue18";
-bsh "issue25.sh";
 scr "issue51";
 scr "nohead-01";
 tst "parser2019";
