@@ -44,18 +44,7 @@ class OleoJmp : public std::exception
 		std::string msg_ = "OleoJmp";
 };
 
-class SyntaxError : public std::exception
-{
-	public:
-		SyntaxError() {}
-		SyntaxError(const std::string& msg) : msg_(msg) {}
-		virtual const char* what() const throw() { return msg_.c_str() ; }
-	private:
-		std::string msg_ = "SyntaxError";
-};
- 
-//void  _assert_uncalled(const char* __file__, int __line__);
-//#define	ASSERT_UNCALLED() { _assert_uncalled(__FILE__, __LINE__); }
+
 
 class ValErr : public std::exception
 {
@@ -70,6 +59,3 @@ class ValErr : public std::exception
 	       std::string msg;
 };
 
-//void raise_error(const char *str, ...);
-//void raise_error(const std::string msg);
-//void panic (const char *s,...);

@@ -1,5 +1,5 @@
 /*
- * Copyright � 1990-2000, 2001 Free Software Foundation, Inc.
+ * Copyright (c) 1990-2000, 2001 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <format>
-#include <string>
-#include <ctype.h>
-#include <cmath>
-#include <map>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <iostream>
 
-using std::cout;
-using std::map;
+#include <string.h>
 
 #include "io-utils.h"
 #include "global.h"
@@ -36,12 +25,16 @@ using std::map;
 #include "regions.h"
 #include "spans.h"
 #include "utils.h"
-import logging;
 #include "oleofile.h"
+
+import std;
+import logging;
 
 import errors;
 //#include "io-curses.h"
 
+using std::cout;
+using std::map;
 
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
@@ -388,8 +381,7 @@ bad_field:
 					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
 					std::string msg{string_format(fmt, lineno, input_line.c_str())};
 					msg = trim(msg);
-					throw SyntaxError(msg);
-					//Global->return_from_error = 0;
+					raise_error(msg);
 					return;
 					}
 		}	/* End of switch */
@@ -483,7 +475,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'f': /* Font specification */
-			throw SyntaxError("Font specification no longer handled");
+			// don't handle
 			break;
 
 		case 'B': 
