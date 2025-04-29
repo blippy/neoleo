@@ -74,43 +74,6 @@ int stricmp (const char * s1, const char * s2)
 		return chr1 - chr2;
 }
 
-/* strincmp - compare first N chars of strings S1 and S2 */
-int strincmp (const char * s1, const char * s2, size_t n)
-{
-	const char *scan1;
-	const char *scan2;
-	size_t count;
-	char chr1, chr2;
-
-	scan1 = s1;
-	scan2 = s2;
-	count = n;
-	do
-	{
-		chr1 = isupper (*scan1) ? tolower (*scan1) : *scan1;
-		chr2 = isupper (*scan2) ? tolower (*scan2) : *scan2;
-		scan1++;
-		scan2++;
-	}
-	while (--count != 0 && chr1 && chr1 == chr2);
-
-	/* if (count == (size_t)-1)
-	   return 0; */
-
-	/*
-	 * The following case analysis is necessary so that characters
-	 * which look negative collate low against normal characters but
-	 * high against the end-of-string NUL.
-	 */
-	if (chr1 == '\0' && chr2 == '\0')
-		return 0;
-	else if (chr1 == '\0')
-		return -1;
-	else if (chr2 == '\0')
-		return 1;
-	else
-		return chr1 - chr2;
-}
 
 
 

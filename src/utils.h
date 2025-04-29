@@ -28,8 +28,6 @@
 #include "errors.h"
 
 
-extern int strincmp (const char *, const char *, size_t);
-
 extern void set_usr_stats (int, char **);
 std::string pad_right(const std::string& s, int width);
 std::string pad_left(const std::string& n, int width);
