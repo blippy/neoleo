@@ -4,10 +4,10 @@
 from io import StringIO
 from sylk_parser import SylkParser
 
-parser = SylkParser("loop.oleo")
+parser = SylkParser("bold.slk")
 
 fbuf = StringIO()
 parser.to_csv(fbuf)
 
 test_results = fbuf.getvalue()
-print test_results
+print(test_results)

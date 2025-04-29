@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-echo i
-for n in `seq 5`
-do	
-	echo $RANDOM
-done
-
-echo .
