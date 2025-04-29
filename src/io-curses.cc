@@ -475,9 +475,9 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	}
 	else
 	{
+
 		CELLREF cc = c;
-		CELL *ccp;
-		CELLREF ccl, cch;
+		CELL *ccp = nullptr;
 
 		for (wwid = wid; lenstr > wwid - 1; wwid += get_width (cc))
 		{
@@ -492,6 +492,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 				break;
 			}
 		}
+
 
 		if (lenstr > wwid - 1) { 
 			if (cp->get_type() == TYP_FLT)
@@ -545,6 +546,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 		else
 			printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
 
+		CELLREF ccl, cch;
 		if (find_slop(r, c, &ccl, &cch))
 		{
 			change_slop(r, ccl, cch, c, cc);
