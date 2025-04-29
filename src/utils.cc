@@ -136,8 +136,7 @@ int stricmp (const char * s1, const char * s2)
 }
 
 /* strincmp - compare first N chars of strings S1 and S2 */
-	int
-strincmp (const char * s1, const char * s2, size_t n)
+int strincmp (const char * s1, const char * s2, size_t n)
 {
 	const char *scan1;
 	const char *scan2;
@@ -174,204 +173,10 @@ strincmp (const char * s1, const char * s2, size_t n)
 		return chr1 - chr2;
 }
 
-#if 0
-	char *
-err_msg (void)
-{
-	int n = errno;
-	static char buf[80];	/* Static to be able to return its address */
-
-
-#ifdef	HAVE_STRERROR
-	p = strerror(n);
-	if (p)
-		strcpy(buf, p);
-	else
-		sprintf (buf, "Unknown error code %d (%#x)", n, n);
-#else
-#if HAVE_SYS_ERRLIST
-	/* This was #if-fed away. Why ? */
-	if (n < sys_nerr);
-	return sys_errlist[n];
-#endif
-
-	sprintf (buf, "Unknown error code %d (%#x)", n, n);
-#endif	/* HAVE_STRERROR */
-
-	return buf;
-}
-#endif
 
 
 
-
-
-/*
- *	astof - accept a number of the form:
- *		(and ignores leading white space)
- *
- *	null	::=
- *	digit	::= 0|1|2|3|4|5|6|7|8|9
- *	digits	::= <digit>*
- *	DIGITS	::= <digit>+
- *	sign	::= <null> | + | -
- *	-------------------------------
- *		accepted:
- *	-------------------------------
- *	integer	::= <sign><DIGITS>
- *	real	::= <integer> . <digits> | <null> . <DIGITS>
- *	epart	::= e <integer> | E <integer>
- *	float	::= <integer> <epart> | <real> <epart>
- *
- *	Always returned as a double
- *
- *	There is no particular attempt to reduce mpys/divs
- *	those machines that are still out there (eg. PDP11/Small)
- *	that shun floating point arithmetic might rethink this routine.
- *
- *	mcarter 23-Dec-2016: I'm not sure we need this function anymore.
- *	I wrote a much simplified astof(). I'm not sure why this one
- *	is needed.
- */
-
-static num_t exps0[10] = {1E0, 1E1, 1E2, 1E3, 1E4, 1E5, 1E6, 1E7, 1E8, 1E9};
-static num_t exps1[10] = {1E00, 1E10, 1E20, 1E30 ,1E40, 1E50, 1E60, 1E70, 1E80, 1E90 };
-
-
-num_t astof (char **sp)
-{
-	char *s;
-	char *cp;
-	long ipart, epart;
-	int neg = 0;
-	num_t res;
-	int n;
-
-	s = *sp;
-	while (isspace (*s))
-	{
-		s++;
-		if (*s == '\0')
-		{
-			*sp = s;
-			return (0.0);
-		}
-	}
-	// Need to handle sign here due to '-.3' or '-0.3' 
-	if (*s == '-')
-	{
-		++neg;
-		++s;
-	}
-	else if (*s == '+')
-		++s;
-	cp = s;
-	// 	get ipart handling '.n' case 
-	res = 0.0;
-	while (isdigit (*s))
-	{
-		for (n = 0, ipart = 0; n < 6 && isdigit (*s); n++)
-			ipart = ipart * 10 + *s++ - '0';
-		res = res * exps0[n] + (num_t) ipart;
-	}
-	if (s == cp)
-	{
-		if (*s == '.')
-			ipart = 0;
-		else
-		{
-			*sp = s;
-			return (0.0);
-		}
-	}
-	/*
-	 *	either we find a '.' or e|E or done
-	 */
-	if (*s == '.')
-	{
-		int m;
-		++s;
-
-		m = 0;
-		while (isdigit (*s))
-		{
-			for (n = 0, ipart = 0; n < 6 && isdigit (*s); n++)
-				ipart = ipart * 10 + *s++ - '0';
-			m += n;
-			if (m >= 100)
-				continue;
-			if (m >= 10)
-				res += ((num_t) ipart) / (exps1[m / 10] * exps0[m % 10]);
-			else
-				res += ((num_t) ipart) / exps0[m];
-		}
-	}
-	/*
-	 *	In either case (.) handle E part
-	 */
-	if (*s == 'e' || *s == 'E')
-	{
-		int eneg;
-
-		++s;
-		epart = 0;
-		eneg = 0;
-		if (*s == '-')
-		{
-			eneg++;
-			s++;
-		}
-		else if (*s == '+')
-			s++;
-		while (isdigit (*s))
-			epart = epart * 10 + *s++ - '0';
-		if (eneg)
-		{
-#ifndef vax
-			while (epart >= 100)
-			{
-				res /= E100;
-				epart -= 100;
-			}
-#endif
-			if (epart > 9)
-			{
-				res /= exps1[epart / 10];
-				epart %= 10;
-			}
-			if (epart)
-				res /= exps0[epart];
-		}
-		else
-		{
-#ifndef vax
-			while (epart >= 100)
-			{
-				res *= E100;
-				epart -= 100;
-			}
-#endif
-			if (epart > 9)
-			{
-				res *= exps1[epart / 10];
-				epart %= 10;
-			}
-			if (epart)
-				res *= exps0[epart];
-		}
-	}
-	/*
-	 *	fix sign
-	 */
-	if (neg)
-		res = -res;
-	*sp = s;
-	return (res);
-}
-
-
-	std::string 
-spaces(int n)
+std::string spaces(int n)
 {
 	n = std::max(0, n);
 	char sa[n+1];
@@ -380,14 +185,12 @@ spaces(int n)
 	return sa; 
 }
 
-	std::string 
-pad_left(const std::string& s, int width)
+std::string pad_left(const std::string& s, int width)
 {
 	return spaces(width-s.size()) + s;
 }
 
-	std::string
-pad_right(const std::string& s, int width)
+std::string pad_right(const std::string& s, int width)
 {
 	return s + spaces(width-s.size());
 }
