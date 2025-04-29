@@ -47,4 +47,5 @@ clean :
 	
 cleaner : clean
 	rm -f *.o 
-	rm -rf gcm.cache build
+	#rm -rf build
+	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
