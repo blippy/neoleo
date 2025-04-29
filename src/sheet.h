@@ -60,3 +60,7 @@ void copy_row(CELLREF dst_row, CELLREF src_row);
 
 void dump_sheet();
 void delete_all_cells();
+
+bool inside(int val, int lo, int hi);
+bool inside(int r, int c, const struct rng *a_rng);
+bool inside(int r, int c, const struct rng &a_rng);

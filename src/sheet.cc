@@ -83,6 +83,7 @@ void flush_cols()
 }
 
 
+
 int binary_cell_search(int l, int r, coord_t target)
 {
 	if(r >= l) {
@@ -95,7 +96,8 @@ int binary_cell_search(int l, int r, coord_t target)
 		return binary_cell_search(mid+1, r, target);
 	}
 	return -1;
-}	
+}
+
 
 /* mcarter 07-May-2018
  * Implementation of find_cell() assumes the cells are sorted
@@ -150,19 +152,25 @@ cell_t* find_or_make_cell() {return find_or_make_cell(curow, cucol);}
 
 
 
-bool inside(int val, int lo, int hi) { return (lo <= val) && (val <= hi) ; } //definition
+bool inside(int val, int lo, int hi) { return (lo <= val) && (val <= hi) ; } //FN
 
-bool inside(int r, int c, struct rng *a_rng) //definition 
+bool inside(int r, int c, const struct rng *a_rng) // FN
 { 
 	return inside(r, a_rng->lr, a_rng->hr) && inside(c, a_rng->lc,a_rng->hc);
 }
 
-void make_cells_in_range (struct rng *r)
+bool inside(int r, int c, const struct rng &a_rng) //
+{
+	return inside(r, c, &a_rng);
+}
+
+void make_cells_in_range (struct rng *r) // FN
 {
 	for(int i = r->lr; i <= r->hr; ++i)
 	       	for(int j  = r->lc; j <= r->hc; ++j)
 			find_or_make_cell(i, j);
 }
+
 
 CELLREF max_row()
 {

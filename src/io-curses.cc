@@ -79,33 +79,21 @@ extern bool curses_loop ();
 
 void cur_io_display_cell_cursor (void)
 {
-	int cell_cursor_row;
-	int cell_cursor_col;
-	int cc;
-	int rr;
-	int cwid;
-	int n;
+
+	if(!inside(curow, cucol, cwin->screen)) return;
+
 	int x, y;
-
-	if (   (curow < cwin->screen.lr)
-			|| (cucol < cwin->screen.lc)
-			|| (curow > cwin->screen.hr)
-			|| (cucol > cwin->screen.hc))
-		return;
-
 	getyx (stdscr, y, x);
-	cell_cursor_col = cwin->win_over;
-	for (cc = cwin->screen.lc; cc < cucol; cc++)
+	int cell_cursor_col = cwin->win_over;
+	for (int cc = cwin->screen.lc; cc < cucol; cc++)
 		cell_cursor_col += get_width (cc);
-	cell_cursor_row = cwin->win_down;
-	for (rr = cwin->screen.lr; rr < curow; rr++)
+	int cell_cursor_row = cwin->win_down;
+	for (int rr = cwin->screen.lr; rr < curow; rr++)
 		cell_cursor_row += get_height (rr);
-	cwid = get_width (cucol);
-	if (cwid > cwin->numc)
-		cwid = cwin->numc;
+	int cwid = std::min(cwin->numc, get_width (cucol));
 	move (cell_cursor_row, cell_cursor_col);
 	standout ();
-	for (n = cwid; n; n--)
+	for (int n = cwid; n; n--)
 		addch (inch () | A_STANDOUT);
 	standend ();
 	move (y, x);
@@ -113,32 +101,21 @@ void cur_io_display_cell_cursor (void)
 
 void win_io_hide_cell_cursor (void)
 {
-	int cc;
-	int rr;
-	int cell_cursor_row;
-	int cell_cursor_col;
-	int cwid;
-	int n;
-	int x, y;
 
-	//if (input_view.current_info)	return;
-	if (   (curow < cwin->screen.lr)
-			|| (cucol < cwin->screen.lc)
-			|| (curow > cwin->screen.hr)
-			|| (cucol > cwin->screen.hc))
-		return;
+
+	if(!inside(curow, cucol, cwin->screen)) return;
+
+	int x, y;
 	getyx (stdscr, y, x);
-	cell_cursor_col = cwin->win_over;
-	for (cc = cwin->screen.lc; cc < cucol; cc++)
+	int cell_cursor_col = cwin->win_over;
+	for (int cc = cwin->screen.lc; cc < cucol; cc++)
 		cell_cursor_col += get_width (cc);
-	cell_cursor_row = cwin->win_down;
-	for (rr = cwin->screen.lr; rr < curow; rr++)
+	int cell_cursor_row = cwin->win_down;
+	for (int rr = cwin->screen.lr; rr < curow; rr++)
 		cell_cursor_row += get_height (rr);
-	cwid = get_width (cucol);
-	if (cwid > cwin->numc)
-		cwid = cwin->numc;
+	int cwid = std::min(cwin->numc, get_width (cucol));
 	move (cell_cursor_row, cell_cursor_col);
-	for (n = cwid; n; n--)
+	for (int n = cwid; n; n--)
 		addch (inch () & ~A_STANDOUT);
 	move (y, x);
 }
