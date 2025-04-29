@@ -38,45 +38,6 @@ std::optional<int> to_int(const std::string& str)
 
 
 
-/*
- * stricmp - compare string s1 to s2, ignoring case
- */
-
-int stricmp (const char * s1, const char * s2)
-{
-	const char *scan1;
-	const char *scan2;
-	char chr1, chr2;
-
-	scan1 = s1;
-	scan2 = s2;
-	do
-	{
-		chr1 = isupper (*scan1) ? tolower (*scan1) : *scan1;
-		chr2 = isupper (*scan2) ? tolower (*scan2) : *scan2;
-		scan1++;
-		scan2++;
-	}
-	while (chr1 && chr1 == chr2);
-
-	/*
-	 * The following case analysis is necessary so that characters
-	 * which look negative collate low against normal characters but
-	 * high against the end-of-string NUL.
-	 */
-	if (chr1 == '\0' && chr2 == '\0')
-		return 0;
-	else if (chr1 == '\0')
-		return -1;
-	else if (chr2 == '\0')
-		return 1;
-	else
-		return chr1 - chr2;
-}
-
-
-
-
 
 std::string spaces(int n)
 {

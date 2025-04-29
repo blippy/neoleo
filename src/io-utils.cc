@@ -259,6 +259,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 	CELL* cp = find_cell (row, col);
 	if(!cp) return "";
 
+	// TODO use get_if()
 	value_t val = cp->get_value_2019();
 	if(std::holds_alternative<std::monostate>(val)) return "";
 	if(std::holds_alternative<num_t>(val)) return flt_to_str(get<num_t>(val));
@@ -497,26 +498,6 @@ void clear_spreadsheet (void)
 	delete_all_cells();
 }
 
-
-
-
-//static char *defaultformat = NULL;
-
-
-
-
-int read_file_generic_2(FILE *fp, char *format, const char *name)
-{
-	if (stricmp ("oleo", format) == 0) {
-		oleo_read_file(fp);
-	} else if (stricmp("dbf", format) == 0) {
-		raise_error("Cannot read XBASE file (xbase not compiled)");
-		return -1;
-	} else {
-		return -1;
-	}
-	return 0;
-}
 
 
 
