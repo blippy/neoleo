@@ -355,8 +355,7 @@ void cur_io_repaint (void)
 		if (cp->get_type() != TYP_NUL) cur_io_pr_cell_win(win, rr, cc, cp);
 	}
 	
-	if (!(cp = find_cell (curow, cucol)) || (cp->get_type() == TYP_NUL))
-		cur_io_display_cell_cursor ();
+	cur_io_display_cell_cursor ();
 	cur_io_update_status ();
 }
 
