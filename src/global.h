@@ -60,17 +60,15 @@ inline std::string option_tests_argument = "";
  * around all over.
  */
 struct OleoGlobal {
-	const int				bkgrnd_recalc = 1, a0 = 0 , auto_recalc = 1;
-	int				modified = 0;
-	//int				display_opened = 0;
-
-	const int			scr_lines = 24, scr_cols = 80,  input_rows = 1, status_rows = 1; 
-	const int 				user_input =1, user_status = 2;
-	const int				input = 0, status = 1;
-	const int			label_rows = 1, label_emcols =1;
-	//int				info_rows, info_line, info_over;
-	const int				default_right_border = 0, default_bottom_border = 0;
-	const int				win_id = 1;
+	const int	bkgrnd_recalc = 1, a0 = 0 , auto_recalc = 1;
+	int			modified = 0;
+	int			scr_lines = 24, scr_cols = 80;
+	int 		input_rows = 1, status_rows = 1;
+	const int 	user_input =1, user_status = 2;
+	const int	input = 0, status = 1;
+	const int	label_rows = 1, label_emcols =1;
+	const int	default_right_border = 0, default_bottom_border = 0;
+	const int	win_id = 1;
 };
 
 inline OleoGlobal global;

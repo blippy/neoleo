@@ -400,8 +400,8 @@ void cur_io_repaint (void)
 	int n, n1;
 	struct window *win = cwin;
 
-	struct rng scr = win->screen;
-	log("cur_io_repaint: screen lc ", scr.lc, " hc ", scr.hc, " lr ", scr.lr, " hr ", scr.hr);
+	//struct rng scr = win->screen;
+	//log("cur_io_repaint: screen lc ", scr.lc, " hc ", scr.hc, " lr ", scr.lr, " hr ", scr.hr);
 
 
 	clear ();
@@ -827,7 +827,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 void curses_main () // FN
 {
-	io_init_windows();
+
 	//cur_io_open_display();
 	initscr ();
 	defer d{endwin};
@@ -839,7 +839,7 @@ void curses_main () // FN
 	nonl ();
 	start_color();
 
-
+	io_init_windows();
 	recenter_window();
 	cur_io_repaint();
 
@@ -873,6 +873,13 @@ void  io_init_windows ()
 	//cwin->id = win_id++;
 	//cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
 	//cwin->win_down = (label_rows + (user_status > 0) * status_rows + (user_input > 0) * input_rows);
+
+	//auto [y, x] = win_getyx(stdscr);
+	//int y, x;
+	//getyx(stdscr, y, x);
+	Global->scr_lines = LINES;
+	//log("scr_lines ", LINES);
+	Global->scr_cols = COLS;
 	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
 	cwin->numc = Global->scr_cols - default_right_border;
 	cwin->bottom_edge_r = default_bottom_border;
