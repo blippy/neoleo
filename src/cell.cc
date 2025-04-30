@@ -171,8 +171,7 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 	set_and_eval(r, c, new_input, true);
 }
 
-std::string
-get_cell_formula_at(int r, int c)
+std::string get_cell_formula_at(int r, int c)
 {
 	return formula_text(r, c);
 }
@@ -181,42 +180,6 @@ void edit_cell (const char* input)
 {
 	CELL* cp = find_or_make_cell(curow, cucol);
 	cp->set_formula_text(input);
-	new_value(curow, cucol, input);
-}
-
-
-
-/* Set the cell ROW,COL to STRING, parsing string as needed */
-static CELL* set_cell (CELLREF row, CELLREF col, const std::string& in_string) // FN
-{
-	cur_row = row;
-	cur_col = col;
-
-	std::string s2{in_string};
-	while(s2.size() > 0 && s2[0] == ' ') s2.erase(0, 1);
-
-	//my_cell = find_cell (cur_row, cur_col);
-	return find_or_make_cell(cur_row, cur_col);
-
-}
-
-
-/* new_value() calls set_cell, but refuses to change locked cells, and
-   updates and prints the results.  It returns an error msg on error. . .
-   */
-
-char * new_value (CELLREF row, CELLREF col, const char *string) // FN
-{
-	CELL *cp = find_cell (row, col);
-	if (((!cp || GET_LCK (cp) == LCK_DEF) && default_lock == LCK_LCK) || (cp && GET_LCK (cp) == LCK_LCK))
-	{
-		return (char *) "cell is locked";
-	}
-
-	cp = set_cell(row, col, string);
-	//cur_io_pr_cell (row, col, cp);
-	Global->modified = 1;
-	return 0;
 }
 
 
@@ -261,14 +224,12 @@ std::string formula_text(CELLREF r, CELLREF c){
 
 static std::string m_copied_cell_formula = "";
 
-void
-copy_this_cell_formula()
+void copy_this_cell_formula()
 {
 	m_copied_cell_formula = formula_text(curow, cucol);
 }
 
-void 
-paste_this_cell_formula()
+void paste_this_cell_formula()
 {	
 	set_cell_input(curow, cucol, m_copied_cell_formula.c_str());
 }

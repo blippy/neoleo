@@ -52,7 +52,7 @@ inline std::string option_tests_argument = "";
  * least toss in a COMMENT like the above to explain what was happening? 
  * ANOTHER GOOD QUESTION!
  */
-inline CELLREF cur_row, cur_col;
+//inline CELLREF cur_row, cur_col;
 
 
 /*
