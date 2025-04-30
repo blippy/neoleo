@@ -758,22 +758,22 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 
 void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
-	if (rr < cwin->screen.lr || rr > cwin->screen.hr
-			|| cc < cwin->screen.lc || cc > cwin->screen.hc)
-	{
-		curow = rr;
-		cucol = cc;
-		recenter_window (cwin);
-		win_io_repaint_win (cwin);
-	}
-	else
-	{
+	//if (rr < cwin->screen.lr || rr > cwin->screen.hr
+	//		|| cc < cwin->screen.lc || cc > cwin->screen.hc)
+
+	if(inside(rr, cc, cwin->screen)) {
 		win_io_hide_cell_cursor ();
 		curow = rr;
 		cucol = cc;
 		cur_io_display_cell_cursor ();
 		cur_io_update_status ();
+	} else 	{
+		curow = rr;
+		cucol = cc;
+		recenter_window (cwin);
+		win_io_repaint_win (cwin);
 	}
+
 	if (get_scaled_width (cucol) == 0)
 		find_nonzero (&cucol, cwin->screen.lc, cwin->screen.hc, get_scaled_width);
 	if (get_scaled_height (curow) == 0)
