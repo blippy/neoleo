@@ -60,6 +60,7 @@ import win;
 CELLREF mkrow = NON_ROW;
 CELLREF mkcol = NON_COL;
 
+
 /* The tty windows datastructures: */
 
 
@@ -109,12 +110,10 @@ inline window* cwin = &the_cwin;
 
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
-void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
-void io_recenter_cur_win (void);
-void io_recenter_named_window(struct window *w);
-void io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
-
-extern bool curses_loop ();
+void 		cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
+void  		io_init_windows ();
+bool 		curses_loop ();
 
 
 
@@ -122,7 +121,6 @@ extern bool curses_loop ();
 
 void cur_io_display_cell_cursor (void)
 {
-
 	if(!inside(curow, cucol, cwin->screen)) return;
 
 	int cell_cursor_col = cwin->win_over;
@@ -141,8 +139,6 @@ void cur_io_display_cell_cursor (void)
 
 void win_io_hide_cell_cursor (void)
 {
-
-
 	if(!inside(curow, cucol, cwin->screen)) return;
 
 	int cell_cursor_col = cwin->win_over;
@@ -323,14 +319,6 @@ void  recenter_window (struct window *win = nullptr) // FN
 
 
 
-void win_io_repaint_win (struct window *win)
-{
-	cur_io_repaint ();
-}
-
-
-
-
 std::string status_line(int wid)
 {
 	//log("status_line called");
@@ -393,7 +381,7 @@ void cur_io_update_status (void) // FN
 }
 
 
-void cur_io_repaint (void)
+void cur_io_repaint ()
 {
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
@@ -747,26 +735,23 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 
 void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
-	//if (rr < cwin->screen.lr || rr > cwin->screen.hr
-	//		|| cc < cwin->screen.lc || cc > cwin->screen.hc)
-
 	if(inside(rr, cc, cwin->screen)) {
-		win_io_hide_cell_cursor ();
+		win_io_hide_cell_cursor();
 		curow = rr;
 		cucol = cc;
-		cur_io_display_cell_cursor ();
-		cur_io_update_status ();
+		cur_io_display_cell_cursor();
+		cur_io_update_status();
 	} else 	{
 		curow = rr;
 		cucol = cc;
-		recenter_window (cwin);
-		win_io_repaint_win (cwin);
+		recenter_window(cwin);
+		cur_io_repaint();
 	}
 
-	if (get_scaled_width (cucol) == 0)
-		find_nonzero (&cucol, cwin->screen.lc, cwin->screen.hc, get_scaled_width);
+	if (get_scaled_width(cucol) == 0)
+		find_nonzero(&cucol, cwin->screen.lc, cwin->screen.hc, get_scaled_width);
 	if (get_scaled_height (curow) == 0)
-		find_nonzero (&curow, cwin->screen.lr, cwin->screen.hr, get_scaled_height);
+		find_nonzero(&curow, cwin->screen.lr, cwin->screen.hr, get_scaled_height);
 }
 
 void io_shift_cell_cursor (dirn way, int repeat) // FN
