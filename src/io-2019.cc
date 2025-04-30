@@ -31,7 +31,7 @@ static constexpr int CTRL(int c) { return c & 037; }
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;
 
-
+static int i19_parameter = -1 ; // useful for repeating functions or general parameter setting
 
 int scr_width()
 {
@@ -250,15 +250,24 @@ static void clear_cell_formula()
 	cur_io_repaint();
 }
 
+static void i19_precision()
+{
+	int prec = std::max(0, i19_parameter);
+	auto cp = find_or_make_cell();
+	set_precision(cp, prec);
+}
+
 void process_key(const keymap_t& keymap)
 {
 	int c = get_ch();
-	//clear_status_line();
-	//log("process_key:", c);
+	if ('0' <= c && c <= '9') {
+		i19_parameter = c-'0';
+	}
 	auto search = keymap.find(c);
 	if(search == keymap.end()) { beep(); return; }
 	auto fn = search->second;
 	fn();
+	i19_parameter = -1;
 }
 
 
@@ -275,20 +284,21 @@ bool curses_loop () // FN
 			{'=', 		edit_cell2019},
 			{'%',		set_cell_toggle_percent},			
 			{'m',		process_menu},
+			{'p',		i19_precision},
 			{'r',		row_cmd2019},
 			{KEY_DC, 	clear_cell_formula}, // delete key
 			{KEY_DOWN,	cursor_down},
-			{KEY_LEFT,  	cursor_left},
+			{KEY_LEFT,  cursor_left},
 			{27,  		complex_key_sequence_27},
-			{KEY_RIGHT, 	cursor_right},
+			{KEY_RIGHT, cursor_right},
 			{KEY_UP, 	cursor_up},			
 			{CTRL('b'),	set_cell_toggle_bold},
-			{CTRL('c'), 	copy_this_cell_formula},
+			{CTRL('c'), copy_this_cell_formula},
 			{CTRL('i'),	set_cell_toggle_italic},
-			{CTRL('l'), 	set_cell_alignment_left},
-			{CTRL('r'), 	set_cell_alignment_right},
-			{CTRL('s'), 	save_spreadsheet2019},
-			{CTRL('v'), 	paste_this_cell_formula},
+			{CTRL('l'), set_cell_alignment_left},
+			{CTRL('r'), set_cell_alignment_right},
+			{CTRL('s'), save_spreadsheet2019},
+			{CTRL('v'), paste_this_cell_formula},
 
 	};
 

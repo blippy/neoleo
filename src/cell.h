@@ -173,6 +173,8 @@ typedef cell cell_t;
 
 #define FLOAT_PRECISION	11
 
+void set_precision(CELL* cp, int precision);
+
 
 /* README README README
  *

@@ -34,13 +34,12 @@ using std::endl;
 using std::get;
 
 
-#if 0
-ValType cell::get_type()
-{
-	return get_value_t_type(value_2019);
-}
-#endif
 
+
+void set_precision(CELL* cp, int precision)
+{
+	cp->cell_flags.cell_precision = precision;
+}
 
 bool is_nul(CELL* cp)
 {
