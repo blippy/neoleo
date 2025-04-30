@@ -172,12 +172,121 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 }
 
 
+int win_label_cols (struct window * win, CELLREF hr)
+{
+	int lh;
+
+	if ((win_flags & WIN_EDGES) == 0)
+		lh = 0;
+
+	else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
+		lh = 5;
+	else if (hr > 10)
+		lh = 4;
+	else
+		lh = 3;
+	lh *= label_emcols;
+	return lh;
+}
+
+int win_label_rows (struct window * win)
+{
+	return (win_flags & WIN_EDGES) ? label_rows : 0;
+}
+
+void set_numcols (struct window *win, CELLREF hr)
+{
+	int lh = win_label_cols (win, hr);
+	win->win_over -= win->lh_wid - lh;
+	win->numc += win->lh_wid - lh;
+	win->lh_wid = lh;
+}
+
+static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
+{
+	CELLREF lo, hi;
+	int tot;
+	int n;
+	int more;
+
+	lo = hi = cur;
+	n = tot = (*get) (cur);
+	do
+	{
+		if (lo > MIN_ROW && tot + (n = (*get) (lo - 1)) <= total)
+		{
+			--lo;
+			tot += n;
+			more = 1;
+		}
+		else
+			more = 0;
+		if (hi < MAX_ROW && tot + (n = (*get) (hi + 1)) <= total)
+		{
+			hi++;
+			tot += n;
+			more++;
+		}
+	}
+	while (more);
+	*loP = lo;
+	*hiP = hi;
+}
+
+static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
+{
+	CELLREF lo, hi;
+	int w, ww;
+
+	lo = hi = MIN_ROW;
+	w = (*get) (hi);
+	for (;;)
+	{
+		ww = (*get) (hi + 1);
+		while (w + ww <= total && hi < MAX_ROW)
+		{
+			hi++;
+			w += ww;
+			ww = (*get) (hi + 1);
+		}
+		if (hi >= cur)
+			break;
+		hi++;
+		lo = hi;
+		w = ww;
+	}
+	if (lo > cur || hi > MAX_ROW)
+		raise_error("Can't find a non-zero-sized cell page_axis");
+	*loP = lo;
+	*hiP = hi;
+}
+
+
+void  recenter_window (struct window *win = nullptr) // FN
+{
+	if(!win) win = cwin;
+	if (win_flags & WIN_PAG_VT)
+		page_axis (curow, get_scaled_height, win->numr,
+				&(win->screen.lr), &(win->screen.hr));
+	else
+		recenter_axis (curow, get_scaled_height, win->numr,
+				&(win->screen.lr), &(win->screen.hr));
+	set_numcols (win, win->screen.hr);
+	if (win_flags & WIN_PAG_HZ)
+		page_axis (cucol, get_scaled_width, win->numc,
+				&(win->screen.lc), &(win->screen.hc));
+	else
+		recenter_axis (cucol, get_scaled_width, win->numc,
+				&(win->screen.lc), &(win->screen.hc));
+	//win_io_repaint_win();
+}
+
 static void _io_redisp (void)
 {
 
 	struct rng * rng = &cwin->screen;
 	if ((curow > rng->hr) || (curow < rng->lr) || (cucol > rng->hc)	|| (cucol < rng->lc))
-		io_recenter_cur_win ();
+		recenter_window ();
 
 	refresh ();
 }
@@ -550,137 +659,25 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-/* Low level window operators. */
 
-
-
-
-int win_label_cols (struct window * win, CELLREF hr)
-{
-	int lh;
-
-	if ((win_flags & WIN_EDGES) == 0)
-		lh = 0;
-
-	else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
-		lh = 5;
-	else if (hr > 10)
-		lh = 4;
-	else
-		lh = 3;
-	lh *= label_emcols;
-	return lh;
-}
-
-int win_label_rows (struct window * win)
-{
-	return (win_flags & WIN_EDGES) ? label_rows : 0;
-}
-
-void set_numcols (struct window *win, CELLREF hr)
-{
-	int lh = win_label_cols (win, hr);
-	win->win_over -= win->lh_wid - lh;
-	win->numc += win->lh_wid - lh;
-	win->lh_wid = lh;
-}
-
-
-static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
-{
-	CELLREF lo, hi;
-	int w, ww;
-
-	lo = hi = MIN_ROW;
-	w = (*get) (hi);
-	for (;;)
-	{
-		ww = (*get) (hi + 1);
-		while (w + ww <= total && hi < MAX_ROW)
-		{
-			hi++;
-			w += ww;
-			ww = (*get) (hi + 1);
-		}
-		if (hi >= cur)
-			break;
-		hi++;
-		lo = hi;
-		w = ww;
-	}
-	if (lo > cur || hi > MAX_ROW)
-		raise_error("Can't find a non-zero-sized cell page_axis");
-	*loP = lo;
-	*hiP = hi;
-}
-
-
-static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
-{
-	CELLREF lo, hi;
-	int tot;
-	int n;
-	int more;
-
-	lo = hi = cur;
-	n = tot = (*get) (cur);
-	do
-	{
-		if (lo > MIN_ROW && tot + (n = (*get) (lo - 1)) <= total)
-		{
-			--lo;
-			tot += n;
-			more = 1;
-		}
-		else
-			more = 0;
-		if (hi < MAX_ROW && tot + (n = (*get) (hi + 1)) <= total)
-		{
-			hi++;
-			tot += n;
-			more++;
-		}
-	}
-	while (more);
-	*loP = lo;
-	*hiP = hi;
-}
-
-
-
-void  recenter_window (struct window *win) // FN
-{
-	if (win_flags & WIN_PAG_VT)
-		page_axis (curow, get_scaled_height, win->numr,
-				&(win->screen.lr), &(win->screen.hr));
-	else
-		recenter_axis (curow, get_scaled_height, win->numr,
-				&(win->screen.lr), &(win->screen.hr));
-	set_numcols (win, win->screen.hr);
-	if (win_flags & WIN_PAG_HZ)
-		page_axis (cucol, get_scaled_width, win->numc,
-				&(win->screen.lc), &(win->screen.hc));
-	else
-		recenter_axis (cucol, get_scaled_width, win->numc,
-				&(win->screen.lc), &(win->screen.hc));
-}
-
-void io_recenter_cur_win (void)
+/*
+void io_recenter_cur_winXXX (void)
 {
 	io_recenter_named_window (cwin);
 	win_io_repaint_win(cwin);
 }
 
-void io_recenter_all_win(void)
+void io_recenter_all_winXXX (void)
 {
 	//if (!nwin) return;
 	io_recenter_named_window (cwin);
 	//win_io_repaint ();
 }
-void io_recenter_named_window(struct window *w)
+void io_recenter_named_windowXXX (struct window *w)
 {
 	recenter_window(w);
 }
+*/
 
 
 static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
@@ -729,16 +726,9 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	//if(!the_cmd_frame) return; // maybe running headless
-	//if(running_headless()) return;
 	if(cwin == 0) return; // maybe we're running headless
-	//struct window *win;
-
-	//for (win = wins; win < &wins[nwin]; win++)
-	//{
-		if (r < cwin->screen.lr || r > cwin->screen.hr || c < cwin->screen.lc || c > cwin->screen.hc) return;
-		cur_io_pr_cell_win (cwin, r, c, cp);
-	//}
+	if (r < cwin->screen.lr || r > cwin->screen.hr || c < cwin->screen.lc || c > cwin->screen.hc) return;
+	cur_io_pr_cell_win (cwin, r, c, cp);
 }
 
 
@@ -824,11 +814,12 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 
 
-
+#if 0
 void recenter_window (void)
 {
 	io_recenter_cur_win ();
 }
+#endif
 
 void curses_main () // FN
 {
@@ -845,7 +836,8 @@ void curses_main () // FN
 	start_color();
 
 
-	io_recenter_cur_win();
+	recenter_window();
+	cur_io_repaint();
 
 
 	// Tell ncurses to interpret "special keys". It means
