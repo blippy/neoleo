@@ -22,15 +22,12 @@
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>
-//#include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string>
 #include <string.h>
 #include <unistd.h>
-//#include <vector>
-#include <term.h>
+//#include <term.h>
 #include <menu.h>
 #include <panel.h>
 
@@ -390,7 +387,7 @@ void cur_io_update_status (void) // FN
 {
 
 	move (Global->status, 0);
-	int wid = columns - 2;
+	int wid = cwin->screen.hc; // columns - 2;
 	win_print(status_line(wid));
 	clrtoeol();
 }
@@ -403,13 +400,9 @@ void cur_io_repaint (void)
 	int n, n1;
 	struct window *win = cwin;
 
-#if 0
-	// 25/4
-	int x, y;
-	getyx(stdscr, y, x);
-	win->screen.hr = y;
-	win->screen.hc = x;
-#endif
+	struct rng scr = win->screen;
+	log("cur_io_repaint: screen lc ", scr.lc, " hc ", scr.hc, " lr ", scr.lr, " hr ", scr.hr);
+
 
 	clear ();
 	show_menu();
@@ -527,7 +520,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	move_cursor_to (win, r, c);
 
 	int yy, xx;
-	getyx (stdscr, yy, xx);
+	getyx(stdscr, yy, xx);
 
 	assert(win == cwin);
 	int glowing = (r == curow && c == cucol && win == cwin);
@@ -694,7 +687,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
 	if (glowing) cur_io_update_status ();
-	move (yy, xx);
+	move(yy, xx);
 }
 
 
