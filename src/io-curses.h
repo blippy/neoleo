@@ -17,8 +17,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <ncurses.h>
-#include <string>
+//#include <ncurses.h>
+//#include <string>
 
 
 void cur_io_repaint();
@@ -30,49 +30,9 @@ void  io_init_windows ();
 
 
 
-#include "cell.h"
-
-/* The tty windows datastructures: */
+//#include "cell.h"
 
 
-struct window
-{
-  /* Do not change these directly. */
-  const int id = 1; // a window id
-  int win_over = 0;			// x-posiition Where the data in this window starts. Can change due to row number
-  const int win_down = 3;	// y-position where data grid starts
-  struct rng screen{0};		/* Cells visible. recenter_* updates this. */
-
-  /* Number of lines of spreadsheet that can fit in this window.
-     This only changes when the screen is resized,
-     win->flags&WIN_EDGES changes, or a window is either
-     created or destroyed */
-  int numr;
-  
-  /* Number of text columns that can fit in this window.
-     This changes when the screen is resized,
-     win->flags&WIN_EDGES changes, a window is created or
-     destoryed, or win->lh_wid changes.  In the last case
-     win->numc+win->lh_wid remains a constant. */
-  int numc;
-  
-  /* 
-   * Number of columns and rows for right and bottom edges. 
-   * As this changes, numc and numr change accordingly.
-   */
-  int bottom_edge_r;
-  int right_edge_c;
-
-
-  /* Number of columns taken up by the row numbers at the
-     left hand edge of the screen.  Zero if edges is
-     win->flags&WIN_EDGES is off (by definition).  Seven (or
-     five) if win->flags&WIN_PAG_HZ (to make things easier).
-     Ranges between three "R9 " to seven "R32767 " depending on
-     the number of the highest row on the screen.  */
-  int lh_wid;
-  
-};
 
 
 #define WIN_LCK_HZ		0x01 // locked horizontally
@@ -100,9 +60,6 @@ inline int win_flags = WIN_EDGES | WIN_EDGE_REV;
 #define	default_bottom_border	Global->default_bottom_border
 
 
-inline window the_cwin;
-inline window* cwin = &the_cwin;
-#define	win_id		Global->win_id
 
 
 enum class dirn { left, right, up, down};
