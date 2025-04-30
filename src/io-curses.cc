@@ -469,17 +469,14 @@ void cur_io_repaint ()
 
 static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 {
-	int cc;
-	int cell_cursor_col;
-	int rr;
-	int cell_cursor_row;
-
-	cell_cursor_col = win->win_over;
-	for (cc = win->screen.lc; cc < c; cc++)
+	int cell_cursor_col = win->win_over;
+	for (int cc = win->screen.lc; cc < c; cc++)
 		cell_cursor_col += get_width (cc);
-	cell_cursor_row = win->win_down;
-	for (rr = win->screen.lr; rr < r; rr++)
+
+	int cell_cursor_row = win->win_down;
+	for (int rr = win->screen.lr; rr < r; rr++)
 		cell_cursor_row += get_height (rr);
+
 	move (cell_cursor_row, cell_cursor_col);
 }
 
