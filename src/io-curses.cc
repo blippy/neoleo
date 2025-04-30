@@ -328,16 +328,6 @@ void  recenter_window (struct window *win = nullptr) // FN
 	//win_io_repaint_win();
 }
 
-static void _io_redisp (void)
-{
-
-	struct rng * rng = &cwin->screen;
-	if ((curow > rng->hr) || (curow < rng->lr) || (cucol > rng->hc)	|| (cucol < rng->lc))
-		recenter_window ();
-
-	refresh ();
-}
-
 
 
 void win_io_repaint_win (struct window *win)
@@ -707,26 +697,6 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-/*
-void io_recenter_cur_winXXX (void)
-{
-	io_recenter_named_window (cwin);
-	win_io_repaint_win(cwin);
-}
-
-void io_recenter_all_winXXX (void)
-{
-	//if (!nwin) return;
-	io_recenter_named_window (cwin);
-	//win_io_repaint ();
-}
-void io_recenter_named_windowXXX (struct window *w)
-{
-	recenter_window(w);
-}
-*/
-
-
 static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
 {
 	CELLREF cc;
@@ -774,8 +744,7 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
 	if(cwin == 0) return; // maybe we're running headless
-	if (r < cwin->screen.lr || r > cwin->screen.hr || c < cwin->screen.lc || c > cwin->screen.hc) return;
-	cur_io_pr_cell_win (cwin, r, c, cp);
+	if(inside(r, c, cwin->screen)) cur_io_pr_cell_win (cwin, r, c, cp);
 }
 
 
