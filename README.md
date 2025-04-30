@@ -8,7 +8,6 @@ Lightweight curses spreadsheet based on GNU oleo.
 
 Keybindings work in the style of vim.
 
-Type `m' to bring up a menu. You can dismiss it by hitting any non-bound key.
 
 Here, `C-` means the `Control character`, `M-` is the mod key, which is
 either `Alt` or `ESC`.
@@ -16,6 +15,7 @@ either `Alt` or `ESC`.
 | Key   | Purpose                              |
 | ----- | ------------------------------------ |
 | =     | Edit a cell                          |
+| m     | Activate the menu                    |
 | r     | Do a row command                     |
 | C-c   | copy cell formula to clipboard       |
 | C-g   | cancels current operation            |
@@ -38,23 +38,32 @@ Neoleo installs examples in a shared directory, typically
 
 ## Compiling/installing
 
-Post v15.0, cmake is used.
+### Official releases
 
 Distro packagers should download and use the latest released tarball,
 e.g. neoleo-X.Y.tar.gz . Others who are feeling brave can clone the
 repo in the traditional fashion:
 ```
+
+### Development version
+
 git clone git@github.com:blippy/neoleo.git
 ```
 
-Whichever way you choose, cd to the root directory. In typical style:
+Due to the complexity of building and the integration of C++ modules,
+a simple Makefile is use. A simple build:
+
 ```
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
+make -f Makefile.neo
 ```
+
+The default install directory is /usr/local. Distro maintainers will likely
+want to put it in `/usr` which you can do like so:
+
+```
+PREFIX=/usr sudo make -f Makefile.neo install
+```
+
 
 Read INSTALL, which contains general instructions, plus specific 
 instructions like compiling from git, as well as **trouble-shooting**. 

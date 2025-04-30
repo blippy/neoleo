@@ -1,4 +1,6 @@
-CXX = c++
+PREFIX ?= /usr/local
+
+CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -fmodules
 CXXFLAGS += -ggdb -O0
 HDRS = $(wilscard src/%.h)
@@ -41,6 +43,7 @@ value.cxx.o : src/value.cxx errors.cxx.o $(STD)
 info :
 	@echo "CC_OBJS = $(CC_OBJS)"
 	@echo "CXX_OBJS = $(CXX_OBJS)"
+	@echo "PREFIX:$(PREFIX)"
 	
 clean :
 	rm -f $(CC_OBJS)  neoleo
