@@ -750,8 +750,6 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	//if(cwin == 0) return; // maybe we're running headless
-	//if(inside(r, c, cwin->screen)) cur_io_pr_cell_win (cwin, r, c, cp);
 	if(cwin && inside(r, c, cwin->screen))
 		cur_io_pr_cell_win (cwin, r, c, cp);
 }
@@ -790,8 +788,6 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 	int over;
 	int down;
 
-	//over = colmagic[dirn] * repeat;
-	//down = rowmagic[dirn] * repeat;
 	switch (way) {
 		case dirn::right:
 		over = repeat;
@@ -839,12 +835,6 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 
 
-#if 0
-void recenter_window (void)
-{
-	io_recenter_cur_win ();
-}
-#endif
 
 void curses_main () // FN
 {
