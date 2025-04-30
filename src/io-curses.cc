@@ -22,44 +22,40 @@
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>
-#include <iostream>
+//#include <iostream>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
+//#include <string>
 #include <string.h>
 #include <unistd.h>
-#include <vector>
+//#include <vector>
 #include <term.h>
-
+#include <menu.h>
+#include <panel.h>
 
 
 #include "cell.h"
+#include "global.h"
+#include "io-2019.h"
+#include "io-curses.h"
+#include "io-utils.h"
+#include "menu-2025.h"
+#include "regions.h"
+#include "sheet.h"
+#include "spans.h"
 #include "utils.h"
 
+
+import std;
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
 using namespace std::string_literals;
 
-#include <menu.h>
-#include <panel.h>
-
-
-#include "global.h"
-#include "cell.h"
-#include "io-curses.h"
-#include "io-2019.h"
-#include "io-utils.h"
-#include "sheet.h"
-#include "regions.h"
-#include "spans.h"
-
-import logging;
-#include "menu-2025.h"
-
 import errors;
+import logging;
 import win;
 
 
