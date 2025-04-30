@@ -1,7 +1,7 @@
 PREFIX ?= /usr/local
 
 CXX ?= g++
-CXXFLAGS =  -std=gnu++23 -fmodules
+CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
 HDRS = $(wilscard src/%.h)
 SRCS = $(wildcard src/%.cc)

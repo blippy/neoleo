@@ -405,7 +405,6 @@ void cur_io_repaint (void)
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
 	int n, n1;
-	CELL *cp;
 	struct window *win = cwin;
 
 	clear ();
