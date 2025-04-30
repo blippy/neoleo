@@ -39,7 +39,7 @@ const auto PACKAGE_NAME = PACKAGE;
 
 inline CELLREF curow = MIN_ROW;
 inline CELLREF cucol = MIN_COL;
-inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
+//inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
 inline std::string option_tests_argument = "";
 
@@ -54,12 +54,6 @@ inline std::string option_tests_argument = "";
  */
 inline CELLREF cur_row, cur_col;
 
-//extern void panic (const char *, ...);
-
-
-
-
-//struct var; /* in case it hasn't been declared yet */
 
 /*
  * This structure is a start at cleaning up global variables that are
@@ -80,6 +74,4 @@ struct OleoGlobal {
 };
 
 inline OleoGlobal global;
-//inline struct OleoGlobal *Global = new struct OleoGlobal;
 inline struct OleoGlobal *Global = &global;
-//inline int nwin = 1; // 25/4 Elminate this
