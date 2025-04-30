@@ -198,7 +198,6 @@ void edit_cell2019()
 static void maybe_quit_spreadsheet2019(bool& quit);
 static void row_cmd2019();
 static void save_spreadsheet2019();
-static void save_csv2019();
 
 //static void cursor_col_0()  { io_shift_cell_cursor(3, 2 + 0*(cucol-1)); } // repeat cucol times to bring cursor to column 0
 static void cursor_left()  { io_shift_cell_cursor(dirn::left,1); }

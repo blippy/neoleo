@@ -192,8 +192,6 @@ void oleo_read_window_config (char * line)
 	//int wnum = 0;
 	char *text;
 	//CELLREF nrow = NON_ROW, ncol = NON_COL;
-	char *opts = 0;
-	//struct window *win;
 
 	text = line;
 	auto eat = [&]() { while (*text && *text != ';') text++; };
@@ -253,8 +251,8 @@ void oleo_read_file (FILE *fp)
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
-	int old_a0;
-	int next_a0;
+	//int old_a0;
+	//int next_a0;
 
 	//Global->return_from_error = 1;
 
@@ -456,8 +454,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 			break;
 
 		case 'D': /* Default format */
- 			err_msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
-			default_fmt = map_or_raise(format_map, *ptr++, err_msg);
+ 			//err_msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
+			default_fmt = format_map.at(*ptr++);  //map_or_raise(format_map, *ptr++, err_msg);
 
 			if (*ptr == 'F')
 			{
@@ -700,7 +698,7 @@ void oleo_write_file(FILE *fp)
 void oleo_write_file(FILE *fp, struct rng *rng)
 {
 	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
-	int old_a0;
+	//int old_a0;
 
 	(void) fprintf (fp, "# This file was created by Neoleo\n");
 

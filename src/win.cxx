@@ -51,6 +51,12 @@ export void win_print(int y, int x, const std::string& str) // FN
 	win_print(str);
 }
 
+export auto win_getyx(WINDOW *win = stdscr)
+{
+	int y, x;
+	getyx(win, y, x);
+	return std::make_tuple(y, x);
 
+}
 
 
