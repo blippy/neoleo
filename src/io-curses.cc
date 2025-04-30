@@ -407,6 +407,14 @@ void cur_io_repaint (void)
 	int n, n1;
 	struct window *win = cwin;
 
+#if 0
+	// 25/4
+	int x, y;
+	getyx(stdscr, y, x);
+	win->screen.hr = y;
+	win->screen.hc = x;
+#endif
+
 	clear ();
 	show_menu();
 	
@@ -742,8 +750,10 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	if(cwin == 0) return; // maybe we're running headless
-	if(inside(r, c, cwin->screen)) cur_io_pr_cell_win (cwin, r, c, cp);
+	//if(cwin == 0) return; // maybe we're running headless
+	//if(inside(r, c, cwin->screen)) cur_io_pr_cell_win (cwin, r, c, cp);
+	if(cwin && inside(r, c, cwin->screen))
+		cur_io_pr_cell_win (cwin, r, c, cp);
 }
 
 
