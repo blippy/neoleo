@@ -69,12 +69,7 @@ bool col_width_form()
 	
 
 	wrefresh(w);
-	
-
 	mvwaddstr(w, 1,2, "Cursor width:");
-	//mvwaddstr(w, 3, 2, "Return to accept");
-	//mvwaddstr(w, 4, 2, "Ctl-g to reject");
-
 	wrefresh(w);
 
 	
@@ -123,11 +118,7 @@ bool col_width_form()
 	if(accept) {
 		set_width(new_width.value());
 	}
-	//getch();
 
-
-	//delwin(w);
-	//log("current col:", cucol);
 	cur_io_repaint();
 	return true;
 

@@ -14,6 +14,7 @@ either `Alt` or `ESC`.
 
 | Key   | Purpose                              |
 | ----- | ------------------------------------ |
+| %     | Toggle percentage mode               |
 | =     | Edit a cell                          |
 | m     | Activate the menu                    |
 | r     | Do a row command                     |
