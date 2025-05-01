@@ -375,7 +375,8 @@ void cur_io_update_status (void) // FN
 {
 
 	move (Global->status, 0);
-	int wid = cwin->screen.hc; // columns - 2;
+	//int wid = cwin->screen.hc; // columns - 2;
+	int wid = COLS;
 	win_print(status_line(wid));
 	clrtoeol();
 }
