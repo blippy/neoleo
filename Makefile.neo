@@ -52,3 +52,9 @@ cleaner : clean
 	rm -f *.o 
 	#rm -rf build
 	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
+	
+install : neoleo
+	install -p neoleo $(PREFIX)/bin 
+	
+uninstall : 
+	rm -f $(PREFIX)/bin/neoleo 

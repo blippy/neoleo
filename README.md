@@ -66,6 +66,10 @@ want to put it in `/usr` which you can do like so:
 PREFIX=/usr sudo make -f Makefile.neo install
 ```
 
+Uninstall:
+```
+PREFIX=/usr sudo make -f Makefile.neo uninstall
+```
 
 Read INSTALL, which contains general instructions, plus specific 
 instructions like compiling from git, as well as **trouble-shooting**. 
