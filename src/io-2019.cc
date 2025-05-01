@@ -253,7 +253,21 @@ static void i19_precision()
 {
 	int prec = std::max(0, i19_parameter);
 	auto cp = find_or_make_cell();
-	set_precision(cp, prec);
+	struct cell_flags_s& flags = cp->cell_flags;
+
+	switch(flags.cell_format) {
+	case FMT_DEF:
+	case FMT_GEN:
+		flags.cell_format = FMT_FXT;
+		break;
+	case FMT_FXT:
+		flags.cell_format = FMT_GEN;
+		break;
+	}
+
+	//flags.cell_format = FMT_DOL;
+	flags.cell_precision = prec;
+
 }
 
 void process_key(const keymap_t& keymap)

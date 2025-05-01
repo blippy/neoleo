@@ -179,13 +179,13 @@ std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_ce
 
 std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 {
-	//num_t flt = get<num_t>(val);
 	switch (j)
 	{
 
 		case FMT_USR:
 			panic("Uncalled FMT_USR");
 
+		case FMT_DEF:
 		case FMT_GEN:
 			{
 				double f;
