@@ -336,6 +336,7 @@ std::string status_line(int wid)
 {
 	//log("status_line called");
 	const char *ptr;
+#if 0
 	const CELLREF mkrow = NON_ROW;
 	const CELLREF mkcol = NON_COL;
 	if (mkrow != NON_ROW)
@@ -351,7 +352,9 @@ std::string status_line(int wid)
 	else {
 		ptr = cell_name (curow, cucol).c_str();
 	}
+#endif
 
+	ptr = std::format("r{}c{}", curow, cucol).c_str();
 	addstr (ptr);
 	wid -= strlen (ptr);
 

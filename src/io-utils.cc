@@ -442,7 +442,7 @@ handle_exp:
 
 /* Functions for printing out the names of cells and ranges */
 
-std::string cell_name (CELLREF rr, CELLREF cc)
+std::string cell_nameXXX (CELLREF rr, CELLREF cc)
 {
 	return std::format("r{}c{}", rr, cc);
 }
@@ -470,7 +470,7 @@ std::string range_name (struct rng *rng)
 	}
 
 	if ((lr == hr) && (lc == hc)) {
-		return cell_name(lr, lc);
+		return std::format("r{}c{}", lr, lc);
 	}
 
 

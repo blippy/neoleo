@@ -25,29 +25,31 @@
 
 extern char numb_oflo[];
 
+/*
 void OleoSetEncoding(const char *);
 void init_infinity (void);
 void OleoUserPrefEncoding(char *);
+*/
+
 char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
 //int usr_set_fmts (void);
 std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
 std::string print_cell (CELL *cp);
 std::string print_cell ();
 std::string FileGetCurrentFileName();
-int words_imatch (char ** ptr, char * key);
-void FileCloseCurrentFile(void);
-void clear_spreadsheet (void);
-void FileSetCurrentFileName(const char *s);
-void FileSetCurrentFileName(const std::string& s);
-void write_file_generic(FILE *, struct rng *, char *);
-void read_file_generic(FILE *, char *, const char *);
+int 		words_imatch (char ** ptr, char * key);
+void 		FileCloseCurrentFile(void);
+void 		clear_spreadsheet (void);
+void 		FileSetCurrentFileName(const char *s);
+void 		FileSetCurrentFileName(const std::string& s);
+void 		write_file_generic(FILE *, struct rng *, char *);
+void 		read_file_generic(FILE *, char *, const char *);
 
 std::string  fmt_std_date(int t);
 
 std::string stringify_value_file_style(const value_t& val);
-std::string cell_name (CELLREF, CELLREF);
 std::string range_name (struct rng *);
-//std::string stringify_value_file_style(value* val);
+
 
 /* Structures/vars/functions for dealing with formatting floating-point
    numbers, etc */
