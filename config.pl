@@ -15,60 +15,83 @@ CXXFLAGS += -ggdb -O0
 VPATH = src
 STD = gcm.cache/std.gcm
 
-.DEAFULT = neoleo
+.DEFAULT_GOAL = neoleo
+
+$(STD) : # build the std module
+	#-mkdir build
+	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
+
 
 info :
-        @echo "CC_OBJS = $(CC_OBJS)"
-        @echo "CXX_OBJS = $(CXX_OBJS)"
-        @echo "PREFIX:$(PREFIX)"
+	@echo "CC_OBJS = $(CC_OBJS)"
+	@echo "CXX_OBJS = $(CXX_OBJS)"
+	@echo "PREFIX:$(PREFIX)"
         
 clean :
-        rm -f $(CC_OBJS)  neoleo
+	rm -f *.o  neoleo
         
 cleaner : clean
-        rm -f *.o 
-        #rm -rf build
-        find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
+	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
         
 install : neoleo
-        install -p neoleo $(PREFIX)/bin 
+	install -p neoleo $(PREFIX)/bin 
         
 uninstall : 
-        rm -f $(PREFIX)/bin/neoleo 
+	rm -f $(PREFIX)/bin/neoleo 
 EOM
 
 print FH $top;
+
+my @objs;
+
 
 while (<DATA>) {
 	chomp($_);
 	my @deps = split /\s+/,$_;
 	my $targ = shift(@deps);
-	#my ($targ, @deps) = @arra;
-	say("$targ.o : @deps");
-	say("\t" . '$(CXX) $(CXXFLAGS) -c $< -o $@' . "\n");
+	#my $dep1 = shift(@deps);
+	#my ($dep1, @rst) = @deps;
+	print FH "$targ.o : src/$targ";
+	push(@objs, "$targ.o"); 
+	foreach (@deps) {
+		print FH " $_.o";
+	}
+	print FH "\n";
+	print FH "\t" . '$(CXX) $(CXXFLAGS) -c $< -o $@' . "\n\n";
 	#my $trg = @_[1]; 
 	#say "$trg ";
 }
 
 
+print FH  "neoleo :  @objs\n";
+print FH "\t" . '$(CXX) $^  -o $@ -lncursesw -lpanel -lform' . "\n";
+
+
+
+
 #my $tail = <<'EOM';
 #EOM
 #print FH $tail;
-#close(FH);
+close(FH);
 
 __DATA__
 basic.cc errors.cxx logging.cxx
 cell.cc value.cxx
+errors.cxx
 io-2019.cc errors.cxx logging.cxx win.cxx
+io-curses.cc errors.cxx logging.cxx win.cxx
 io-headless.cc logging.cxx mod.cxx
 io-utils.cc errors.cxx logging.cxx value.cxx
+logging.cxx
 main.cc logging.cxx
+mod.cxx
 menu-2025.cc logging.cxx
-oleofile.cc
-parser-2019.cc
+oleofile.cc errors.cxx
+parser-2019.cc errors.cxx
 regions.cc
 sheet.cc
 spans.cc
 tests.cc
-utils.cc
+utils.cc value.cxx
 value.cxx errors.cxx
+win.cxx
