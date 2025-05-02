@@ -3,7 +3,7 @@ PREFIX ?= /usr/local
 CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
-HDRS = $(wilscard src/%.h)
+HDRS = $(wildcard src/%.h)
 SRCS = $(wildcard src/%.cc)
 CC_OBJS = $(patsubst src/%.cc,%.cc.o,$(wildcard src/*.cc)) # regular .cc files
 CXX_OBJS =$(patsubst src/%.cxx,%.cxx.o,$(wildcard src/*.cxx)) # module objects
