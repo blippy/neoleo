@@ -20,13 +20,17 @@
 #include "global.h"
 #include "cell.h"
 
-extern struct rng all_rng;
 
-void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
-void lock_region (struct rng *where, int locked);
-void format_region (struct rng *where, int fmt, int just);
+void lock_region (const struct rng& where, int locked);
+crefs_t coords_in_range (const rng_t& rng);
+const inline struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
+void format_region (const struct rng& where, int fmt, int just);
+void set_rng (const struct rng& r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
+
+/*
+extern struct rng all_rng;
 void move_region (struct rng *fm, struct rng *to);
 void copy_region (struct rng *fm, struct rng *to);
 void copy_values_region (struct rng *fm, struct rng *to);
-crefs_t coords_in_range (const rng_t& rng);
 crefs_t coords_in_ranges (const ranges_t& rng);
+*/

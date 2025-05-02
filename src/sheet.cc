@@ -164,11 +164,17 @@ bool inside(int r, int c, const struct rng &a_rng) //
 	return inside(r, c, &a_rng);
 }
 
-void make_cells_in_range (struct rng *r) // FN
+bool inside(CELL *cp, const struct rng &a_rng) //
 {
-	for(int i = r->lr; i <= r->hr; ++i)
-	       	for(int j  = r->lc; j <= r->hc; ++j)
-			find_or_make_cell(i, j);
+	coord_t coord = cp->get_coord();
+	return inside(get_row(coord), get_col(coord), &a_rng);
+}
+
+void make_cells_in_range (const struct rng& a_rng) // FN
+{
+	for(int i = a_rng.lr; i <= a_rng.hr; ++i)
+	       	for(int j  = a_rng.lc; j <= a_rng.hc; ++j)
+	       		find_or_make_cell(i, j);
 }
 
 
@@ -305,7 +311,7 @@ void copy_row(CELLREF dst_row, CELLREF src_row)
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
-celldeq_t get_cells_in_range(struct rng *a_rng) // definition
+celldeq_t get_cells_in_range(const rng_t& a_rng) // FN
 {
 	celldeq_t res;
 	for(auto const& a_cell: the_cells) {

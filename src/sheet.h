@@ -38,10 +38,9 @@ cell_t* find_or_make_cell (coord_t coord);
 cell_t* find_or_make_cell ();
 
 void init_cells();
-celldeq_t get_cells_in_range(struct rng *r);
 cell* take_front(celldeq_t & cd);
 
-void make_cells_in_range(struct rng *r);
+void make_cells_in_range(const struct rng& a_rng);
 void no_more_cells();
 
 coord_t to_coord(coord_t row, coord_t col);
@@ -56,11 +55,13 @@ CELLREF highest_col();
 
 void insert_row_above(coord_t row);
 void delete_sheet_row(coord_t row);
-void copy_row(CELLREF dst_row, CELLREF src_row);
 
-void dump_sheet();
-void delete_all_cells();
-
-bool inside(int val, int lo, int hi);
-bool inside(int r, int c, const struct rng *a_rng);
-bool inside(int r, int c, const struct rng &a_rng);
+void 		copy_row(CELLREF dst_row, CELLREF src_row);
+void 		dump_sheet();
+void 		delete_all_cells();
+celldeq_t	get_cells_in_range(const rng_t& a_rng);
+bool 		inside(int val, int lo, int hi);
+//bool inside(int r, int c, const struct rng *a_rng);
+bool 		inside(int r, int c, const struct rng& a_rng);
+bool 		inside(cell* cp, const struct rng& a_rng);
+//celldeq_t get_cells_in_range(struct rng *r);

@@ -571,8 +571,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		rng.lc = czcol;
 		rng.hr = mx_row;
 		rng.hc = czcol;
-		make_cells_in_range(&rng);
-		for (CELL *cp : get_cells_in_range(&rng))
+		make_cells_in_range(rng);
+		for (CELL *cp : get_cells_in_range(rng))
 		{
 			set_cell_flags(cp);
 			//SET_FORMAT(cp, fmt);
@@ -585,8 +585,8 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 		rng.lc = MIN_COL;
 		rng.hr = czrow;
 		rng.hc = mx_col;
-		make_cells_in_range(&rng);
-		for (CELL *cp : get_cells_in_range(&rng))
+		make_cells_in_range(rng);
+		for (CELL *cp : get_cells_in_range(rng))
 		{
 			set_cell_flags(cp);
 			//SET_FORMAT(cp, fmt);
@@ -632,7 +632,7 @@ void write_widths(FILE* fp)
 void write_cells(FILE* fp)
 {
 	CELLREF crow = 0, ccol = 0;
-	for(CELL* cp: get_cells_in_range(&all_rng))
+	for(CELL* cp: get_cells_in_range(all_rng))
 	{
 		coord_t coord = cp->get_coord();
 		CELLREF r = get_row(coord);

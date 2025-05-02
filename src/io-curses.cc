@@ -319,17 +319,32 @@ void  recenter_window (struct window *win = nullptr) // FN
 
 
 
+/* Take a struct rng (R) and init its elements to R1 C1 R2 C2, making sure
+   they are put in in the right order.
+ */
+/*
+void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
+{
+	r->lr = std::min(r1, r2);
+	r->hr = std::max(r1, r2);
+	r->lc = std::min(c1, c2);
+	r->hc = std::max(c1, c2);
+}
+*/
+
+
 std::string status_line(int wid)
 {
 	//log("status_line called");
 	const char *ptr;
 	if (mkrow != NON_ROW)
 	{
-		struct rng r;
+		struct rng r{.lr = std::min(curow, mkrow), .lc = std::min(cucol, mkcol),
+			.hr = std::max(curow, mkrow),  .hc = std::max(cucol, mkcol)};
 
 		addch ('*');
 		--wid;
-		set_rng (&r, curow, cucol, mkrow, mkcol);
+		//set_rng (&r, curow, cucol, mkrow, mkcol);
 		ptr = range_name (&r).c_str();
 	}
 	else
@@ -455,7 +470,7 @@ void cur_io_repaint ()
 			standend ();
 	}
 	flush_slops();
-	for(CELL* cp: get_cells_in_range(&(win->screen))) {
+	for(CELL* cp: get_cells_in_range(win->screen)) {
 		decoord(cp, rr, cc);
 		if (!is_nul(cp)) cur_io_pr_cell_win(win, rr, cc, cp);
 	}

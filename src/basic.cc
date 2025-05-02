@@ -117,7 +117,7 @@ void write_cmd (FILE *fp, const char * name)
 
 /* PROT may be `d', `p', or `u'. */
 
-void set_region_protection (struct rng * rng, int prot)
+void set_region_protection (const struct rng& rng, int prot)
 {
 	if (isupper (prot))
 		prot = tolower (prot);
@@ -154,7 +154,7 @@ static int chr_to_jst (int chr)
 
 
 
-void set_region_alignment (struct rng * rng, int align)
+void set_region_alignment (const struct rng& rng, int align)
 {
 	int fun = chr_to_jst (align);
 	if (fun != -1)
@@ -166,7 +166,7 @@ void set_region_alignment (struct rng * rng, int align)
 static void set_cell_alignment(char align)
 {
 	rng_t rng = {curow, cucol, curow, cucol};
-	set_region_alignment(&rng, align);
+	set_region_alignment(rng, align);
 }
 
 

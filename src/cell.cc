@@ -108,13 +108,35 @@ coord_t cell::get_coord() const { return coord;}
 
 void cell::set_coord(coord_t coord) {	this->coord = coord; }
 
+#if 1
+static crefs_t coords_in_ranges(const ranges_t& ranges)
+{
+	crefs_t coords;
+	for(const auto& rng: ranges)
+		for(auto coord: coords_in_range(rng))
+			coords.insert(coord);
+	return coords;
+
+}
+#endif
+
 void cell::erase_predec_deps()
 {
+#if 0
+	for(const auto& rng: predecs) {
+		for(auto rc: coords_in_range(rng)) {
+			if(CELL *cp = find_cell(rc)) cp->deps_2019.erase(rc);
+		}
+
+	}
+#endif
+#if 1
 	for(auto rc: coords_in_ranges(predecs)) {
 		CELL* cp = find_cell(rc);
 		if(!cp) continue;
 		cp->deps_2019.erase(rc);
 	}
+#endif
 }
 void cell::insert_predec_deps(coord_t coord)
 {
