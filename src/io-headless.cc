@@ -19,6 +19,7 @@
 //#include "tbl.h"
 #include "utils.h"
 #include "oleofile.h"
+import errors;
 import logging;
 //#include "global.h"
 import mod;

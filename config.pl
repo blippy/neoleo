@@ -1,5 +1,8 @@
 #/usr/bin/env perl
 
+common is *h errors.cxx logging.cxx
+
+__DATA__
 ## cc
 basic.cc errors.cxx logging.cxx
 cell.cc value.cxx

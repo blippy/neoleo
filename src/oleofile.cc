@@ -42,6 +42,31 @@ const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP},
 const map<char, int>  jst_map{{'C', JST_CNT}, {'D', JST_DEF}, {'L', JST_LFT}, {'R', JST_RGT}};
 
 
+// look up an item in a map. If not, raise an error
+template<typename S, typename T>
+T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
+{
+	try {
+		return m.at(key);
+	} catch (std::out_of_range e) {
+		//raise_error(msg_if_fail);
+		throw OleoJmp(msg_if_fail);
+	}
+}
+
+
+// perform a reverse look-up on a map
+template<typename K, typename V>
+K map_reverse(const std::map<K,V> &m, V val)
+{
+	for (auto const& [key, v] : m) {
+		if(v == val)  return key;
+	}
+
+	throw OleoJmp("map_reverse failed");
+
+}
+
 static long astol (char **ptr)
 {
 	long i = 0;

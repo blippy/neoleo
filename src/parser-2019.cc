@@ -18,6 +18,7 @@
 
 #include "parser-2019.h"
 
+import errors;
 import value;
 using namespace std;
 

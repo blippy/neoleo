@@ -25,7 +25,6 @@
 #include <string>
 #include <stdio.h>
 #include "global.h"
-#include "errors.h"
 
 
 extern void set_usr_stats (int, char **);
@@ -37,30 +36,7 @@ size_t strlen(const std::string& s);
 
 std::optional<int> to_int(const std::string& str); // 25/4
 
-// look up an item in a map. If not, raise an error
-template<typename S, typename T>
-T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
-{
-	try {
-		return m.at(key);
-	} catch (std::out_of_range e) {
-		//raise_error(msg_if_fail);
-		throw OleoJmp(msg_if_fail);
-	}
-}
 
-
-// perform a reverse look-up on a map
-template<typename K, typename V>
-K map_reverse(const std::map<K,V> &m, V val)
-{
-	for (auto const& [key, v] : m) {
-		if(v == val)  return key;
-	}
-
-	throw OleoJmp("map_reverse failed");
-
-}
 
 
 class defer {
