@@ -57,8 +57,7 @@ import win;
 
 
 
-CELLREF mkrow = NON_ROW;
-CELLREF mkcol = NON_COL;
+
 
 
 /* The tty windows datastructures: */
@@ -337,6 +336,8 @@ std::string status_line(int wid)
 {
 	//log("status_line called");
 	const char *ptr;
+	const CELLREF mkrow = NON_ROW;
+	const CELLREF mkcol = NON_COL;
 	if (mkrow != NON_ROW)
 	{
 		struct rng r{.lr = std::min(curow, mkrow), .lc = std::min(cucol, mkcol),
@@ -347,8 +348,9 @@ std::string status_line(int wid)
 		//set_rng (&r, curow, cucol, mkrow, mkcol);
 		ptr = range_name (&r).c_str();
 	}
-	else
+	else {
 		ptr = cell_name (curow, cucol).c_str();
+	}
 
 	addstr (ptr);
 	wid -= strlen (ptr);
