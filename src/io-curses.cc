@@ -834,10 +834,10 @@ void  io_init_windows ()
 	//getyx(stdscr, y, x);
 	scr_lines = LINES;
 	scr_cols = COLS;
-	cwin->numr = (scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
-	cwin->numc = scr_cols - default_right_border;
-	cwin->bottom_edge_r = default_bottom_border;
-	cwin->right_edge_c = default_right_border;
+	cwin->numr = (scr_lines - label_rows - !!user_status * status_rows - input_rows );
+	cwin->numc = scr_cols;
+	cwin->bottom_edge_r = 0;
+	cwin->right_edge_c = 0;
 	cwin->lh_wid = 0;
 
 	/* at the end of this process

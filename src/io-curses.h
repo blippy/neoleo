@@ -17,20 +17,8 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#include <ncurses.h>
-//#include <string>
-
 
 void cur_io_repaint();
-/*
-void cur_io_update_status (void);
-void win_io_hide_cell_cursor ();
-void cur_io_display_cell_cursor();
-void cur_io_open_display();
-*/
-
-
-//#include "cell.h"
 
 
 
@@ -54,10 +42,6 @@ inline int win_flags = WIN_EDGES | WIN_EDGE_REV;
 #define	label_rows	Global->label_rows
 #define	label_emcols	Global->label_emcols
 
-
-/* Window borders: */
-#define	default_right_border	Global->default_right_border
-#define	default_bottom_border	Global->default_bottom_border
 
 
 
