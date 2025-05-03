@@ -334,26 +334,7 @@ void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
 std::string status_line(int wid)
 {
 	//log("status_line called");
-	const char *ptr;
-#if 0
-	const CELLREF mkrow = NON_ROW;
-	const CELLREF mkcol = NON_COL;
-	if (mkrow != NON_ROW)
-	{
-		struct rng r{.lr = std::min(curow, mkrow), .lc = std::min(cucol, mkcol),
-			.hr = std::max(curow, mkrow),  .hc = std::max(cucol, mkcol)};
-
-		addch ('*');
-		--wid;
-		//set_rng (&r, curow, cucol, mkrow, mkcol);
-		ptr = range_name (&r).c_str();
-	}
-	else {
-		ptr = cell_name (curow, cucol).c_str();
-	}
-#endif
-
-	ptr = std::format("r{}c{}", curow, cucol).c_str();
+	const char *ptr = std::format("r{}c{}", curow, cucol).c_str();
 	addstr (ptr);
 	wid -= strlen (ptr);
 
@@ -408,7 +389,8 @@ void cur_io_repaint ()
 	int n, n1;
 	struct window *win = cwin;
 
-	clear ();
+	erase();
+	//clear();
 	show_menu();
 	
 	if (win->lh_wid)
@@ -492,11 +474,6 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 
 
 
-void cur_io_pr_cell (CELLREF r, CELLREF c, CELL *cp) // FN
-{
-	cur_io_pr_cell_win(cwin, r, c, cp);
-}
-
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 	//log("_io_pr_cell_win:", cp);
@@ -514,8 +491,9 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 	move_cursor_to (win, r, c);
 
-	int yy, xx;
-	getyx(stdscr, yy, xx);
+	//int yy, xx;
+	//getyx(stdscr, yy, xx);
+	// defer d{move, yy, xx};
 
 	assert(win == cwin);
 	int glowing = (r == curow && c == cucol && win == cwin);
@@ -682,7 +660,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
 	if (glowing) cur_io_update_status ();
-	move(yy, xx);
+
 }
 
 
