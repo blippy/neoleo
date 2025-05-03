@@ -758,12 +758,12 @@ void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		curow = rr;
 		cucol = cc;
 		cur_io_display_cell_cursor();
-		//cur_io_update_status();
+		//cur_io_update_status(); // 25/5 Seems redundant
 	} else 	{
 		curow = rr;
 		cucol = cc;
 		recenter_window(cwin);
-		cur_io_repaint();
+		//cur_io_repaint(); // 25/5 seems redundant
 	}
 
 	if (get_scaled_width(cucol) == 0)
