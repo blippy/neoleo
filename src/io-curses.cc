@@ -297,9 +297,9 @@ static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *lo
 }
 
 
-void  recenter_window (struct window *win = nullptr) // FN
+void  recenter_window (struct window *win = cwin) // FN
 {
-	if(!win) win = cwin;
+	//if(!win) win = cwin;
 	if (win_flags & WIN_PAG_VT)
 		page_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
