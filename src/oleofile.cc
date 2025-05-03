@@ -701,9 +701,7 @@ static std::string oleo_write_window_config ()
 /* Modify this to write out *all* the options */
 static void write_mp_options (FILE *fp)
 {
-	fprintf (fp, "O;%sauto;%sbackground;noa0\n",
-			Global->auto_recalc ? "" : "no",
-			Global->bkgrnd_recalc ? "" : "no");
+	fprintf (fp, "O;auto;background;noa0\n");
 }
 
 void oleo_write_file(FILE *fp)
