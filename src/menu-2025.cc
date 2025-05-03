@@ -61,6 +61,9 @@ bool col_width_form()
 	defer1 d1(delwin, w);
 	box(w, 0 ,0);
 
+	curs_set(1);
+	defer1 d4{curs_set, 0};
+
 	PANEL *p = new_panel(w);
 	defer1 d2(del_panel, p);
 	show_panel(p);

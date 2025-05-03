@@ -106,6 +106,7 @@ class nform_c : public npanel_c {
 			set_form_sub(m_f, m_w);
 			post_form(m_f);
 			form_driver(m_f, REQ_END_FIELD);
+			curs_set(1);
 			refresh();
 			wrefresh(m_w);
 
@@ -121,6 +122,7 @@ class nform_c : public npanel_c {
 			free_form(m_f);
 			free_field(m_fields[0]);
 			free_field(m_fields[1]);
+			curs_set(0);
 		}
 
 	public:

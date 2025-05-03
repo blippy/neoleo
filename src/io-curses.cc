@@ -791,6 +791,7 @@ void curses_main () // FN
 	noecho ();
 	nonl ();
 	start_color();
+	curs_set(0); // turn the cursor off
 
 	io_init_windows();
 	recenter_window();
