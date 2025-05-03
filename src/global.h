@@ -21,15 +21,10 @@
 
 #include "neotypes.h"
 
-//inline constexpr auto BITS_PER_CELLREF = 16;
 
 /* The location of a cell that can never be referenced */
 #define NON_ROW		0
 #define NON_COL		0
-
-
-
-//typedef unsigned short CELLREF;
 
 
 const auto VERSION = "16.0";
@@ -39,20 +34,9 @@ const auto PACKAGE_NAME = PACKAGE;
 
 inline CELLREF curow = MIN_ROW;
 inline CELLREF cucol = MIN_COL;
-//inline constexpr rng_t rng_all{.lr = MIN_ROW, .lc = MIN_COL, .hr = MAX_ROW, .hc = MAX_COL};
 
 inline std::string option_tests_argument = "";
 
-/* These have two uses.  During parsing, these contain the 
- * base address of all relative references.  During evaluation,
- * these contain the address of the cell that is being updated.
- * 
- * Wey are all these distinct uses bound up in one pair of GLOBAL
- * variables?  GOOD QUESTION?  Why didn't the person who created the mess at
- * least toss in a COMMENT like the above to explain what was happening? 
- * ANOTHER GOOD QUESTION!
- */
-//inline CELLREF cur_row, cur_col;
 
 
 /*
@@ -60,7 +44,7 @@ inline std::string option_tests_argument = "";
  * around all over.
  */
 struct OleoGlobal {
-	const int	bkgrnd_recalc = 1, a0 = 0 , auto_recalc = 1;
+	const int	bkgrnd_recalc = 1, auto_recalc = 1;
 	int			modified = 0;
 	int			scr_lines = 24, scr_cols = 80;
 	int 		input_rows = 1, status_rows = 1;

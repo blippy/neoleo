@@ -56,6 +56,7 @@ while (<DATA>) {
 	foreach (@deps) {
 		print FH " $_.o";
 	}
+	print FH " global.h neotypes.h";
 	print FH "\n";
 	print FH "\t" . '$(CXX) $(CXXFLAGS) -c $< -o $@' . "\n\n";
 	#my $trg = @_[1]; 

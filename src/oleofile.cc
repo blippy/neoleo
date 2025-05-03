@@ -276,14 +276,6 @@ void oleo_read_file (FILE *fp)
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
-	//int old_a0;
-	//int next_a0;
-
-	//Global->return_from_error = 1;
-
-	//old_a0 = Global->a0;
-	//next_a0 = old_a0;
-	//Global->a0 = 0;
 	lineno = 0;
 	if (!ismerge)
 		clear_spreadsheet ();
@@ -709,10 +701,9 @@ static std::string oleo_write_window_config ()
 /* Modify this to write out *all* the options */
 static void write_mp_options (FILE *fp)
 {
-	fprintf (fp, "O;%sauto;%sbackground;%sa0\n",
+	fprintf (fp, "O;%sauto;%sbackground;noa0\n",
 			Global->auto_recalc ? "" : "no",
-			Global->bkgrnd_recalc ? "" : "no",
-			Global->a0 ? "" : "no");
+			Global->bkgrnd_recalc ? "" : "no");
 }
 
 void oleo_write_file(FILE *fp)
@@ -723,7 +714,6 @@ void oleo_write_file(FILE *fp)
 void oleo_write_file(FILE *fp, struct rng *rng)
 {
 	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
-	//int old_a0;
 
 	(void) fprintf (fp, "# This file was created by Neoleo\n");
 
@@ -741,13 +731,6 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 			default_width);
 
 	write_mp_options (fp);
-
-
-	//old_a0 = Global->a0;
-	//Global->a0 = 0;
-
-	//span_find_t w_find = find_span(the_wids, rng->lc, rng->hc);
-	//write_spans(fp, w_find, 'W');
 	write_widths(fp);
 
 	// 25/4 We no longer write the heights, because they are always 1
@@ -762,7 +745,6 @@ void oleo_write_file(FILE *fp, struct rng *rng)
 	std::string str = oleo_write_window_config();
 	fputs(str.c_str(), fp);
 	(void) fprintf (fp, "E\n");
-	//Global->a0 = old_a0;
 }
 
 int oleo_set_options( int set_opt, char *option)
