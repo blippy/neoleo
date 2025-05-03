@@ -192,7 +192,6 @@ void edit_cell2019()
 	if(old_formula == formula) return;
 	Global->modified = true;
 	set_and_eval(curow, cucol, formula, true);
-	cur_io_repaint();
 }
 
 static void maybe_quit_spreadsheet2019(bool& quit);
@@ -244,9 +243,7 @@ fail:
 // TODO this may be more useful that you think
 static void clear_cell_formula()
 {
-	//edit_cell_str(""); // this doesn't work properly
 	set_and_eval(curow, cucol, "", true);
-	cur_io_repaint();
 }
 
 static void i19_precision()
@@ -316,7 +313,7 @@ bool curses_loop () // FN
 	};
 
 	process_key(keymap);
-	cur_io_repaint();
+	//cur_io_repaint();
 	return quit;
 
 

@@ -313,7 +313,6 @@ void  recenter_window (struct window *win = nullptr) // FN
 	else
 		recenter_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
-	//win_io_repaint_win();
 }
 
 
@@ -408,10 +407,6 @@ void cur_io_repaint ()
 	CELLREF cc, rr;
 	int n, n1;
 	struct window *win = cwin;
-
-	//struct rng scr = win->screen;
-	//log("cur_io_repaint: screen lc ", scr.lc, " hc ", scr.hc, " lr ", scr.lr, " hr ", scr.hr);
-
 
 	clear ();
 	show_menu();
@@ -751,13 +746,10 @@ void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		//win_io_hide_cell_cursor(); // 25/5 apparently unnecessary
 		curow = rr;
 		cucol = cc;
-		//cur_io_display_cell_cursor(); // 25/5 apparently unnecessary
-		//cur_io_update_status(); // 25/5 Seems redundant
 	} else 	{
 		curow = rr;
 		cucol = cc;
 		recenter_window(cwin);
-		//cur_io_repaint(); // 25/5 seems redundant
 	}
 
 	if (get_scaled_width(cucol) == 0)
@@ -838,7 +830,7 @@ void curses_main () // FN
 
 	io_init_windows();
 	recenter_window();
-	cur_io_repaint();
+	//cur_io_repaint();
 
 
 	// Tell ncurses to interpret "special keys". It means
@@ -852,6 +844,7 @@ void curses_main () // FN
 	bool quit = false;
 	while(!quit) {
 		try {
+			cur_io_repaint();
 			quit = curses_loop();
 		} catch (OleoJmp& e) {
 			write_status(e.what());
