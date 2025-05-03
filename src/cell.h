@@ -32,7 +32,7 @@
 #include <string>
 #include <variant>
 
-typedef uint32_t coord_t;
+//typedef uint32_t coord_t;
 //using coord_t = uint32_t;
 #include "neotypes.h"
 #include "global.h"

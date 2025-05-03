@@ -87,10 +87,10 @@ main.cc logging.cxx
 mod.cxx
 menu-2025.cc logging.cxx
 oleofile.cc errors.cxx
-parser-2019.cc errors.cxx
+parser-2019.cc errors.cxx value.cxx
 regions.cc
 sheet.cc
-spans.cc
+spans.cc logging.cxx
 tests.cc
 utils.cc value.cxx
 value.cxx errors.cxx
