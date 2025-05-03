@@ -454,22 +454,19 @@ void cur_io_repaint ()
 		}
 		while (cc++ < win->screen.hc);
 
+		// print row labels
 		rr = win->screen.lr;
 		n = win->win_down;
-		do
-		{
+		do {
 			n1 = get_height (rr);
-			if (n1)
-			{
-				move (n, win->win_over - win->lh_wid);
-				printw ("R%-*d", win->lh_wid - 1, rr);
-				n += n1;
-			}
-		}
-		while (rr++ < win->screen.hr);
+			if (!n1) continue;
+			move (n, win->win_over - win->lh_wid);
+			printw ("R%-*d", win->lh_wid - 1, rr);
+			n += n1;
+		} while (rr++ < win->screen.hr);
 
-		if (win_flags & WIN_EDGE_REV)
-			standend ();
+
+		if (win_flags & WIN_EDGE_REV) standend ();
 	}
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(win->screen)) {
