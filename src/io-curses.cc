@@ -462,10 +462,7 @@ void cur_io_repaint ()
 			if (n1)
 			{
 				move (n, win->win_over - win->lh_wid);
-				if (Global->a0)
-					printw ("%-*d ", win->lh_wid - 1, rr);
-				else
-					printw ("R%-*d", win->lh_wid - 1, rr);
+				printw ("R%-*d", win->lh_wid - 1, rr);
 				n += n1;
 			}
 		}
@@ -754,10 +751,10 @@ void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 void io_move_cell_cursor (CELLREF rr, CELLREF cc)
 {
 	if(inside(rr, cc, cwin->screen)) {
-		win_io_hide_cell_cursor();
+		//win_io_hide_cell_cursor(); // 25/5 apparently unnecessary
 		curow = rr;
 		cucol = cc;
-		cur_io_display_cell_cursor();
+		//cur_io_display_cell_cursor(); // 25/5 apparently unnecessary
 		//cur_io_update_status(); // 25/5 Seems redundant
 	} else 	{
 		curow = rr;
