@@ -32,15 +32,7 @@ void cur_io_repaint();
 inline int win_flags = WIN_EDGES | WIN_EDGE_REV; 
 
 
-/* These control the layout of input and status lines. */
-#define	user_input	Global->user_input
-#define	user_status	Global->user_status
-#define	input_rows	Global->input_rows
-#define	status_rows	Global->status_rows
 
-/* These control the layout of edge labels. */
-#define	label_rows	Global->label_rows
-#define	label_emcols	Global->label_emcols
 
 
 
