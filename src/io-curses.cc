@@ -317,20 +317,6 @@ void  recenter_window (struct window *win = nullptr) // FN
 
 
 
-/* Take a struct rng (R) and init its elements to R1 C1 R2 C2, making sure
-   they are put in in the right order.
- */
-/*
-void set_rng (struct rng *r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2)
-{
-	r->lr = std::min(r1, r2);
-	r->hr = std::max(r1, r2);
-	r->lc = std::min(c1, c2);
-	r->hc = std::max(c1, c2);
-}
-*/
-
-
 std::string status_line(int wid)
 {
 	//log("status_line called");
