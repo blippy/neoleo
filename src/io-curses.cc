@@ -27,13 +27,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-//#include <term.h>
+
 #include <menu.h>
 #include <panel.h>
 
 
 #include "cell.h"
-#include "global.h"
+//#include "global.h"
 #include "io-2019.h"
 #include "io-curses.h"
 #include "io-utils.h"

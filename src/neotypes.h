@@ -1,5 +1,7 @@
 #pragma once
 
+//import std;
+
 #include <cstdint>
 #include <limits>
 #include <string>
@@ -14,6 +16,9 @@ constexpr auto MAX_ROW = std::numeric_limits<CELLREF>::max();
 constexpr auto MAX_COL = std::numeric_limits<CELLREF>::max();
 constexpr auto MIN_ROW = 1;
 constexpr auto MIN_COL = 1;
+/* The location of a cell that can never be referenced */
+constexpr auto NON_ROW = 0;
+constexpr auto NON_COL = 0;
 
 typedef struct rng {
 	CELLREF lr, lc, hr, hc;
@@ -63,3 +68,19 @@ inline const char *ename_desc[] =
 
 // monostate basically means "empty" as a valid type
 typedef std::variant<std::monostate, num_t, std::string, err_t, rng_t, bool_t> value_t;
+
+
+
+
+
+const auto VERSION = "16.0";
+const auto  PACKAGE = "neoleo";
+const auto PACKAGE_NAME = PACKAGE;
+
+
+inline CELLREF curow = MIN_ROW;
+inline CELLREF cucol = MIN_COL;
+
+inline std::string option_tests_argument = "";
+
+inline bool Global_modified = false;

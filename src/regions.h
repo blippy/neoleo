@@ -17,7 +17,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "global.h"
+//#include "global.h"
 #include "cell.h"
 
 
@@ -26,11 +26,3 @@ crefs_t coords_in_range (const rng_t& rng);
 const inline struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
 void format_region (const struct rng& where, int fmt, int just);
 void set_rng (const struct rng& r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);
-
-/*
-extern struct rng all_rng;
-void move_region (struct rng *fm, struct rng *to);
-void copy_region (struct rng *fm, struct rng *to);
-void copy_values_region (struct rng *fm, struct rng *to);
-crefs_t coords_in_ranges (const ranges_t& rng);
-*/

@@ -1,8 +1,9 @@
 module;
 
 #include <stdarg.h>
+#include <stdio.h>
 
-#include "global.h"
+#include "neotypes.h"
 
 export module errors;
 

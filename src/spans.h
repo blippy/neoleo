@@ -3,7 +3,7 @@
 #include <deque>
 #include <map>
 
-#include "global.h"
+#include "neotypes.h"
 
 extern float height_scale;
 extern float width_scale;

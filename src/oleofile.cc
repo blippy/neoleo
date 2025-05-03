@@ -20,7 +20,7 @@
 #include <string.h>
 
 #include "io-utils.h"
-#include "global.h"
+//#include "global.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"

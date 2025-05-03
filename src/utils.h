@@ -24,7 +24,6 @@
 #include <stdexcept>
 #include <string>
 #include <stdio.h>
-#include "global.h"
 
 
 extern void set_usr_stats (int, char **);
