@@ -60,30 +60,11 @@ import win;
 static int scr_lines = 24, scr_cols = 80;
 
 
-
-// TODO get rid of this
-struct OleoGlobal {
-	int 		input_rows = 1, status_rows = 1;
-	const int 	user_input =1, user_status = 2;
-	const int	input = 0, status = 1;
-	const int	label_rows = 1;
-	//const int	default_right_border = 0, default_bottom_border = 0;
-	const int	win_id = 1;
-};
-
-inline OleoGlobal global;
-inline struct OleoGlobal *Global = &global;
-
-/* These control the layout of input and status lines. */
-#define	user_input	Global->user_input
-#define	user_status	Global->user_status
-#define	input_rows	Global->input_rows
-#define	status_rows	Global->status_rows
-
-/* These control the layout of edge labels. */
-#define	label_rows	Global->label_rows
-#define	label_emcols	Global->label_emcols
-
+static int 		input_rows = 1, status_rows = 1;
+static const int 	user_input =1, user_status = 2;
+static const int	input = 0, status = 1;
+static const int	label_rows = 1;
+//static const int	win_id = 1;
 
 
 
@@ -392,7 +373,7 @@ std::string status_line(int wid)
 void cur_io_update_status (void) // FN
 {
 
-	move (Global->status, 0);
+	move (status, 0);
 	//int wid = cwin->screen.hc; // columns - 2;
 	int wid = COLS;
 	win_print(status_line(wid));
