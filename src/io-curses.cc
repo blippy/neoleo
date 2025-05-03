@@ -221,7 +221,6 @@ int win_label_cols (struct window * win, CELLREF hr)
 		lh = 4;
 	else
 		lh = 3;
-	lh *= label_emcols;
 	return lh;
 }
 

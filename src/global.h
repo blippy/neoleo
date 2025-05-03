@@ -48,7 +48,7 @@ struct OleoGlobal {
 	int 		input_rows = 1, status_rows = 1;
 	const int 	user_input =1, user_status = 2;
 	const int	input = 0, status = 1;
-	const int	label_rows = 1, label_emcols =1;
+	const int	label_rows = 1;
 	const int	default_right_border = 0, default_bottom_border = 0;
 	const int	win_id = 1;
 };
