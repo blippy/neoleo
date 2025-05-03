@@ -252,7 +252,7 @@ bump_row (CELLREF row, int increment)
 		cp->reparse();
 
 	//recalculate(1); // this doesn't help
-	Global->modified = 1;
+	Global_modified = 1;
 }
 
 
@@ -266,7 +266,7 @@ void recreate_cells(const vector<cell_s>& cells)
 		CELL* cp = find_cell(r, c);
 		cp->cell_flags = flags;
 	}
-	Global->modified = 1;
+	Global_modified = 1;
 }
 
 void insert_row_above(coord_t row)

@@ -52,7 +52,7 @@ crefs_t coords_in_range (const rng_t& rng)
 /* Turn on/off the locked bits in a region */
 void lock_region (const struct rng&  where, int locked)
 {
-	Global->modified = 1;
+	Global_modified = 1;
 	make_cells_in_range (where);
 	for(CELL* cp:get_cells_in_range(where))
 		SET_LCK (cp, locked);
@@ -62,7 +62,7 @@ void lock_region (const struct rng&  where, int locked)
 void change_region(const struct rng& a_rng, std::function<void(CELL*)> fn)
 {
 
-	Global->modified = 1;
+	Global_modified = 1;
 	make_cells_in_range (a_rng);
 	for(CELL* cp:get_cells_in_range(a_rng))
 	{

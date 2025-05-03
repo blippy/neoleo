@@ -37,14 +37,14 @@ inline CELLREF cucol = MIN_COL;
 
 inline std::string option_tests_argument = "";
 
-
+inline bool Global_modified = false;
 
 /*
  * This structure is a start at cleaning up global variables that are
  * around all over.
  */
 struct OleoGlobal {
-	int			modified = 0;
+
 	int 		input_rows = 1, status_rows = 1;
 	const int 	user_input =1, user_status = 2;
 	const int	input = 0, status = 1;

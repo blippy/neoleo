@@ -108,7 +108,7 @@ void write_cmd (FILE *fp, const char * name)
 {
 	if(name) FileSetCurrentFileName(name);
 	oleo_write_file(fp, 0);
-	Global->modified = 0;
+	Global_modified = 0;
 }
 
 
@@ -175,7 +175,7 @@ void set_cell_toggle_bold()
 {	
 	auto cp = find_or_make_cell();
 	cp->cell_flags.bold = ! cp->cell_flags.bold;
-	Global->modified = true;
+	Global_modified = true;
 }
 
 void set_cell_toggle_percent()
@@ -188,7 +188,7 @@ void set_cell_toggle_percent()
 	else
 		fmt = FMT_PCT;
 
-	Global->modified = true;
+	Global_modified = true;
 }
 
 void set_cell_toggle_italic()
@@ -196,7 +196,7 @@ void set_cell_toggle_italic()
 	
 	auto cp = find_or_make_cell();
 	cp->cell_flags.italic = ! cp->cell_flags.italic;
-	Global->modified = true;
+	Global_modified = true;
 }
 
 

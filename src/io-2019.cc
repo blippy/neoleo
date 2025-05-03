@@ -192,7 +192,7 @@ void edit_cell2019()
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
 	if(old_formula == formula) return;
-	Global->modified = true;
+	Global_modified = true;
 	set_and_eval(curow, cucol, formula, true);
 }
 
@@ -348,7 +348,7 @@ static void save_spreadsheet2019(){
 static void maybe_quit_spreadsheet2019(bool& quit)
 {
 	quit = false;
-	if(Global->modified == false) { quit = true ; return; }
+	if(Global_modified == false) { quit = true ; return; }
 	std::string response = ""; 
 	if(!invoke_std_form("Spreadsheet modified; kill anyway? (y/[n])? ", response)) return;
 	if(response == "y" || response == "yes") quit = true;
