@@ -57,6 +57,7 @@ import win;
 
 
 
+static int scr_lines = 24, scr_cols = 80;
 
 
 
@@ -832,11 +833,10 @@ void  io_init_windows ()
 	//auto [y, x] = win_getyx(stdscr);
 	//int y, x;
 	//getyx(stdscr, y, x);
-	Global->scr_lines = LINES;
-	//log("scr_lines ", LINES);
-	Global->scr_cols = COLS;
-	cwin->numr = (Global->scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
-	cwin->numc = Global->scr_cols - default_right_border;
+	scr_lines = LINES;
+	scr_cols = COLS;
+	cwin->numr = (scr_lines - label_rows - !!user_status * status_rows - input_rows - default_bottom_border);
+	cwin->numc = scr_cols - default_right_border;
 	cwin->bottom_edge_r = default_bottom_border;
 	cwin->right_edge_c = default_right_border;
 	cwin->lh_wid = 0;

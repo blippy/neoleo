@@ -46,7 +46,6 @@ inline std::string option_tests_argument = "";
 struct OleoGlobal {
 	const int	bkgrnd_recalc = 1, auto_recalc = 1;
 	int			modified = 0;
-	int			scr_lines = 24, scr_cols = 80;
 	int 		input_rows = 1, status_rows = 1;
 	const int 	user_input =1, user_status = 2;
 	const int	input = 0, status = 1;
