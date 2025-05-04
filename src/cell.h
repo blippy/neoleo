@@ -195,7 +195,7 @@ void paste_this_cell_formula();
 char * new_value (CELLREF row, CELLREF col, const char *string);
 
 
-typedef struct point_t {int r; int c;} point_t;
+
 typedef point_t RC_t;
 RC_t ws_extent();
 std::string formula_text(CELLREF r, CELLREF c);

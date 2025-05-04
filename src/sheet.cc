@@ -78,11 +78,6 @@ cellmap_t the_cells;
 
 
 
-void flush_cols()
-{
-}
-
-
 
 int binary_cell_search(int l, int r, coord_t target)
 {
@@ -105,28 +100,9 @@ int binary_cell_search(int l, int r, coord_t target)
  */
 cell_t* find_cell (coord_t coord)
 {
-	//static auto cmp = [](CELL* a, const coord_t coord) { return a->coord < coord; };
-	//auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord, cmp);
-	//auto it = std::lower_bound(the_cells.begin(), the_cells.end(), coord);
-	//auto it = std::binary_search(the_cells.begin(), the_cells.end(), coord);
 	int idx = binary_cell_search(0, the_cells.size() -1, coord);
-	if(idx == -1)
-		return nullptr;
-	//if(it == the_cells.end())
-	//	return nullptr;
-	//cout << "Found something:coord:r" << get_row(coord) << ":" << get_col(coord) << endl;
-	//return *it;
+	if(idx == -1) return nullptr;
 	return the_cells[idx];
-
-	/*
-	auto it = the_cells.find(coord);
-	if(it == the_cells.end())
-		return nullptr;
-
-	CELL* cp = it->second;
-	assert(cp->coord == coord); // Had you moved/copied a cell without updating its coords?
-	return cp;
-	*/
 }
 
 cell_t* find_cell (CELLREF r, CELLREF c) { return find_cell(to_coord(r, c)); }
@@ -193,7 +169,6 @@ CELLREF max_col()
 	for(CELL* cp : the_cells) {
 		int n = get_col(cp->get_coord());
 		hi = std::max(hi, n);
-		//hi = std::max(hi, cp->get_col());
 	}
 
 	return hi;
@@ -237,23 +212,6 @@ void dump_sheet()
 }
 
 
-void 
-bump_row (CELLREF row, int increment)
-{
-	if(increment == 0) return;
-
-	for(CELL* cp: the_cells) {
-		if(get_row(cp)<row || cp == nullptr) continue;
-		auto r = get_row(cp);
-		cp->set_row(r+increment);
-	}
-
-	for(CELL* cp: the_cells) 
-		cp->reparse();
-
-	//recalculate(1); // this doesn't help
-	Global_modified = 1;
-}
 
 
 using cell_s = struct { CELLREF r, c; struct cell_flags_s cell_flags; string formula; };
@@ -323,6 +281,7 @@ celldeq_t get_cells_in_range(const rng_t& a_rng) // FN
 	
 }
 
+#if 0
 cell* take_front(celldeq_t & cd)
 {
 	if(cd.size() ==0) return nullptr;
@@ -330,4 +289,5 @@ cell* take_front(celldeq_t & cd)
 	cd.pop_front();
 	return cp;
 }
+#endif
 

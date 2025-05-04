@@ -30,18 +30,8 @@ typedef std::deque<cell_t*> celldeq_t;
 
 void decoord(const CELL* cp, CELLREF& r, CELLREF& c);
 std::tuple<CELLREF, CELLREF> decoord(const CELL* cp);
-void flush_cols();
-cell* find_cell(CELLREF row, CELLREF col);
-cell* find_cell(coord_t coord);
-cell* find_or_make_cell(CELLREF row, CELLREF col);
-cell_t* find_or_make_cell (coord_t coord);
-cell_t* find_or_make_cell ();
 
-void init_cells();
-cell* take_front(celldeq_t & cd);
 
-void make_cells_in_range(const struct rng& a_rng);
-void no_more_cells();
 
 coord_t to_coord(coord_t row, coord_t col);
 int get_col(coord_t coord);
@@ -53,15 +43,20 @@ CELLREF max_col();
 CELLREF highest_row();
 CELLREF highest_col();
 
-void insert_row_above(coord_t row);
 void delete_sheet_row(coord_t row);
 
 void 		copy_row(CELLREF dst_row, CELLREF src_row);
-void 		dump_sheet();
 void 		delete_all_cells();
+void 		dump_sheet();
+cell* 		find_cell(CELLREF row, CELLREF col);
+cell* 		find_cell(coord_t coord);
+cell* 		find_or_make_cell(CELLREF row, CELLREF col);
+cell_t* 	find_or_make_cell (coord_t coord);
+cell_t* 	find_or_make_cell ();
 celldeq_t	get_cells_in_range(const rng_t& a_rng);
+void 		insert_row_above(coord_t row);
 bool 		inside(int val, int lo, int hi);
-//bool inside(int r, int c, const struct rng *a_rng);
 bool 		inside(int r, int c, const struct rng& a_rng);
 bool 		inside(cell* cp, const struct rng& a_rng);
-//celldeq_t get_cells_in_range(struct rng *r);
+void 		make_cells_in_range(const struct rng& a_rng);
+void 		no_more_cells();
