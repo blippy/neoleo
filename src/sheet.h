@@ -20,7 +20,8 @@
 // MANAGE THE COLLECTION OF CELLS, WHICH WE CALL A `SHEET'
 
 
-#include <deque>
+//#include <deque>
+#include <generator>
 
 #include "cell.h"
 #include "neotypes.h"
@@ -45,18 +46,18 @@ CELLREF highest_col();
 
 void delete_sheet_row(coord_t row);
 
-void 		copy_row(CELLREF dst_row, CELLREF src_row);
-void 		delete_all_cells();
-void 		dump_sheet();
-cell* 		find_cell(CELLREF row, CELLREF col);
-cell* 		find_cell(coord_t coord);
-cell* 		find_or_make_cell(CELLREF row, CELLREF col);
-cell_t* 	find_or_make_cell (coord_t coord);
-cell_t* 	find_or_make_cell ();
-celldeq_t	get_cells_in_range(const rng_t& a_rng);
-void 		insert_row_above(coord_t row);
-bool 		inside(int val, int lo, int hi);
-bool 		inside(int r, int c, const struct rng& a_rng);
-bool 		inside(cell* cp, const struct rng& a_rng);
-void 		make_cells_in_range(const struct rng& a_rng);
-void 		no_more_cells();
+void 			copy_row(CELLREF dst_row, CELLREF src_row);
+void 			delete_all_cells();
+void 			dump_sheet();
+cell* 			find_cell(CELLREF row, CELLREF col);
+cell* 			find_cell(coord_t coord);
+cell* 			find_or_make_cell(CELLREF row, CELLREF col);
+cell_t* 		find_or_make_cell (coord_t coord);
+cell_t* 		find_or_make_cell ();
+std::generator<CELL*>	get_cells_in_range(const rng_t& a_rng);
+void 			insert_row_above(coord_t row);
+bool 			inside(int val, int lo, int hi);
+bool 			inside(int r, int c, const struct rng& a_rng);
+bool 			inside(cell* cp, const struct rng& a_rng);
+void 			make_cells_in_range(const struct rng& a_rng);
+void 			no_more_cells();

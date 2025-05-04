@@ -18,12 +18,13 @@
 
 
 
-#include "neotypes.h"
+//#include "neotypes.h"
 #include "basic.h"
 #include "cell.h"
 #include "io-utils.h"
-import logging;
 #include "sheet.h"
+
+import logging;
 
 using std::cout;
 using std::endl;
@@ -269,14 +270,10 @@ void copy_row(CELLREF dst_row, CELLREF src_row)
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
-celldeq_t get_cells_in_range(const rng_t& a_rng) // FN
+std::generator<CELL*> get_cells_in_range(const rng_t& a_rng) // FN
 {
-	celldeq_t res;
-	for(auto const& a_cell: the_cells) {
-		//coord_t coord = a_cell.first;
-		if(inside(a_cell, a_rng))
-			res.push_back(a_cell);
+	for(auto const cp: the_cells) {
+		if(cp && inside(cp, a_rng)) co_yield cp;
 	}
-	return res;
 	
 }
