@@ -280,14 +280,3 @@ celldeq_t get_cells_in_range(const rng_t& a_rng) // FN
 	return res;
 	
 }
-
-#if 0
-cell* take_front(celldeq_t & cd)
-{
-	if(cd.size() ==0) return nullptr;
-	cell *cp = cd.front();
-	cd.pop_front();
-	return cp;
-}
-#endif
-
