@@ -76,5 +76,5 @@ scr "write";
 #add_test(NAME spans     COMMAND ${NEO} verified/spans.scr.oleo -s spans.scr)
 #add_test(NAME write     COMMAND ${NEO} -s write.scr)
 
-my $ok = ($npasses eq $ntests)? "✅" : "❌";
+my $ok = ($npasses eq $ntests)? "✔ " : "❌";
 say "$ok $npasses/$ntests pass";
