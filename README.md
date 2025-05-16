@@ -53,22 +53,22 @@ git clone git@github.com:blippy/neoleo.git
 ```
 
 Due to the complexity of building and the integration of C++ modules,
-a simple Makefile is use. A simple build:
+a simple perl script is used to generate the Makefile. The simplest case:
 
 ```
-make -f Makefile.neo
+./config.pl
+make
+sudo make install
 ```
 
-The default install directory is /usr/local. Distro maintainers will likely
-want to put it in `/usr` which you can do like so:
-
+You can specify an install prefix, e.g.:
 ```
-PREFIX=/usr sudo make -f Makefile.neo install
+./config.pl --prefix=/usr
 ```
 
 Uninstall:
 ```
-PREFIX=/usr sudo make -f Makefile.neo uninstall
+sudo make uninstall
 ```
 
 Read INSTALL, which contains general instructions, plus specific 
