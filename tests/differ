@@ -1,6 +1,6 @@
 #!/bin/sh
 
 #show what the difference is
-echo `date` " writing $1" >>/tmp/differ.txt
+#echo `date` " writing $1" >>/tmp/differ.txt
 diff out/$1.oleo verified/$1.scr.oleo >diffs/$1.diffs 2>&1
 exit $?
