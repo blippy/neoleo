@@ -52,6 +52,7 @@ l r l.
 Key@NB@Meaning
 _
 \[eq]@@Edit a cell
+c@4@Perform column command
 m@@Show menu
 r@@Perform row command
 C-\[<-]@1@move to first column (Ctrl-leftarrow)
@@ -98,6 +99,25 @@ p@paste row
 
 This is a new feature in neoleo 16.0. If you use bold in your format,
 the oleo file will be incompatible with prior version. So BEWARE.
+
+
+.SH NOTE 4 - COLUMN COMMANDS
+
+Column sub-commands are activated by `c':
+
+.ie c \[shc] \
+.  ds softhyphen \[shc]
+.el \
+.  ds softhyphen \(hy
+.na
+.TS
+tab (@);
+l l.
+Key@Meaning
+_
+i@insert column left
+.TE
+.ad
 
 
 .SH EXAMPLES

@@ -23,8 +23,13 @@ using namespace std::string_literals;
 using std::cout;
 using std::cerr;
 
+static void col_cmd2019();
 extern void hl_write_file();
 extern void io_shift_cell_cursor (dirn way, int repeat);
+//static void insert_col_left();
+static void maybe_quit_spreadsheet2019(bool& quit);
+static void row_cmd2019();
+static void save_spreadsheet2019();
 
 static constexpr int CTRL(int c) { return c & 037; }
 
@@ -196,9 +201,7 @@ void edit_cell2019()
 	set_and_eval(curow, cucol, formula, true);
 }
 
-static void maybe_quit_spreadsheet2019(bool& quit);
-static void row_cmd2019();
-static void save_spreadsheet2019();
+
 
 //static void cursor_col_0()  { io_shift_cell_cursor(3, 2 + 0*(cucol-1)); } // repeat cucol times to bring cursor to column 0
 static void cursor_left()  { io_shift_cell_cursor(dirn::left,1); }
@@ -269,6 +272,7 @@ static void i19_precision()
 
 }
 
+// FN process_key
 void process_key(const keymap_t& keymap)
 {
 	int c = get_ch();
@@ -281,6 +285,7 @@ void process_key(const keymap_t& keymap)
 	fn();
 	i19_parameter = -1;
 }
+// FN-END
 
 
 
@@ -294,7 +299,8 @@ bool curses_loop () // FN
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 			{'=', 		edit_cell2019},
-			{'%',		set_cell_toggle_percent},			
+			{'%',		set_cell_toggle_percent},
+			{'c',		col_cmd2019},
 			{'m',		process_menu},
 			{'p',		i19_precision},
 			{'r',		row_cmd2019},
@@ -364,6 +370,23 @@ void clear_status_line()
 {
 	write_status("");
 }
+
+
+// user has typed 'c' to perform a col action. This function
+// decides which one it is
+// 25/5 added
+static void col_cmd2019()
+{
+	auto insert_left = []() { insert_col_left(); };
+	static auto keymap = std::map<int, fn_t> {
+		//{'d', delete_1row},
+			{'i', insert_left}
+			//{'p', paste_1row}
+	};
+
+	process_key(keymap);
+}
+
 
 static void delete_1row() { delete_row(1); }
 

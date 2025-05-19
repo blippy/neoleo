@@ -16,6 +16,7 @@ either `Alt` or `ESC`.
 | ----- | ------------------------------------ |
 | %     | Toggle percentage mode               |
 | =     | Edit a cell                          |
+| c     | Do a row command                     |
 | m     | Activate the menu                    |
 | &lt;n&gt;p | set cell precision to 'n'        |
 | r     | Do a row command                     |

@@ -1,3 +1,4 @@
+.settings/
 tests/diffs
 gcm.cache/
 build/

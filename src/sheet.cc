@@ -228,7 +228,23 @@ void recreate_cells(const vector<cell_s>& cells)
 	Global_modified = 1;
 }
 
-void insert_row_above(coord_t row)
+// FN insert_col_left
+void insert_col_left (coord_t col)
+{
+	vector<cell_s> cells;
+	for(CELL* cp: the_cells) {
+		auto [r, c] = decoord(cp);
+		if(c>=col) c++;
+		cells.push_back(cell_s{r, c, cp->cell_flags, cp->get_formula_text()});
+	}
+
+	recreate_cells(cells);
+
+}
+// FN-END
+
+// FN insert_row_above
+void insert_row_above (coord_t row)
 {
 	vector<cell_s> cells;
 	for(CELL* cp: the_cells) {
@@ -240,6 +256,7 @@ void insert_row_above(coord_t row)
 	recreate_cells(cells);
 
 }
+// FN-END
 
 void delete_sheet_row(coord_t row)
 {

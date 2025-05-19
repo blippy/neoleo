@@ -55,6 +55,7 @@ cell* 			find_or_make_cell(CELLREF row, CELLREF col);
 cell_t* 		find_or_make_cell (coord_t coord);
 cell_t* 		find_or_make_cell ();
 std::generator<CELL*>	get_cells_in_range(const rng_t& a_rng);
+void 			insert_col_left (coord_t col = cucol);
 void 			insert_row_above(coord_t row);
 bool 			inside(int val, int lo, int hi);
 bool 			inside(int r, int c, const struct rng& a_rng);

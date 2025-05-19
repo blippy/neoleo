@@ -10,6 +10,8 @@ After what was mostly compilation bugfixes in previous releases, we now have new
 
 == FEATURES
 
+* Added column insert left (keystroke: ci)
+
 * Added <n>p to set precision of cell.
 
 * Removed functionality to create csv and dsv files. examples/mkcsv.py
