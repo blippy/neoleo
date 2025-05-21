@@ -271,6 +271,7 @@ void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CE
 	char *cexp = 0, *cval = 0;
 	//CELLREF crow = 0, ccol = 0; // , czrow = 0, czcol = 0;
 	char expbuf[1024];
+	int crow_tmp = crow, ccol_tmp = ccol;
 
 	ptr++; // skip over the 'C'
 	while (*ptr) {
@@ -281,10 +282,10 @@ void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CE
 		*ptr++ = '\0';
 		switch (*ptr++) {
 		case 'c':
-			ccol = astol(&ptr);
+			ccol_tmp = astol(&ptr);
 			break;
 		case 'r':
-			crow = astol(&ptr);
+			crow_tmp = astol(&ptr);
 			break;
 		case 'R':
 			czrow = astol(&ptr);
@@ -326,6 +327,12 @@ void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CE
 		}
 	}
 	*ptr = '\0';
+
+	// 25/05 bad row and column number
+	if(crow_tmp<1 || ccol_tmp < 1) return;
+	crow = crow_tmp;
+	ccol = ccol_tmp;
+
 	if (cexp || cval) {
 		read_new_value(crow, ccol, cexp, cval);
 		ptr = 0;

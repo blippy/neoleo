@@ -44,6 +44,7 @@ sub tst {
 	update_score($ret);
 }
 
+scr "badrc", "badrc.oleo";
 bsh "basic.sh";
 scr "ctime";
 scr "decompile-01";
