@@ -262,17 +262,94 @@ void oleo_read_window_config (char * line)
 }
 
 
+void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CELLREF& czcol)
+{
+	const int ismerge = 0;
+	int cprot = 0;
+	//int cval = 0;
+	//int cexp = 0;
+	char *cexp = 0, *cval = 0;
+	//CELLREF crow = 0, ccol = 0; // , czrow = 0, czcol = 0;
+	char expbuf[1024];
+
+	ptr++; // skip over the 'C'
+	while (*ptr) {
+		int quotes;
+
+		if (*ptr != ';') return; // bad field
+			//goto bad_field;
+		*ptr++ = '\0';
+		switch (*ptr++) {
+		case 'c':
+			ccol = astol(&ptr);
+			break;
+		case 'r':
+			crow = astol(&ptr);
+			break;
+		case 'R':
+			czrow = astol(&ptr);
+			break;
+		case 'C':
+			czcol = astol(&ptr);
+			break;
+		case 'P': /* This cell is Protected */
+			cprot++;
+			break;
+		case 'K': /* This cell's Konstant value */
+			cval = ptr;
+			quotes = 0;
+			while (*ptr && (*ptr != ';' || quotes > 0))
+				if (*ptr++ == '"')
+					quotes = !quotes;
+			break;
+		case 'E': /* This cell's Expression */
+			cexp = ptr;
+			quotes = 0;
+			while (*ptr && (*ptr != ';' || quotes > 0))
+				if (*ptr++ == '"')
+					quotes = !quotes;
+
+			break;
+		case 'G':
+			strcpy(expbuf, cval);
+			break;
+		case 'D':
+			strcpy(expbuf, cexp);
+			break;
+		case 'S':
+			cexp = expbuf;
+			break;
+		default:
+			--ptr;
+			//goto bad_field;
+			return; // bad field
+		}
+	}
+	*ptr = '\0';
+	if (cexp || cval) {
+		read_new_value(crow, ccol, cexp, cval);
+		ptr = 0;
+	}
+
+	if (cprot)
+		SET_LCK(find_or_make_cell(crow, ccol), LCK_LCK);
+	if (ismerge) {
+		panic("Unhandled case");
+	}
+}
+
+
 void oleo_read_file (FILE *fp)
 {
 	const int ismerge = 0;
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
+	//CELLREF czrow = 0, czcol = 0;
 	int lineno;
 	char cbuf[1024];
-	char expbuf[1024];
-	//int vlen = 0;
-	int cprot;
-	char *cexp, *cval;
+	//char expbuf[1024];
+	//int cprot;
+	//char *cexp, *cval;
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
@@ -301,75 +378,7 @@ void oleo_read_file (FILE *fp)
 
 
 			case 'C':		/* A Cell entry */
-				cprot = 0;
-				cval = 0;
-				cexp = 0;
-				cval = 0;
-				ptr++;
-				while (*ptr)
-				{
-					int quotes;
-
-					if (*ptr != ';')
-						goto bad_field;
-					*ptr++ = '\0';
-					switch (*ptr++)
-					{
-						case 'c':
-							ccol = astol (&ptr);
-							break;
-						case 'r':
-							crow = astol (&ptr);
-							break;
-						case 'R':
-							czrow = astol (&ptr);
-							break;
-						case 'C':
-							czcol = astol (&ptr);
-							break;
-						case 'P':	/* This cell is Protected */
-							cprot++;
-							break;
-						case 'K':	/* This cell's Konstant value */
-							cval = ptr;
-							quotes = 0;
-							while (*ptr && (*ptr != ';' || quotes > 0))
-								if (*ptr++ == '"')
-									quotes = !quotes;
-							break;
-						case 'E':	/* This cell's Expression */
-							cexp = ptr;
-							quotes = 0;
-							while (*ptr && (*ptr != ';' || quotes > 0))
-								if (*ptr++ == '"')
-									quotes = !quotes;
-
-							break;
-						case 'G':
-							strcpy (expbuf, cval);
-							break;
-						case 'D':
-							strcpy (expbuf, cexp);
-							break;
-						case 'S':
-							cexp = expbuf;
-							break;
-						default:
-							--ptr;
-							goto bad_field;
-					}
-				}
-				*ptr = '\0';
-				if(cexp || cval) {
-					read_new_value (crow, ccol, cexp, cval);
-					ptr = 0;
-				}
-
-				if (cprot)
-					SET_LCK (find_or_make_cell (crow, ccol), LCK_LCK);
-				if (ismerge) {
-					panic("Unhandled case");
-				}
+				read_cell_entry(ptr, crow, ccol, czrow, czcol);
 				break;
 			case 'W':
 				oleo_read_window_config (ptr + 2);

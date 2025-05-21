@@ -10,4 +10,4 @@ file ../neoleo
 #r -s ../tests/ctime.scr
 #r -H ../build/tests/out/spans.oleo
 #r -s ../tests/decompile-01.scr
-r -T fmt
+r -H ../examples/scratch.oleo

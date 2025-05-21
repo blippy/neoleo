@@ -16,7 +16,7 @@ my $top = <<'EOM';
 CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
-CXXFLAGS += -Wfatal-errors
+#CXXFLAGS += -Wfatal-errors
 VPATH = src
 STD = gcm.cache/std.gcm
 
