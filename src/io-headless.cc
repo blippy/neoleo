@@ -255,7 +255,7 @@ bool process_headless_line(std::string line, int fildes)
 	//cout << "'" << cmd << "'\n";
 
 	if(cmd == "q") {
-		log("quit found");
+		//log("quit found");
 		return false;
 	}
 
