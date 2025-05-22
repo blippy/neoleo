@@ -5,6 +5,9 @@ use Getopt::Long;
 my $prefix = "/usr/local";
 GetOptions("prefix=s" => \$prefix);
 
+
+mkdir "build";
+
 open(FH, '>', "Makefile") or die $!;
 
 
@@ -33,7 +36,7 @@ info :
 	@echo "PREFIX:$(PREFIX)"
         
 clean :
-	rm -f *.o  neoleo
+	rm -f build/*.o  neoleo
         
 cleaner : clean
 	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
@@ -60,10 +63,10 @@ while (<DATA>) {
 	my $targ = shift(@deps);
 	#my $dep1 = shift(@deps);
 	#my ($dep1, @rst) = @deps;
-	print FH "$targ.o : src/$targ";
-	push(@objs, "$targ.o"); 
+	print FH "build/$targ.o : src/$targ";
+	push(@objs, "build/$targ.o"); 
 	foreach (@deps) {
-		print FH " $_.o";
+		print FH " build/$_.o";
 	}
 	print FH " neotypes.h";
 	print FH "\n";
