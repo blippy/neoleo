@@ -254,6 +254,11 @@ bool process_headless_line(std::string line, int fildes)
 	while(i<len) _arg += line[i++];
 	//cout << "'" << cmd << "'\n";
 
+	if(cmd == "q") {
+		log("quit found");
+		return false;
+	}
+
 	//log("process_headless_line cmd;", cmd, ";arg:", _arg);
 	// try to find a canned function and execute it
 	auto it = func_map.find(cmd);
@@ -267,10 +272,7 @@ bool process_headless_line(std::string line, int fildes)
 	}
 
 
-	if(line == "q") {
-		log("quit found");
-		return false;
-	}
+
 
 
 	cout << std::flush;
