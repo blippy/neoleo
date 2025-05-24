@@ -17,10 +17,12 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+enum class dirn { left, right, up, down};
 
 void cur_io_repaint();
-
-
+void page_down();
+void page_up();
+void io_shift_cell_cursor (dirn way, int repeat);
 
 
 #define WIN_LCK_HZ		0x01 // locked horizontally
@@ -30,13 +32,3 @@ void cur_io_repaint();
 #define WIN_EDGES		0x10 // edged disabled
 #define WIN_EDGE_REV	0x20 // edges standout
 inline int win_flags = WIN_EDGES | WIN_EDGE_REV; 
-
-
-
-
-
-
-
-
-enum class dirn { left, right, up, down};
-

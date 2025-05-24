@@ -25,8 +25,6 @@ using std::cerr;
 
 static void col_cmd2019();
 extern void hl_write_file();
-extern void io_shift_cell_cursor (dirn way, int repeat);
-//static void insert_col_left();
 static void maybe_quit_spreadsheet2019(bool& quit);
 static void row_cmd2019();
 static void save_spreadsheet2019();
@@ -47,6 +45,7 @@ int scr_width()
 int get_ch ()
 {
 	int c = getch();
+	//log(c);
 	write_status(""); // clear the status line
 	return c;
 }
@@ -54,9 +53,7 @@ int get_ch ()
 
 class nwin_c {
 	public:
-		nwin_c() { 
-			
-
+		nwin_c() {
 			m_w = newwin(1, scr_width(), 1, 0);
 			assert(m_w);
 			wrefresh(m_w);
@@ -209,6 +206,9 @@ static void cursor_right() { io_shift_cell_cursor(dirn::right, 1); }
 static void cursor_down()  { io_shift_cell_cursor(dirn::down, 1); }
 static void cursor_up()    { io_shift_cell_cursor(dirn::up, 1); }
 
+
+
+
 // needed for handling Ctl leftarrow and uparrow
 static void complex_key_sequence_27()
 {
@@ -309,7 +309,9 @@ bool curses_loop () // FN
 			{KEY_LEFT,  cursor_left},
 			{27,  		complex_key_sequence_27},
 			{KEY_RIGHT, cursor_right},
-			{KEY_UP, 	cursor_up},			
+			{KEY_UP, 	cursor_up},
+			{KEY_NPAGE,	page_down},
+			{KEY_PPAGE,	page_up},
 			{CTRL('b'),	set_cell_toggle_bold},
 			{CTRL('c'), copy_this_cell_formula},
 			{CTRL('i'),	set_cell_toggle_italic},

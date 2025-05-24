@@ -38,6 +38,7 @@
 #include "io-curses.h"
 #include "io-utils.h"
 #include "menu-2025.h"
+//#include "neotypes.h"
 #include "regions.h"
 #include "sheet.h"
 #include "spans.h"
@@ -124,11 +125,37 @@ inline window* cwin = &the_cwin;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
 void 		cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 void  		io_init_windows ();
 bool 		curses_loop ();
 
 
+// FN page_down
+void page_down()
+{
+	//log("TODO page_down detected");
+	//io_shift_cell_cursor(dirn::down, cwin->numr);
+	curow = std::min(cwin->screen.hr+1, (int) MAX_ROW);
+	io_move_cell_cursor(curow, cucol);
+	//curow += 10;
+}
+// FN-END
+
+// FN page_up
+void page_up()
+{
+	//log("TODO page_up detected");
+	//int r = std::min(1, curow - cwin->numr);
+	//move_cursor_to(cwin, r, cucol);
+	//curow = std::max(1, curow - cwin->numr/2); // new row we want to land on
+	curow = std::max(1, cwin->screen.lr-1);
+	io_move_cell_cursor(curow, cucol);
+	//if(r<1) r = 1;
+	//int repeat = cwin->numr -r;
+	//io_shift_cell_cursor(dirn::up, repeat);
+}
+// FN-END
 
 
 
