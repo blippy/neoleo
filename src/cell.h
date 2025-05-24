@@ -42,10 +42,7 @@
 typedef std::set<coord_t> crefs_t;
 
 
-#define JST_DEF 	0
-#define JST_LFT		1
-#define JST_RGT		2
-#define JST_CNT		3
+
 #define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
 #define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
 inline const int base_default_jst = JST_RGT;
@@ -128,6 +125,7 @@ class cell
 		//void reset();
 		struct cell_flags_s cell_flags;
 		int get_cell_jst() { return cell_flags.cell_justify; }
+		int width();
 
 
 

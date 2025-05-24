@@ -19,7 +19,7 @@
  */
 
 
-
+#include "neotypes.h"
 #include "utils.h"
 
 import value;
@@ -48,17 +48,43 @@ std::string spaces(int n)
 	return sa; 
 }
 
+// FN pad_left .
 std::string pad_left(const std::string& s, int width)
 {
 	return spaces(width-s.size()) + s;
 }
+// FN-END
 
+// FN pad_right .
 std::string pad_right(const std::string& s, int width)
 {
 	return s + spaces(width-s.size());
 }
+// FN-END
 
-size_t strlenXXX(const std::string& s)
+// FN pad_centre .
+std::string pad_centre(const std::string& s, int width)
 {
-	return s.size();
+	return pad_left(pad_right(s, width/2), width);
 }
+// FN-END
+
+// FN pad_jst .
+std::string pad_jst(const std::string& s, int width, int jst)
+{
+	std::string txt{s};
+	switch(jst) {
+		case JST_DEF:
+		case JST_RGT:
+			txt = pad_left(txt, width);
+			break;
+		case JST_LFT:
+			txt = pad_right(txt, width);
+			break;
+		case JST_CNT:
+			txt = pad_centre(txt, width);
+			break;
+	}
+	return txt;
+}
+// FN-END

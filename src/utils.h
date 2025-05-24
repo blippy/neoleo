@@ -27,11 +27,12 @@
 
 
 extern void set_usr_stats (int, char **);
+std::string pad_centre(const std::string& s, int width);
+std::string pad_jst(const std::string& s, int width, int jst);
 std::string pad_right(const std::string& s, int width);
 std::string pad_left(const std::string& n, int width);
 std::string spaces(int n);
-size_t strlen(const std::string& s);
-//int stricmp (const char *, const char *);
+//size_t strlen(const std::string& s);
 
 std::optional<int> to_int(const std::string& str); // 25/4
 

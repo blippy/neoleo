@@ -19,6 +19,8 @@
 //#include "tbl.h"
 #include "utils.h"
 #include "oleofile.h"
+#include "spans.h"
+
 import errors;
 import logging;
 //#include "global.h"
@@ -224,6 +226,31 @@ static void _exc(int fildes)
 	//cout << _sys_ret << "\n";
 }
 
+// 25/05 Started. Very rough at this stage!
+static void hl_print_row(int fildes)
+{
+	// assume for now that we only want to print the first row
+	// and that there are 80 columns
+	//std::array<int, 80> row{-1};
+
+	int row = std::max(1, atoi(_arg.c_str()));
+	for(int col =0;col < 10; col++){
+		int w = get_width(col);
+		CELL* cp = find_cell(row, col);
+		if(cp == 0) {
+			cout << pad_left("", w);
+		} else {
+			int just = cp->get_cell_jst();
+			string txt{print_cell(cp)};
+			txt = pad_jst(txt, w, just);
+			cout << txt;
+		}
+		cout << " ";
+	}
+	cout << endl;
+
+}
+
 static map<string, function<void(T)> > func_map = {
 	{"!",		_exc},
 	{"dump-sheet", 	hless_dump_sheet},
@@ -232,6 +259,7 @@ static map<string, function<void(T)> > func_map = {
 	{"I", 		insert_rowwise},
 	{"i", 		insert_columnwise},
 	{"info", 	info},
+	{"p",		hl_print_row},
 	{"ri", 		hl_insert_row},
 	{"t", 		_type_sheet},
 	{"recalc", 	hl_recalc},

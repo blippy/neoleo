@@ -26,6 +26,7 @@
 #include "cell.h"
 #include "regions.h"
 #include "sheet.h"
+#include "spans.h"
 
 import value;
 using std::cerr;
@@ -57,6 +58,10 @@ bool is_range(CELL* cp)
 	return (cp && std::holds_alternative<rng_t>(cp->get_value_2019()));
 }
 
+int cell::width()
+{
+	return get_width(get_col(this->coord));
+}
 
 num_t cell::to_num()
 {
