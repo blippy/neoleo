@@ -71,13 +71,13 @@ void change_region(const struct rng& a_rng, std::function<void(CELL*)> fn)
 		//io_pr_cell (r, c, cp);		
 	}
 }
-void format_region (const struct rng& where, int fmt, int just) // FN
+void format_region (const struct rng& where, int fmt, enum jst just) // FN
 {
 	auto fn = [=](CELL* cp) {
 		if (fmt != -1) 
 			SET_FORMAT (cp, fmt);	/* Only the format, not the precision !! */
-		if (just != -1)
-			SET_JST (cp, just);
+		//if (just != -1)
+		cp->set_jst(just);
 	};
 
 	change_region(where, fn);

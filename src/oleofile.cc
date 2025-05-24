@@ -39,7 +39,7 @@ using std::map;
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
 
-const map<char, int>  jst_map{{'C', JST_CNT}, {'D', JST_DEF}, {'L', JST_LFT}, {'R', JST_RGT}};
+const map<char, enum jst>  jst_map{{'C', jst::cnt}, {'D', jst::def}, {'L', jst::lft}, {'R', jst::rgt}};
 
 
 // look up an item in a map. If not, raise an error
@@ -466,7 +466,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 	struct rng rng;
 	int vlen =0;
 	int fmt = 0, prc = 0;
-	int jst = 0;
+	enum jst jst = jst::def;
 	bool is_bold = false;
 	bool is_italic = false;
 	std::string err_msg;
@@ -559,7 +559,7 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 
 		SET_FORMAT(cp, fmt);
 		SET_PRECISION(cp, prc);
-		SET_JST(cp, jst);
+		cp->set_jst(jst);
 		cp->cell_flags.bold = is_bold;
 		cp->cell_flags.italic = is_italic;
 	};
@@ -648,13 +648,11 @@ void write_cells(FILE* fp)
 		CELLREF c = get_col(coord);
 		assert(c>0);
 
-		int f1, j1;
-
-		f1 = GET_FORMAT (cp);
-		j1 = GET_JST (cp);
+		int f1 = GET_FORMAT (cp);
+		enum jst j1 = cp->get_cell_jst();
 		bool is_bold = cp->cell_flags.bold;
 		bool is_italic = cp->cell_flags.italic;
-		if (f1 != FMT_DEF || j1 != JST_DEF || is_bold || is_italic)
+		if (f1 != FMT_DEF || j1 != jst::def || is_bold || is_italic)
 		{
 			(void) fprintf (fp, "F;");
 			if (c != ccol) {

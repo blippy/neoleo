@@ -21,10 +21,15 @@ constexpr auto MIN_COL = 1;
 constexpr auto NON_ROW = 0;
 constexpr auto NON_COL = 0;
 
+/*
 #define JST_DEF 	0
 #define JST_LFT		1
-#define JST_RGT		2
-#define JST_CNT		3
+#define jst::rgt		2
+#define jst::cnt		3
+*/
+
+enum class jst { def, lft, rgt, cnt};
+
 typedef struct rng {
 	CELLREF lr, lc, hr, hc;
 	bool operator==(const rng&) const = default;

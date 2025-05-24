@@ -70,18 +70,18 @@ std::string pad_centre(const std::string& s, int width)
 // FN-END
 
 // FN pad_jst .
-std::string pad_jst(const std::string& s, int width, int jst)
+std::string pad_jst(const std::string& s, int width, enum jst j)
 {
 	std::string txt{s};
-	switch(jst) {
-		case JST_DEF:
-		case JST_RGT:
+	switch(j) {
+		case jst::def:
+		case jst::rgt:
 			txt = pad_left(txt, width);
 			break;
-		case JST_LFT:
+		case jst::lft:
 			txt = pad_right(txt, width);
 			break;
-		case JST_CNT:
+		case jst::cnt:
 			txt = pad_centre(txt, width);
 			break;
 	}

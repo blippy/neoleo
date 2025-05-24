@@ -240,7 +240,7 @@ static void hl_print_row(int fildes)
 		if(cp == 0) {
 			cout << pad_left("", w);
 		} else {
-			int just = cp->get_cell_jst();
+			enum jst just = cp->get_cell_jst();
 			string txt{print_cell(cp)};
 			txt = pad_jst(txt, w, just);
 			cout << txt;

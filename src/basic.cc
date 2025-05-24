@@ -139,28 +139,25 @@ void set_region_protection (const struct rng& rng, int prot)
 }
 
 
-static int chr_to_jst (int chr)
+static enum jst chr_to_jst (int chr)
 {
 	if (chr == 'd' || chr == 'D')
-		return JST_DEF;
+		return jst::def;
 	if (chr == 'l' || chr == 'L')
-		return JST_LFT;
+		return jst::lft;
 	if (chr == 'r' || chr == 'R')
-		return JST_RGT;
+		return jst::rgt;
 	if (chr == 'c' || chr == 'C')
-		return JST_CNT;
-	return -1;
+		return jst::cnt;
+	return jst::def;
 }
 
 
 
 void set_region_alignment (const struct rng& rng, int align)
 {
-	int fun = chr_to_jst (align);
-	if (fun != -1)
-		format_region (rng, -1, fun);
-	else			/* if (main_map[align]!=BREAK_CMD) */
-		raise_error("Unknown Justify '%c'", align);
+	enum jst j = chr_to_jst (align);
+	format_region (rng, -1, j);
 }
 
 static void set_cell_alignment(char align)

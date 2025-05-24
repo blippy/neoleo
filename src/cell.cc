@@ -35,6 +35,10 @@ using std::endl;
 using std::get;
 
 
+void cell::set_jst(enum jst j)
+{
+	cell_flags.cell_justify = j;
+}
 
 
 void set_precision(CELL* cp, int precision)

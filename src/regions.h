@@ -24,5 +24,5 @@
 void lock_region (const struct rng& where, int locked);
 crefs_t coords_in_range (const rng_t& rng);
 const inline struct rng all_rng = {MIN_ROW, MIN_COL, MAX_ROW, MAX_COL};
-void format_region (const struct rng& where, int fmt, int just);
+void format_region (const struct rng& where, int fmt, enum jst just);
 void set_rng (const struct rng& r, CELLREF r1, CELLREF c1, CELLREF r2, CELLREF c2);

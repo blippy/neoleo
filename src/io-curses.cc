@@ -533,8 +533,8 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 
 
-	int j = GET_JST (cp);
-	if (j == JST_DEF) j = default_jst;
+	enum jst j = cp->get_cell_jst();
+	if (j == jst::def) j = default_jst;
 
 	const std::string& str = print_cell(cp);
 	char ptr1[str.size()+1];
@@ -545,11 +545,11 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	{
 		CELLREF ccl, cch;
 
-		if (j == JST_LFT)
+		if (j == jst::lft)
 			printw ("%-*.*s", wid, wid - 1, ptr);
-		else if (j == JST_RGT)
+		else if (j == jst::rgt)
 			printw ("%*.*s ", wid - 1, wid - 1, ptr);
-		else if (j == JST_CNT)
+		else if (j == jst::cnt)
 		{
 			wwid = (wid - 1) - lenstr;
 			printw ("%*s%*s ", (wwid + 1) / 2 + lenstr, ptr, wwid / 2, "");

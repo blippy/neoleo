@@ -43,9 +43,9 @@ typedef std::set<coord_t> crefs_t;
 
 
 
-#define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
-#define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
-inline const int base_default_jst = JST_RGT;
+//#define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
+//#define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
+inline enum jst base_default_jst = jst::rgt;
 
 /* Cell size paramaters. */
 inline const unsigned int default_width = 8;
@@ -72,11 +72,11 @@ inline unsigned int saved_default_height = 1;
 struct cell_flags_s {
 	unsigned int	cell_unused:	1;	/* Was 2 */
 	unsigned int	cell_lock = 	0;
-	unsigned int	cell_justify =	JST_DEF;
+	enum jst		cell_justify =	jst::def;
 	unsigned int	cell_format = 	FMT_DEF;	
 	unsigned int	cell_precision:	4;	
-	bool		bold = false;
-	bool		italic = false;
+	bool			bold = false;
+	bool			italic = false;
 }; 
 
 #define LCK_DEF		0
@@ -84,7 +84,7 @@ struct cell_flags_s {
 #define LCK_LCK		2
 
 /* Other cell defaults: */
-inline int default_jst = base_default_jst;
+inline enum jst default_jst = base_default_jst;
 inline int default_fmt = FMT_GEN;
 inline int default_prc = 0x0F;		/* FIX ME */
 inline int default_lock = LCK_UNL;
@@ -113,18 +113,16 @@ class cell
 		value_t get_value_2019() const;
 		void set_value_2019(value_t newval);
 		num_t to_num();
-		//ValType get_type();
 
-		// formula stuff
 		void set_formula_text(const std::string& str);
 
 		void dump_cell();
 		void reparse();
 
 		std::string get_formula_text() const;
-		//void reset();
 		struct cell_flags_s cell_flags;
-		int get_cell_jst() { return cell_flags.cell_justify; }
+		enum jst get_cell_jst() { return cell_flags.cell_justify; }
+		void set_jst(enum jst j);
 		int width();
 
 

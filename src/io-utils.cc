@@ -303,7 +303,7 @@ char *pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec)
 	return buffer;
 }
 
-char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, int just)
+char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just)
 {
 	int fmt;
 	int prc;
@@ -420,11 +420,11 @@ handle_exp:
 	   (len<=width) that we want to output */
 	if (len < smallwid)
 	{
-		if (just == JST_RGT || just == JST_CNT)
+		if (just == jst::rgt || just == jst::cnt)
 		{
 			int n;
 
-			n = (just == JST_RGT) ? smallwid - len : (1 + smallwid - len) / 2;
+			n = (just == jst::rgt) ? smallwid - len : (1 + smallwid - len) / 2;
 			for (;;)
 			{
 				bptr[len + n] = bptr[len];

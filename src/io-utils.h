@@ -25,7 +25,7 @@
 extern char numb_oflo[];
 
 
-char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, int just);
+char * adjust_prc (char *oldp, CELL *cp, int width, int smallwid, enum jst just);
 std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
 std::string print_cell (CELL *cp);
 std::string print_cell ();
