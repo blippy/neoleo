@@ -91,7 +91,7 @@ __DATA__
 basic.cc 		errors.cxx logging.cxx
 cell.cc 		value.cxx
 errors.cxx
-io-2019.cc 		errors.cxx logging.cxx win.cxx
+io-2019.cc 		errors.cxx logging.cxx utils.cxx win.cxx
 io-curses.cc	errors.cxx logging.cxx utils.cxx win.cxx
 io-headless.cc 	logging.cxx mod.cxx utils.cxx
 io-utils.cxx 	errors.cxx logging.cxx value.cxx
@@ -99,8 +99,8 @@ logging.cxx
 main.cc 		logging.cxx
 mod.cxx
 menu-2025.cc 	logging.cxx utils.cxx
-oleofile.cc 	errors.cxx
-parser-2019.cc 	errors.cxx value.cxx
+oleofile.cc 	errors.cxx utils.cxx
+parser-2019.cc 	errors.cxx utils.cxx value.cxx
 regions.cc
 sheet.cc
 spans.cc 		logging.cxx

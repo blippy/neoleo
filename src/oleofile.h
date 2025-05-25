@@ -21,8 +21,13 @@
  */
 
 
+#include <string>
 
-void	oleo_read_file (FILE *);
-int	oleo_set_options (int, char *);
-void	oleo_write_file (FILE *);
-void	oleo_write_file (FILE *, struct rng *);
+std::string FileGetCurrentFileName();
+void 		FileSetCurrentFileName(const char *s);
+void 		FileSetCurrentFileName(const std::string& s);
+void		oleo_read_file (FILE *);
+int			oleo_set_options (int, char *);
+void		oleo_write_file (FILE *);
+void		oleo_write_file (FILE *, struct rng *);
+void 		read_file_generic(FILE *, char *, const char *);

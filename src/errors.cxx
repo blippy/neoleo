@@ -63,7 +63,7 @@ export void raise_error (const std::string& msg) // FN
 	raise_error("%s", msg.c_str());
 }
 
-// FN panic
+// FN panic .
 export void panic (const char *s,...)
 {
 	va_list iggy;

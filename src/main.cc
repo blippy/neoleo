@@ -9,6 +9,7 @@
 #include "assert.h"
 #include "basic.h"
 #include "io-utils.h"
+#include "oleofile.h"
 #include "parser-2019.h"
 #include "sheet.h"
 #include "tests.h"

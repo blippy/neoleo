@@ -29,8 +29,8 @@
 
 import std;
 import logging;
-
 import errors;
+import utl;
 //#include "io-curses.h"
 
 using std::cout;
@@ -65,6 +65,38 @@ K map_reverse(const std::map<K,V> &m, V val)
 
 	throw OleoJmp("map_reverse failed");
 
+}
+
+
+void read_file_generic(FILE *fp, char *format, const char *name)
+{
+		oleo_read_file(fp);
+}
+
+
+static std::string _FileName = "unnamed.oleo";
+
+void FileCloseCurrentFile(void)
+{
+	_FileName =  "";
+}
+
+
+void FileSetCurrentFileName(const char *s)
+{
+	FileCloseCurrentFile();
+	if(!s) return;
+	_FileName = s;
+}
+
+void FileSetCurrentFileName(const std::string& s)
+{
+	FileSetCurrentFileName(s.c_str());
+}
+
+std::string FileGetCurrentFileName()
+{
+	return _FileName;
 }
 
 static long astol (char **ptr)
