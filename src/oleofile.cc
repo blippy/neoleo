@@ -25,8 +25,6 @@
 #include "oleofile.h"
 
 import std;
-import logging;
-import errors;
 import utl;
 
 using std::cout;

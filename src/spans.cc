@@ -2,7 +2,7 @@
 #include "cell.h"
 
 import std;
-import logging;
+import utl;
 
 void flush_spans ()
 {

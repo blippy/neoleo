@@ -16,7 +16,6 @@
 #include "io-curses.h"
 
 import std;
-import logging;
 import utl;
 import win;
 

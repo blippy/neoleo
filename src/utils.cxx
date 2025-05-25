@@ -21,6 +21,7 @@
 module;
 
 #include <math.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -30,49 +31,17 @@ module;
 #include "neotypes.h"
 #include "oleofile.h"
 #include "sheet.h"
-//#include "utils.h"
-
-#if 0
-
-#include <format>
-#include <stdlib.h>
-#include <iomanip>
-#include <locale>
-
-#include <signal.h>
-#include <sstream>
-#include <cstring>
-#include <string>
-
-#include <ctype.h>
-
-#include <variant>
-
-#include "basic.h"
-#include "io-utils.h"
-
-
-
-#include "spans.h"
-
-
-
-
-#endif
 
 
 export module utl;
 
 import std;
 
-import errors;
-import logging;
-import value;
-
 
 using namespace std::literals;
 using std::get;
 using std::string;
+namespace fs = std::filesystem;
 
 
 
@@ -98,6 +67,151 @@ private:
 	R m_unwind;
 	T m_param;
 };
+
+
+
+
+
+class Log
+{
+	public:
+		Log();
+		void debug(std::string s);
+		~Log();
+	private:
+		std::ofstream m_ofs;
+};
+
+Log m_log;
+
+Log::Log()
+{
+	auto dir = std::string(std::getenv("HOME")) + "/.neoleo";
+	fs::create_directories(dir);
+	auto logname = dir + "/log.txt";
+	m_ofs.open(logname, std::ofstream::out | std::ofstream::app);
+}
+
+void log_debug(const std::string& s)
+{
+	m_log.debug(s);
+}
+
+void log_debug(const char* s)
+{
+	m_log.debug(s);
+}
+
+
+void Log::debug(std::string s)
+{
+	auto t = std::time(nullptr);
+	auto tm = *std::localtime(&t);
+	m_ofs << std::put_time(&tm, "%Y-%m-%d %H:%M:%S ");
+	m_ofs << s << std::endl;
+
+}
+
+Log::~Log()
+{
+	if(m_ofs.is_open())
+		m_ofs.close();
+}
+
+
+export template<typename... Args>
+void log(Args ... args) {
+	std::ostringstream ss;
+	(ss << ... << args);
+	log_debug(ss.str());
+}
+
+
+
+
+/* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++
+ * */
+export class OleoJmp : public std::exception
+{
+	public:
+		OleoJmp() {}
+		OleoJmp(const std::string& msg) : msg_(msg) {}
+
+		virtual const char* what() const throw()
+		{
+			return msg_.c_str() ;
+		}
+
+	private:
+		std::string msg_ = "OleoJmp";
+};
+
+
+
+export class ValErr : public std::exception
+{
+	public:
+	       ValErr() {}
+	       ValErr(const int n) : n(n) {}
+	       const char* what() const throw();
+	       const int num() const throw();
+
+	private:
+	       int n = 0;
+	       std::string msg;
+};
+
+//using namespace std;
+
+
+const char* ValErr::what() const throw()
+{
+	return ename_desc[n];
+
+}
+const int ValErr::num() const throw()
+{
+	return n;
+}
+
+export bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
+export bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
+
+
+// FN raise_error
+export void raise_error (const char *str, ...) // FN
+{
+	va_list args;
+	char buf[1000];
+	va_start (args, str);
+	vsprintf (buf, str, args);
+	va_end(args);
+
+	throw OleoJmp(buf);
+}
+// FN-END
+
+export void raise_error (const std::string& msg) // FN
+{
+	raise_error("%s", msg.c_str());
+}
+
+// FN panic .
+export void panic (const char *s,...)
+{
+	va_list iggy;
+
+	va_start (iggy, s);
+	fprintf (stderr, "%s %s:", PACKAGE_NAME, VERSION);
+	vfprintf (stderr, s, iggy);
+	putc ('\n', stderr);
+	va_end (iggy);
+	exit (2);
+}
+// FN-END
+
+
+
 
 export char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 

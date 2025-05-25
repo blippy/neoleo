@@ -24,7 +24,7 @@
 #include "sheet.h"
 #include "spans.h"
 
-import logging;
+import utl;
 
 using std::cout;
 using std::endl;

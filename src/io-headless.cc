@@ -12,8 +12,6 @@
 #include "spans.h"
 
 import std;
-import errors;
-import logging;
 import mod;
 import utl;
 
