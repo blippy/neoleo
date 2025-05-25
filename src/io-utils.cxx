@@ -39,7 +39,6 @@
 import logging;
 #include "oleofile.h"
 #include "spans.h"
-//#include "utils.h"
 
 
 import errors;
@@ -48,12 +47,6 @@ import value;
 using namespace std::literals;
 using std::get;
 using std::string;
-
-#ifndef RETSIGTYPE
-#define RETSIGTYPE void
-#endif /* RETSIGTYPE */
-
-
 
 
 std::string bool_name(bool b)
@@ -71,10 +64,6 @@ char numb_oflo[] = "########################################";
 
 double __plinf = MAXFLOAT;
 double __neinf = -MAXFLOAT;
-//double __nan;
-
-
-
 
 
 char nname[] = "#NAN";
@@ -441,11 +430,6 @@ handle_exp:
 
 
 /* Functions for printing out the names of cells and ranges */
-
-std::string cell_nameXXX (CELLREF rr, CELLREF cc)
-{
-	return std::format("r{}c{}", rr, cc);
-}
 
 
 std::string range_name (struct rng *rng)
