@@ -470,19 +470,6 @@ std::string range_name (struct rng *rng)
 
 
 
-void clear_spreadsheet (void)
-{
-	flush_spans();
-	//default_width = saved_default_width;
-	default_height = saved_default_height;
-	default_jst = base_default_jst;
-	default_fmt = FMT_GEN;
-	default_lock = LCK_UNL;
-	delete_all_cells();
-}
-
-
-
 
 void read_file_generic(FILE *fp, char *format, const char *name)
 {

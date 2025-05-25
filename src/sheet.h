@@ -29,36 +29,32 @@
 
 typedef std::deque<cell_t*> celldeq_t;
 
-void decoord(const CELL* cp, CELLREF& r, CELLREF& c);
+void 	clear_spreadsheet (void);
+void 	copy_row(CELLREF dst_row, CELLREF src_row);
 std::tuple<CELLREF, CELLREF> decoord(const CELL* cp);
-
-
-
-coord_t to_coord(coord_t row, coord_t col);
-int get_col(coord_t coord);
-int get_row(coord_t coord);
-int get_col(const CELL* cp);
-int get_row(const CELL* cp);
-CELLREF max_row();
-CELLREF max_col();
-CELLREF highest_row();
-CELLREF highest_col();
-
-void delete_sheet_row(coord_t row);
-
-void 			copy_row(CELLREF dst_row, CELLREF src_row);
-void 			delete_all_cells();
-void 			dump_sheet();
-cell* 			find_cell(CELLREF row, CELLREF col);
-cell* 			find_cell(coord_t coord);
-cell* 			find_or_make_cell(CELLREF row, CELLREF col);
-cell_t* 		find_or_make_cell (coord_t coord);
-cell_t* 		find_or_make_cell ();
+void 	decoord(const CELL* cp, CELLREF& r, CELLREF& c);
+void 	delete_all_cells();
+void 	delete_sheet_row(coord_t row);
+void 	dump_sheet();
+cell* 	find_cell(CELLREF row, CELLREF col);
+cell* 	find_cell(coord_t coord);
+cell* 	find_or_make_cell(CELLREF row, CELLREF col);
+cell_t* find_or_make_cell (coord_t coord);
+cell_t* find_or_make_cell ();
 std::generator<CELL*>	get_cells_in_range(const rng_t& a_rng);
-void 			insert_col_left (coord_t col = cucol);
-void 			insert_row_above(coord_t row);
-bool 			inside(int val, int lo, int hi);
-bool 			inside(int r, int c, const struct rng& a_rng);
-bool 			inside(cell* cp, const struct rng& a_rng);
-void 			make_cells_in_range(const struct rng& a_rng);
-void 			no_more_cells();
+int 	get_col(coord_t coord);
+int 	get_col(const CELL* cp);
+int 	get_row(const CELL* cp);
+int 	get_row(coord_t coord);
+CELLREF highest_col();
+CELLREF highest_row();
+void 	insert_col_left (coord_t col = cucol);
+void 	insert_row_above(coord_t row);
+bool 	inside(int val, int lo, int hi);
+bool 	inside(int r, int c, const struct rng& a_rng);
+bool 	inside(cell* cp, const struct rng& a_rng);
+void 	make_cells_in_range(const struct rng& a_rng);
+CELLREF max_col();
+CELLREF max_row();
+void 	no_more_cells();
+coord_t to_coord(coord_t row, coord_t col);

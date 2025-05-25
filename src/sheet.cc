@@ -23,6 +23,7 @@
 #include "cell.h"
 #include "io-utils.h"
 #include "sheet.h"
+#include "spans.h"
 
 import logging;
 
@@ -77,6 +78,19 @@ std::tuple<CELLREF, CELLREF> decoord(const CELL* cp)
 cellmap_t the_cells;
 
 
+
+
+
+void clear_spreadsheet (void)
+{
+	flush_spans();
+	//default_width = saved_default_width;
+	default_height = saved_default_height;
+	default_jst = base_default_jst;
+	default_fmt = FMT_GEN;
+	default_lock = LCK_UNL;
+	delete_all_cells();
+}
 
 
 

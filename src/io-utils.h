@@ -32,7 +32,6 @@ std::string print_cell ();
 std::string FileGetCurrentFileName();
 int 		words_imatch (char ** ptr, char * key);
 void 		FileCloseCurrentFile(void);
-void 		clear_spreadsheet (void);
 void 		FileSetCurrentFileName(const char *s);
 void 		FileSetCurrentFileName(const std::string& s);
 void 		write_file_generic(FILE *, struct rng *, char *);
