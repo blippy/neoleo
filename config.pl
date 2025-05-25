@@ -88,23 +88,23 @@ print FH "\t" . '$(CXX) $^  -o $@ -lncursesw -lpanel -lform' . "\n";
 close(FH);
 
 __DATA__
-basic.cc errors.cxx logging.cxx
-cell.cc value.cxx
+basic.cc 		errors.cxx logging.cxx
+cell.cc 		value.cxx
 errors.cxx
-io-2019.cc errors.cxx logging.cxx win.cxx
-io-curses.cc errors.cxx logging.cxx win.cxx
-io-headless.cc logging.cxx mod.cxx
-io-utils.cc errors.cxx logging.cxx value.cxx
+io-2019.cc 		errors.cxx logging.cxx win.cxx
+io-curses.cc	errors.cxx logging.cxx utils.cxx win.cxx
+io-headless.cc 	logging.cxx mod.cxx utils.cxx
+io-utils.cxx 	errors.cxx logging.cxx value.cxx
 logging.cxx
-main.cc logging.cxx
+main.cc 		logging.cxx
 mod.cxx
-menu-2025.cc logging.cxx
-oleofile.cc errors.cxx
-parser-2019.cc errors.cxx value.cxx
+menu-2025.cc 	logging.cxx utils.cxx
+oleofile.cc 	errors.cxx
+parser-2019.cc 	errors.cxx value.cxx
 regions.cc
 sheet.cc
-spans.cc logging.cxx
-tests.cc
-utils.cc value.cxx
-value.cxx errors.cxx
+spans.cc 		logging.cxx
+tests.cc 		utils.cxx
+utils.cxx 		value.cxx
+value.cxx 		errors.cxx
 win.cxx

@@ -18,6 +18,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#if 0
 #include <map>
 #include <functional>
 #include <optional>
@@ -41,25 +42,4 @@ std::optional<int> to_int(const std::string& str); // 25/4
 
 
 
-class defer {
-public:
-	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
-	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
-	~defer() {m_unwind();};
-private:
-	std::function<void()> m_unwind;
-};
-
-
-template <typename R, typename T>
-class defer1 {
-public:
-	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
-	defer1(R fn_unwind, T param)  : m_unwind{fn_unwind}, m_param{param}  {};
-	~defer1() { m_unwind(m_param) ; };
-private:
-	R m_unwind;
-	T m_param;
-};
-
-
+#endif
