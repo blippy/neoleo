@@ -30,7 +30,7 @@
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
-#include "utils.h"
+//#include "utils.h"
 import logging;
 
 using std::cout;

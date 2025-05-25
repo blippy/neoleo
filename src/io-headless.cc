@@ -17,7 +17,7 @@
 #include "io-utils.h"
 #include "sheet.h"
 //#include "tbl.h"
-#include "utils.h"
+//#include "utils.h"
 #include "oleofile.h"
 #include "spans.h"
 

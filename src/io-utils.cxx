@@ -39,7 +39,7 @@
 import logging;
 #include "oleofile.h"
 #include "spans.h"
-#include "utils.h"
+//#include "utils.h"
 
 
 import errors;
