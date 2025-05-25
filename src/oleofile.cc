@@ -19,19 +19,15 @@
 
 #include <string.h>
 
-#include "io-utils.h"
-//#include "global.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
-//#include "utils.h"
 #include "oleofile.h"
 
 import std;
 import logging;
 import errors;
 import utl;
-//#include "io-curses.h"
 
 using std::cout;
 using std::map;

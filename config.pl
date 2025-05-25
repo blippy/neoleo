@@ -19,7 +19,7 @@ my $top = <<'EOM';
 CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
-#CXXFLAGS += -Wfatal-errors
+CXXFLAGS += -Wfatal-errors
 VPATH = src
 STD = gcm.cache/std.gcm
 
@@ -94,7 +94,6 @@ errors.cxx
 io-2019.cc 		errors.cxx logging.cxx utils.cxx win.cxx
 io-curses.cc	errors.cxx logging.cxx utils.cxx win.cxx
 io-headless.cc 	logging.cxx mod.cxx utils.cxx
-io-utils.cxx 	errors.cxx logging.cxx value.cxx
 logging.cxx
 main.cc 		logging.cxx
 mod.cxx

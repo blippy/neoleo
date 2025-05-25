@@ -33,16 +33,12 @@
 
 
 #include "cell.h"
-//#include "global.h"
 #include "io-2019.h"
 #include "io-curses.h"
-#include "io-utils.h"
 #include "menu-2025.h"
-//#include "neotypes.h"
 #include "regions.h"
 #include "sheet.h"
 #include "spans.h"
-//#include "utils.h"
 
 
 import std;

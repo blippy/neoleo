@@ -1,29 +1,19 @@
 #include <assert.h>
-#include <algorithm>
 #include <errno.h>
 #include <fcntl.h>
-#include <functional>
-#include <generator>
-#include <map>
 #include <ncurses.h>
 #include <unistd.h>
 #include <iostream>
-#include <string>
-#include <sstream>
-#include <vector>
 
 #include "basic.h"
 #include "cell.h"
-#include "io-utils.h"
 #include "sheet.h"
-//#include "tbl.h"
-//#include "utils.h"
 #include "oleofile.h"
 #include "spans.h"
 
+import std;
 import errors;
 import logging;
-//#include "global.h"
 import mod;
 import utl;
 

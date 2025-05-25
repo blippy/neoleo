@@ -26,19 +26,16 @@
 
 #include "basic.h"
 #include "regions.h"
-#include "io-utils.h"
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
-//#include "utils.h"
+
+import errors;
 import logging;
 
 using std::cout;
 using std::endl;
 
-import errors;
-
-//#define S (char *)
 
 
 

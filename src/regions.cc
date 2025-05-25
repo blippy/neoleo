@@ -26,7 +26,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "io-utils.h"
 #include "sheet.h"
 #include "regions.h"
 #include "basic.h"
