@@ -2,7 +2,7 @@
 # simple test of the spans functionality
 # Can it simply put out what it sucked in?
 
-! rm out/spans.oleo
+! rm -f out/spans.oleo
 I
 .
 

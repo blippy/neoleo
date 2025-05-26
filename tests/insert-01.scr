@@ -1,4 +1,4 @@
-! rm out/insert-01.oleo
+! rm -f out/insert-01.oleo
 i
 12
 13.1

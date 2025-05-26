@@ -1,5 +1,5 @@
 # # fix bug in floor which caused infinited loop
-! rm out/floor.oleo
+! rm -f out/floor.oleo
 I
 "Func"
 "In"

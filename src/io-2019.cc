@@ -8,6 +8,7 @@
 
 #include "basic.h"
 #include "io-2019.h"
+#include "neotypes.h"
 #include "parser-2019.h"
 #include "menu-2025.h"
 #include "oleofile.h"

@@ -1,5 +1,5 @@
 # 2025-04-20 A simple script to see if headless writing works
-! rm out/write.oleo
+! rm -f out/write.oleo
 I
 1
 2

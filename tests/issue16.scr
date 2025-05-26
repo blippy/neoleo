@@ -1,5 +1,5 @@
 # BUG#16 blank line test
-! rm out/issue16.oleo
+! rm -f out/issue16.oleo
 i
 1
 

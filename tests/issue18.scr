@@ -1,7 +1,7 @@
 # test of issue 18
 # cell referencing parsing bug
 
-! rm out/issue18.oleo
+! rm -f out/issue18.oleo
 i
 10
 r1c1+1

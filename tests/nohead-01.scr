@@ -1,4 +1,4 @@
-! rm out/nohead-01.oleo
+! rm -f out/nohead-01.oleo
 i
 12
 13.1

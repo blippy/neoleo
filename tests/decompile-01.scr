@@ -1,5 +1,5 @@
 # test decompile
-! rm out/decompile-01.oleo
+! rm -f out/decompile-01.oleo
 i
 "expect hello:"
 if(#TRUE, "hello", -3)

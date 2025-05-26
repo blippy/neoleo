@@ -26,7 +26,7 @@ using std::vector;
 
 typedef int T;
 
-static string _arg; // holds any argument found by process_headless_line()
+//static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
 
@@ -60,7 +60,7 @@ string to_oct(long n)
 }
 
 
-static void info(int fildes)
+static void info()
 {
 	// print diagnostic information
 
@@ -82,7 +82,7 @@ static void info(int fildes)
 
 
 
-static void hless_dump_sheet(T fildes)
+static void hless_dump_sheet()
 {
 	extern void dump_sheet();
 	dump_sheet();
@@ -125,16 +125,14 @@ static void insert_rowwise(T fildes)
 }
 
 
-static void type_cell(int fildes)
+static void type_cell()
 {
 	cout << print_cell() << "\n";
 }
 
-
-static void _write_file(int fildes)
+// FN hl_write_file .
+void hl_write_file()
 {
-	//log("_write_file:called");
-	if(_arg.size() > 0) FileSetCurrentFileName(_arg);
 	string name = FileGetCurrentFileName();
 	
 	//log("writing file:", name);
@@ -142,7 +140,7 @@ static void _write_file(int fildes)
 	FILE *fp = fopen(name.c_str(), "w");
 	if(!fp) {
 		_sys_ret = 1; 
-		cerr << "? Couldn't oleo file for writing:" << name << endl;
+		cerr << "? Couldn't open neoleo file for writing:" << name << endl;
 		return;
 	}
 
@@ -151,10 +149,21 @@ static void _write_file(int fildes)
 	fclose(fp);
 
 }
+void hl_write_file(string filename)
+{
+	//log("_write_file:called:", filename);
+	if(filename.size() > 0) FileSetCurrentFileName(filename);
+	hl_write_file();
+
+}
+// FN-END
+
+/*
 void hl_write_file(){
 	//log("hl_write_file:called");
 	_write_file(0);
 }
+*/
 
 // this seems to crash
 function<void(int)> with_int(function<void()> fn)
@@ -179,50 +188,51 @@ static void hl_goto_cell(int fildes)
 	}
 }
 
-static void hl_recalc(int fildes)
+static void hl_recalc()
 {
 	recalculate(1);
 }
 
-static void hl_insert_row(int fildes)
+static void hl_insert_row()
 {
 	insert_1row();
 }
 
 // type the sheet as an oleo file to stdout
-static void _type_sheet(int fildes) 
+static void _type_sheet()
 {
 	oleo_write_file(stdout);
 }
 
-static void hl_exit(int fildes)
+static void hl_exit(string arg)
 {	
 	//cout << "exit called\n";
-	if(_arg == "$?") {
+	if(arg == "$?") {
 		//log("calling hl_exit with status ", _sys_ret);
 		exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
 	}
-	auto ret = to_int(_arg);
+	auto ret = to_int(arg);
 	if(ret.has_value()) exit(ret.value());
 	exit(0);
 }
 
-static void _exc(int fildes)
+static void hl_exec(string command)
 {
+	//log("hl_exec", command);
 	//system("ls");
-	_sys_ret = system(_arg.c_str());
+	_sys_ret = system(command.c_str());
 	//log("system status:", _sys_ret, ", arg:", _arg);
 	//cout << _sys_ret << "\n";
 }
 
 // 25/05 Started. Very rough at this stage!
-static void hl_print_row(int fildes)
+static void hl_print_row(string arg)
 {
 	// assume for now that we only want to print the first row
 	// and that there are 80 columns
 	//std::array<int, 80> row{-1};
 
-	int row = std::max(1, atoi(_arg.c_str()));
+	int row = std::max(1, atoi(arg.c_str()));
 	for(int col =0;col < 10; col++){
 		int w = get_width(col);
 		CELL* cp = find_cell(row, col);
@@ -240,6 +250,7 @@ static void hl_print_row(int fildes)
 
 }
 
+/*
 static map<string, function<void(T)> > func_map = {
 	{"!",		_exc},
 	{"dump-sheet", 	hless_dump_sheet},
@@ -255,22 +266,57 @@ static map<string, function<void(T)> > func_map = {
 	{"type-cell", 	type_cell},
 	{"w", 		_write_file}
 };
+*/
 
 bool process_headless_line(std::string line, int fildes)
 {
 	// break line down into a command and arguments
-	int len = line.size();
-	if(len == 0) return true;
+	//int len = line.size();
+	if(line.size() == 0) return true;
 	if(line[0] == '#') return true;
 	int i = 0;
 	string cmd;
-	_arg = ""; // same it for use by any function
-	while(i<len && isspace(line[i])) i++;
+	string arg = ""; // same it for use by any function
+	line = trim(line);
+	int len = line.size();
+	//while(i<len && isspace(line[i])) i++;
 	while(i<len && !isspace(line[i])) cmd += line[i++];
 	while(i<len && isspace(line[i])) i++;
-	while(i<len) _arg += line[i++];
+	while(i<len) arg += line[i++];
 	//cout << "'" << cmd << "'\n";
 
+	//auto is = [&cmd](string s) { return cmd == s; };
+	if( cmd == "!") {
+		hl_exec(arg);
+	} else if(cmd == "dump-sheet") {
+		hless_dump_sheet();
+	} else if(cmd == "exit") {
+		hl_exit(arg);
+	} else if(cmd == "g") {
+		hl_goto_cell(fildes);
+	} else if(cmd == "I") {
+		insert_rowwise(fildes);
+	} else if(cmd == "i") {
+		insert_columnwise(fildes);
+	} else if(cmd == "info") {
+		info();
+	} else if(cmd == "p") {
+		hl_print_row(arg);
+	} else if(cmd == "q") {
+		return false;
+	} else if(cmd == "ri") {
+		hl_insert_row();
+	} else if(cmd == "t") {
+		_type_sheet();
+	} else if(cmd == "recalc") {
+		hl_recalc();
+	} else if(cmd == "type-cell") {
+		type_cell();
+	} else if( cmd == "w") {
+		hl_write_file(arg);
+	}
+
+#if 0
 	if(cmd == "q") {
 		//log("quit found");
 		return false;
@@ -287,7 +333,7 @@ bool process_headless_line(std::string line, int fildes)
 	} else {
 		cerr << "? command not found:" << cmd << endl;
 	}
-
+#endif
 
 
 

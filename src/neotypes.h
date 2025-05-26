@@ -96,3 +96,5 @@ inline std::string option_tests_argument = "";
 inline bool Global_modified = false;
 
 typedef struct point_t {int r; int c;} point_t;
+
+

@@ -1,6 +1,6 @@
 # see if a segfault happens with ctime()
 
-! rm out/ctime.oleo
+! rm -r out/ctime.oleo
 i
 ctime(1548076419)
 .

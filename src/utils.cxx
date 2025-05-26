@@ -749,6 +749,8 @@ export std::string stringify_value_file_style(const value_t& val)
 }
 
 
+// FN trim .
+// Remove the leading and trailing spaces of a string
 export std::string trim(const std::string& str)
 {
     if(str.length() ==0) { return str;}
@@ -757,6 +759,7 @@ export std::string trim(const std::string& str)
     size_t last = str.find_last_not_of(" \t\r\n");
     return str.substr(first, (last-first+1));
 }
+// FN-END
 
 export std::string getline_from_fildes(int fildes, bool& eof)
 {
