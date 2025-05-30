@@ -1,0 +1,34 @@
+
+Chapters
+CH	headless commands
+
+CH	headless commands
+
+hcmd:dum-sheet
+
+hcmd:exit
+
+hcmd:g
+
+hcmd:I
+
+hcmd:i
+
+hcmd:info
+
+hcmd:p	print [from[,to]]
+E.g. p 10,20
+Prints rows 10 to 20 inclusive
+
+
+hcmd:q	quit
+
+hcmd:ri	row insert
+
+hcmd:t
+
+hcmd:type-cell
+
+hcmd:w	write
+
+

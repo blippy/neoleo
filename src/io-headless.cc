@@ -22,6 +22,7 @@ using std::endl;
 using std::function;
 using std::map;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 typedef int T;
@@ -29,6 +30,21 @@ typedef int T;
 //static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
+
+static bool hl_scan_pint(stringstream& ss, int& val)
+{
+	while(isspace(ss.peek())) ss.get();
+	bool found = false;
+	int res = 0;
+	while(isdigit(ss.peek())) {
+		found = true;
+		res *= 10;
+		res += ss.get() - '0';
+	}
+
+	if(found) val = res;
+	return found;
+}
 
 void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
@@ -225,30 +241,48 @@ static void hl_exec(string command)
 	//cout << _sys_ret << "\n";
 }
 
+// FN hl_print_row
 // 25/05 Started. Very rough at this stage!
-static void hl_print_row(string arg)
+static void hl_print_row (string arg)
 {
 	// assume for now that we only want to print the first row
 	// and that there are 80 columns
 	//std::array<int, 80> row{-1};
 
-	int row = std::max(1, atoi(arg.c_str()));
-	for(int col =0;col < 10; col++){
-		int w = get_width(col);
-		CELL* cp = find_cell(row, col);
-		if(cp == 0) {
-			cout << pad_left("", w);
-		} else {
-			enum jst just = cp->get_cell_jst();
-			string txt{print_cell(cp)};
-			txt = pad_jst(txt, w, just);
-			cout << txt;
-		}
-		cout << " ";
+	//log("hl_print_row:enter:", arg);
+	stringstream ss(arg);
+	int row_start = 1;
+	int row_end = 1;
+	if(hl_scan_pint(ss, row_start)) {
+		row_end = row_start;
+		if(ss.peek() != ',') goto finis_scan;
+		ss.get();
+		hl_scan_pint(ss, row_end);
 	}
-	cout << endl;
+	finis_scan:
+
+	//int row = row_start;
+	//log("hl_print_row: row:", row);
+	//int row = std::max(1, atoi(arg.c_str()));
+	for (int row = row_start; row <= row_end; row++) {
+		for (int col = 0; col < 10; col++) {
+			int w = get_width(col);
+			CELL *cp = find_cell(row, col);
+			if (cp == 0) {
+				cout << pad_left("", w);
+			} else {
+				enum jst just = cp->get_cell_jst();
+				string txt { print_cell(cp) };
+				txt = pad_jst(txt, w, just);
+				cout << txt;
+			}
+			cout << " ";
+		}
+		cout << endl;
+	}
 
 }
+// FN-END
 
 /*
 static map<string, function<void(T)> > func_map = {

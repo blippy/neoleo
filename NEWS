@@ -41,6 +41,11 @@ refers to current column.
 * Added support for Ctrl-uparrow (move the 1st row) and Ctl-leftarrow
 (move to 1st column). Note that this is not supported on all terminals.
 
+== FEATURES ADDED TO HEADLESS MODE
+
+* p - print rows with row-range specifiers
+
+
 
 == BUGS
 
