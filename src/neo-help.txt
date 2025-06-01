@@ -16,9 +16,13 @@ hcmd:i
 
 hcmd:info
 
-hcmd:p	print [from[,to]]
+hcmd:p	print [r lo[,rhi]] [c clo[,chi]]
+Print row. Optionally, specify row low (rlo) and row high (rhi) and col low
+(clo) and col high (chi)
 E.g. p 10,20
-Prints rows 10 to 20 inclusive
+	Prints rows 10 to 20 inclusive
+E.g. p 10, 20 c 2,5
+	Prints rows 10 to 20, columns 2 to 5 (inclusive)
 
 
 hcmd:q	quit

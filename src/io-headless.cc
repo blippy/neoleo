@@ -30,10 +30,13 @@ typedef int T;
 //static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
-
-static bool hl_scan_pint(stringstream& ss, int& val)
+static void hl_eat_ws(stringstream& ss)
 {
 	while(isspace(ss.peek())) ss.get();
+}
+static bool hl_scan_pint(stringstream& ss, int& val)
+{
+	hl_eat_ws(ss);
 	bool found = false;
 	int res = 0;
 	while(isdigit(ss.peek())) {
@@ -45,6 +48,29 @@ static bool hl_scan_pint(stringstream& ss, int& val)
 	if(found) val = res;
 	return found;
 }
+
+static bool hl_scan_char(stringstream& ss, char c)
+{
+	hl_eat_ws(ss);
+	if(ss.peek() == c) {
+		ss.get();
+		return true;
+	}
+	return false;
+}
+
+
+static bool hl_scan_range(stringstream& ss, int& start, int& end)
+{
+	if (hl_scan_pint(ss, start)) {
+		end = start;
+		if (hl_scan_char(ss, ','))
+			hl_scan_pint(ss, end);
+		return true;
+	}
+	return false;
+}
+
 
 void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
@@ -253,19 +279,20 @@ static void hl_print_row (string arg)
 	stringstream ss(arg);
 	int row_start = 1;
 	int row_end = 1;
-	if(hl_scan_pint(ss, row_start)) {
-		row_end = row_start;
-		if(ss.peek() != ',') goto finis_scan;
-		ss.get();
-		hl_scan_pint(ss, row_end);
-	}
-	finis_scan:
+	hl_scan_range(ss, row_start, row_end);
+
+	int col_start = 1;
+	int col_end   = 10;
+	if(hl_scan_char(ss, 'c'))
+		hl_scan_range(ss, col_start, col_end);
+
+
 
 	//int row = row_start;
 	//log("hl_print_row: row:", row);
 	//int row = std::max(1, atoi(arg.c_str()));
 	for (int row = row_start; row <= row_end; row++) {
-		for (int col = 0; col < 10; col++) {
+		for (int col = col_start; col <= col_end; col++) {
 			int w = get_width(col);
 			CELL *cp = find_cell(row, col);
 			if (cp == 0) {
