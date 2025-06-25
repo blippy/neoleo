@@ -20,6 +20,7 @@ CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
 CXXFLAGS += -Wfatal-errors
+CXXFLAGS += $(shell pkg-config --cflags ncurses)
 VPATH = src
 STD = gcm.cache/std.gcm
 
@@ -68,7 +69,7 @@ while (<DATA>) {
 	foreach (@deps) {
 		print FH " build/$_.o";
 	}
-	print FH " neotypes.h";
+	print FH " neotypes.h \$(STD)";
 	print FH "\n";
 	print FH "\t" . '$(CXX) $(CXXFLAGS) -c $< -o $@' . "\n\n";
 	#my $trg = @_[1]; 
@@ -91,13 +92,13 @@ __DATA__
 basic.cc 		utils.cxx
 cell.cc 		utils.cxx
 io-2019.cc 		utils.cxx win.cxx
-io-curses.cc	utils.cxx win.cxx
-io-headless.cc 	utils.cxx
+io-curses.cc		utils.cxx win.cxx
+io-headless.cc 		utils.cxx mod.cxx
 main.cc 		utils.cxx
 mod.cxx
-menu-2025.cc 	utils.cxx
-oleofile.cc 	utils.cxx
-parser-2019.cc 	utils.cxx
+menu-2025.cc 		utils.cxx
+oleofile.cc 		utils.cxx
+parser-2019.cc 		utils.cxx
 regions.cc
 sheet.cc		utils.cxx
 spans.cc 		utils.cxx
