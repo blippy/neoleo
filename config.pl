@@ -20,9 +20,12 @@ CXX ?= g++
 CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
 CXXFLAGS += -Wfatal-errors
-CXXFLAGS += $(shell pkg-config --cflags ncurses)
+CXXFLAGS += $(shell pkg-config --cflags ncursesw)
 VPATH = src
 STD = gcm.cache/std.gcm
+
+LDLIBS = $(shell pkg-config --libs ncursesw)
+LDLIBS += -lpanel -lform
 
 .DEFAULT_GOAL = neoleo
 
@@ -78,7 +81,7 @@ while (<DATA>) {
 
 
 print FH  "neoleo :  @objs\n";
-print FH "\t" . '$(CXX) $^  -o $@ -lncursesw -lpanel -lform' . "\n";
+print FH "\t" . '$(CXX) $^  -o $@ $(LDLIBS)' . "\n";
 
 
 
