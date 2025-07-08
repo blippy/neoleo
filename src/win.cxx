@@ -29,6 +29,7 @@ export module win;
 import std;
 
 
+// FN win_print .
 // these should be nice generic functions
 export void win_print(WINDOW *w, const char* str) // FN
 {
@@ -38,6 +39,11 @@ export void win_print(WINDOW *w, const char* str) // FN
 export void win_print(const char* str) // FN
 {
 	addstr(str);
+}
+
+export void win_print(WINDOW *w, const std::string& str) // FN
+{
+	win_print(w, str.c_str());
 }
 
 export void win_print(const std::string& str) // FN
@@ -50,6 +56,7 @@ export void win_print(int y, int x, const std::string& str) // FN
 	move(y, x);
 	win_print(str);
 }
+// FN-END
 
 export std::tuple<int, int> win_getyx(WINDOW *win = stdscr)
 {
@@ -61,3 +68,12 @@ export std::tuple<int, int> win_getyx(WINDOW *win = stdscr)
 }
 
 
+// FN win_set .
+export void win_set_line(WINDOW *w, const std::string& str)
+{
+	wmove(w, 0, 0);
+	win_print(w, str);
+	wclrtoeol(w);
+	
+}
+// FN-END

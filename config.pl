@@ -99,7 +99,7 @@ io-curses.cc		utils.cxx win.cxx
 io-headless.cc 		utils.cxx mod.cxx
 main.cc 		utils.cxx
 mod.cxx
-menu-2025.cc 		utils.cxx
+menu-2025.cc 		utils.cxx win.cxx
 oleofile.cc 		utils.cxx
 parser-2019.cc 		utils.cxx
 regions.cc

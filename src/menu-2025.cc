@@ -10,7 +10,7 @@ import utl;
 #include "io-2019.h"
 #include "io-curses.h"
 
-
+import win;
 
 using namespace std;
 
@@ -78,24 +78,33 @@ bool col_width_form()
 	
 	WINDOW *win = subwin(w, 1, 6, 3, 16); // lines cols y x
 	defer1 d3(delwin, win);
+	// TODO
 	int pos = input.size(), len = 5;
-	mvwaddstr(win, 0, 0, input.c_str());
+	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
-		int ch = mvwgetch(win, 0, pos);
+		win_set_line(win, input);
+		//win_print(win, input);
+		wrefresh(win);	
+		int ch = get_ch();
+		//int ch = mvwgetch(win, 0, pos);
 		//int ch = getch();
 		if(ch == '\r') break;
 		//if(ch == CTRL('g')) break;
-		if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
+		if(ch == KEY_LEFT) {
+			input += '<';
+		} else 	if(ch == KEY_RIGHT) {
+			input += '>';
+		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
 			pos--; 
-			wdelch(win);  
+			//wdelch(win);  
 			input.erase(pos, 1);
 			continue;
+		} else {
+			if(pos >= len) continue;
+			input += ch;
+			//waddch(win, ch);			
+			pos++;
 		}
-		if(pos >= len) continue;
-		input += ch;
-		waddch(win, ch);
-		wrefresh(win);		
-		pos++;
 	}
 
 	mvwprintw(w, 2, 2, "You said '%s'", input.c_str());

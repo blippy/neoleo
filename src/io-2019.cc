@@ -46,7 +46,7 @@ int scr_width()
 int get_ch ()
 {
 	int c = getch();
-	//log(c);
+	log(c);
 	write_status(""); // clear the status line
 	return c;
 }
@@ -107,6 +107,7 @@ class nform_c : public npanel_c {
 
 			set_form_win(m_f, m_w);
 			set_form_sub(m_f, m_w);
+			//set_form_sub(m_f, derwin(m_w, 1, dlen, 1, 1));
 			post_form(m_f);
 			form_driver(m_f, REQ_END_FIELD);
 			curs_set(1);
