@@ -61,8 +61,7 @@ bool col_width_form()
 	defer1 d1(delwin, w);
 	box(w, 0 ,0);
 
-	curs_set(1);
-	defer1 d4{curs_set, 0};
+
 
 	PANEL *p = new_panel(w);
 	defer1 d2(del_panel, p);
@@ -78,13 +77,19 @@ bool col_width_form()
 	
 	WINDOW *win = subwin(w, 1, 6, 3, 16); // lines cols y x
 	defer1 d3(delwin, win);
+	curs_set(2); // 0: invis, 1:normal, 2:very vis
+	defer1 d4{curs_set, 0};
 	// TODO
 	int pos = input.size(), len = 5;
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		win_set_line(win, input);
+		//wmove(win, 1, 3); // set cursor
+		move(3, 16+pos);
 		//win_print(win, input);
 		wrefresh(win);	
+		//move(20, 20);
+		//refresh();
 		int ch = get_ch();
 		//int ch = mvwgetch(win, 0, pos);
 		//int ch = getch();
