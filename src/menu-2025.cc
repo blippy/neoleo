@@ -80,12 +80,12 @@ bool col_width_form()
 	curs_set(2); // 0: invis, 1:normal, 2:very vis
 	defer1 d4{curs_set, 0};
 	// TODO
-	int pos = input.size(), len = 5;
+	int pos = input.size() , max_len = 5;
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		win_set_line(win, input);
 		//wmove(win, 1, 3); // set cursor
-		move(3, 16+pos);
+		move(3, 16+pos); // place cursor. I don't think this makes sense, but nevermind, wmove doesn't seem to work
 		//win_print(win, input);
 		wrefresh(win);	
 		//move(20, 20);
@@ -96,17 +96,20 @@ bool col_width_form()
 		if(ch == '\r') break;
 		//if(ch == CTRL('g')) break;
 		if(ch == KEY_LEFT) {
-			input += '<';
+			//input += '<';
+			pos = max(pos-1, 0);
 		} else 	if(ch == KEY_RIGHT) {
-			input += '>';
+			pos = min(pos+1, max_len);
+			//input += '>';
 		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
 			pos--; 
 			//wdelch(win);  
 			input.erase(pos, 1);
 			continue;
 		} else {
-			if(pos >= len) continue;
-			input += ch;
+			if(pos >= max_len) continue;
+			input.insert(pos, string{static_cast<char>(ch)});
+			//input += ch;
 			//waddch(win, ch);			
 			pos++;
 		}
