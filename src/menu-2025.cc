@@ -104,6 +104,7 @@ bool col_width_form()
 			pos = 0;
 		} else 	if(ch == KEY_RIGHT) {
 			pos = min(pos+1, max_len);
+			pos = min(pos, (int) input.size());
 		} else if (ch == KEY_DC) {
 			// delete key
 			input.erase(pos, 1);
