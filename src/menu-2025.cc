@@ -98,9 +98,16 @@ bool col_width_form()
 		if(ch == KEY_LEFT) {
 			//input += '<';
 			pos = max(pos-1, 0);
+		} else if (ch == KEY_END) {
+			pos = input.size();
+		} else if (ch == KEY_HOME) {
+			pos = 0;
 		} else 	if(ch == KEY_RIGHT) {
 			pos = min(pos+1, max_len);
-			//input += '>';
+		} else if (ch == KEY_DC) {
+			// delete key
+			input.erase(pos, 1);
+			pos = max(pos-1, 0);
 		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
 			pos--; 
 			//wdelch(win);  
