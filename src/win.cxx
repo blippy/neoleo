@@ -51,10 +51,16 @@ export void win_print(const std::string& str) // FN
 	win_print(str.c_str());
 }
 
+export void win_print(WINDOW* w, int y, int x, const std::string& str) // FN
+{
+	//wmove(w, y, x);
+	mvwaddstr(w, y, x, str.c_str());
+	//win_print(w, str);
+
+}
 export void win_print(int y, int x, const std::string& str) // FN
 {
-	move(y, x);
-	win_print(str);
+	win_print(stdscr, y, x, str);
 }
 // FN-END
 
@@ -68,7 +74,7 @@ export std::tuple<int, int> win_getyx(WINDOW *win = stdscr)
 }
 
 
-// FN win_set .
+// FN win_set_line .
 export void win_set_line(WINDOW *w, const std::string& str)
 {
 	wmove(w, 0, 0);
