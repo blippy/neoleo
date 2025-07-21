@@ -148,83 +148,10 @@ bool col_width_form()
 	box(w, 0 ,0);
 
 
-#if 0
-	PANEL *p = new_panel(w);
-	defer1 d2(del_panel, p);
-	show_panel(p);
-#endif
-
-	
-#if 0
-	wrefresh(w);
-	mvwaddstr(w, 1,2, "Cursor width:");
-	wrefresh(w);
-#endif
 	
 	win_edln ed(w, 6, 1, 3, "Cursor width:", input);
 	ed.run();
 	input = ed.m_input;
-		//get_ch();
-	
-#if 0
-return true;
-	int y, x ;
-	getyx(w, y, x);	
-	x = 3;
-y=16;
-	log("y ", y, " x ", x);
-
-	WINDOW *win = subwin(w, 1, 6, y, x); // lines cols y x
-	defer1 d3(delwin, win);
-
-	// TODO
-
-	int pos = input.size() , max_len = 5;
-	//mvwaddstr(win, 0, 0, input.c_str());
-	while(1) {
-		win_set_line(win, input);
-		//wmove(win, 1, 3); // set cursor
-		move(3, 16+pos); // place cursor. I don't think this makes sense, but nevermind, wmove doesn't seem to work
-		//win_print(win, input);
-		//touchwin(w);
-		//touchwin(win);
-		wrefresh(win);	
-		wrefresh(w);
-		//move(20, 20);
-		//refresh();
-		int ch = get_ch();
-		//int ch = mvwgetch(win, 0, pos);
-		//int ch = getch();
-		if(ch == '\r') break;
-		//if(ch == CTRL('g')) break;
-		if(ch == KEY_LEFT) {
-			//input += '<';
-			pos = max(pos-1, 0);
-		} else if (ch == KEY_END) {
-			pos = input.size();
-		} else if (ch == KEY_HOME) {
-			pos = 0;
-		} else 	if(ch == KEY_RIGHT) {
-			pos = min(pos+1, max_len);
-			pos = min(pos, (int) input.size());
-		} else if (ch == KEY_DC) {
-			// delete key
-			input.erase(pos, 1);
-			pos = max(pos-1, 0);
-		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
-			pos--; 
-			//wdelch(win);  
-			input.erase(pos, 1);
-			continue;
-		} else {
-			if(pos >= max_len) continue;
-			input.insert(pos, string{static_cast<char>(ch)});
-			//input += ch;
-			//waddch(win, ch);			
-			pos++;
-		}
-	}
-#endif
 	mvwprintw(w, 2, 2, "You said '%s'", input.c_str());
 	//mvwprintw(w, 3, 2, "C for canel");
 	wrefresh(w);
