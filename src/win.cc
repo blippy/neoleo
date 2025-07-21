@@ -16,55 +16,58 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-module;
+//module;
 
-#include <ncurses.h>
+//#include <ncurses.h>
 
+#include "win.h"
 
 
 //#include <string>
 
-export module win;
+//export module win;
 
-import std;
+//import std;
 
 
 // FN win_print .
 // these should be nice generic functions
-export void win_print(WINDOW *w, const char* str) // FN
+void win_print(WINDOW *w, const char* str) // FN
 {
 	waddstr(w, str);
 }
 
-export void win_print(const char* str) // FN
+void win_print(const char* str) // FN
 {
 	addstr(str);
 }
 
-export void win_print(WINDOW *w, const std::string& str) // FN
+void win_print(WINDOW *w, const std::string& str) // FN
 {
 	win_print(w, str.c_str());
 }
 
-export void win_print(const std::string& str) // FN
+void win_print(const std::string& str) // FN
 {
 	win_print(str.c_str());
 }
 
-export void win_print(WINDOW* w, int y, int x, const std::string& str) // FN
+void win_print(WINDOW* w, int y, int x, const std::string& str) // FN
 {
 	//wmove(w, y, x);
 	mvwaddstr(w, y, x, str.c_str());
 	//win_print(w, str);
 
 }
-export void win_print(int y, int x, const std::string& str) // FN
+void win_print(int y, int x, const std::string& str) // FN
 {
 	win_print(stdscr, y, x, str);
 }
 // FN-END
 
-export std::tuple<int, int> win_getyx(WINDOW *win = stdscr)
+// FN win_getyx .
+// win defaults to stdscr
+std::tuple<int, int> win_getyx(WINDOW *win)
 {
 	int y, x;
 	getyx(win, y, x);
@@ -72,10 +75,11 @@ export std::tuple<int, int> win_getyx(WINDOW *win = stdscr)
 	return std::make_tuple(y, x);
 
 }
+// FN-END
 
 
 // FN win_set_line .
-export void win_set_line(WINDOW *w, const std::string& str)
+void win_set_line(WINDOW *w, const std::string& str)
 {
 	wmove(w, 0, 0);
 	win_print(w, str);

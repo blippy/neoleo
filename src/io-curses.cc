@@ -36,12 +36,13 @@
 #include "io-2019.h"
 #include "io-curses.h"
 #include "menu-2025.h"
+#include "neotypes.h"
 #include "regions.h"
 #include "sheet.h"
 #include "spans.h"
 
 
-import std;
+//import std;
 using std::cout;
 using std::endl;
 using std::string;
@@ -49,8 +50,8 @@ using std::vector;
 using namespace std::string_literals;
 
 
-import utl;
-import win;
+//import utl;
+//import win;
 
 
 

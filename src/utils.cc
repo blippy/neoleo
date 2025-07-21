@@ -18,7 +18,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-module;
+//module;
 
 #include <math.h>
 #include <stdarg.h>
@@ -27,15 +27,17 @@ module;
 #include <time.h>
 #include <unistd.h>
 
+#include <filesystem>
+
 #include "cell.h"
 #include "neotypes.h"
 #include "oleofile.h"
 #include "sheet.h"
 
 
-export module utl;
+//export module utl;
 
-import std;
+//import std;
 
 
 using namespace std::literals;
@@ -47,40 +49,8 @@ namespace fs = std::filesystem;
 
 
 
-export class defer {
-public:
-	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
-	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
-	~defer() {m_unwind();};
-private:
-	std::function<void()> m_unwind;
-};
 
 
-export template <typename R, typename T>
-class defer1 {
-public:
-	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
-	defer1(R fn_unwind, T param)  : m_unwind{fn_unwind}, m_param{param}  {};
-	~defer1() { m_unwind(m_param) ; };
-private:
-	R m_unwind;
-	T m_param;
-};
-
-
-
-
-
-class Log
-{
-	public:
-		Log();
-		void debug(std::string s);
-		~Log();
-	private:
-		std::ofstream m_ofs;
-};
 
 Log m_log;
 
@@ -119,47 +89,13 @@ Log::~Log()
 }
 
 
-export template<typename... Args>
-void log(Args ... args) {
-	std::ostringstream ss;
-	(ss << ... << args);
-	log_debug(ss.str());
-}
 
 
 
 
-/* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++
- * */
-export class OleoJmp : public std::exception
-{
-	public:
-		OleoJmp() {}
-		OleoJmp(const std::string& msg) : msg_(msg) {}
-
-		virtual const char* what() const throw()
-		{
-			return msg_.c_str() ;
-		}
-
-	private:
-		std::string msg_ = "OleoJmp";
-};
 
 
 
-export class ValErr : public std::exception
-{
-	public:
-	       ValErr() {}
-	       ValErr(const int n) : n(n) {}
-	       const char* what() const throw();
-	       const int num() const throw();
-
-	private:
-	       int n = 0;
-	       std::string msg;
-};
 
 //using namespace std;
 
@@ -174,12 +110,12 @@ const int ValErr::num() const throw()
 	return n;
 }
 
-export bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
-export bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
+bool is_num(const value_t& val) { return std::holds_alternative<num_t>(val); }
+bool is_range(const value_t& val) { return std::holds_alternative<rng_t>(val); }
 
 
-// FN raise_error
-export void raise_error (const char *str, ...) // FN
+// FN raise_error .
+void raise_error (const char *str, ...) 
 {
 	va_list args;
 	char buf[1000];
@@ -189,15 +125,15 @@ export void raise_error (const char *str, ...) // FN
 
 	throw OleoJmp(buf);
 }
-// FN-END
 
-export void raise_error (const std::string& msg) // FN
+void raise_error (const std::string& msg) 
 {
 	raise_error("%s", msg.c_str());
 }
+// FN-END
 
 // FN panic .
-export void panic (const char *s,...)
+void panic (const char *s,...)
 {
 	va_list iggy;
 
@@ -213,14 +149,14 @@ export void panic (const char *s,...)
 
 
 
-export char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
+
 
 constexpr char* CCC(const char* str) { return const_cast<char*>(str); }
 
 /* Structures/vars/functions for dealing with formatting floating-point
    numbers, etc */
 
-export struct user_fmt {
+struct user_fmt {
     char *name,		/* Format name */
 	*p_hdr,		/* Positive header */
 	*n_hdr,		/* Negative header */
@@ -234,31 +170,14 @@ export struct user_fmt {
 };
 
 
-// https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/3742999#3742999
-export template<typename ... Args>
-std::string string_format( const std::string& format, Args ... args )
-{
-    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
-    std::unique_ptr<char[]> buf( new char[ size ] );
-    snprintf( buf.get(), size, format.c_str(), args ... );
-    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
-}
-
-// 25/4 You can use it like
-// auto v = to_int(mystr);
-export std::optional<int> to_int(const std::string& str)
-{
-	try {
-		return stoi(str);
-	} catch(...) {
-		return std::nullopt;
-	}
-}
 
 
 
 
-export std::string spaces(int n)
+
+
+
+std::string spaces(int n)
 {
 	n = std::max(0, n);
 	char sa[n+1];
@@ -268,28 +187,28 @@ export std::string spaces(int n)
 }
 
 // FN pad_left .
-export std::string pad_left(const std::string& s, int width)
+std::string pad_left(const std::string& s, int width)
 {
 	return spaces(width-s.size()) + s;
 }
 // FN-END
 
 // FN pad_right .
-export std::string pad_right(const std::string& s, int width)
+std::string pad_right(const std::string& s, int width)
 {
 	return s + spaces(width-s.size());
 }
 // FN-END
 
 // FN pad_centre .
-export std::string pad_centre(const std::string& s, int width)
+std::string pad_centre(const std::string& s, int width)
 {
 	return pad_left(pad_right(s, width/2), width);
 }
 // FN-END
 
 // FN pad_jst .
-export std::string pad_jst(const std::string& s, int width, enum jst j)
+std::string pad_jst(const std::string& s, int width, enum jst j)
 {
 	std::string txt{s};
 	switch(j) {
@@ -349,14 +268,14 @@ const char *date_formats[] = {
 
 constexpr char* DOT() { return CCC("."); }
 
-export struct user_fmt dol = { CCC("dollar"), CCC("$"), CCC("$"), 0, CCC(")"), CCC("$0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
+struct user_fmt dol = { CCC("dollar"), CCC("$"), CCC("$"), 0, CCC(")"), CCC("$0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
 
-export struct user_fmt cma = { CCC("comma"), 0, CCC("("), 0, CCC(")"), CCC("0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
+struct user_fmt cma = { CCC("comma"), 0, CCC("("), 0, CCC(")"), CCC("0"), CCC(","), DOT(), FLOAT_PRECISION, 1};
 
-export struct user_fmt pct = { CCC("percent"), 0, CCC("-"), CCC("%"), CCC("%"), CCC("0%"), 0, DOT(), FLOAT_PRECISION, 100};
+struct user_fmt pct = { CCC("percent"), 0, CCC("-"), CCC("%"), CCC("%"), CCC("0%"), 0, DOT(), FLOAT_PRECISION, 100};
 
 // issue #6/TR01: zero now uses default "D", rather than "0"
-export struct user_fmt fxt = { CCC("fixed"), 0, CCC("-"), 0, 0, CCC("D"), 0, DOT(), FLOAT_PRECISION, 1};
+struct user_fmt fxt = { CCC("fixed"), 0, CCC("-"), 0, 0, CCC("D"), 0, DOT(), FLOAT_PRECISION, 1};
 
 
 
@@ -440,7 +359,7 @@ std::string flt_to_str (num_t val)
 }
 
 
-export std::string  fmt_std_date(int t)
+std::string  fmt_std_date(int t)
 {
 	time_t t1 = t;
 	struct tm *tmp = localtime(&t1);
@@ -500,7 +419,7 @@ std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 }
 
 // FN print_cell .
-export std::string print_cell (CELL * cp)
+std::string print_cell (CELL * cp)
 {
 
 	if (!cp) return CCC("");
@@ -525,7 +444,7 @@ export std::string print_cell (CELL * cp)
 	throw std::logic_error("Unhandled variant type in print_cell");
 }
 
-export std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_cell(cp); }
+std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_cell(cp); }
 // FN-END
 
 
@@ -537,7 +456,7 @@ export std::string print_cell () { auto *cp = find_cell(curow, cucol);  return p
  * they will have "" around them.
  */
 
-export std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
+std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 {
 	CELL* cp = find_cell (row, col);
 	if(!cp) return "";
@@ -557,7 +476,7 @@ export std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 
 
 
-export char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just)
+char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just)
 {
 	int fmt;
 	int prc;
@@ -739,7 +658,7 @@ std::string range_name (struct rng *rng)
 
 
 
-export std::string stringify_value_file_style(const value_t& val)
+std::string stringify_value_file_style(const value_t& val)
 {
 	if(std::get_if<std::monostate>(&val)) return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
@@ -751,7 +670,7 @@ export std::string stringify_value_file_style(const value_t& val)
 
 // FN trim .
 // Remove the leading and trailing spaces of a string
-export std::string trim(const std::string& str)
+std::string trim(const std::string& str)
 {
     if(str.length() ==0) { return str;}
     size_t first = str.find_first_not_of(" \t\r\n");
@@ -761,24 +680,16 @@ export std::string trim(const std::string& str)
 }
 // FN-END
 
-export std::string getline_from_fildes(int fildes, bool& eof)
+
+// FN to_int .
+std::optional<int> to_int(const std::string& str)
 {
-	char ch;
-	std::string line;
-	while(true) {
-		eof = read(fildes, &ch, 1) == 0;
-		if(eof) return line;
-
-		if(ch == '\n') {
-			//ofs << "line: " << line << endl;
-			//exec_cmd(line, fildes);
-			//line = "";
-			return line;
-		} else {
-			line += ch;
-		}
+	try {
+		return stoi(str);
+	} catch(...) {
+		return std::nullopt;
 	}
-
-	return line;
 }
+// FN-END
+
 

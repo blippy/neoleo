@@ -7,11 +7,11 @@
 //#include "utils.h"
 #include "spans.h"
 #include "basic.h"
-import utl;
+//import utl;
 #include "io-2019.h"
 #include "io-curses.h"
 
-import win;
+//import win;
 
 using namespace std;
 

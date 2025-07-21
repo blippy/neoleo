@@ -1,3 +1,6 @@
+.cache/
+.clang-format
+.clangd
 .settings/
 tests/diffs
 gcm.cache/

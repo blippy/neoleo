@@ -1,6 +1,6 @@
 # cmake v3.28 allows for  C++23 import std;
-#cmake_minimum_required(VERSION 3.28)
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.28)
+#cmake_minimum_required(VERSION 4.0)
 project(neoleo)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
@@ -19,10 +19,10 @@ set(CMAKE_BUILD_TYPE Debug)
 file(GLOB_RECURSE sources src/*.cc)
 
 add_executable(neoleo ${sources})
-#target_link_libraries(neoleo cursesw panel form)
+target_link_libraries(neoleo ncursesw panel form)
 
 enable_testing()
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 # Generate an archive using `cpack'
 set(CPACK_PACKAGE_NAME "neoleo")

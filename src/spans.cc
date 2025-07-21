@@ -1,8 +1,8 @@
 #include "spans.h"
 #include "cell.h"
 
-import std;
-import utl;
+//import std;
+//import utl;
 
 void flush_spans ()
 {

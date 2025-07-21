@@ -4,10 +4,19 @@
 
 #include <array>
 #include <cstdint>
+#include <functional>
+#include <iomanip>
+#include <iostream>
 #include <limits>
+#include <map>
+#include <memory>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <variant>
 #include <vector>
+
+#include "win.h"
 
 
 using num_t = double;
@@ -96,5 +105,123 @@ inline std::string option_tests_argument = "";
 inline bool Global_modified = false;
 
 typedef struct point_t {int r; int c;} point_t;
+
+void raise_error (const char *str, ...); 
+void raise_error (const std::string& msg);
+
+
+class Log
+{
+	public:
+		Log();
+		void debug(std::string s);
+		~Log();
+	private:
+		std::ofstream m_ofs;
+};
+
+void log_debug(const char* s);
+void log_debug(const std::string& s);
+
+template<typename... Args>
+void log(Args ... args) {
+	std::ostringstream ss;
+	(ss << ... << args);
+	log_debug(ss.str());
+}
+
+std::string trim(const std::string& str);
+
+// https://stackoverflow.com/questions/2342162/stdstring-formatting-like-sprintf/3742999#3742999
+template<typename ... Args>
+std::string string_format( const std::string& format, Args ... args )
+{
+    size_t size = snprintf( nullptr, 0, format.c_str(), args ... ) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buf( new char[ size ] );
+    snprintf( buf.get(), size, format.c_str(), args ... );
+    return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
+}
+
+std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
+char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
+std::string trim(const std::string& str);
+std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j);
+std::string print_cell (CELL * cp);
+std::string print_cell ();
+std::string spaces(int n);
+std::string pad_left(const std::string& s, int width);
+std::string pad_right(const std::string& s, int width);
+std::string pad_centre(const std::string& s, int width);
+std::string pad_jst(const std::string& s, int width, enum jst j);
+std::string stringify_value_file_style(const value_t& val);
+void panic (const char *s,...);
+bool is_num(const value_t& val);
+bool is_range(const value_t& val);
+char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
+extern struct user_fmt fxt;
+std::string  fmt_std_date(int t);
+
+
+
+class defer {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer(std::function<void()> fn_unwind) : m_unwind{fn_unwind} {};
+	~defer() {m_unwind();};
+private:
+	std::function<void()> m_unwind;
+};
+
+
+template <typename R, typename T>
+class defer1 {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer1(R fn_unwind, T param)  : m_unwind{fn_unwind}, m_param{param}  {};
+	~defer1() { m_unwind(m_param) ; };
+private:
+	R m_unwind;
+	T m_param;
+};
+
+
+
+/* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++
+ * */
+class OleoJmp : public std::exception
+{
+	public:
+		OleoJmp() {}
+		OleoJmp(const std::string& msg) : msg_(msg) {}
+
+		virtual const char* what() const throw()
+		{
+			return msg_.c_str() ;
+		}
+
+	private:
+		std::string msg_ = "OleoJmp";
+};
+
+// 25/4 You can use it like
+// auto v = to_int(mystr);
+std::optional<int> to_int(const std::string& str);
+
+
+
+class ValErr : public std::exception
+{
+	public:
+	       ValErr() {}
+	       ValErr(const int n) : n(n) {}
+	       const char* what() const throw();
+	       const int num() const throw();
+
+	private:
+	       int n = 0;
+	       std::string msg;
+};
+
+
 
 

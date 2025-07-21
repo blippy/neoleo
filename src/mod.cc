@@ -1,17 +1,17 @@
 // 2025-04-18 Created for testing purposes
 // 25/4 Intellisense doesn't support modules yet
 
-module;
+//module;
 
-//#include <string_view>
+#include <string_view>
 //import string_view;
 
 
-export module mod;
+//export module mod;
 
 //#include <string_view>
 
-import std;
+//import std;
 
 using namespace std::literals;
 
@@ -23,7 +23,7 @@ using namespace std::literals;
 
 //using namespace std::literals;
 
-export const char* mod_hi()
+const char* mod_hi()
 {
 	//return c();
 
@@ -33,7 +33,7 @@ export const char* mod_hi()
 
 // 25/4 good luck getting this working, even though it is simple
 
-export std::string_view c()
+std::string_view c()
 {
 	return  "module mod says hi"sv;
 

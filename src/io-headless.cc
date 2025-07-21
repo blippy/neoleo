@@ -11,9 +11,9 @@
 #include "oleofile.h"
 #include "spans.h"
 
-import std;
-import mod;
-import utl;
+//import std;
+//import mod;
+//import utl;
 
 using std::cin;
 using std::cout;
@@ -29,6 +29,27 @@ typedef int T;
 
 //static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
+
+std::string getline_from_fildes(int fildes, bool& eof)
+{
+	char ch;
+	std::string line;
+	while(true) {
+		eof = read(fildes, &ch, 1) == 0;
+		if(eof) return line;
+
+		if(ch == '\n') {
+			//ofs << "line: " << line << endl;
+			//exec_cmd(line, fildes);
+			//line = "";
+			return line;
+		} else {
+			line += ch;
+		}
+	}
+
+	return line;
+}
 
 static void hl_eat_ws(stringstream& ss)
 {

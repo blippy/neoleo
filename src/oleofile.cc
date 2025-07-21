@@ -19,13 +19,14 @@
 
 #include <string.h>
 
+#include "neotypes.h"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
 #include "oleofile.h"
 
-import std;
-import utl;
+//import std;
+//import utl;
 
 using std::cout;
 using std::map;

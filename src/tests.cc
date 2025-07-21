@@ -23,7 +23,7 @@ using namespace std::string_literals;
 #include "neotypes.h"
 #include "sheet.h"
 
-import utl;
+//import utl;
 
 static bool all_pass = true; // all the checks have passed so far
 
