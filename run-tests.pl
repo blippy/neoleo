@@ -2,8 +2,11 @@
 
 use v5.30;
 
+my $neo = "../build/neoleo";
+
 my $ntests = 0;
 my $npasses = 0;
+
 
 sub update_score {
 	my $ret = shift(@_);
@@ -20,7 +23,7 @@ sub update_score {
 sub scr {
 	my $name = shift(@_);
 	my $arg = shift(@_);
-	my $cmd = "cd tests ; ../neoleo $arg -s $name.scr";
+	my $cmd = "cd tests ; $neo $arg -s $name.scr";
 	print "Running $name: "; #  $cmd";
 	my $ret = system $cmd ;
 	update_score($ret);
@@ -40,7 +43,7 @@ sub bsh {
 sub tst {
 	my $name = shift(@_);
 	print "Running $name: ";
-	my $ret = system "cd tests; ../neoleo -T $name >/dev/null";
+	my $ret = system "cd tests; $neo -T $name >/dev/null";
 	update_score($ret);
 }
 
