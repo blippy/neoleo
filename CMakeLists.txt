@@ -5,7 +5,7 @@ project(neoleo)
 
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 set(CMAKE_CXX_COMPILER c++)
-#set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_MODULE_STD 1)
 
 #set(CMAKE_CXX_FLAGS "-fmodules -fsearch-include-path bits/std.cc")
-set(CMAKE_CXX_FLAGS "-fmodules")
+#set(CMAKE_CXX_FLAGS "-fmodules")
 
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)

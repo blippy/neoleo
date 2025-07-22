@@ -21,7 +21,7 @@
 
 
 //#include <deque>
-#include <generator>
+//#include <generator>
 
 #include "cell.h"
 #include "neotypes.h"
@@ -41,7 +41,8 @@ cell* 	find_cell(coord_t coord);
 cell* 	find_or_make_cell(CELLREF row, CELLREF col);
 cell_t* find_or_make_cell (coord_t coord);
 cell_t* find_or_make_cell ();
-std::generator<CELL*>	get_cells_in_range(const rng_t& a_rng);
+//std::generator<CELL*>	get_cells_in_range(const rng_t& a_rng);
+std::vector<CELL*> get_cells_in_range(const rng_t& a_rng);
 int 	get_col(coord_t coord);
 int 	get_col(const CELL* cp);
 int 	get_row(const CELL* cp);

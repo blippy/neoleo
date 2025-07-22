@@ -300,10 +300,14 @@ void copy_row(CELLREF dst_row, CELLREF src_row)
 ///////////////////////////////////////////////////////////////////////////
 // Looping routines
 
-std::generator<CELL*> get_cells_in_range(const rng_t& a_rng) // FN
+// FN get_cells_in_range .
+std::vector<CELL*> get_cells_in_range(const rng_t& a_rng)
 {
+	std::vector<CELL*> result;
 	for(auto const cp: the_cells) {
-		if(cp && inside(cp, a_rng)) co_yield cp;
+		if(cp && inside(cp, a_rng)) result.push_back(cp);
 	}
+	return result;
 	
 }
+// FN-END

@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include <filesystem>
+#include <format>
 
 #include "cell.h"
 #include "neotypes.h"
@@ -180,7 +181,8 @@ struct user_fmt {
 std::string spaces(int n)
 {
 	n = std::max(0, n);
-	char sa[n+1];
+	//char sa[n+1];
+	char *sa = (char*) alloca(n+1);
 	std::fill(sa, sa+n, ' ');
 	sa[n] = '\0';
 	return sa; 
