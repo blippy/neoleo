@@ -22,13 +22,18 @@
 
 #include "win.h"
 
-
+#include <algorithm>
 //#include <string>
 
 //export module win;
 
 //import std;
 
+using std::max;
+using std::min;
+using std::string;
+
+int get_ch (WINDOW *);
 
 
 // FN win_print .
@@ -88,3 +93,85 @@ void win_set_line(WINDOW *w, const std::string& str)
 	
 }
 // FN-END
+
+win_edln::win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const string& desc, const string& input)
+{
+	curs_set(2); // 0: invis, 1:normal, 2:very vis
+	
+	//defer1 d4{curs_set, 0};
+	m_parent = parent;
+
+	win_print(parent, begin_y, begin_x, desc);
+	win_print(parent, input);
+	wrefresh(parent);
+	m_begin_y = begin_y;
+	m_off_x = begin_x + desc.size();
+	m_input = input;
+	m_ncols = ncols;
+	getbegyx(parent, m_at_y, m_at_x); // where the window starts
+	//keypad(parent, TRUE); // might also be necessary for ESC key detection
+	notimeout(parent, FALSE); // capture escape
+	//nodelay(stdscr, TRUE); // we want to detect keys immediately
+}
+
+win_edln::~win_edln()
+{
+	//delwin(win);
+	curs_set(0); // invisible
+}
+
+
+void win_edln::run()
+{
+// log("win_edln::run");
+
+	int pos = m_input.size(); // , max_len = 5;
+	//mvwaddstr(win, 0, 0, input.c_str());
+	while(1) {
+		string padded{m_input};
+		padded.append(m_ncols- m_input.size(), ' ');
+		win_print(m_parent, m_begin_y, m_off_x, padded);
+		//win_set_line(win, input);
+		//wmove(win, 1, 3); // set cursor
+		//move(3, 16+pos); // place cursor. I don't think this makes sense, but nevermind, wmove doesn't seem to work
+		//wmove(m_parent, m_begin_y, m_off_x + pos);
+		move(m_begin_y + m_at_y, m_off_x + m_at_x + pos);
+		//wrefresh(win);	
+		wrefresh(m_parent);
+		refresh();
+		int ch = get_ch(m_parent);
+		if(ch == '\r') break;
+		if(ch == CTRL('g') || ch == 27 ) { // 27 is ESC key
+			m_cancelled = true;
+			return;
+		}
+		if(ch == KEY_LEFT) {
+			//input += '<';
+			pos = max(pos-1, 0);
+		} else if (ch == KEY_END) {
+			pos = m_input.size();
+		} else if (ch == KEY_HOME) {
+			pos = 0;
+		} else 	if(ch == KEY_RIGHT) {
+			pos = min(pos+1, m_ncols);
+			pos = min(pos, (int) m_input.size());
+		} else if (ch == KEY_DC) {
+			// delete key
+			m_input.erase(pos, 1);
+			pos = max(pos-1, 0);
+		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
+			pos--; 
+			//wdelch(win);  
+			m_input.erase(pos, 1);
+			continue;
+		} else {
+			if(pos >= m_ncols) continue;
+			m_input.insert(pos, string{static_cast<char>(ch)});
+			//input += ch;
+			//waddch(win, ch);			
+			pos++;
+		}
+	}
+
+}
+

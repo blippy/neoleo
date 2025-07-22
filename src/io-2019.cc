@@ -44,14 +44,24 @@ int scr_width()
 	return getmaxx(stdscr);
 }
 
-// FN get_ch 
+// FN get_ch .
 int get_ch ()
 {
-	int c = getch();
+	return get_ch(stdscr);
+	//int c = getch();
+	//log(c);
+	//write_status(""); // clear the status line
+	//return c;
+}
+
+int get_ch (WINDOW *win)
+{
+	int c = wgetch(win);
 	log(c);
 	write_status(""); // clear the status line
 	return c;
 }
+
 // FN-END
 
 class nwin_c {

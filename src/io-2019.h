@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
 
-void main_command_loop_for2019();
-void clear_status_line();
-void write_status (const std::string& str);
-int get_ch ();
+#include <ncurses.h>
+
+void 	clear_status_line();
+int 	get_ch ();
+int 	get_ch (WINDOW *win);
+void	main_command_loop_for2019();
+void 	write_status (const std::string& str);
