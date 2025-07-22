@@ -117,6 +117,7 @@ class Log
 		Log();
 		void debug(std::string s);
 		~Log();
+		int m_count = 0;
 	private:
 		std::ofstream m_ofs;
 };

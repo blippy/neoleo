@@ -76,6 +76,7 @@ void log_debug(const char* s)
 
 void Log::debug(std::string s)
 {
+	m_ofs << m_count++ << " ";
 	auto t = std::time(nullptr);
 	auto tm = *std::localtime(&t);
 	m_ofs << std::put_time(&tm, "%Y-%m-%d %H:%M:%S ");

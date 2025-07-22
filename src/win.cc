@@ -23,6 +23,9 @@
 #include "win.h"
 
 #include <algorithm>
+#include <ncurses.h>
+
+#include "neotypes.h"
 //#include <string>
 
 //export module win;
@@ -109,8 +112,11 @@ win_edln::win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const st
 	m_input = input;
 	m_ncols = ncols;
 	getbegyx(parent, m_at_y, m_at_x); // where the window starts
-	//keypad(parent, TRUE); // might also be necessary for ESC key detection
-	notimeout(parent, FALSE); // capture escape
+	keypad(parent, TRUE); // allow arrow detection
+	//notimeout(parent, FALSE); // capture escape
+	//notimeout(parent, TRUE); // do NOT capture escape
+	//log("get_escdelay:", get_escdelay());
+	set_escdelay(10); // lowering the escape delay will enable us to detect a pure escape (as opposed to arrows)
 	//nodelay(stdscr, TRUE); // we want to detect keys immediately
 }
 
@@ -141,10 +147,6 @@ void win_edln::run()
 		refresh();
 		int ch = get_ch(m_parent);
 		if(ch == '\r') break;
-		if(ch == CTRL('g') || ch == 27 ) { // 27 is ESC key
-			m_cancelled = true;
-			return;
-		}
 		if(ch == KEY_LEFT) {
 			//input += '<';
 			pos = max(pos-1, 0);
@@ -164,6 +166,10 @@ void win_edln::run()
 			//wdelch(win);  
 			m_input.erase(pos, 1);
 			continue;
+		} else if(ch == CTRL('g') || ch == 27) { // 27 = ESC
+			// positioning here is important due to pesky escaping conditions
+			m_cancelled = true;
+			return;
 		} else {
 			if(pos >= m_ncols) continue;
 			m_input.insert(pos, string{static_cast<char>(ch)});
