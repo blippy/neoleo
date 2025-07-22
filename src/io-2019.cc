@@ -16,6 +16,7 @@
 #include "regions.h"
 #include "sheet.h"
 #include "io-curses.h"
+#include "win.h"
 
 //import std;
 //import utl;
@@ -31,7 +32,7 @@ static void maybe_quit_spreadsheet2019(bool& quit);
 static void row_cmd2019();
 static void save_spreadsheet2019();
 
-static constexpr int CTRL(int c) { return c & 037; }
+
 
 using fn_t = std::function<void()> ;
 using keymap_t = std::map<int, fn_t>;

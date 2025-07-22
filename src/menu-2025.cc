@@ -10,6 +10,7 @@
 //import utl;
 #include "io-2019.h"
 #include "io-curses.h"
+#include "win.h"
 
 //import win;
 
@@ -26,6 +27,7 @@ class win_edln {
 		WINDOW* m_parent;
 		int m_begin_y, m_off_x, m_ncols, m_at_y, m_at_x;
 		string m_input;
+		bool m_cancelled = false;
 	
 };
 
@@ -70,7 +72,10 @@ void win_edln::run()
 		refresh();
 		int ch = get_ch();
 		if(ch == '\r') break;
-		//if(ch == CTRL('g')) break;
+		if(ch == CTRL('g')) {
+			m_cancelled = true;
+			return;
+		}
 		if(ch == KEY_LEFT) {
 			//input += '<';
 			pos = max(pos-1, 0);
@@ -135,7 +140,7 @@ void process_menu() // FN
 	}
 }
 
-static constexpr int CTRL(int c) { return c & 037; }
+//static constexpr int CTRL(int c) { return c & 037; }
 
 
 // the examplar is io-2019.cc:nform_c
@@ -151,6 +156,7 @@ bool col_width_form()
 	
 	win_edln ed(w, 6, 1, 3, "Cursor width:", input);
 	ed.run();
+	if(ed.m_cancelled) return true;
 	input = ed.m_input;
 	mvwprintw(w, 2, 2, "You said '%s'", input.c_str());
 	//mvwprintw(w, 3, 2, "C for canel");
@@ -176,7 +182,7 @@ bool col_width_form()
 		set_width(new_width.value());
 	}
 
-	cur_io_repaint();
+	//cur_io_repaint();
 	return true;
 
 }

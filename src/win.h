@@ -12,3 +12,6 @@ void win_print(const std::string& str);
 void win_print(WINDOW* w, int y, int x, const std::string& str);
 void win_print(int y, int x, const std::string& str);
 std::tuple<int, int> win_getyx(WINDOW *win = stdscr);
+
+//int CTRL(int c);
+constexpr int CTRL(int c) { return c & 037; }
