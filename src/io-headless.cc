@@ -30,7 +30,8 @@ typedef int T;
 //static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
-std::string getline_from_fildes(int fildes, bool& eof)
+// FN getline_from_fildes .
+std::string getline_from_fildes (int fildes, bool& eof)
 {
 	char ch;
 	std::string line;
@@ -50,6 +51,7 @@ std::string getline_from_fildes(int fildes, bool& eof)
 
 	return line;
 }
+// FN-END
 
 static void hl_eat_ws(stringstream& ss)
 {
@@ -153,6 +155,7 @@ static void hless_dump_sheet()
 
 
 
+#if 0
 std::generator<string> reading(T fildes)
 {
 	while(true) {
@@ -166,10 +169,23 @@ std::generator<string> reading(T fildes)
 	}
 
 }
+#endif
+
+bool reading(T fildes, string& line)
+{
+	bool eof;
+again:
+	line = getline_from_fildes(fildes, eof);
+	if(line == ".") return false;
+	if(line.size() == 0 && eof) return false;
+	if(line.starts_with('#')) goto again;
+	return true;
+}
 
 static void insert_columnwise(T fildes)
 {
-	for(const string& line : reading(fildes)) {
+	string line;
+	while(reading(fildes, line)) {
 		if(line == ";") { cucol++; 	curow=1; continue;}
 		if(line == "")  { curow++; continue;}
 		set_cell_input_1(curow, cucol, line);
@@ -179,7 +195,8 @@ static void insert_columnwise(T fildes)
 
 static void insert_rowwise(T fildes)
 {
-	for(const string& line : reading(fildes)) {
+	string line;
+	while(reading(fildes, line)) {
 		if(line == ";") { curow++; 	cucol=1; continue;}
 		if(line == "")  { cucol++; continue;}
 		set_cell_input_1(curow, cucol, line);

@@ -13,7 +13,6 @@
 #include "menu-2025.h"
 #include "neotypes.h"
 #include "oleofile.h"
-#include "regions.h"
 #include "sheet.h"
 #include "io-curses.h"
 #include "win.h"
