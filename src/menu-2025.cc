@@ -46,6 +46,9 @@ win_edln::win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const st
 	m_input = input;
 	m_ncols = ncols;
 	getbegyx(parent, m_at_y, m_at_x); // where the window starts
+	//keypad(parent, TRUE); // might also be necessary for ESC key detection
+	notimeout(parent, FALSE); // capture escape
+	//nodelay(stdscr, TRUE); // we want to detect keys immediately
 }
 
 win_edln::~win_edln()
@@ -72,7 +75,7 @@ void win_edln::run()
 		refresh();
 		int ch = get_ch();
 		if(ch == '\r') break;
-		if(ch == CTRL('g')) {
+		if(ch == CTRL('g') || ch == 27 ) { // 27 is ESC key
 			m_cancelled = true;
 			return;
 		}
