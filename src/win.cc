@@ -23,6 +23,7 @@
 #include "win.h"
 
 #include <algorithm>
+#include <cassert>
 #include <ncurses.h>
 
 #include "neotypes.h"
@@ -96,6 +97,27 @@ void win_set_line(WINDOW *w, const std::string& str)
 	
 }
 // FN-END
+
+// 
+
+win_dow::win_dow(int nlines, int ncols, int begin_y, int begin_x) :
+	nlines(nlines), ncols(ncols), begin_y(begin_y), begin_x(begin_x) {
+	m_w = newwin(nlines, ncols, begin_y, begin_x);
+	keypad(m_w, TRUE);
+	set_escdelay(10); // lowering the escape delay will enable us to detect a
+					  // pure escape (as opposed to arrows)
+	assert(m_w);
+	wrefresh(m_w);
+}
+
+win_dow::~win_dow() { delwin(m_w); }
+
+void win_dow::print_at(int y, int x, const std::string& str)
+{
+	mvwaddstr(m_w, y, x, str.c_str());
+}
+
+
 
 // FN win_edln .
 win_edln::win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const string& desc, const string& input)

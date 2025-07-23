@@ -63,32 +63,7 @@ int get_ch (WINDOW *win)
 
 // FN-END
 
-class nwin_c {
-	public:
-		nwin_c(int nlines, int ncols, int begin_y, int begin_x);
-		~nwin_c();
-		void print_at(int y, int x, const std::string& str);
-	
-		WINDOW* m_w = 0;
-		int nlines, ncols, begin_y, begin_x;
-};
 
-nwin_c::nwin_c(int nlines, int ncols, int begin_y, int begin_x) :
-	nlines(nlines), ncols(ncols), begin_y(begin_y), begin_x(begin_x) {
-	m_w = newwin(nlines, ncols, begin_y, begin_x);
-	keypad(m_w, TRUE);
-	set_escdelay(10); // lowering the escape delay will enable us to detect a
-					  // pure escape (as opposed to arrows)
-	assert(m_w);
-	wrefresh(m_w);
-}
-
-nwin_c::~nwin_c() { delwin(m_w); }
-
-void nwin_c::print_at(int y, int x, const std::string& str)
-{
-	mvwaddstr(m_w, y, x, str.c_str());
-}
 
 #if 0
 class npanel_c : public nwin_c {
@@ -180,7 +155,7 @@ const std::string nform_c::text()
 static bool invoke_std_form(const char* desc, std::string& text_field)
 {
 #if 1
-	nwin_c win(12, 75, 10, 5);
+	win_dow win(12, 75, 10, 5);
 	nform_c frm(win.m_w, desc, text_field);
 
 	auto fdrive = [&frm](int req) { form_driver(frm.m_f, req); } ;
@@ -241,7 +216,7 @@ void edit_cell2019()
 	std::string formula{ formula_text(curow, cucol)};
 	std::string old_formula{formula};
 #if 1
-	nwin_c par(1, 75, 2, 0);
+	win_dow par(1, 75, 2, 0);
 	par.print_at(0, 0, "foogoo");
 	wrefresh(par.m_w);
 	//get_ch(par.m_w);

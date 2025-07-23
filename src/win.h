@@ -16,6 +16,18 @@ std::tuple<int, int> win_getyx(WINDOW *win = stdscr);
 //int CTRL(int c);
 constexpr int CTRL(int c) { return c & 037; }
 
+
+class win_dow {
+	public:
+		win_dow(int nlines, int ncols, int begin_y, int begin_x);
+		~win_dow();
+		void print_at(int y, int x, const std::string& str);
+	
+		WINDOW* m_w = 0;
+		int nlines, ncols, begin_y, begin_x;
+};
+
+
 class win_edln {
 	public:
 		win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const std::string& desc, const std::string& input);
