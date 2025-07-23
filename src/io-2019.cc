@@ -56,8 +56,8 @@ int get_ch ()
 int get_ch (WINDOW *win)
 {
 	int c = wgetch(win);
-	log(c);
-	write_status(""); // clear the status line
+	log("get_ch:", c);
+	//write_status(""); // clear the status line
 	return c;
 }
 
@@ -65,20 +65,32 @@ int get_ch (WINDOW *win)
 
 class nwin_c {
 	public:
-		nwin_c() {
-			m_w = newwin(1, scr_width(), 1, 0);
-			assert(m_w);
-			wrefresh(m_w);
-		}
-		~nwin_c() {
-			delwin(m_w);
-		}
-
-		//private:
-		WINDOW* m_w;
-
+		nwin_c(int nlines, int ncols, int begin_y, int begin_x);
+		~nwin_c();
+		void print_at(int y, int x, const std::string& str);
+	
+		WINDOW* m_w = 0;
+		int nlines, ncols, begin_y, begin_x;
 };
 
+nwin_c::nwin_c(int nlines, int ncols, int begin_y, int begin_x) :
+	nlines(nlines), ncols(ncols), begin_y(begin_y), begin_x(begin_x) {
+	m_w = newwin(nlines, ncols, begin_y, begin_x);
+	keypad(m_w, TRUE);
+	set_escdelay(10); // lowering the escape delay will enable us to detect a
+					  // pure escape (as opposed to arrows)
+	assert(m_w);
+	wrefresh(m_w);
+}
+
+nwin_c::~nwin_c() { delwin(m_w); }
+
+void nwin_c::print_at(int y, int x, const std::string& str)
+{
+	mvwaddstr(m_w, y, x, str.c_str());
+}
+
+#if 0
 class npanel_c : public nwin_c {
 	public:
 		npanel_c() {
@@ -98,63 +110,83 @@ class npanel_c : public nwin_c {
 		PANEL* m_p;
 
 };
+#endif
 
-class nform_c : public npanel_c {
+#if 1
+class nform_c  /*: public npanel_c */ {
 	public:
-		nform_c(const char* desc, std::string& text) {
-			int dlen = strlen(desc);
-			m_fields[0] = new_field(1, dlen, 0, 0, 0, 0);
-			m_fields[1] = new_field(1, scr_width() - dlen, 0, dlen, 0, 0);
-			m_fields[2] = nullptr;
-			m_f = new_form(m_fields);
-			assert(m_f);
-			set_field_buffer(m_fields[0], 0, desc);
-			set_field_opts(m_fields[0], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
-			set_field_buffer(m_fields[1], 0, text.c_str());
-			set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
-			set_field_back(m_fields[1], A_UNDERLINE);
-			//set_field_type(m_fields[1], TYPE_ALNUM, 60);
-			set_current_field(m_f, m_fields[1]);
+		nform_c(WINDOW *win, const char* desc, std::string& text);
+		const std::string text();
 
-			set_form_win(m_f, m_w);
-			set_form_sub(m_f, m_w);
-			//set_form_sub(m_f, derwin(m_w, 1, dlen, 1, 1));
-			post_form(m_f);
-			form_driver(m_f, REQ_END_FIELD);
-			curs_set(1);
-			refresh();
-			wrefresh(m_w);
-
-
-		}
-		const std::string text() {
-			form_driver(m_f, REQ_NEXT_FIELD); // force buffer sync
-			return trim(field_buffer(m_fields[1], 0));
-		}
-
-		~nform_c() {
-			unpost_form(m_f);
-			free_form(m_f);
-			free_field(m_fields[0]);
-			free_field(m_fields[1]);
-			curs_set(0);
-		}
+		~nform_c(); 
 
 	public:
 		FIELD *m_fields[3]; //= { m_desc, m_edit, nullptr };;
 		FORM* m_f;
+		WINDOW* m_w = nullptr;
 
 };
+
+nform_c::nform_c(WINDOW *win, const char* desc, std::string& text)
+{
+	curs_set(1);
+	assert(win);
+	m_w = win;
+	int dlen = strlen(desc);
+	m_fields[0] = new_field(1, dlen, 0, 0, 0, 0);
+	m_fields[1] = new_field(1, 60 - dlen, 0, dlen, 0, 0);
+	m_fields[2] = nullptr;
+	m_f = new_form(m_fields);
+	assert(m_f);
+	set_field_buffer(m_fields[0], 0, desc);
+	set_field_opts(m_fields[0], O_VISIBLE | O_PUBLIC | O_AUTOSKIP);
+	set_field_buffer(m_fields[1], 0, text.c_str());
+	set_field_opts(m_fields[1], O_VISIBLE | O_PUBLIC | O_EDIT | O_ACTIVE);
+	set_field_back(m_fields[1], A_UNDERLINE);
+	//set_field_type(m_fields[1], TYPE_ALNUM, 60);
+	set_current_field(m_f, m_fields[1]);
+
+	set_form_win(m_f, m_w);
+	//set_form_sub(m_f, m_w);
+	set_form_sub(m_f, derwin(m_w, 1, 70, 1, 1));
+	post_form(m_f);
+	form_driver(m_f, REQ_END_FIELD);
+	//curs_set(1);
+	//refresh();
+	wrefresh(m_w);
+	
+}
+
+nform_c::~nform_c() 
+{
+	unpost_form(m_f);
+	free_form(m_f);
+	free_field(m_fields[0]);
+	free_field(m_fields[1]);
+	curs_set(0);
+}
+
+const std::string nform_c::text()
+{
+	form_driver(m_f, REQ_NEXT_FIELD); // force buffer sync
+	return trim(field_buffer(m_fields[1], 0));
+}
+
+
+#endif
 
 // retun true for normal exit, false if user wants to abort action
 // text_field is modified by nform_c
 static bool invoke_std_form(const char* desc, std::string& text_field)
 {
-	nform_c frm(desc, text_field);
+#if 1
+	nwin_c win(12, 75, 10, 5);
+	nform_c frm(win.m_w, desc, text_field);
 
 	auto fdrive = [&frm](int req) { form_driver(frm.m_f, req); } ;
 	int ch;
-	while((ch = getch()) != CTRL('m')) {
+	while((ch = get_ch(win.m_w)) != CTRL('m')) {
+		log("invoke_std_form:ch", ch);
 		switch(ch) {
 			case KEY_HOME:
 				fdrive(REQ_BEG_FIELD);
@@ -192,20 +224,47 @@ static bool invoke_std_form(const char* desc, std::string& text_field)
 					fdrive(ch);
 					break;
 		}
-		refresh();
+		//refresh();
 		wrefresh(frm.m_w);
 	}
 
 	text_field =  frm.text();
+	log("frm.text():", text_field);
+#endif
 	return true;
+
 }
+
 
 void edit_cell2019()
 {
 	std::string formula{ formula_text(curow, cucol)};
 	std::string old_formula{formula};
+#if 1
+	nwin_c par(1, 75, 2, 0);
+	par.print_at(0, 0, "foogoo");
+	wrefresh(par.m_w);
+	//get_ch(par.m_w);
+	//return;
+
+	//WINDOW * win = par.m_w;
+	//win = stdscr;
+log("edit_cell2019:1");
+	WINDOW* win;
+	//= newwin(7, 75, 1, 1);
+	win = par.m_w;
+log("edit_cell2019:2");
+	//defer1(delwin, win);
+log("edit_cell2019:3");
+	win_edln ed(win, 70, 0, 0 , "=",  formula);
+log("edit_cell2019:4");
+	ed.run();
+	if(ed.m_cancelled) return;
+	formula = ed.m_input;
+#else
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
+#endif
 	if(old_formula == formula) return;
 	Global_modified = true;
 	set_and_eval(curow, cucol, formula, true);
@@ -347,6 +406,7 @@ bool curses_loop () // FN
 void write_status (const std::string& str)
 {
 	// 25/4 Persist the error messages
+	log("write_status");
 	win_print(1, 0, str);
 	clrtoeol();
 

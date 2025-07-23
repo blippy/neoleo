@@ -23,7 +23,7 @@ class win_edln {
 		void run();
 		//WINDOW *m_win;
 		WINDOW* m_parent;
-		int m_begin_y, m_off_x, m_ncols, m_at_y, m_at_x;
+		int m_begin_y, m_off_x, m_ncols, m_at_y, m_at_x, m_begin_x, m_desc_len;
 		std::string m_input;
 		bool m_cancelled = false;
 	

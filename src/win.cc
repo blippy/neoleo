@@ -97,28 +97,34 @@ void win_set_line(WINDOW *w, const std::string& str)
 }
 // FN-END
 
+// FN win_edln .
 win_edln::win_edln(WINDOW *parent, int ncols, int begin_y, int begin_x, const string& desc, const string& input)
 {
+	//log("win_edln:1");
 	curs_set(2); // 0: invis, 1:normal, 2:very vis
 	
 	//defer1 d4{curs_set, 0};
 	m_parent = parent;
-
 	win_print(parent, begin_y, begin_x, desc);
 	win_print(parent, input);
 	wrefresh(parent);
+	//refresh();
 	m_begin_y = begin_y;
 	m_off_x = begin_x + desc.size();
 	m_input = input;
 	m_ncols = ncols;
+	//get_ch(parent);
+	m_desc_len = desc.size();
+	m_begin_x = begin_x;
+	//log("win_edln:5");
 	getbegyx(parent, m_at_y, m_at_x); // where the window starts
+	//win_print(parent, m_at_y, m_at_x, "bar");
+	//win_print(parent, 0, 0, "ssplob");
+	//wrefresh(parent);
 	keypad(parent, TRUE); // allow arrow detection
-	//notimeout(parent, FALSE); // capture escape
-	//notimeout(parent, TRUE); // do NOT capture escape
-	//log("get_escdelay:", get_escdelay());
 	set_escdelay(10); // lowering the escape delay will enable us to detect a pure escape (as opposed to arrows)
-	//nodelay(stdscr, TRUE); // we want to detect keys immediately
 }
+// FN-END
 
 win_edln::~win_edln()
 {
@@ -135,16 +141,17 @@ void win_edln::run()
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		string padded{m_input};
-		padded.append(m_ncols- m_input.size(), ' ');
-		win_print(m_parent, m_begin_y, m_off_x, padded);
+		//padded.append(m_ncols- m_input.size(), ' ');
+	log("padded:", padded);
+		win_print(m_parent, m_begin_y, m_begin_x + m_desc_len, padded);
 		//win_set_line(win, input);
 		//wmove(win, 1, 3); // set cursor
 		//move(3, 16+pos); // place cursor. I don't think this makes sense, but nevermind, wmove doesn't seem to work
-		//wmove(m_parent, m_begin_y, m_off_x + pos);
-		move(m_begin_y + m_at_y, m_off_x + m_at_x + pos);
+		wmove(m_parent, m_begin_y, m_begin_x + m_desc_len + pos);
+		//move(m_begin_y + m_at_y, m_off_x + m_at_x + pos);
 		//wrefresh(win);	
 		wrefresh(m_parent);
-		refresh();
+		//refresh();
 		int ch = get_ch(m_parent);
 		if(ch == '\r') break;
 		if(ch == KEY_LEFT) {
@@ -171,6 +178,8 @@ void win_edln::run()
 			m_cancelled = true;
 			return;
 		} else {
+			//m_input += ch; continue;
+			log("m_ncols:", m_ncols);
 			if(pos >= m_ncols) continue;
 			m_input.insert(pos, string{static_cast<char>(ch)});
 			//input += ch;

@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.28)
 #cmake_minimum_required(VERSION 4.0)
 project(neoleo)
 
+set(CMAKE_BUILD_TYPE Debug)
+#add_compile_definitions("NDEBUG") # debugging
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
 set(CMAKE_CXX_COMPILER c++)
 set(CMAKE_CXX_COMPILER clang++)
@@ -20,7 +22,9 @@ set(CMAKE_BUILD_TYPE Debug)
 file(GLOB_RECURSE sources src/*.cc)
 
 add_executable(neoleo ${sources})
-target_link_libraries(neoleo ncursesw panel form)
+find_package(Curses REQUIRED)
+target_link_libraries(neoleo ncursesw tinfo panel form newt)
+#target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
 
 enable_testing()
 #add_subdirectory(tests)
