@@ -18,7 +18,7 @@
 
 
 
-#include <format>
+//#include <format>
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
@@ -358,17 +358,19 @@ void  recenter_window (struct window *win = cwin) // FN
 std::string status_line(int wid)
 {
 	//log("status_line called");
-	string rc_str{std::format("r{}c{}", curow, cucol)};
-	wid = rc_str.size();
-	//const char *ptr = std::format("r{}c{}", curow, cucol).c_str();
-	const char *ptr = rc_str.c_str(); //std::format("r{}c{}", curow, cucol).c_str();
+	//string rc_strx{std::format("r{}c{}", curow, cucol)};
+	//wid = rc_str.size();
+	//const char *ptr = rc_str.c_str(); //std::format("r{}c{}", curow, cucol).c_str();
+	char rc_str[1000];
+	snprintf(rc_str, sizeof(rc_str), "r%dc%d", curow, cucol);
+	char *ptr = rc_str;
 	addstr (ptr);
 	//wid -= strlen (ptr);
 
 
 	std::string dec = formula_text(curow, cucol);
 	const std::string& cvs = cell_value_string(curow, cucol, 1);
-	ptr = cvs.c_str();
+	strcpy(ptr, cvs.c_str());
 
 	int plen = strlen (ptr);
 
