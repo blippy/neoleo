@@ -28,7 +28,7 @@
 #include <unistd.h>
 
 #include <filesystem>
-#include <format>
+//#include <format>
 
 #include "cell.h"
 #include "neotypes.h"
@@ -356,7 +356,8 @@ std::string flt_to_str (num_t val)
 
 	double f = fabs (val);
 	if (f >= 1e6 || (f > 0 && f <= 9.9999e-6)) {
-		return std::format("{}",(double) val);
+		//return std::format("{}",(double) val);
+		return std::to_string(val);
 	}
 	return  pr_flt (val, &fxt, FLOAT_PRECISION, false);
 }
@@ -640,17 +641,22 @@ std::string range_name (struct rng *rng)
 		return "";
 	}
 
+	char res[1000];
 	if ((lr == hr) && (lc == hc)) {
-		return std::format("r{}c{}", lr, lc);
+		sprintf(res, "r%dc%d", lr, lc);
+		//return std::format("r{}c{}", lr, lc);
+	} else 	if (lr == hr && lc != hc) {
+		sprintf(res, "r%dc%d:%d", lr, lc, hc);
+		//return std::format("r{}c{}:{}", lr, lc, hc);
+	} else if (lr != hr && lc == hc) {
+		sprintf(res, "r%d:%dc%d", lr, hr, lc);
+		//return std::format("r{}:{}c{}", lr, hr, lc);
+	} else { 
+		sprintf(res, "r%d:%dc%d:%d", lr, hr, lc, hc);
+		//return std::format("r{}:{}c{}:{}", lr, hr, lc, hc);
 	}
 
-
-	if (lr == hr && lc != hc)
-		return std::format("r{}c{}:{}", lr, lc, hc);
-	else if (lr != hr && lc == hc)
-		return std::format("r{}:{}c{}", lr, hr, lc);
-
-	return std::format("r{}:{}c{}:{}", lr, hr, lc, hc);
+	return res;
 
 }
 
