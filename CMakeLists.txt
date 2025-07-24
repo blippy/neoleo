@@ -23,7 +23,7 @@ file(GLOB_RECURSE sources src/*.cc)
 
 add_executable(neoleo ${sources})
 find_package(Curses REQUIRED)
-target_link_libraries(neoleo ncursesw tinfo panel form newt)
+target_link_libraries(neoleo ncursesw tinfo)
 #target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
 
 enable_testing()

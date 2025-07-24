@@ -3,13 +3,15 @@
 
 #include <form.h>
 #include <panel.h>
+
+#define USE_NEWT 0
+#if USE_NEWT
 #include <newt.h>
+#endif
 
 #include "menu-2025.h"
-//#include "utils.h"
 #include "spans.h"
 #include "basic.h"
-//import utl;
 #include "io-2019.h"
 #include "io-curses.h"
 #include "win.h"
@@ -44,6 +46,7 @@ void show_menu (bool active) // FN
 }
 
 
+#if USE_NEWT
 // used by test_newt
 int entryFilter(newtComponent entry, void * data, int ch, int cursor) 
 {
@@ -87,6 +90,8 @@ void test_newt()
 	newtFinished();
 }
 
+#endif
+
 // shown when you hit the menu button (m key)
 void process_menu() // FN
 {
@@ -95,7 +100,9 @@ void process_menu() // FN
 	
 	switch(get_ch()) {
 		case 'c': col_width_form(); break;
+#if USE_NEWT
 		case 't': test_newt(); break;
+#endif
 	}
 }
 

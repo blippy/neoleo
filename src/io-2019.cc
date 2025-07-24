@@ -1,7 +1,10 @@
 #include <string.h>
 
 #include <ncurses.h>
+#define USE_FORM 0
+#if USE_FORM
 #include <form.h>
+#endif
 #include <panel.h>
 
 
@@ -87,7 +90,7 @@ class npanel_c : public nwin_c {
 };
 #endif
 
-#if 1
+#if USE_FORM
 class nform_c  /*: public npanel_c */ {
 	public:
 		nform_c(WINDOW *win, const char* desc, std::string& text);
