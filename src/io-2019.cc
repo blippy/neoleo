@@ -155,6 +155,18 @@ const std::string nform_c::text()
 static bool invoke_std_form(const char* desc, std::string& text_field)
 {
 #if 1
+	win_dow par(1, 75, 1, 0);
+	//par.print_at(0, 0, "foogoo");
+	wrefresh(par.m_w);
+	WINDOW* win;
+	win = par.m_w;
+	win_edln ed(win, 70, 0, 0 , desc,  text_field);
+	ed.run();
+	if(ed.m_cancelled) return false;
+	text_field = ed.m_input;
+	return true;
+
+#else
 	win_dow win(12, 75, 10, 5);
 	nform_c frm(win.m_w, desc, text_field);
 
@@ -216,26 +228,8 @@ void edit_cell2019()
 	std::string formula{ formula_text(curow, cucol)};
 	std::string old_formula{formula};
 #if 1
-	win_dow par(1, 75, 2, 0);
-	par.print_at(0, 0, "foogoo");
-	wrefresh(par.m_w);
-	//get_ch(par.m_w);
-	//return;
-
-	//WINDOW * win = par.m_w;
-	//win = stdscr;
-log("edit_cell2019:1");
-	WINDOW* win;
-	//= newwin(7, 75, 1, 1);
-	win = par.m_w;
-log("edit_cell2019:2");
-	//defer1(delwin, win);
-log("edit_cell2019:3");
-	win_edln ed(win, 70, 0, 0 , "=",  formula);
-log("edit_cell2019:4");
-	ed.run();
-	if(ed.m_cancelled) return;
-	formula = ed.m_input;
+	if(!invoke_std_form("=", formula)) return;
+	//formula = ed.m_input;
 #else
 	bool ok = invoke_std_form("=", formula);
 	if(!ok) return;
