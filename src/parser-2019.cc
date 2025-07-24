@@ -12,7 +12,7 @@
 #include <vector>
 */
 #include <cmath>
-#include <format>
+//#include <format>
 
 #include "cell.h"
 #include "regions.h"
@@ -939,7 +939,8 @@ bool check_result(CELLREF r, CELLREF c, string expecting)
 {
 
 	string res = cell_value_string(r, c, 0);
-	cout << std::format("Result  of R{}C{} is`{}' " , r, c, res);
+	//cout << std::format("Result  of R{}C{} is`{}' " , r, c, res);
+	printf("Result  of R%dC%d is`%s' " , r, c, res.c_str());
 	bool pass = res == expecting;
 	cout << (pass ? "PASS"s : "FAIL") << "\n";
 	return pass;
