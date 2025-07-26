@@ -1,7 +1,7 @@
 # cmake v3.28 allows for  C++23 import std;
 cmake_minimum_required(VERSION 3.25)
 #cmake_minimum_required(VERSION 4.0)
-project(neoleo)
+project(neoleo_toplevel)
 
 #set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging
@@ -18,8 +18,7 @@ project(neoleo)
 #set(CMAKE_CXX_FLAGS "-fmodules -fsearch-include-path bits/std.cc")
 #set(CMAKE_CXX_FLAGS "-fmodules")
 
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
-set(CMAKE_BUILD_TYPE Debug)
+
 #file(GLOB_RECURSE sources src/*.cc)
 #target_sources(neoleo PRIVATE src/basic.cc    src/io-curses.cc    src/menu-2025.cc  src/parser-2019.cc  src/spans.cc  src/win.cc
 #src/cell.cc     src/io-headless.cc  src/mod.cc        src/regions.cc      src/tests.cc

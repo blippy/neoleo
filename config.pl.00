@@ -17,19 +17,42 @@ print FH "PREFIX ?= $prefix\n";
 my $top = <<'EOM';
 
 CXX ?= g++
-CXXFLAGS =  -std=gnu++23 -Wall # -fmodules
+CXXFLAGS =  -std=gnu++23 -Wall -fmodules
 CXXFLAGS += -ggdb -O0
 CXXFLAGS += -Wfatal-errors
 CXXFLAGS += $(shell pkg-config --cflags ncursesw)
 VPATH = src
-#STD = gcm.cache/std.gcm
+STD = gcm.cache/std.gcm
 
 LDLIBS = $(shell pkg-config --libs ncursesw)
-# LDLIBS += -lpanel -lform
+LDLIBS += -lpanel -lform
 
 .DEFAULT_GOAL = neoleo
 
+$(STD) : # build the std module
+	#-mkdir build
+	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
+
+info :
+	@echo "CC_OBJS = $(CC_OBJS)"
+	@echo "CXX_OBJS = $(CXX_OBJS)"
+	@echo "PREFIX:$(PREFIX)"
+        
+clean :
+	rm -f build/*.o  neoleo
+        
+cleaner : clean
+	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
+        
+install : neoleo
+	install -p neoleo $(PREFIX)/bin 
+        
+uninstall : 
+	rm -f $(PREFIX)/bin/neoleo 
+
+check :
+	./run-tests.pl
 
 EOM
 
@@ -38,7 +61,6 @@ print FH $top;
 my @objs;
 
 
-sub old_way {
 while (<DATA>) {
 	chomp($_);
 	my @deps = split /\s+/,$_;
@@ -56,64 +78,17 @@ while (<DATA>) {
 	#my $trg = @_[1]; 
 	#say "$trg ";
 }
-}
-
-my @cc_srcs = glob("src/*.cc");
-#print "Files are @cc_srcs\n";
-my @cc_objs = @cc_srcs;
-for(@cc_objs) { s/src/build/; s/cc$/o/; }
-#map { s/src/obj/ } @cc_srcs; 
-#print "objs are @cc_objs\n";
-print FH "OBJS = @cc_objs\n";
-
-#print FH  "neoleo :  @objs\n";
-#print FH "\t" . '$(CXX) $^  -o $@ $(LDLIBS)' . "\n";
 
 
-my $middle = <<'EOM';
+print FH  "neoleo :  @objs\n";
+print FH "\t" . '$(CXX) $^  -o $@ $(LDLIBS)' . "\n";
 
 
-.DEFAULT_GOAL = neoleo
-
-#$(STD) : # build the std module
-#	#-mkdir build
-#	$(CXX) $(CXXFLAGS) -c -fsearch-include-path bits/std.cc
 
 
-info :
-	@echo "CC_OBJS = $(CC_OBJS)"
-	@echo "CXX_OBJS = $(CXX_OBJS)"
-	@echo "PREFIX:$(PREFIX)"
-        
-clean :
-	rm -f build/*.o  neoleo
-        
-#cleaner : clean
-#	find gcm.cache/*.gcm ! -name std.gcm -delete # delete everything in gcm.cach except std.gcm
-        
-install : neoleo
-	install -p neoleo $(PREFIX)/bin 
-        
-uninstall : 
-	rm -f $(PREFIX)/bin/neoleo 
-
-check :
-	./run-tests.pl
-
-EOM
-
-print FH $middle;
-
-
-my $tail = <<'EOM';
-
-neoleo : $(OBJS)
-	$(CXX) $^ -o $@ $(LDLIBS)
-	
-build/%.o : src/%.cc
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
-EOM
-print FH $tail;
+#my $tail = <<'EOM';
+#EOM
+#print FH $tail;
 close(FH);
 
 __DATA__

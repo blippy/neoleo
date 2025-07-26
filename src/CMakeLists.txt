@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 #set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #set(CMAKE_CXX_MODULE_STD 1)
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
+set(CMAKE_BUILD_TYPE Debug)
 
 set(neo_srcs 
 	basic.cc    io-curses.cc    menu-2025.cc  parser-2019.cc  spans.cc  win.cc
@@ -20,9 +22,11 @@ set(neo_srcs
 	#PARENT_SCOPE
 )
 
-add_executable(neoleo ${neo_srcs})
+add_executable(neoleo)
+target_sources(neoleo PUBLIC ${neo_srcs})
 target_link_libraries(neoleo ncursesw tinfo)
 install(TARGETS neoleo)
+#install(PROGRAMS neoleo DESTINATION bin)
 
 #target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
 

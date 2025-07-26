@@ -3,6 +3,7 @@
 use v5.30;
 
 my $neo = "../build/neoleo";
+$neo = "../neoleo";
 
 my $ntests = 0;
 my $npasses = 0;
