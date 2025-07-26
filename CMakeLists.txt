@@ -3,28 +3,33 @@ cmake_minimum_required(VERSION 3.25)
 #cmake_minimum_required(VERSION 4.0)
 project(neoleo)
 
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging
-set(CMAKE_VERBOSE_MAKEFILE TRUE)
-set(CMAKE_CXX_COMPILER c++)
-set(CMAKE_CXX_COMPILER clang++)
+#set(CMAKE_VERBOSE_MAKEFILE TRUE)
+#set(CMAKE_CXX_COMPILER c++)
+#set(CMAKE_CXX_COMPILER clang++)
 #set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_MODULE_STD 1)
+#set(CMAKE_CXX_STANDARD 20)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_EXTENSIONS OFF)
+#set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#set(CMAKE_CXX_MODULE_STD 1)
 
 #set(CMAKE_CXX_FLAGS "-fmodules -fsearch-include-path bits/std.cc")
 #set(CMAKE_CXX_FLAGS "-fmodules")
 
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)
-file(GLOB_RECURSE sources src/*.cc)
+#file(GLOB_RECURSE sources src/*.cc)
+#target_sources(neoleo PRIVATE src/basic.cc    src/io-curses.cc    src/menu-2025.cc  src/parser-2019.cc  src/spans.cc  src/win.cc
+#src/cell.cc     src/io-headless.cc  src/mod.cc        src/regions.cc      src/tests.cc
+#src/io-2019.cc  src/main.cc         src/oleofile.cc   src/sheet.cc        src/utils.cc
+#)
+add_subdirectory(src)
 
-add_executable(neoleo ${sources})
-find_package(Curses REQUIRED)
-target_link_libraries(neoleo ncursesw tinfo)
+#add_executable(neoleo ${sources})
+#find_package(Curses REQUIRED)
+#target_link_libraries(neoleo ncursesw tinfo)
 #target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
 
 enable_testing()
