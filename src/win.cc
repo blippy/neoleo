@@ -154,59 +154,55 @@ win_edln::~win_edln()
 	curs_set(0); // invisible
 }
 
+void win_edln::add_char(int ch)
+{
+	// m_input += ch; continue;
+	log("m_ncols:", m_ncols);
+	if (m_pos >= m_ncols) return;
+	m_input.insert(m_pos, string{static_cast<char>(ch)});
+	m_pos++;
+}
 
 void win_edln::run()
 {
 // log("win_edln::run");
 
-	int pos = m_input.size(); // , max_len = 5;
+	m_pos = m_input.size(); // , max_len = 5;
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		string padded{m_input};
 		//padded.append(m_ncols- m_input.size(), ' ');
-	log("padded:", padded);
+		//log("padded:", padded);
 		win_print(m_parent, m_begin_y, m_begin_x + m_desc_len, padded);
-		//win_set_line(win, input);
-		//wmove(win, 1, 3); // set cursor
-		//move(3, 16+pos); // place cursor. I don't think this makes sense, but nevermind, wmove doesn't seem to work
-		wmove(m_parent, m_begin_y, m_begin_x + m_desc_len + pos);
-		//move(m_begin_y + m_at_y, m_off_x + m_at_x + pos);
-		//wrefresh(win);	
+		wmove(m_parent, m_begin_y, m_begin_x + m_desc_len + m_pos);
 		wrefresh(m_parent);
-		//refresh();
 		int ch = get_ch(m_parent);
 		if(ch == '\r') break;
 		if(ch == KEY_LEFT) {
 			//input += '<';
-			pos = max(pos-1, 0);
+			m_pos = max(m_pos-1, 0);
 		} else if (ch == KEY_END) {
-			pos = m_input.size();
+			m_pos = m_input.size();
 		} else if (ch == KEY_HOME) {
-			pos = 0;
+			m_pos = 0;
 		} else 	if(ch == KEY_RIGHT) {
-			pos = min(pos+1, m_ncols);
-			pos = min(pos, (int) m_input.size());
+			m_pos = min(m_pos+1, m_ncols);
+			m_pos = min(m_pos, (int) m_input.size());
 		} else if (ch == KEY_DC) {
 			// delete key
-			m_input.erase(pos, 1);
-			pos = max(pos-1, 0);
-		} else if((ch == KEY_BACKSPACE || ch == 127) && pos >0) { 
-			pos--; 
+			m_input.erase(m_pos, 1);
+			m_pos = max(m_pos-1, 0);
+		} else if((ch == KEY_BACKSPACE || ch == 127) && m_pos >0) { 
+			m_pos--; 
 			//wdelch(win);  
-			m_input.erase(pos, 1);
+			m_input.erase(m_pos, 1);
 			continue;
 		} else if(ch == CTRL('g') || ch == 27) { // 27 = ESC
 			// positioning here is important due to pesky escaping conditions
 			m_cancelled = true;
 			return;
 		} else {
-			//m_input += ch; continue;
-			log("m_ncols:", m_ncols);
-			if(pos >= m_ncols) continue;
-			m_input.insert(pos, string{static_cast<char>(ch)});
-			//input += ch;
-			//waddch(win, ch);			
-			pos++;
+			add_char(ch);
 		}
 	}
 
