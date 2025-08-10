@@ -16,8 +16,8 @@ print FH "PREFIX ?= $prefix\n";
 
 my $top = <<'EOM';
 
-CXX ?= g++
-CXXFLAGS =  -std=gnu++23 -Wall # -fmodules
+CXX = c++
+CXXFLAGS =  -std=c++23 -Wall # -fmodules
 CXXFLAGS += -ggdb -O0
 CXXFLAGS += -Wfatal-errors
 CXXFLAGS += $(shell pkg-config --cflags ncursesw)
@@ -81,6 +81,7 @@ my $middle = <<'EOM';
 
 
 info :
+	@echo "CXX = $(CXX)"
 	@echo "CC_OBJS = $(CC_OBJS)"
 	@echo "CXX_OBJS = $(CXX_OBJS)"
 	@echo "PREFIX:$(PREFIX)"
