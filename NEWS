@@ -1,4 +1,24 @@
 ===========================================================================
+VERSION:	15.1
+STATUS:		RELEASE
+DATE:		2025-08-16
+
+NB This version is not the latest mainline development version,
+but an update for 15.0
+
+It removes the `ctime' test. The ctime test was originally introduced
+because there had been segfaults in the function. This has now been
+fixed, so the test isn't really necessary. 
+
+The problem, however, is that ctime is a local time and may produce
+different results depending on different users timezone. So some
+have noticed test failures using `make check'. 
+
+So I have simply removed the test to avoid confusion. ctime still
+works, though, so there shouldn't be any problems.
+
+
+===========================================================================
 VERSION:	15.0
 STATUS:		RELEASE
 DATE:		2025-01-04

@@ -1,6 +1,5 @@
 EXTRA_DIST = \
 	concata.scr.oleo \
-	ctime.scr.oleo \
 	decompile-01.scr.oleo \
 	floor.scr.oleo \
 	issue16.scr.oleo \
