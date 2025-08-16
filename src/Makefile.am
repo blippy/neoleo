@@ -30,7 +30,7 @@ dist_man_MANS = neoleo.1
 #CLEANFILES = $(BUILT_SOURCES)
 
 neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm 
-neoleo_LDADD += @NCURSES_LIBS@ -lpanel -lform
+neoleo_LDADD += @NCURSES_LIBS@ 
 
 
 neoleo_SOURCES = \
