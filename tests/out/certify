@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# certify a file as being verified
+cp $1 ../verified
