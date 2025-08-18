@@ -153,7 +153,7 @@ const std::string nform_c::text()
 
 #endif
 
-// retun true for normal exit, false if user wants to abort action
+// return true for normal exit, false if user wants to abort action
 // text_field is modified by nform_c
 static bool invoke_std_form(const char* desc, std::string& text_field)
 {
@@ -333,13 +333,14 @@ void process_key(const keymap_t& keymap)
 
 
 
-
-bool curses_loop () // FN
+// FN curses_loop .
+bool curses_loop ()
 {
 
-	bool quit = false;
-	auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); }; 
 	show_menu();
+	bool quit = false;
+#if 0
+	static auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); };
 	static auto keymap = keymap_t {
 		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
 			{'=', 		edit_cell2019},
@@ -368,6 +369,43 @@ bool curses_loop () // FN
 
 	process_key(keymap);
 	//cur_io_repaint();
+#endif
+	//while(!)
+
+	int c = get_ch();
+	if ('0' <= c && c <= '9') {
+		i19_parameter = c - '0';
+		return false;
+	}
+
+	switch (c) {
+	case CTRL('q'):		maybe_quit_spreadsheet2019(quit);		break;
+	case '=': 		edit_cell2019(); 		break;
+	case '%': 		set_cell_toggle_percent();		break;
+	case 'c':		col_cmd2019();		break;
+	case 'm':		process_menu();		break;
+	case 'p':		i19_precision();		break;
+	case 'r':		row_cmd2019();		break;
+	case KEY_DC:		clear_cell_formula();		break; // delete key
+	case KEY_DOWN: 		cursor_down();		break;
+	case KEY_LEFT:		cursor_left();		break;
+	case 27:		complex_key_sequence_27();		break;
+	case KEY_RIGHT:		cursor_right();		break;
+	case KEY_UP:		cursor_up();		break;
+	case KEY_NPAGE:		page_down();		break;
+	case KEY_PPAGE:		page_up();		break;
+	case CTRL('b'):		set_cell_toggle_bold();		break;
+	case CTRL('c'):		copy_this_cell_formula();		break;
+	case CTRL('i'):		set_cell_toggle_italic();		break;
+	case CTRL('l'):		set_cell_alignment_left();		break;
+	case CTRL('r'):		set_cell_alignment_right();		break;
+	case CTRL('s'):		save_spreadsheet2019();		break;
+	case CTRL('v'):		paste_this_cell_formula();		break;
+	}
+
+	i19_parameter = -1;
+
+
 	return quit;
 
 

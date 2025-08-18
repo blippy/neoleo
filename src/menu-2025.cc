@@ -92,6 +92,19 @@ void test_newt()
 
 #endif
 
+void test_edit()
+{
+	// TODO
+	win_dow win(10, 40, 10, 10);
+	box(win(), 0 , 0);
+	std::string text{"Type here"};
+	win_edln ed(win(), 8, 3, 3, "Input:", text);
+	ed.run();
+	win_print(win(), 7, 3, ed.m_input);
+	wrefresh(win());
+	wgetch(win());
+}
+
 // shown when you hit the menu button (m key)
 void process_menu() // FN
 {
@@ -100,6 +113,7 @@ void process_menu() // FN
 	
 	switch(get_ch()) {
 		case 'c': col_width_form(); break;
+		case 't': test_edit(); break;
 #if USE_NEWT
 		case 't': test_newt(); break;
 #endif
@@ -113,9 +127,10 @@ void process_menu() // FN
 bool col_width_form() 
 {
 	string input{to_string(get_width())};
-	//input = "hello";
-	WINDOW *w = newwin(7, 30, 2 , 0); // lines cols y x
-	defer1 d1(delwin, w);
+	win_dow win(7, 30, 2, 0);
+	WINDOW* w = win();
+	//WINDOW *w = newwin(7, 30, 2 , 0); // lines cols y x
+	//defer1 d1(delwin, w);
 	box(w, 0 ,0);
 
 

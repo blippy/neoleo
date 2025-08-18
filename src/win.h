@@ -22,6 +22,8 @@ class win_dow {
 		win_dow(int nlines, int ncols, int begin_y, int begin_x);
 		~win_dow();
 		void print_at(int y, int x, const std::string& str);
+		WINDOW* operator()() const;
+
 	
 		WINDOW* m_w = 0;
 		int nlines, ncols, begin_y, begin_x;

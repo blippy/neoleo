@@ -27,6 +27,7 @@
 #include <ncurses.h>
 
 #include "neotypes.h"
+//#include "utils.h"
 //#include <string>
 
 //export module win;
@@ -117,6 +118,11 @@ void win_dow::print_at(int y, int x, const std::string& str)
 	mvwaddstr(m_w, y, x, str.c_str());
 }
 
+WINDOW* win_dow::operator()() const
+{
+	return m_w;
+}
+
 
 
 // FN win_edln .
@@ -172,7 +178,9 @@ void win_edln::run()
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		string padded{m_input};
-		padded.append(m_ncols- m_input.size(), ' '); // necessary
+		padded = pad_right(padded, m_ncols);
+		//for(size_t i = 0; i<  m_ncols- m_input.size(); padded += ' ');
+		//padded.append(m_ncols- m_input.size(), ' '); // necessary // seems to cause crash
 		//log("padded:", padded);
 		win_print(m_parent, m_begin_y, m_begin_x + m_desc_len, padded);
 		wmove(m_parent, m_begin_y, m_begin_x + m_desc_len + m_pos);
