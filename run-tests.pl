@@ -4,6 +4,8 @@ use v5.30;
 
 my $neo = "../build/neoleo";
 $neo = "../neoleo";
+$neo = "../src/neoleo" if -e "src/neoleo" ;
+#$neo = "../src/neoleo" if -e "../src/neoleo" ;
 
 my $ntests = 0;
 my $npasses = 0;

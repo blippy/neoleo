@@ -156,6 +156,7 @@ win_edln::~win_edln()
 
 void win_edln::add_char(int ch)
 {
+	if(m_only_digits && ! isdigit(ch)) return;
 	// m_input += ch; continue;
 	log("m_ncols:", m_ncols);
 	if (m_pos >= m_ncols) return;

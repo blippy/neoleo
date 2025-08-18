@@ -39,6 +39,7 @@ class win_edln {
 		std::string m_input;
 		bool m_cancelled = false;
 		int m_pos;
+		bool m_only_digits = false;
 	private:
 		void add_char(int ch);	
 };

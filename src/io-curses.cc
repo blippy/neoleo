@@ -41,6 +41,7 @@
 #include "regions.h"
 #include "sheet.h"
 #include "spans.h"
+#include "win.h"
 
 
 //import std;
