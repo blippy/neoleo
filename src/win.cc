@@ -172,7 +172,7 @@ void win_edln::run()
 	//mvwaddstr(win, 0, 0, input.c_str());
 	while(1) {
 		string padded{m_input};
-		//padded.append(m_ncols- m_input.size(), ' ');
+		padded.append(m_ncols- m_input.size(), ' '); // necessary
 		//log("padded:", padded);
 		win_print(m_parent, m_begin_y, m_begin_x + m_desc_len, padded);
 		wmove(m_parent, m_begin_y, m_begin_x + m_desc_len + m_pos);
@@ -180,6 +180,7 @@ void win_edln::run()
 		int ch = get_ch(m_parent);
 		if(ch == '\r') break;
 		if(ch == KEY_LEFT) {
+
 			//input += '<';
 			m_pos = max(m_pos-1, 0);
 		} else if (ch == KEY_END) {
@@ -191,9 +192,11 @@ void win_edln::run()
 			m_pos = min(m_pos, (int) m_input.size());
 		} else if (ch == KEY_DC) {
 			// delete key
+			log("KEY_DC delete key detected");
 			m_input.erase(m_pos, 1);
 			m_pos = max(m_pos-1, 0);
 		} else if((ch == KEY_BACKSPACE || ch == 127) && m_pos >0) { 
+			log("KEY_BACKSPACE or 127 delete key detected");
 			m_pos--; 
 			//wdelch(win);  
 			m_input.erase(m_pos, 1);
