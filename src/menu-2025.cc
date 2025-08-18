@@ -120,7 +120,7 @@ bool col_width_form()
 
 
 	
-	win_edln ed(w, 6, 1, 3, "Cursor width:", input);
+	win_edln ed(w, 2, 1, 3, "Cursor width:", input);
 	ed.m_only_digits = true;
 	ed.run();
 	if(ed.m_cancelled) return true;
