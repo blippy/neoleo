@@ -97,12 +97,17 @@ void test_edit()
 	// TODO
 	win_dow win(10, 40, 10, 10);
 	box(win(), 0 , 0);
-	std::string text{"Type here"};
+	std::string text{"12345678"};
 	win_edln ed(win(), 8, 3, 3, "Input:", text);
-	ed.run();
-	win_print(win(), 7, 3, ed.m_input);
-	wrefresh(win());
-	wgetch(win());
+	win_print(win(), 8, 3, "Esc to exit");
+	while(!ed.m_cancelled) {
+		ed.run();
+		win_print(win(), 7, 3, "'" + ed.m_input + "'");
+		wclrtoeol(win());
+		box(win(), 0 , 0);
+		wrefresh(win());
+	}
+	//wgetch(win());
 }
 
 // shown when you hit the menu button (m key)

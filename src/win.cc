@@ -202,7 +202,7 @@ void win_edln::run()
 			// delete key
 			log("KEY_DC delete key detected");
 			m_input.erase(m_pos, 1);
-			m_pos = max(m_pos-1, 0);
+			m_pos = max(m_pos, 0);
 		} else if((ch == KEY_BACKSPACE || ch == 127) && m_pos >0) { 
 			log("KEY_BACKSPACE or 127 delete key detected");
 			m_pos--; 
