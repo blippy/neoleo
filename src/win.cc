@@ -203,12 +203,11 @@ void win_edln::run()
 			log("KEY_DC delete key detected");
 			m_input.erase(m_pos, 1);
 			m_pos = max(m_pos, 0);
-		} else if((ch == KEY_BACKSPACE || ch == 127) && m_pos >0) { 
+		} else if(ch == KEY_BACKSPACE || ch == 127) {
 			log("KEY_BACKSPACE or 127 delete key detected");
+			if(m_pos == 0) continue;
 			m_pos--; 
-			//wdelch(win);  
 			m_input.erase(m_pos, 1);
-			continue;
 		} else if(ch == CTRL('g') || ch == 27) { // 27 = ESC
 			// positioning here is important due to pesky escaping conditions
 			m_cancelled = true;
