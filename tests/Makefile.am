@@ -13,6 +13,7 @@ TESTS = basic.sh \
 	issue51.sh \
 	nohead-01.sh \
 	parser.sh \
+	spans.sh \
 	write.sh
 
 
