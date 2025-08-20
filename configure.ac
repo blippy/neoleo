@@ -18,6 +18,12 @@ PKG_CHECK_MODULES(NCURSES, ncursesw)
 #https://stackoverflow.com/questions/130801/how-do-you-create-tests-for-make-check-with-gnu-autotools
 #PKG_CHECK_MODULES([CHECK], [check >= 0.9.10])
 
+#export SRCDIR=$(abs_srcdir)
+#export BUILDDIR=$(abs_top_builddir)
+#export BUILDDIR=$(top_builddir)
+
+
+
 AC_PROG_CXX
 #AC_PROG_YACC
 

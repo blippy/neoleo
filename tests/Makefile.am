@@ -21,7 +21,7 @@ TEST_EXTENSIONS = .scr
 SCR_LOG_COMPILER = $(srcdir)/script.sh
 AM_SCR_LOG_FLAGS = -b $(abs_builddir) -s $(abs_srcdir)
 #export FOO=bar
-
+export BUILDDIR=$(abs_top_builddir)
 
 EXTRA_DIST = neotests-env.sh script.sh issue25.oleo $(TESTS)
 
