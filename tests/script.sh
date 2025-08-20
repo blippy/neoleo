@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # TODO use  the functinality provided in neotests-env.sh
 #source neotests-env.sh

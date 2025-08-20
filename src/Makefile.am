@@ -51,6 +51,7 @@ neoleo_SOURCES = \
 
 noinst_HEADERS = basic.h cell.h \
 		 io-2019.h io-curses.h \
+		 menu-2025.h \
 		 neotypes.h  \
 		 oleofile.h  \
 		 parser-2019.h \
