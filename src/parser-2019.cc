@@ -992,6 +992,8 @@ bool run_parser_2019_tests ()
 
 
 #if 1
+	interpret1("floor(1.2)", "1");
+	interpret1("ceil(1.2)", "2");
 	interpret1("if(#TRUE, \"hello\", -3)", "hello");
 	interpret1("sqrt(4+5)+2", "5");
 	//return 0;

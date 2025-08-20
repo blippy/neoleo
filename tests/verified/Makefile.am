@@ -1,6 +1,5 @@
 EXTRA_DIST = \
 	concata.scr.oleo \
-	floor.scr.oleo \
 	issue16.scr.oleo \
 	issue18.scr.oleo \
 	issue25.rep \
