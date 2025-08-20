@@ -1,7 +1,0 @@
-# 2025-05-21 Tet for bad RC in oleo file
-
-! rm -f out/badrc.oleo
-w out/badrc.oleo
-! ./differ badrc
-exit $?
-

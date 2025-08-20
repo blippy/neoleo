@@ -9,6 +9,7 @@ AM_TESTS_ENVIRONMENT = \
 
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = basic.sh \
+	badrc.sh \
 	insert-01.sh \
 	issue16.sh issue18.sh \
 	issue51.sh \
@@ -26,6 +27,7 @@ AM_SCR_LOG_FLAGS = -b $(abs_builddir) -s $(abs_srcdir)
 export BUILDDIR=$(abs_top_builddir)
 
 EXTRA_DIST = differ neotests.env script.sh $(TESTS)
+EXTRA_DIST += badrc.oleo
 
 clean-local : clean-local-out
 .PHONY: clean-local-out
