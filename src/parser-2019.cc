@@ -992,6 +992,7 @@ bool run_parser_2019_tests ()
 
 
 #if 1
+	interpret1("if(#TRUE, \"hello\", -3)", "hello");
 	interpret1("sqrt(4+5)+2", "5");
 	//return 0;
 	interpret1("42", "42");

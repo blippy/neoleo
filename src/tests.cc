@@ -130,6 +130,7 @@ bool headless_tests()
 	using func_t = struct { string name; std::function<bool()> func; };
 	vector<func_t> funcs = {
 		{"clear",	run_clear_test},
+		//{"decomp-01", test_cecomp_01};
 		{"fail",	fail},
 		{"fmt",		format_tests},
 		{"parser2019",	run_parser_2019_tests},
