@@ -12,7 +12,8 @@ TESTS = basic.sh \
 	issue16.sh issue18.sh \
 	issue51.sh \
 	nohead-01.sh \
-	parser.sh
+	parser.sh \
+	write.sh
 
 
 TEST_EXTENSIONS = .scr
