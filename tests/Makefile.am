@@ -11,7 +11,7 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = basic.sh \
 	issue16.sh issue18.sh \
 	issue51.sh \
-	nohead-01.scr \
+	nohead-01.sh \
 	parser.sh
 
 
