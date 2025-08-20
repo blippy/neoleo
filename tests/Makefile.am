@@ -9,7 +9,7 @@ AM_TESTS_ENVIRONMENT = \
 
 # NB Supressing cpreg-01.src for now due to issue#17
 TESTS = basic.sh \
-	issue16.sh issue18.scr \
+	issue16.sh issue18.sh \
 	nohead-01.scr \
 	parser.sh
 

@@ -1,3 +1,6 @@
+#!/bin/sh
+
+$BUILDDIR/src/neoleo -H << EOF
 # test of issue 18
 # cell referencing parsing bug
 
@@ -7,5 +10,6 @@ i
 r1c1+1
 .
 w out/issue18.oleo
-! ./differ issue18
-exit $?
+EOF
+
+diff out/issue18.oleo $SRCDIR/verified/issue18.scr.oleo
