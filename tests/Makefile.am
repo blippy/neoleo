@@ -8,8 +8,8 @@ AM_TESTS_ENVIRONMENT = \
 
 
 # NB Supressing cpreg-01.src for now due to issue#17
-TESTS = decompile-01.scr \
-	basic.sh \
+TESTS = basic.sh \
+	decompile-01.scr \
 	floor.scr \
 	issue16.scr issue18.scr issue25.sh \
 	nohead-01.scr \
