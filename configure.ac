@@ -15,6 +15,9 @@ AX_FORTIFY
 #AC_SUBST(CURSES_LIBS, `pkg-config --libs ncurses`)
 PKG_CHECK_MODULES(NCURSES, ncursesw)
 
+#https://stackoverflow.com/questions/130801/how-do-you-create-tests-for-make-check-with-gnu-autotools
+#PKG_CHECK_MODULES([CHECK], [check >= 0.9.10])
+
 AC_PROG_CXX
 #AC_PROG_YACC
 

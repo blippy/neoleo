@@ -25,6 +25,8 @@ done
 
 if [ ! -f configure ]; then
 	autoreconf -iv
+else
+	autoreconf -iv
 fi
 
 
