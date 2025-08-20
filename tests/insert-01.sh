@@ -1,3 +1,6 @@
+#!/bin/sh
+
+$BUILDDIR/src/neoleo -H  << EOF
 ! rm -f out/insert-01.oleo
 i
 12
@@ -16,5 +19,6 @@ i
 .
 #dump-sheet
 w out/insert-01.oleo
-! ./differ insert-01
-exit $?
+EOF
+
+diff out/insert-01.oleo $SRCDIR/verified/insert-01.scr.oleo
