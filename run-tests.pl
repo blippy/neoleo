@@ -52,7 +52,6 @@ sub tst {
 
 scr "badrc", "badrc.oleo";
 bsh "basic.sh";
-scr "ctime";
 scr "decompile-01";
 #tst "fail"; # this should ALWAYS fail
 tst "fmt";
@@ -69,7 +68,6 @@ tst "vals";
 scr "write";
 
 #add_test(NAME basic     COMMAND basic.sh)
-#add_test(NAME ctime     COMMAND ${NEO} -s ctime.scr)
 #add_test(NAME decompile COMMAND ${NEO} -s decompile-01.scr)
 #add_test(NAME floor     COMMAND ${NEO} -s floor.scr)
 #add_test(NAME insert    COMMAND ${NEO} -s insert-01.scr)

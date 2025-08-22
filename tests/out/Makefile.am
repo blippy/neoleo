@@ -1,4 +1,4 @@
-EXTRA_DIST = certify
+#EXTRA_DIST = certify
 
 # as suggested at:
 # https://www.gnu.org/software/automake/manual/html_node/Clean.html
