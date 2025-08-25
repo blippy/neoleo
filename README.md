@@ -41,36 +41,7 @@ Neoleo installs examples in a shared directory, typically
 
 ## Compiling/installing
 
-### Official releases
-
-Distro packagers should download and use the latest released tarball,
-e.g. neoleo-X.Y.tar.gz . Others who are feeling brave can clone the
-repo in the traditional fashion:
-```
-
-### Development version
-
-git clone git@github.com:blippy/neoleo.git
-```
-
-Due to the complexity of building and the integration of C++ modules,
-a simple perl script is used to generate the Makefile. The simplest case:
-
-```
-./config.pl
-make
-sudo make install
-```
-
-You can specify an install prefix, e.g.:
-```
-./config.pl --prefix=/usr
-```
-
-Uninstall:
-```
-sudo make uninstall
-```
+### General overview
 
 Read INSTALL, which contains general instructions, plus specific 
 instructions like compiling from git, as well as **trouble-shooting**. 
@@ -79,9 +50,52 @@ files. INSTALL-debian covers Debian-derived distros like Ubuntu
 and Mint.
 
 
+### Official releases
+
+Distro maintainers and most users  should download and use the latest 
+released tarball,
+e.g. neoleo-X.Y.tar.gz . Others who are feeling brave can clone the
+repo in the traditional fashion:
+```
+
+You then build and install in the traditional way:
+
+```
+tar xvfz neoleo-X.Y.tar.gz
+cd neoleo-X.Y
+./configure # specify usual GNU options if required
+make & sudo make install
+```
+
+### Development version
+
+Development versions are WIPs and are generally not recommended for
+most users. User official releases instead. But if you're still
+brave ...
+
+```
+git clone git@github.com:blippy/neoleo.git
+cd neoleo
+autoreconf -iv
+```
+
+Then it's the usual:
+```
+./configure # ... with any necessary options
+make
+sudo make install
+
+
+### Uninstalling
+```
+sudo make uninstall
+```
+
+
+
 ## Getting fancy
 
-`Neoleo` comes with a "headerless" mode, where you can interact
+`Neoleo` comes with a "headless" mode, where you can interact
 via stdin/stdout, a la `ed`. One command that `neoleo` has is
 `tbl`, for example, which prints a sheet in `groff`-compatible form. So you
 can create your spreadsheet, and create a nice PDF with it, say
