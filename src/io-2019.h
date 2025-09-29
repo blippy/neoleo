@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 void 	clear_status_line();
 int 	get_ch ();

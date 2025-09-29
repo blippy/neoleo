@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 #include <unistd.h>
 #include <iostream>
 

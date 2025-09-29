@@ -61,8 +61,8 @@ static int scr_lines = 24, scr_cols = 80;
 
 
 static int 		input_rows = 1, status_rows = 1;
-static const int 	user_input =1, user_status = 2;
-static const int	input = 0, status = 1;
+static const int 	user_status = 2;
+static const int	status = 1;
 static const int	label_rows = 1;
 //static const int	win_id = 1;
 
@@ -827,6 +827,7 @@ void curses_main () // FN
 {
 
 	//cur_io_open_display();
+	setlocale(LC_ALL, ""); // helpful for unicode
 	initscr ();
 	defer d{endwin};
 	//defer d;

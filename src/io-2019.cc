@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 #define USE_FORM 0
 #if USE_FORM
 #include <form.h>

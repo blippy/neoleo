@@ -18,13 +18,13 @@
 
 //module;
 
-//#include <ncurses.h>
+//#include <ncursesw/ncurses.h>
 
 #include "win.h"
 
 #include <algorithm>
 #include <cassert>
-#include <ncurses.h>
+#include <ncursesw/ncurses.h>
 
 #include "neotypes.h"
 //#include "utils.h"
