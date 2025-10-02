@@ -43,6 +43,7 @@ neoleo_SOURCES = \
 		 menu-2025.cc \
 		 oleofile.cc \
 		 parser-2019.cc \
+		 picol.cc \
 		 regions.cc \
 		 sheet.cc spans.cc \
 		 utils.cc \
