@@ -609,12 +609,12 @@ int picol_interactive()
 	picolRegisterCoreCommands(&interp);
 	while(1) {
 		char clibuf[1024];
-		int retcode;
 		printf("picol> "); fflush(stdout);
 		if (fgets(clibuf,1024,stdin) == NULL) return 0;
-		retcode = picolEval(&interp,clibuf);
-		if (interp.result[0] != '\0')
-			printf("[%d] %s\n", retcode, interp.result);
+		int retcode = picolEval(&interp,clibuf);
+		if (retcode) { // tweak by mcarter to only print if the result is not 0
+			if (interp.result[0] != '\0') printf("[%d] %s\n", retcode, interp.result);
+		}
 	}
 }
 
