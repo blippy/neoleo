@@ -1,17 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 
-mkfifo /tmp/in
-mkfifo /tmp/iut
+function emit () {
+	echo "$1" >fifo0
+	read INPUT  <fifo1
+	echo "Parent recd $INPUT"
+}
 
-:q
-
-echo "Starting child" >> /tmp/child.log
-
-while [ "$INPUT" != "q" ]
-do
-	read INPUT
-	RES="child started with args $*. You said $INPUT"
-	echo $RES >> /tmp/child.log
-	echo $RES
-done
+emit "Line 1"
+emit "hell world"
+emit q
+#echo q >fifo0
