@@ -349,6 +349,11 @@ static void hl_print_row (string arg)
 }
 // FN-END
 
+// FN hl_hi 
+// 25/10 added
+static void hl_hi () { cout << "neoleo says 'hi'" << endl; }
+
+
 /*
 static map<string, function<void(T)> > func_map = {
 	{"!",		_exc},
@@ -393,6 +398,8 @@ bool process_headless_line(std::string line, int fildes)
 		hl_exit(arg);
 	} else if(cmd == "g") {
 		hl_goto_cell(fildes);
+	} else if(cmd == "hi") { 
+		hl_hi();
 	} else if(cmd == "I") {
 		insert_rowwise(fildes);
 	} else if(cmd == "i") {
