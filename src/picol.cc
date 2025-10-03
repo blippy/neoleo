@@ -30,6 +30,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <iostream>
+#include <stack>
+using namespace std;
+
+
 enum {PICOL_OK, PICOL_ERR, PICOL_RETURN, PICOL_BREAK, PICOL_CONTINUE};
 enum {PT_ESC,PT_STR,PT_CMD,PT_VAR,PT_SEP,PT_EOL,PT_EOF};
 
@@ -63,12 +68,15 @@ struct picolCallFrame {
 	struct picolCallFrame *parent; /* parent is NULL at top level */
 };
 
+// FN picolInterp .
 struct picolInterp {
 	int level; /* Level of nesting */
 	struct picolCallFrame *callframe;
 	struct picolCmd *commands;
 	char *result;
+	stack<FILE*> files; // sourced code file descriptor stack
 };
+// FN-END
 
 void picolInitParser(struct picolParser *p, char *text) {
 	p->text = p->p = text;
@@ -259,9 +267,9 @@ int picolGetToken(struct picolParser *p) {
 void picolInitInterp(struct picolInterp *i) {
 	i->level = 0;
 	i->callframe = (struct picolCallFrame *) malloc(sizeof(struct picolCallFrame));
-	i->callframe->vars = NULL;
-	i->callframe->parent = NULL;
-	i->commands = NULL;
+	i->callframe->vars = nullptr;
+	i->callframe->parent = nullptr;
+	i->commands = nullptr;
 	i->result = strdup("");
 }
 
@@ -588,35 +596,59 @@ int picolCommandReturn(struct picolInterp *i, int argc, char **argv, void *pd) {
 	return PICOL_RETURN;
 }
 
+// FN picol_interact_fd .
+// 25/10 TODO
+int picol_interact_fd (struct picolInterp *i)
+{
+	string prompt{"picol> "};
+	prompt = ""; // Nah, we don't want a prompt after all
+
+	FILE* fp = i->files.top();
+	while(1) {
+		char clibuf[1024];
+		//printf("%s", prompt); fflush(stdout);
+		cout << prompt << flush;
+		if (fgets(clibuf,1024, fp) == NULL) return 0;
+		int retcode = picolEval(i,clibuf);
+		if (retcode) { // tweak by mcarter to only print if the result is not 0
+			if (i->result[0] != '\0') printf("[%d] %s\n", retcode, i->result);
+		}
+	}
+}
+int picolCommandSource(struct picolInterp *i, int argc, char **argv, void *pd) {
+	if (argc != 2) return picolArityErr(i,argv[0]);
+	//picolSetResult(i, (argc == 2) ? argv[1] : "");
+	return PICOL_RETURN;
+}
+
 void picolRegisterCoreCommands(struct picolInterp *i) {
 	int j; const char *name[] = {"+","-","*","/",">",">=","<","<=","==","!="};
 	for (j = 0; j < (int)(sizeof(name)/sizeof(char*)); j++)
-		picolRegisterCommand(i,name[j],picolCommandMath,NULL);
-	picolRegisterCommand(i,"set",picolCommandSet,NULL);
-	picolRegisterCommand(i,"puts",picolCommandPuts,NULL);
-	picolRegisterCommand(i,"if",picolCommandIf,NULL);
-	picolRegisterCommand(i,"while",picolCommandWhile,NULL);
-	picolRegisterCommand(i,"break",picolCommandRetCodes,NULL);
-	picolRegisterCommand(i,"continue",picolCommandRetCodes,NULL);
-	picolRegisterCommand(i,"proc",picolCommandProc,NULL);
-	picolRegisterCommand(i,"return",picolCommandReturn,NULL);
+		picolRegisterCommand(i,name[j],picolCommandMath,nullptr);
+	picolRegisterCommand(i,"set",picolCommandSet,nullptr);
+	picolRegisterCommand(i,"puts",picolCommandPuts,nullptr);
+	picolRegisterCommand(i,"if",picolCommandIf,nullptr);
+	picolRegisterCommand(i,"while",picolCommandWhile,nullptr);
+	picolRegisterCommand(i,"break",picolCommandRetCodes,nullptr);
+	picolRegisterCommand(i,"continue",picolCommandRetCodes,nullptr);
+	picolRegisterCommand(i,"proc",picolCommandProc,nullptr);
+	picolRegisterCommand(i,"return",picolCommandReturn,nullptr);
+	picolRegisterCommand(i,"source",picolCommandSource,nullptr); // 25/10
+
+
 }
 
+// FN picol_interactive .
 int picol_interactive()
 {
 	struct picolInterp interp;
 	picolInitInterp(&interp);
 	picolRegisterCoreCommands(&interp);
-	while(1) {
-		char clibuf[1024];
-		printf("picol> "); fflush(stdout);
-		if (fgets(clibuf,1024,stdin) == NULL) return 0;
-		int retcode = picolEval(&interp,clibuf);
-		if (retcode) { // tweak by mcarter to only print if the result is not 0
-			if (interp.result[0] != '\0') printf("[%d] %s\n", retcode, interp.result);
-		}
-	}
+	interp.files.push(stdin);
+	return picol_interact_fd(&interp);
+
 }
+// FN-END
 
 int picol_main(int argc, char **argv) {
 	if (argc == 1) {

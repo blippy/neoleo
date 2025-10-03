@@ -15,6 +15,7 @@ TESTS = basic.sh \
 	issue51.sh \
 	nohead-01.sh \
 	parser.sh \
+	picol-01.sh \
 	spans.sh \
 	write.sh
 
