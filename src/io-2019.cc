@@ -349,16 +349,18 @@ bool curses_loop ()
 
 	switch (c) {
 	case CTRL('q'):		maybe_quit_spreadsheet2019(quit);		break;
-	case '=': 		edit_cell2019(); 		break;
-	case '%': 		set_cell_toggle_percent();		break;
-	case 'c':		col_cmd2019();		break;
-	case 'm':		process_menu();		break;
-	case 'p':		i19_precision();		break;
-	case 'r':		row_cmd2019();		break;
+	case '=': 			edit_cell2019(); 		break;
+	case '%': 			set_cell_toggle_percent();		break;
+	case 'c':			col_cmd2019();		break;
+	case 'm':			process_menu();		break;
+	case 'p':			i19_precision();		break;
+	case 'r':			row_cmd2019();		break;
 	case KEY_DC:		clear_cell_formula();		break; // delete key
 	case KEY_DOWN: 		cursor_down();		break;
 	case KEY_LEFT:		cursor_left();		break;
-	case 27:		complex_key_sequence_27();		break;
+	case 27:			complex_key_sequence_27();		break;
+	case 554:			io_shift_cell_cursor(dirn::left, cucol-1); break ; // Ctrl-←  repeat cucol-1 times to bring cursor to col 1
+	case 575:			io_shift_cell_cursor(dirn::up, curow-1); break ; // Ctrl-↑  repeat curol-1 times to bring cursor to row 1
 	case KEY_RIGHT:		cursor_right();		break;
 	case KEY_UP:		cursor_up();		break;
 	case KEY_NPAGE:		page_down();		break;
