@@ -1,0 +1,4 @@
+I will now source picol-02a.tcl
+I am sourced picol
+And so am I
+I am now back to the original source file

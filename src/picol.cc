@@ -596,9 +596,9 @@ int picolCommandReturn(struct picolInterp *i, int argc, char **argv, void *pd) {
 	return PICOL_RETURN;
 }
 
-// FN picol_interact_fd .
+// FN picol_interact_fileptr .
 // 25/10 TODO
-int picol_interact_fd (struct picolInterp *i)
+int picol_interact_fileptr (struct picolInterp *i)
 {
 	string prompt{"picol> "};
 	prompt = ""; // Nah, we don't want a prompt after all
@@ -606,7 +606,6 @@ int picol_interact_fd (struct picolInterp *i)
 	FILE* fp = i->files.top();
 	while(1) {
 		char clibuf[1024];
-		//printf("%s", prompt); fflush(stdout);
 		cout << prompt << flush;
 		if (fgets(clibuf,1024, fp) == NULL) return 0;
 		int retcode = picolEval(i,clibuf);
@@ -617,8 +616,14 @@ int picol_interact_fd (struct picolInterp *i)
 }
 int picolCommandSource(struct picolInterp *i, int argc, char **argv, void *pd) {
 	if (argc != 2) return picolArityErr(i,argv[0]);
+	FILE *fp = fopen(argv[1], "r");
+	// TODO handle case fp == 0
+	i->files.push(fp);
+	int res = picol_interact_fileptr(i);
+	fclose(fp);
+	i->files.pop();
 	//picolSetResult(i, (argc == 2) ? argv[1] : "");
-	return PICOL_RETURN;
+	return res;
 }
 
 void picolRegisterCoreCommands(struct picolInterp *i) {
@@ -645,7 +650,7 @@ int picol_interactive()
 	picolInitInterp(&interp);
 	picolRegisterCoreCommands(&interp);
 	interp.files.push(stdin);
-	return picol_interact_fd(&interp);
+	return picol_interact_fileptr(&interp);
 
 }
 // FN-END

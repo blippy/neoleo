@@ -16,6 +16,7 @@ TESTS = basic.sh \
 	nohead-01.sh \
 	parser.sh \
 	picol-01.sh \
+	picol-02.sh \
 	spans.sh \
 	write.sh
 
