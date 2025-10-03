@@ -261,7 +261,7 @@ static void complex_key_sequence_27()
 	int c;
 	auto get = [&](){ 
 		c = get_ch(); 
-		//log(c);
+		log("complex_key_sequence_27:" , c);
 		return c;
 	};
 	if(get() != 91) goto fail;
@@ -270,6 +270,7 @@ static void complex_key_sequence_27()
 	if(get() != 53) goto fail;
 
 	
+
 	switch(get()) {
 		case 68: // Ctr leftarrow
 			io_shift_cell_cursor(dirn::left, cucol-1); // repeat cucol-1 times to bring cursor to column 1
@@ -339,38 +340,6 @@ bool curses_loop ()
 
 	show_menu();
 	bool quit = false;
-#if 0
-	static auto quitter = [&quit]() { maybe_quit_spreadsheet2019(quit); };
-	static auto keymap = keymap_t {
-		{CTRL('q'), 	quitter}, // this may (or may not) set quit to true
-			{'=', 		edit_cell2019},
-			{'%',		set_cell_toggle_percent},
-			{'c',		col_cmd2019},
-			{'m',		process_menu},
-			{'p',		i19_precision},
-			{'r',		row_cmd2019},
-			{KEY_DC, 	clear_cell_formula}, // delete key
-			{KEY_DOWN,	cursor_down},
-			{KEY_LEFT,  cursor_left},
-			{27,  		complex_key_sequence_27},
-			{KEY_RIGHT, cursor_right},
-			{KEY_UP, 	cursor_up},
-			{KEY_NPAGE,	page_down},
-			{KEY_PPAGE,	page_up},
-			{CTRL('b'),	set_cell_toggle_bold},
-			{CTRL('c'), copy_this_cell_formula},
-			{CTRL('i'),	set_cell_toggle_italic},
-			{CTRL('l'), set_cell_alignment_left},
-			{CTRL('r'), set_cell_alignment_right},
-			{CTRL('s'), save_spreadsheet2019},
-			{CTRL('v'), paste_this_cell_formula},
-
-	};
-
-	process_key(keymap);
-	//cur_io_repaint();
-#endif
-	//while(!)
 
 	int c = get_ch();
 	if ('0' <= c && c <= '9') {
