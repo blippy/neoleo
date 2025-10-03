@@ -597,7 +597,6 @@ int picolCommandReturn(struct picolInterp *i, int argc, char **argv, void *pd) {
 }
 
 // FN picol_interact_fileptr .
-// 25/10 TODO
 int picol_interact_fileptr (struct picolInterp *i)
 {
 	string prompt{"picol> "};
@@ -614,7 +613,10 @@ int picol_interact_fileptr (struct picolInterp *i)
 		}
 	}
 }
-int picolCommandSource(struct picolInterp *i, int argc, char **argv, void *pd) {
+// FN-END
+
+// FN picolCommandSource .
+int picolCommandSource (struct picolInterp *i, int argc, char **argv, void *pd) {
 	if (argc != 2) return picolArityErr(i,argv[0]);
 	FILE *fp = fopen(argv[1], "r");
 	// TODO handle case fp == 0
@@ -625,6 +627,7 @@ int picolCommandSource(struct picolInterp *i, int argc, char **argv, void *pd) {
 	//picolSetResult(i, (argc == 2) ? argv[1] : "");
 	return res;
 }
+// FN-END
 
 void picolRegisterCoreCommands(struct picolInterp *i) {
 	int j; const char *name[] = {"+","-","*","/",">",">=","<","<=","==","!="};
