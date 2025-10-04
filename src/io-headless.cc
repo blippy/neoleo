@@ -11,9 +11,6 @@
 #include "oleofile.h"
 #include "spans.h"
 
-//import std;
-//import mod;
-//import utl;
 
 using namespace std;
 using std::cin;
@@ -155,23 +152,6 @@ static void hless_dump_sheet()
 }
 
 
-
-#if 0
-std::generator<string> reading(T fildes)
-{
-	while(true) {
-		bool eof;
-		string line = getline_from_fildes(fildes, eof);
-		if(line == ".") break;
-		//if(line == ";") { co_yield line ; continue; }
-		if(line.size() == 0 && eof) break;
-		if(line.starts_with('#')) continue;
-		co_yield line;
-	}
-
-}
-#endif
-
 bool reading(T fildes, string& line)
 {
 	bool eof;
@@ -239,20 +219,7 @@ void hl_write_file(string filename)
 }
 // FN-END
 
-/*
-void hl_write_file(){
-	//log("hl_write_file:called");
-	_write_file(0);
-}
-*/
 
-// this seems to crash
-function<void(int)> with_int(function<void()> fn)
-{
-	//return std::bind(fn, 0);
-	//return fn;
-	return [&](int i) { fn(); };
-}
 
 
 
@@ -354,25 +321,6 @@ static void hl_print_row (string arg)
 // 25/10 added
 static void hl_hi () { cout << "neoleo says 'hi'" << endl; }
 
-
-/*
-static map<string, function<void(T)> > func_map = {
-	{"!",		_exc},
-	{"dump-sheet", 	hless_dump_sheet},
-	{"exit", 	hl_exit},
-	{"g", 		hl_goto_cell},
-	{"I", 		insert_rowwise},
-	{"i", 		insert_columnwise},
-	{"info", 	info},
-	{"p",		hl_print_row},
-	{"ri", 		hl_insert_row},
-	{"t", 		_type_sheet},
-	{"recalc", 	hl_recalc},
-	{"type-cell", 	type_cell},
-	{"w", 		_write_file}
-};
-*/
-
 bool process_headless_line(std::string line, int fildes)
 {
 	// break line down into a command and arguments
@@ -425,28 +373,6 @@ bool process_headless_line(std::string line, int fildes)
 	} else if( cmd == "w") {
 		hl_write_file(arg);
 	}
-
-#if 0
-	if(cmd == "q") {
-		//log("quit found");
-		return false;
-	}
-
-	//log("process_headless_line cmd;", cmd, ";arg:", _arg);
-	// try to find a canned function and execute it
-	auto it = func_map.find(cmd);
-	if(it != func_map.end()) {
-		auto fn = it->second;
-		fn(fildes);
-		cout << std::flush;
-		return true;
-	} else {
-		cerr << "? command not found:" << cmd << endl;
-	}
-#endif
-
-
-
 
 	cout << std::flush;
 	return true;
