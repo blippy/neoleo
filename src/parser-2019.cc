@@ -662,29 +662,30 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 			return Expr(stod(toke.val));
 		case STR:
 			return Expr(toke.val);
-		case ID:  {
-				  string lower = tolower(toke); //toke.val;
-				  //std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-				  if(lower== "r" || lower == "rc" )
-					  return parse_rc_1(tokes, predecs, r, c, lower);
-				  if(tokes.front().type == '(')
-					  return parse_fn(toke.val, tokes, predecs, r, c);
-				  else
-					  parse_error(); // although could be a variable name
-			  }
+		case ID: {
+			string lower = tolower(toke); //toke.val;
+			//std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+			if(lower== "r" || lower == "rc" )
+				return parse_rc_1(tokes, predecs, r, c, lower);
+			if(tokes.front().type == '(')
+				return parse_fn(toke.val, tokes, predecs, r, c);
+			else
+				parse_error(); // although could be a variable name
+			}
+			break;
 		case SYM: {
-				  bool_t b;
-				  if(toke == "#TRUE") { 
-					  b.v = true;
-					  return Expr(b);
-				  }
-				  if(toke == "#FALSE") { 
-					  b.v = false;
-					  return Expr(b);
-				  }
-				  parse_error();
-
-			  }
+			bool_t b;
+			if(toke == "#TRUE") {
+				b.v = true;
+				return Expr(b);
+			}
+			if(toke == "#FALSE") {
+				b.v = false;
+				return Expr(b);
+			}
+			parse_error();
+			}
+			break;
 		case '(': {
 				  Expr x1{parse_e(tokes, predecs,r ,c)};
 				  if(peek(tokes) == ')')
