@@ -84,22 +84,18 @@ Expr::Expr(string fname, Expr x)
 class CyclicErr : public std::exception { };
 
 
-class Tour {
-	public:
-		using marks_t = std::set<CELL*>;
-		bool frozen(CELL* cp) { return pmarks.count(cp) != 0; };
-		void freeze(CELL* cp) { pmarks.insert(cp); };
-		void touch(CELL* cp) 
-		{ 
-			if(tmarks.count(cp)) // Existence implies cyclicity
-				throw CyclicErr();
-			tmarks.insert(cp);
-		};
-		void untouch(CELL* cp) { tmarks.erase(cp); }
-	private:
-		marks_t tmarks; // temporary mark
-		marks_t pmarks; // permanent marks
+
+
+bool Tour::frozen(CELL* cp) { return pmarks.count(cp) != 0; };
+void Tour::freeze(CELL* cp) { pmarks.insert(cp); };
+void Tour::touch(CELL* cp)
+{
+	if(tmarks.count(cp)) // Existence implies cyclicity
+		throw CyclicErr();
+	tmarks.insert(cp);
 };
+void Tour::untouch(CELL* cp) { tmarks.erase(cp); }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -888,6 +884,7 @@ string str_eval (Tour& tour, Expr expr)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// FN parse_string .
 Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 	predecs.clear();
@@ -914,7 +911,7 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 		return Expr{err};
 	}
 }
-
+// FN-END
 
 /* user is responsible for repainting the changed sheet, maybe calling something like _io_repaint() */
 std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it = false) // FN

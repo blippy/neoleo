@@ -31,6 +31,26 @@ constexpr auto MIN_COL = 1;
 constexpr auto NON_ROW = 0;
 constexpr auto NON_COL = 0;
 
+#define FMT_DEF		0	/* Default */
+#define FMT_HID		1	/* Hidden */
+//#define FMT_GPH		2	/* Graph */
+#define FMT_DOL		3	/* Dollar */
+#define FMT_CMA		4	/* Comma */
+#define FMT_PCT		5	/* Percent */
+#define FMT_USR		6	/* User defined */
+#define FMT_FXT		7
+#define FMT_EXP		8
+#define FMT_GEN		9
+#define	FMT_DATE	10	/* Date */
+
+/* Other cell defaults: */
+
+
+inline int default_fmt = FMT_GEN;
+inline int default_prc = 0x0F;		/* FIX ME */
+
+
+
 /*
 #define JST_DEF 	0
 #define JST_LFT		1
@@ -39,6 +59,9 @@ constexpr auto NON_COL = 0;
 */
 
 enum class jst { def, lft, rgt, cnt};
+inline enum jst base_default_jst = jst::rgt;
+inline enum jst default_jst = base_default_jst;
+
 
 typedef struct rng {
 	CELLREF lr, lc, hr, hc;
@@ -86,9 +109,10 @@ inline const char *ename_desc[] =
 	CCC1(0)
 };
 
+// FN value_t .
 // monostate basically means "empty" as a valid type
 typedef std::variant<std::monostate, num_t, std::string, err_t, rng_t, bool_t> value_t;
-
+// FN-END
 
 
 
@@ -162,6 +186,7 @@ bool is_range(const value_t& val);
 char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 extern struct user_fmt fxt;
 std::string  fmt_std_date(int t);
+std::string fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
 
 
 

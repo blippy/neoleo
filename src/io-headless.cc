@@ -15,6 +15,7 @@
 //import mod;
 //import utl;
 
+using namespace std;
 using std::cin;
 using std::cout;
 using std::cerr;
@@ -471,6 +472,17 @@ static void _repl(int fildes)
 
 void headless_main() // FN
 {
+	// 25/10 test of parser - seems to work
+	ranges_t predecs;
+	string s{"life()"};
+	Expr expr{parse_string(s, predecs, curow, cucol)};
+	Tour tour;
+	value_t val{eval_expr(tour, expr)};
+	//cout << fmt_value(val) << endl;
+
+
+
+
 	//cout << mod_hi() << endl;
 	constexpr int fildes = STDIN_FILENO;
 	_repl(fildes);

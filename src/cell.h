@@ -43,9 +43,6 @@ typedef std::set<coord_t> crefs_t;
 
 
 
-//#define GET_JST(p)	((p == 0) ? JST_DEF : ((p)->cell_flags.cell_justify))
-//#define SET_JST(p,x)	((p)->cell_flags.cell_justify = (x))
-inline enum jst base_default_jst = jst::rgt;
 
 /* Cell size paramaters. */
 inline const unsigned int default_width = 8;
@@ -53,17 +50,7 @@ inline unsigned int default_height = 1;
 inline unsigned int saved_default_height = 1;
 
 
-#define FMT_DEF		0	/* Default */
-#define FMT_HID		1	/* Hidden */
-//#define FMT_GPH		2	/* Graph */
-#define FMT_DOL		3	/* Dollar */
-#define FMT_CMA		4	/* Comma */
-#define FMT_PCT		5	/* Percent */
-#define FMT_USR		6	/* User defined */
-#define FMT_FXT		7
-#define FMT_EXP		8
-#define FMT_GEN		9
-#define	FMT_DATE	10	/* Date */
+
 
 #define FMT_MAX 15
 /* An actual cell structure.  These cannot be variable-length, since they are
@@ -82,12 +69,9 @@ struct cell_flags_s {
 #define LCK_DEF		0
 #define LCK_UNL		1
 #define LCK_LCK		2
-
-/* Other cell defaults: */
-inline enum jst default_jst = base_default_jst;
-inline int default_fmt = FMT_GEN;
-inline int default_prc = 0x0F;		/* FIX ME */
 inline int default_lock = LCK_UNL;
+
+
 
 typedef unsigned char* formula_t;
 

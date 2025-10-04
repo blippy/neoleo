@@ -422,6 +422,20 @@ std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 	}
 }
 
+
+// FN fmt_value .
+std::string fmt_value (value_t& val, int p, int j)
+{
+	if(std::holds_alternative<std::monostate>(val)) return "";
+	if(std::holds_alternative<num_t>(val)) return print_cell_flt(get<num_t>(val), p, j);
+	if(std::holds_alternative<std::string>(val)) return get<string>(val);
+	if(std::holds_alternative<bool_t>(val)) return bool_name(get<bool_t>(val));
+	if(std::holds_alternative<err_t>(val)) return ename_desc[get<err_t>(val).num];
+	throw std::logic_error("Unhandled variant type in print_cell");
+
+}
+// FN-END
+
 // FN print_cell .
 std::string print_cell (CELL * cp)
 {
@@ -439,13 +453,8 @@ std::string print_cell (CELL * cp)
 	if (j == FMT_HID) return "";
 
 	value_t val = cp->get_value_2019();
+	return fmt_value(val, p, j);
 
-	if(std::holds_alternative<std::monostate>(val)) return "";
-	if(std::holds_alternative<num_t>(val)) return print_cell_flt(get<num_t>(val), p, j);
-	if(std::holds_alternative<std::string>(val)) return get<string>(val);
-	if(std::holds_alternative<bool_t>(val)) return bool_name(get<bool_t>(val));
-	if(std::holds_alternative<err_t>(val)) return ename_desc[get<err_t>(val).num];
-	throw std::logic_error("Unhandled variant type in print_cell");
 }
 
 std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_cell(cp); }
