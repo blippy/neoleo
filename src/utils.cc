@@ -384,7 +384,7 @@ std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 
 		case FMT_USR:
 			panic("Uncalled FMT_USR");
-
+			break;
 		case FMT_DEF:
 		case FMT_GEN:
 			{

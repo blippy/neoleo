@@ -17,13 +17,17 @@ using namespace std;
 // TYPE DECLARATIONS
 
 class Expr;
+
+
+
 typedef vector<Expr> args_t;
 typedef double num_t;
-typedef variant<num_t, string> value_t;
+typedef variant<num_t, int, string> value_t;
 typedef function<value_t(args_t)> function_t;
 typedef function_t* funptr;
 //class Args { public: vector<Expr> args; };
 //class FunCall;
+
 class FunCall { 
 	public: 
 		funptr fn ; 
@@ -70,6 +74,15 @@ value_t eval(Expr expr);
 num_t num_eval(Expr expr);
 string str_eval(Expr expr);
 
+std::string to_string(const value_t& val)
+{
+	//if(std::get_if<v>(&val)) return "";
+	if(auto v = std::get_if<num_t>(&val)) 	return to_string(*v);
+	if(auto v = std::get_if<int>(&val)) 	return to_string(*v);
+	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
+	throw std::logic_error("Unhandled stringify_value_file_style value type");
+}
+
 
 void parse_error()
 {
@@ -91,7 +104,7 @@ value_t do_plus(args_t args)
 }
 value_t do_minus(args_t args)
 {
-	if(args.size() == 0) return 0;
+	if(args.size() == 0) return 0.0;
 	num_t val = num_eval(args[0]);
 	if(args.size() == 1) return -val; // if there is only one argument, then return the negative of it
 	for(int i = 1; i<args.size(); ++i) val -= num_eval(args[i]);
@@ -109,7 +122,7 @@ value_t do_mul(args_t args)
 }
 value_t do_div(args_t args)
 {
-	if(args.size() == 0) return 0;
+	if(args.size() == 0) return 0.0;
 	num_t val = num_eval(args[0]);
 	//cout << "do_div 1/val " << 1.0/val << "\n";
 	if(args.size() == 1) return 1.0/val;
@@ -140,7 +153,7 @@ value_t do_plusfn(args_t args)
 value_t do_strlen(args_t args)
 {
 	if(args.size() !=1) parse_error();
-	return strlen(str_eval(args.at(0)).c_str());
+	return (int) str_eval(args.at(0)).size();
 	//num_t val = num_eval(args[0]);
 	//return sqrt(val);
 }
@@ -307,6 +320,7 @@ Expr parse_p(tokens_t& tokes)
 				 else
 					 parse_error(); // although could be a variable name
 			 }
+		break;
 		case '(': {
 				  //tokes.pop_front();
 				  Expr x1{parse_e(tokes)};
@@ -435,7 +449,16 @@ value_t eval (Expr expr)
 
 }
 
-num_t to_num (value_t v) { return std::get<num_t>(v); }
+num_t to_num (value_t val)
+{
+	//if(std::get_if<v>(&val)) return "";
+	if(auto v = std::get_if<num_t>(&val)) 	return *v;
+	if(auto v = std::get_if<int>(&val)) 	return *v;
+	//if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
+	throw std::logic_error("Unhandled stringify_value_file_style value type");
+}
+
+
 num_t num_eval (Expr expr) { return to_num(eval(expr)); }
 string to_str (value_t v) { return std::get<string>(v); }
 string str_eval (Expr expr) { return to_str(eval(expr)); }
@@ -451,9 +474,10 @@ int interpret(string s, int expected)
 	}
 
 	Expr expr{parse_e(tokes)};
-	num_t val = num_eval(expr);
-	cout << "Evaluates to " << val << " ";
-	if(val == expected) 
+	auto val= num_eval(expr);
+	cout << "Evaluates to " << to_string(val) << " ";
+	cout.flush();
+	if(to_num(val) == expected)
 		cout << "PASS";
 	else
 		cout << "FAIL";
@@ -464,9 +488,9 @@ int interpret(string s, int expected)
 int main()
 {
 
-	interpret("sqrt(4+5)+2", 5);
 	//return 0;
 	interpret("42", 42);
+	interpret("sqrt(4+5)+2", 5);
 	interpret("42+3", 45);
 	interpret("1+3+5+7", 16);
 	interpret("1-3-5-7", -14);

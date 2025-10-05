@@ -1,6 +1,6 @@
-CXXFLAGS = -std=c++17 -Wfatal-errors -ggdb -lm
+CXXFLAGS = -std=c++23 -Wfatal-errors -ggdb -lm
 parser : parser.cc
-	g++ $(CXXFLAGS) $^ -o $@
+	c++ $(CXXFLAGS) $^ -o $@
 clean:
 	rm -f parser
 
