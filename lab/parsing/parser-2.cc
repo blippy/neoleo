@@ -91,7 +91,7 @@ void parse_error()
 	throw 666;
 }
 
-value_t do_plus(args_t args)
+value_t eval_plus(args_t args)
 {
 	num_t val = 0;
 	for(auto& arg: args) val += num_eval(arg);
@@ -104,7 +104,7 @@ value_t do_plus(args_t args)
 	   */
 	return val;
 }
-value_t do_minus(args_t args)
+value_t eval_minus(args_t args)
 {
 	if(args.size() == 0) return 0.0;
 	num_t val = num_eval(args[0]);
@@ -112,7 +112,7 @@ value_t do_minus(args_t args)
 	for(int i = 1; i<args.size(); ++i) val -= num_eval(args[i]);
 	return val;
 }
-value_t do_mul(args_t args)
+value_t eval_mul(args_t args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
@@ -122,7 +122,7 @@ value_t do_mul(args_t args)
 	}
 	return val;
 }
-value_t do_div(args_t args)
+value_t eval_div(args_t args)
 {
 	if(args.size() == 0) return 0.0;
 	num_t val = num_eval(args[0]);
@@ -132,27 +132,27 @@ value_t do_div(args_t args)
 	return val;
 }
 
-value_t do_sqrt(args_t args)
+value_t eval_sqrt(args_t args)
 {
 	if(args.size() !=1) parse_error();
 	num_t val = num_eval(args[0]);
 	return sqrt(val);
 }
-value_t do_hypot(args_t args)
+value_t eval_hypot(args_t args)
 {
 	if(args.size() !=2) parse_error();
 	num_t v1 = num_eval(args[0]);
 	num_t v2 = num_eval(args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-value_t do_plusfn(args_t args)
+value_t eval_plusfn(args_t args)
 {
 	num_t val = 0;
 	for(auto& v: args) val += num_eval(v);
 	return val;
 }
 
-value_t do_strlen(args_t args)
+value_t eval_strlen(args_t args)
 {
 	if(args.size() !=1) parse_error();
 	return (int) str_eval(args.at(0)).size();
@@ -162,14 +162,14 @@ value_t do_strlen(args_t args)
 
 map<string, function_t> funcmap= {
 
-	{"strlen", do_strlen},
-	{"+", &do_plus},
-	{"-", &do_minus},
-	{"*", &do_mul},
-	{"/", &do_div},
-	{"sqrt", do_sqrt},
-	{"hypot", do_hypot},
-	{"plus", do_plusfn}
+	{"strlen", eval_strlen},
+	{"+", &eval_plus},
+	{"-", &eval_minus},
+	{"*", &eval_mul},
+	{"/", &eval_div},
+	{"sqrt", eval_sqrt},
+	{"hypot", eval_hypot},
+	{"plus", eval_plusfn}
 };
 
 
