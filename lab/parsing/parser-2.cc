@@ -24,7 +24,11 @@ class Expr;
 
 typedef vector<Expr> args_t;
 typedef double num_t;
+
+// FN value_t .
 typedef variant<monostate, num_t, int, string> value_t;
+// FN-END
+
 typedef function<value_t(args_t)> function_t;
 typedef function_t* funptr;
 //class Args { public: vector<Expr> args; };
@@ -36,6 +40,8 @@ class FunCall {
 		args_t args; 
 		//void set(string fnamej
 };
+
+// FN Expr .
 class Expr { 
 	public: 
 		Expr() {};
@@ -44,6 +50,7 @@ class Expr {
 		//Expr(string fname, args_t args);
 		variant<FunCall, value_t> expr; 
 };
+// FN-END
 
 
 //extern map<string, funptr> funcmap;
@@ -211,6 +218,7 @@ public:
 	void consume(char ch);
 	token_t front();
 	void pop_front();
+	bool eof();
 	~Lexer();
 
 private:
@@ -238,6 +246,12 @@ Lexer::Lexer(string input)
 
 Lexer::~Lexer() {}
 
+bool Lexer::eof()
+{
+	if(tokens.empty()) cout << "Lexer::eof: empty\n";
+	return tokens.empty();
+	//return tokens.size() == 0;
+}
 bool Lexer::isfirst(char c)
 {
 	return tokens.front().text == string{c};
@@ -295,6 +309,7 @@ loop:
 	}
 	goto loop;
 finis:
+	cout << "tokenise: EOI" << endl;
 	found(EOI, "End of stream"); // Add this so that we can look ahead into the void
 	//return tokens;
 }
@@ -363,14 +378,8 @@ loop:
 
 finis:
 	lxr.consume(')');
-
-	//args_t args{parse_e(tokes)};
-
-	//fc.args = args;
 	Expr x;
 	x.expr = fc;
-
-	//tokes.pop_front(); // rrb
 	return x;
 }
 
@@ -454,7 +463,8 @@ Expr parse_t(Lexer& lxr)
 
 }
 
-FunCall _parse_e(Lexer& lxr)
+// FN _parse_e .
+FunCall _parse_e (Lexer& lxr)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -463,7 +473,10 @@ FunCall _parse_e(Lexer& lxr)
 	while(1) {
 		auto nid = lxr.front().type;
 		//cout << "nid is " << nid << "\n";
-		if(nid == EOI) return fc;
+		if(nid == EOI) {
+			cout << "_parse_e: EOI\n";
+			return fc;
+		}
 		//tokes.pop_front();
 		if(nid == '+') {
 			lxr.pop_front();
@@ -483,7 +496,10 @@ FunCall _parse_e(Lexer& lxr)
 		}
 	}
 }
-Expr parse_e(Lexer& lxr)
+// FN_END
+
+// FN parse_e .
+Expr parse_e (Lexer& lxr)
 {
 	FunCall fc{_parse_e(lxr)};
 
@@ -496,6 +512,7 @@ Expr parse_e(Lexer& lxr)
 	}
 
 }
+// FN-END
 
 
 
@@ -556,12 +573,12 @@ int interpret(string s, int expected)
 void interpret1(string s)
 {
 	Lexer lxr(s);
-
 	cout << endl;
-	Expr expr{parse_e(lxr)};
 	cout << "Performing eval:\n";
-	eval(expr); // this evaluated precisely 1 expression
-
+	while(!lxr.eof()) {
+		Expr expr{parse_e(lxr)};
+		eval(expr); // this evaluated precisely 1 expression
+	}
 }
 
 int main()
@@ -591,6 +608,7 @@ int main()
 		interpret1("print(strlen(\"hi\"), 42)");
 	}
 
+	//interpret1("print(1)");
 	interpret1("print(1) print(2)");
 
 
