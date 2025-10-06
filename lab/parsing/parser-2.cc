@@ -175,18 +175,52 @@ map<string, function_t> funcmap= {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // LEXER
-typedef pair<int, string> token_t;
-typedef deque<token_t> tokens_t;
+
+#if 1
+//typedef pair<int, string> Lexer;
+//typedef deque<Lexer> tokens_t;
 
 //enum Tokens { EOI, UNK, NUMBER, ID, PLUS };
 enum Tokens { EOI = 128, NUMBER, ID, STR };
 
+typedef struct {
+	enum Tokens type;
+	string text;
+} 	token_t;
 
-tokens_t tokenise(string str)
-{
+typedef deque<token_t> tokens_t;
+
+class Lexer {
+public:
+	Lexer(string input);
+	token_t yylex();
+	~Lexer();
+
+private:
+	void tokenise(string str);
+	void found(int type, string text);
 	tokens_t tokens;
+	//string m_input;
+};
 
-	auto found = [&tokens](auto toketype, auto token) { tokens.push_back(make_pair(toketype, token)); };
+Lexer::Lexer(string input)
+{
+	tokenise(input);
+
+}
+
+Lexer::~Lexer() {}
+
+void Lexer::found(int type, string text)
+{
+	tokens.push_back(token_t{(Tokens) type, text});
+}
+
+void Lexer::tokenise(string str)
+{
+	//tokens_t tokens;
+
+	//auto found = [&tokens](auto toketype, auto token) { tokens.push_back(token_t{toketype, token}); };
 	cout << "Parsing: " << str << "\n";
 	const char* cstr = str.c_str();
 	int pos = 0;
@@ -221,14 +255,15 @@ loop:
 	goto loop;
 finis:
 	found(EOI, "End of stream"); // Add this so that we can look ahead into the void
-	return tokens;
+	//return tokens;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
 
-void consume(char ch, tokens_t& tokes)
+void consume(char ch, Lexer& tokes)
 {
 	if(ch == tokes.front().first)
 		tokes.pop_front();
@@ -307,7 +342,7 @@ finis:
 Expr parse_p(tokens_t& tokes)
 {
 	//Expr t{parse_t(tokes)};
-	token_t toke = tokes.front();
+	Lexer toke = tokes.front();
 	tokes.pop_front();
 	switch(toke.first) {
 		case EOI:
@@ -383,7 +418,7 @@ Expr parse_t(tokens_t& tokes)
 
 }
 
-FunCall _parse_e(tokens_t& tokes)
+FunCall _parse_e(Lexer& tokes)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -412,7 +447,7 @@ FunCall _parse_e(tokens_t& tokes)
 		}
 	}
 }
-Expr parse_e(tokens_t& tokes)
+Expr parse_e(Lexer& tokes)
 {
 	FunCall fc{_parse_e(tokes)};
 
@@ -467,6 +502,9 @@ string str_eval (Expr expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 int interpret(string s, int expected)
 {
+	Lexer lxr(s);
+
+#if 0
 	tokens_t tokes{tokenise(s)};
 
 	if constexpr (0) {
@@ -474,8 +512,9 @@ int interpret(string s, int expected)
 			cout << "Found: " << t.first << " " << t.second << "\n";
 		}
 	}
+#endif
 
-	Expr expr{parse_e(tokes)};
+	Expr expr{parse_e(lxr)};
 	auto val= num_eval(expr);
 	cout << "Evaluates to " << to_string(val) << " ";
 	cout.flush();
