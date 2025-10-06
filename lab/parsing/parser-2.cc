@@ -527,16 +527,6 @@ int interpret(string s, int expected)
 {
 	Lexer lxr(s);
 
-#if 0
-	tokens_t tokes{tokenise(s)};
-
-	if constexpr (0) {
-		for(auto& t:tokes) {
-			cout << "Found: " << t.first << " " << t.second << "\n";
-		}
-	}
-#endif
-
 	Expr expr{parse_e(lxr)};
 	auto val= num_eval(expr);
 	cout << "Evaluates to " << to_string(val) << " ";
@@ -569,6 +559,7 @@ int main()
 	interpret("plus(2)+1", 3);
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
+	interpret(" plus(1,strlen(\"hello\")) +2 ", 8);
 
 
 	return 0;
