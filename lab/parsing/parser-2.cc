@@ -24,7 +24,7 @@ class Expr;
 
 typedef vector<Expr> args_t;
 typedef double num_t;
-typedef variant<num_t, int, string> value_t;
+typedef variant<monostate, num_t, int, string> value_t;
 typedef function<value_t(args_t)> function_t;
 typedef function_t* funptr;
 //class Args { public: vector<Expr> args; };
@@ -79,6 +79,7 @@ string str_eval(Expr expr);
 std::string to_string(const value_t& val)
 {
 	//if(std::get_if<v>(&val)) return "";
+	if(auto v = std::get_if<monostate>(&val)) 	return "";
 	if(auto v = std::get_if<num_t>(&val)) 	return to_string(*v);
 	if(auto v = std::get_if<int>(&val)) 	return to_string(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
@@ -156,8 +157,19 @@ value_t eval_strlen(args_t args)
 {
 	if(args.size() !=1) parse_error();
 	return (int) str_eval(args.at(0)).size();
-	//num_t val = num_eval(args[0]);
-	//return sqrt(val);
+}
+
+value_t eval_print(args_t args)
+{
+	//cout << "eval_print: called" << endl;
+	for(const auto& a : args) {
+		cout << to_string(eval(a));
+	}
+	cout << endl;
+
+	//if(args.size() !=1) parse_error();
+	//return (int) str_eval(args.at(0)).size();
+	return std::monostate{};
 }
 
 map<string, function_t> funcmap= {
@@ -169,7 +181,8 @@ map<string, function_t> funcmap= {
 	{"/", &eval_div},
 	{"sqrt", eval_sqrt},
 	{"hypot", eval_hypot},
-	{"plus", eval_plusfn}
+	{"plus", eval_plusfn},
+	{"print", eval_print}
 };
 
 
@@ -470,9 +483,9 @@ FunCall _parse_e(Lexer& lxr)
 		}
 	}
 }
-Expr parse_e(Lexer& tokes)
+Expr parse_e(Lexer& lxr)
 {
-	FunCall fc{_parse_e(tokes)};
+	FunCall fc{_parse_e(lxr)};
 
 	if(fc.args.size() == 1)
 		return Expr(fc.args[0]);
@@ -492,6 +505,7 @@ Expr parse_e(Lexer& tokes)
 //template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
+// FN eval .
 value_t eval (Expr expr)
 {
 	value_t val = 667;
@@ -505,9 +519,8 @@ value_t eval (Expr expr)
 	}
 
 	return val;
-
-
 }
+// FN-END
 
 num_t to_num (value_t val)
 {
@@ -539,6 +552,28 @@ int interpret(string s, int expected)
 
 	return 0;
 }
+
+void interpret1(string s)
+{
+	Lexer lxr(s);
+
+	cout << endl;
+	Expr expr{parse_e(lxr)};
+	eval(expr);
+	/*
+	auto val= num_eval(expr);
+	cout << "Evaluates to " << to_string(val) << " ";
+	cout.flush();
+	if(to_num(val) == expected)
+		cout << "PASS";
+	else
+		cout << "FAIL";
+	cout << "\n\n";
+
+	return 0;
+	*/
+}
+
 int main()
 {
 
@@ -560,6 +595,8 @@ int main()
 	interpret("plus(2,3  +4  )  + 1", 10);
 	interpret(" strlen(\"hello world\") ", 11);
 	interpret(" plus(1,strlen(\"hello\")) +2 ", 8);
+	interpret1("print(4, 2)");
+	interpret1("print(strlen(\"hi\"), 42)");
 
 
 	return 0;

@@ -4,7 +4,7 @@ define hook-quit
 end
 
 set pagination off
-file ./parser
+file ./app-2
 #b main
 #b print_acc
 #r  ../accts/25.txt
