@@ -193,7 +193,11 @@ typedef deque<token_t> tokens_t;
 class Lexer {
 public:
 	Lexer(string input);
-	token_t yylex();
+	//token_t yylex();
+	bool isfirst(char c);
+	void consume(char ch);
+	token_t front();
+	void pop_front();
 	~Lexer();
 
 private:
@@ -203,6 +207,16 @@ private:
 	//string m_input;
 };
 
+
+void Lexer::pop_front()
+{
+	tokens.pop_front();
+}
+token_t Lexer::front()
+{
+	return tokens.front();
+}
+
 Lexer::Lexer(string input)
 {
 	tokenise(input);
@@ -211,9 +225,23 @@ Lexer::Lexer(string input)
 
 Lexer::~Lexer() {}
 
+bool Lexer::isfirst(char c)
+{
+	return tokens.front().text == string{c};
+}
+
 void Lexer::found(int type, string text)
 {
 	tokens.push_back(token_t{(Tokens) type, text});
+}
+
+
+void Lexer::consume(char ch)
+{
+	if(isfirst(ch))
+		tokens.pop_front();
+	else
+		parse_error();
 }
 
 void Lexer::tokenise(string str)
@@ -263,13 +291,6 @@ finis:
 // SCANNER (the "yacc" side of things)
 
 
-void consume(char ch, Lexer& tokes)
-{
-	if(ch == tokes.front().first)
-		tokes.pop_front();
-	else
-		parse_error();
-}
 
 	template<class Q>
 Q rest(Q qs)
@@ -304,30 +325,31 @@ typedef deque<string> ops_t;
 
 
 
-Expr parse_e(tokens_t& tokes);
-Expr parse_t(tokens_t& tokes);
+Expr parse_e(Lexer& lxr);
+Expr parse_t(Lexer& lxr);
 
 // parse a function
-Expr parse_fn(string fname, tokens_t& tokes)
+Expr parse_fn(string fname, Lexer& lxr)
 {
 	cout << "parse_fn name " << fname << "\n";
 	auto fn = fn_lookup(fname);
 	//cout << (*fn)(args_t{12}) << "\n";
 
-	consume('(', tokes);
+	//consume('(', tokes);
+	lxr.consume('(');
 	FunCall fc;
 	fc.fn = fn;
 loop:
-	if(tokes.front().first == ')') goto finis;
-	fc.args.push_back(parse_e(tokes));
-	if(tokes.front().first == ',') {
-		consume(',', tokes);
+	if(lxr.isfirst(')')) goto finis;
+	fc.args.push_back(parse_e(lxr));
+	if(lxr.isfirst(',')) {
+		lxr.consume(',');
 		goto loop;
-	} else if(tokes.front().first != ')')
+	} else if(!lxr.isfirst(')'))
 		parse_error();
 
 finis:
-	consume(')', tokes);
+	lxr.consume(')');
 
 	//args_t args{parse_e(tokes)};
 
@@ -339,60 +361,61 @@ finis:
 	return x;
 }
 
-Expr parse_p(tokens_t& tokes)
+Expr parse_p(Lexer& lxr)
 {
 	//Expr t{parse_t(tokes)};
-	Lexer toke = tokes.front();
-	tokes.pop_front();
-	switch(toke.first) {
+	token_t toke{lxr.front()};
+	//tokes.pop_front();
+	lxr.pop_front();
+	switch(toke.type) {
 		case EOI:
 			return Expr();
 		case NUMBER:
-			return Expr(stoi(toke.second));
+			return Expr(stoi(toke.text));
 		case STR:
-			return Expr(toke.second);
-		case ID: {
-				 if(tokes.front().first == '(')
-					 return parse_fn(toke.second, tokes);
-				 else
-					 parse_error(); // although could be a variable name
-			 }
-		break;
+			return Expr(toke.text);
+		case ID:
+			if(lxr.isfirst('('))
+				return parse_fn(toke.text, lxr);
+			else
+				parse_error(); // although could be a variable name
+			break;
 		case '(': {
 				  //tokes.pop_front();
-				  Expr x1{parse_e(tokes)};
-				  if(tokes.front().first == ')')
-					  tokes.pop_front();
+				  Expr x1{parse_e(lxr)};
+				  if(lxr.isfirst(')'))
+					  lxr.pop_front();
 				  else
 					  parse_error();
 				  return x1;
 			  }
 		case '-':
-			  return Expr("-", parse_t(tokes));
+			  return Expr("-", parse_t(lxr));
 		default:
 			  parse_error();
 	}
 	return Expr(); // should never reach here
 }
-Expr parse_f(tokens_t& tokes) { return parse_p(tokes); }
+
+Expr parse_f(Lexer& lxr) { return parse_p(lxr); }
 
 
-FunCall _parse_t(tokens_t& tokes)
+FunCall _parse_t(Lexer& lxr)
 {
 	FunCall fc;
 	fc.fn = &funcmap["*"];
 
-	fc.args.push_back(parse_f(tokes));
+	fc.args.push_back(parse_f(lxr));
 	//return fc;
 	while(1) {
-		auto nid = tokes.front().first;
+		auto nid = lxr.front().type;
 		if(nid == EOI) return fc;
 		if(nid == '*') {
-			tokes.pop_front();
-			fc.args.push_back(parse_f(tokes));
+			lxr.pop_front();
+			fc.args.push_back(parse_f(lxr));
 		} else  if(nid == '/') {
-			tokes.pop_front();
-			Expr eneg =parse_f(tokes);
+			lxr.pop_front();
+			Expr eneg =parse_f(lxr);
 			FunCall fneg;
 			fneg.fn = &funcmap["/"];
 			fneg.args = args_t{eneg};
@@ -404,9 +427,9 @@ FunCall _parse_t(tokens_t& tokes)
 		}
 	}
 }
-Expr parse_t(tokens_t& tokes)
+Expr parse_t(Lexer& lxr)
 {
-	FunCall fc{_parse_t(tokes)};
+	FunCall fc{_parse_t(lxr)};
 
 	if(fc.args.size() == 1)
 		return Expr(fc.args[0]);
@@ -418,24 +441,24 @@ Expr parse_t(tokens_t& tokes)
 
 }
 
-FunCall _parse_e(Lexer& tokes)
+FunCall _parse_e(Lexer& lxr)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
 
-	fc.args.push_back(parse_t(tokes));
+	fc.args.push_back(parse_t(lxr));
 	while(1) {
-		auto nid = tokes.front().first;
+		auto nid = lxr.front().type;
 		//cout << "nid is " << nid << "\n";
 		if(nid == EOI) return fc;
 		//tokes.pop_front();
 		if(nid == '+') {
-			tokes.pop_front();
+			lxr.pop_front();
 			//cout <<" nod is +\n";
-			fc.args.push_back(parse_t(tokes));
+			fc.args.push_back(parse_t(lxr));
 		} else  if(nid == '-') {
-			tokes.pop_front();
-			Expr eneg =parse_t(tokes);
+			lxr.pop_front();
+			Expr eneg =parse_t(lxr);
 			FunCall fneg;
 			fneg.fn = &funcmap["-"];
 			fneg.args = args_t{eneg};
