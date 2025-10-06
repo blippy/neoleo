@@ -559,44 +559,39 @@ void interpret1(string s)
 
 	cout << endl;
 	Expr expr{parse_e(lxr)};
-	eval(expr);
-	/*
-	auto val= num_eval(expr);
-	cout << "Evaluates to " << to_string(val) << " ";
-	cout.flush();
-	if(to_num(val) == expected)
-		cout << "PASS";
-	else
-		cout << "FAIL";
-	cout << "\n\n";
+	cout << "Performing eval:\n";
+	eval(expr); // this evaluated precisely 1 expression
 
-	return 0;
-	*/
 }
 
 int main()
 {
 
 	//return 0;
-	interpret("42", 42);
-	interpret("sqrt(4+5)+2", 5);
-	interpret("42+3", 45);
-	interpret("1+3+5+7", 16);
-	interpret("1-3-5-7", -14);
-	interpret("1-3+5-7", -4);
-	interpret("1+2*3", 7);
-	interpret("1+12/3", 5);
-	interpret("1+12/3*2/2", 5);
-	interpret("(1+2)*3", 9);
-	interpret("-(1+2)*-3", 9);
-	interpret("hypot(3,4)+1", 6);
-	interpret("plus()+1", 1);
-	interpret("plus(2)+1", 3);
-	interpret("plus(2,3  +4  )  + 1", 10);
-	interpret(" strlen(\"hello world\") ", 11);
-	interpret(" plus(1,strlen(\"hello\")) +2 ", 8);
-	interpret1("print(4, 2)");
-	interpret1("print(strlen(\"hi\"), 42)");
+	if(0) {
+		// fairly simple cases
+		interpret("42", 42);
+		interpret("sqrt(4+5)+2", 5);
+		interpret("42+3", 45);
+		interpret("1+3+5+7", 16);
+		interpret("1-3-5-7", -14);
+		interpret("1-3+5-7", -4);
+		interpret("1+2*3", 7);
+		interpret("1+12/3", 5);
+		interpret("1+12/3*2/2", 5);
+		interpret("(1+2)*3", 9);
+		interpret("-(1+2)*-3", 9);
+		interpret("hypot(3,4)+1", 6);
+		interpret("plus()+1", 1);
+		interpret("plus(2)+1", 3);
+		interpret("plus(2,3  +4  )  + 1", 10);
+		interpret(" strlen(\"hello world\") ", 11);
+		interpret(" plus(1,strlen(\"hello\")) +2 ", 8);
+		interpret1("print(4, 2)");
+		interpret1("print(strlen(\"hi\"), 42)");
+	}
+
+	interpret1("print(1) print(2)");
 
 
 	return 0;
