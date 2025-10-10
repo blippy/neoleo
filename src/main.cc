@@ -8,6 +8,7 @@
 
 #include "assert.h"
 #include "basic.h"
+#include "blang2.h"
 #include "neotypes.h"
 #include "oleofile.h"
 #include "parser-2019.h"
@@ -40,9 +41,10 @@ static char*	opt_script_file = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "VHhps:Tv";
+static char short_options[] = "b:VHhps:Tv";
 static struct option long_options[] =
 {
+		{"blang",	required_argument, NULL, 'b'},
 	{"version",		0,	NULL,	'V'},
 	{"headless",		0,	NULL,	'H'},
 	{"help",		0,	NULL,	'h'},
@@ -79,6 +81,7 @@ show_usage (void)
 	printf("Usage: %s [OPTION]... [FILE]...\n", PACKAGE);
 
 const char* usage = R"(
+  -b, --blang FILE         execute a blang file
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
   -s, --script FILE        execute a script
@@ -93,8 +96,7 @@ Report bugs to https://github.com/blippy/neoleo/issues
 
 
 
-void
-parse_command_line(int argc, char **argv, bool& user_wants_headless)
+void parse_command_line (int argc, char **argv, bool& user_wants_headless, strings& blang_files)
 {
 	int opt, optindex;
 
@@ -103,8 +105,11 @@ parse_command_line(int argc, char **argv, bool& user_wants_headless)
 		if (opt == EOF)
 			break;
 
-		switch (opt)
-		{
+		switch (opt) {
+			case 'b':
+				//cout << "parse_command_line with blang file " << optarg << endl;
+				blang_files.push_back(optarg);
+				break;
 			case 'v':
 			case 'V':
 				print_version();
@@ -140,10 +145,21 @@ parse_command_line(int argc, char **argv, bool& user_wants_headless)
 		show_usage ();
 		exit (1);
 	}
+
+}
+
+std::string slurp(const char *filename)
+{
+        std::ifstream in;
+        in.open(filename, std::ifstream::in | std::ifstream::binary);
+        std::stringstream sstr;
+        sstr << in.rdbuf();
+        in.close();
+        return sstr.str();
 }
 
 
-void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool use_headless)
+void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool use_headless, strings blang_files)
 {
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();
@@ -175,12 +191,18 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 		optind++;
 	}
 
-	//Global->display_opened = 1;
 	Global_modified = 0;
+
+	for(auto const& f : blang_files) {
+		auto src = slurp(f.c_str());
+		blang_interpret_string(src);
+	}
+
 	if(opt_script_file) {
 		int ret = headless_script(opt_script_file);
 		exit(ret);
 	}
+
 	if(use_headless)
 		headless_main();
 	else {
@@ -196,8 +218,9 @@ int main (int argc, char **argv)
 
 	int command_line_file = 0;	/* was there one? */
 	bool use_headless = false;
-	parse_command_line(argc, argv, use_headless);
-	run_nonexperimental_mode(argc, argv, command_line_file, use_headless);
+	strings blang_files;
+	parse_command_line(argc, argv, use_headless, blang_files);
+	run_nonexperimental_mode(argc, argv, command_line_file, use_headless, blang_files);
 
 	return 0;
 }
