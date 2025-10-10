@@ -34,10 +34,12 @@ dist_man_MANS = neoleo.1
 
 neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm 
 neoleo_LDADD += @NCURSES_LIBS@ 
+neoleo_LDADD += -lstdc++exp # for stacktrace in blang
 
 
 neoleo_SOURCES = \
 		 basic.cc \
+		 blang2.cc \
          cell.cc \
 		 io-2019.cc io-headless.cc io-curses.cc \
 		 menu-2025.cc \
@@ -53,7 +55,7 @@ neoleo_SOURCES = \
 	
 
 
-noinst_HEADERS = basic.h cell.h \
+noinst_HEADERS = basic.h blang2.h cell.h \
 		 io-2019.h io-curses.h \
 		 menu-2025.h \
 		 neotypes.h  \
