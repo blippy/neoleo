@@ -1,5 +1,5 @@
 // 25/10 Let's try a new lexer (not yet started)
-// 2025-10-11	Owned by neoleo
+// 2025-10-11	Owned by cerbo
 
 #include <cassert>
 #include <ctype.h>
