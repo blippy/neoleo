@@ -9,6 +9,7 @@
 #include "assert.h"
 #include "basic.h"
 #include "blang2.h"
+#include "blx.h"
 #include "neotypes.h"
 #include "oleofile.h"
 #include "parser-2019.h"
@@ -193,6 +194,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 
 	Global_modified = 0;
 
+	blx_init();
 	for(auto const& f : blang_files) {
 		auto src = slurp(f.c_str());
 		blang_interpret_string(src);

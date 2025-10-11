@@ -80,5 +80,6 @@ private:
 // FUNCTIONS
 
 blang_expr_t 	blang_interpret_string(const std::string& s);
+blang_expr_t 	eval (blang_expr_t expr);
 blang_num_t		to_num (blang_expr_t val);
 std::string 	to_string (const blang_expr_t& val);

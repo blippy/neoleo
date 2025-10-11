@@ -420,6 +420,8 @@ std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j)
 			panic ("Unknown format: %d", j);
 			return "YUK";
 	}
+
+	return "Impossible to reach";
 }
 
 

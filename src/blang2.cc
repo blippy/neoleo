@@ -1,4 +1,5 @@
 // 25/10 Let's try a new lexer (not yet started)
+// 2025-10-11	Owned by neoleo
 
 #include <cassert>
 #include <ctype.h>
@@ -391,9 +392,9 @@ loop:
 	} else if (ch == '$' && isalpha(cstr[pos+1])) {
 		//cout << "found $" <<endl;
 		pos++;
-		found('$', "$"); // start of a vairable name
+		found('$', "$"); // start of a variable name
 	} else if (isalpha(ch)) {
-		while(isalnum(ch) && ch) { token += ch; ch = cstr[++pos]; }
+		while(ch && (isalnum(ch) || ch == '_')) { token += ch; ch = cstr[++pos]; }
 		if(token == "sub") {
 			found(SUB, token);
 		} else if (token == "call") {
