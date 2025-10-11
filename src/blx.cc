@@ -13,7 +13,21 @@
 #include "neotypes.h"
 #include "parser-2019.h"
 
-blang_expr_t eval_set_cell(blang_exprs_t args)
+using namespace std;
+
+blang_expr_t eval_bind(blang_exprs_t args)
+{
+	log("eval_bind  called");
+	char trigger = to_string(eval(args[0]))[0];
+	log("trigger is ", string{trigger});
+	string code = to_string(eval(args[1]));
+	log("code is ", code);
+	bind_char(trigger, code);
+	return std::monostate{};
+
+}
+
+blang_expr_t eval_set_cell (blang_exprs_t args)
 {
 	int row = to_num(eval(args[0]));
 	if(row == 0) row = curow;
@@ -22,18 +36,13 @@ blang_expr_t eval_set_cell(blang_exprs_t args)
 	auto val  = to_string(eval(args[2]));
 	set_and_eval(row, col, val, false);
 
-	/*
-	for(const auto& a : args) {
-		cout << to_string(eval(a));
-	}
-	cout << endl;
-*/
 	return std::monostate{};
 }
 
 
 void blx_init()
 {
+	blang_funcmap["bind"] = &eval_bind;
 	blang_funcmap["set_cell"] = &eval_set_cell;
 }
 

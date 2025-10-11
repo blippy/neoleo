@@ -1,4 +1,4 @@
-# 2025-10-10 Added
+# 2025-10-10 Added. Works.
 # Some simple to-do commands
 
 sub tick
@@ -6,7 +6,5 @@ sub tick
 	set_cell(0, 3, "\"✅\"")
 }
 
-call tick
+bind("t", "call tick")
 
-#bind("t", "set_cell(0, 3, \"✅\")")
-#print("blang says hello")

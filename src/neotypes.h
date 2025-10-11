@@ -168,25 +168,28 @@ std::string string_format( const std::string& format, Args ... args )
     return std::string( buf.get(), buf.get() + size - 1 ); // We don't want the '\0' inside
 }
 
-std::string cell_value_string (CELLREF row, CELLREF col, int add_quote);
-char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
-std::string trim(const std::string& str);
-std::string print_cell_flt (num_t flt, unsigned int precision, unsigned int j);
-std::string print_cell (CELL * cp);
-std::string print_cell ();
-std::string spaces(int n);
-std::string pad_left(const std::string& s, int width);
-std::string pad_right(const std::string& s, int width);
-std::string pad_centre(const std::string& s, int width);
-std::string pad_jst(const std::string& s, int width, enum jst j);
-std::string stringify_value_file_style(const value_t& val);
-void panic (const char *s,...);
-bool is_num(const value_t& val);
-bool is_range(const value_t& val);
-char* pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 extern struct user_fmt fxt;
-std::string  fmt_std_date(int t);
-std::string fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
+
+
+void bind_char(char c, std::string blang_code); // bind a character to some blang code requiring interpreting
+std::string 	cell_value_string (CELLREF row, CELLREF col, int add_quote);
+char 			*adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
+std::string 	trim(const std::string& str);
+std::string 	print_cell_flt (num_t flt, unsigned int precision, unsigned int j);
+std::string 	print_cell (CELL * cp);
+std::string 	print_cell ();
+std::string 	spaces(int n);
+std::string 	pad_left(const std::string& s, int width);
+std::string 	pad_right(const std::string& s, int width);
+std::string 	pad_centre(const std::string& s, int width);
+std::string 	pad_jst(const std::string& s, int width, enum jst j);
+std::string 	stringify_value_file_style(const value_t& val);
+void 			panic (const char *s,...);
+bool 			is_num(const value_t& val);
+bool 			is_range(const value_t& val);
+char* 			pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
+std::string  	fmt_std_date(int t);
+std::string 	fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
 
 
 

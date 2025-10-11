@@ -10,6 +10,7 @@
 
 
 #include "basic.h"
+#include "blang2.h"
 #include "io-2019.h"
 #include "neotypes.h"
 #include "parser-2019.h"
@@ -27,6 +28,8 @@
 using namespace std::string_literals;
 using std::cout;
 using std::cerr;
+using std::map;
+using std::string;
 
 static void col_cmd2019();
 extern void hl_write_file();
@@ -333,6 +336,13 @@ void process_key(const keymap_t& keymap)
 // FN-END
 
 
+static map<char, string> custom_bindings; // map between a char and a blang string that must be interpreted
+
+// bind a character to some blang code requiring interpreting
+void bind_char(char c, std::string blang_code)
+{
+	custom_bindings[c] = blang_code;
+}
 
 // FN curses_loop .
 bool curses_loop ()
@@ -373,6 +383,14 @@ bool curses_loop ()
 	case CTRL('s'):		save_spreadsheet2019();		break;
 	case CTRL('v'):		paste_this_cell_formula();		break;
 	}
+
+	if(custom_bindings.contains(c)) {
+		log("custom binding found");
+		blang_interpret_string(custom_bindings[c]);
+	}
+
+
+
 
 	i19_parameter = -1;
 
