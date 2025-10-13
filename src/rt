@@ -1,0 +1,11 @@
+#!/bin/sh
+
+print_help()
+{
+cat <<EOF
+rt: run tests
+EOF
+}
+ 
+cd ..
+make check

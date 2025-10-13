@@ -29,6 +29,7 @@ export BUILDDIR=$(abs_top_builddir)
 
 EXTRA_DIST = differ neotests.env script.sh $(TESTS)
 EXTRA_DIST += badrc.oleo
+EXTRA_DIST += blang-01.bas
 
 clean-local : clean-local-out
 .PHONY: clean-local-out

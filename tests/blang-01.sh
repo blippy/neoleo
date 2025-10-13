@@ -1,26 +1,40 @@
 #!/bin/sh
 
 # 2025-10-13 Check blang setting and getting cells
+# Never run this from within the tests directory
+# because it basically wonks up all the settings
 
-# TODO incorporate in 
-if [ "$BUILDDIR" = "" ]
-then
-	if [ -d "../src" ] 
-	then
-		BUILDDIR=".."
-	fi
-fi
+# SRCDIR should point to the tests directory 
 
-if [ "$SRCDIR" = "" ]
-then
-	SRCDIR=$BUILDDIR/tests
-fi
+echo "Incoming SRCDIR=$SRCDIR"
+#if [ "$SRCDIR" = "" ]
+#then
+#	SRCDIR=$PWD
+#fi
 
-echo "SRCDIR:$SRCDIR"
+#if [ "$SRCDIR" = "." ]
+#then
+#	SRCDIR=`realpath ..`
+#fi
+SRCDIR=`realpath $SRCDIR`
+echo "Resolved SRCDIR=$SRCDIR"
+
+
+#if [ "$BUILDDIR" = "" ]
+#then
+#	BUILDDIR=$SRCDIR
+#fi
+echo "Incoming BUILDDIR=$BUILDDIR"
+BUILDDIR=`realpath $BUILDDIR`
+echo "Resolved BUILDDIR=$BUILDDIR"
+NEO="$BUILDDIR/src/neoleo"
+echo "NEO=$NEO"
 BASE=blang-01.bas
 REP=$BASE.rep
-CMD="$BUILDDIR/src/neoleo -H -b $SRCDIR/$BASE"
+CMD="$NEO -H -b $SRCDIR/$BASE"
 echo "CMD:$CMD"
-$CMD >$SRCDIR/out/$REP
+TESTDIR=$BUILDDIR/tests
+echo "TESTDIR=$TESTDIR"
+$CMD >$TESTDIR/out/$REP
 
-diff out/$REP $SRCDIR/verified/$REP
+diff $TESTDIR/out/$REP $SRCDIR/verified/$REP

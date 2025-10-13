@@ -1,5 +1,6 @@
 EXTRA_DIST = \
 	badrc.scr.oleo \
+	blang-01.bas.rep \
 	concata.scr.oleo \
 	insert-01.scr.oleo \
 	issue16.scr.oleo \
