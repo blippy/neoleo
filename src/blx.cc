@@ -7,6 +7,7 @@
  *      Author: pi
  */
 
+#include <type_traits>
 
 #include "blang2.h"
 #include "blx.h"
@@ -88,9 +89,79 @@ static blang_expr_t eval_QUIT (blang_exprs_t args)
 	return monostate{}; // never reach here
 }
 
+static blang_expr_t eval_isnull(blang_exprs_t args)
+{
+	if(std::holds_alternative<std::monostate>(eval(args[0])))
+		return 1;
+	else
+		return 0;
+}
+
+template<class Variant, class T>
+struct compare_variant;
+
+template<class T, class ... Ts>
+struct compare_variant<std::variant<Ts...>, T>
+{
+    static bool apply(std::variant<Ts...> obj1, T obj2)
+    {
+        return ((std::is_same<Ts, T>::value
+                && std::holds_alternative<T>(obj1)
+                && obj1 == obj2)||...);
+    }
+};
+
+static blang_expr_t eval_eq (blang_exprs_t args)
+{
+	blang_expr_t r1 = eval(args[0]);
+	blang_expr_t r2 = eval(args[1]);
+
+	//auto cmp = compare_variant<blang_expr_t, blang_expr_t>{};
+	//cmp.apply(r1,r2);
+	//cout << "eval_eq called "  << endl;
+
+	if(r1.index() != r2.index()) return 0;
+
+	int ok = 0;
+	if(holds_alternative<num_t>(r1)) {
+		ok = get<num_t>(r1) == get<num_t>(r2);
+	} else if(holds_alternative<int>(r1)) {
+		ok = get<int>(r1) == get<int>(r2);
+	} else if(holds_alternative<string>(r1)) {
+		ok = get<string>(r1) == get<string>(r2);
+	} else if(holds_alternative<monostate>(r1)) {
+		ok = 1; // both types are monostates, and so must be equal
+	}
+
+	//cout << "eval_eq result: " << ok << endl;
+
+	return ok;
+	//if(r1.index() != r2.index()) return 0;
+	//if(r1 == r2)
+	//	return 1;
+	//else
+	//	return 0;
+}
+
+
+static blang_expr_t eval_or (blang_exprs_t args)
+{
+	for(const auto& a : args) {
+		blang_expr_t r = eval(a);
+		if(auto v = std::get_if<num_t>(&r)) 	return (*v) == 0 ? 0 : 1;
+		if(auto v = std::get_if<int>(&r)) 	return (*v) == 0 ? 0 : 1;
+	}
+
+	return 0;
+}
+
+
 void blx_init()
 {
 	blang_funcmap["bind"] = &eval_bind;
+	blang_funcmap["eq"] = &eval_eq;
+	blang_funcmap["isnull"] = &eval_isnull;
+	blang_funcmap["or"] = &eval_or;
 	blang_funcmap["set_cell"] = &eval_set_cell;
 	blang_funcmap["get_cell"] = &eval_get_cell;
 	blang_funcmap["QUIT"] = &eval_QUIT;
