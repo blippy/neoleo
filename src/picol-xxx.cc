@@ -25,6 +25,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* 2025-10-13	I think it has lots of memory leaks, so just forget about it
+ *
+ */
+
 /* https://github.com/antirez/picol 25/10 */
 #include <stdio.h>
 #include <stdlib.h>

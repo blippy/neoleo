@@ -357,9 +357,9 @@ bool process_headless_line(std::string line, int fildes)
 		info();
 	} else if(cmd == "p") {
 		hl_print_row(arg);
-	} else if(cmd == "picol") {
-		extern int picol_interactive();
-		picol_interactive();
+	//} else if(cmd == "picol") {
+	//	extern int picol_interactive();
+	//	picol_interactive();
 	} else if(cmd == "q") {
 		return false;
 	} else if(cmd == "ri") {

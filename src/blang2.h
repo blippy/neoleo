@@ -8,6 +8,9 @@
 #include <variant>
 #include <vector>
 
+namespace blang {
+
+
 typedef double blang_num_t;
 
 struct blang_funcall_t;
@@ -100,7 +103,9 @@ private:
 
 // FUNCTIONS
 
-blang_expr_t 	blang_interpret_string(const std::string& s);
+blang_expr_t 	interpret_string(const std::string& s);
 blang_expr_t 	eval (blang_expr_t expr);
-blang_num_t		to_num (blang_expr_t val);
-std::string 	to_string (const blang_expr_t& val);
+blang_num_t		blang_to_num (blang_expr_t val);
+std::string 	blang_to_string (const blang_expr_t& val);
+
+} // namespace blang

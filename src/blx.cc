@@ -14,13 +14,14 @@
 #include "parser-2019.h"
 
 using namespace std;
+using namespace blang;
 
 blang_expr_t eval_bind(blang_exprs_t args)
 {
 	log("eval_bind  called");
-	char trigger = to_string(eval(args[0]))[0];
+	char trigger = blang_to_string(eval(args[0]))[0];
 	log("trigger is ", string{trigger});
-	string code = to_string(eval(args[1]));
+	string code = blang_to_string(eval(args[1]));
 	log("code is ", code);
 	bind_char(trigger, code);
 	return std::monostate{};
@@ -29,11 +30,11 @@ blang_expr_t eval_bind(blang_exprs_t args)
 
 blang_expr_t eval_set_cell (blang_exprs_t args)
 {
-	int row = to_num(eval(args[0]));
+	int row = blang_to_num(eval(args[0]));
 	if(row == 0) row = curow;
-	int col = to_num(eval(args[1]));
+	int col = blang_to_num(eval(args[1]));
 	if(col == 0) col = cucol;
-	auto val  = to_string(eval(args[2]));
+	auto val  = blang_to_string(eval(args[2]));
 	set_and_eval(row, col, val, false);
 
 	return std::monostate{};

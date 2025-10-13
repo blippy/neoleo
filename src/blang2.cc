@@ -12,10 +12,20 @@
 
 #include "blang2.h"
 
+namespace blang {
+
+
 using expr_t = blang_expr_t;
 using usr_funcall_t = blang_usr_funcall_t;
 
-using namespace std;
+//using namespace std;
+using std::cout;
+using std::deque;
+using std::endl;
+using std::map;
+using std::monostate;
+//using std::string;
+using string = std::string;
 
 
 
@@ -31,7 +41,7 @@ map<string, blang_usr_funcall_t> usr_funcmap;
 
 //class ParseException : public std::exception {};
 
-blang_num_t to_num (blang_expr_t val);
+blang_num_t blang_to_num (blang_expr_t val);
 
 
 
@@ -72,13 +82,13 @@ blang_num_t num_eval(blang_expr_t expr);
 string str_eval(blang_expr_t expr);
 
 // FN to_string .
-std::string to_string (const blang_expr_t& val)
+std::string blang_to_string (const blang_expr_t& val)
 {
 	if(holds_alternative<monostate>(val)) return ""; // don't use get_if in the case ∵ of unused variable
-	if(auto v = std::get_if<blang_num_t>(&val)) 	return to_string(*v);
-	if(auto v = std::get_if<int>(&val)) 	return to_string(*v);
+	if(auto v = std::get_if<blang_num_t>(&val)) 	return std::to_string(*v);
+	if(auto v = std::get_if<int>(&val)) 	return std::to_string(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return *v;
-	throw std::logic_error("to_string: Unhandled stringify expression type index " + to_string(val.index()));
+	throw std::logic_error("to_string: Unhandled stringify expression type index " + std::to_string(val.index()));
 }
 // FN-END
 
@@ -119,7 +129,7 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 		for(size_t i = 2 ; i < args.size();) {
 			int op = num_eval(args[i]);
 			if( op == '+') {
-				result_str += to_string(eval(args[i+1]));
+				result_str += blang_to_string(eval(args[i+1]));
 			} else {
 				eval_error("Can only use + operator on string");
 			}
@@ -131,7 +141,7 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 	// OK, for most purposes we're dealing with numbers
 	//cout << "bodmans: called\n";
 	//num_t result_num = 0;
-	blang_num_t result_num = to_num(result);
+	blang_num_t result_num = blang_to_num(result);
 	for(size_t i = 2; i < args.size(); ) {
 		//cout << "i = " << i << endl;
 		int op = num_eval(args[i]);		// operator. One of + - * /
@@ -153,7 +163,7 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 blang_expr_t eval_if (blang_exprs_t args)
 {
 
-	if(to_num(eval(args[0])))
+	if(blang_to_num(eval(args[0])))
 			return eval(args[1]);
 
 	// maybe an else
@@ -228,7 +238,7 @@ blang_expr_t eval_strlen(blang_exprs_t args)
 {
 	//cout << "eval_strlen: called" << endl;
 	if(args.size() !=1) BlangException("strlen: requires 1 argument");
-	string s = to_string(eval(args[0]));
+	string s = blang_to_string(eval(args[0]));
 	//cout << " eval_strlen value " << s << endl;
 	return (float) s.size();
 }
@@ -237,7 +247,7 @@ blang_expr_t eval_print(blang_exprs_t args)
 {
 	//cout << "eval_print: called" << endl;
 	for(const auto& a : args) {
-		cout << to_string(eval(a));
+		cout << blang_to_string(eval(a));
 	}
 	cout << endl;
 
@@ -250,7 +260,7 @@ blang_expr_t eval_print(blang_exprs_t args)
 // We get the value of a variable
 blang_expr_t eval_getvar(blang_exprs_t args)
 {
-	string name = to_string(args[0]);
+	string name = blang_to_string(args[0]);
 	if(blang_varmap.contains(name)) {
 		return blang_varmap[name];
 	} else {
@@ -261,7 +271,7 @@ blang_expr_t eval_getvar(blang_exprs_t args)
 // this is where we are assigning a variable
 blang_expr_t eval_let(blang_exprs_t args)
 {
-	string varname = to_string(args[0]);
+	string varname = blang_to_string(args[0]);
 	blang_expr_t result = eval(args[1]);
 	blang_varmap[varname] = result;
 	//cout << "eval_let set " << varname << " with " << to_num(result) << endl;
@@ -271,7 +281,7 @@ blang_expr_t eval_let(blang_exprs_t args)
 blang_expr_t eval_while(blang_exprs_t args)
 {
 	blang_expr_t result;
-	while(to_num(eval(args[0])))
+	while(blang_to_num(eval(args[0])))
 		result = eval(args[1]);
 	return result;
 }
@@ -279,9 +289,9 @@ blang_expr_t eval_while(blang_exprs_t args)
 blang_expr_t eval_interpret (blang_exprs_t args)
 {
 	//cout << "eval_interpret called" << endl;
-	string code = to_string(eval(args[0]));
+	string code = blang_to_string(eval(args[0]));
 	//cout << "code is " << code << endl;
-	return blang_interpret_string(code);
+	return interpret_string(code);
 }
 
 // These will be augmented by user defined functions using eval_userfn
@@ -530,7 +540,7 @@ void BlangParser::consume(string s)
 	if(t.text == s)
 		lxr.pop_front();
 	else
-		throw BlangException("parser error: consume: looking for " + s + ", but found '" + t.text + "', line: "+ to_string(t.lineno));
+		throw BlangException("parser error: consume: looking for " + s + ", but found '" + t.text + "', line: "+ blang_to_string(t.lineno));
 
 	//lxr.consume(s);
 }
@@ -787,22 +797,22 @@ blang_expr_t eval (blang_expr_t expr)
 }
 // FN-END
 
-blang_num_t to_num (blang_expr_t val)
+blang_num_t blang_to_num (blang_expr_t val)
 {
 	if(holds_alternative<monostate>(val)) return 0; // don't use get_if() in this case ∵ an unused var will be generated otherwise
 	if(auto v = std::get_if<blang_num_t>(&val)) 	return *v;
 	if(auto v = std::get_if<int>(&val)) 	return *v;
 	//if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
-	throw std::logic_error("to_num: Unhandled stringify expression type index " + to_string(val.index()));
+	throw std::logic_error("to_num: Unhandled stringify expression type index " + std::to_string(val.index()));
 }
 
 
-blang_num_t num_eval (blang_expr_t expr) { return to_num(eval(expr)); }
+blang_num_t num_eval (blang_expr_t expr) { return blang_to_num(eval(expr)); }
 string to_str (blang_expr_t v) { return std::get<string>(v); }
 string str_eval (blang_expr_t expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-blang_expr_t blang_interpret_string(const string& s)
+blang_expr_t interpret_string(const string& s)
 {
 	BlangLexer lxr(s);
 	BlangParser p(lxr);
@@ -813,3 +823,5 @@ blang_expr_t blang_interpret_string(const string& s)
 	}
 	return result;
 }
+
+} // namespace blang

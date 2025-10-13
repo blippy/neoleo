@@ -386,7 +386,7 @@ bool curses_loop ()
 
 	if(custom_bindings.contains(c)) {
 		log("custom binding found");
-		blang_interpret_string(custom_bindings[c]);
+		blang::interpret_string(custom_bindings[c]);
 	}
 
 

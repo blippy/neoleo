@@ -197,7 +197,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	blx_init();
 	for(auto const& f : blang_files) {
 		auto src = slurp(f.c_str());
-		blang_interpret_string(src);
+		blang::interpret_string(src);
 	}
 
 	if(opt_script_file) {
