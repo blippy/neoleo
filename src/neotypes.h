@@ -68,10 +68,13 @@ typedef struct rng {
 	bool operator==(const rng&) const = default;
 } rng_t;
 
+
+// FN bool_t .
 typedef struct bol {
 	bool v;
 	bool operator==(const bol&) const = default;
 } bool_t;
+// FN-END
 
 typedef std::vector<std::string> strings;
 

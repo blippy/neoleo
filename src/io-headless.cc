@@ -398,6 +398,7 @@ static void _repl(int fildes)
 
 void headless_main() // FN
 {
+#if 0
 	// 25/10 test of parser - seems to work
 	ranges_t predecs;
 	string s{"life()"};
@@ -405,7 +406,7 @@ void headless_main() // FN
 	Tour tour;
 	value_t val{eval_expr(tour, expr)};
 	//cout << fmt_value(val) << endl;
-
+#endif
 
 
 
