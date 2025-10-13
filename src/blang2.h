@@ -3,6 +3,8 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <exception>
+#include <string>
 #include <variant>
 #include <vector>
 
@@ -45,6 +47,21 @@ typedef struct blang_usr_funcall_t {
 extern std::map<std::string, blang_function_t> blang_funcmap;
 
 
+class BlangException : public std::exception {
+private:
+    std::string message;
+public:
+
+    // Constructor accepting const char*
+    BlangException(const std::string msg) : message(msg) {}
+
+    // Override what() method, marked
+    // noexcept for modern C++
+    const char* what() const noexcept {
+        return message.c_str();
+    }
+};
+
 
 class BlangLexer;
 
@@ -61,16 +78,20 @@ private:
 	//Expr parse_e();
 	BlangLexer& lxr;
 	void consume(std::string s);
+	void parser_error(std::string msg);
 	//expr_t parse_block();
+	expr_t parse_block();
 	expr_t parse_bra();
 	expr_t parse_call();
+	expr_t parse_defsub(); // we're defining a sub
 	expr_t parse_e();
 	expr_t parse_fncall(std::string func_name); // for calling a sub
-	expr_t parse_defsub(); // we're defining a sub
+	expr_t parse_if();
 	expr_t parse_let();
 	expr_t parse_p();
 	expr_t parse_t();
 	expr_t parse_varname();
+	expr_t parse_while();
 	//Expr binop(Expr& left, string& op, Expr& right);
 };
 // FN-END

@@ -1,5 +1,5 @@
 // 25/10 Let's try a new lexer (not yet started)
-// 2025-10-11	Owned by cerbo
+// 2025-10-11	Owned by blang2 repo
 
 #include <cassert>
 #include <ctype.h>
@@ -22,6 +22,7 @@ using namespace std;
 map<string, blang_usr_funcall_t> usr_funcmap;
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TYPE DECLARATIONS
 
@@ -32,24 +33,20 @@ map<string, blang_usr_funcall_t> usr_funcmap;
 
 blang_num_t to_num (blang_expr_t val);
 
-void parse_error (string msg = "")
-{
-	std::cout << std::stacktrace::current();
-	msg = "parse error: " + msg;
-	throw std::runtime_error(msg);
-}
+
 
 void eval_error (string msg = "")
 {
-	std::cout << std::stacktrace::current();
+	//std::cout << std::stacktrace::current();
 	msg = "runtime error: " + msg;
 	throw std::runtime_error(msg);
 }
 
-void blang_unknown_function(string function_name)
+void blang_unknown_function (string function_name)
 {
 	string msg{"Unknown function " + function_name};
-	parse_error(msg);
+	throw BlangException(msg);
+	//parse_error(msg);
 }
 
 static blang_function_t* blang_fn_lookup (string function_name)
@@ -153,6 +150,19 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 }
 // FN-END
 
+blang_expr_t eval_if (blang_exprs_t args)
+{
+
+	if(to_num(eval(args[0])))
+			return eval(args[1]);
+
+	// maybe an else
+	if(args.size() > 2)
+		return eval(args[2]);
+
+	return monostate{};
+}
+
 // FN eval_plus .
 blang_expr_t eval_plus (blang_exprs_t args)
 {
@@ -196,13 +206,13 @@ blang_expr_t eval_life(blang_exprs_t args)
 }
 blang_expr_t eval_sqrt(blang_exprs_t args)
 {
-	if(args.size() !=1) parse_error("sqrt: requires  argument");
+	if(args.size() !=1) throw BlangException("sqrt: requires  argument");
 	blang_num_t val = num_eval(args[0]);
 	return sqrt(val);
 }
 blang_expr_t eval_hypot(blang_exprs_t args)
 {
-	if(args.size() !=2) parse_error("hypot: requires 2 arguments");
+	if(args.size() !=2) throw BlangException("hypot: requires 2 arguments");
 	blang_num_t v1 = num_eval(args[0]);
 	blang_num_t v2 = num_eval(args[1]);
 	return sqrt(v1*v1 + v2*v2);
@@ -217,7 +227,7 @@ blang_expr_t eval_plusfn(blang_exprs_t args)
 blang_expr_t eval_strlen(blang_exprs_t args)
 {
 	//cout << "eval_strlen: called" << endl;
-	if(args.size() !=1) parse_error("strlen: requires 1 argument");
+	if(args.size() !=1) BlangException("strlen: requires 1 argument");
 	string s = to_string(eval(args[0]));
 	//cout << " eval_strlen value " << s << endl;
 	return (float) s.size();
@@ -254,9 +264,17 @@ blang_expr_t eval_let(blang_exprs_t args)
 	string varname = to_string(args[0]);
 	blang_expr_t result = eval(args[1]);
 	blang_varmap[varname] = result;
+	//cout << "eval_let set " << varname << " with " << to_num(result) << endl;
 	return result;
 }
 
+blang_expr_t eval_while(blang_exprs_t args)
+{
+	blang_expr_t result;
+	while(to_num(eval(args[0])))
+		result = eval(args[1]);
+	return result;
+}
 
 blang_expr_t eval_interpret (blang_exprs_t args)
 {
@@ -286,11 +304,12 @@ map<string, blang_function_t> blang_funcmap= {
 // LEXER
 
 
-enum Tokens { EOI = 128, NUMBER, ID, STR, SUB, CALL, LET };
+enum Tokens { EOI = 128, NUMBER, ID, STR, SUB, CALL, LET, IF, ELSE, WHILE };
 
 typedef struct {
 	enum Tokens type;
 	string text;
+	int lineno;
 } 	token_t;
 
 typedef deque<token_t> tokens_t;
@@ -311,6 +330,7 @@ public:
 private:
 	void tokenise(const string& str);
 	void found(int type, const string& text);
+	int lineno = 1;
 	tokens_t tokens;
 	//string m_input;
 };
@@ -357,7 +377,7 @@ bool BlangLexer::isfirst(string c)
 
 void BlangLexer::found(int type, const string& text)
 {
-	token_t t{(Tokens) type, text};
+	token_t t{(Tokens) type, text, lineno};
 	tokens.push_back(t);
 }
 
@@ -367,7 +387,7 @@ void BlangLexer::consume(string s)
 	if(isfirst(s))
 		tokens.pop_front();
 	else
-		parse_error("consume: looking for " + s + ", but found " + tokens.front().text);
+		throw BlangException("consume: looking for " + s + ", but found " + tokens.front().text);
 }
 
 void BlangLexer::tokenise(const string& str)
@@ -385,7 +405,10 @@ loop:
 	} else if(ch == '#') {
 		while(ch != '\n') ch = cstr[++pos];
 	} else if(isspace(ch)) {
-		while(isspace(ch)) { ch = cstr[++pos]; }
+		while(isspace(ch)) {
+			if(ch == '\n') lineno++;
+			ch = cstr[++pos];
+		}
 	} else if ( isdigit(ch)) {
 		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
 		found(NUMBER, token);
@@ -397,11 +420,17 @@ loop:
 		while(ch && (isalnum(ch) || ch == '_')) { token += ch; ch = cstr[++pos]; }
 		if(token == "sub") {
 			found(SUB, token);
+		} else if(token == "if") {
+			found(IF, token);
+		} else if(token == "else") {
+				found(ELSE, token);
 		} else if (token == "call") {
 			found(CALL, token);
 		} else if (token == "let") {
 			//cout << "Found LET" << endl;
 			found(LET, token);
+		} else if (token == "while") {
+			found(WHILE, "while");
 		} else {
 			found(ID, token);
 		}
@@ -436,12 +465,14 @@ loop:
 
 
 
+#if 0
 	template<class Q>
 Q rest(Q qs)
 {
 	qs.pop_front();
 	return qs;
 }
+#endif
 
 
 typedef deque<string> ops_t;
@@ -487,20 +518,53 @@ void BlangParser::dbx (string s)
 	// hushed debug messages
 }
 
+void BlangParser::parser_error(std::string msg)
+{
+	//msg += " line " + to_string(lxr.lineno);
+	throw BlangException(msg);
+}
 
 void BlangParser::consume(string s)
 {
-	lxr.consume(s);
+	token_t t = lxr.front();
+	if(t.text == s)
+		lxr.pop_front();
+	else
+		throw BlangException("parser error: consume: looking for " + s + ", but found '" + t.text + "', line: "+ to_string(t.lineno));
+
+	//lxr.consume(s);
 }
 
 
 
+// FN parse_block .
+blang_expr_t BlangParser::parse_block ()
+{
+	funcall_t fc;
+	fc.fn = eval_block;
+#if 1
+	while(lxr.front().type != '}')
+		fc.exprs.push_back(parse_e());
+	consume("}");
+
+#else
+	while(1) {
+		auto type = lxr.front().type;
+		//cout << "Parser::parse_block looping with text " << lxr.front().text << "\n";
+		if(type == '}') break;
+		fc.exprs.push_back(parse_e());
+	}
+	consume("}");
+#endif
+	return fc;
+}
+// FN-END
 
 // FN parse_bra .
 blang_expr_t BlangParser::parse_bra ()
 {
 	blang_expr_t x = parse_e();
-	lxr.consume(")");
+	consume(")");
 	return x;
 
 }
@@ -512,15 +576,15 @@ blang_expr_t BlangParser::parse_fncall (string func_name)
 {
 	funcall_t fc;
 	fc.fn = *blang_fn_lookup(func_name);
-	lxr.consume("(");
+	consume("(");
 
 	while(1) {
 		if(lxr.isfirst(")")) break;
 		fc.exprs.push_back(parse_e());
-		if(lxr.isfirst(",")) lxr.consume(",");
+		if(lxr.isfirst(",")) consume(",");
 	}
 
-	lxr.consume(")");
+	consume(")");
 	return fc;
 }
 // FN-END
@@ -556,19 +620,25 @@ blang_expr_t BlangParser::parse_defsub ()
 
 	usr_funcall_t ufc;
 	ufc.func_name = sub_name;
-
-	consume("{");
-	while(1) {
-		auto type = lxr.front().type;
-		//cout << "Parser::parse_block looping with text " << lxr.front().text << "\n";
-		if(type == '}') break;
-		ufc.codeblock.push_back(parse_e());
-	}
-	consume("}");
+	ufc.codeblock.push_back(parse_e());
 	usr_funcmap[sub_name] = ufc;
 	return monostate{};
 }
 // FN-END
+
+blang_expr_t BlangParser::parse_if ()
+{
+	funcall_t fc;
+	fc.fn = eval_if;
+	fc.exprs.push_back(parse_e()); // condition
+	fc.exprs.push_back(parse_e()); // then clause
+	if(lxr.front().type == ELSE) {
+		lxr.pop_front();
+		fc.exprs.push_back(parse_e());
+	}
+	return fc;
+}
+
 
 // FN parse_varname .
 // This is where we get the value of a variable
@@ -580,8 +650,17 @@ blang_expr_t BlangParser::parse_varname ()
 	fc.fn = eval_getvar;
 	fc.exprs = {varname};
 	return fc;
-
 }
+
+blang_expr_t BlangParser::parse_while()
+{
+	funcall_t fc;
+	fc.fn = eval_while;
+	fc.exprs.push_back(parse_e()); // test
+	fc.exprs.push_back(parse_e()); // body
+	return fc;
+}
+
 
 // FN parse_p .
 // P -> V | ( E ) | -T | FN
@@ -591,12 +670,16 @@ blang_expr_t BlangParser::parse_p ()
 	token_t toke{lxr.pop_front()};
 	switch((int)toke.type) {
 	case NUMBER: dbx("parse_p pushing NUMBER " + toke.text); return stof(toke.text);
-	case '$': return parse_varname();
-	case STR: dbx("parse_p STR of <" + toke.text + ">" ) ; return toke.text;
-	case ID: return parse_fncall(toke.text);
-	case CALL: return parse_call();
-	case LET: dbx("parse_p found LET"); return parse_let();
-	case '(': return parse_bra();
+	case '$':	return parse_varname();
+	case IF: 	return parse_if();
+	case STR: 	dbx("parse_p STR of <" + toke.text + ">" ) ; return toke.text;
+	case ID: 	return parse_fncall(toke.text);
+	case CALL: 	return parse_call();
+	case LET: 	dbx("parse_p found LET"); return parse_let();
+	case WHILE: 	return parse_while();
+	case '(': 	return parse_bra();
+	case '{': 	return parse_block();
+	default: 	throw BlangException("Error parsing primitive: unrecognise token '" + toke.text + "', line " + std::to_string(toke.lineno));
 	// case '{': return parse_block(); NB No, not a general expression
 	}
 
