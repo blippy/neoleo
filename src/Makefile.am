@@ -67,4 +67,5 @@ noinst_HEADERS = basic.h blang2.h blx.h cell.h \
 		 win.h
 
 
-neotest_SOURCES = neotest.cc
+neotest_SOURCES = neotest.cc \
+	cell.cc parser-2019.cc regions.cc sheet.cc spans.cc utils.cc
