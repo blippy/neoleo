@@ -26,7 +26,7 @@ AM_CXXFLAGS += -Wall
 #YFLAGS = -d
 #EXTRA_DIST = $(srcdir)/neoleo.i
 
-bin_PROGRAMS = neoleo 
+bin_PROGRAMS = neoleo neotest
 dist_man_MANS = neoleo.1
 
 #BUILT_SOURCES = parse.cc parse.hh
@@ -66,3 +66,5 @@ noinst_HEADERS = basic.h blang2.h blx.h cell.h \
 		 tests.h \
 		 win.h
 
+
+neotest_SOURCES = neotest.cc
