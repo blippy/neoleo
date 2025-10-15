@@ -4,6 +4,8 @@
 #include <cassert>
 #include <ctype.h>
 #include <deque>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 //#include <map>
 #include <cmath>
@@ -314,6 +316,30 @@ map<string, blang_function_t> blang_funcmap= {
 // LEXER
 
 
+std::string repr(const token_t& t)
+{
+	std::string result = "<token(type=" ;
+	int ty = t.type;
+	std::string typestr = string{(char)ty};
+	switch(ty) {
+	case EOI:  typestr = "EOI"; break;
+	case NUMBER: typestr = "NUMBER"; break;
+	case ID: typestr = "ID"; break;
+	case STR: typestr = "STR"; break;
+	case SUB: typestr = "SUB"; break;
+	case CALL: typestr = "CALL"; break;
+	case LET: typestr = "LET"; break;
+	case IF: typestr = "IF"; break;
+	case ELSE: typestr = "ELSE"; break;
+	case WHILE: typestr = "WHILE"; break;
+	case VAR: typestr = "VAR"; break;
+	}
+	result += typestr + ", text=" + t.text + ", lineno=" + std::to_string(t.lineno) + ">";
+	//if(ty == EOI = 128, NUMBER, ID, STR, SUB, CALL, LET, IF, ELSE, WHILE, VAR
+	return result;
+}
+
+#if 0
 enum Tokens { EOI = 128, NUMBER, ID, STR, SUB, CALL, LET, IF, ELSE, WHILE };
 
 typedef struct {
@@ -321,11 +347,242 @@ typedef struct {
 	string text;
 	int lineno;
 } 	token_t;
+#endif
+
+Lexer1::Lexer1(const std::filesystem::path& path)
+{
+    std::ifstream in;
+    in.open(path, std::ifstream::in | std::ifstream::binary);
+    std::stringstream sstr;
+    sstr << in.rdbuf();
+    in.close();
+    std::string str = sstr.str();
+    //cout << "Init with str " << str << endl;
+    //istrm = std::make_unique<std::istringstream>(std::istringstream{str});
+    input = str;
+    is = new  std::istringstream(input);
+    yylex(); // prime the pump, as it were
+    //Lexer1::Lexer1(str);
+    //return sstr.str();
+
+	//istrm = std::make_unique<std::istringstream>(std::istringstream{input});
+	//is& = std::istringstream{input};
+}
+
+Lexer1::Lexer1(const std::string& input)
+{
+	//istrm = std::make_unique<std::istringstream>(std::istringstream{input});
+	this->input = input;
+	is = new  std::istringstream(input);
+    yylex(); // prime the pump, as it were
+    //cout << repr(next) << "\n";
+
+	//is& = std::istringstream{input};
+}
+
+/* You'd typically call it like:
+ * 		Lexer1 lxr(&std::cin);
+ */
+Lexer1::Lexer1( std::istream* input)
+{
+	is = input;
+    yylex(); // prime the pump, as it were
+
+	//is = input;
+	//istrm = std::make_unique<std::istream>(&input);
+}
+
+char Lexer1::peek_char()
+{
+#if 1
+	return is->peek();
+#else
+	if(is)
+		return is->peek();
+	else
+		return istrm->peek();
+#endif
+}
+
+char Lexer1::get_char()
+{
+#if 1
+	return is->get();
+#else
+	if(is)
+		return is->get();
+	else
+		return istrm->get();
+#endif
+}
+
+bool Lexer1::good()
+{
+#if 1
+	return is->good();
+#else
+	if(is)
+		return is->good();
+	else
+		return istrm->good();
+#endif
+}
+
+bool Lexer1::isfirst(string c)
+{
+	return peek().text == c;
+}
+
+bool Lexer1::eof()
+{
+	bool result = peek().type == EOI;
+	//cout << "Lexer1::eof=" << result << "\n";
+	return result;
+}
+
+token_t Lexer1::found(int type, const string& text)
+{
+	token_t t{(Tokens) type, text, lineno};
+	next = t;
+	//cout << "Lexer1::found " << repr(t) << endl;
+	return t;
+}
+
+token_t Lexer1::varname()
+{
+	get_char(); // eat $
+	std::string token;
+	while(isalpha(peek_char())) token += get_char();
+	return found(VAR, token);
+}
+
+token_t Lexer1::quoted_string()
+{
+	std::string token;
+	get_char(); // eat double-quote
+
+	char c;
+	while(1) {
+		c = get_char();
+		if(c == '\"' || c == '\n' || !good()) break;
+		if(c == '\\') {
+			char c1 = get_char();
+			switch(c1) {
+			case 0: c = '?'; break;
+			case -1: c = '?'; break;
+			case 'n' : c = '\n'; break;
+			case 't' : c = '\t'; break;
+			default: c = c1;
+			}
+		}
+		token += c;
+	}
+	return found(STR, token);
+}
+
+token_t Lexer1::yylex()
+{
+	//cout << "yylex called\n";
+
+	// comment and white space stuff
+	unneeded:
+	while(isspace(peek_char())) {
+		if(get_char() == '\n') lineno++;
+	}
+	if(peek_char() == '#') {
+		// eat comments
+		while(peek_char() != '\n' && good()) get_char();
+		goto unneeded; // there may be multiple comments
+	}
+
+
+
+	if(!peek_char() || !good()) return found(EOI, "EOI");
+	//cout << "peek " << get() << endl;
+
+	std::string token;
+
+
+	if(isalpha(peek_char())) {
+		while(isalnum(peek_char())  || peek_char() == '_') token += get_char();
+		if(token == "sub") {
+			return found(SUB, token);
+		} else if(token == "if") {
+			return found(IF, token);
+		} else if(token == "else") {
+			return found(ELSE, token);
+		} else if (token == "call") {
+			return found(CALL, token);
+		} else if (token == "let") {
+			//cout << "Found LET" << endl;
+			return found(LET, token);
+		} else if (token == "while") {
+			return found(WHILE, "while");
+		} else {
+			return found(ID, token);
+		}
+	}
+
+	//cout << "X1\n";
+	if(isdigit(peek_char())) {
+		while(1) {
+			int ch = peek_char();
+			if(isdigit(ch) || ch == '.' )
+				token += get_char(); // i.e. ch
+			else
+				break;
+		}
+		//std::cout << "Lexer1::yylex found NUMBER " <<  token << endl;
+		return found(NUMBER, token);
+	}
+
+	if(peek_char() == '\"') return quoted_string();
+
+	if(peek_char() == '$') return varname();
+
+	//if(peek() == '#')
+
+	//if()
+	char c = get_char();
+	//if(c==-1) return "EOI";
+	//cout << "getting " << (int)c << endl;
+	return found(c, string{c});
+
+}
+
+token_t Lexer1::peek()
+{
+	return next;
+}
+token_t Lexer1::get()
+{
+	token_t t{next};
+	next = yylex();
+	return t;
+}
+
+void Lexer1::print_tokens(){
+	//std::string t;
+	while(1) {
+		token_t t{get()};
+		if(t.type == EOI) break;
+		cout << repr(t) << endl;
+	}
+}
+
+Lexer1::~Lexer1()
+{
+	if(is && is != &std::cin) delete(is);
+}
+
+
+
+
 
 typedef deque<token_t> tokens_t;
 
 // FN Lexer .
-class BlangLexer {
+class [[deprecated("Use the more recent lexer")]] BlangLexer {
 public:
 	BlangLexer(string input);
 	//token_t yylex();
@@ -333,7 +590,7 @@ public:
 	void consume(string s);
 	token_t front();
 	token_t pop_front();
-	void push_front(token_t t); // for when you want to undo a peek
+	void push_front_XXX(token_t t); // for when you want to undo a peek
 	bool eof();
 	~BlangLexer();
 
@@ -346,7 +603,7 @@ private:
 };
 // FN-END
 
-void BlangLexer::push_front(token_t t)
+void BlangLexer::push_front_XXX(token_t t)
 {
 	tokens.push_front(t);
 }
@@ -510,7 +767,7 @@ typedef deque<string> ops_t;
 
 
 
-BlangParser::BlangParser(BlangLexer& lxr) : lxr{lxr}
+BlangParser::BlangParser(Lexer1& lxr) : lxr{lxr}
 {
 	//this->lxr = lxr;
 }
@@ -536,9 +793,9 @@ void BlangParser::parser_error(std::string msg)
 
 void BlangParser::consume(string s)
 {
-	token_t t = lxr.front();
+	token_t t = lxr.peek();
 	if(t.text == s)
-		lxr.pop_front();
+		lxr.get();
 	else
 		throw BlangException("parser error: consume: looking for " + s + ", but found '" + t.text + "', line: "+ blang_to_string(t.lineno));
 
@@ -553,7 +810,7 @@ blang_expr_t BlangParser::parse_block ()
 	funcall_t fc;
 	fc.fn = eval_block;
 #if 1
-	while(lxr.front().type != '}')
+	while(lxr.peek().type != '}')
 		fc.exprs.push_back(parse_e());
 	consume("}");
 
@@ -604,8 +861,8 @@ blang_expr_t BlangParser::parse_fncall (string func_name)
 blang_expr_t BlangParser::parse_let ()
 {
 	//cout << "parse_let called" << endl;
-	consume("$");
-	string varname = lxr.pop_front().text;
+	//consume("$");
+	string varname = lxr.get().text;
 	//cout << "parse_let: varname:" << varname << endl;
 	consume("=");
 
@@ -625,7 +882,7 @@ blang_expr_t BlangParser::parse_defsub ()
 {
 	//cout << "parse_defsub: called" << endl;
 	consume("sub");
-	string sub_name = lxr.pop_front().text;
+	string sub_name = lxr.get().text;
 	//cout << "sub name is " << sub_name << endl;
 
 	usr_funcall_t ufc;
@@ -642,8 +899,8 @@ blang_expr_t BlangParser::parse_if ()
 	fc.fn = eval_if;
 	fc.exprs.push_back(parse_e()); // condition
 	fc.exprs.push_back(parse_e()); // then clause
-	if(lxr.front().type == ELSE) {
-		lxr.pop_front();
+	if(lxr.peek().type == ELSE) {
+		lxr.get();
 		fc.exprs.push_back(parse_e());
 	}
 	return fc;
@@ -652,9 +909,9 @@ blang_expr_t BlangParser::parse_if ()
 
 // FN parse_varname .
 // This is where we get the value of a variable
-blang_expr_t BlangParser::parse_varname ()
+blang_expr_t BlangParser::parse_varname (const std::string& varname)
 {
-	string varname = lxr.pop_front().text;
+	//string varname = lxr.get().text;
 	//cout << "parse_varname is " << varname << endl;
 	funcall_t fc;
 	fc.fn = eval_getvar;
@@ -677,19 +934,19 @@ blang_expr_t BlangParser::parse_while()
 blang_expr_t BlangParser::parse_p ()
 {
 //#define parse_x parse_e
-	token_t toke{lxr.pop_front()};
+	token_t toke{lxr.get()};
 	switch((int)toke.type) {
 	case NUMBER: dbx("parse_p pushing NUMBER " + toke.text); return stof(toke.text);
-	case '$':	return parse_varname();
+	case VAR:	return parse_varname(toke.text);
 	case IF: 	return parse_if();
 	case STR: 	dbx("parse_p STR of <" + toke.text + ">" ) ; return toke.text;
 	case ID: 	return parse_fncall(toke.text);
 	case CALL: 	return parse_call();
 	case LET: 	dbx("parse_p found LET"); return parse_let();
-	case WHILE: 	return parse_while();
+	case WHILE:	return parse_while();
 	case '(': 	return parse_bra();
 	case '{': 	return parse_block();
-	default: 	throw BlangException("Error parsing primitive: unrecognise token '" + toke.text + "', line " + std::to_string(toke.lineno));
+	default: 	throw BlangException("Error parsing primitive: unrecognised token '" + toke.text + "', line " + std::to_string(toke.lineno));
 	// case '{': return parse_block(); NB No, not a general expression
 	}
 
@@ -706,10 +963,10 @@ blang_expr_t BlangParser::parse_t ()
 		fc.fn = eval_bodmas;
 		fc.exprs = { '+', parse_x()}; // sic
 		while(1) {
-			auto type = lxr.front().type;
+			auto type = lxr.peek().type;
 			if(type == EOI) { dbx("parse_t breaking"); break;}
 			if(type == '*' || type == '/') {
-				lxr.pop_front();
+				lxr.get();
 				fc.exprs.push_back(type);
 				fc.exprs.push_back(parse_x());
 				//cout << "pushing */\n";
@@ -730,11 +987,11 @@ blang_expr_t BlangParser::parse_e ()
 	fc.fn = eval_bodmas;
 	fc.exprs = { '+', parse_x()};
 	while(1) {
-		auto type = lxr.front().type;
+		auto type = lxr.peek().type;
 		if(type == EOI) {dbx("parse_e breaking"); break;}
 		//if(type == '{') return parse_block();
 		if(type == '+' || type == '-') {
-			lxr.pop_front();
+			lxr.get();
 			fc.exprs.push_back(type);
 			fc.exprs.push_back(parse_x());
 			//cout << "pushing +-\n";
@@ -751,7 +1008,7 @@ blang_expr_t BlangParser::parse_e ()
 blang_expr_t BlangParser:: parse_call ()
 {
 	//consume("call");
-	string sub_name = lxr.pop_front().text;
+	string sub_name = lxr.get().text;
 	auto ufc = usr_funcmap[sub_name];
 	return ufc;
 }
@@ -759,8 +1016,9 @@ blang_expr_t BlangParser:: parse_call ()
 blang_expr_t BlangParser::parse_top ()
 {
 	//cout << "parse_top " << lxr.front().type << endl;
-	switch(lxr.front().type ) {
+	switch(lxr.peek().type ) {
 	case SUB: return parse_defsub();
+	case EOI: return monostate{};
 	default: return parse_e(); // expression
 	}
 
@@ -814,7 +1072,10 @@ string str_eval (blang_expr_t expr) { return to_str(eval(expr)); }
 
 blang_expr_t interpret_string(const string& s)
 {
-	BlangLexer lxr(s);
+	//cout << "interpret_string called\n";
+	Lexer1 lxr(s);
+	//cout << "print tokens\n";
+	//lxr.print_tokens();
 	BlangParser p(lxr);
 	blang_expr_t result; // of last expression
 	while(!lxr.eof()) {
@@ -824,4 +1085,38 @@ blang_expr_t interpret_string(const string& s)
 	return result;
 }
 
+blang_expr_t interpret_file(const string& path)
+{
+	//cout << "interpret_string called\n";
+	std::filesystem::path pth(path);
+	Lexer1 lxr(pth);
+	//cout << "print tokens\n";
+	//lxr.print_tokens();
+	BlangParser p(lxr);
+	blang_expr_t result; // of last expression
+	while(!lxr.eof()) {
+		blang_expr_t expr{p.parse_top()};
+		result = eval(expr); // this evaluated precisely 1 expression
+	}
+	return result;
+}
+
+// This is not quite right because it is always expecting another input
+blang_expr_t interpret_cin()
+{
+	blang::Lexer1 lxr(&std::cin);
+	BlangParser p(lxr);
+	blang_expr_t result; // of last expression
+	while(!lxr.eof()) {
+		blang_expr_t expr{p.parse_top()};
+		result = eval(expr); // this evaluated precisely 1 expression
+	}
+	return result;
+
+}
+
+
+
+
 } // namespace blang
+
