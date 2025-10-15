@@ -452,7 +452,9 @@ token_t Lexer1::varname()
 {
 	get_char(); // eat $
 	std::string token;
-	while(isalpha(peek_char())) token += get_char();
+	if(!isalpha(peek_char())) throw BlangException("Error lexing variable name: must beging with a letter. Found "
+			+ string{peek_char()} + ", line: " + blang_to_string(lineno));
+	while(isalnum(peek_char())  || peek_char() == '_') token += get_char();
 	return found(VAR, token);
 }
 

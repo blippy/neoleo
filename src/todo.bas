@@ -5,8 +5,9 @@ let $todo_db = 0
 let $todo_tick = "\"✅\""
 sub tick
 {
-	let $tick_v = get_cell(0, 3)	
-	if $todo_db print("cell is ", $tick_v)
+	let $tick_v = get_cell(0, 3)
+	let $tick_type = gct(0, 3)
+	if $todo_db print("cell is ", $tick_type, $tick_v)
 	if  eq(0, $tick_v)
 		set_cell(0, 3, $todo_tick)
 	else
@@ -23,5 +24,6 @@ if $todo_db {
 	call tick
 	call tick
 	call tick
+	QUIT(0)
 	#set_cell(1,1, "")
 }

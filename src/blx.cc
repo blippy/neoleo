@@ -7,6 +7,7 @@
  *      Author: pi
  */
 
+#include <tuple>
 #include <type_traits>
 
 #include "blang2.h"
@@ -30,12 +31,19 @@ static blang_expr_t eval_bind(blang_exprs_t args)
 
 }
 
-static blang_expr_t eval_set_cell (blang_exprs_t args)
+// convenience function to deduce row and column from arguments passed in
+static auto get_rc(blang_exprs_t args)
 {
 	int row = blang_to_num(eval(args[0]));
 	if(row == 0) row = curow;
 	int col = blang_to_num(eval(args[1]));
 	if(col == 0) col = cucol;
+	return std::make_tuple(row, col);
+}
+
+static blang_expr_t eval_set_cell (blang_exprs_t args)
+{
+	auto [row, col] = get_rc(args);
 	auto val  = blang_to_string(eval(args[2]));
 	set_and_eval(row, col, val, false);
 
@@ -67,10 +75,7 @@ static blang_expr_t to_blang_expr(const value_t& val)
 
 static blang_expr_t eval_get_cell (blang_exprs_t args)
 {
-	int row = blang_to_num(eval(args[0]));
-	if(row == 0) row = curow;
-	int col = blang_to_num(eval(args[1]));
-	if(col == 0) col = cucol;
+	auto [row, col] = get_rc(args);
 	cell_t* cp = find_cell(row, col);
 	if(!cp) return monostate{};
 
@@ -155,6 +160,31 @@ static blang_expr_t eval_or (blang_exprs_t args)
 	return 0;
 }
 
+// print type of cell. User call gst function
+static blang_expr_t eval_get_cell_type (blang_exprs_t args)
+{
+	auto [row, col] = get_rc(args);
+	cell_t* cp = find_cell(row, col);
+	if(!cp) return "Z";
+
+	//blang_expr_t result;
+	value_t v = cp->get_value_2019();
+	if(holds_alternative<monostate>(v))
+		return "M";
+	else if(holds_alternative<num_t>(v))
+		return "N";
+	else if(holds_alternative<string>(v))
+		return "S";
+	else if(holds_alternative<err_t>(v))
+		return "E";
+	else if(holds_alternative<rng_t>(v))
+		return "R";
+	else if(holds_alternative<bool_t>(v))
+		return "B";
+
+	return "?";
+	//return ConvertVariant<decltype(result), decltype(v)>(v);
+}
 
 void blx_init()
 {
@@ -164,6 +194,7 @@ void blx_init()
 	blang_funcmap["or"] = &eval_or;
 	blang_funcmap["set_cell"] = &eval_set_cell;
 	blang_funcmap["get_cell"] = &eval_get_cell;
+	blang_funcmap["gct"] = &eval_get_cell_type;
 	blang_funcmap["QUIT"] = &eval_QUIT;
 }
 
