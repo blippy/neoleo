@@ -21,13 +21,16 @@
  */
 
 
+#include <sstream>
 #include <string>
+
+using olfos_t = std::ostringstream;
 
 std::string FileGetCurrentFileName();
 void 		FileSetCurrentFileName(const char *s);
 void 		FileSetCurrentFileName(const std::string& s);
 void		oleo_read_file (FILE *);
 int			oleo_set_options (int, char *);
-void		oleo_write_file (FILE *);
-void		oleo_write_file (FILE *, struct rng *);
+void		oleo_write_file (olfos_t&);
+void		oleo_write_file (olfos_t&, struct rng *);
 void 		read_file_generic(FILE *, char *, const char *);

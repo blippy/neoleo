@@ -249,7 +249,9 @@ static void hl_insert_row()
 // type the sheet as an oleo file to stdout
 static void _type_sheet()
 {
-	oleo_write_file(stdout);
+	olfos_t olfos;
+	oleo_write_file(olfos);
+	cout << olfos.str() << flush;
 }
 
 static void hl_exit(string arg)

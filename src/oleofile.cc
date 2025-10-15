@@ -638,13 +638,12 @@ static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &cz
 }
 
 
-static FILE *oleo_fp;
+//static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
 
-void write_widths(FILE* fp)
+void write_widths(olfos_t& out)
 {
-	//fprintf(fp, "W");
 	span_find_t w_find = find_span(the_wids, MIN_COL, MAX_COL);
 	CELLREF c{0};
 	unsigned short w = next_span(w_find, c);
@@ -656,7 +655,8 @@ void write_widths(FILE* fp)
 		do
 			ww = next_span(w_find, ccc);
 		while (ccc == ++cc && ww == w);
-		(void) fprintf (fp, "F;%c%u %u %u\n", 'W', c, cc - 1, w - 1);
+		//(void) fprintf (fp, "F;%c%u %u %u\n", 'W', c, cc - 1, w - 1);
+		out << "F;W" << c << " " << cc-1 << " " << w-1 << "\n";
 		c = ccc;
 		w = ww;
 	}
@@ -664,7 +664,7 @@ void write_widths(FILE* fp)
 }
 
 
-void write_cells(FILE* fp)
+void write_cells(olfos_t &out)
 {
 	CELLREF crow = 0, ccol = 0;
 	for(CELL* cp: get_cells_in_range(all_rng))
@@ -681,109 +681,125 @@ void write_cells(FILE* fp)
 		bool is_italic = cp->cell_flags.italic;
 		if (f1 != FMT_DEF || j1 != jst::def || is_bold || is_italic)
 		{
-			(void) fprintf (fp, "F;");
+			//(void) fprintf (fp, "F;");
+			out << "F;";
 			if (c != ccol) {
-				(void) fprintf (fp, "c%u;", c);
+				//(void) fprintf (fp, "c%u;", c);
+				out << "c" << c << ";";
 				ccol = c;
 			}
 			if (r != crow) {
-				(void) fprintf (fp, "r%u;", r);
+				//(void) fprintf (fp, "r%u;", r);
+				out << "r" << r << ";";
 				crow = r;
 			}
 
-			if(is_bold) fprintf(fp, "B;");
-			if(is_italic) fprintf(fp, "I;");
-			fprintf (fp, "F");
+			if(is_bold) out << "B;" ; //fprintf(fp, "B;");
+			if(is_italic) out << "I;"; //fprintf(fp, "I;");
+			//fprintf (fp, "F");
+			out << "F";
 			
-			fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));
-			//fprintf(fp, "%c\n", jst_to_chr (j1));
-			fprintf(fp, "%c\n", map_reverse(jst_map, j1));
+			//fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));
+			out << oleo_fmt_to_str (f1, GET_PRECISION(cp));
+			//fprintf(fp, "%c\n", map_reverse(jst_map, j1));
+			out << map_reverse(jst_map, j1) << "\n";
 		}
 
 		if (is_nul(cp)) continue;
 
-		(void) fprintf (fp, "C;");
+		//(void) fprintf (fp, "C;");
+		out << "C;";
 		if (c != ccol) {
-			(void) fprintf (fp, "c%u;", c);
+			//(void) fprintf (fp, "c%u;", c);
+			out << "c" << c << ";";
 			ccol = c;
 		}
 		if (r != crow) {
-			(void) fprintf (fp, "r%u;", r);
+			//(void) fprintf (fp, "r%u;", r);
+			out << "r" << r << ";";
 			crow = r;
 		}
 
 		
 		std::string formula = formula_text(r, c);
-		(void) fprintf (fp, "E%s;", formula.c_str());
+		//(void) fprintf (fp, "E%s;", formula.c_str());
+		out << "E" << formula << ";";
 		
 
 
 		value_t val = cp->get_value_2019();
 		std::string strval = stringify_value_file_style(val) ;
-		fprintf(fp, "K%s", strval.c_str());
+		//fprintf(fp, "K%s", strval.c_str());
+		out << "K" << strval;
 
-		if(cp->locked()) fprintf (fp, ";P");
+		if(cp->locked()) out << ";P"; // fprintf (fp, ";P");
 
-		putc ('\n', fp);
+		//putc ('\n', fp);
+		out << "\n";
 	}
 }
 
-static std::string oleo_write_window_config ()
+static void oleo_write_window_config (olfos_t &out)
 {
-	std::ostringstream oss;
-	oss << "O;status 2\n";
-	oss << "W;N" << 1 << ";A" << curow << " " << cucol 	<< ";C7 0 7;Ostandout\n";
-	return oss.str();
+	//std::ostringstream oss;
+	out << "O;status 2\n";
+	out << "W;N" << 1 << ";A" << curow << " " << cucol 	<< ";C7 0 7;Ostandout\n";
+	//return oss.str();
 }
 
 
 
 
 /* Modify this to write out *all* the options */
-static void write_mp_options (FILE *fp)
+static void write_mp_options (olfos_t &out)
 {
-	fprintf (fp, "O;auto;background;noa0\n");
+	//fprintf (fp, "O;auto;background;noa0\n");
+	out << "O;auto;background;noa0\n";
 }
 
-void oleo_write_file(FILE *fp)
+void oleo_write_file(olfos_t &out)
 {
-	oleo_write_file(fp, nullptr);
+	oleo_write_file(out, nullptr);
 }
 
-void oleo_write_file(FILE *fp, struct rng *rng)
+void oleo_write_file(olfos_t& out, struct rng *rng)
 {
 	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
 
-	(void) fprintf (fp, "# This file was created by Neoleo\n");
+	//(void) fprintf (fp, "# This file was created by Neoleo\n");
+	out <<  "# This file was created by Neoleo\n";
 
 	/* All versions of the oleo file format should have a 
 	 * version cookie on the second line.
 	 */
-	(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
+	//(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
+	out << "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n";
 
 	//rng = &all_rng;
 
-	(void) fprintf (fp, "F;D%s%c%u\n",
-			oleo_fmt_to_str (default_fmt, default_prc),
-			//jst_to_chr (default_jst),
-			map_reverse(jst_map, default_jst),
-			default_width);
+	//(void) fprintf (fp, "F;D%s%c%u\n",
+	//		oleo_fmt_to_str (default_fmt, default_prc),
+	//		map_reverse(jst_map, default_jst),
+	//		default_width);
+	out << "F;D" << oleo_fmt_to_str(default_fmt, default_prc) << 	map_reverse(jst_map, default_jst) << default_width << "\n";
 
-	write_mp_options (fp);
-	write_widths(fp);
+	write_mp_options (out);
+	write_widths(out);
 
 	// 25/4 We no longer write the heights, because they are always 1
 	//span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
 	//write_spans(fp, h_find, 'H');
 
-	oleo_fp = fp;
+	//oleo_fp = fp;
 	oleo_rng = rng;
 
-	write_cells(fp);
+	write_cells(out);
 
-	std::string str = oleo_write_window_config();
-	fputs(str.c_str(), fp);
-	(void) fprintf (fp, "E\n");
+	//std::string str = oleo_write_window_config();
+	oleo_write_window_config(out);
+	//fputs(str.c_str(), fp);
+	//(void) fprintf (fp, "E\n");
+	out << "E\n";
 }
 
 int oleo_set_options( int set_opt, char *option)
