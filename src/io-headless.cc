@@ -372,6 +372,9 @@ bool process_headless_line(std::string line, int fildes)
 		hl_recalc();
 	} else if(cmd == "type-cell") {
 		type_cell();
+	} else if(cmd == "visual") {
+		extern void curses_main();
+		curses_main();
 	} else if( cmd == "w") {
 		hl_write_file(arg);
 	}
