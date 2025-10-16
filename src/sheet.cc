@@ -45,7 +45,7 @@ typedef std::vector<cell_t*> cellmap_t;
 
 coord_t to_coord(coord_t row, coord_t col) { return  (col << 16) + row; }
 int get_col(coord_t coord) { return coord >> 16; }
-int get_row(coord_t coord) { return coord & 0xFF; }
+int get_row(coord_t coord) { return coord & 0xFFFF; }
 
 int get_col(const CELL* cp) 
 { 

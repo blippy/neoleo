@@ -25,6 +25,7 @@ using CELLREF = uint16_t;
 //static_assert(sizeof(unsigned short) == 2);
 constexpr auto MAX_ROW = std::numeric_limits<CELLREF>::max();
 constexpr auto MAX_COL = std::numeric_limits<CELLREF>::max();
+static_assert(MAX_ROW>256);
 constexpr auto MIN_ROW = 1;
 constexpr auto MIN_COL = 1;
 /* The location of a cell that can never be referenced */
