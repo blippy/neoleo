@@ -201,8 +201,8 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	}
 
 	if(opt_script_file) {
-		int ret = headless_script(opt_script_file);
-		exit(ret);
+		headless_script(opt_script_file);
+		//exit(ret);
 	}
 
 	if(use_headless)
