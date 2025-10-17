@@ -2,14 +2,21 @@
 // 2025-10-11	Owned by blang2 repo
 
 #include <cassert>
+#include <chrono>
+#include <cstdio>
 #include <ctype.h>
 #include <deque>
+//#include <fcntl.h>
 #include <filesystem>
 #include <fstream>
+//#include <ios>
 #include <iostream>
 //#include <map>
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
 #include <stacktrace>
+//#include <sys/syslimits.h>
 
 
 #include "blang2.h"
@@ -45,6 +52,7 @@ map<string, blang_usr_funcall_t> usr_funcmap;
 
 blang_num_t blang_to_num (blang_expr_t val);
 
+double to_double(const blang_expr_t& val);
 
 
 void eval_error (string msg = "")
@@ -68,6 +76,30 @@ static blang_function_t* blang_fn_lookup (string function_name)
 	return &blang_funcmap[function_name];
 }
 
+std::string slurp(const char *filename)
+{
+        std::ifstream in;
+        in.open(filename, std::ifstream::in | std::ifstream::binary);
+        std::stringstream sstr;
+        sstr << in.rdbuf();
+        in.close();
+        return sstr.str();
+}
+
+
+bool spit (const string& path, const string &text)
+{
+        std::fstream file;
+        file.open(path, std::ios_base::out);
+
+        if(!file.is_open()) return false;
+
+        file<<text;
+        file.close();
+        return true;
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // VARIABLES
@@ -87,13 +119,28 @@ string str_eval(blang_expr_t expr);
 std::string blang_to_string (const blang_expr_t& val)
 {
 	if(holds_alternative<monostate>(val)) return ""; // don't use get_if in the case ∵ of unused variable
-	if(auto v = std::get_if<blang_num_t>(&val)) 	return std::to_string(*v);
-	if(auto v = std::get_if<int>(&val)) 	return std::to_string(*v);
+
+	if(auto v = std::get_if<blang_num_t>(&val)) {
+		double n = *v;
+		if(floor(n) == n)
+			return std::to_string((int)n);
+		else
+			return std::to_string(n);
+	}
+	if(auto v = std::get_if<int>(&val)) return std::to_string(*v);
 	if(auto v = std::get_if<std::string>(&val)) 	return *v;
 	throw std::logic_error("to_string: Unhandled stringify expression type index " + std::to_string(val.index()));
 }
 // FN-END
 
+double to_double(blang_expr_t& val)
+{
+	if(holds_alternative<monostate>(val)) return 0;
+	if(auto v = std::get_if<int>(&val)) return *v;
+	if(auto v = std::get_if<double>(&val)) return *v;
+
+	throw std::logic_error("to_double: Can't convert type index " + std::to_string(val.index()));
+}
 
 
 bool isstring(blang_expr_t v)
@@ -296,8 +343,85 @@ blang_expr_t eval_interpret (blang_exprs_t args)
 	return interpret_string(code);
 }
 
+blang_expr_t eval_system (blang_exprs_t args)
+{
+	string cmd = blang_to_string(eval(args[0]));
+	return system(cmd.c_str());
+}
+
+blang_expr_t eval_concat (blang_exprs_t args)
+{
+	string result;
+	for(auto a: args) {
+		result += blang_to_string(eval(a));
+	}
+	return result;
+}
+
+blang_expr_t eval_str (blang_exprs_t args)
+{
+	blang_expr_t a0 = eval(args[0]);
+	if(holds_alternative<string>(a0)) return a0;
+
+	if(args.size() == 1) return blang_to_string(a0);
+
+	int prec = blang_to_num(eval(args[1]));
+
+	char s[30];
+	double v = to_double(a0);
+	string fmt = "%." + std::to_string(prec) +"f";
+	snprintf(s, sizeof(s), fmt.c_str(), v);
+
+	return string{s};
+}
+
+// compiler gets a bit arsey about tmpname, but I want a temporary name anyway
+blang_expr_t eval_tmpnam (blang_exprs_t args)
+{
+
+	auto now = std::chrono::system_clock::now();
+	auto duration = now.time_since_epoch();
+	auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(duration);
+	auto seed =  static_cast<uint64_t>(nanoseconds.count());
+	srand(seed);
+
+	string fname = "/tmp/blang-";
+	for(int i = 0; i < 6; i++) {
+		fname += ('a'+rand()%26);
+	}
+
+	return fname;
+}
+
+blang_expr_t eval_file_del (blang_exprs_t args)
+{
+	string path = blang_to_string(eval(args[0]));
+	return std::filesystem::remove(path);
+}
+
+blang_expr_t eval_file_write (blang_exprs_t args)
+{
+	string path = blang_to_string(eval(args[0]));
+	string contents = blang_to_string(eval(args[1]));
+
+	return spit(path, contents);
+
+}
+
+blang_expr_t eval_file_read (blang_exprs_t args)
+{
+	string path = blang_to_string(eval(args[0]));
+	return slurp(path.c_str());
+}
+
+
 // These will be augmented by user defined functions using eval_userfn
 map<string, blang_function_t> blang_funcmap= {
+		{"concat", eval_concat},
+		{"file_del", eval_file_del},
+		{"file_read", eval_file_read},
+		{"file_write", eval_file_write},
+		{"str", eval_str},
 	{"strlen", eval_strlen},
 	{"+", &eval_plus},
 	{"-", &eval_minus},
@@ -308,7 +432,9 @@ map<string, blang_function_t> blang_funcmap= {
 	{"sqrt", eval_sqrt},
 	{"hypot", eval_hypot},
 	{"plus", eval_plusfn},
-	{"print", eval_print}
+	{"print", eval_print},
+	{"system", eval_system},
+	{"tmpnam", eval_tmpnam}
 };
 
 
@@ -580,7 +706,7 @@ Lexer1::~Lexer1()
 
 
 
-
+#if 0
 typedef deque<token_t> tokens_t;
 
 // FN Lexer .
@@ -605,10 +731,7 @@ private:
 };
 // FN-END
 
-void BlangLexer::push_front_XXX(token_t t)
-{
-	tokens.push_front(t);
-}
+
 
 token_t BlangLexer::pop_front()
 {
@@ -728,20 +851,11 @@ loop:
 	}
 	goto loop;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
-
-
-#if 0
-	template<class Q>
-Q rest(Q qs)
-{
-	qs.pop_front();
-	return qs;
-}
-#endif
 
 
 typedef deque<string> ops_t;
@@ -1063,7 +1177,7 @@ blang_num_t blang_to_num (blang_expr_t val)
 	if(auto v = std::get_if<blang_num_t>(&val)) 	return *v;
 	if(auto v = std::get_if<int>(&val)) 	return *v;
 	//if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
-	throw std::logic_error("to_num: Unhandled stringify expression type index " + std::to_string(val.index()));
+	throw std::logic_error("blang_to_num: Unhandled stringify expression type index " + std::to_string(val.index()));
 }
 
 
