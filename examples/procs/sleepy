@@ -1,0 +1,9 @@
+#!/bin/sh
+
+count=0
+while true
+do
+       	count=`expr $count + 1`
+	echo "sleepy count: $count"
+	sleep 1
+done

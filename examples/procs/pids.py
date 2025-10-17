@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import psutil
 procs = []
 for p in psutil.process_iter():
@@ -28,6 +29,6 @@ print(".")
 
 
 print("\n".join(["g", "1", "1"]))
-print("visual")
+#print("visual")
 
 
