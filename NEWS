@@ -10,6 +10,10 @@ After what was mostly compilation bugfixes in previous releases, we now have new
 
 == FEATURES
 
+* Check out https://www.youtube.com/watch?v=ei2uxmvnI54 , where I show how you can control processes using neoleo.
+
+* Added blang - a BASIC language for neoleo, similar in idea to VBA
+
 * Page Up/Down make big movements
 
 * Added column insert left (keystroke: ci)

@@ -1,0 +1,108 @@
+2025-10-17
+
+https://youtu.be/ei2uxmvnI54
+
+neoleo is a spreadsheet for the linux terminal written in c++ and ncurses. 
+
+[start neoleo]
+
+It is based on a gnu project called oleo. i decided to fork it and turn it c++ code. a lot of code has
+been stripped away, along with a lot of features.
+
+Just to show you quickly, I can enter numbers or strings into the spreadsheet
+
+[=12]
+
+and formula
+
+[r2c1: =r1c1+1]
+
+although it's a fairly underpowered spreadsheet, i have been wondering if i can turn it a general-purpose data input program. 
+
+[quit neoleo]
+
+I want to see if i can adopt the unix philosophy of doing one thing well by seeing if can integrate with exterior tools.
+
+So I did a proof of concept. in this video i'm going to show you how i can do a simple process controller using neoleo
+
+I'll start a process in the other window
+
+[starts sleepy]
+
+This is a bash script called sleepy. it just prints a simple incrementing count every second.
+
+Now lets start the process viewer, which I've called neopids
+
+[starts neopids]
+
+You can see, if by magic, my current unix processes are shown. if i scroll down far enough, i'll see the sleepy process that i started a moment ago.
+
+[scroll down]
+
+There. We see it is process (9225). i can kill that process by pressing the 'k' button. let me do it now.
+
+[press k]
+
+There, you can see in the other window that sleepy has stopped.
+
+[close neoleo]
+
+so what's going on here? how did i do it? 
+
+let's look at the script that kicks neoleo off
+
+[nla neopids]
+
+The first line of note is line 9.
+
+[highlight line 9]
+
+It runs a python script called pids.py which writes to a temporary file.
+
+What it writes is list of commands that neoleo understands. Let's take a quick look at what it generates.
+
+[./pids.py | nla | less]
+
+Here you can see that the first three lines are g, then 1 then 1, which puts the spreadsheet cursor at the home position.
+
+Line 4 issues an I character, which tells neoleo to insert cells rowwise.
+
+On line 5 you can see a process number. On line 6 you can see the process name.
+
+On line 7 you see a semicolon, which tells neoleo to start a fresh line.
+
+So you can begin to see where the data is coming from.
+
+[close output]
+
+[nla neopids]
+
+So pids.py creates a script.
+
+Look at line 10 of the output. The -s option tells neoleo to execute that script. 
+
+There's a final piece to the puzzle. Line 10 also executes a script called pids.bas using the -b option. neoleo contains an interpreter for a basic language, a little like VBA. Let's take a look at the program.
+
+[nla pids.bas]
+
+Take a look at line 10 first. It invokes a function called bind. 
+
+The first argument is 'k', which tells neoleo what key to bind.
+
+The second key tells neoleo what subroutine to run when key is hit. In this instance, it is a subroutine called kill.
+
+Now look at lines 3 to 8. That's the kill subroutine.
+
+It composes a command on line 5, consisting of the linux kill command combined with an argument. 
+
+get_cell(0, 1) fetches the contents of the current row, column 1. This is the process number.
+
+Line 7 executes the string using a system call.
+
+And that's how one can extend my spreadsheet to be quite a flexible program.
+
+Thanks for watching, and until next time. Bye.
+
+
+
+
