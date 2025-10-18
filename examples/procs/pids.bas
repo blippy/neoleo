@@ -1,10 +1,20 @@
 # 2025-10-17	Added
 
+let $tmp = tmpnam()
+
+sub populate
+{
+	system("./pids.py >/tmp/blang-pids")
+	headless_script_run("/tmp/blang-pids")
+}
+
+call populate
+
 sub kill
 {
 	let $cmd = concat("kill -9 ", get_cell(0, 1))
-	#print("cms is ", $cmd)
 	system($cmd)
+	call populate
 }
 
 bind("k", "call kill")

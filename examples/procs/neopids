@@ -1,11 +1,4 @@
 #!/bin/sh
-#!/usr/bin/env bash
 
 ARGS="$@"
-#echo "args are $ARGS"
-#exit 0
-
-TMP=/tmp/blang-pids
-./pids.py >$TMP
-neoleo $ARGS -s $TMP -b pids.bas
-rm $TMP
+neoleo $ARGS -b pids.bas

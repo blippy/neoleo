@@ -4,15 +4,15 @@ procs = []
 for p in psutil.process_iter():
 	procs.append([p.pid, p.name()])
 
-#print(procs)
 
 def keyer(x): return x[1].lower()
-#print(procs)
 procs.sort(key = keyer)
-#procs = procs1
-#print(procs)
 
-print("\n".join(["g", "1", "1", "I"])) # got to R1C1 and insert rowwise
+
+def princ(*arg):
+	print("\n".join(arg))
+
+princ("g", "1", "1", "I") # got to R1C1 and insert rowwise
 for p in procs:
 	print(p[0])
 	print('"' + p[1] + '"')
@@ -20,17 +20,9 @@ for p in procs:
 print(".")
 
 
+princ("I", '' , '', ".") # blank out last row for when we do a kill
 
-#print("\n".join(["g", "1", "2", "i"])) # got to R1C1 and insert columnwise
-#print(";")
-#for p in procs:
-#	print('"', p[1], '"', sep = '')
-#print(".")
-
-
-print("\n".join(["g", "1", "2"]))
-print("cal\n") # left-align the process names
-print("\n".join(["g", "1", "1"]))
-#print("visual")
-
+princ("g", "1", "2")
+print("cal") # left-align the process names
+princ("g", "1", "1")
 

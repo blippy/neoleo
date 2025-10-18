@@ -186,6 +186,14 @@ static blang_expr_t eval_get_cell_type (blang_exprs_t args)
 	//return ConvertVariant<decltype(result), decltype(v)>(v);
 }
 
+static blang_expr_t eval_headless_script_run (blang_exprs_t args)
+{
+	extern int headless_script_run(const std::string& script_file);
+	headless_script_run(blang_to_string(eval(args[0])));
+	return 0;
+}
+
+
 void blx_init()
 {
 	blang_funcmap["bind"] = &eval_bind;
@@ -195,6 +203,7 @@ void blx_init()
 	blang_funcmap["set_cell"] = &eval_set_cell;
 	blang_funcmap["get_cell"] = &eval_get_cell;
 	blang_funcmap["gct"] = &eval_get_cell_type;
+	blang_funcmap["headless_script_run"] = &eval_headless_script_run,
 	blang_funcmap["QUIT"] = &eval_QUIT;
 }
 

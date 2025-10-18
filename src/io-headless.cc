@@ -445,3 +445,8 @@ int headless_script(const char* script_file)
 	close(fildes);
 	return 0;
 }
+
+int headless_script_run(const std::string& script_file)
+{
+	return headless_script(script_file.c_str());
+}
