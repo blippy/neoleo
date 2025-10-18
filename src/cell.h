@@ -101,7 +101,6 @@ class cell
 		void set_formula_text(const std::string& str);
 
 		void dump_cell();
-		void reparse();
 
 		std::string get_formula_text() const;
 		struct cell_flags_s cell_flags;

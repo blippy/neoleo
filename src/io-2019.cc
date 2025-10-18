@@ -293,7 +293,6 @@ fail:
 }
 
 
-// TODO this may be more useful that you think
 static void clear_cell_formula()
 {
 	set_and_eval(curow, cucol, "", true);

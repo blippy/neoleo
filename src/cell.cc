@@ -92,11 +92,6 @@ cell::cell(coord_t coord) :coord(coord)
 {
 }
 
-void cell::reparse()
-{
-	// TODO this doesn't work properly
-	// parse_and_compile(this);
-}
 
 
 
@@ -216,14 +211,12 @@ void edit_cell (const char* input)
 
 
 
-
+#if 0
 /*
  * highest_row() and highest_col() should be expected to 
  * overallocate the number of rows and columns in the 
  * spreadsheet. The true number of rows and columns must 
  * be calculated
- *
- * TODO this is likely to be a very useful function
  *
  */
 
@@ -242,7 +235,7 @@ RC_t ws_extent()
 		}
 	return RC_t{size_r, size_c};
 }
-
+#endif
 
 std::string formula_text(CELLREF r, CELLREF c){
 	CELL* cp = find_cell(r, c);
