@@ -28,6 +28,8 @@ print(".")
 #print(".")
 
 
+print("\n".join(["g", "1", "2"]))
+print("cal\n") # left-align the process names
 print("\n".join(["g", "1", "1"]))
 #print("visual")
 

@@ -59,6 +59,7 @@ void lock_region (const struct rng&  where, int locked)
 
 void change_region(const struct rng& a_rng, std::function<void(CELL*)> fn)
 {
+	assert(a_rng.hc != MAX_COL && a_rng.hr != MAX_ROW); // you'll regret things if you've set it to max
 
 	Global_modified = 1;
 	make_cells_in_range (a_rng);

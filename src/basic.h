@@ -19,15 +19,16 @@
 
 //#include "global.h"
 
-void delete_row (int repeat);
-void set_def_format (int fmt);
-void set_cell_alignment_left();
-void set_cell_alignment_right();
-void insert_1row();
-void recalculate (int all);
-void write_cmd (FILE *fp, const char * name);
-void read_file_and_run_hooks (FILE * fp,  const char * name);
-int set_window_option (int set_opt, char *text);
-void set_cell_toggle_bold();
-void set_cell_toggle_italic();
-void set_cell_toggle_percent();
+void 	column_align_left();
+void	delete_row (int repeat);
+void	insert_1row();
+void	recalculate (int all);
+void	read_file_and_run_hooks (FILE * fp,  const char * name);
+void	set_cell_alignment_left();
+void	set_cell_alignment_right();
+void 	set_cell_toggle_bold();
+void 	set_cell_toggle_italic();
+void 	set_cell_toggle_percent();
+void	set_def_format (int fmt);
+int		set_window_option (int set_opt, char *text);
+void	write_cmd (FILE *fp, const char * name);

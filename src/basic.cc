@@ -37,6 +37,19 @@ using std::endl;
 
 
 
+// FN current_col .
+// set a range to correspond to the current column
+rng_t current_col ()
+{
+	return rng_t{.lc = cucol, .hc = cucol};
+	//rng.lr = MIN_ROW;
+	//rng.lc = cucol;
+	//rng.hr = MAX_ROW;
+	//rng.hc = cucol;
+
+}
+// FN-END
+
 
 /* A very basic command. */
 
@@ -195,6 +208,22 @@ void set_cell_toggle_italic()
 }
 
 
+// 25/10 added
+// FN column_align_left .
+void column_align_left ()
+{
+	rng_t rng{current_col()};
+	assert(rng.hr == MAX_ROW);
+	assert(rng.lr == MIN_ROW);
+	//set_region_alignment(rng, 'L');
+	//make_cells_in_range (where); // BAD IDEA!
+	for(CELL* cp:get_cells_in_range(rng)) {
+		if(cp == nullptr) continue;
+		Global_modified = 1;
+		cp->set_jst(jst::lft);
+	}
+}
+// FN-END
 
 void set_cell_alignment_left()
 {

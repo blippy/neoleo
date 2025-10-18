@@ -451,6 +451,21 @@ void clear_status_line()
 // 25/5 added
 static void col_cmd2019()
 {
+#if 1
+	//log("col_cmd2019 enter");
+	int c = get_ch();
+	if(c == 'i') {
+		insert_col_left();
+	} else if (c == 'a') {
+		//log("col_cmd2019 got a");
+		c = get_ch();
+		if(c == 'l')
+			column_align_left();
+	}
+
+	i19_parameter = -1;
+
+#else
 	auto insert_left = []() { insert_col_left(); };
 	static auto keymap = std::map<int, fn_t> {
 		//{'d', delete_1row},
@@ -459,6 +474,7 @@ static void col_cmd2019()
 	};
 
 	process_key(keymap);
+#endif
 }
 
 

@@ -64,10 +64,12 @@ inline enum jst base_default_jst = jst::rgt;
 inline enum jst default_jst = base_default_jst;
 
 
+// FN rng_t .
 typedef struct rng {
-	CELLREF lr, lc, hr, hc;
+	CELLREF lr = MIN_ROW, lc = MIN_COL, hr = MAX_ROW, hc = MAX_COL;
 	bool operator==(const rng&) const = default;
 } rng_t;
+// FN-END
 
 
 // FN bool_t .

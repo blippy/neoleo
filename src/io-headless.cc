@@ -101,6 +101,16 @@ void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 	set_and_eval(r, c, formula, true);
 }
 
+#if 0
+// 25/10 added
+static void hl_column_align_left (const string& arg)
+{
+	//std::istringstream is(arg);
+
+
+
+}
+#endif
 
 string hl_getline (int fildes)
 {
@@ -341,9 +351,9 @@ bool process_headless_line(std::string line, int fildes)
 	//cout << "'" << cmd << "'\n";
 
 	//auto is = [&cmd](string s) { return cmd == s; };
-	if( cmd == "!") {
-		hl_exec(arg);
-	} else if(cmd == "dump-sheet") {
+	if( cmd == "!") { hl_exec(arg); }
+	else if(cmd == "cal") {column_align_left();}
+	else if(cmd == "dump-sheet") {
 		hless_dump_sheet();
 	} else if(cmd == "exit") {
 		hl_exit(arg);
