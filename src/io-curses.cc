@@ -144,15 +144,8 @@ void page_down()
 // FN page_up
 void page_up()
 {
-	//log("TODO page_up detected");
-	//int r = std::min(1, curow - cwin->numr);
-	//move_cursor_to(cwin, r, cucol);
-	//curow = std::max(1, curow - cwin->numr/2); // new row we want to land on
 	curow = std::max(1, cwin->screen.lr-1);
 	io_move_cell_cursor(curow, cucol);
-	//if(r<1) r = 1;
-	//int repeat = cwin->numr -r;
-	//io_shift_cell_cursor(dirn::up, repeat);
 }
 // FN-END
 
