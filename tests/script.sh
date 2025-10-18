@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# TODO use  the functinality provided in neotests-env.sh
+# 25/10 possbily use  the functinality provided in neotests-env.sh
 #source neotests-env.sh
 
 TMPFILE=`mktemp`

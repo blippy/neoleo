@@ -476,15 +476,14 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 	CELL* cp = find_cell (row, col);
 	if(!cp) return "";
 
-	// TODO use get_if()
 	value_t val = cp->get_value_2019();
 	if(std::holds_alternative<std::monostate>(val)) return "";
-	if(std::holds_alternative<num_t>(val)) return flt_to_str(get<num_t>(val));
 	if(std::holds_alternative<std::string>(val)) return cp->get_formula_text();
-	if(std::holds_alternative<bool_t>(val)) return bool_name(get<bool_t>(val));
-	if(std::holds_alternative<err_t>(val)) return ename_desc[get<err_t>(val).num];
-	throw std::logic_error("Unhandled variant type in cell_value_string");
+	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
+	if(auto v = std::get_if<bool_t>(&val)) 	return bool_name(*v);
+	if(auto v = std::get_if<err_t>(&val)) 	return ename_desc[v->num];
 
+	throw std::logic_error("Unhandled variant type in cell_value_string");
 }
 
 
