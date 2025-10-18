@@ -133,11 +133,8 @@ bool 		curses_loop ();
 // FN page_down
 void page_down()
 {
-	//log("TODO page_down detected");
-	//io_shift_cell_cursor(dirn::down, cwin->numr);
 	curow = std::min(cwin->screen.hr+1, (int) MAX_ROW);
 	io_move_cell_cursor(curow, cucol);
-	//curow += 10;
 }
 // FN-END
 
