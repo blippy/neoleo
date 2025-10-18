@@ -1,5 +1,5 @@
-
-/* mcarter TODO 05-May-2018
+/*
+ * 18/05 NB
  * Now that I want to incorporate the coord in with the cell, be warned that
  * it will likely be outdated under a move or copy. I'll need to watch out 
  * for that!
@@ -18,13 +18,11 @@
 
 
 
-//#include "neotypes.h"
 #include "basic.h"
 #include "cell.h"
 #include "sheet.h"
 #include "spans.h"
 
-//import utl;
 
 using std::cout;
 using std::endl;

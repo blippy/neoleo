@@ -154,7 +154,6 @@ void cell::set_formula_text(const std::string& str)
 	if(str ==formula_text) return;
 	formula_text = str;
 
-	// erase_predec_deps(); TODO get this working properly
 	predecs.clear();
 	CELLREF r, c;
 	decoord(this, r, c);

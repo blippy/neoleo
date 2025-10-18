@@ -94,7 +94,6 @@ void test_newt()
 
 void test_edit()
 {
-	// TODO
 	win_dow win(10, 40, 10, 10);
 	box(win(), 0 , 0);
 	std::string text{"12345678"};
