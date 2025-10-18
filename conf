@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+	#debian) export  LIBS=-lstdc++fs ;;
 
 # mcarter 22-Dec-2016 my own configuration experiments.
 # Everyone else should ignore this file
@@ -36,8 +37,7 @@ case "$ID" in
 	#arch)	OPTS="CPPFLAGS= -D_FORTIFY_SOURCE=2" ;;
 	arch)	OPTS="--with-fortify" ;;
 	#arch) source /etc/makepkg.conf ;;
-	#debian) export  LIBS=-lstdc++fs ;;
-	debian) OPTS="--with-debug --with-fortify --with-asan" ;;
+	debian) OPTS="--with-debug --with-fortify --with-asan " ;;
 	#raspbian) export  LIBS=-lstdc++fs CXXFLAGS='-Wno-psabi' ;;
 	ubuntu) OPTS="--with-debug --with-coverage --with-asan" ;;
 	slackware) OPTS="--with-debug" ;;
