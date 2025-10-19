@@ -232,7 +232,6 @@ value_t do_sum (Tour& tour, args_t args)
 {
 	nargs_eq(args, 1);
 	Expr& x = args[0];
-	// TODO might hold fn instead
 	value_t v = std::get<value_t>(x.expr);
 	rng_t rng = to_range(v);
 	num_t sum = 0;
