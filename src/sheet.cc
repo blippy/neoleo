@@ -1,7 +1,6 @@
 /*
- * 18/05 NB
- * Now that I want to incorporate the coord in with the cell, be warned that
- * it will likely be outdated under a move or copy. I'll need to watch out 
+ * NB 10/05 Now that I want to incorporate the coord in with the cell, be warned that
+ * it will likely be outdated under a move or copy. I'll need to watch out
  * for that!
  */
 
