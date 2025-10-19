@@ -1,8 +1,6 @@
 #pragma once
 #include <string>
 
-#include <ncursesw/ncurses.h>
-
 void 	clear_status_line();
 int 	get_ch ();
 int 	get_ch (WINDOW *win);
