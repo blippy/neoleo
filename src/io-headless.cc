@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <ncursesw/ncurses.h>
 #include <unistd.h>
 #include <iostream>
 
@@ -101,16 +100,7 @@ void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 	set_and_eval(r, c, formula, true);
 }
 
-#if 0
-// 25/10 added
-static void hl_column_align_left (const string& arg)
-{
-	//std::istringstream is(arg);
 
-
-
-}
-#endif
 
 string hl_getline (int fildes)
 {
@@ -133,24 +123,6 @@ string to_oct(long n)
 }
 
 
-static void info()
-{
-	// print diagnostic information
-
-	typedef struct info_t { string str; int num; string desc; } info_t;
-	auto infos = vector<info_t> {
-		{"KEY_END",	KEY_END,	"End key"},
-			{"KEY_HOME",	KEY_HOME,	"Home key"},
-			{"KEY_LEFT", 	KEY_LEFT, 	"Arrow left"},
-			{"KEY_NPAGE",	KEY_NPAGE}
-	};
-
-	for(const auto& i:infos)
-		cout << "curses." << pad_right(i.str,11)  << pad_left(to_oct(i.num),6) 
-			<< pad_left(to_hex(i.num), 7)  
-			<< pad_left(std::to_string(int(i.num)), 5) 
-			<< "     # " << i.desc << "\n";
-}
 
 
 
@@ -353,9 +325,8 @@ bool process_headless_line(std::string line, int fildes)
 	//auto is = [&cmd](string s) { return cmd == s; };
 	if( cmd == "!") { hl_exec(arg); }
 	else if(cmd == "cal") {column_align_left();}
-	else if(cmd == "dump-sheet") {
-		hless_dump_sheet();
-	} else if(cmd == "exit") {
+	else if(cmd == "dump-sheet") { hless_dump_sheet(); }
+	else if(cmd == "exit") {
 		hl_exit(arg);
 	} else if(cmd == "g") {
 		hl_goto_cell(fildes);
@@ -365,8 +336,6 @@ bool process_headless_line(std::string line, int fildes)
 		insert_rowwise(fildes);
 	} else if(cmd == "i") {
 		insert_columnwise(fildes);
-	} else if(cmd == "info") {
-		info();
 	} else if(cmd == "p") {
 		hl_print_row(arg);
 	//} else if(cmd == "picol") {
