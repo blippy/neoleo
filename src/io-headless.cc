@@ -352,9 +352,9 @@ bool process_headless_line(std::string line, int fildes)
 	} else if(cmd == "type-cell") {
 		type_cell();
 	} else if(cmd == "visual") {
-		// 25/10 TODO Not right, because when ncurses quits, it will return here. We need curses to replace headless
 		extern void curses_main();
 		curses_main();
+		return false;
 	} else if( cmd == "w") {
 		hl_write_file(arg);
 	}
