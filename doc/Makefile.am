@@ -5,7 +5,7 @@
 #
 info_TEXINFOS = neoleo.texi
 
-TEXIS=		
+TEXIS= headless.texi
 
 EXTRA_DIST=	$(TEXIS) neoleo_web.html texi2html
 #noinst_DATA =	neoleo_web.html $(TEXIS)
@@ -18,6 +18,8 @@ html_DATA=	neoleo.html
 
 #neoleo.html:	$(srcdir)/neoleo.texi ${TEXIS} $(top_builddir)/doc/texi2html
 #		@HAVE_PERL@ $(top_builddir)/doc/texi2html $(srcdir)/neoleo.texi
+		
+neoleo.html: neoleo.texi headless.texi		
 
 DISTCLEANFILES = $(html_DATA)
 MAINTAINERCLEANFILES = Makefile.in

@@ -101,6 +101,7 @@ version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
 @menu
+* Headless mode::
 * Key Index::
 * Command Index::
 * Function Index::
@@ -108,6 +109,8 @@ means complete, nor necessarily accurate for that matter.
 * Concept Index::
 @end menu
 
+@include headless.texi
+ 
 @c @include running.texi
 @c @include basics.texi
 @c @include entering-data.texi

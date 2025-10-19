@@ -1,0 +1,40 @@
+@node Headless mode, Top, Top, Top
+@chapter Headless mode
+
+Headless mode allows you to enter certain commands on stdin. Think of it like 'ed', where you don't have a TUI.
+
+You can enter headless mode by using the option "-H".
+
+You can also run the commands files using the -s option: 
+neoleo -s myscript.txt
+These are run before going into headless or ncurses mode.
+
+!
+
+cal - column align left
+
+dump-sheet
+
+g - go to a line
+
+hi - print a simple greeting. Can be used for testing purposes
+
+I - insert rowwise
+
+i - insert columnwise
+
+p - print a row
+
+q - quit without save
+
+recalc - recalculate the spreadsheet
+
+ri - row insert above
+
+t - type sheet
+
+type-cell - type a cell
+
+visual - enter visual mode, i.e. the curses TUI
+
+w - write to a file
