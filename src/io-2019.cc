@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include <ncursesw/ncurses.h>
-//#define USE_FORM 1
+//#define USE_FORM
 #ifdef USE_FORM
 #include <form.h>
 #endif
@@ -71,6 +71,7 @@ int get_ch (WINDOW *win)
 
 
 
+
 #if 0
 class npanel_c : public nwin_c {
 	public:
@@ -93,7 +94,7 @@ class npanel_c : public nwin_c {
 };
 #endif
 
-#if USE_FORM
+#ifdef USE_FORM
 class nform_c  /*: public npanel_c */ {
 	public:
 		nform_c(WINDOW *win, const char* desc, std::string& text);
@@ -129,7 +130,11 @@ nform_c::nform_c(WINDOW *win, const char* desc, std::string& text)
 
 	set_form_win(m_f, m_w);
 	//set_form_sub(m_f, m_w);
-	set_form_sub(m_f, derwin(m_w, 1, 70, 1, 1));
+	int parent_x, parent_y;
+	getmaxyx(m_w, parent_y, parent_x);
+	log("nform_c parent_x ", parent_x,  " parent_y ", parent_y);
+	//set_form_sub(m_f, derwin(m_w, 1, 70, 0, 0));
+	set_form_sub(m_f, derwin(m_w, parent_y, parent_x, 0, 0));
 	post_form(m_f);
 	form_driver(m_f, REQ_END_FIELD);
 	//curs_set(1);
@@ -160,7 +165,7 @@ const std::string nform_c::text()
 // text_field is modified by nform_c
 static bool invoke_std_form(const char* desc, std::string& text_field)
 {
-#if 1
+#ifndef  USE_FORM
 	win_dow par(1, 75, 1, 0);
 	//par.print_at(0, 0, "foogoo");
 	wrefresh(par.m_w);
@@ -173,7 +178,8 @@ static bool invoke_std_form(const char* desc, std::string& text_field)
 	return true;
 
 #else
-	win_dow win(12, 75, 10, 5);
+	//win_dow win(12, 75, 10, 5);
+	win_dow win(1, 75, 1, 0);
 	nform_c frm(win.m_w, desc, text_field);
 
 	auto fdrive = [&frm](int req) { form_driver(frm.m_f, req); } ;
