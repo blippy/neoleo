@@ -7,7 +7,8 @@ AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORM_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
 
-AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection  -Wp,-D_GLIBCXX_ASSERTIONS
+AM_CXXFLAGS += -Wall
+#AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection  -Wp,-D_GLIBCXX_ASSERTIONS
 
 # Following won't work on Arms:
 #AM_CXXFLAG += -fcf-protection
@@ -16,7 +17,7 @@ AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection  -Wp,-D_GLIBCXX
 
 AM_CXXFLAGS += -Wuninitialized
 #AM_CXXFLAGS += -Wfatal-errors  # aborts compilation on first error
-AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
+#AM_CXXFLAGS += -Wno-psabi # ignore warnings about GCC 7.1 ABI breakage
 AM_CXXFLAGS += -Wall 
 #AM_CXXFLAGS += -Wuse-after-free # Slackware 15.0 doesn't like this flag
 
