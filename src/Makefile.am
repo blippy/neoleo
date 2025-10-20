@@ -37,7 +37,7 @@ dist_man_MANS = neoleo.1
 neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm 
 neoleo_LDADD += @NCURSES_LIBS@ 
 neoleo_LDADD += @FORM_LIBS@ 
-neoleo_LDADD += -lstdc++exp # for stacktrace in blang
+#neoleo_LDADD += -lstdc++exp # for stacktrace in blang, but disabled because older compilers don't like it
 
 
 neoleo_SOURCES = \
