@@ -7,7 +7,7 @@ AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
 AM_CXXFLAGS += @FORM_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
 
-AM_CXXFLAGS += -Wall
+AM_CXXFLAGS += -Wall # -Wextra
 #AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection  -Wp,-D_GLIBCXX_ASSERTIONS
 
 # Following won't work on Arms:
