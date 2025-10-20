@@ -52,7 +52,7 @@ map<string, blang_usr_funcall_t> usr_funcmap;
 
 blang_num_t blang_to_num (blang_expr_t val);
 
-double to_double(const blang_expr_t& val);
+//double to_double(const blang_expr_t& val);
 
 
 void eval_error (string msg = "")

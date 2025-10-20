@@ -129,7 +129,7 @@ T tox (Tour& tour, value_t val, int errtype)
 	else
 		throw ValErr(errtype);
 }
-value_t eval(Tour& tour, Expr expr);
+//value_t eval(Tour& tour, Expr expr);
 bool bool_eval (Tour& tour, Expr expr);
 num_t num_eval(Tour& tour, Expr expr);
 string str_eval(Tour& tour, Expr expr);
