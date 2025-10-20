@@ -1,8 +1,8 @@
 #include <string.h>
 
 #include <ncursesw/ncurses.h>
-#define USE_FORM 0
-#if USE_FORM
+//#define USE_FORM 1
+#ifdef USE_FORM
 #include <form.h>
 #endif
 #include <panel.h>

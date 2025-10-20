@@ -51,6 +51,8 @@ esac
 
 #GPPOF=--with-prof
 #OPTS="$DBG $GPROF $SAN $COV "
+OPTS="$OPTS --with-form"
+
 
 #./configure $GPROF $SAN "CXXFLAGS=  -O0 -g" --prefix=$HOME/.local
 #CXX=clang++ ./configure $OPTS  --prefix=$HOME/.local

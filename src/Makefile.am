@@ -2,8 +2,9 @@ AM_CXXFLAGS = @ASAN_CXXFLAGS@
 AM_CXXFLAGS += -std=c++23
 #AM_CXXFLAGS += -Wno-psabi # turn off ABI 7.1 changes
 #AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
-AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
+#AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""
 AM_CXXFLAGS += @COVERAGE_CXXFLAGS@
+AM_CXXFLAGS += @FORM_CXXFLAGS@
 AM_CXXFLAGS += @FORTIFY_CXXFLAGS@ # simulate Arch Linux build (--with-fortify)
 
 AM_CXXFLAGS += -Werror=format-security 	-fstack-clash-protection  -Wp,-D_GLIBCXX_ASSERTIONS
@@ -34,6 +35,7 @@ dist_man_MANS = neoleo.1
 
 neoleo_LDADD = @COVERAGE_LDADD@ @ASAN_LIBS@ -lm 
 neoleo_LDADD += @NCURSES_LIBS@ 
+neoleo_LDADD += @FORM_LIBS@ 
 neoleo_LDADD += -lstdc++exp # for stacktrace in blang
 
 
