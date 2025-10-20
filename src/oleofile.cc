@@ -43,7 +43,7 @@ T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
 {
 	try {
 		return m.at(key);
-	} catch (std::out_of_range e) {
+	} catch (std::out_of_range& e) {
 		//raise_error(msg_if_fail);
 		throw OleoJmp(msg_if_fail);
 	}
