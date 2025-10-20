@@ -40,7 +40,7 @@ class win_edln {
 		int m_begin_y, m_off_x, m_ncols, m_at_y, m_at_x, m_begin_x, m_desc_len;
 		std::string m_input;
 		bool m_cancelled = false;
-		int m_pos;
+		int m_pos = 0;
 		bool m_only_digits = false;
 	private:
 		void add_char(int ch);	
