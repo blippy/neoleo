@@ -141,13 +141,13 @@ void nargs_eq(const args_t& args, size_t n)
 		throw ValErr(BAD_FUNC);
 }
 
-value_t do_plus(Tour& tour, args_t args)
+value_t do_plus(Tour& tour, const args_t& args)
 {
 	num_t val = 0;
 	for(auto& arg: args) val += num_eval(tour, arg);
 	return val;
 }
-value_t do_minus(Tour& tour, args_t args)
+value_t do_minus(Tour& tour, const args_t& args)
 {
 	num_t val = 0;
 	if(args.size() == 0) return val;
@@ -156,7 +156,7 @@ value_t do_minus(Tour& tour, args_t args)
 	for(size_t i = 1; i<args.size(); ++i) val -= num_eval(tour, args[i]);
 	return val;
 }
-value_t do_mul(Tour& tour, args_t args)
+value_t do_mul(Tour& tour, const args_t& args)
 {
 	num_t val = 1.0;
 	for(auto& arg: args) {
@@ -165,7 +165,7 @@ value_t do_mul(Tour& tour, args_t args)
 	}
 	return val;
 }
-value_t do_div(Tour& tour, args_t args)
+value_t do_div(Tour& tour, const args_t& args)
 {
 	num_t val = 0;
 	if(args.size() == 0) return val;
@@ -176,42 +176,42 @@ value_t do_div(Tour& tour, args_t args)
 	return val;
 }
 
-value_t do_sqrt(Tour& tour, args_t args)
+value_t do_sqrt(Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 1);
 	num_t val = num_eval(tour, args[0]);
 	return sqrt(val);
 }
-value_t do_hypot(Tour& tour, args_t args)
+value_t do_hypot(Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 2);
 	num_t v1 = num_eval(tour, args[0]);
 	num_t v2 = num_eval(tour, args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-value_t do_plusfn(Tour& tour, args_t args)
+value_t do_plusfn(Tour& tour, const args_t& args)
 {
 	num_t val = 0;
 	for(auto& v: args) val += num_eval(tour, v);
 	return val;
 }
 
-value_t do_strlen(Tour& tour, args_t args)
+value_t do_strlen(Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 1);
 	string str = str_eval(tour, args[0]);
 	return (double)str.size();
 }
 
-value_t do_life(Tour& tour, args_t args)
+value_t do_life(Tour& tour, const args_t& args)
 {
 	return 42.0;
 }
 
-value_t do_sum (Tour& tour, args_t args)
+value_t do_sum (Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 1);
-	Expr& x = args[0];
+	const Expr& x = args[0];
 	value_t v = std::get<value_t>(x.expr);
 	rng_t rng = to_range(v);
 	num_t sum = 0;
@@ -227,17 +227,17 @@ value_t do_sum (Tour& tour, args_t args)
 	return sum;
 }	
 
-num_t one_num(Tour& tour, args_t args)
+num_t one_num(Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 1);
 	return num_eval(tour, args[0]);
 }
-value_t do_floor (Tour& tour, args_t args)
+value_t do_floor (Tour& tour, const args_t& args)
 {
 	num_t n = one_num(tour, args);
 	return floor(n);
 }
-value_t do_ceil (Tour& tour, args_t args)
+value_t do_ceil (Tour& tour, const args_t& args)
 {
 	num_t n = one_num(tour, args);
 	return ceil(n);
@@ -245,14 +245,14 @@ value_t do_ceil (Tour& tour, args_t args)
 
 
 
-void two_nums(Tour& tour, args_t args, num_t& v1, num_t& v2)
+void two_nums(Tour& tour, const args_t& args, num_t& v1, num_t& v2)
 {
 	nargs_eq(args, 2);
 	v1  = num_eval(tour, args[0]);
 	v2  = num_eval(tour, args[1]);
 }
 
-value_t do_pow (Tour& tour, args_t args)
+value_t do_pow (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
@@ -268,37 +268,37 @@ value_t to_bool (num_t n)
 	b.v = n != 0;
 	return b;
 }
-value_t do_eq (Tour& tour, args_t args)
+value_t do_eq (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
 	return to_bool(x == y);
 }
-value_t do_ne (Tour& tour, args_t args)
+value_t do_ne (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
 	return to_bool(x != y);
 }
-value_t do_le (Tour& tour, args_t args)
+value_t do_le (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
 	return to_bool(x <= y);
 }
-value_t do_ge (Tour& tour, args_t args)
+value_t do_ge (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
 	return to_bool(x >= y);
 }
-value_t do_lt (Tour& tour, args_t args)
+value_t do_lt (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
 	return to_bool(x < y);
 }
-value_t do_gt (Tour& tour, args_t args)
+value_t do_gt (Tour& tour, const args_t& args)
 {
 	num_t x,y;
 	two_nums(tour, args, x, y);
@@ -316,7 +316,7 @@ value_t do_if (Tour& tour, const args_t& args)
 
 }
 
-value_t do_ctime (Tour& tour, args_t args)
+value_t do_ctime (Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 1);
 	time_t tim = num_eval(tour, args[0]);
