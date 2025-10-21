@@ -48,12 +48,6 @@ map<string, blang_usr_funcall_t> usr_funcmap;
 
 
 
-//class ParseException : public std::exception {};
-
-blang_num_t blang_to_num (blang_expr_t val);
-
-//double to_double(const blang_expr_t& val);
-
 
 void eval_error (string msg = "")
 {
@@ -62,14 +56,14 @@ void eval_error (string msg = "")
 	throw std::runtime_error(msg);
 }
 
-void blang_unknown_function (string function_name)
+void blang_unknown_function (const string& function_name)
 {
 	string msg{"Unknown function " + function_name};
 	throw BlangException(msg);
 	//parse_error(msg);
 }
 
-static blang_function_t* blang_fn_lookup (string function_name)
+static blang_function_t* blang_fn_lookup (const string& function_name)
 {
 	if(blang_funcmap.count(function_name) == 0)
 		blang_unknown_function(function_name);
@@ -111,9 +105,8 @@ static map<string, blang_expr_t> blang_varmap;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FUNCTION DEFINITIONS
 
-blang_expr_t eval(blang_expr_t expr);
-blang_num_t num_eval(blang_expr_t expr);
-string str_eval(blang_expr_t expr);
+blang_num_t num_eval(const blang_expr_t& expr);
+//string str_eval(blang_expr_t expr);
 
 // FN to_string .
 std::string blang_to_string (const blang_expr_t& val)
@@ -133,7 +126,7 @@ std::string blang_to_string (const blang_expr_t& val)
 }
 // FN-END
 
-double to_double(blang_expr_t& val)
+double to_double(const blang_expr_t& val)
 {
 	if(holds_alternative<monostate>(val)) return 0;
 	if(auto v = std::get_if<int>(&val)) return *v;
@@ -143,7 +136,7 @@ double to_double(blang_expr_t& val)
 }
 
 
-bool isstring(blang_expr_t v)
+bool isstring(const blang_expr_t& v)
 {
 	return holds_alternative<string>(v);
 }
@@ -151,7 +144,7 @@ bool isstring(blang_expr_t v)
 // FN eval_block .
 // A block is code between { ... }
 // Returns the value of the last statement executed
-blang_expr_t eval_block (blang_exprs_t args)
+blang_expr_t eval_block (const blang_exprs_t& args)
 {
 	//cout << "I'm evalutiong a block\n";
 	blang_expr_t v{monostate{}};
@@ -165,7 +158,7 @@ blang_expr_t eval_block (blang_exprs_t args)
 
 // FN eval_bodmas .
 // A special function used by parsing to get the +|- *|/ right
-blang_expr_t eval_bodmas (blang_exprs_t args)
+blang_expr_t eval_bodmas (const blang_exprs_t& args)
 {
 
 	//cout << "eval_bodmas num args " << args.size() << endl;
@@ -190,7 +183,7 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 	// OK, for most purposes we're dealing with numbers
 	//cout << "bodmans: called\n";
 	//num_t result_num = 0;
-	blang_num_t result_num = blang_to_num(result);
+	blang_num_t result_num{blang_to_num(result)};
 	for(size_t i = 2; i < args.size(); ) {
 		//cout << "i = " << i << endl;
 		int op = num_eval(args[i]);		// operator. One of + - * /
@@ -209,7 +202,7 @@ blang_expr_t eval_bodmas (blang_exprs_t args)
 }
 // FN-END
 
-blang_expr_t eval_if (blang_exprs_t args)
+blang_expr_t eval_if (const blang_exprs_t& args)
 {
 
 	if(blang_to_num(eval(args[0])))
@@ -223,15 +216,15 @@ blang_expr_t eval_if (blang_exprs_t args)
 }
 
 // FN eval_plus .
-blang_expr_t eval_plus (blang_exprs_t args)
+blang_expr_t eval_plus (const blang_exprs_t& args)
 {
 	blang_num_t val = 0;
-	for(auto& arg: args) val += num_eval(arg );
+	for(auto& arg: args) val += num_eval(arg);
 	return val;
 }
 // FN-END
 
-blang_expr_t eval_minus(blang_exprs_t args)
+blang_expr_t eval_minus(const blang_exprs_t& args)
 {
 	if(args.size() == 0) return 0.0;
 	blang_num_t val = num_eval(args[0]);
@@ -239,7 +232,7 @@ blang_expr_t eval_minus(blang_exprs_t args)
 	for(size_t i = 1; i<args.size(); ++i) val -= num_eval(args[i]);
 	return val;
 }
-blang_expr_t eval_mul(blang_exprs_t args)
+blang_expr_t eval_mul(const blang_exprs_t& args)
 {
 	blang_num_t val = 1.0;
 	for(auto& arg: args) {
@@ -249,7 +242,7 @@ blang_expr_t eval_mul(blang_exprs_t args)
 	}
 	return val;
 }
-blang_expr_t eval_div(blang_exprs_t args)
+blang_expr_t eval_div(const blang_exprs_t& args)
 {
 	if(args.size() == 0) return 0.0;
 	blang_num_t val = num_eval(args[0]);
@@ -259,31 +252,31 @@ blang_expr_t eval_div(blang_exprs_t args)
 	return val;
 }
 
-blang_expr_t eval_life(blang_exprs_t args)
+blang_expr_t eval_life(const blang_exprs_t& args)
 {
 	return 48.0;
 }
-blang_expr_t eval_sqrt(blang_exprs_t args)
+blang_expr_t eval_sqrt(const blang_exprs_t& args)
 {
 	if(args.size() !=1) throw BlangException("sqrt: requires  argument");
 	blang_num_t val = num_eval(args[0]);
 	return sqrt(val);
 }
-blang_expr_t eval_hypot(blang_exprs_t args)
+blang_expr_t eval_hypot(const blang_exprs_t& args)
 {
 	if(args.size() !=2) throw BlangException("hypot: requires 2 arguments");
 	blang_num_t v1 = num_eval(args[0]);
 	blang_num_t v2 = num_eval(args[1]);
 	return sqrt(v1*v1 + v2*v2);
 }
-blang_expr_t eval_plusfn(blang_exprs_t args)
+blang_expr_t eval_plusfn(const blang_exprs_t& args)
 {
 	blang_num_t val = 0;
 	for(auto& v: args) val += num_eval(v);
 	return val;
 }
 
-blang_expr_t eval_strlen(blang_exprs_t args)
+blang_expr_t eval_strlen(const blang_exprs_t& args)
 {
 	//cout << "eval_strlen: called" << endl;
 	if(args.size() !=1) BlangException("strlen: requires 1 argument");
@@ -292,7 +285,7 @@ blang_expr_t eval_strlen(blang_exprs_t args)
 	return (float) s.size();
 }
 
-blang_expr_t eval_print(blang_exprs_t args)
+blang_expr_t eval_print(const blang_exprs_t& args)
 {
 	//cout << "eval_print: called" << endl;
 	for(const auto& a : args) {
@@ -307,7 +300,7 @@ blang_expr_t eval_print(blang_exprs_t args)
 
 
 // We get the value of a variable
-blang_expr_t eval_getvar(blang_exprs_t args)
+blang_expr_t eval_getvar(const blang_exprs_t& args)
 {
 	string name = blang_to_string(args[0]);
 	if(blang_varmap.contains(name)) {
@@ -318,7 +311,7 @@ blang_expr_t eval_getvar(blang_exprs_t args)
 }
 
 // this is where we are assigning a variable
-blang_expr_t eval_let(blang_exprs_t args)
+blang_expr_t eval_let(const blang_exprs_t& args)
 {
 	string varname = blang_to_string(args[0]);
 	blang_expr_t result = eval(args[1]);
@@ -327,7 +320,7 @@ blang_expr_t eval_let(blang_exprs_t args)
 	return result;
 }
 
-blang_expr_t eval_while(blang_exprs_t args)
+blang_expr_t eval_while(const blang_exprs_t& args)
 {
 	blang_expr_t result;
 	while(blang_to_num(eval(args[0])))
@@ -335,7 +328,7 @@ blang_expr_t eval_while(blang_exprs_t args)
 	return result;
 }
 
-blang_expr_t eval_interpret (blang_exprs_t args)
+blang_expr_t eval_interpret (const blang_exprs_t& args)
 {
 	//cout << "eval_interpret called" << endl;
 	string code = blang_to_string(eval(args[0]));
@@ -343,13 +336,13 @@ blang_expr_t eval_interpret (blang_exprs_t args)
 	return interpret_string(code);
 }
 
-blang_expr_t eval_system (blang_exprs_t args)
+blang_expr_t eval_system (const blang_exprs_t& args)
 {
 	string cmd = blang_to_string(eval(args[0]));
 	return system(cmd.c_str());
 }
 
-blang_expr_t eval_concat (blang_exprs_t args)
+blang_expr_t eval_concat (const blang_exprs_t& args)
 {
 	string result;
 	for(auto a: args) {
@@ -358,7 +351,7 @@ blang_expr_t eval_concat (blang_exprs_t args)
 	return result;
 }
 
-blang_expr_t eval_str (blang_exprs_t args)
+blang_expr_t eval_str (const blang_exprs_t& args)
 {
 	blang_expr_t a0 = eval(args[0]);
 	if(holds_alternative<string>(a0)) return a0;
@@ -376,7 +369,7 @@ blang_expr_t eval_str (blang_exprs_t args)
 }
 
 // compiler gets a bit arsey about tmpname, but I want a temporary name anyway
-blang_expr_t eval_tmpnam (blang_exprs_t args)
+blang_expr_t eval_tmpnam (const blang_exprs_t& args)
 {
 
 	auto now = std::chrono::system_clock::now();
@@ -393,13 +386,13 @@ blang_expr_t eval_tmpnam (blang_exprs_t args)
 	return fname;
 }
 
-blang_expr_t eval_file_del (blang_exprs_t args)
+blang_expr_t eval_file_del (const blang_exprs_t& args)
 {
 	string path = blang_to_string(eval(args[0]));
 	return std::filesystem::remove(path);
 }
 
-blang_expr_t eval_file_write (blang_exprs_t args)
+blang_expr_t eval_file_write (const blang_exprs_t& args)
 {
 	string path = blang_to_string(eval(args[0]));
 	string contents = blang_to_string(eval(args[1]));
@@ -408,7 +401,7 @@ blang_expr_t eval_file_write (blang_exprs_t args)
 
 }
 
-blang_expr_t eval_file_read (blang_exprs_t args)
+blang_expr_t eval_file_read (const blang_exprs_t& args)
 {
 	string path = blang_to_string(eval(args[0]));
 	return slurp(path.c_str());
@@ -417,24 +410,24 @@ blang_expr_t eval_file_read (blang_exprs_t args)
 
 // These will be augmented by user defined functions using eval_userfn
 map<string, blang_function_t> blang_funcmap= {
-		{"concat", eval_concat},
-		{"file_del", eval_file_del},
-		{"file_read", eval_file_read},
-		{"file_write", eval_file_write},
-		{"str", eval_str},
-	{"strlen", eval_strlen},
-	{"+", &eval_plus},
-	{"-", &eval_minus},
-	{"*", &eval_mul},
-	{"/", &eval_div},
-	{"interpret", &eval_interpret},
-	{"life", eval_life},
-	{"sqrt", eval_sqrt},
-	{"hypot", eval_hypot},
-	{"plus", eval_plusfn},
-	{"print", eval_print},
-	{"system", eval_system},
-	{"tmpnam", eval_tmpnam}
+		{"concat", &eval_concat},
+		{"file_del", &eval_file_del},
+		{"file_read", &eval_file_read},
+		{"file_write", &eval_file_write},
+		{"str", &eval_str},
+		{"strlen", &eval_strlen},
+		{"+", &eval_plus},
+		{"-", &eval_minus},
+		{"*", &eval_mul},
+		{"/", &eval_div},
+		{"interpret", &eval_interpret},
+		{"life", eval_life},
+		{"sqrt", eval_sqrt},
+		{"hypot", eval_hypot},
+		{"plus", eval_plusfn},
+		{"print", eval_print},
+		{"system", eval_system},
+		{"tmpnam", &eval_tmpnam}
 };
 
 
@@ -520,38 +513,17 @@ Lexer1::Lexer1( std::istream* input)
 
 char Lexer1::peek_char()
 {
-#if 1
 	return is->peek();
-#else
-	if(is)
-		return is->peek();
-	else
-		return istrm->peek();
-#endif
 }
 
 char Lexer1::get_char()
 {
-#if 1
 	return is->get();
-#else
-	if(is)
-		return is->get();
-	else
-		return istrm->get();
-#endif
 }
 
 bool Lexer1::good()
 {
-#if 1
 	return is->good();
-#else
-	if(is)
-		return is->good();
-	else
-		return istrm->good();
-#endif
 }
 
 bool Lexer1::isfirst(string c)
@@ -704,155 +676,6 @@ Lexer1::~Lexer1()
 }
 
 
-
-
-#if 0
-typedef deque<token_t> tokens_t;
-
-// FN Lexer .
-class [[deprecated("Use the more recent lexer")]] BlangLexer {
-public:
-	BlangLexer(string input);
-	//token_t yylex();
-	bool isfirst(string s);
-	void consume(string s);
-	token_t front();
-	token_t pop_front();
-	void push_front_XXX(token_t t); // for when you want to undo a peek
-	bool eof();
-	~BlangLexer();
-
-private:
-	void tokenise(const string& str);
-	void found(int type, const string& text);
-	int lineno = 1;
-	tokens_t tokens;
-	//string m_input;
-};
-// FN-END
-
-
-
-token_t BlangLexer::pop_front()
-{
-	if(tokens.empty()) return token_t{EOI, "EOI"};
-	token_t t = tokens.front();
-	tokens.pop_front();
-	return t;
-}
-token_t BlangLexer::front()
-{
-	if(tokens.empty()) return token_t{EOI, "EOI"};
-	return tokens.front();
-}
-
-BlangLexer::BlangLexer(string input)
-{
-	tokenise(input);
-
-}
-
-BlangLexer::~BlangLexer() {
-	tokens.clear();
-}
-
-bool BlangLexer::eof()
-{
-	//if(tokens.empty()) cout << "Lexer::eof: empty\n";
-	return tokens.empty();
-	//return tokens.size() == 0;
-}
-bool BlangLexer::isfirst(string c)
-{
-	return tokens.front().text == c;
-}
-
-void BlangLexer::found(int type, const string& text)
-{
-	token_t t{(Tokens) type, text, lineno};
-	tokens.push_back(t);
-}
-
-
-void BlangLexer::consume(string s)
-{
-	if(isfirst(s))
-		tokens.pop_front();
-	else
-		throw BlangException("consume: looking for " + s + ", but found " + tokens.front().text);
-}
-
-void BlangLexer::tokenise(const string& str)
-{
-	//cout << "Parsing: " << str << "\n";
-	const char* cstr = str.c_str();
-	int pos = 0;
-	//auto it = str.begin();
-loop:
-	string token;
-	char ch = cstr[pos];
-	if(ch == 0) {
-		//goto finis;
-		return;
-	} else if(ch == '#') {
-		while(ch != '\n') ch = cstr[++pos];
-	} else if(isspace(ch)) {
-		while(isspace(ch)) {
-			if(ch == '\n') lineno++;
-			ch = cstr[++pos];
-		}
-	} else if ( isdigit(ch)) {
-		while(isdigit(ch) || ch == '.' ) { token += ch; ch = cstr[++pos]; }
-		found(NUMBER, token);
-	} else if (ch == '$' && isalpha(cstr[pos+1])) {
-		//cout << "found $" <<endl;
-		pos++;
-		found('$', "$"); // start of a variable name
-	} else if (isalpha(ch)) {
-		while(ch && (isalnum(ch) || ch == '_')) { token += ch; ch = cstr[++pos]; }
-		if(token == "sub") {
-			found(SUB, token);
-		} else if(token == "if") {
-			found(IF, token);
-		} else if(token == "else") {
-				found(ELSE, token);
-		} else if (token == "call") {
-			found(CALL, token);
-		} else if (token == "let") {
-			//cout << "Found LET" << endl;
-			found(LET, token);
-		} else if (token == "while") {
-			found(WHILE, "while");
-		} else {
-			found(ID, token);
-		}
-		//cout << "found id: " << token << "\n";
-	} else if(ch == '"') {
-		while(1) {
-			ch = cstr[++pos];
-			if(ch == 0 || ch == '"') {pos++; break; }
-			if(ch == '\\') {
-				ch = cstr[++pos];
-				switch (ch) {
-					case 0: ch = '\\'; break;
-					case 'n': ch = '\n'; break;
-					case 't': ch = '\t'; break;
-				}
-				//if(ch == '\"')  				
-			}
-			token += ch;
-		}
-		//cout << "tokenise string is <" << token << ">\n";
-		found(STR, token);
-	}else {
-		token = ch;
-		pos++;
-		found(ch, token);
-	}
-	goto loop;
-}
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // SCANNER (the "yacc" side of things)
 
@@ -925,20 +748,9 @@ blang_expr_t BlangParser::parse_block ()
 {
 	funcall_t fc;
 	fc.fn = eval_block;
-#if 1
 	while(lxr.peek().type != '}')
 		fc.exprs.push_back(parse_e());
 	consume("}");
-
-#else
-	while(1) {
-		auto type = lxr.front().type;
-		//cout << "Parser::parse_block looping with text " << lxr.front().text << "\n";
-		if(type == '}') break;
-		fc.exprs.push_back(parse_e());
-	}
-	consume("}");
-#endif
 	return fc;
 }
 // FN-END
@@ -1150,7 +962,7 @@ blang_expr_t BlangParser::parse_top ()
 //template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 // FN eval .
-blang_expr_t eval (blang_expr_t expr)
+blang_expr_t eval (const blang_expr_t& expr)
 {
 	// might be a little more comprehensible if I hard-coded the function names
 	if(auto fc = std::get_if<funcall_t>(&expr)) {
@@ -1171,7 +983,7 @@ blang_expr_t eval (blang_expr_t expr)
 }
 // FN-END
 
-blang_num_t blang_to_num (blang_expr_t val)
+blang_num_t blang_to_num (const blang_expr_t& val)
 {
 	if(holds_alternative<monostate>(val)) return 0; // don't use get_if() in this case ∵ an unused var will be generated otherwise
 	if(auto v = std::get_if<blang_num_t>(&val)) 	return *v;
@@ -1181,9 +993,9 @@ blang_num_t blang_to_num (blang_expr_t val)
 }
 
 
-blang_num_t num_eval (blang_expr_t expr) { return blang_to_num(eval(expr)); }
-string to_str (blang_expr_t v) { return std::get<string>(v); }
-string str_eval (blang_expr_t expr) { return to_str(eval(expr)); }
+blang_num_t num_eval (const blang_expr_t& expr) { return blang_to_num(eval(expr)); }
+string to_str (const blang_expr_t& v) { return std::get<string>(v); }
+string str_eval (const blang_expr_t& expr) { return to_str(eval(expr)); }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 blang_expr_t interpret_string(const string& s)

@@ -1,5 +1,5 @@
 AM_CXXFLAGS = @ASAN_CXXFLAGS@
-AM_CXXFLAGS += -std=c++26
+AM_CXXFLAGS += -std=c++23 # c++26 not avail on some platforms like Min 22.1
 #AM_CXXFLAGS += -Wno-psabi # turn off ABI 7.1 changes
 #AM_CXXFLAGS += -Wno-write-strings # activate to supress warnings about const char*
 #AM_CXXFLAGS += -DDATADIR="\"$(datadir)\""

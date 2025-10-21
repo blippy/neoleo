@@ -27,10 +27,9 @@ using blang_exprs_t =std::vector<blang_expr_t>;
 // FN-END
 
 // FN function_t .
-using blang_function_t =  std::function<blang_expr_t(blang_exprs_t)>;
+using blang_function_t =  std::function<blang_expr_t(const blang_exprs_t&)>;
 // FN-END
 
-blang_expr_t eval_plus (blang_exprs_t args);
 
 
 
@@ -144,8 +143,8 @@ private:
 blang_expr_t 	interpret_file(const std::string& path);
 blang_expr_t 	interpret_cin();
 blang_expr_t 	interpret_string(const std::string& s);
-blang_expr_t 	eval (blang_expr_t expr);
-blang_num_t		blang_to_num (blang_expr_t val);
+blang_expr_t 	eval (const blang_expr_t& expr);
+blang_num_t		blang_to_num (const blang_expr_t& val);
 std::string 	blang_to_string (const blang_expr_t& val);
 std::string 	repr(const token_t& t);
 
