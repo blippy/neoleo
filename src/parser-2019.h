@@ -49,7 +49,7 @@ class Expr {
 		std::variant<FunCall, value_t> expr; 
 };
 
-value_t eval_expr (Tour& tour, Expr expr);
+value_t eval_expr (Tour& tour, const Expr& expr);
 Expr parse_string(std::string& s, ranges_t& predecs, CELLREF r, CELLREF c);
 std::string set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it);
 Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c);

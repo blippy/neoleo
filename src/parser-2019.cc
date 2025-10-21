@@ -109,10 +109,9 @@ T tox (Tour& tour, const value_t& val, int errtype)
 	else
 		throw ValErr(errtype);
 }
-//value_t eval(Tour& tour, Expr expr);
-bool bool_eval (Tour& tour, Expr expr);
-num_t num_eval(Tour& tour, Expr expr);
-string str_eval(Tour& tour, Expr expr);
+bool bool_eval (Tour& tour, const Expr& expr);
+num_t num_eval(Tour& tour, const Expr& expr);
+string str_eval(Tour& tour, const Expr& expr);
 
 
 bool to_bool (Tour& tour, const value_t& v) { return tox<bool_t>(tour, v, NON_BOOL).v; }
@@ -126,9 +125,10 @@ rng_t to_range(const value_t& val)
 	return std::get<rng_t>(val);
 }
 
-num_t num_eval (Tour& tour, Expr expr);
-std::string str_eval (Expr expr);
-value_t eval_expr (Tour& tour, Expr expr);
+num_t num_eval (Tour& tour, const Expr& expr);
+std::string str_eval (const Expr& expr);
+value_t eval_expr (Tour& tour, const Expr& expr);
+
 bool parse_error()
 {
 	throw ValErr(PARSE_ERR);
@@ -305,7 +305,7 @@ value_t do_gt (Tour& tour, args_t args)
 	return to_bool(x > y);
 }
 
-value_t do_if (Tour& tour, args_t args)
+value_t do_if (Tour& tour, const args_t& args)
 {
 	nargs_eq(args, 3);
 	bool test = bool_eval(tour, args[0]);
@@ -814,12 +814,12 @@ void eval_dependents (CELL* root)
 	}
 }
 
-bool bool_eval (Tour& tour, Expr expr)	
+bool bool_eval (Tour& tour, const Expr& expr)
 { 
 	value_t v = eval_expr(tour, expr); 
 	return to_bool(tour, v); 
 }
-num_t num_eval (Tour& tour, Expr expr)	
+num_t num_eval (Tour& tour, const Expr& expr)
 { 
 	value_t v = eval_expr(tour, expr); 
 	return to_num(tour, v); 
@@ -840,7 +840,7 @@ void eval_cell (Tour& tour, CELL* cp)
 	}
 }
 
-value_t eval_expr (Tour& tour, Expr expr)
+value_t eval_expr (Tour& tour, const Expr& expr)
 {
 	value_t val;
 
@@ -856,7 +856,7 @@ value_t eval_expr (Tour& tour, Expr expr)
 }
 
 
-string str_eval (Tour& tour, Expr expr) 
+string str_eval (Tour& tour, const Expr& expr)
 { 
 	value_t v{eval_expr(tour, expr)};
 	return to_str(tour, v); 
