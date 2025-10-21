@@ -377,7 +377,7 @@ bool operator==(const token_t t, const string& str)
 	return t.val == str;
 
 }
-bool operator==(const token_t t, char c)
+bool operator==(const token_t& t, char c)
 {
 	return t.val == std::string{c};
 
@@ -392,7 +392,7 @@ static string tolower(const token_t& t)
 	return s;
 }
 
-static tokens_t tokenise (string str, bool& unclosed_string)
+static tokens_t tokenise (const string& str, bool& unclosed_string)
 {
 	tokens_t tokens;
 	unclosed_string = false; // sometimes the user doesn't close the string
@@ -718,8 +718,7 @@ Expr simplify(const FunCall& fc)
 	return x;
 }
 
-	Expr 
-parse_t (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
+Expr parse_t (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 	FunCall fc;
 	fc.fn = &funcmap["*"];
@@ -746,8 +745,8 @@ parse_t (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 
 
 
-	Expr 
-parse_e1 (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
+
+Expr parse_e1 (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 	FunCall fc;
 	fc.fn = &funcmap["+"];
@@ -773,8 +772,8 @@ parse_e1 (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 }
 
 
-	Expr 
-parse_e (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
+
+Expr parse_e (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 {
 
 	Expr x = parse_e1(tokes,  predecs,r ,c);
@@ -912,9 +911,8 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 	return print_cell(cp);
 }
 
-bool check_result(CELLREF r, CELLREF c, string expecting)
+bool check_result(CELLREF r, CELLREF c, const string& expecting)
 {
-
 	string res = cell_value_string(r, c, 0);
 	//cout << std::format("Result  of R{}C{} is`{}' " , r, c, res);
 	printf("Result  of R%dC%d is`%s' " , r, c, res.c_str());
@@ -923,7 +921,7 @@ bool check_result(CELLREF r, CELLREF c, string expecting)
 	return pass;
 }
 
-bool interpret (int r, int c, string s, string expecting)
+bool interpret (int r, int c, const string& s, const string& expecting)
 {
 	cout << "Pret: R" << r << "C" << c << ": `" << s << "'";
 	string res = set_and_eval(r,c, s);
@@ -933,7 +931,7 @@ bool interpret (int r, int c, string s, string expecting)
 	return pass;
 }
 
-bool interpret(string s, string expected)
+bool interpret(const string& s, const string& expected)
 {
 	return interpret(1, 1, s, expected);
 }
