@@ -44,8 +44,8 @@ class FunCall {
 class Expr { 
 	public: 
 		Expr();
-		Expr(value_t v) : expr(v) {};
-		Expr(std::string fname, Expr x);
+		Expr(const value_t& v) : expr(v) {};
+		Expr(const std::string& fname, const Expr& x);
 		std::variant<FunCall, value_t> expr; 
 };
 

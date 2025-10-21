@@ -33,14 +33,14 @@ using namespace std;
 
 extern map<string, parse_function_t> funcmap;
 
-void unknown_function(string function_name)
+void unknown_function(const string& function_name)
 {
 	//cerr << "Unknown function " << function_name << "\n";
 	//throw 667;
 	throw ValErr(BAD_FUNC);
 }
 
-funptr fn_lookup(string function_name)
+funptr fn_lookup(const string& function_name)
 {
 	if(funcmap.count(function_name) == 0)
 		unknown_function(function_name);
@@ -52,7 +52,7 @@ Expr::Expr()
 	expr = std::monostate{};
 }
 
-Expr::Expr(string fname, Expr x)
+Expr::Expr(const string& fname, const Expr& x)
 {
 	FunCall fc;
 	fc.fn = fn_lookup(fname);
