@@ -3,7 +3,8 @@
 #include <string>
 #include <tuple>
 
-#include <ncursesw/ncurses.h>
+//#include <ncursesw/ncurses.h>
+#include <cursesw.h>
 
 void win_print(WINDOW *w, const char* str);
 void win_print(const char* str);

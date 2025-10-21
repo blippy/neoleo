@@ -16,15 +16,13 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//module;
-
-//#include <ncursesw/ncurses.h>
-
 #include "win.h"
 
 #include <algorithm>
 #include <cassert>
-#include <ncursesw/ncurses.h>
+#include <cstring>
+//#include <ncursesw/ncurses.h>
+#include <cursesw.h>
 
 #include "neotypes.h"
 //#include "utils.h"
@@ -45,7 +43,10 @@ int get_ch (WINDOW *);
 // these should be nice generic functions
 void win_print(WINDOW *w, const char* str) // FN
 {
-	waddstr(w, str);
+	// *sigh* some sort of conversion const nonsense
+	char str1[strlen(str)+1];
+	strcpy(str1, str);
+	waddstr(w, str1);
 }
 
 void win_print(const char* str) // FN

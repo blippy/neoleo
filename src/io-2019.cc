@@ -1,6 +1,7 @@
 #include <string.h>
 
-#include <ncursesw/ncurses.h>
+//#include <ncursesw/ncurses.h>
+#include <cursesw.h>
 //#define USE_FORM
 #ifdef USE_FORM
 #include <form.h>
