@@ -1,4 +1,5 @@
-#include <ncursesw/ncurses.h>
+//#include <ncursesw/ncurses.h>
+#include <cursesw.h>
 #include <unistd.h>
 
 #include <form.h>
