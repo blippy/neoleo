@@ -1,28 +1,10 @@
-/*
-#include <algorithm>
-#include <cassert>
-#include <cctype>
-#include <functional>
-#include <iostream>
-#include <map>
 #include <cmath>
-#include <string>
-#include <string.h>
-#include <variant>
-#include <vector>
-*/
-#include <cmath>
-//#include <format>
 
 #include "cell.h"
 #include "regions.h"
 #include "sheet.h"
-
-
 #include "parser-2019.h"
 
-//import std;
-//import utl;
 using namespace std;
 
 
@@ -35,8 +17,6 @@ extern map<string, parse_function_t> funcmap;
 
 void unknown_function(const string& function_name)
 {
-	//cerr << "Unknown function " << function_name << "\n";
-	//throw 667;
 	throw ValErr(BAD_FUNC);
 }
 
@@ -120,12 +100,12 @@ value_t to_irreducible(Tour& tour, value_t val)
 	return val;
 }
 	template <class T>
-T tox (Tour& tour, value_t val, int errtype)
+T tox (Tour& tour, const value_t& val, int errtype)
 {
-	val = to_irreducible(tour, val);
+	auto val1{to_irreducible(tour, val)};
 
-	if(std::holds_alternative<T>(val))
-		return std::get<T>(val);
+	if(std::holds_alternative<T>(val1))
+		return std::get<T>(val1);
 	else
 		throw ValErr(errtype);
 }
