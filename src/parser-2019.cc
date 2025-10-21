@@ -84,7 +84,7 @@ void Tour::untouch(CELL* cp) { tmarks.erase(cp); }
 void eval_cell (Tour& tour, CELL* cp);
 
 
-value_t to_irreducible(Tour& tour, value_t val)
+static value_t to_irreducible(Tour& tour, const value_t& val)
 {
 	if(!is_range(val)) return val;
 
@@ -95,9 +95,7 @@ value_t to_irreducible(Tour& tour, value_t val)
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
 	//if(root == cp) throw ValErr(CYCLE);
 	eval_cell(tour, cp); // maybe too much evaluation?
-	val = cp->get_value_2019();
-	//throw_if_cyclic(val); // doesn't help
-	return val;
+	return cp->get_value_2019();
 }
 	template <class T>
 T tox (Tour& tour, const value_t& val, int errtype)
@@ -677,7 +675,7 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 	return Expr(); // should never reach here
 }
 
-Expr expr_funcall (FunCall fc)
+Expr expr_funcall (const FunCall& fc)
 {
 	Expr x;
 	x.expr = fc;
