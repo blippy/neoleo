@@ -236,7 +236,7 @@ static void _type_sheet()
 	cout << olfos.str() << flush;
 }
 
-static void hl_exit(string arg)
+static void hl_exit(const string& arg)
 {	
 	//cout << "exit called\n";
 	if(arg == "$?") {
@@ -248,14 +248,14 @@ static void hl_exit(string arg)
 	exit(0);
 }
 
-static void hl_exec(string command)
+static void hl_exec(const string& command)
 {
 	_sys_ret = system(command.c_str());
 }
 
 // FN hl_print_row
 // 25/05 Started. Very rough at this stage!
-static void hl_print_row (string arg)
+static void hl_print_row (const string& arg)
 {
 	// assume for now that we only want to print the first row
 	// and that there are 80 columns
@@ -301,10 +301,11 @@ static void hl_print_row (string arg)
 // 25/10 added
 static void hl_hi () { cout << "neoleo says 'hi'" << endl; }
 
-static void process_headless_line(std::string line, int fildes)
+static void process_headless_line(const std::string& str, int fildes)
 {
 	// break line down into a command and arguments
 	//int len = line.size();
+	string line{str};
 	if(line.size() == 0) return;
 	if(line[0] == '#') return;
 	int i = 0;
