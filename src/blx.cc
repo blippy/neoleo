@@ -193,12 +193,31 @@ static blang_expr_t eval_headless_script_run (blang_exprs_t args)
 	return 0;
 }
 
+static blang_expr_t eval_blang_log (const blang_exprs_t& args)
+{
+	string str;
+	for(auto a: args) {
+		str += blang_to_string(eval(a));
+	}
+	log(str);
+	//return result;
+
+	//blang_expr_t eval_concat (const blang_exprs_t& args);
+	//auto catted{eval_concat(args)};
+	//log(blang_to_string(catted));
+	return monostate{};
+	//}
+	//for(const auto* a: args)
+	//	str += blang_to_string()
+
+}
 
 void blx_init()
 {
 	blang_funcmap["bind"] = &eval_bind;
 	blang_funcmap["eq"] = &eval_eq;
 	blang_funcmap["isnull"] = &eval_isnull;
+	blang_funcmap["log"] = &eval_blang_log;
 	blang_funcmap["or"] = &eval_or;
 	blang_funcmap["set_cell"] = &eval_set_cell;
 	blang_funcmap["get_cell"] = &eval_get_cell;
