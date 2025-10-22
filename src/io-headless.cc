@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <fstream>
 #include <unistd.h>
 #include <iostream>
 
@@ -27,8 +28,9 @@ typedef int T;
 //static string _arg; // holds any argument found by process_headless_line()
 static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
+#if 0
 // FN getline_from_fildes .
-std::string getline_from_fildes (int fildes, bool& eof)
+static std::string getline_from_fildes (int fildes, bool& eof)
 {
 	char ch;
 	std::string line;
@@ -49,6 +51,7 @@ std::string getline_from_fildes (int fildes, bool& eof)
 	return line;
 }
 // FN-END
+#endif
 
 static void hl_eat_ws(stringstream& ss)
 {
@@ -101,12 +104,13 @@ void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 }
 
 
-
-string hl_getline (int fildes)
+#if 0
+static string hl_getline (int fildes)
 {
 	bool eof;
 	return getline_from_fildes(fildes, eof);
 }
+#endif
 
 string to_hex(long n)
 {
@@ -134,21 +138,22 @@ static void hless_dump_sheet()
 }
 
 
-bool reading(T fildes, string& line)
+bool reading(std::istream& is, string& line)
 {
-	bool eof;
+	//bool eof;
 again:
-	line = getline_from_fildes(fildes, eof);
+	//line = getline_from_fildes(fildes, eof);
+	getline(is, line);
 	if(line == ".") return false;
-	if(line.size() == 0 && eof) return false;
+	if(line.size() == 0 && is.eof()) return false;
 	if(line.starts_with('#')) goto again;
 	return true;
 }
 
-static void insert_columnwise(T fildes)
+static void insert_columnwise(std::istream& is)
 {
 	string line;
-	while(reading(fildes, line)) {
+	while(reading(is, line)) {
 		if(line == ";") { cucol++; 	curow=1; continue;}
 		if(line == "")  { curow++; continue;}
 		set_cell_input_1(curow, cucol, line);
@@ -156,10 +161,10 @@ static void insert_columnwise(T fildes)
 	}
 }
 
-static void insert_rowwise(T fildes)
+static void insert_rowwise(std::istream& is)
 {
 	string line;
-	while(reading(fildes, line)) {
+	while(reading(is, line)) {
 		if(line == ";") { curow++; 	cucol=1; continue;}
 		if(line == "")  { cucol++; continue;}
 		set_cell_input_1(curow, cucol, line);
@@ -205,12 +210,15 @@ void hl_write_file(string filename)
 
 
 
-static void hl_goto_cell(int fildes)
+static void hl_goto_cell(std::istream& is)
 {
-	std::size_t pos{};
+	//std::size_t pos{};
+	string line;
 	try {
-		auto r = (CELLREF) stol(hl_getline(fildes), &pos);
-		auto c = (CELLREF) stol(hl_getline(fildes), &pos);
+		getline(is, line);
+		auto r = (CELLREF) stol(line);
+		getline(is, line);
+		auto c = (CELLREF) stol(line);
 		curow = r;
 		cucol = c;
 	} catch(...) {
@@ -293,6 +301,7 @@ static void hl_print_row (const string& arg)
 		}
 		cout << endl;
 	}
+	//log("hl_print_row:exiting");
 
 }
 // FN-END
@@ -301,7 +310,8 @@ static void hl_print_row (const string& arg)
 // 25/10 added
 static void hl_hi () { cout << "neoleo says 'hi'" << endl; }
 
-static void process_headless_line(const std::string& str, int fildes)
+// 25/10 TODO eliminate use of is input
+static void process_headless_line(const std::string& str, std::istream& is)
 {
 	// break line down into a command and arguments
 	//int len = line.size();
@@ -327,13 +337,13 @@ static void process_headless_line(const std::string& str, int fildes)
 	else if(cmd == "exit") {
 		hl_exit(arg);
 	} else if(cmd == "g") {
-		hl_goto_cell(fildes);
+		hl_goto_cell(is);
 	} else if(cmd == "hi") { 
 		hl_hi();
 	} else if(cmd == "I") {
-		insert_rowwise(fildes);
+		insert_rowwise(is);
 	} else if(cmd == "i") {
-		insert_columnwise(fildes);
+		insert_columnwise(is);
 	} else if(cmd == "p") {hl_print_row(arg); }
 	else if(cmd == "q") {	Global_definitely_quit = true;}
 	else if(cmd == "recalc") { 	hl_recalc(); }
@@ -352,6 +362,18 @@ static void process_headless_line(const std::string& str, int fildes)
 	cout << std::flush;
 }
 
+#if 1
+static void _repl(std::istream& is)
+{
+	string line;
+	while(std::getline(is, line) && !Global_definitely_quit) {
+		process_headless_line(line, is);
+	}
+
+
+}
+
+#else
 static void _repl(int fildes)
 {
 	//log("_repl:start");
@@ -367,6 +389,8 @@ static void _repl(int fildes)
 		}
 	}
 }
+#endif
+
 
 void headless_main() // FN
 {
@@ -380,15 +404,28 @@ void headless_main() // FN
 	//cout << fmt_value(val) << endl;
 #endif
 
-
+#if 1
+	_repl(std::cin);
+#else
 
 	//cout << mod_hi() << endl;
 	constexpr int fildes = STDIN_FILENO;
 	_repl(fildes);
+#endif
 }
 
 int headless_script(const char* script_file)
 {
+#if 1
+	std::ifstream in(script_file);
+	if(!in.is_open()) {
+		cerr << "? Couldn't script file:" << script_file << endl;
+		return 1;
+	}
+
+	_repl(in);
+
+#else
 	//log("headless_script:started");
 	int fildes = open(script_file, O_RDONLY);
 	if(fildes == -1) {
@@ -400,6 +437,7 @@ int headless_script(const char* script_file)
 	_repl(fildes);
 	//log("headless_script:finished repl");
 	close(fildes);
+#endif
 	return 0;
 }
 

@@ -1,6 +1,7 @@
 # 2025-10-22	Hmmm, There's something wrong here. It's quitting prematurely.
 # 2025-10-17	Added
 
+log("pids.bas starting")
 
 let $tmp = tmpnam()
 
@@ -10,7 +11,7 @@ sub populate
 	headless_script_run("/tmp/blang-pids")
 }
 
-call populate
+#call populate
 
 sub kill
 {
@@ -26,3 +27,5 @@ sub kill
 
 bind("k", "call kill")
 #bind("q", "call quit")
+
+log("pids.bas end of file")
