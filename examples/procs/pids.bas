@@ -1,4 +1,6 @@
+# 2025-10-22	Hmmm, There's something wrong here. It's quitting prematurely.
 # 2025-10-17	Added
+
 
 let $tmp = tmpnam()
 
@@ -17,4 +19,10 @@ sub kill
 	call populate
 }
 
+#sub quitly
+#{
+#	QUIT(0)
+#}	
+
 bind("k", "call kill")
+#bind("q", "call quit")

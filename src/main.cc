@@ -46,14 +46,14 @@ static char short_options[] = "b:VHhps:Tv";
 static struct option long_options[] =
 {
 		{"blang",	required_argument, NULL, 'b'},
-	{"version",		0,	NULL,	'V'},
-	{"headless",		0,	NULL,	'H'},
-	{"help",		0,	NULL,	'h'},
-	{"parser",		0,	NULL,	'p'},
-	{"script",		required_argument,	NULL,	's'},
-	{"tests",		optional_argument,	NULL,	'T'},
-	{"version",		0,	NULL,	'v'},
-	{NULL,			0,	NULL,	0}
+		{"version",		0,	NULL,	'V'},
+		{"headless",		0,	NULL,	'H'},
+		{"help",		0,	NULL,	'h'},
+		{"parser",		0,	NULL,	'p'},
+		{"script",		required_argument,	NULL,	's'},
+		{"tests",		optional_argument,	NULL,	'T'},
+		{"version",		0,	NULL,	'v'},
+		{NULL,			0,	NULL,	0}
 };
 
 

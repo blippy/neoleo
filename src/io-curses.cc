@@ -812,6 +812,11 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 
 
+static void close_curses()
+{
+	endwin();
+	cout << "close_curses called\n";
+}
 
 void curses_main () // FN
 {
@@ -819,7 +824,7 @@ void curses_main () // FN
 	//cur_io_open_display();
 	setlocale(LC_ALL, ""); // helpful for unicode
 	initscr ();
-	defer d{endwin};
+	defer d{close_curses};
 	//defer d;
 	scrollok (stdscr, 0);
 	crmode ();
