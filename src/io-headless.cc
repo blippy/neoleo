@@ -250,11 +250,7 @@ static void hl_exit(string arg)
 
 static void hl_exec(string command)
 {
-	//log("hl_exec", command);
-	//system("ls");
 	_sys_ret = system(command.c_str());
-	//log("system status:", _sys_ret, ", arg:", _arg);
-	//cout << _sys_ret << "\n";
 }
 
 // FN hl_print_row
@@ -305,12 +301,12 @@ static void hl_print_row (string arg)
 // 25/10 added
 static void hl_hi () { cout << "neoleo says 'hi'" << endl; }
 
-bool process_headless_line(std::string line, int fildes)
+static void process_headless_line(std::string line, int fildes)
 {
 	// break line down into a command and arguments
 	//int len = line.size();
-	if(line.size() == 0) return true;
-	if(line[0] == '#') return true;
+	if(line.size() == 0) return;
+	if(line[0] == '#') return;
 	int i = 0;
 	string cmd;
 	string arg = ""; // same it for use by any function
@@ -325,6 +321,7 @@ bool process_headless_line(std::string line, int fildes)
 	//auto is = [&cmd](string s) { return cmd == s; };
 	if( cmd == "!") { hl_exec(arg); }
 	else if(cmd == "cal") {column_align_left();}
+	else if(cmd == "clr-sheet") {clear_spreadsheet();}
 	else if(cmd == "dump-sheet") { hless_dump_sheet(); }
 	else if(cmd == "exit") {
 		hl_exit(arg);
@@ -336,45 +333,34 @@ bool process_headless_line(std::string line, int fildes)
 		insert_rowwise(fildes);
 	} else if(cmd == "i") {
 		insert_columnwise(fildes);
-	} else if(cmd == "p") {
-		hl_print_row(arg);
-	//} else if(cmd == "picol") {
-	//	extern int picol_interactive();
-	//	picol_interactive();
-	} else if(cmd == "q") {
-		return false;
-	} else if(cmd == "ri") {
-		hl_insert_row();
-	} else if(cmd == "t") {
-		_type_sheet();
-	} else if(cmd == "recalc") {
-		hl_recalc();
-	} else if(cmd == "type-cell") {
+	} else if(cmd == "p") {hl_print_row(arg); }
+	else if(cmd == "q") {	Global_definitely_quit = true;}
+	else if(cmd == "recalc") { 	hl_recalc(); }
+	else if(cmd == "ri") { hl_insert_row(); }
+	else if(cmd == "t") { _type_sheet(); }
+	else if(cmd == "type-cell") {
 		type_cell();
 	} else if(cmd == "visual") {
 		extern void curses_main();
 		curses_main();
-		return false;
+		Global_definitely_quit = true;
 	} else if( cmd == "w") {
 		hl_write_file(arg);
 	}
 
 	cout << std::flush;
-	return true;
 }
 
 static void _repl(int fildes)
 {
 	//log("_repl:start");
-	bool cont = true;
-	while(cont) {
+	while(!Global_definitely_quit) {
 		try {
-			//log(".");
 			bool eof;
 			string line = getline_from_fildes(fildes, eof);
-			cont =	process_headless_line(line, fildes);
-			if(!cont) close(fildes);
-			if(eof) { cont = false; }
+			process_headless_line(line, fildes);
+			if(Global_definitely_quit) close(fildes);
+			if(eof) { Global_definitely_quit = true; }
 		} catch (OleoJmp& e) {
 			cerr << e.what() << endl;
 		}
