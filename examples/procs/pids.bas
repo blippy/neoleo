@@ -1,4 +1,3 @@
-# 2025-10-22	Hmmm, There's something wrong here. It's quitting prematurely.
 # 2025-10-17	Added
 
 log("pids.bas starting")
@@ -11,7 +10,7 @@ sub populate
 	headless_script_run("/tmp/blang-pids")
 }
 
-#call populate
+call populate
 
 sub kill
 {
@@ -20,12 +19,12 @@ sub kill
 	call populate
 }
 
-#sub quitly
-#{
-#	QUIT(0)
-#}	
+sub quit
+{
+	QUIT(0)
+}	
 
 bind("k", "call kill")
-#bind("q", "call quit")
+bind("q", "call quit")
 
 log("pids.bas end of file")

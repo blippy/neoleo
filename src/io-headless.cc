@@ -366,7 +366,7 @@ static void process_headless_line(const std::string& str, std::istream& is)
 static void _repl(std::istream& is)
 {
 	string line;
-	while(std::getline(is, line) && !Global_definitely_quit) {
+	while( !Global_definitely_quit && std::getline(is, line)) {
 		process_headless_line(line, is);
 	}
 

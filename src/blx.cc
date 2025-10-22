@@ -89,6 +89,8 @@ static blang_expr_t eval_get_cell (blang_exprs_t args)
 // a definite quit
 static blang_expr_t eval_QUIT (blang_exprs_t args)
 {
+	Global_definitely_quit = true;
+	return 0;
 	int exit_code = blang_to_num(eval(args[0]));
 	exit(exit_code);
 	return monostate{}; // never reach here
