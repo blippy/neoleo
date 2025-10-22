@@ -14,7 +14,7 @@ call populate
 
 sub kill
 {
-	let $cmd = concat("kill -9 ", get_cell(0, 1))
+	let $cmd = concat("sudo kill -9 ", get_cell(0, 1))
 	system($cmd)
 	call populate
 }
