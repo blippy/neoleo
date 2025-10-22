@@ -34,7 +34,7 @@ using std::string;
 
 static void col_cmd2019();
 extern void hl_write_file();
-static void maybe_quit_spreadsheet2019(bool& quit);
+static void maybe_quit_spreadsheet2019();
 static void row_cmd2019();
 static void save_spreadsheet2019();
 
@@ -351,20 +351,19 @@ void bind_char(char c, std::string blang_code)
 }
 
 // FN curses_loop .
-bool curses_loop ()
+void curses_loop ()
 {
 
 	show_menu();
-	bool quit = false;
 
 	int c = get_ch();
 	if ('0' <= c && c <= '9') {
 		i19_parameter = c - '0';
-		return false;
+		return;
 	}
 
 	switch (c) {
-	case CTRL('q'):		maybe_quit_spreadsheet2019(quit);		break;
+	case CTRL('q'):		maybe_quit_spreadsheet2019();		break;
 	case '=': 			edit_cell2019(); 		break;
 	case '%': 			set_cell_toggle_percent();		break;
 	case 'c':			col_cmd2019();		break;
@@ -395,15 +394,7 @@ bool curses_loop ()
 		blang::interpret_string(custom_bindings[c]);
 	}
 
-
-
-
 	i19_parameter = -1;
-
-
-	return quit;
-
-
 }
 
 
@@ -431,13 +422,13 @@ static void save_spreadsheet2019(){
 }
 
 // return true to go ahead with quit, false otherwise
-static void maybe_quit_spreadsheet2019(bool& quit)
+static void maybe_quit_spreadsheet2019()
 {
-	quit = false;
-	if(Global_modified == false) { quit = true ; return; }
+	Global_definitely_quit = false;
+	if(Global_modified == false) { Global_definitely_quit = true ; return; }
 	std::string response = ""; 
 	if(!invoke_std_form("Spreadsheet modified; kill anyway? (y/[n])? ", response)) return;
-	if(response == "y" || response == "yes") quit = true;
+	if(response == "y" || response == "yes") Global_definitely_quit = true;
 
 }
 
@@ -457,7 +448,6 @@ void clear_status_line()
 // 25/5 added
 static void col_cmd2019()
 {
-#if 1
 	//log("col_cmd2019 enter");
 	int c = get_ch();
 	if(c == 'i') {
@@ -470,17 +460,6 @@ static void col_cmd2019()
 	}
 
 	i19_parameter = -1;
-
-#else
-	auto insert_left = []() { insert_col_left(); };
-	static auto keymap = std::map<int, fn_t> {
-		//{'d', delete_1row},
-			{'i', insert_left}
-			//{'p', paste_1row}
-	};
-
-	process_key(keymap);
-#endif
 }
 
 

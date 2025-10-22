@@ -134,6 +134,7 @@ inline CELLREF cucol = MIN_COL;
 inline std::string option_tests_argument = "";
 
 inline bool Global_modified = false;
+inline bool Global_definitely_quit = false;
 
 typedef struct point_t {int r; int c;} point_t;
 

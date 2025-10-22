@@ -841,19 +841,14 @@ void curses_main () // FN
 
 	show_menu();
 	//doupdate();
-
-	bool quit = false;
-	while(!quit) {
+	while(!Global_definitely_quit) {
 		try {
 			cur_io_repaint();
-			quit = curses_loop();
+			curses_loop();
 		} catch (OleoJmp& e) {
 			write_status(e.what());
 		}
 	}
-
-	//delwin(main_menu);
-	//endwin();
 }
 
 
