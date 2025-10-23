@@ -1,7 +1,0 @@
-
-
-PREREQUISITES
-
-Aside from all the compilation tools, ensure you install:
-* bison
-* libncurses-devel

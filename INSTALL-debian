@@ -1,4 +1,4 @@
 #The following packages should be installed:
 
 sudo apt install autoconf build-essential pkgconf
-sudo apt install libncurses-dev
+sudo apt install libncurses-dev texinfo
