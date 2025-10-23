@@ -10,15 +10,23 @@ EXTRA_DIST=	$(neoleo_TEXINFOS) # neoleo_web.html # texi2html
 #neoleo.info:	neoleo.texi $(TEXIS)
 
 
-#htmldir=	$(prefix)/share/neoleo
-#html_DATA=	html
+htmldir=	$(prefix)/share/neoleo
+html_DATA=	neoleo_html
 
-#neoleo.html:	$(srcdir)/neoleo.texi ${TEXIS} $(top_builddir)/doc/texi2html
+#html:	$(srcdir)/neoleo.texi ${TEXIS} $(top_builddir)/doc/texi2html
 #		@HAVE_PERL@ $(top_builddir)/doc/texi2html $(srcdir)/neoleo.texi
 		
+neoleo_html:	$(srcdir)/neoleo.texi ${TEXIS} 
+	texi2any --html $(srcdir)/neoleo.texi
+
+
 #html: neoleo.texi headless.texi		
 
 
 #DISTCLEANFILES = $(html_DATA)
 #MAINTAINERCLEANFILES = Makefile.in
 
+# 25/10 dvi are an awkward ball of wax, so don't distcheck them
+EMPTY_AUTOMAKE_TARGETS = dvi 
+.PHONY: $(EMPTY_AUTOMAKE_TARGETS)
+$(EMPTY_AUTOMAKE_TARGETS):

@@ -167,7 +167,7 @@ Up, down, left right and delete keys should work as expected.
 @c @include dbms.texi
 
 @page
-@node   Key Index, Command Index, Top, Top
+@node   Key Index, Command Index, Headless mode, Top
 @unnumbered Key Index
 @printindex ky
 

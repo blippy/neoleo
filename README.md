@@ -30,6 +30,10 @@ Debian Stable is my main development box. Test compiles are sometimes made on Sl
 
 ### General overview
 
+Notes about particular dependencies and quirks for various distros
+are stored in INSTALL-arch,
+INSTALL-debian (and their derivatives), INSTALL-fedora and INSTALL-slack
+
 Read INSTALL, which contains general instructions, plus specific 
 instructions like compiling from git, as well as **trouble-shooting**. 
 Platform-specific comments are contained in INSTALL-${platform} 

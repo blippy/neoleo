@@ -38,6 +38,15 @@ dnl else
 dnl	AC_MSG_RESULT([$HAVE_MAKEINFO])
 fi
 
+AC_CHECK_PROG(HAVE_TEX, tex, yes)
+dnl AC_MSG_CHECKING([for tex])
+if test -z "$HAVE_TEX"; then
+dnl	AC_MSG_RESULT([none found])
+	AC_MSG_ERROR([Could not find tex. Arch users should install texlive-bin])
+dnl else
+dnl	AC_MSG_RESULT([$HAVE_TEXI_TO_ANY])
+fi
+
 AC_CHECK_PROG(HAVE_TEXI_TO_ANY, texi2any, yes)
 dnl AC_MSG_CHECKING([for texi2any])
 if test -z "$HAVE_TEXI_TO_ANY"; then
