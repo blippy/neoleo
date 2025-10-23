@@ -6,40 +6,27 @@ Lightweight curses spreadsheet based on GNU oleo.
 
 ## Quick start
 
-Keybindings work in the style of vim.
+Absolute minimum you need to know:
+* `=` to edit a cell
+* `s` to save a file
+* `C-q` to quit
+* `C-g` cancels any edits you are making
 
+There is plenty more to keep you amused. Type `info neoleo` to find out more.
 
-Here, `C-` means the `Control character`, `M-` is the mod key, which is
-either `Alt` or `ESC`.
-
-| Key   | Purpose                              |
-| ----- | ------------------------------------ |
-| %     | Toggle percentage mode               |
-| =     | Edit a cell                          |
-| c     | Do a row command                     |
-| m     | Activate the menu                    |
-| &lt;n&gt;p | set cell precision to 'n'        |
-| r     | Do a row command                     |
-| C-c   | copy cell formula to clipboard       |
-| C-g   | cancels current operation            |
-| C-l   | set cell alignment left              |
-| C-q   | quit                                 |
-| C-r   | set cell alignment right             |
-| C-s   | save document                        |
-| C-v   | paste cell formula from clipboard    |
-
-Up, down, left right and delete keys should work as expected.
-
-For further keybindings, see the `man neoleo-keys` page. 
-You should definitely read that manpage!
 
 
 ## Documents and examples
 
 Neoleo installs examples in a shared directory, typically
+    /usr/local/share/neoleo/examples/
+or
+    /usr/share/neoleo/examples/
 
 
 ## Compiling/installing
+
+Debian Stable is my main development box. Test compiles are sometimes made on Slackware, Mint, and a few others. As at Oct 2025, I have given particular attention to Arch Linux, where this software has some interest.
 
 ### General overview
 

@@ -1,9 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@set version 1.99.13
-@set update-date July 29 2000
-@set update-month July 2000
+@set version 16.0
+@set update-date 23 Oct 2025
+@set update-month Oct 2025
 
 @setfilename neoleo.info
 @settitle Neoleo @value{version}
@@ -94,9 +94,9 @@ by the Free Software Foundation.
 @end titlepage
 
 @node   Top, (dir), (dir)
-@top Neooleo
+@top Neoleo
 
-Neolethe GNU spreadsheet program.  This documentation is of Neoleo
+Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
@@ -108,6 +108,44 @@ means complete, nor necessarily accurate for that matter.
 * Options Index::
 * Concept Index::
 @end menu
+
+Absolute minimum you need to know:
+* `=` to edit a cell
+* `s` to save a file
+* `C-q` to quit
+* `C-g` cancels any edits you are making
+
+Keybindings work in the style of vim.
+
+
+Here, `C-` means the `Control character`, `M-` is the mod key, which is
+either `Alt` or `ESC`.
+
+
+| Key   | Purpose                              |
+| ----- | ------------------------------------ |
+| %     | Toggle percentage mode               |
+| =     | Edit a cell                          |
+| c     | Do a row command                     |
+| m     | Activate the menu                    |
+| &lt;n&gt;p | set cell precision to 'n'        |
+| r     | Do a row command                     |
+| C-c   | copy cell formula to clipboard       |
+| C-g   | cancels current operation            |
+| C-l   | set cell alignment left              |
+| C-q   | quit                                 |
+| C-r   | set cell alignment right             |
+| C-s   | save document                        |
+| C-v   | paste cell formula from clipboard    |
+
+Up, down, left right and delete keys should work as expected.
+
+
+
+
+
+
+
 
 @include headless.texi
  

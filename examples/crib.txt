@@ -1,7 +1,0 @@
-Crib sheet for headlessness
-
-      bye
- edit-cell
-right-cell
-  set-cell-width
-      view
