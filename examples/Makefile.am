@@ -13,8 +13,8 @@ PYS = cs.py mkcsv.py neog.py
 
 SCRS = q.scr
 
-EXTRA_DIST = $(OLEOS) $(PROCS) $PYS)\
-	q110399.csv simple.csv
+EXTRA_DIST = $(OLEOS) $(PROCS) $(PYS) \
+     	     q110399.csv simple.csv
 
 
 # EXTRA_DIST += pivot.r
