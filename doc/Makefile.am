@@ -1,14 +1,40 @@
 # 25/10 Using current processes for making info
 
+HTMLS = \
+ 	html/Command-Index.html \
+ 	html/Concept-Index.html \
+ 	html/Function-Index.html \
+ 	html/Headless-mode.html \
+ 	html/index.html \
+ 	html/Key-Index.html \
+ 	html/Options-Index.html
+
+
+#distdir=$(datadir)/neoleo
+#TEXIS = neoleo.texi headless.texi
+
+#texi_SOURCES = $(TEXIS)
+#texi_BIN = neoleo.info
+
+
+
+#infodir = $(datadir)/neoleo
+
+
+#info_DATA = neoleo.texi
+
+info_TEXINFOS = neoleo.texi
+neoleo_TEXINFOS = headless.texi
+
+#MAKEINFOHTML = $(MAKEINFO) --html -o html
+
 all : neoleo.info html
 
-#SUFFIXES = .texi
+# I think this is actually right
+htmldir =       $(prefix)/share/doc/neoleo/html
 
-
-
-#info_TEXINFOS = neoleo.texi
-
-#neoleo_TEXINFOS = headless.texi
+html : neoleo.texi
+	makeinfo --html -o html neoleo.texi
 
 #EXTRA_DIST=	$(neoleo_TEXINFOS) # neoleo_web.html # texi2html
 #noinst_DATA =	neoleo_web.html $(TEXIS)
@@ -42,13 +68,15 @@ all : neoleo.info html
 #%.info : %.texi
 #	makeinfo $<
 
-html :
 
-html : neoleo.info htmlxref.cnf
-	makeinfo --html neoleo.texi -o html
+#html : neoleo.info htmlxref.cnf
+#	makeinfo --html neoleo.texi -o html
 
-neoleo.info : neoleo.texi headless.texi
-	echo "mc making info"
-	makeinfo $<
+#neoleo.info : $(TEXIS)
+#	echo "mc making info"
+#	makeinfo $<
 
-EXTRA_DIST = neoleo.info neoleo.texi headless.texi
+#EXTRA_DIST = neoleo.info $(TEXIS) htmlxref.cnf $(HTMLS)
+EXTRA_DIST = $(HTMLS)
+#neoleo.texi headless.texi
+dist_html_DATA = $(EXTRA_DIST)
