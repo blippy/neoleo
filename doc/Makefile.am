@@ -33,8 +33,8 @@ all : neoleo.info html
 # I think this is actually right
 htmldir =       $(prefix)/share/doc/neoleo/html
 
-html : neoleo.texi
-	makeinfo --html -o html neoleo.texi
+#html : neoleo.texi
+#	makeinfo --html -o html neoleo.texi
 
 #EXTRA_DIST=	$(neoleo_TEXINFOS) # neoleo_web.html # texi2html
 #noinst_DATA =	neoleo_web.html $(TEXIS)
@@ -77,6 +77,8 @@ html : neoleo.texi
 #	makeinfo $<
 
 #EXTRA_DIST = neoleo.info $(TEXIS) htmlxref.cnf $(HTMLS)
-EXTRA_DIST = $(HTMLS)
+EXTRA_DIST = $(HTMLS) 
+EXTRA_DIST += neoleo.texi
 #neoleo.texi headless.texi
 dist_html_DATA = $(EXTRA_DIST)
+#nodist_info_DATA = neoleo.texi
