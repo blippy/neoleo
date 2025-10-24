@@ -112,13 +112,13 @@ means complete, nor necessarily accurate for that matter.
 Absolute minimum you need to know:
 @itemize @bullet{}
 @item
-`=` to edit a cell
+`=` to edit a cell. Start with '"' to enter a string. Numbers are entered normally.
 @item
-`s` to save a file
+`^s` to save a file
 @item
-`C-q` to quit
+`^q` to quit
 @item
-`C-g` cancels any edits you are making
+`^g` cancels any edits you are making
 @end itemize
 
 Keybindings work in the style of vim.
@@ -136,9 +136,16 @@ either `Alt` or `ESC`.
 
 | Key   | Purpose                              |
 | ----- | ------------------------------------ |
-| %     | Toggle percentage mode               |
-| =     | Edit a cell                          |
-| c     | Do a row command                     |
+
+
+@table @samp
+@item %
+Toggle percentage mode
+@item =
+Edit a cell
+@item c
+Do a volumn command
+@end table
 | m     | Activate the menu                    |
 | &lt;n&gt;p | set cell precision to 'n'        |
 | r     | Do a row command                     |

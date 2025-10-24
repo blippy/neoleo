@@ -1,0 +1,21 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+F;DGFR8
+O;auto;background;noa0
+F;c1;r1;FDL
+C;E"UTF-8 test";K"UTF-8 test"
+F;r2;FDL
+C;E"😀";K"😀"
+F;r3;FDL
+C;E"§";K"§"
+F;r4;FDL
+C;E"✅";K"✅"
+F;r5;FDL
+C;E"❎";K"❎"
+C;c2;r2;E"Grinning face";K"Grinning face"
+C;r3;E"Section sign";K"Section sign"
+C;r4;E"Check Mark Button";K"Check Mark Button"
+C;r5;E"Cross Mark button";K"Cross Mark button"
+O;status 2
+W;N1;A7 1;C7 0 7;Ostandout
+E

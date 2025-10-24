@@ -4,7 +4,7 @@ exampledir = $(datadir)/neoleo/examples
 
 CSVS = 
 OLEOS = blank.oleo bold.oleo dates.oleo docs.oleo issue38.oleo large.oleo loop.oleo malformed.oleo \
-	nogood.oleo point3.oleo simple.oleo test.oleo types.oleo
+	nogood.oleo point3.oleo simple.oleo test.oleo types.oleo utf8.oleo
 	
 # TODO these are put in the wrong directory 
 PROCS = procs/neopids procs/pids.bas procs/pids.py procs/sleepy procs/youtube-script.txt	
