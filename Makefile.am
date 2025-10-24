@@ -2,7 +2,8 @@
 
 generaldir = $(datadir)/neoleo
 
-SUBDIRS = doc examples src tests tests/out tests/verified
+#SUBDIRS = doc examples src tests tests/out tests/verified
+SUBDIRS = doc
 
 EXTRA_DIST = FAQ README.md INSTALL-debian INSTALL-fedora
 general_DATA = $(EXTRA_DIST)

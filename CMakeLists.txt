@@ -1,7 +1,9 @@
 # cmake v3.28 allows for  C++23 import std;
+# trixie has v3.31
+
 cmake_minimum_required(VERSION 3.25)
-#cmake_minimum_required(VERSION 4.0)
-project(neoleo_toplevel)
+project(neoleo)
+add_subdirectory(doc)
 
 #set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging
@@ -24,14 +26,14 @@ project(neoleo_toplevel)
 #src/cell.cc     src/io-headless.cc  src/mod.cc        src/regions.cc      src/tests.cc
 #src/io-2019.cc  src/main.cc         src/oleofile.cc   src/sheet.cc        src/utils.cc
 #)
-add_subdirectory(src)
+#add_subdirectory(src)
 
 #add_executable(neoleo ${sources})
 #find_package(Curses REQUIRED)
 #target_link_libraries(neoleo ncursesw tinfo)
 #target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
 
-enable_testing()
+#enable_testing()
 #add_subdirectory(tests)
 
 # Generate an archive using `cpack'
@@ -46,5 +48,5 @@ install(DIRECTORY src DESTINATION .)
 #	\\.git/
 #	build/
 #)
-include(CPack)
+#include(CPack)
 

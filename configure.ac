@@ -3,7 +3,7 @@ AC_INIT([neoleo], [16.0])
 : ${CXXFLAGS=""}dnl https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/C_002b_002b-Compiler.html
 AC_CONFIG_HEADERS([config.h])
 
-AC_CONFIG_SRCDIR([src/main.cc])
+#AC_CONFIG_SRCDIR([src/main.cc])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_MACRO_DIRS([m4])
 
@@ -31,6 +31,11 @@ PKG_CHECK_MODULES(NCURSES, ncursesw)
 AC_PROG_CXX
 #AC_PROG_YACC
 
-AC_CONFIG_FILES([Makefile doc/Makefile examples/Makefile src/Makefile  
-		 tests/Makefile tests/out/Makefile tests/verified/Makefile])
+#AC_CONFIG_FILES([Makefile doc/Makefile examples/Makefile src/Makefile  
+#		 tests/Makefile tests/out/Makefile tests/verified/Makefile])
+
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([doc/Makefile])
+
+
 AC_OUTPUT
