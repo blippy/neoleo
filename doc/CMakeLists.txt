@@ -1,18 +1,18 @@
 project(doc)
 
-add_custom_target(neoleo.info ALL
-	COMMAND makeinfo neoleo.texi headless.texi
+find_program(MAKEINFO_EXECUTABLE makeinfo)
+
+set(info_in 
+	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
+)
+set(info_out ${CMAKE_CURRENT_BINARY_DIR}/neoleo.info)
+add_custom_command(OUTPUT ${info_out}
+	COMMAND $(MAKEINFO_EXECUTABLE) -o ${info_out} ${info_in}
+	DEPENDS ${info_in}
+	COMMENT £Creating info file $(info_out}"
+	VERBATIM
 )
 
-target_sources(neoleo.info
-	PRIVATE neoleo.texi headless.texi
-)
 
-
-#add_dependencies(neoleo.info neoleo.texi headless.texi)
-
-#add_custom_command(
-#	TARGET neoleo.info
-#	POST_BUILD
-#	COMMAND makeinfo neoleo.texi headless.info
-#)
+add_custom_target(info ALL DEPENDS ${info_out})
