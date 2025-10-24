@@ -100,6 +100,8 @@ Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
+1
+
 @menu
 * Headless mode::
 * Key Index::
