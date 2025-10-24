@@ -110,12 +110,24 @@ means complete, nor necessarily accurate for that matter.
 @end menu
 
 Absolute minimum you need to know:
-* `=` to edit a cell
-* `s` to save a file
-* `C-q` to quit
-* `C-g` cancels any edits you are making
+@itemize @bullet{}
+@item
+`=` to edit a cell
+@item
+`s` to save a file
+@item
+`C-q` to quit
+@item
+`C-g` cancels any edits you are making
+@end itemize
 
 Keybindings work in the style of vim.
+
+html docs will be stored in a place like
+/usr/local/share/doc/html
+
+info files stored in
+?? /usr/local/share/
 
 
 Here, `C-` means the `Control character`, `M-` is the mod key, which is
