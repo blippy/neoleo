@@ -32,6 +32,7 @@ add_test(NAME iss51 	COMMAND issue51.sh)
 add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
 add_test(NAME span 		COMMAND spans.sh)
+add_test(NAME writ 		COMMAND write.sh)
 
 
 # Temporarily commented out because it will cause tests to hand
@@ -48,4 +49,3 @@ add_test(NAME span 		COMMAND spans.sh)
 #add_test(NAME iss25	COMMAND issue25.sh)
 #add_test(NAME fmt  	COMMAND ${NEO} -T fmt)
 #add_test(NAME pass  	COMMAND ${NEO} -T pass) # a test that always passes
-#add_test(NAME write 	COMMAND ${NEO} -s write.scr)

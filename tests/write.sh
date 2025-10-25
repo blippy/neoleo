@@ -1,6 +1,7 @@
 #!/bin/sh
 
-$BUILDDIR/src/neoleo -H << EOF
+NEO=`realpath ../src/neoleo`
+$NEO  -H << EOF
 # 2025-04-20 A simple script to see if headless writing works
 ! rm -f out/write.oleo
 I
@@ -11,4 +12,4 @@ I
 w out/write.oleo
 EOF
 
-diff out/write.oleo $SRCDIR/verified/write.scr.oleo
+diff out/write.oleo verified/write.scr.oleo
