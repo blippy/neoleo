@@ -1,6 +1,7 @@
 #!/bin/sh
 
-$BUILDDIR/src/neoleo -H << EOF
+NEO=`realpath ../src/neoleo`
+$NEO -H << EOF
 # 2025-04-20 Script hanging bug
 I
 1

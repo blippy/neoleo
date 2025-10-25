@@ -28,6 +28,7 @@ add_test(NAME pass1	COMMAND ${NEOT} pass)
 add_test(NAME insert 	COMMAND insert-01.sh)
 add_test(NAME iss16 	COMMAND issue16.sh)
 add_test(NAME iss18 	COMMAND issue18.sh)
+add_test(NAME iss51 	COMMAND issue51.sh)
 
 
 # Temporarily commented out because it will cause tests to hand
