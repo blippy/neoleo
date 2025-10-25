@@ -36,16 +36,6 @@ install(TARGETS neoleo)
 
 
 
-	#set(test_srcs     cell.cc parser-2019.cc regions.cc sheet.cc spans.cc utils.cc)
+# build testneo, which you shouldn't install, as it's for testing purposes
 add_executable(testneo testneo.cc)
-#target_sources(testneo PUBLIC testneo.cc) # don't install this
 target_link_libraries(testneo common_objs)
-
-#install(PROGRAMS neoleo DESTINATION bin)
-
-#target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)
-
-#target_sources(neoleo PRIVATE src/basic.cc    src/io-curses.cc    src/menu-2025.cc  src/parser-2019.cc  src/spans.cc  src/win.cc
-#src/cell.cc     src/io-headless.cc  src/mod.cc        src/regions.cc      src/tests.cc
-#src/io-2019.cc  src/main.cc         src/oleofile.cc   src/sheet.cc        src/utils.cc
-#)

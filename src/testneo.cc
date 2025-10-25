@@ -16,11 +16,16 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
 	puts("neotest says hi");
 	auto result = set_and_eval(1, 1, "7", false);
 	cout << "result is " << result << ", should be 7" << endl;
+
+	if(argc<2) return 0;
+	string cmd{argv[1]};	
+	if(cmd == "pass") { cout << "you want to pass\n"; }
+	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
 
 	return 0;
 }
