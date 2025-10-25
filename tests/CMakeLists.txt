@@ -23,14 +23,15 @@ set(NEOT ${CMAKE_BINARY_DIR}/src/testneo) # need to inform test where exe is
 add_test(NAME basic 	COMMAND basic.sh)
 add_test(NAME badrc 	COMMAND badrc.sh)
 add_test(NAME blang 	COMMAND blang-01.sh)
-add_test(NAME pass1	COMMAND ${NEOT} pass)
-#add_test(NAME fail	COMMAND ${NEOT} fail) # a deliberate fail, which is generally not what you want
+add_test(NAME pass1		COMMAND ${NEOT} pass)
+#add_test(NAME fail		COMMAND ${NEOT} fail) # a deliberate fail, which is generally not what you want
 add_test(NAME insert 	COMMAND insert-01.sh)
 add_test(NAME iss16 	COMMAND issue16.sh)
 add_test(NAME iss18 	COMMAND issue18.sh)
 add_test(NAME iss51 	COMMAND issue51.sh)
 add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
+add_test(NAME span 		COMMAND spans.sh)
 
 
 # Temporarily commented out because it will cause tests to hand
@@ -46,7 +47,5 @@ add_test(NAME parser 	COMMAND parser.sh)
 #add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
 #add_test(NAME iss25	COMMAND issue25.sh)
 #add_test(NAME fmt  	COMMAND ${NEO} -T fmt)
-#add_test(NAME parser  	COMMAND ${NEO} -T parser2019)
 #add_test(NAME pass  	COMMAND ${NEO} -T pass) # a test that always passes
-#add_test(NAME spans 	COMMAND ${NEO} verified/spans.scr.oleo -s spans.scr)
 #add_test(NAME write 	COMMAND ${NEO} -s write.scr)
