@@ -14,7 +14,6 @@ g 1 1
 i
 42
 .
-#dump-sheet
 w out/insert-01.oleo
 EOF
 

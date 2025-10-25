@@ -1,6 +1,7 @@
 #!/bin/sh
 
-$BUILDDIR/src/neoleo -H << EOF
+NEO=`realpath ../src/neoleo`
+$NEO -H << EOF
 # BUG#16 blank line test
 ! rm -f out/issue16.oleo
 i
@@ -12,4 +13,4 @@ i
 w out/issue16.oleo
 EOF
 
-diff out/issue16.oleo $SRCDIR/verified/issue16.scr.oleo
+diff out/issue16.oleo verified/issue16.scr.oleo
