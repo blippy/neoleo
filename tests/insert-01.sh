@@ -1,6 +1,7 @@
 #!/bin/sh
 
-$BUILDDIR/src/neoleo -H  << EOF
+NEO=`realpath ../src/neoleo`
+$NEO -H  << EOF
 ! rm -f out/insert-01.oleo
 i
 12
@@ -17,4 +18,4 @@ i
 w out/insert-01.oleo
 EOF
 
-diff out/insert-01.oleo $SRCDIR/verified/insert-01.scr.oleo
+diff out/insert-01.oleo verified/insert-01.scr.oleo

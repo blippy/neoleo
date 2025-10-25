@@ -24,7 +24,8 @@ add_test(NAME basic 	COMMAND basic.sh)
 add_test(NAME badrc 	COMMAND badrc.sh)
 add_test(NAME blang 	COMMAND blang-01.sh)
 add_test(NAME pass1	COMMAND ${NEOT} pass)
-#add_test(NAME fail	COMMAND ${NEOT} fail)
+#add_test(NAME fail	COMMAND ${NEOT} fail) # a deliberate fail, which is generally not what you want
+add_test(NAME insert 	COMMAND insert-01.sh)
 add_test(NAME iss18 	COMMAND issue18.sh)
 
 
