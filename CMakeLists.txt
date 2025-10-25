@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 3.25)
 project(neoleo)
 add_subdirectory(doc)
 add_subdirectory(src)
+enable_testing()
+add_subdirectory(tests)
 
 #set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging

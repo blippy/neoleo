@@ -1,5 +1,5 @@
 #file(GLOB_RECURSE sources src/*.cc)
-project(src)
+#project(src)
 
 set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging

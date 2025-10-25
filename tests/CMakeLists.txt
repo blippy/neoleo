@@ -1,12 +1,13 @@
+#project(tests)
 # run when you do cmake .. :
-#message("Hello from tests/CmakeLists.txt")
+message("Hello from tests/CmakeLists.txt. Current binary dir: ${CMAKE_CURRENT_BINARY_DIR}")
 
 set(CTEST_OUTPUT_ON_FAILURE ON)
 file(GLOB SHELLS *.sh)
 file(COPY ${SHELLS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(GLOB SCRIPTS *.scr)
 file(COPY ${SCRIPTS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY certify differ issue25.oleo DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#file(COPY certify differ issue25.oleo DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB VERIF verified/*.oleo verified/*.rep)
 file(COPY ${VERIF}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/verified)
@@ -14,7 +15,7 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/diffs) 
 
 
-set(NEO ${CMAKE_BINARY_DIR}/neoleo) # need to inform test where exe is
+set(NEO ${CMAKE_BINARY_DIR}/src/neoleo) # need to inform test where exe is
 
 add_test(NAME basic 	COMMAND basic.sh)
 add_test(NAME decompile COMMAND ${NEO} -s decompile-01.scr)
@@ -36,4 +37,5 @@ add_test(NAME write 	COMMAND ${NEO} -s write.scr)
 
 # Tests that always fail, so dont' run them
 # (I made them just for testing purposes)
-#add_test(NAME fail COMMAND ${NEO} -T fail)
+add_test(NAME fail COMMAND ${NEO} -T fail)
+

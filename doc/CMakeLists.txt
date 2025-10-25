@@ -1,6 +1,6 @@
 # 25/10 creates neoleo.info successfully. Not sure about Dir
 
-project(doc)
+#project(doc)
 
 find_program(MAKEINFO_EXECUTABLE makeinfo)
 
