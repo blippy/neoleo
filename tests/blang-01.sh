@@ -37,4 +37,8 @@ TESTDIR=$BUILDDIR/tests
 echo "TESTDIR=$TESTDIR"
 $CMD >$TESTDIR/out/$REP
 
-diff $TESTDIR/out/$REP $SRCDIR/verified/$REP
+
+NEO=`realpath ../src/neoleo`
+REP=blang-01.bas.rep
+$NEO -H -b blang-01.bas  >out/$REP
+diff out/$REP verified/$REP

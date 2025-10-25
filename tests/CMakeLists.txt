@@ -7,8 +7,8 @@ file(GLOB SHELLS *.sh)
 file(COPY ${SHELLS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(GLOB SCRIPTS *.scr)
 file(COPY ${SCRIPTS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(GLOB OLEOS *.oleo)
-file(COPY ${OLEOS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(GLOB OTHER *.bas *.oleo)
+file(COPY ${OTHER}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 #file(COPY certify differ issue25.oleo DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB VERIF verified/*.oleo verified/*.rep)
@@ -22,6 +22,7 @@ set(NEOT ${CMAKE_BINARY_DIR}/src/testneo) # need to inform test where exe is
 
 add_test(NAME basic 	COMMAND basic.sh)
 add_test(NAME badrc 	COMMAND badrc.sh)
+add_test(NAME blang 	COMMAND blang-01.sh)
 add_test(NAME pass1	COMMAND ${NEOT} pass)
 #add_test(NAME fail	COMMAND ${NEOT} fail)
 add_test(NAME iss18 	COMMAND issue18.sh)

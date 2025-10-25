@@ -85,6 +85,13 @@ static blang_expr_t eval_get_cell (blang_exprs_t args)
 	//return ConvertVariant<decltype(result), decltype(v)>(v);
 }
 
+// a definite quit
+static blang_expr_t eval_exit (blang_exprs_t args)
+{
+	exit(0);
+	return monostate{}; // never reach here
+}
+
 
 // a definite quit
 static blang_expr_t eval_QUIT (blang_exprs_t args)
@@ -218,6 +225,7 @@ void blx_init()
 {
 	blang_funcmap["bind"] = &eval_bind;
 	blang_funcmap["eq"] = &eval_eq;
+	blang_funcmap["exit"] = &eval_exit;
 	blang_funcmap["isnull"] = &eval_isnull;
 	blang_funcmap["log"] = &eval_blang_log;
 	blang_funcmap["or"] = &eval_or;

@@ -8,5 +8,5 @@ set_cell(2,2, "7")
 print(get_cell(2, 2), " ... expecting 7")
 print("...text-01.bas finis")
 
-QUIT(0)
+exit()
 
