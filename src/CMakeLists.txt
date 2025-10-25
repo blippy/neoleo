@@ -17,17 +17,23 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)
 
-set(neo_srcs 
+set(common_neo_srcs 
 	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc  parser-2019.cc  spans.cc  win.cc
 	cell.cc     io-headless.cc  regions.cc      tests.cc
-	io-2019.cc  main.cc         oleofile.cc   sheet.cc        utils.cc
+	io-2019.cc           oleofile.cc   sheet.cc        utils.cc
 	#PARENT_SCOPE
 )
 
 add_executable(neoleo)
-target_sources(neoleo PUBLIC ${neo_srcs})
+target_sources(neoleo PUBLIC ${common_neo_srcs} main.cc)
 target_link_libraries(neoleo ncursesw tinfo)
 install(TARGETS neoleo)
+
+add_executable(testneo)
+set(test_srcs     cell.cc parser-2019.cc regions.cc sheet.cc spans.cc utils.cc)
+target_sources(testneo PUBLIC ${test_srcs} testneo.cc) # don't install this
+target_link_libraries(testneo)
+
 #install(PROGRAMS neoleo DESTINATION bin)
 
 #target_link_libraries(neoleo ${CURSES_LIBRARIES} panel form)

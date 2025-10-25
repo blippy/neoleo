@@ -18,11 +18,12 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/diffs)
 set(NEO ${CMAKE_BINARY_DIR}/src/neoleo) # need to inform test where exe is
 
 add_test(NAME basic 	COMMAND basic.sh)
+add_test(NAME iss18 	COMMAND issue18.sh)
 add_test(NAME decompile COMMAND ${NEO} -s decompile-01.scr)
 add_test(NAME floor 	COMMAND ${NEO} -s floor.scr)
 add_test(NAME insert	COMMAND ${NEO} -s insert-01.scr)
 add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
-add_test(NAME iss18	COMMAND ${NEO} -s issue18.scr)
+#add_test(NAME iss18	COMMAND ${NEO} -s issue18.scr)
 add_test(NAME iss25	COMMAND issue25.sh)
 add_test(NAME nohead	COMMAND ${NEO} -s nohead-01.scr)
 add_test(NAME fmt  	COMMAND ${NEO} -T fmt)
