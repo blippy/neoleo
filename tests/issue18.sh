@@ -1,6 +1,9 @@
 #!/bin/sh
 
-$BUILDDIR/src/neoleo -H << EOF
+NEO=`realpath ../src/neoleo`
+echo "Looking for neoleo in $NEO"
+echo "Current working dir $PWD"
+$NEO -H << EOF
 # test of issue 18
 # cell referencing parsing bug
 
@@ -12,4 +15,4 @@ r1c1+1
 w out/issue18.oleo
 EOF
 
-diff out/issue18.oleo $SRCDIR/verified/issue18.scr.oleo
+diff out/issue18.oleo verified/issue18.scr.oleo
