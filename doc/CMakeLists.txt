@@ -12,11 +12,12 @@ set(info_in
 	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
 	#${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
 )
+set(p "${CMAKE_INSTALL_PREFIX}")
 set(info_out ${CMAKE_CURRENT_BINARY_DIR}/neoleo.info)
 add_custom_command(OUTPUT ${info_out}
-	COMMAND ${MAKEINFO_EXECUTABLE} -o ${info_out} ${info_in}
+	COMMAND ${MAKEINFO_EXECUTABLE} -D "PREFIX ${p}" -o ${info_out} ${info_in}
 	DEPENDS ${info_in}
-	COMMENT "Creating info file ${info_out}"
+	COMMENT "Creating info file ${info_out} with ${p}"
 	VERBATIM
 )
 
@@ -41,7 +42,7 @@ set(html_out
 
 )
 add_custom_command(OUTPUT ${html_out}
-	COMMAND ${MAKEINFO_EXECUTABLE} --html -o html ${info_in}
+	COMMAND ${MAKEINFO_EXECUTABLE} --html  -D "PREFIX ${p}" -o html ${info_in}
         DEPENDS ${info_in}
         COMMENT "Creating html files"
         VERBATIM
