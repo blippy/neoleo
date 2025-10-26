@@ -2,7 +2,7 @@
 
 Lightweight curses spreadsheet based on GNU oleo.
 
-![screenshot](screen-shot.jpg Accounts preparation. See example/accounts)
+![screenshot](screen-shot.jpg)
 
 [NEWS](NEWS)
 
