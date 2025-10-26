@@ -16,7 +16,11 @@ install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/cs.py neodsv.py neog.py
 install(PROGRAMS accounts/process
 	DESTINATION ${edest}/accounts
 )
-install(FILES accounts/accts-plate.oleo  accounts/README.md  accounts/trans.oleo
+install(FILES 
+	accounts/accts-plate.oleo  
+	accounts/mkscr.pl  
+	accounts/README.md  
+	accounts/trans.oleo
 	DESTINATION ${edest}/accounts
 )
 
