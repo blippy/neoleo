@@ -1,0 +1,46 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+F;DF2R8
+O;auto;background;noa0
+F;W2 3 12
+C;c1;r2;E"Income and Expenses";K"Income and Expenses"
+C;r4;E"INCOME";K"INCOME"
+C;r5;E"Wages";K"Wages"
+C;r6;E"Gifts";K"Gifts"
+C;r11;E"EXPENSES";K"EXPENSES"
+C;r12;E"Motor";K"Motor"
+C;r13;E"Shop";K"Shop"
+C;r16;E"SURPLUS";K"SURPLUS"
+C;r20;E"BALANCE SHEET";K"BALANCE SHEET"
+C;r22;E"ASSETS";K"ASSETS"
+C;r23;E"Bank";K"Bank"
+C;r24;E"Cash";K"Cash"
+C;r29;E"LIABILITIES";K"LIABILITIES"
+C;r30;E"Visa";K"Visa"
+C;r31;E"Open";K"Open"
+C;r32;E"Surplus";K"Surplus"
+C;c2;r5;E-200;K-200
+C;r6;E0;K0
+C;r7;E"--------";K"--------"
+C;r12;E123.4;K123.4
+C;r13;E41.32;K41.32
+C;r14;E"--------";K"--------"
+C;r23;E2195.12;K2195.12
+C;r24;E0;K0
+C;r25;E"--------";K"--------"
+C;r26;Er23c2 + r24c2;K2195.12
+C;r27;E"========";K"========"
+C;r30;E-118.4;K-118.4
+C;r31;E-2100.12;K-2100.12
+C;r32;Er16c3;K-35.28
+C;r33;E"--------";K"--------"
+C;r34;Esum(r30:32c2);K-2253.8
+C;r35;E"========";K"========"
+C;c3;r7;Esum(r5:6c2);K-200
+C;r14;Esum(r12:13c2);K164.72
+C;r15;E"--------";K"--------"
+C;r16;Er7c3 + r14c3;K-35.28
+C;r17;E"========";K"========"
+O;status 2
+W;N1;A13 2;C7 0 7;Ostandout
+E

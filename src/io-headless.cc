@@ -47,8 +47,8 @@ static string get_word(std::istream& is){
 	return result;
 }
 
-
-static void hl_eat_ws(stringstream& ss)
+template <typename T> // T is usuall stringstream or istream
+static void hl_eat_ws(T& ss)
 {
 	while(isspace(ss.peek())) ss.get();
 }
@@ -293,6 +293,19 @@ static void hl_where()
 
 }
 
+static void hl_set_cell (std::istream& is)
+{
+	//cout << "hl_set_cell called\n";
+	CELLREF r = stol(get_word(is));
+	CELLREF c = stol(get_word(is));
+	hl_eat_ws(is);
+	string formula;
+	is >> formula;
+	//cout << "hl_set_cell  " << r << " " << c << " with " <<formula << endl;
+	set_cell_input_1(r, c, formula);
+
+}
+
 static void process_headless_line(const std::string& str, istream& rest_of_stream)
 {
 	string line{str};
@@ -319,6 +332,7 @@ static void process_headless_line(const std::string& str, istream& rest_of_strea
 	else if(cmd == "q") {	Global_definitely_quit = true;}
 	else if(cmd == "recalc") { 	hl_recalc(); }
 	else if(cmd == "ri") { hl_insert_row(); }
+	else if(cmd == "set-cell") { hl_set_cell(is); }
 	else if(cmd == "t") { _type_sheet(); }
 	else if(cmd == "type-cell") {
 		type_cell();

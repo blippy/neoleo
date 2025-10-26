@@ -2,6 +2,8 @@
 
 Lightweight curses spreadsheet based on GNU oleo.
 
+![screenshot](screen-shot.jpg)
+
 [NEWS](NEWS)
 
 ## Quick start

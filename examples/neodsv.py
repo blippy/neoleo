@@ -10,6 +10,7 @@ maxrow = 0
 cells = {}
 
 def field_C(fields):
+	#print("field_C calling with fields", fields)
 	global col, maxcol, row, maxrow, cells
 	for f in fields:
 		if f[0] == 'c' :
@@ -22,9 +23,19 @@ def field_C(fields):
 			val = f[1:]
 			cells[(row,col)] = val
 			
+def field_F(fields):
+	global col, maxcol, row, maxrow, cells
+	for f in fields:
+		if f[0] == 'r':
+			row = int(f[1:])
+			maxrow = max(row, maxrow)
+
 
 
 def main(path):
+	global col, maxcol, row, maxrow, cells
+	#global cells
+	#print("file ", path)
 	f = open(path, "r")
 	for line in f.readlines():
 		line = line.rstrip()
@@ -36,6 +47,9 @@ def main(path):
 		if cmd == 'E': break
 		if cmd == 'C':
 			field_C(fields)
+		if cmd == 'F':
+			field_F(fields)
+	#print("cells are ", cells)
 		
 	for r in range(1, maxrow +1):
 		cols = [cells.get((r,c), '') for c in range(1, maxcol + 1)]
