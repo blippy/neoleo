@@ -5,6 +5,11 @@ Trouble-shooting
 Basic Installation
 Compilers and Options
 
+mkdir build
+cd build
+cmake  -DCMAKE_INSTALL_PREFIX=$HOME/tmp ..
+make
+sudo make install
 
 Trouble-shooting
 ================

@@ -1,6 +1,6 @@
 #project(tests)
 # run when you do cmake .. :
-message("Hello from tests/CmakeLists.txt. Current binary dir: ${CMAKE_CURRENT_BINARY_DIR}")
+#message("Hello from tests/CmakeLists.txt. Current binary dir: ${CMAKE_CURRENT_BINARY_DIR}")
 
 set(CTEST_OUTPUT_ON_FAILURE ON)
 file(GLOB SHELLS *.sh)

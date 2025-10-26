@@ -4,6 +4,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(neoleo)
 add_subdirectory(doc)
+add_subdirectory(examples)
 add_subdirectory(src)
 enable_testing()
 add_subdirectory(tests)
