@@ -1,0 +1,72 @@
+@node Key bindings, Headless mode, Top, Top
+@chapter Key bindings
+
+Absolute minimum you need to know:
+@table @samp
+@item Delete
+Delete current cell
+@item =
+Edit a cell. Start with '"' to enter a string. Numbers are entered normally.
+@item ^s
+Save a file
+@item ^q
+Quit
+@item ^g
+Cancels current input/edit
+@end table
+
+
+Here, `C-` means the `Control character`, `M-` is the mod key, which is
+either `Alt` or `ESC`.
+
+
+
+
+@table @samp
+@item %
+Toggle percentage mode
+@item =
+Edit a cell
+@item cal
+Column align left
+@item ci
+Column insert left
+@item m
+Activate the menu
+@item <n> p
+Set cell precision to 'n'
+@item rd
+Row delete
+@item ri
+Row insert above
+@item rp
+Row paste from internal clipboard
+@item C-c
+Copy cell formula to internal clipboard
+@item C-g
+Cancel current operation
+@item C-l
+Set cell alignment left
+@item C-q
+Quit
+@item C-r
+Set cell alignment right
+@item C-s
+Save spreadsheet 
+@item C-v
+Paste cell formula from clipboard
+@item C-↑
+Go to first row of column
+@item C-←
+Go to first column of row
+@end table
+
+
+
+Up, down, left right and delete keys should work as expected.
+
+
+
+
+
+End of page

@@ -1,4 +1,4 @@
-@node Headless mode, Key Index, Top, Top
+@node Headless mode, Key Index, Key bindings, Top
 @chapter Headless mode
 
 Headless mode allows you to enter certain commands on stdin. Think of it like 'ed', where you don't have a TUI.

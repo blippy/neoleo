@@ -10,12 +10,13 @@ find_program(MAKEINFO_EXECUTABLE makeinfo)
 
 set(info_in 
 	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
-	#${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
 )
 set(p "${CMAKE_INSTALL_PREFIX}")
 set(info_out ${CMAKE_CURRENT_BINARY_DIR}/neoleo.info)
 add_custom_command(OUTPUT ${info_out}
-	COMMAND ${MAKEINFO_EXECUTABLE} -D "PREFIX ${p}" -o ${info_out} ${info_in}
+	COMMAND ${MAKEINFO_EXECUTABLE} -D "PREFIX ${p}" -o ${info_out} ${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
 	DEPENDS ${info_in}
 	COMMENT "Creating info file ${info_out} with ${p}"
 	VERBATIM
@@ -35,6 +36,7 @@ set(html_out
 	${H}/index.html
 	${H}/Command-Index.html
 	${H}/Function-Index.html
+	${H}/Key-bindings.html
 	${H}/Options-Index.html
 	${H}/Concept-Index.html  
 	${H}/Headless-mode.html
@@ -42,7 +44,7 @@ set(html_out
 
 )
 add_custom_command(OUTPUT ${html_out}
-	COMMAND ${MAKEINFO_EXECUTABLE} --html  -D "PREFIX ${p}" -o html ${info_in}
+	COMMAND ${MAKEINFO_EXECUTABLE} --html  -D "PREFIX ${p}" -o html ${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
         DEPENDS ${info_in}
         COMMENT "Creating html files"
         VERBATIM

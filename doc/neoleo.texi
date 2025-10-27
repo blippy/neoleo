@@ -100,9 +100,10 @@ Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
-3
+5
 
 @menu
+* Key bindings::	Start here!
 * Headless mode::
 * Key Index::
 * Command Index::
@@ -111,19 +112,7 @@ means complete, nor necessarily accurate for that matter.
 * Concept Index::
 @end menu
 
-Absolute minimum you need to know:
-@itemize @bullet{}
-@item
-`=` to edit a cell. Start with '"' to enter a string. Numbers are entered normally.
-@item
-`^s` to save a file
-@item
-`^q` to quit
-@item
-`^g` cancels any edits you are making
-@end itemize
 
-Keybindings work in the style of vim.
 
 html docs will be stored in a place like
 @value{PREFIX}/share/doc/html
@@ -133,43 +122,13 @@ info files stored in a place like
 
 
 
-Here, `C-` means the `Control character`, `M-` is the mod key, which is
-either `Alt` or `ESC`.
-
-
-| Key   | Purpose                              |
-| ----- | ------------------------------------ |
-
-
-@table @samp
-@item %
-Toggle percentage mode
-@item =
-Edit a cell
-@item c
-Do a volumn command
-@end table
-| m     | Activate the menu                    |
-| &lt;n&gt;p | set cell precision to 'n'        |
-| r     | Do a row command                     |
-| C-c   | copy cell formula to clipboard       |
-| C-g   | cancels current operation            |
-| C-l   | set cell alignment left              |
-| C-q   | quit                                 |
-| C-r   | set cell alignment right             |
-| C-s   | save document                        |
-| C-v   | paste cell formula from clipboard    |
-
-Up, down, left right and delete keys should work as expected.
-
-
-
 
 
 
 
 
 @include headless.texi
+@include keys.texi
  
 @c @include running.texi
 @c @include basics.texi
