@@ -21,6 +21,9 @@ def field_C(fields):
 			maxrow = max(row, maxrow)
 		elif f[0] == 'E':
 			val = f[1:]
+			# strip leading and trailing spaces
+			if len(val) >0 and val[0] == '"': val = val[1:]
+			if len(val) >0 and val[-1] == '"': val = val[:-1]
 			cells[(row,col)] = val
 			
 def field_F(fields):
