@@ -221,6 +221,21 @@ static blang_expr_t eval_blang_log (const blang_exprs_t& args)
 
 }
 
+static blang_expr_t eval_blang_max_col (const blang_exprs_t& args)
+{
+	return max_col();
+}
+static blang_expr_t eval_blang_max_row (const blang_exprs_t& args)
+{
+	return max_row();
+}
+
+static blang_expr_t eval_blang_lte (const blang_exprs_t& args)
+{
+	return blang_to_num(eval(args[0])) <= blang_to_num(eval(args[1])) ;
+}
+
+
 void blx_init()
 {
 	blang_funcmap["bind"] = &eval_bind;
@@ -228,6 +243,9 @@ void blx_init()
 	blang_funcmap["exit"] = &eval_exit;
 	blang_funcmap["isnull"] = &eval_isnull;
 	blang_funcmap["log"] = &eval_blang_log;
+	blang_funcmap["lte"] = &eval_blang_lte;
+	blang_funcmap["max_col"] = &eval_blang_max_col;
+	blang_funcmap["max_row"] = &eval_blang_max_row;
 	blang_funcmap["or"] = &eval_or;
 	blang_funcmap["set_cell"] = &eval_set_cell;
 	blang_funcmap["get_cell"] = &eval_get_cell;

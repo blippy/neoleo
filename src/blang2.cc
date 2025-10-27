@@ -285,16 +285,19 @@ blang_expr_t eval_strlen(const blang_exprs_t& args)
 	return (float) s.size();
 }
 
-blang_expr_t eval_print(const blang_exprs_t& args)
+blang_expr_t eval_printx(const blang_exprs_t& args)
 {
-	//cout << "eval_print: called" << endl;
 	for(const auto& a : args) {
 		cout << blang_to_string(eval(a));
 	}
-	cout << endl;
 
-	//if(args.size() !=1) parse_error();
-	//return (int) str_eval(args.at(0)).size();
+	return std::monostate{};
+}
+
+blang_expr_t eval_print(const blang_exprs_t& args)
+{
+	eval_printx(args);
+	cout << endl;
 	return std::monostate{};
 }
 
@@ -426,6 +429,7 @@ map<string, blang_function_t> blang_funcmap= {
 		{"hypot", eval_hypot},
 		{"plus", eval_plusfn},
 		{"print", eval_print},
+		{"printx", eval_printx},
 		{"system", eval_system},
 		{"tmpnam", &eval_tmpnam}
 };

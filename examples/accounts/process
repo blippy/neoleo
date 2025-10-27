@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-../neodsv.py trans.oleo | perl mkscr.pl > /tmp/accts1
+#../neodsv.py trans.oleo | perl mkscr.pl > /tmp/accts1
+neoleo -0 -b ../tsv.bas trans.oleo | perl mkscr.pl > /tmp/accts1
 neoleo -H  accts-plate.oleo -s /tmp/accts1

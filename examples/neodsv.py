@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# 25/10	You should probably just use tsv.bas instead
 
 import argparse
 

@@ -42,9 +42,10 @@ static char*	opt_script_file = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "b:VHhps:Tv";
+static char short_options[] = "0b:VHhps:Tv";
 static struct option long_options[] =
 {
+		{"no-repl",		0,	NULL,	'0'},
 		{"blang",	required_argument, NULL, 'b'},
 		{"version",		0,	NULL,	'V'},
 		{"headless",		0,	NULL,	'H'},
@@ -82,6 +83,7 @@ show_usage (void)
 	printf("Usage: %s [OPTION]... [FILE]...\n", PACKAGE);
 
 const char* usage = R"(
+  -0, --no-repl            do not use headless or ncurses repl
   -b, --blang FILE         execute a blang file
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
@@ -96,8 +98,13 @@ Report bugs to https://github.com/blippy/neoleo/issues
 }
 
 
+enum class ReplType { none, headless, ncurses};
+struct {
+	ReplType rt = ReplType::ncurses;
+	strings blang_files;
+} cmd_options; // command-line options
 
-void parse_command_line (int argc, char **argv, bool& user_wants_headless, strings& blang_files)
+void parse_command_line (int argc, char **argv) //bool& user_wants_headless, strings& blang_files)
 {
 	int opt, optindex;
 
@@ -107,9 +114,11 @@ void parse_command_line (int argc, char **argv, bool& user_wants_headless, strin
 			break;
 
 		switch (opt) {
+			case '0':
+				cmd_options.rt = ReplType::none;
+				break;
 			case 'b':
-				//cout << "parse_command_line with blang file " << optarg << endl;
-				blang_files.push_back(optarg);
+				cmd_options.blang_files.push_back(optarg);
 				break;
 			case 'v':
 			case 'V':
@@ -117,7 +126,7 @@ void parse_command_line (int argc, char **argv, bool& user_wants_headless, strin
 				exit (0);
 				break;
 			case 'H':
-				user_wants_headless = true;
+				cmd_options.rt = ReplType::headless;
 				break;
 			case 'h':
 				show_usage ();
@@ -160,7 +169,7 @@ std::string slurp(const char *filename)
 }
 
 
-void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool use_headless, strings blang_files)
+void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, bool use_headless, strings blang_files)
 {
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();
@@ -187,7 +196,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 			fclose (fp);
 		}
 
-		command_line_file = 1;
+		//command_line_file = 1;
 		FileSetCurrentFileName(argv[optind]);
 		optind++;
 	}
@@ -195,7 +204,7 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 	Global_modified = 0;
 
 	blx_init();
-	for(auto const& f : blang_files) {
+	for(auto const& f : cmd_options.blang_files) {
 		auto src = slurp(f.c_str());
 		blang::interpret_string(src);
 	}
@@ -205,12 +214,12 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 		//exit(ret);
 	}
 
-	if(use_headless)
-		headless_main();
-	else {
-		curses_main();
-	}
 	
+	if(cmd_options.rt == ReplType::headless) { headless_main(); }
+	else if(cmd_options.rt == ReplType::ncurses) { curses_main(); }
+	// otherwise we want to run neither, so it will be purely script-based
+
+
 }
 
 
@@ -218,11 +227,11 @@ void run_nonexperimental_mode(int argc, char** argv, int command_line_file, bool
 int main (int argc, char **argv)
 {
 
-	int command_line_file = 0;	/* was there one? */
-	bool use_headless = false;
-	strings blang_files;
-	parse_command_line(argc, argv, use_headless, blang_files);
-	run_nonexperimental_mode(argc, argv, command_line_file, use_headless, blang_files);
+	//int command_line_file = 0;	/* was there one? */
+	//bool use_headless = false;
+	//strings blang_files;
+	parse_command_line(argc, argv);
+	run_nonexperimental_mode(argc, argv); // , command_line_file, use_headless, blang_files);
 
 	return 0;
 }
