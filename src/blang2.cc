@@ -410,6 +410,28 @@ blang_expr_t eval_file_read (const blang_exprs_t& args)
 	return slurp(path.c_str());
 }
 
+blang_expr_t eval_for (const blang_exprs_t& args)
+{
+	string varname{blang_to_string(args[0])};
+	//cout << blang_to_string(ar)
+	blang_num_t from = blang_to_num(eval(args[1]), "eval_for from");
+	blang_num_t to = blang_to_num(eval(args[2]), "eval_for to");
+	blang_num_t step = blang_to_num(eval(args[3]), "eval_for step");
+	for(blang_num_t i = from; ( i <= to && step >0) || (i>= to && step <0); i+= step  )
+	{
+		blang_varmap[varname] = i;
+		eval(args[4]);
+	}
+
+	return 1;
+
+}
+
+blang_expr_t eval_negate (const blang_exprs_t& args)
+{
+	blang_num_t v =  blang_to_num(eval(args[0]));
+	return -v;
+}
 
 // These will be augmented by user defined functions using eval_userfn
 map<string, blang_function_t> blang_funcmap= {
@@ -613,12 +635,12 @@ token_t Lexer1::yylex()
 			return found(SUB, token);
 		} else if(token == "if") {
 			return found(IF, token);
-		} else if(token == "else") {
-			return found(ELSE, token);
-		} else if (token == "call") {
-			return found(CALL, token);
-		} else if (token == "let") {
-			//cout << "Found LET" << endl;
+		} else if(token == "else") { return found(ELSE, token); }
+		else if (token == "call") { return found(CALL, token); }
+		else if (token == "for") { return found(FOR, token); }
+		else if (token == "to") { return found(TO, token); }
+		else if (token == "step") { return found(STEP, token); }
+		else if (token == "let") {
 			return found(LET, token);
 		} else if (token == "while") {
 			return found(WHILE, "while");
@@ -800,10 +822,7 @@ blang_expr_t BlangParser::parse_let ()
 
 	funcall_t fc;
 	fc.fn = eval_let;
-	fc.exprs = { varname, parse_t()};
-	//let_t let;
-	//let.name = varname;
-	//let.exprs = {parse_e()};
+	fc.exprs = { varname, parse_e()}; // 25/10 changed from parse_t to parse_e
 	return fc;
 }
 // END-FN
@@ -860,6 +879,39 @@ blang_expr_t BlangParser::parse_while()
 	return fc;
 }
 
+blang_expr_t BlangParser::parse_for()
+{
+	string varname = lxr.get().text;
+	consume("=");
+
+	funcall_t fc;
+	fc.fn = eval_for;
+	fc.exprs.push_back(varname);
+	fc.exprs.push_back(parse_e()); // from
+	consume("to");
+	fc.exprs.push_back(parse_e()); // to
+
+	// handle step
+	if(lxr.peek().type == Tokens::STEP) {
+		consume("step");
+		fc.exprs.push_back(parse_e()); // user-define step
+	} else {
+		fc.exprs.push_back(1); // default is to step by 1
+	}
+
+
+	fc.exprs.push_back(parse_e()); // the body of the for loop
+
+	return fc;
+}
+
+blang_expr_t BlangParser::parse_negate()
+{
+	funcall_t fc;
+	fc.fn = eval_negate;
+	fc.exprs.push_back(parse_t()); // NB parse_t rather than parse_e
+	return fc;
+}
 
 // FN parse_p .
 // P -> V | ( E ) | -T | FN
@@ -871,6 +923,7 @@ blang_expr_t BlangParser::parse_p ()
 	case NUMBER: dbx("parse_p pushing NUMBER " + toke.text); return stof(toke.text);
 	case VAR:	return parse_varname(toke.text);
 	case IF: 	return parse_if();
+	case FOR:	return parse_for();
 	case STR: 	dbx("parse_p STR of <" + toke.text + ">" ) ; return toke.text;
 	case ID: 	return parse_fncall(toke.text);
 	case CALL: 	return parse_call();
@@ -878,6 +931,7 @@ blang_expr_t BlangParser::parse_p ()
 	case WHILE:	return parse_while();
 	case '(': 	return parse_bra();
 	case '{': 	return parse_block();
+	case '-':	return parse_negate();
 	default: 	throw BlangException("Error parsing primitive: unrecognised token '" + toke.text + "', line " + std::to_string(toke.lineno));
 	// case '{': return parse_block(); NB No, not a general expression
 	}
@@ -987,13 +1041,19 @@ blang_expr_t eval (const blang_expr_t& expr)
 }
 // FN-END
 
-blang_num_t blang_to_num (const blang_expr_t& val)
+blang_num_t blang_to_num (const blang_expr_t& val, const string& msg)
 {
 	if(holds_alternative<monostate>(val)) return 0; // don't use get_if() in this case ∵ an unused var will be generated otherwise
 	if(auto v = std::get_if<blang_num_t>(&val)) 	return *v;
 	if(auto v = std::get_if<int>(&val)) 	return *v;
-	//if(auto v = std::get_if<std::string>(&val)) 	return "\""s + *v + "\""s;
-	throw std::logic_error("blang_to_num: Unhandled stringify expression type index " + std::to_string(val.index()));
+
+	string err_msg{"blang_to_num failed:" + msg  };
+	throw std::logic_error(err_msg);
+}
+
+blang_num_t blang_to_num (const blang_expr_t& val)
+{
+	return blang_to_num(val, "");
 }
 
 

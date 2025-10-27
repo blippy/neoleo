@@ -66,7 +66,7 @@ public:
 };
 
 
-enum Tokens { EOI = 128, NUMBER, ID, STR, SUB, CALL, LET, IF, ELSE, WHILE, VAR };
+enum Tokens { EOI = 128, NUMBER, ID, STR, SUB, CALL, FOR, TO, STEP, LET, IF, ELSE, WHILE, VAR };
 
 typedef struct {
 	enum Tokens type;
@@ -126,8 +126,10 @@ private:
 	expr_t parse_defsub(); // we're defining a sub
 	expr_t parse_e();
 	expr_t parse_fncall(std::string func_name); // for calling a sub
-	expr_t parse_if();
+	expr_t parse_for(); // for statements
+	expr_t parse_if(); // if statements
 	expr_t parse_let();
+	expr_t parse_negate();
 	expr_t parse_p();
 	expr_t parse_t();
 	expr_t parse_varname(const std::string& varname);
@@ -145,6 +147,7 @@ blang_expr_t 	interpret_cin();
 blang_expr_t 	interpret_string(const std::string& s);
 blang_expr_t 	eval (const blang_expr_t& expr);
 blang_num_t		blang_to_num (const blang_expr_t& val);
+blang_num_t		blang_to_num (const blang_expr_t& val, const std::string& msg);
 std::string 	blang_to_string (const blang_expr_t& val);
 std::string 	repr(const token_t& t);
 

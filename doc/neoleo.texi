@@ -100,7 +100,9 @@ Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
-5
+*** TODO entering formulae
+
+6
 
 @menu
 * Key bindings::	Start here!
