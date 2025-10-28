@@ -3,6 +3,9 @@
 
 cmake_minimum_required(VERSION 3.25)
 project(neoleo)
+
+include(Sanitise.cmake)
+
 add_subdirectory(doc)
 add_subdirectory(examples)
 add_subdirectory(src)

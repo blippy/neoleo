@@ -227,6 +227,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 int main (int argc, char **argv)
 {
 
+	//malloc(666);
 	//int command_line_file = 0;	/* was there one? */
 	//bool use_headless = false;
 	//strings blang_files;
