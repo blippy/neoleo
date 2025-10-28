@@ -6,6 +6,8 @@
 #include <unistd.h>
 //#include <vector>
 
+//#include <tcl.h>
+
 #include "assert.h"
 #include "basic.h"
 #include "blang2.h"
@@ -226,6 +228,9 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 
 int main (int argc, char **argv)
 {
+	extern void tickle_init(char*);
+	tickle_init(argv[0]);
+
 
 	//malloc(666);
 	//int command_line_file = 0;	/* was there one? */
