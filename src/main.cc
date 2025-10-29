@@ -44,16 +44,17 @@ static char*	opt_script_file = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "0b:VHhps:Tv";
+static char short_options[] = "0b:VHhps:t:Tv";
 static struct option long_options[] =
 {
 		{"no-repl",		0,	NULL,	'0'},
-		{"blang",	required_argument, NULL, 'b'},
+		{"blang",		required_argument, NULL, 'b'},
 		{"version",		0,	NULL,	'V'},
-		{"headless",		0,	NULL,	'H'},
+		{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
 		{"parser",		0,	NULL,	'p'},
 		{"script",		required_argument,	NULL,	's'},
+		{"tcl",			required_argument,	NULL,	't'},
 		{"tests",		optional_argument,	NULL,	'T'},
 		{"version",		0,	NULL,	'v'},
 		{NULL,			0,	NULL,	0}
@@ -90,8 +91,9 @@ const char* usage = R"(
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
   -s, --script FILE        execute a script
-  -V, --version            output version information and exit
+  -t  --tcl FILE           execute a Tcl file
   -T, --tests [x]          run test suite x
+  -V, --version            output version information and exit
 
 Report bugs to https://github.com/blippy/neoleo/issues
 )";
@@ -104,6 +106,7 @@ enum class ReplType { none, headless, ncurses};
 struct {
 	ReplType rt = ReplType::ncurses;
 	strings blang_files;
+	strings tcl_files;
 } cmd_options; // command-line options
 
 void parse_command_line (int argc, char **argv) //bool& user_wants_headless, strings& blang_files)
@@ -135,7 +138,10 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 				exit (0);
 				break;
 			case 's':
-				opt_script_file = optarg; // Do I need the ++ ?
+				opt_script_file = optarg;
+				break;
+			case 't':
+				cmd_options.tcl_files.push_back(optarg);
 				break;
 			case 'T':
 				option_tests = true;
@@ -209,6 +215,13 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	for(auto const& f : cmd_options.blang_files) {
 		auto src = slurp(f.c_str());
 		blang::interpret_string(src);
+	}
+
+	for(auto const& f : cmd_options.tcl_files) {
+		extern void tickle_run_file(const std::string& path);
+		tickle_run_file(f);
+		//auto src = slurp(f.c_str());
+		//blang::interpret_string(src);
 	}
 
 	if(opt_script_file) {

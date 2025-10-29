@@ -7,7 +7,7 @@ file(GLOB SHELLS *.sh)
 file(COPY ${SHELLS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(GLOB SCRIPTS *.scr)
 file(COPY ${SCRIPTS}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(GLOB OTHER *.bas *.oleo)
+file(GLOB OTHER *.bas *.oleo *.tcl)
 file(COPY ${OTHER}  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 #file(COPY certify differ issue25.oleo DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -32,6 +32,7 @@ add_test(NAME iss51 	COMMAND issue51.sh)
 add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
 add_test(NAME span 		COMMAND spans.sh)
+add_test(NAME tcl1 		COMMAND tcl1.sh)
 add_test(NAME writ 		COMMAND write.sh)
 
 
