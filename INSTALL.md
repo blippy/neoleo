@@ -1,3 +1,17 @@
+# Installation overview for 16.0
+
+To compile neoleo you need:
+* cmake
+* ncurses developer libraries
+* tcl headers
+
+Help is avialable for the following platforms:
+[INSTALL-arch](INSTALL-arch.md)
+[INSTALL-debian](INSTALL-debian.md)
+[INSTALL-fedora](INSTALL-fedora.md)
+[INSTALL-slack](INSTALL-slack.md)
+
+
 Contents
 ========
 

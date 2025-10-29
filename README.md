@@ -30,6 +30,12 @@ or
 
 Debian Stable is my main development box. Test compiles are sometimes made on Slackware, Mint, and a few others. As at Oct 2025, I have given particular attention to Arch Linux, where this software has some interest.
 
+Neoleo depends on the tcl library and ncurses. Clues as to minimal install requirements are found in
+[INSTALL](INSTALL.md)
+Suggestions are available for Arch, Debian flavours, Fedora and Slackware.
+
+
+
 ### General overview
 
 Notes about particular dependencies and quirks for various distros
