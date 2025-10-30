@@ -33,6 +33,7 @@ add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
 add_test(NAME span 		COMMAND spans.sh)
 add_test(NAME tcl1 		COMMAND tcl1.sh)
+add_test(NAME tcl2 		COMMAND tcl2.sh)
 add_test(NAME writ 		COMMAND write.sh)
 
 

@@ -28,6 +28,32 @@ static int tcl_hi( ClientData dummy,                /* Not used. */
 	cout << "Tcl says 'hi'" << endl;
 	return TCL_OK;
 }
+
+static int tickle_life (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//Tcl_SetObjResults(interp)
+	//return max_col();
+	Tcl_SetObjResult(interp, Tcl_NewIntObj(42) );
+	return TCL_OK;
+}
+
+static int tickle_max_col (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//Tcl_SetObjResults(interp)
+	//return max_col();
+	return TCL_OK;
+}
+
+
+static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//return max_row();
+	return TCL_OK;
+
+}
+
+
+
 // runs TCL commands in tclCommands, returns EXIT_SUCESS or EXIT_FAILURE
 static int Ex_RunTcl(const char *tclCommands){
 	int rc = EXIT_FAILURE;
@@ -82,7 +108,11 @@ void tickle_init(char* argv0)
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
 
-	Tcl_CreateObjCommand(interp, "tcl_hi", tcl_hi, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "life", 	tickle_life, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max_col", tickle_max_col, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max_row", tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "tcl_hi", 	tcl_hi, NULL, NULL);
+
 
 #if 0
 	int err = Tcl_Eval(interp, "tcl_hi");
