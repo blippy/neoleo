@@ -37,6 +37,7 @@ add_test(NAME tcl1 		COMMAND tcl1.sh)
 add_test(NAME tcl2 		COMMAND ${NEO} -0 -t tcl2.tcl)
 add_test(NAME tcl3 		COMMAND ${NEO} -0 sht1.oleo -t tcl3.tcl)
 add_test(NAME tcl4 		COMMAND ${NEO} -0 sht1.oleo -t tcl4.tcl)
+add_test(NAME tcl5 		COMMAND ${NEO} -0 -t tcl5.tcl) # test of load-oleo
 add_test(NAME writ 		COMMAND write.sh)
 
 

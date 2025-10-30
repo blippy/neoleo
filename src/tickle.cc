@@ -19,7 +19,7 @@ using std::endl;
 
 #include <tcl.h>
 
-//#include "neotypes.h"
+#include "oleofile.h"
 #include "sheet.h"
 
 static Tcl_Interp *interp = nullptr;
@@ -59,6 +59,31 @@ static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 	return TCL_OK;
 }
 
+static int tickle_load_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//extern void oleo_read_file (FILE *fp);
+	//Tcl_SetObjResults(interp)
+	//return max_col();
+	//cout << "tickle_get_cell called " << endl;
+	int r, c, status;
+	char* str = Tcl_GetString(objv[1]);
+	//printf("tickle_load_oleo: filename:%s\n", str);
+	// TODO set filename
+	FILE* fp = fopen(str, "r");
+	oleo_read_file(fp);
+	fclose(fp);
+
+#if 0
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract row" <<endl;
+	status = Tcl_GetIntFromObj(interp, objv[2], &c);
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
+	CELL *cp = find_cell(r, c);
+	std::string str{print_cell(cp)};
+	//cout << "r " << r << " c " << c << " result " << str << endl;
+	Tcl_SetObjResult(interp, Tcl_NewStringObj(str.c_str(), str.size()));
+#endif
+	return TCL_OK;
+}
 
 static int tickle_hi( ClientData dummy,                /* Not used. */
 	    Tcl_Interp *interp,                /* Current interpreter. */
@@ -161,6 +186,7 @@ void tickle_init(char* argv0)
 
 	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "load-oleo",	tickle_load_oleo, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
