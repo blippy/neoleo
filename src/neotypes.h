@@ -50,6 +50,8 @@ constexpr auto NON_COL = 0;
 inline int default_fmt = FMT_GEN;
 inline int default_prc = 0x0F;		/* FIX ME */
 
+inline int exit_value = 0; // set a custom exit value
+
 
 
 /*

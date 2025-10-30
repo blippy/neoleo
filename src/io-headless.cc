@@ -27,7 +27,6 @@ using std::vector;
 typedef int T;
 
 //static string _arg; // holds any argument found by process_headless_line()
-static int _sys_ret = 0; // store the value of the last system call we make so that we can use it in exit
 
 void log_func(const std::source_location& location = std::source_location::current())
 {
@@ -171,7 +170,7 @@ void hl_write_file()
 	string name = FileGetCurrentFileName();
 	FILE *fp = fopen(name.c_str(), "w");
 	if(!fp) {
-		_sys_ret = 1; 
+		exit_value = 1; 
 		cerr << "? Couldn't open neoleo file for writing:" << name << endl;
 		return;
 	}
@@ -232,7 +231,7 @@ static void hl_exit(std::istream& is)
 	getline(is, str);
 
 	if(str == "$?") {
-		exit(_sys_ret ? 1 : 0); // return numbers can be too high for our purposes
+		exit(exit_value ? 1 : 0); // return numbers can be too high for our purposes
 	}
 
 	auto ret = to_int(str);
@@ -244,7 +243,7 @@ static void hl_exec(std::istream& is)
 {
 	string command;
 	getline(is, command);
-	_sys_ret = system(command.c_str());
+	exit_value = system(command.c_str());
 }
 
 // FN hl_print_row

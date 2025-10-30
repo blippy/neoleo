@@ -252,5 +252,7 @@ int main (int argc, char **argv)
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv); // , command_line_file, use_headless, blang_files);
 
-	return 0;
+	//cout << "returning with exit_value " << exit_value << endl;
+	//if(exit_value != 0) exit(exit_value);
+	return exit_value;
 }

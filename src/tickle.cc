@@ -17,6 +17,8 @@ using std::endl;
 
 #include <tcl.h>
 
+#include "neotypes.h"
+
 static Tcl_Interp *interp = nullptr;
 
 
@@ -52,7 +54,17 @@ static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 
 }
 
+static int tickle_set_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	cout << "number of args: " << objc << endl;
+	//assert(objc == 1);
+	Tcl_GetIntFromObj(interp, objv[1], &exit_value);
+	cout << "tickle_set_exit with " << exit_value << endl;
+	//exit(exit_value);
+	//return max_row();
+	return TCL_OK;
 
+}
 
 // runs TCL commands in tclCommands, returns EXIT_SUCESS or EXIT_FAILURE
 static int Ex_RunTcl(const char *tclCommands){
@@ -109,8 +121,9 @@ void tickle_init(char* argv0)
 	assert(interp);
 
 	Tcl_CreateObjCommand(interp, "life", 	tickle_life, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max_col", tickle_max_col, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max_row", tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-col", tickle_max_col, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-row", tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "set-exit", tickle_set_exit, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "tcl_hi", 	tcl_hi, NULL, NULL);
 
 

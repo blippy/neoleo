@@ -33,8 +33,12 @@ add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
 add_test(NAME span 		COMMAND spans.sh)
 add_test(NAME tcl1 		COMMAND tcl1.sh)
-add_test(NAME tcl2 		COMMAND tcl2.sh)
+#add_test(NAME tcl2 		COMMAND tcl2.sh)
+add_test(NAME tcl2 		COMMAND ${NEO} -0 -t tcl2.tcl)
 add_test(NAME writ 		COMMAND write.sh)
+
+
+#add_test(NAME tcf 		COMMAND ${NEO} -0 -t tcl-fail.tcl) # deliberatebly engineered to fail. So don't use it normally
 
 
 # Temporarily commented out because it will cause tests to hand

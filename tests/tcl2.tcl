@@ -2,3 +2,6 @@
 
 set meaning [life]
 puts "Meaning of life is $meaning"
+if {$meaning != 42} {set-exit 13}
+#set-exit 2
+
