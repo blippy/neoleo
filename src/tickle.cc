@@ -10,6 +10,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -22,8 +23,41 @@ using std::endl;
 
 static Tcl_Interp *interp = nullptr;
 
+#if 0
+static std::string string_cell (CELLREF row, CELLREF col)
+{
+	CELL* cp = find_cell (row, col);
+	if(!cp) return "";
 
-static int tcl_hi( ClientData dummy,                /* Not used. */
+	value_t val = cp->get_value_2019();
+	if(std::holds_alternative<std::monostate>(val)) return "";
+	if(auto v = std::get_if<std::string>(&val)) return *v;
+	if(auto v = std::get_if<num_t>(&val)) 	return flt_to_str(*v);
+	if(auto v = std::get_if<bool_t>(&val)) 	return bool_name(*v);
+	if(auto v = std::get_if<err_t>(&val)) 	return ename_desc[v->num];
+
+	throw std::logic_error("Unhandled variant type in cell_value_string");
+}
+#endif
+
+
+static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//Tcl_SetObjResults(interp)
+	//return max_col();
+	//cout << "tickle_get_cell called " << endl;
+	int r, c;
+	Tcl_GetIntFromObj(interp, objv[1], &r);
+	Tcl_GetIntFromObj(interp, objv[2], &c);
+	CELL *cp = find_cell(r, c);
+	std::string str{print_cell(cp)};
+	//cout << "r " << r << " c " << c << " result " << str << endl;
+	Tcl_SetObjResult(interp, Tcl_NewStringObj(str.c_str(), str.size()));
+	return TCL_OK;
+}
+
+
+static int tickle_hi( ClientData dummy,                /* Not used. */
 	    Tcl_Interp *interp,                /* Current interpreter. */
 	    int objc,                        /* Number of arguments. */
 	    Tcl_Obj *const objv[])        /* Argument objects. */
@@ -122,15 +156,16 @@ void tickle_init(char* argv0)
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
 
-	Tcl_CreateObjCommand(interp, "life", 	tickle_life, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max-col", tickle_max_col, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max-row", tickle_max_row, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "set-exit", tickle_set_exit, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "tcl_hi", 	tcl_hi, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
 
 
 #if 0
-	int err = Tcl_Eval(interp, "tcl_hi");
+	int err = Tcl_Eval(interp, "tickle_hi");
 	assert(err == TCL_OK);
 	fprintf(stderr,"string result: %s\n",Tcl_GetStringResult(interp));
 	Tcl_FreeResult(interp);

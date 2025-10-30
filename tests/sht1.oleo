@@ -6,6 +6,7 @@ C;c1;r1;E1;K1
 C;r2;E2;K2
 C;r3;E3;K3
 C;c2;r1;E12;K12
+C;r2;E"hello world";K"hello world"
 O;status 2
-W;N1;A3 2;C7 0 7;Ostandout
+W;N1;A2 2;C7 0 7;Ostandout
 E
