@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 #rm accts.oleo
-neoleo -0 trans.oleo -t accum.tcl
+neoleo -0 -t accum.tcl
 #neoleo -0 -b ../tsv.bas trans.oleo | perl mkscr.pl > /tmp/accts1
 #neoleo -H  accts-plate.oleo -s /tmp/accts1

@@ -1,9 +1,9 @@
 # 2025-10-30 Added
 
-
+load-oleo "trans.oleo"
 puts "hello from accum"
 set mr [max-row]
-puts "mac row $mr"
+puts "max row $mr"
 
 #set totals {}
 
@@ -32,4 +32,9 @@ foreach {key value} [array get totals] {
 }
 #parray totals
 puts "fin"
+ 
+
+load-oleo "accts-plate.oleo"
+set mr [max-row]
+puts "mac row $mr"
 
