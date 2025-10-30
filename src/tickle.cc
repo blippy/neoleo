@@ -17,7 +17,8 @@ using std::endl;
 
 #include <tcl.h>
 
-#include "neotypes.h"
+//#include "neotypes.h"
+#include "sheet.h"
 
 static Tcl_Interp *interp = nullptr;
 
@@ -43,6 +44,7 @@ static int tickle_max_col (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 {
 	//Tcl_SetObjResults(interp)
 	//return max_col();
+	Tcl_SetObjResult(interp, Tcl_NewIntObj(max_col()) );
 	return TCL_OK;
 }
 
@@ -50,8 +52,8 @@ static int tickle_max_col (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
 	//return max_row();
+	Tcl_SetObjResult(interp, Tcl_NewIntObj(max_row()) );
 	return TCL_OK;
-
 }
 
 static int tickle_set_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
