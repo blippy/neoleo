@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 
+using std::cerr;
 using std::cout;
 using std::endl;
 
@@ -46,9 +47,11 @@ static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 	//Tcl_SetObjResults(interp)
 	//return max_col();
 	//cout << "tickle_get_cell called " << endl;
-	int r, c;
-	Tcl_GetIntFromObj(interp, objv[1], &r);
-	Tcl_GetIntFromObj(interp, objv[2], &c);
+	int r, c, status;
+	status = Tcl_GetIntFromObj(interp, objv[1], &r);
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract row" <<endl;
+	status = Tcl_GetIntFromObj(interp, objv[2], &c);
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
 	CELL *cp = find_cell(r, c);
 	std::string str{print_cell(cp)};
 	//cout << "r " << r << " c " << c << " result " << str << endl;
