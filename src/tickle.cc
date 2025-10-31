@@ -141,10 +141,10 @@ static int tickle_set_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 
 static int tickle_set_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-	cout << "number of args: " << objc << endl;
-	//assert(objc == 1);
+	//cout << "number of args: " << objc << endl;
+	//assert(objc == 1); // it's actually 2
 	Tcl_GetIntFromObj(interp, objv[1], &exit_value);
-	cout << "tickle_set_exit with " << exit_value << endl;
+	//cout << "tickle_set_exit with " << exit_value << endl;
 	//exit(exit_value);
 	//return max_row();
 	return TCL_OK;
