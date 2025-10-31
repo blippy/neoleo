@@ -16,13 +16,6 @@
 #include "oleofile.h"
 #include "parser-2019.h"
 #include "sheet.h"
-#include "tests.h"
-//#include "utils.h"
-
-
-//import std;
-
-//import utl;
 
 
 using std::cerr;
@@ -55,7 +48,7 @@ static struct option long_options[] =
 		{"parser",		0,	NULL,	'p'},
 		{"script",		required_argument,	NULL,	's'},
 		{"tcl",			required_argument,	NULL,	't'},
-		{"tests",		optional_argument,	NULL,	'T'},
+		//{"tests",		optional_argument,	NULL,	'T'},
 		{"version",		0,	NULL,	'v'},
 		{NULL,			0,	NULL,	0}
 };
@@ -92,7 +85,6 @@ const char* usage = R"(
   -h, --help               display this help and exit
   -s, --script FILE        execute a script
   -t  --tcl FILE           execute a Tcl file
-  -T, --tests [x]          run test suite x
   -V, --version            output version information and exit
 
 Report bugs to https://github.com/blippy/neoleo/issues
@@ -143,19 +135,6 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			case 't':
 				cmd_options.tcl_files.push_back(optarg);
 				break;
-			case 'T':
-				// TODO eliminate
-				break;
-				option_tests = true;
-				//cout << "optindex:" << optind << "\n";
-				if(!optarg 
-						&& optind < argc
-						&& NULL !=argv[optind] 
-						&& '\0' != argv[optind][0]
-						&& '-' != argv[optind][0])
-					option_tests_argument = argv[optind++];
-				//exit(1);
-				break;
 		}
 	}
 
@@ -181,15 +160,6 @@ std::string slurp(const char *filename)
 
 void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, bool use_headless, strings blang_files)
 {
-#if 0
-	if(get_option_tests()) {
-		bool all_pass = headless_tests();
-		int ret = all_pass ? EXIT_SUCCESS : EXIT_FAILURE;
-		//ret = EXIT_FAILURE;
-		exit(ret);
-	}
-#endif
-
 
 
 	using namespace std::literals;

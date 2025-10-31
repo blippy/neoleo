@@ -46,5 +46,5 @@ target_compile_options(neoleo PUBLIC ${TCL_CFLAGS_OTHER})
 
 
 # build testneo, which you shouldn't install, as it's for testing purposes
-add_executable(testneo testneo.cc tests.cc)
+add_executable(testneo testneo.cc)
 target_link_libraries(testneo common_objs)
