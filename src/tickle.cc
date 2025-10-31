@@ -118,6 +118,17 @@ static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 	return TCL_OK;
 }
 
+static int tickle_save_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	if(objc>1) {
+		char* path = Tcl_GetString(objv[1]);
+		oleo_write_file_as(path);
+	} else {
+		oleo_write_file();
+	}
+	return TCL_OK;
+}
+
 static int tickle_set_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
 	//Tcl_SetObjResults(interp)
@@ -211,6 +222,7 @@ void tickle_init(char* argv0)
 	Tcl_CreateObjCommand(interp, "load-oleo",	tickle_load_oleo, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "save-oleo", 	tickle_save_oleo, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-cell", 	tickle_set_cell, NULL, NULL);
 
