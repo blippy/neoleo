@@ -118,6 +118,27 @@ static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 	return TCL_OK;
 }
 
+static int tickle_set_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//Tcl_SetObjResults(interp)
+	//return max_col();
+	//cout << "tickle_get_cell called " << endl;
+	int r, c, status;
+	status = Tcl_GetIntFromObj(interp, objv[1], &r);
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract row" <<endl;
+	status = Tcl_GetIntFromObj(interp, objv[2], &c);
+	if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
+	char* formula = Tcl_GetString(objv[3]); // cell formula
+	//status = Tcl_GetStringFromObj(interp, objv[2], &c);
+	set_and_eval (r, c, formula, false);
+	//CELL *cp = find_or_make_cell(r, c);
+	//std::string str{print_cell(cp)};
+	//cout << "r " << r << " c " << c << " result " << str << endl;
+	//Tcl_SetObjResult(interp, Tcl_NewStringObj(str.c_str(), str.size()));
+	return TCL_OK;
+}
+
+
 static int tickle_set_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
 	cout << "number of args: " << objc << endl;
@@ -185,12 +206,13 @@ void tickle_init(char* argv0)
 	assert(interp);
 
 	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "load-oleo",	tickle_load_oleo, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "set-cell", 	tickle_set_cell, NULL, NULL);
 
 
 #if 0

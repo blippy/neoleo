@@ -890,7 +890,7 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 // FN-END
 
 /* user is responsible for repainting the changed sheet, maybe calling something like _io_repaint() */
-std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it = false) // FN
+std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it) // FN
 {
 	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
