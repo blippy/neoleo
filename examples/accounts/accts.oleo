@@ -19,14 +19,14 @@ C;r29;E"LIABILITIES";K"LIABILITIES"
 C;r30;E"Visa";K"Visa"
 C;r31;E"Open";K"Open"
 C;r32;E"Surplus";K"Surplus"
-C;c2;r5;E-200;K-200
-C;r6;E0;K0
+C;c2;r5;E-200.0;K-200
+C;r6;E0.0;K0
 C;r7;E"--------";K"--------"
 C;r12;E123.4;K123.4
 C;r13;E41.32;K41.32
 C;r14;E"--------";K"--------"
 C;r23;E2195.12;K2195.12
-C;r24;E58.68;K58.68
+C;r24;E58.68000000000001;K58.68
 C;r25;E"--------";K"--------"
 C;r26;Er23c2 + r24c2;K2253.8
 C;r27;E"========";K"========"
@@ -42,5 +42,5 @@ C;r15;E"--------";K"--------"
 C;r16;Er7c3 + r14c3;K-35.28
 C;r17;E"========";K"========"
 O;status 2
-W;N1;A13 2;C7 0 7;Ostandout
+W;N1;A12 2;C7 0 7;Ostandout
 E

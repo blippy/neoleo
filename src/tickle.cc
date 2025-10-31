@@ -120,8 +120,10 @@ static int tickle_max_row (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_
 
 static int tickle_save_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
+	//cout << "tickle_save_oleo objc = " << objc <<endl;
 	if(objc>1) {
 		char* path = Tcl_GetString(objv[1]);
+		//cout << "saving file as " << path <<endl;
 		oleo_write_file_as(path);
 	} else {
 		oleo_write_file();

@@ -1,6 +1,9 @@
 Ever wanted to keep a simple set of accounts? Well, neoleo
 makes that possible.
 
+2025-10-31 process-1 supercedes process as a standard process
+Everything is combined in one tcl file
+
 ## Transaction data
 
 Let's keep our transaction data in a spreadsheet, let's call it

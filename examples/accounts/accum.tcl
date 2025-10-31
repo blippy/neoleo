@@ -1,4 +1,4 @@
-# 2025-10-30 Added
+# 2025-10-30 Added Works
 
 load-oleo "trans.oleo"
 puts "hello from accum"
@@ -9,13 +9,9 @@ puts "max row $mr"
 
 set c 2
 for {set r 1} {$r <= $mr} {incr r} {
-	#puts "r $r $c"
 	set dr [get-cell $r 2]
-	#puts "dr  $dr"
 	set cr [get-cell $r 3]
 	set amnt [get-cell $r 4]
-	#puts "amnt $amnt"
-	#puts [expr $amnt + 0]
 	if {! [info exists totals($dr)]} {
 		set totals($dr) 0
 	}
@@ -30,11 +26,23 @@ puts "the array"
 foreach {key value} [array get totals] {
     puts "$key => $value"
 }
-#parray totals
-puts "fin"
  
 
 load-oleo "accts-plate.oleo"
 set mr [max-row]
 puts "mac row $mr"
+for {set r 1} {$r <= $mr} {incr r} {
+	set k [get-cell $r 2]
+	try {
+		set tot $totals($k)
+		set-cell $r 2 $tot
+		puts "set with [get-cell $r 2]"
+	} on error {msg} {
+		if {[regexp {^[a-z]+$} $k]} {
+			puts "key matches $k"
+			set-cell $r 2 0.0
+		}
+	}
+}
 
+save-oleo "accts.oleo"
