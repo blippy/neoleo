@@ -418,7 +418,7 @@ static void save_spreadsheet2019(){
 	if(!invoke_std_form("Save spreadsheet as:", filename)) return;
 	FileSetCurrentFileName(filename);
 	//log("Filename after:<", FileGetCurrentFileName(), ">");
-	hl_write_file();
+	oleo_write_file();
 }
 
 // return true to go ahead with quit, false otherwise

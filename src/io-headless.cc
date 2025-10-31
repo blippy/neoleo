@@ -165,19 +165,9 @@ static void type_cell()
 }
 
 // FN hl_write_file .
-void hl_write_file()
+static void hl_write_file()
 {
-	string name = FileGetCurrentFileName();
-	FILE *fp = fopen(name.c_str(), "w");
-	if(!fp) {
-		exit_value = 1; 
-		cerr << "? Couldn't open neoleo file for writing:" << name << endl;
-		return;
-	}
-
-	write_cmd(fp, name.c_str());
-	fclose(fp);
-
+	oleo_write_file();
 }
 
 static void hl_write_file(std::istream& is)

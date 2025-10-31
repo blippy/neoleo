@@ -31,6 +31,8 @@ void 		FileSetCurrentFileName(const char *s);
 void 		FileSetCurrentFileName(const std::string& s);
 void		oleo_read_file (FILE *);
 int			oleo_set_options (int, char *);
+void 		oleo_write_file(void);
 void		oleo_write_file (olfos_t&);
 void		oleo_write_file (olfos_t&, struct rng *);
+void 		oleo_write_file_as(std::string path);
 void 		read_file_generic(FILE *, char *, const char *);

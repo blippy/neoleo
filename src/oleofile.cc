@@ -17,7 +17,8 @@
  */
 
 
-#include <string.h>
+#include <cstring>
+#include <string>
 
 #include "neotypes.h"
 #include "sheet.h"
@@ -28,8 +29,11 @@
 //import std;
 //import utl;
 
-using std::cout;
-using std::map;
+//using std::cout;
+//using std::map;
+//using std::string;
+
+using namespace std;
 
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
@@ -756,6 +760,38 @@ static void write_mp_options (olfos_t &out)
 	//fprintf (fp, "O;auto;background;noa0\n");
 	out << "O;auto;background;noa0\n";
 }
+
+static void write_cmd (FILE *fp, const char * name)
+{
+	if(name) FileSetCurrentFileName(name);
+	olfos_t olfos;
+	oleo_write_file(olfos, 0);
+	fputs(olfos.str().c_str(), fp);
+	Global_modified = 0;
+}
+
+
+
+void oleo_write_file(void)
+{
+	string name = FileGetCurrentFileName();
+	FILE *fp = fopen(name.c_str(), "w");
+	if(!fp) {
+		exit_value = 1;
+		cerr << "? Couldn't open neoleo file for writing:" << name << endl;
+		return;
+	}
+
+	write_cmd(fp, name.c_str());
+	fclose(fp);
+}
+
+void oleo_write_file_as(std::string path)
+{
+	FileSetCurrentFileName(path);
+	oleo_write_file();
+}
+
 
 void oleo_write_file(olfos_t &out)
 {

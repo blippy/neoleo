@@ -113,14 +113,7 @@ void read_file_and_run_hooks (FILE * fp, const char * name)
 }
 
 
-void write_cmd (FILE *fp, const char * name)
-{
-	if(name) FileSetCurrentFileName(name);
-	olfos_t olfos;
-	oleo_write_file(olfos, 0);
-	fputs(olfos.str().c_str(), fp);
-	Global_modified = 0;
-}
+
 
 
 
