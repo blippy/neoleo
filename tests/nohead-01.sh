@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NEO=`realpath ../src/neoleo`
-$NEO -H << EOF
+$NEO -0 << EOF
 ! rm -f out/nohead-01.oleo
 i
 12

@@ -144,6 +144,8 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 				cmd_options.tcl_files.push_back(optarg);
 				break;
 			case 'T':
+				// TODO eliminate
+				break;
 				option_tests = true;
 				//cout << "optindex:" << optind << "\n";
 				if(!optarg 
@@ -179,13 +181,14 @@ std::string slurp(const char *filename)
 
 void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, bool use_headless, strings blang_files)
 {
+#if 0
 	if(get_option_tests()) {
 		bool all_pass = headless_tests();
 		int ret = all_pass ? EXIT_SUCCESS : EXIT_FAILURE;
 		//ret = EXIT_FAILURE;
 		exit(ret);
 	}
-
+#endif
 
 
 

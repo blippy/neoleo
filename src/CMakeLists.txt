@@ -26,7 +26,7 @@ add_library(common_objs STATIC
 # sources exclusive to building neoleo
 set(neo_srcs 
 	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    spans.cc  win.cc
-	     io-headless.cc       tests.cc
+	     io-headless.cc    
 	io-2019.cc           oleofile.cc   tickle.cc
 )
 
@@ -46,5 +46,5 @@ target_compile_options(neoleo PUBLIC ${TCL_CFLAGS_OTHER})
 
 
 # build testneo, which you shouldn't install, as it's for testing purposes
-add_executable(testneo testneo.cc)
+add_executable(testneo testneo.cc tests.cc)
 target_link_libraries(testneo common_objs)
