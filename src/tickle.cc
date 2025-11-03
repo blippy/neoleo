@@ -13,6 +13,7 @@
 #include <string>
 
 using std::cerr;
+using std::cin;
 using std::cout;
 using std::endl;
 
@@ -161,8 +162,21 @@ static int tickle_set_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 	//exit(exit_value);
 	//return max_row();
 	return TCL_OK;
-
 }
+
+#if 0
+static int tickle_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
+{
+	//cout << "number of args: " << objc << endl;
+	//assert(objc == 1); // it's actually 2
+	Tcl_GetIntFromObj(interp, objv[1], &exit_value);
+	//cout << "tickle_set_exit with " << exit_value << endl;
+	//exit(exit_value);
+	//return max_row();
+	return TCL_OK;
+}
+#endif
+
 
 // runs TCL commands in tclCommands, returns EXIT_SUCESS or EXIT_FAILURE
 static int Ex_RunTcl(const char *tclCommands){
@@ -218,6 +232,7 @@ void tickle_init(char* argv0)
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
 
+	//Tcl_CreateObjCommand(interp, "exit",		tickle_exit, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
@@ -237,4 +252,16 @@ void tickle_init(char* argv0)
 #endif
 	//Tcl_FreeResult(interp);
 
+}
+
+// a repl from stdin
+void tickle_main()
+{
+	std::string cmd;
+	while(std::getline(cin, cmd)) {
+		int err = Tcl_Eval(interp, cmd.c_str());
+		if ( err != TCL_OK ){
+				fprintf(stderr,"Error calling Tcl_Eval(): %s\n",Tcl_GetStringResult(interp));
+		}
+	}
 }

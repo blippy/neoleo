@@ -113,9 +113,6 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			break;
 
 		switch (opt) {
-			//case '0':
-			//	cmd_options.mode = "0";
-				break;
 			case 'b':
 				cmd_options.blang_files.push_back(optarg);
 				break;
@@ -124,10 +121,6 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 				print_version();
 				exit (0);
 				break;
-			//case 'H':
-				// TODO remove
-			//	cmd_options.mode = "h";
-			//	break;
 			case 'h':
 				show_usage ();
 				exit (0);
@@ -168,6 +161,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 {
 
 
+	extern void tickle_main();
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
 
@@ -211,6 +205,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	const string& mode = cmd_options.mode;
 	if(mode == "h") {headless_main(); }
 	else if(mode=="0") { /* do nothing */ }
+	else if(mode=="tcl") { tickle_main();}
 	else { curses_main(); }
 	// otherwise we want to run neither, so it will be purely script-based
 
