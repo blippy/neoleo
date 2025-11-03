@@ -37,7 +37,7 @@ static char*	opt_script_file = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "0b:VHhps:t:Tv";
+static char short_options[] = "0b:VHhm:ps:t:Tv";
 static struct option long_options[] =
 {
 		{"no-repl",		0,	NULL,	'0'},
@@ -45,6 +45,7 @@ static struct option long_options[] =
 		{"version",		0,	NULL,	'V'},
 		{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
+		{"mode",		required_argument,	NULL,	'm'},
 		{"parser",		0,	NULL,	'p'},
 		{"script",		required_argument,	NULL,	's'},
 		{"tcl",			required_argument,	NULL,	't'},
@@ -96,8 +97,9 @@ Report bugs to https://github.com/blippy/neoleo/issues
 
 enum class ReplType { none, headless, ncurses};
 struct {
-	ReplType rt = ReplType::ncurses;
+	//ReplType rt = ReplType::ncurses;
 	strings blang_files;
+	string mode;
 	strings tcl_files;
 } cmd_options; // command-line options
 
@@ -112,7 +114,7 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 
 		switch (opt) {
 			case '0':
-				cmd_options.rt = ReplType::none;
+				cmd_options.mode = "0";
 				break;
 			case 'b':
 				cmd_options.blang_files.push_back(optarg);
@@ -123,11 +125,15 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 				exit (0);
 				break;
 			case 'H':
-				cmd_options.rt = ReplType::headless;
+				// TODO remove
+				cmd_options.mode = "h";
 				break;
 			case 'h':
 				show_usage ();
 				exit (0);
+				break;
+			case 'm':
+				cmd_options.mode = optarg;
 				break;
 			case 's':
 				opt_script_file = optarg;
@@ -202,9 +208,10 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 		//exit(ret);
 	}
 
-	
-	if(cmd_options.rt == ReplType::headless) { headless_main(); }
-	else if(cmd_options.rt == ReplType::ncurses) { curses_main(); }
+	const string& mode = cmd_options.mode;
+	if(mode == "h") {headless_main(); }
+	else if(mode=="0") { /* do nothing */ }
+	else { curses_main(); }
 	// otherwise we want to run neither, so it will be purely script-based
 
 
