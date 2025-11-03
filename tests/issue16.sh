@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NEO=`realpath ../src/neoleo`
-$NEO -H << EOF
+$NEO -m h << EOF
 # BUG#16 blank line test
 ! rm -f out/issue16.oleo
 i

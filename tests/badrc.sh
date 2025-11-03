@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NEO=`realpath ../src/neoleo`
-$NEO -H  badrc.oleo << EOF
+$NEO -m h  badrc.oleo << EOF
 # 2025-05-21 Test for bad RC in oleo file
 
 ! rm -f out/badrc.oleo

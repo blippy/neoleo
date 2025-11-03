@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NEO=`realpath ../src/neoleo`
-$NEO  -H << EOF
+$NEO  -m h << EOF
 # 2025-04-20 A simple script to see if headless writing works
 ! rm -f out/write.oleo
 I

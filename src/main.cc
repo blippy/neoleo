@@ -37,16 +37,16 @@ static char*	opt_script_file = 0;
 
 bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "0b:VHhm:ps:t:Tv";
+static char short_options[] = "b:Vhm:s:t:v";
 static struct option long_options[] =
 {
-		{"no-repl",		0,	NULL,	'0'},
+		//{"no-repl",		0,	NULL,	'0'},
 		{"blang",		required_argument, NULL, 'b'},
 		{"version",		0,	NULL,	'V'},
-		{"headless",	0,	NULL,	'H'},
+		//{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
 		{"mode",		required_argument,	NULL,	'm'},
-		{"parser",		0,	NULL,	'p'},
+		//{"parser",		0,	NULL,	'p'},
 		{"script",		required_argument,	NULL,	's'},
 		{"tcl",			required_argument,	NULL,	't'},
 		//{"tests",		optional_argument,	NULL,	'T'},
@@ -113,8 +113,8 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			break;
 
 		switch (opt) {
-			case '0':
-				cmd_options.mode = "0";
+			//case '0':
+			//	cmd_options.mode = "0";
 				break;
 			case 'b':
 				cmd_options.blang_files.push_back(optarg);
@@ -124,10 +124,10 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 				print_version();
 				exit (0);
 				break;
-			case 'H':
+			//case 'H':
 				// TODO remove
-				cmd_options.mode = "h";
-				break;
+			//	cmd_options.mode = "h";
+			//	break;
 			case 'h':
 				show_usage ();
 				exit (0);
