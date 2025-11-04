@@ -1,6 +1,10 @@
 #file(GLOB_RECURSE sources src/*.cc)
 #project(src)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+#include(Sanitise.cmake)
+
 set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging
 set(CMAKE_VERBOSE_MAKEFILE TRUE)
@@ -18,33 +22,43 @@ set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)
 
 
+find_package(PkgConfig)
+pkg_check_modules(TCL REQUIRED tcl)
+include_directories(AFTER ${TCL_INCLUDE_DIRS})
+
+
+# files that we need for creating neoleo, testneo and a shared library
+set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc)
+
 # files used by both neoleo and testneo
-add_library(common_objs STATIC
-	cell.cc parser-2019.cc regions.cc sheet.cc spans.cc utils.cc
-)
+#add_library(common_objs STATIC ${common_srcs})
+
+add_library(oleo SHARED ${common_srcs})
+#target_include_directories(oleo PUBLIC ${TCL_INCLUDE_DIRS})
+
+#target_compile_options(oleo PRIVATE "-fsanitize=address")
+#target_link_libraries(oleo PRIVATE "-fsanitize=address")
+
 
 # sources exclusive to building neoleo
 set(neo_srcs 
 	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    spans.cc  win.cc
 	     io-headless.cc    
-	io-2019.cc           oleofile.cc   tickle.cc
+	io-2019.cc          
 )
 
-add_executable(neoleo)
-target_sources(neoleo PUBLIC ${neo_srcs} main.cc)
-target_link_libraries(neoleo common_objs ncursesw tinfo)
-install(TARGETS neoleo)
+#add_executable(neoleo)
+#target_sources(neoleo PUBLIC ${neo_srcs} main.cc)
+#target_link_libraries(neoleo oleo ncursesw tinfo)
+#install(TARGETS neoleo)
 
 
-find_package(PkgConfig)
-pkg_check_modules(TCL REQUIRED tcl)
-target_link_libraries(neoleo ${TCL_LIBRARIES})
-target_include_directories(neoleo PUBLIC ${TCL_INCLUDE_DIRS})
-target_compile_options(neoleo PUBLIC ${TCL_CFLAGS_OTHER})
-#message("tcl inc dirs are ${TCL_INCLUDE_DIRS}")
+#target_link_libraries(neoleo ${TCL_LIBRARIES})
+#target_include_directories(neoleo PUBLIC ${TCL_INCLUDE_DIRS})
+#target_compile_options(neoleo PUBLIC ${TCL_CFLAGS_OTHER})
 
 
 
 # build testneo, which you shouldn't install, as it's for testing purposes
 add_executable(testneo testneo.cc)
-target_link_libraries(testneo common_objs)
+target_link_libraries(testneo oleo ${TCL_LIBRARIES})

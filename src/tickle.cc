@@ -86,12 +86,13 @@ static int tickle_load_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tc
 	return TCL_OK;
 }
 
-static int tickle_hi( ClientData dummy,                /* Not used. */
+extern "C"  int tickle_hi( ClientData dummy,                /* Not used. */
 	    Tcl_Interp *interp,                /* Current interpreter. */
 	    int objc,                        /* Number of arguments. */
 	    Tcl_Obj *const objv[])        /* Argument objects. */
 {
 	cout << "Tcl says 'hi'" << endl;
+	Tcl_SetObjResult(interp, Tcl_NewIntObj(0));
 	return TCL_OK;
 }
 
@@ -221,6 +222,24 @@ void atexit_handler_1()
 	Tcl_Finalize();
 }
 
+// use both by embedded and extended
+void tickle_create_commands()
+{
+#if 1
+	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "load-oleo",	tickle_load_oleo, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "save-oleo", 	tickle_save_oleo, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
+	Tcl_CreateObjCommand(interp, "set-cell", 	tickle_set_cell, NULL, NULL);
+#endif
+	Tcl_CreateObjCommand(interp, "oleo-hi", 	tickle_hi, NULL, NULL);
+//	Tcl_CreateCommand(interp, "oleo-hi", 	tickle_hi, NULL, NULL);
+
+}
 // argv0 is argv[0] from main()
 void tickle_init(char* argv0)
 {
@@ -232,16 +251,7 @@ void tickle_init(char* argv0)
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
 
-	//Tcl_CreateObjCommand(interp, "exit",		tickle_exit, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "load-oleo",	tickle_load_oleo, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max-col", 	tickle_max_col, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "max-row", 	tickle_max_row, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "save-oleo", 	tickle_save_oleo, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
-	Tcl_CreateObjCommand(interp, "set-cell", 	tickle_set_cell, NULL, NULL);
+	tickle_create_commands();
 
 
 #if 0
@@ -265,3 +275,28 @@ void tickle_main()
 		}
 	}
 }
+
+// 25/11
+// For extending Tcl, see:
+// https://deepwiki.com/tcltk/tcl/3.2-creating-tcl-extensions
+// This is for use in creating liboleo.so for extension
+extern "C" int Oleo_Init(Tcl_Interp *interp0) {
+
+	interp = interp0;
+    /* Initialize the stubs mechanism */
+    if (Tcl_InitStubs(interp0, TCL_VERSION, 0) == NULL)
+        return TCL_ERROR;
+
+    tickle_create_commands();
+
+    /* Register the package */
+    return Tcl_PkgProvide(interp, "Oleo", "0.1"); // TODO use project version rather than 0.1
+}
+
+// 25/11
+// Similar to Oleo_Init(), but for Safe interpreters
+extern "C" int Oleo_SafeInit(Tcl_Interp *interp0) {
+    /* Safe interpreters can use this extension too */
+    return Oleo_Init(interp0);
+}
+
