@@ -24,7 +24,8 @@ set(CMAKE_BUILD_TYPE Debug)
 
 find_package(PkgConfig)
 pkg_check_modules(TCL REQUIRED tcl)
-include_directories(AFTER ${TCL_INCLUDE_DIRS})
+include_directories(AFTER ${TCL_INCLUDE_DIRS}) # for all targets
+link_libraries(${TCL_LIBRARIES}) # required by everything
 
 
 # files that we need for creating neoleo, testneo and a shared library
@@ -34,6 +35,7 @@ set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc
 #add_library(common_objs STATIC ${common_srcs})
 
 add_library(oleo SHARED ${common_srcs})
+install(TARGETS oleo) # We'll want this
 #target_include_directories(oleo PUBLIC ${TCL_INCLUDE_DIRS})
 
 #target_compile_options(oleo PRIVATE "-fsanitize=address")
@@ -47,10 +49,10 @@ set(neo_srcs
 	io-2019.cc          
 )
 
-#add_executable(neoleo)
-#target_sources(neoleo PUBLIC ${neo_srcs} main.cc)
-#target_link_libraries(neoleo oleo ncursesw tinfo)
-#install(TARGETS neoleo)
+add_executable(neoleo)
+target_sources(neoleo PUBLIC ${neo_srcs} main.cc)
+target_link_libraries(neoleo oleo ncursesw tinfo)
+install(TARGETS neoleo)
 
 
 #target_link_libraries(neoleo ${TCL_LIBRARIES})
@@ -61,4 +63,4 @@ set(neo_srcs
 
 # build testneo, which you shouldn't install, as it's for testing purposes
 add_executable(testneo testneo.cc)
-target_link_libraries(testneo oleo ${TCL_LIBRARIES})
+target_link_libraries(testneo oleo)

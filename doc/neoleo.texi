@@ -102,6 +102,8 @@ means complete, nor necessarily accurate for that matter.
 
 *** TODO entering formulae
 
+*** TODO sudo ldconfig to update install
+
 6
 
 @menu
