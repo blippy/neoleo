@@ -3,7 +3,7 @@
 NEO=`realpath ../src/neoleo`
 echo "Looking for neoleo in $NEO"
 echo "Current working dir $PWD"
-$NEO -m 0 << EOF
+$NEO -m h << EOF
 # test of issue 18
 # cell referencing parsing bug
 
