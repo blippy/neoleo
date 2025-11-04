@@ -12,16 +12,19 @@
 #include <iostream>
 #include <string>
 
+using namespace std::literals;
 using std::cerr;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::string;
 
 
 #include <tcl.h>
 
 #include "oleofile.h"
 #include "sheet.h"
+#include "spans.h"
 
 static Tcl_Interp *interp = nullptr;
 
@@ -45,10 +48,41 @@ static std::string string_cell (CELLREF row, CELLREF col)
 
 static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj *const objv[])
 {
-	//Tcl_SetObjResults(interp)
-	//return max_col();
-	//cout << "tickle_get_cell called " << endl;
+	//cout << "num args " << objc << endl;
+
+	if(objc != 3 && objc != 4) {
+		Tcl_WrongNumArgs(interp, 0, objv, "?-fmt? row col");
+		return TCL_ERROR;
+	}
+
 	int r, c, status;
+	//int row_idx = 1, col_idx = 2;
+	char* fmtp = Tcl_GetString(objv[1]); // maybe we want a formatted output
+	if("-fmt"s == fmtp) {
+		// print a formatted version
+		//row_idx = 2;
+		//col_idx = 3;
+		status = Tcl_GetIntFromObj(interp, objv[2], &r);
+		if(status != TCL_OK) cerr << "get-cell: couldn't extract row" <<endl;
+		status = Tcl_GetIntFromObj(interp, objv[3], &c);
+		if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
+		int w = get_width(c);
+		CELL *cp = find_cell(r, c);
+		std::string text;
+		if (cp == 0) {
+			text = pad_left("", w);
+		} else {
+			enum jst just = cp->get_cell_jst();
+			text = print_cell(cp);
+			text = pad_jst(text, w, just);
+			//cout << txt;
+		}
+		Tcl_SetObjResult(interp, Tcl_NewStringObj(text.c_str(), text.size()));
+		return TCL_OK;
+	}
+
+
+	// we just want a raw value
 	status = Tcl_GetIntFromObj(interp, objv[1], &r);
 	if(status != TCL_OK) cerr << "get-cell: couldn't extract row" <<endl;
 	status = Tcl_GetIntFromObj(interp, objv[2], &c);
@@ -92,7 +126,7 @@ static int tickle_hi( ClientData dummy,                /* Not used. */
 	    Tcl_Obj *const objv[])        /* Argument objects. */
 {
 	cout << "Tcl says 'hi'" << endl;
-	//Tcl_SetObjResult(interp, NULL);
+	//Tcl_SetObjResult(interp, NULL); // I think returning nULL causes segfault
 	return TCL_OK;
 }
 
