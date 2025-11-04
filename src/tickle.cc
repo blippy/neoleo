@@ -86,13 +86,13 @@ static int tickle_load_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tc
 	return TCL_OK;
 }
 
-extern "C"  int tickle_hi( ClientData dummy,                /* Not used. */
+static int tickle_hi( ClientData dummy,                /* Not used. */
 	    Tcl_Interp *interp,                /* Current interpreter. */
 	    int objc,                        /* Number of arguments. */
 	    Tcl_Obj *const objv[])        /* Argument objects. */
 {
 	cout << "Tcl says 'hi'" << endl;
-	Tcl_SetObjResult(interp, Tcl_NewIntObj(0));
+	//Tcl_SetObjResult(interp, NULL);
 	return TCL_OK;
 }
 
