@@ -1,4 +1,4 @@
-@node Key bindings, Headless mode, Top, Top
+@node Key bindings, Tcl bindings, Top, Top
 @chapter Key bindings
 
 Absolute minimum you need to know:

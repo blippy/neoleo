@@ -108,6 +108,7 @@ means complete, nor necessarily accurate for that matter.
 
 @menu
 * Key bindings::	Start here!
+* Tcl bindings::	Program neoleo using Tcl
 * Headless mode::
 * Key Index::
 * Command Index::
@@ -133,6 +134,7 @@ info files stored in a place like
 
 @include headless.texi
 @include keys.texi
+@include tcl.texi
  
 @c @include running.texi
 @c @include basics.texi

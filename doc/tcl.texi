@@ -1,0 +1,26 @@
+@node Tcl bindings, Key Index, Key bindings, Top
+@chapter Tcl bindings
+
+You can program neoleo using Tcl, either calling Tcl code from within neoleo ("embedding") or calling a neoleo library from Tcl ("extending").
+There is also a Tcl oleo package that provides extra functions for your programming convenience. 
+You can combine this regular Tcl to produce really powerful functionality.
+
+Part of the oleo package:
+
+proc ::oleo::incra @{arr key by@}
+Increment a variable. E.g.
+@example
+set i 1
+incr i ; # => i becomes 2
+incr i 10 ; # => i becomes 12
+@end example
+
+proc ::oleo::forn @{varName from to step block@}
+A convenient for-next-step loop
+E.g. for i from 1 to 10 step 2:
+@example
+for i 1 10 2 @{
+	puts "i => $i"
+@}
+@end example
+You can also specify negative steps

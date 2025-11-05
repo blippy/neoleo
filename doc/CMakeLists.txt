@@ -12,6 +12,7 @@ set(info_in
 	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/tcl.texi
 )
 set(p "${CMAKE_INSTALL_PREFIX}")
 set(info_out ${CMAKE_CURRENT_BINARY_DIR}/neoleo.info)
@@ -41,6 +42,7 @@ set(html_out
 	${H}/Concept-Index.html  
 	${H}/Headless-mode.html
 	${H}/Key-Index.html
+	${H}/Tcl-bindings.html
 
 )
 add_custom_command(OUTPUT ${html_out}
