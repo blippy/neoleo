@@ -30,6 +30,7 @@ std::string FileGetCurrentFileName();
 void 		FileSetCurrentFileName(const char *s);
 void 		FileSetCurrentFileName(const std::string& s);
 void		oleo_read_file (FILE *);
+int			oleo_read_file (const std::string& path);
 int			oleo_set_options (int, char *);
 void 		oleo_write_file(void);
 void		oleo_write_file (olfos_t&);

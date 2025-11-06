@@ -35,6 +35,10 @@ int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 
 
+int ploppy_load_oleo(char* path)
+{
+	return oleo_read_file(path);
+}
 char*  ploppy_get_cell(int r, int c)
 {
 	string s{string_cell(r, c)};
@@ -203,7 +207,6 @@ static int tickle_load_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tc
 	int r, c, status;
 	char* str = Tcl_GetString(objv[1]);
 	//printf("tickle_load_oleo: filename:%s\n", str);
-	// TODO set filename
 	FILE* fp = fopen(str, "r");
 	oleo_read_file(fp);
 	fclose(fp);

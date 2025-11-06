@@ -376,6 +376,15 @@ void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CE
 	}
 }
 
+int oleo_read_file (const std::string& path)
+{
+	FILE* fp = fopen(path.c_str(), "r");
+	if(fp == 0) return 0;
+	FileSetCurrentFileName(path);
+	oleo_read_file(fp);
+	fclose(fp);
+	return 1;
+}
 
 void oleo_read_file (FILE *fp)
 {
