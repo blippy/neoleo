@@ -20,3 +20,4 @@ int ploppy_max_row();
 char*  ploppy_get_cell(int r, int c);
 int ploppy_load_oleo(char* path);
 void ploppy_set_cell(int r, int c, char* formula);
+void ploppy_save_oleo_as(char* path);

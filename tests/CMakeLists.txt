@@ -43,6 +43,7 @@ add_test(NAME tcl4 		COMMAND tcl4.sh)
 add_test(NAME tcl5 		COMMAND tcl5.sh) # test of load-oleo
 #add_test(NAME tcl6 		COMMAND ${NEO} -m 0 -t tcl6.tcl) # test of set-cell formula
 add_test(NAME tcl6 		COMMAND tcl6.sh) # test of set-cell
+add_test(NAME tcl7 		COMMAND tcl7.sh) # test of save-oleo-as
 add_test(NAME writ 		COMMAND write.sh)
 
 

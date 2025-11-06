@@ -35,6 +35,11 @@ int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 
 
+void ploppy_save_oleo_as(char* path)
+{
+	oleo_write_file_as(path);
+}
+
 int ploppy_load_oleo(char* path)
 {
 	return oleo_read_file(path);
