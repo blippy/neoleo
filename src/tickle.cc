@@ -35,6 +35,17 @@ int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 
 
+// returns a malloced string for use by Tcl
+// Tcl is responsible for deleting
+char* ploppy_string(const std::string& s)
+{
+	//string s{string_cell(r, c)};
+	char *return_string = (char*) malloc(s.size()+1);
+	if(return_string == 0) return 0; // oops
+	strcpy(return_string, s.c_str());
+	return return_string;
+}
+
 void ploppy_save_oleo_as(char* path)
 {
 	oleo_write_file_as(path);
@@ -53,11 +64,14 @@ void ploppy_set_cell(int r, int c, char* formula)
 
 char*  ploppy_get_cell(int r, int c)
 {
+	return ploppy_string(string_cell(r,c));
+	/*
 	string s{string_cell(r, c)};
 	char *return_string = (char*) malloc(s.size()+1);
 	if(return_string == 0) return 0; // oops
 	strcpy(return_string, s.c_str());
 	return return_string;
+	*/
 }
 
 
