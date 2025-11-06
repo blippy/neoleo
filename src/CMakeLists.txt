@@ -25,25 +25,23 @@ include_directories(${TCL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}) # for all t
 
 # files that we need for creating neoleo, testneo and a shared library
 set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc)
-add_library(common STATIC ${common_srcs})
+#add_library(common SHARED ${common_srcs})
 
 
 include(swig.cmake)
-
-
 
 
 # sources exclusive to building neoleo
 set(neo_srcs 
 	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    win.cc
 	     io-headless.cc    
-	io-2019.cc          
+	io-2019.cc        
 )
 
 add_executable(neoleo)
 target_sources(neoleo PUBLIC ${neo_srcs} main.cc ${wrapper_cc})
-add_dependencies(neoleo common)
-target_link_libraries(neoleo common)
+add_dependencies(neoleo ploppy)
+target_link_libraries(neoleo ploppy)
 target_link_libraries(neoleo ${TCL_LIBRARIES})
 #target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  Wrapper/tickleTCL_wrap.cc)
 target_link_libraries(neoleo ncursesw tinfo)
@@ -53,5 +51,10 @@ install(TARGETS neoleo)
 
 
 # build testneo, which you shouldn't install, as it's for testing purposes
-#add_executable(testneo testneo.cc)
-#target_link_libraries(testneo ploppy)
+add_executable(testneo testneo.cc)
+add_dependencies(testneo ploppy)
+target_link_libraries(testneo ploppy)
+target_link_libraries(testneo ${TCL_LIBRARIES})
+#add_dependencies(testneo common)
+#target_link_libraries(testneo common)
+#target_link_libraries(testneo ${TCL_LIBRARIES})

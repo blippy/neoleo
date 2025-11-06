@@ -16,8 +16,11 @@ add_custom_target(swigly
 	COMMENT "Generating swig wrapper source file"
 ) 
 
-#add_library 
-
+add_library(ploppy SHARED ${wrapper_cc} ${common_srcs})
+#target_link_libraries(ploppy common)
+install(TARGETS ploppy DESTINATION lib)
+#install(CODE "message(\"Remember to run 'sudo ldconfig' to update library libploppy.so\")")
+install(CODE "execute_process(COMMAND ldconfig)")
 
 
 #find_package(SWIG REQUIRED)
@@ -37,5 +40,4 @@ add_custom_target(swigly
 #swig_link_libraries(ploppy ploppy_do)
 #add_library(libploppy STATIC ploppy.so)
 #install(TARGETS ${PLOP} DESTINATION lib)
-#install(CODE "message(\"Remember to run sudo ldconfig to update libraries\")")
 
