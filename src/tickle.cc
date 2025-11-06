@@ -34,6 +34,15 @@ int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 
 
+int ploppy_max_col()
+{
+	return max_col();
+}
+int ploppy_max_row()
+{
+	return max_row();
+}
+
 int ploppy_life()
 {
 	return 42;

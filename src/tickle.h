@@ -1,3 +1,4 @@
+#pragma once
 /*
  * tickle.h
  *
@@ -5,13 +6,17 @@
  *      Author: pi
  */
 
-#ifndef SRC_TICKLE_H_
-#define SRC_TICKLE_H_
+//#include "neotypes.h"
+//#include <cstdint>
+
+//typedef uint16_t CELLREF;
 
 void set_exit (int code);
 void ploppy_hi( );
 int ploppy_life();
+int ploppy_max_col();
+int ploppy_max_row();
+
 //double twicely(double d);
 
 
-#endif /* SRC_TICKLE_H_ */

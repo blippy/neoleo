@@ -4,14 +4,34 @@
 //%rename("twice") tickle_twice;
 %rename ("set-exit") set_exit;
 %rename ("hi-ploppy") ploppy_hi;
+%rename ("max-col") ploppy_max_col;
+%rename ("max-row") ploppy_max_row;
 %rename ("ploppy-life") ploppy_life;
 
+/*
+%{
+//#include "neotypes.h"
+using CELLREF = uint16_t;
+void set_exit (int code);
+void ploppy_hi( );
+int ploppy_life();
+CELLREF max_col();
+CELLREF max_row();
+%}
+*/
 
 %inline %{
-//extern double twicely(double d);
-//extern int Plop_Init(Tcl_Interp *interp0);
 #include "tickle.h"
 %}
 
 
+
 %include "tickle.h"
+
+/* 
+void set_exit (int code);
+void ploppy_hi( );
+int ploppy_life();
+CELLREF max_col();
+CELLREF max_row();
+*/

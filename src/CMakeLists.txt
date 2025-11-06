@@ -72,6 +72,7 @@ set(neo_srcs
 )
 
 add_executable(neoleo)
+add_dependencies(neoleo ploppy)
 target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  Wrapper/tickleTCL_wrap.cc)
 target_link_libraries(neoleo ploppy ncursesw tinfo dl)
 install(TARGETS neoleo)
