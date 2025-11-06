@@ -35,6 +35,12 @@ int Ploppy_Init(Tcl_Interp *interp);
 
 
 
+// exported as hi-ploppy
+void ploppy_hi( )
+{
+	cout << "Ploppy Tcl says 'hi'" << endl;
+}
+
 void set_exit (int code)
 {
 	exit_value = code;

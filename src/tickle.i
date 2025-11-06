@@ -3,6 +3,8 @@
 //https://stackoverflow.com/questions/7223437/how-to-create-a-tcl-function-with-optional-arguments-using-swig
 //%rename("twice") tickle_twice;
 %rename ("set-exit") set_exit;
+%rename ("hi-ploppy") ploppy_hi;
+
 
 %inline %{
 //extern double twicely(double d);

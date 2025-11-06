@@ -9,7 +9,7 @@
 #define SRC_TICKLE_H_
 
 void set_exit (int code);
-
+void ploppy_hi( );
 //double twicely(double d);
 
 
