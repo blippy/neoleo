@@ -460,6 +460,13 @@ std::string string_cell (CELL * cp)
 }
 
 std::string string_cell () { auto *cp = find_cell(curow, cucol);  return string_cell(cp); }
+
+std::string string_cell (CELLREF r, CELLREF c)
+{
+	CELL* cp =  find_cell(r, c);
+	return string_cell(cp);
+
+}
 // FN-END
 
 

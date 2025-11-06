@@ -191,6 +191,7 @@ std::string 	pad_centre(const std::string& s, int width);
 std::string 	pad_jst(const std::string& s, int width, enum jst j);
 std::string 	spaces(int n);
 std::string 	string_cell (CELL * cp);
+std::string 	string_cell (CELLREF r, CELLREF c);
 std::string 	string_cell ();
 std::string 	stringify_value_file_style(const value_t& val);
 void 			panic (const char *s,...);

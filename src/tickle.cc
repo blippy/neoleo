@@ -9,6 +9,7 @@
 
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <string>
 
@@ -32,6 +33,16 @@ static Tcl_Interp *interp = nullptr;
 extern "C"
 int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
+
+
+char*  ploppy_get_cell(int r, int c)
+{
+	string s{string_cell(r, c)};
+	char *return_string = (char*) malloc(s.size()+1);
+	if(return_string == 0) return 0; // oops
+	strcpy(return_string, s.c_str());
+	return return_string;
+}
 
 
 int ploppy_max_col()

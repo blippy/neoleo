@@ -2,6 +2,8 @@
 
 //https://stackoverflow.com/questions/7223437/how-to-create-a-tcl-function-with-optional-arguments-using-swig
 //%rename("twice") tickle_twice;
+%rename("get-cell") ploppy_get_cell;
+%newobject ploppy_get_cell; // because a char* is returned
 %rename ("set-exit") set_exit;
 %rename ("hi-ploppy") ploppy_hi;
 %rename ("max-col") ploppy_max_col;
