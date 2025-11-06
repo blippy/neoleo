@@ -17,9 +17,9 @@
 #include "parser-2019.h"
 #include "sheet.h"
 
-#include <dlfcn.h>
+//#include <dlfcn.h>
 
-#include <tcl.h> // TODO remove
+//#include <tcl.h> // TODO remove
 
 
 using std::cerr;
@@ -216,45 +216,10 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 
 }
 
-//#define Ploppy_Init SWIG_init
-extern "C"
-int Ploppy_Init(Tcl_Interp *interp);
-extern "C" int SWIG_init(Tcl_Interp *interp);
+
 
 int main (int argc, char **argv)
 {
-
-#if 0
-	  void* handle = dlopen("ploppy.so", RTLD_LAZY);
-	  if(!handle) {
-		  puts("couldn't open library");
-		  return 1;
-	  } else {
-		  puts("Found the library");
-	  }
-#endif
-
-	Tcl_Interp* interp;
-
-	//Tcl_FindExecutable(argv0);
-	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
-	assert(interp);
-	int ok = Ploppy_Init(interp);
-	if(ok == TCL_ERROR) {
-		puts("couldn't Ploppy_Init");
-		return 1;
-	}
-
-	puts("aq");
-	ok = Tcl_Eval(interp, "puts [twicely x3]");
-	if(ok == TCL_ERROR) {
-		puts("Error orrcurred");
-		puts(interp->resultDontUse);
-	}
-	puts("az");
-	//SWIG_init(interp);
-	//Tcl_DeleteInterp(interp);
-	return 0;
 
 
 	extern void tickle_init(char*);

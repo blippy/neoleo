@@ -28,6 +28,75 @@ using std::string;
 
 static Tcl_Interp *interp = nullptr;
 
+//#define Ploppy_Init SWIG_init
+extern "C"
+int Ploppy_Init(Tcl_Interp *interp);
+//extern "C" int SWIG_init(Tcl_Interp *interp);
+
+
+
+void set_exit (int code)
+{
+	exit_value = code;
+}
+
+
+void tickle_run_file(const std::string& path)
+{
+	Tcl_EvalFile(interp, path.c_str()); // TODO error check and cleanup
+}
+
+// a repl from stdin
+void tickle_main()
+{
+	std::string cmd;
+	while(std::getline(cin, cmd)) {
+		int err = Tcl_Eval(interp, cmd.c_str());
+		if ( err != TCL_OK ){
+				fprintf(stderr,"Error calling Tcl_Eval(): %s\n",Tcl_GetStringResult(interp));
+		}
+	}
+}
+
+void tickle_init(char* argv0)
+{
+#if 0
+	  void* handle = dlopen("ploppy.so", RTLD_LAZY);
+	  if(!handle) {
+		  puts("couldn't open library");
+		  return 1;
+	  } else {
+		  puts("Found the library");
+	  }
+#endif
+
+	//Tcl_Interp* interp;
+
+	//Tcl_FindExecutable(argv0);
+	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
+	assert(interp);
+	int ok = Ploppy_Init(interp);
+	if(ok == TCL_ERROR) {
+		puts("couldn't Ploppy_Init");
+		return;
+	}
+
+#if 0
+	puts("aq");
+	ok = Tcl_Eval(interp, "puts [twicely x3]");
+	if(ok == TCL_ERROR) {
+		puts("Error orrcurred");
+		puts(interp->resultDontUse);
+	}
+	puts("az");
+	//SWIG_init(interp);
+	//Tcl_DeleteInterp(interp);
+#endif
+
+	// TODO possibly delete interpreter
+}
+
+#if 0
 #if 0
 static std::string string_cell (CELLREF row, CELLREF col)
 {
@@ -246,12 +315,6 @@ static int Ex_RunTcl(const char *tclCommands){
 	return rc;
 }
 
-
-void tickle_run_file(const std::string& path)
-{
-	Tcl_EvalFile(interp, path.c_str()); // TODO error check and cleanup
-}
-
 void atexit_handler_1()
 {
     //std::cout << "Shutting down Tcl\n";
@@ -306,17 +369,7 @@ void tickle_init(char* argv0)
 
 }
 
-// a repl from stdin
-void tickle_main()
-{
-	std::string cmd;
-	while(std::getline(cin, cmd)) {
-		int err = Tcl_Eval(interp, cmd.c_str());
-		if ( err != TCL_OK ){
-				fprintf(stderr,"Error calling Tcl_Eval(): %s\n",Tcl_GetStringResult(interp));
-		}
-	}
-}
+
 
 // 25/11
 // For extending Tcl, see:
@@ -346,3 +399,5 @@ int xPlop_Init(Tcl_Interp *interp0)
 {
 	return Oleo_Init(interp0)	;
 }
+
+#endif

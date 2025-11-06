@@ -42,7 +42,7 @@ add_test(NAME tcl6 		COMMAND ${NEO} -m 0 -t tcl6.tcl) # test of set-cell formula
 add_test(NAME writ 		COMMAND write.sh)
 
 
-#add_test(NAME tcf 		COMMAND ${NEO} -0 -t tcl-fail.tcl) # deliberatebly engineered to fail. So don't use it normally
+add_test(NAME tcf 		COMMAND ${NEO} -m 0 -t tcl-fail.tcl) # deliberatebly engineered to fail. So don't use it normally
 
 
 # Temporarily commented out because it will cause tests to hand
