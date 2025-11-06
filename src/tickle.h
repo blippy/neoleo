@@ -10,6 +10,7 @@
 
 void set_exit (int code);
 void ploppy_hi( );
+int ploppy_life();
 //double twicely(double d);
 
 

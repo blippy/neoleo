@@ -34,6 +34,11 @@ int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 
 
+int ploppy_life()
+{
+	return 42;
+}
+
 
 // exported as hi-ploppy
 void ploppy_hi( )

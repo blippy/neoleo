@@ -4,6 +4,7 @@
 //%rename("twice") tickle_twice;
 %rename ("set-exit") set_exit;
 %rename ("hi-ploppy") ploppy_hi;
+%rename ("ploppy-life") ploppy_life;
 
 
 %inline %{
