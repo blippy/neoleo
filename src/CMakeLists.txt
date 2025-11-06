@@ -1,5 +1,4 @@
-#file(GLOB_RECURSE sources src/*.cc)
-#project(src)
+# 25/11 TODO install ploppy.so
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
