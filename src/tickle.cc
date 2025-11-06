@@ -39,6 +39,13 @@ int ploppy_load_oleo(char* path)
 {
 	return oleo_read_file(path);
 }
+
+void ploppy_set_cell(int r, int c, char* formula)
+{
+	set_and_eval (r, c, formula, false);
+}
+
+
 char*  ploppy_get_cell(int r, int c)
 {
 	string s{string_cell(r, c)};

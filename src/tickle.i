@@ -10,6 +10,7 @@
 %rename ("max-row") ploppy_max_row;
 %rename ("ploppy-life") ploppy_life;
 %rename ("load-oleo") ploppy_load_oleo;
+%rename ("set-cell") ploppy_set_cell;
 
 /*
 %{

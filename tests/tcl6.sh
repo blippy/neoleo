@@ -1,26 +1,22 @@
+#!/bin/sh
 # 2025-10-31 Added
 # Test of set-cell
 
+NEO=`realpath ../src/neoleo`
+REP=tcl6.rep
+
+$NEO -m tcl  <<- "EOF" >out/$REP 
 set-cell 2 3 "24"
 set v [get-cell 2 3]
-puts $v
-if {$v != 24} {
-	puts "Error 1"
-	set-exit 1
-}
+puts "Got $v. Expected 24"
 
 set-cell 2 4 "\"hello world\""
 set v [get-cell 2 4]
-puts $v
-if {$v != "hello world"} {
-	puts "Error 2"
-	set-exit 2
-}
+puts "Got $v. Expected hello world"
 
 set-cell 2 5 "r2c3+1"
 set v [get-cell 2 5]
-puts $v
-if {$v != 25} {
-	puts "Error 3"
-	set-exit 3
-}
+puts "Got $v. Expected 25"
+EOF
+
+diff out/$REP verified/$REP
