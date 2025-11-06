@@ -21,21 +21,43 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 set(CMAKE_BUILD_TYPE Debug)
 
+# files that we need for creating neoleo, testneo and a shared library
+set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc)
+
 
 find_package(PkgConfig)
 pkg_check_modules(TCL REQUIRED tcl)
 include_directories(AFTER ${TCL_INCLUDE_DIRS}) # for all targets
 link_libraries(${TCL_LIBRARIES}) # required by everything
 
+find_package(SWIG REQUIRED)
+include(UseSWIG)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}) # for all targets
+set_property(SOURCE tickle.i PROPERTY CPLUSPLUS ON)
+swig_add_library(ploppy
+	TYPE SHARED
+	#TYPE STATIC
+	LANGUAGE  tcl
+	#OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Generated"
+	#OUTFILE_DIR "${CMAKE_CURRENT_BINARY_DIR}/Wrapper"
+	SOURCES tickle.i ${common_srcs}
+)
 
-# files that we need for creating neoleo, testneo and a shared library
-set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc)
+#add_custom_command(
+#	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/tickle_wrap.cxx
+#	COMMAND  swig -c++ -tcl -o ${CMAKE_CURRENT_BINARY_DIR}/tickle_wrap.cxx ${CMAKE_CURRENT_SOURCE_DIR}/tickle.i 
+#	DEPENDS tickle.i
+#	COMMENT "Generate swig wrapper code"
+#)
+
 
 # files used by both neoleo and testneo
 #add_library(common_objs STATIC ${common_srcs})
 
-add_library(oleo SHARED ${common_srcs})
-install(TARGETS oleo) # We'll want this
+#add_library(oleo SHARED ${common_srcs})
+#target_link_libraries(oleo)
+#target_link_libraries(oleo PUBLIC  ploppy)
+#install(TARGETS oleo) # We'll want this
 #target_include_directories(oleo PUBLIC ${TCL_INCLUDE_DIRS})
 
 #target_compile_options(oleo PRIVATE "-fsanitize=address")
@@ -50,8 +72,8 @@ set(neo_srcs
 )
 
 add_executable(neoleo)
-target_sources(neoleo PUBLIC ${neo_srcs} main.cc)
-target_link_libraries(neoleo oleo ncursesw tinfo)
+target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  Wrapper/tickleTCL_wrap.cc)
+target_link_libraries(neoleo ploppy ncursesw tinfo dl)
 install(TARGETS neoleo)
 
 
@@ -63,4 +85,4 @@ install(TARGETS neoleo)
 
 # build testneo, which you shouldn't install, as it's for testing purposes
 add_executable(testneo testneo.cc)
-target_link_libraries(testneo oleo)
+target_link_libraries(testneo ploppy)

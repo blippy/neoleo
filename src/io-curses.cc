@@ -530,7 +530,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	enum jst j = cp->get_cell_jst();
 	if (j == jst::def) j = default_jst;
 
-	const std::string& str = print_cell(cp);
+	const std::string& str = string_cell(cp);
 	//char ptr1[str.size()+1];
 	char* ptr1 = (char*) alloca(str.size()+1);
 	char* ptr = strcpy(ptr1, str.c_str());

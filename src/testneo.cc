@@ -339,7 +339,7 @@ int run_clear_test()
 	interpret(1,1, "16", "16");
 	clear_spreadsheet();
 	CELL* cp = find_or_make_cell(1, 1);
-	string res = print_cell(cp);
+	string res = string_cell(cp);
 	cout << (res == "" ? "PASS" : "FAIL") << endl;
 	return 0;
 }

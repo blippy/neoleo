@@ -439,7 +439,7 @@ std::string fmt_value (value_t& val, int p, int j)
 // FN-END
 
 // FN print_cell .
-std::string print_cell (CELL * cp)
+std::string string_cell (CELL * cp)
 {
 
 	if (!cp) return CCC("");
@@ -459,7 +459,7 @@ std::string print_cell (CELL * cp)
 
 }
 
-std::string print_cell () { auto *cp = find_cell(curow, cucol);  return print_cell(cp); }
+std::string string_cell () { auto *cp = find_cell(curow, cucol);  return string_cell(cp); }
 // FN-END
 
 

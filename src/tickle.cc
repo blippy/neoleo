@@ -73,7 +73,7 @@ static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 			text = pad_left("", w);
 		} else {
 			enum jst just = cp->get_cell_jst();
-			text = print_cell(cp);
+			text = string_cell(cp);
 			text = pad_jst(text, w, just);
 			//cout << txt;
 		}
@@ -88,7 +88,7 @@ static int tickle_get_cell (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl
 	status = Tcl_GetIntFromObj(interp, objv[2], &c);
 	if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
 	CELL *cp = find_cell(r, c);
-	std::string str{print_cell(cp)};
+	std::string str{string_cell(cp)};
 	//cout << "r " << r << " c " << c << " result " << str << endl;
 	Tcl_SetObjResult(interp, Tcl_NewStringObj(str.c_str(), str.size()));
 	return TCL_OK;
@@ -113,7 +113,7 @@ static int tickle_load_oleo (ClientData dummy,  Tcl_Interp *interp, int objc, Tc
 	status = Tcl_GetIntFromObj(interp, objv[2], &c);
 	if(status != TCL_OK) cerr << "get-cell: couldn't extract col" <<endl;
 	CELL *cp = find_cell(r, c);
-	std::string str{print_cell(cp)};
+	std::string str{string_cell(cp)};
 	//cout << "r " << r << " c " << c << " result " << str << endl;
 	Tcl_SetObjResult(interp, Tcl_NewStringObj(str.c_str(), str.size()));
 #endif
@@ -212,6 +212,10 @@ static int tickle_exit (ClientData dummy,  Tcl_Interp *interp, int objc, Tcl_Obj
 }
 #endif
 
+double twicely(double d)
+{
+	return 2.0*d;
+}
 
 // runs TCL commands in tclCommands, returns EXIT_SUCESS or EXIT_FAILURE
 static int Ex_RunTcl(const char *tclCommands){
@@ -256,10 +260,12 @@ void atexit_handler_1()
 	Tcl_Finalize();
 }
 
+//extern "C"
+//int _wrap_twice(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]);
+
 // use both by embedded and extended
 void tickle_create_commands()
 {
-#if 1
 	Tcl_CreateObjCommand(interp, "get-cell",	tickle_get_cell, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "hi", 			tickle_hi, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "life", 		tickle_life, NULL, NULL);
@@ -269,8 +275,10 @@ void tickle_create_commands()
 	Tcl_CreateObjCommand(interp, "save-oleo", 	tickle_save_oleo, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-exit", 	tickle_set_exit, NULL, NULL);
 	Tcl_CreateObjCommand(interp, "set-cell", 	tickle_set_cell, NULL, NULL);
-#endif
 	Tcl_CreateObjCommand(interp, "oleo-hi", 	tickle_hi, NULL, NULL);
+
+//	Tcl_CreateObjCommand(interp, "twice", 	_wrap_twice, NULL, NULL);
+
 //	Tcl_CreateCommand(interp, "oleo-hi", 	tickle_hi, NULL, NULL);
 
 }
@@ -334,3 +342,7 @@ extern "C" int Oleo_SafeInit(Tcl_Interp *interp0) {
     return Oleo_Init(interp0);
 }
 
+int xPlop_Init(Tcl_Interp *interp0)
+{
+	return Oleo_Init(interp0)	;
+}

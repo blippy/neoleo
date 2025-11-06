@@ -161,7 +161,7 @@ static void insert_rowwise(std::istream& is)
 
 static void type_cell()
 {
-	cout << print_cell() << "\n";
+	cout << string_cell() << "\n";
 }
 
 // FN hl_write_file .
@@ -260,7 +260,7 @@ static void hl_print_row (std::istream& is)
 				cout << pad_left("", w);
 			} else {
 				enum jst just = cp->get_cell_jst();
-				string txt { print_cell(cp) };
+				string txt { string_cell(cp) };
 				txt = pad_jst(txt, w, just);
 				cout << txt;
 			}

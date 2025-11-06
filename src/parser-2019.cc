@@ -907,6 +907,6 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 	//if(display_it) // this is really cack-handed
 	//	io_pr_cell(r, c, cp);
 
-	return print_cell(cp);
+	return string_cell(cp);
 }
 
