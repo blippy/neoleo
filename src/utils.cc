@@ -34,6 +34,7 @@
 #include "neotypes.h"
 #include "oleofile.h"
 #include "sheet.h"
+#include "spans.h"
 
 
 //export module utl;
@@ -437,6 +438,25 @@ std::string fmt_value (value_t& val, int p, int j)
 
 }
 // FN-END
+
+
+// convert a cell to a string adjusting for width and format
+std::string string_cell_formatted (CELLREF r, CELLREF c)
+{
+	int w = get_width(c);
+
+	CELL *cp = find_cell(r, c);
+	std::string text;
+	if (cp == 0) {
+		text = pad_left("", w);
+	} else {
+		enum jst just = cp->get_cell_jst();
+		text = string_cell(cp);
+		text = pad_jst(text, w, just);
+	}
+
+	return text;
+}
 
 // FN print_cell .
 std::string string_cell (CELL * cp)

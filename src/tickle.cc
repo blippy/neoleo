@@ -30,9 +30,14 @@ using std::string;
 static Tcl_Interp *interp = nullptr;
 
 //#define Ploppy_Init SWIG_init
-extern "C"
-int Ploppy_Init(Tcl_Interp *interp);
+extern "C" int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
+char* ploppy_string(const std::string& s);
+
+char*  ploppy_get_cell_fmt(int r, int c)
+{
+	return ploppy_string(string_cell_formatted(r,c));
+}
 
 
 // returns a malloced string for use by Tcl

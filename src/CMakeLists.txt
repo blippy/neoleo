@@ -66,7 +66,7 @@ swig_add_library(ploppy
 
 # sources exclusive to building neoleo
 set(neo_srcs 
-	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    spans.cc  win.cc
+	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    win.cc
 	     io-headless.cc    
 	io-2019.cc          
 )

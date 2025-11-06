@@ -193,6 +193,7 @@ std::string 	spaces(int n);
 std::string 	string_cell (CELL * cp);
 std::string 	string_cell (CELLREF r, CELLREF c);
 std::string 	string_cell ();
+std::string 	string_cell_formatted (CELLREF r, CELLREF c);
 std::string 	stringify_value_file_style(const value_t& val);
 void 			panic (const char *s,...);
 bool 			is_num(const value_t& val);

@@ -1,5 +1,5 @@
 #!/bin/sh
-# 2025-10-31 Added
+# 2025-11-06 Added
 # Test of set-cell
 
 NEO=`realpath ../src/neoleo`

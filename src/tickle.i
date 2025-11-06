@@ -4,6 +4,9 @@
 //%rename("twice") tickle_twice;
 %rename("get-cell") ploppy_get_cell;
 %newobject ploppy_get_cell; // because a char* is returned
+%rename ("get-cell-fmt") ploppy_get_cell_fmt;
+%newobject ploppy_get_cell_fmt; // Tcl must free
+
 %rename ("set-exit") set_exit;
 %rename ("hi-ploppy") ploppy_hi;
 %rename ("max-col") ploppy_max_col;
