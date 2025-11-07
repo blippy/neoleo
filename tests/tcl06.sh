@@ -3,7 +3,7 @@
 # Test of set-cell
 
 NEO=`realpath ../src/neoleo`
-REP=tcl6.rep
+REP=tcl06.rep
 
 $NEO -m tcl  <<- "EOF" >out/$REP 
 set-cell 2 3 "24"

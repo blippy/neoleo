@@ -2,7 +2,7 @@
 # 2025-10-30 Added. Test load-oleo
 
 NEO=`realpath ../src/neoleo`
-REP=tcl5.rep
+REP=tcl05.rep
 
 $NEO -m tcl  <<- "EOF" >out/$REP 
 load-oleo "sht1.oleo"

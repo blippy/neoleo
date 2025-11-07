@@ -3,7 +3,7 @@
 # Test of get-cell-fmt
 
 NEO=`realpath ../src/neoleo`
-REP=tcl8.rep
+REP=tcl08.rep
 
 
 $NEO -m tcl  <<- "EOF" >out/$REP 

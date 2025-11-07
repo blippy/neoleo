@@ -3,7 +3,7 @@
 # Test get-cell
 
 NEO=`realpath ../src/neoleo`
-REP=tcl4.rep
+REP=tcl04.rep
 
 $NEO -m tcl  sht1.oleo <<- "EOF" >out/$REP 
 puts "Running tcl4.tcl"

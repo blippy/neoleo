@@ -2,7 +2,7 @@
 # 2025-10-30	Added
 
 NEO=`realpath ../src/neoleo`
-REP=tcl3.rep
+REP=tcl03.rep
 
 $NEO -m tcl  sht1.oleo <<- "EOF" >out/$REP 
 set mr [max-row]

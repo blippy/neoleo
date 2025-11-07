@@ -31,20 +31,15 @@ add_test(NAME iss18 	COMMAND issue18.sh)
 add_test(NAME iss51 	COMMAND issue51.sh)
 add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
-add_test(NAME span 		COMMAND spans.sh)
-add_test(NAME tcl1 		COMMAND tcl1.sh)
-add_test(NAME tcl2 		COMMAND tcl2.sh)
-#add_test(NAME tcl2 		COMMAND ${NEO} -m 0 -t tcl2.tcl)
-#add_test(NAME tcl3 		COMMAND ${NEO} -m 0 sht1.oleo -t tcl3.tcl)
-add_test(NAME tcl3 		COMMAND tcl3.sh)
-#add_test(NAME tcl4 		COMMAND ${NEO} -m 0 sht1.oleo -t tcl4.tcl)
-add_test(NAME tcl4 		COMMAND tcl4.sh)
-#add_test(NAME tcl5 		COMMAND ${NEO} -m 0 -t tcl5.tcl) # test of load-oleo
-add_test(NAME tcl5 		COMMAND tcl5.sh) # test of load-oleo
-#add_test(NAME tcl6 		COMMAND ${NEO} -m 0 -t tcl6.tcl) # test of set-cell formula
-add_test(NAME tcl6 		COMMAND tcl6.sh) # test of set-cell
-add_test(NAME tcl7 		COMMAND tcl7.sh) # test of save-oleo-as
-add_test(NAME tcl8 		COMMAND tcl8.sh) # test of get-cell-fmt
+add_test(NAME span 	COMMAND spans.sh)
+add_test(NAME tcl01 	COMMAND tcl01.sh)
+add_test(NAME tcl02 	COMMAND tcl02.sh)
+add_test(NAME tcl03 	COMMAND tcl03.sh)
+add_test(NAME tcl04 	COMMAND tcl04.sh)
+add_test(NAME tcl05 	COMMAND tcl05.sh) # test of load-oleo
+add_test(NAME tcl06 	COMMAND tcl06.sh) # test of set-cell
+add_test(NAME tcl07 	COMMAND tcl07.sh) # test of save-oleo-as
+add_test(NAME tcl08 	COMMAND tcl08.sh) # test of get-cell-fmt
 add_test(NAME tcl09 	COMMAND tcl09.sh)
 add_test(NAME tcl10 	COMMAND tcl10.sh) # test of insert-by-row
 
