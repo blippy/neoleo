@@ -1,16 +1,18 @@
 #!/bin/sh
 
+OLEO=issue16.oleo
+rm -f out/$OLEO
+
 NEO=`realpath ../src/neoleo`
-$NEO -m h << EOF
+$NEO -m tcl <<- "EOF"
 # BUG#16 blank line test
-! rm -f out/issue16.oleo
-i
+insert-by-col
 1
 
 2
 .
 
-w out/issue16.oleo
+save-oleo-as out/issue16.oleo
 EOF
 
-diff out/issue16.oleo verified/issue16.scr.oleo
+diff out/$OLEO verified/$OLEO
