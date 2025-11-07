@@ -18,8 +18,11 @@ add_custom_target(swigly
 
 add_library(ploppy SHARED ${wrapper_cc} ${common_srcs})
 #target_link_libraries(ploppy common)
-install(TARGETS ploppy DESTINATION lib)
-#install(CODE "message(\"Remember to run 'sudo ldconfig' to update library libploppy.so\")")
+install(TARGETS ploppy DESTINATION lib64)
+set(libloc ${CMAKE_INSTALL_PREFIX}/lib) # different distros have different dirs
+set(libloc ${CMAKE_INSTALL_PREFIX}/lib64/libploppy.so) # different distros have different dirs
+install(CODE "message(\"Updating library cache ${libloc}\")")
+install(CODE "execute_process(COMMAND ldconfig -l ${libloc})")
 install(CODE "execute_process(COMMAND ldconfig)")
 
 
