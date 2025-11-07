@@ -27,3 +27,7 @@ set(CPACK_ARCHIVE_FILE_EXTENSION "tgz")
 #)
 #include(CPack)
 
+
+add_custom_target(uninstall
+	COMMAND xargs rm < install_manifest.txt
+)	

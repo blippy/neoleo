@@ -3,6 +3,7 @@
 To compile neoleo you need:
 * cmake
 * ncurses developer libraries
+* swig
 * tcl headers
 
 Help is avialable for the following platforms:
@@ -24,6 +25,12 @@ cd build
 cmake  -DCMAKE_INSTALL_PREFIX=$HOME/tmp ..
 make
 sudo make install
+
+Packagers probably want to use
+cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+
+An uninstall target is also provided. So you can so something like
+sudo make uninstall
 
 Trouble-shooting
 ================
