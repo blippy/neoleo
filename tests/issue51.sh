@@ -1,10 +1,10 @@
 #!/bin/sh
 
 NEO=`realpath ../src/neoleo`
-$NEO -m 0 << EOF
+$NEO -m tcl <<- "EOF"
 # 2025-04-20 Script hanging bug
-I
+insert-by-row
 1
 2
 3
-EOF
+"EOF"
