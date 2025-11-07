@@ -11,6 +11,7 @@
 %rename ("hi-ploppy") ploppy_hi;
 %rename ("go") ploppy_go;
 %rename ("insert-by-col") ploppy_insert_by_col;
+%rename ("insert-by-row") ploppy_insert_by_row;
 %rename ("insert-row") ploppy_insert_row;
 %rename ("max-col") ploppy_max_col;
 %rename ("max-row") ploppy_max_row;

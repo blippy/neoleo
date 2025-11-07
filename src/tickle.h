@@ -25,5 +25,6 @@ char*  ploppy_get_cell_fmt(int r, int c);
 void ploppy_insert_row();
 void ploppy_go(int r, int c);
 void ploppy_insert_by_col();
+void ploppy_insert_by_row();
 
 

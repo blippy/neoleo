@@ -36,6 +36,29 @@ extern "C" int Ploppy_Init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
 
 
+static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
+{
+	curow = r;
+	cucol = c;
+	set_and_eval(r, c, formula, true);
+}
+
+
+// 25/11
+void ploppy_insert_by_row()
+{
+	string line;
+	while(getline(cin, line)) {
+		if(line == ";") { curow++; 	cucol=1; continue;}
+		if(line == "")  { cucol++; continue;}
+		if(line == ".") return;
+		if(line.starts_with('#')) continue;
+		set_cell_input_1(curow, cucol, line);
+		cucol++;
+	}
+}
+
+
 // 25/11 Added
 void ploppy_insert_row()
 {
@@ -49,12 +72,6 @@ void ploppy_go(int r, int c)
 	cucol = c;
 }
 
-static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
-{
-	curow = r;
-	cucol = c;
-	set_and_eval(r, c, formula, true);
-}
 
 // 25/11 Added
 void ploppy_insert_by_col()
@@ -65,7 +82,6 @@ void ploppy_insert_by_col()
 		if(line == ";") { cucol++; 	curow=1; continue;}
 		if(line == "")  { curow++; continue;}
 		if(line == ".") return;
-		//if(line.size() == 0 && is.eof()) return false;
 		if(line.starts_with('#')) continue;
 		set_cell_input_1(curow, cucol, line);
 		curow++;
