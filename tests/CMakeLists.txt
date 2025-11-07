@@ -46,7 +46,7 @@ add_test(NAME tcl6 		COMMAND tcl6.sh) # test of set-cell
 add_test(NAME tcl7 		COMMAND tcl7.sh) # test of save-oleo-as
 add_test(NAME tcl8 		COMMAND tcl8.sh) # test of get-cell-fmt
 add_test(NAME tcl09 	COMMAND tcl09.sh)
-add_test(NAME writ 		COMMAND write.sh)
+add_test(NAME tcl10 	COMMAND tcl10.sh) # test of insert-by-row
 
 
 #add_test(NAME tcf 		COMMAND ${NEO} -m 0 -t tcl-fail.tcl) # deliberatebly engineered to fail. So don't use it normally
