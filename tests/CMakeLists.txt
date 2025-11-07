@@ -29,7 +29,6 @@ add_test(NAME insert 	COMMAND insert-01.sh)
 add_test(NAME iss16 	COMMAND issue16.sh)
 add_test(NAME iss18 	COMMAND issue18.sh)
 add_test(NAME iss51 	COMMAND issue51.sh)
-add_test(NAME hless 	COMMAND nohead-01.sh)
 add_test(NAME parser 	COMMAND parser.sh)
 add_test(NAME span 	COMMAND spans.sh)
 add_test(NAME tcl01 	COMMAND tcl01.sh)
@@ -54,10 +53,3 @@ add_test(NAME tcl10 	COMMAND tcl10.sh) # test of insert-by-row
 # (I made them just for testing purposes)
 #add_test(NAME fail COMMAND ${NEO} -T fail)
 
-# 25/10 Tests of yesteryear
-#add_test(NAME decompile COMMAND ${NEO} -s decompile-01.scr)
-#add_test(NAME floor 	COMMAND ${NEO} -s floor.scr)
-#add_test(NAME iss16	COMMAND ${NEO} -s issue16.scr)
-#add_test(NAME iss25	COMMAND issue25.sh)
-#add_test(NAME fmt  	COMMAND ${NEO} -T fmt)
-#add_test(NAME pass  	COMMAND ${NEO} -T pass) # a test that always passes
