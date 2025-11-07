@@ -6,6 +6,7 @@
  */
 
 // https://github.com/hpaluch-pil/tcl-cpp-example/blob/master/tcl_ex.cpp
+// NB You need to add the exported functions to tickle.h
 
 #include <cassert>
 #include <cstdlib>
@@ -33,6 +34,43 @@ static Tcl_Interp *interp = nullptr;
 extern "C" int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
+
+
+// 25/11 Added
+void ploppy_insert_row()
+{
+	insert_row_above(curow);
+}
+
+// 25/11 Added
+void ploppy_go(int r, int c)
+{
+	curow = r;
+	cucol = c;
+}
+
+static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
+{
+	curow = r;
+	cucol = c;
+	set_and_eval(r, c, formula, true);
+}
+
+// 25/11 Added
+void ploppy_insert_by_col()
+{
+	//log_func();
+	string line;
+	while(getline(cin, line)) {
+		if(line == ";") { cucol++; 	curow=1; continue;}
+		if(line == "")  { curow++; continue;}
+		if(line == ".") return;
+		//if(line.size() == 0 && is.eof()) return false;
+		if(line.starts_with('#')) continue;
+		set_cell_input_1(curow, cucol, line);
+		curow++;
+	}
+}
 
 char*  ploppy_get_cell_fmt(int r, int c)
 {

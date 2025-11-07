@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Categories=Internet;
+Name=Neoleo
+GenericName=Neoleo
+Comment=Ncurses spreadsheet based on GNU oleo
+#Exec=gnome-terminal -- /usr/local/bin/neoleo %F
+Exec=/usr/local/bin/neoleo %F
+Icon=/usr/local/share/pixmaps/neoleo.png
+Terminal=true
+MimeType=application/x-oleo;
+Keywords=office;spreadsheet;
+

@@ -22,3 +22,8 @@ int ploppy_load_oleo(char* path);
 void ploppy_set_cell(int r, int c, char* formula);
 void ploppy_save_oleo_as(char* path);
 char*  ploppy_get_cell_fmt(int r, int c);
+void ploppy_insert_row();
+void ploppy_go(int r, int c);
+void ploppy_insert_by_col();
+
+

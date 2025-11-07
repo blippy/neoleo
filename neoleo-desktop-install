@@ -1,0 +1,12 @@
+#!/bin/sh
+
+D1=/usr/local/share/applications/
+mkdir -p $D1
+cp neoleo.desktop $D1
+
+D2=/usr/local/share/pixmaps
+mkdir -p $D2
+cp neoleo.png $D2
+
+update-desktop-database /usr/local/share/applications
+

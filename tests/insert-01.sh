@@ -1,20 +1,24 @@
 #!/bin/sh
 
+
+OLEO=insert-01.oleo
+OUT=out/$OLEO
+rm $OUT
+
 NEO=`realpath ../src/neoleo`
-$NEO -m h  << EOF
-! rm -f out/insert-01.oleo
-i
+$NEO -m tcl  <<- "EOF"
+insert-by-col
 12
 13.1
 sum(r1:[-1]c1)
 .
-g 1 1
-ri
-g 1 1
-i
+go 1 1
+insert-row
+go 1 1
+insert-by-col
 42
 .
-w out/insert-01.oleo
+save-oleo-as out/insert-01.oleo
 EOF
 
-diff out/insert-01.oleo verified/insert-01.scr.oleo
+diff $OUT verified/$OLEO

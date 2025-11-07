@@ -89,11 +89,10 @@ static bool hl_scan_range(stringstream& ss, int& start, int& end)
 }
 
 
-void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
+static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
 	curow = r;
 	cucol = c;
-	//CELL* cp = find_or_make_cell(r, c);
 	set_and_eval(r, c, formula, true);
 }
 
