@@ -168,6 +168,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	extern void tickle_main();
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
+	log("\n=== Started as ", argv[0]);
 
 	if (argc - optind == 1) {
 		if (FILE *fp = fopen (argv[optind], "r")) {
