@@ -170,6 +170,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	set_def_format(155); // which is "general.float", believe it or not
 	log("\n=== Started as ", argv[0]);
 	log("Current working dir:", std::filesystem::current_path());
+	FileSetCurrentFileName(string{std::filesystem::current_path()} + "/unnamed.oleo"); // 25/11 In case started up from desktop with no file name
 
 	if (argc - optind == 1) {
 		if (FILE *fp = fopen (argv[optind], "r")) {

@@ -18,6 +18,7 @@
 
 
 #include <cstring>
+#include <filesystem>
 #include <string>
 
 #include "neotypes.h"
@@ -72,8 +73,10 @@ void read_file_generic(FILE *fp, char *format, const char *name)
 		oleo_read_file(fp);
 }
 
+//std::string_view s{"hello"sv};
+//static std::string _FileName = std::filesystem::current_path(); //  + "/unnamed.oleo"sv;
+static std::string _FileName{"unnamed.oleo"};
 
-static std::string _FileName = "unnamed.oleo";
 
 void FileCloseCurrentFile(void)
 {
