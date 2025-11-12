@@ -1,3 +1,4 @@
+//#include <chrono>
 #include <cmath>
 
 #include "cell.h"
@@ -330,9 +331,31 @@ value_t do_ctime (Tour& tour, const args_t& args)
 }
 
 
+value_t do_days  (Tour& tour, const args_t& args)
+{
+	//using namespace std::chrono;
+	nargs_eq(args, 3);
+
+	int y =  num_eval(tour, args[0]);
+	int m =  num_eval(tour, args[1]);
+	int d =  num_eval(tour, args[2]);
+
+	struct tm tm{};
+	tm.tm_year = y-1900; // since 1900
+	tm.tm_mon = m-1; // month [0, 11]
+	tm.tm_mday = d ; // day of the month [1,31]
+
+	time_t t = mktime(&tm); // returns seconds since epoch
+	t = (float) t/(60.0 *  60*  24);
+	//auto ymd{month(1)};
+	return (double)t;
+
+}
+
 
 map<string, parse_function_t> funcmap= {
 	{"ctime", do_ctime},
+	{"days", do_days},
 	{"if", do_if},
 	{"=", do_eq},
 	{"!=", do_ne},
