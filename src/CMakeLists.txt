@@ -10,6 +10,7 @@ set(CMAKE_CXX_COMPILER c++)
 #set(CMAKE_CXX_COMPILER clang++)
 #set(CMAKE_CXX_COMPILER g++)
 
+add_compile_options(-Wno-psabi) # stop obsolete warnings GCC v7 on RPi
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
