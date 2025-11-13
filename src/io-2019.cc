@@ -8,6 +8,7 @@
 #endif
 #include <panel.h>
 
+#include <unistd.h>
 
 
 #include "basic.h"
@@ -51,23 +52,21 @@ int scr_width()
 }
 
 // FN get_ch .
-int get_ch ()
-{
-	return get_ch(stdscr);
-	//int c = getch();
-	//log(c);
-	//write_status(""); // clear the status line
-	//return c;
-}
+
 
 int get_ch (WINDOW *win)
 {
 	int c = wgetch(win);
 	log("get_ch:", c);
+	//write_status("test status");
 	//write_status(""); // clear the status line
 	return c;
 }
 
+int get_ch ()
+{
+	return get_ch(stdscr);
+}
 // FN-END
 
 
@@ -405,8 +404,11 @@ void write_status (const std::string& str)
 {
 	// 25/4 Persist the error messages
 	log("write_status");
-	win_print(1, 0, str);
+	win_print(2, 0, str);
 	clrtoeol();
+	refresh();
+	//wrefresh(stdscr);
+	//sleep(1);
 
 }
 // FN-END

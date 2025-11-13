@@ -119,27 +119,18 @@ void col_prec_form()
 
 	try {
 		int prec = stoi(txt);
-		if(prec<0) throw std::invalid_argument("Cannot be negative");
+		if(prec<0) throw std::out_of_range("Cannot be negative");
 		set_column_prec(prec);
+		log("set column precision");
+		write_status("Column precision set");
 	} catch(const std::invalid_argument& e) {
-
+		write_status("Invalid argument (Press any key)");
+		get_ch();
 	} catch(const std::out_of_range& e) {
-
+		write_status("Out of range (Press any key)");
+		get_ch();
 	}
 
-
-#if 0
-	win_dow par(1, 75, 1, 0);
-	wrefresh(par.m_w);
-	WINDOW* win;
-	win = par.m_w;
-	win_edln ed(win, 70, 0, 0 , desc,  text_field);
-	ed.run();
-	if(ed.m_cancelled) return false;
-	text_field = ed.m_input;
-	return true;
-#endif
-	// TODO
 }
 
 void mnu_column ()
@@ -147,21 +138,25 @@ void mnu_column ()
 
 	// create menu
 	const strings entries{
-		"precision p",
-		"width     w"
+		"align left  l",
+		"align right r",
+		"precision   p",
+		"width       w"
 	};
 
 	int lines = entries.size();
 	int cols = 0;
 	for(const auto& s:entries) if(s.size() > cols) cols = s.size();
 	cols;
-	win_dow win(lines+2, cols+2, 2, 0);
+	win_dow win(lines+2, cols+2, 3, 0);
 	WINDOW *w = win();
 	for(int i = 0; i<lines; i++) win.print_at(i+1, 1, entries[i]);
 	box(w, 0 ,0);
 	wrefresh(w);
 
 	switch(get_ch()) {
+	case 'l': column_align_left(); break;
+	case 'r': column_align_right(); break;
 	case 'p': col_prec_form(); break;
 	case 'w' : col_width_form(); break;
 	}
@@ -210,14 +205,14 @@ bool col_width_form()
 		mvwprintw(w, 3, 2, "A for accept, C for cancel");
 		wrefresh(w);		
 		while(1) {
-			int ch = wgetch(w);
+			int ch = get_ch(w);
 			if(ch == 'a') { accept = true; break;}
 			if(ch == 'c') { break;}
 		}
 	} else {
 		mvwprintw(w, 3, 2, "Bad input. C for cancel");
 		wrefresh(w);
-		while(wgetch(w) == 'c');
+		while(get_ch(w) == 'c');
 	
 	}
 

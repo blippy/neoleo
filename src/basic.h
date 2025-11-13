@@ -20,6 +20,7 @@
 //#include "global.h"
 
 void 	column_align_left();
+void 	column_align_right();
 void	delete_row (int repeat);
 void	insert_1row();
 void	recalculate (int all);

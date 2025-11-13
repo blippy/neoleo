@@ -60,8 +60,8 @@ using namespace std::string_literals;
 static int scr_lines = 24, scr_cols = 80;
 
 
-static int 		input_rows = 1, status_rows = 1;
-static const int 	user_status = 2;
+//static int 		input_rows = 1, status_rows = 1;
+//static const int 	user_status = 2;
 static const int	status = 1;
 static const int	label_rows = 1;
 //static const int	win_id = 1;
@@ -77,12 +77,13 @@ static const int	label_rows = 1;
 /* The tty windows datastructures: */
 
 
+constexpr int grid_starts = 4;	// y-position where data grid starts
 struct window
 {
   /* Do not change these directly. */
   const int id = 1; // a window id
+  int win_down = grid_starts; // should be const
   int win_over = 0;			// x-posiition Where the data in this window starts. Can change due to row number
-  const int win_down = 3;	// y-position where data grid starts
   struct rng screen{0};		/* Cells visible. recenter_* updates this. */
 
   /* Number of lines of spreadsheet that can fit in this window.
@@ -876,7 +877,8 @@ void  io_init_windows ()
 	//getyx(stdscr, y, x);
 	scr_lines = LINES;
 	scr_cols = COLS;
-	cwin->numr = (scr_lines - label_rows - !!user_status * status_rows - input_rows );
+	cwin->win_down = grid_starts;
+	cwin->numr = scr_lines - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
 	cwin->numc = scr_cols;
 	cwin->bottom_edge_r = 0;
 	cwin->right_edge_c = 0;
