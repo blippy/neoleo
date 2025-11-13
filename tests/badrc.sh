@@ -1,12 +1,15 @@
 #!/bin/sh
 
+OLEO=badrc.oleo
+rm -f out/$OLEO
+
+
 NEO=`realpath ../src/neoleo`
-$NEO -m h  badrc.oleo << EOF
+$NEO -m tcl  <<- "EOF"
 # 2025-05-21 Test for bad RC in oleo file
 
-! rm -f out/badrc.oleo
+load-oleo badrc,oleo
+save-oleo-as out/badrc.oleo
+"EOF"
 
-w out/badrc.oleo
-EOF
-
-diff out/badrc.oleo verified/badrc.scr.oleo
+diff out/$OLEO verified/$OLEO

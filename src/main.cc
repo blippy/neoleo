@@ -1,6 +1,7 @@
 //#include <exception>
 #include <getopt.h>
 //#include <iostream>
+#include <filesystem>
 #include <string>
 #include <sys/auxv.h>
 #include <unistd.h>
@@ -10,8 +11,8 @@
 
 #include "assert.h"
 #include "basic.h"
-#include "blang2.h"
-#include "blx.h"
+//#include "blang2.h"
+//#include "blx.h"
 #include "neotypes.h"
 #include "oleofile.h"
 #include "parser-2019.h"
@@ -34,24 +35,23 @@ extern void headless_main();
 extern int headless_script(const char* script_file);
 void curses_main();
 
-static bool	option_tests = false;
-//static int	opt_script = 0;
-static char*	opt_script_file = 0;
+//static bool	option_tests = false;
+//static char*	opt_script_file = 0;
 //std::string	option_tests_argument = "regular";
 
-bool get_option_tests() { return option_tests;}
+//bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "b:Vhm:s:t:v";
+static char short_options[] = "Vhm:t:v";
 static struct option long_options[] =
 {
 		//{"no-repl",		0,	NULL,	'0'},
-		{"blang",		required_argument, NULL, 'b'},
+		//{"blang",		required_argument, NULL, 'b'},
 		{"version",		0,	NULL,	'V'},
 		//{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
 		{"mode",		required_argument,	NULL,	'm'},
 		//{"parser",		0,	NULL,	'p'},
-		{"script",		required_argument,	NULL,	's'},
+		//{"script",		required_argument,	NULL,	's'},
 		{"tcl",			required_argument,	NULL,	't'},
 		//{"tests",		optional_argument,	NULL,	'T'},
 		{"version",		0,	NULL,	'v'},
@@ -85,10 +85,8 @@ show_usage (void)
 
 const char* usage = R"(
   -0, --no-repl            do not use headless or ncurses repl
-  -b, --blang FILE         execute a blang file
   -H, --headless           run without all toolkits
   -h, --help               display this help and exit
-  -s, --script FILE        execute a script
   -t  --tcl FILE           execute a Tcl file
   -V, --version            output version information and exit
 
@@ -102,7 +100,7 @@ Report bugs to https://github.com/blippy/neoleo/issues
 enum class ReplType { none, headless, ncurses};
 struct {
 	//ReplType rt = ReplType::ncurses;
-	strings blang_files;
+	//strings blang_files;
 	string mode;
 	strings tcl_files;
 } cmd_options; // command-line options
@@ -117,9 +115,6 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			break;
 
 		switch (opt) {
-			case 'b':
-				cmd_options.blang_files.push_back(optarg);
-				break;
 			case 'v':
 			case 'V':
 				print_version();
@@ -132,9 +127,9 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			case 'm':
 				cmd_options.mode = optarg;
 				break;
-			case 's':
-				opt_script_file = optarg;
-				break;
+			//case 's':
+			//	opt_script_file = optarg;
+			//	break;
 			case 't':
 				cmd_options.tcl_files.push_back(optarg);
 				break;
@@ -191,11 +186,13 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 
 	Global_modified = 0;
 
+#if 0
 	blx_init();
 	for(auto const& f : cmd_options.blang_files) {
 		auto src = slurp(f.c_str());
 		blang::interpret_string(src);
 	}
+#endif
 
 	for(auto const& f : cmd_options.tcl_files) {
 		extern void tickle_run_file(const std::string& path);
@@ -204,14 +201,16 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 		//blang::interpret_string(src);
 	}
 
+#if 0
 	if(opt_script_file) {
 		headless_script(opt_script_file);
 		//exit(ret);
 	}
+#endif
 
 	const string& mode = cmd_options.mode;
-	if(mode == "h") {headless_main(); }
-	else if(mode=="0") { /* do nothing */ }
+	//if(mode == "h") {headless_main(); }
+	if(mode=="0") { /* do nothing */ }
 	else if(mode=="tcl") { tickle_main();}
 	else { curses_main(); }
 	// otherwise we want to run neither, so it will be purely script-based

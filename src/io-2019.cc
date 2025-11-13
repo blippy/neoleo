@@ -11,7 +11,7 @@
 
 
 #include "basic.h"
-#include "blang2.h"
+//#include "blang2.h"
 #include "io-2019.h"
 #include "neotypes.h"
 #include "parser-2019.h"
@@ -389,10 +389,12 @@ void curses_loop ()
 	case CTRL('v'):		paste_this_cell_formula();		break;
 	}
 
+#if 0
 	if(custom_bindings.contains(c)) {
 		log("custom binding found");
 		blang::interpret_string(custom_bindings[c]);
 	}
+#endif
 
 	i19_parameter = -1;
 }

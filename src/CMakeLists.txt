@@ -34,9 +34,7 @@ include(swig.cmake)
 
 # sources exclusive to building neoleo
 set(neo_srcs 
-	basic.cc    blang2.cc blx.cc io-curses.cc    menu-2025.cc    win.cc
-	     io-headless.cc    
-	io-2019.cc        
+	basic.cc    io-2019.cc  io-curses.cc    menu-2025.cc    win.cc	       
 )
 
 add_executable(neoleo)
