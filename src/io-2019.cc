@@ -308,6 +308,10 @@ static void i19_precision()
 {
 	int prec = std::max(0, i19_parameter);
 	auto cp = find_or_make_cell();
+
+	Global_modified = 1;
+	cp->set_prec(prec);
+#if 0
 	struct cell_flags_s& flags = cp->cell_flags;
 
 	switch(flags.cell_format) {
@@ -322,7 +326,7 @@ static void i19_precision()
 
 	//flags.cell_format = FMT_DOL;
 	flags.cell_precision = prec;
-
+#endif
 }
 
 // FN process_key
