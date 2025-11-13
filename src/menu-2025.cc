@@ -34,15 +34,15 @@ void show_menu (bool active) // FN
 	text = pad_right(text, COLS);
 
 	// display menu
-	int cp = 1; // color pair
-	init_pair(cp, COLOR_BLACK, COLOR_CYAN);
+	//int cp = 1; // color pair
+	//init_pair(cp, COLOR_BLACK, COLOR_CYAN);
 	WINDOW *main_menu = stdscr;
 	//WINDOW* main_menu = newwin(1, COLS, 0, 0);
 	wmove(main_menu, 0, 0);
-	wattron(main_menu, COLOR_PAIR(cp));
+	wattron(main_menu, COLOR_PAIR(BL_ON_CY));
 
 	wprintw(main_menu,"%s", text.c_str());
-	wattroff(main_menu, COLOR_PAIR(cp));
+	wattroff(main_menu, COLOR_PAIR(BL_ON_CY));
 	//refresh();
 }
 

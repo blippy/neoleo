@@ -496,6 +496,8 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 
 void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
+
+	defer2(wattroff, stdscr, COLOR_PAIR(GR_ON_BL)); // used if current row is row we're printing
 	//log("_io_pr_cell_win:", cp);
 	int wwid;
 
@@ -517,7 +519,9 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 
 	assert(win == cwin);
 	int glowing = (r == curow && c == cucol && win == cwin);
-	if (glowing) standout ();
+	if (glowing) {
+		standout ();
+	}
 
 	bool is_bold = cp->cell_flags.bold;
 	if(is_bold) wattr_on(stdscr, WA_BOLD, 0);
@@ -525,7 +529,7 @@ void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // 
 	bool is_italic = cp->cell_flags.italic;
 	if(is_italic) wattr_on(stdscr, WA_ITALIC, 0);
 
-
+	if(r == curow) {wattron(stdscr, COLOR_PAIR(GR_ON_BL));}
 
 	enum jst j = cp->get_cell_jst();
 	if (j == jst::def) j = default_jst;
@@ -832,6 +836,8 @@ void curses_main () // FN
 	noecho ();
 	nonl ();
 	start_color();
+	init_pair(BL_ON_CY, COLOR_BLACK, COLOR_CYAN);
+	init_pair(GR_ON_BL, COLOR_GREEN, COLOR_BLACK);
 	curs_set(0); // turn the cursor off
 
 	io_init_windows();

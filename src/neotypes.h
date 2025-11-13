@@ -225,6 +225,18 @@ private:
 	T m_param;
 };
 
+template <typename R, typename T, typename U>
+class defer2 {
+public:
+	//defer(std::function<void>() unwind) : m_unwind{unwind} {};
+	defer2(R fn_unwind, T param1, U param2)  : m_unwind{fn_unwind}, m_param1{param1},  m_param2{param2} {};
+	~defer2() { m_unwind(m_param1, m_param2) ; };
+private:
+	R m_unwind;
+	T m_param1;
+	U m_param2;
+};
+
 
 
 /* https://www.quora.com/How-does-one-write-a-custom-exception-class-in-C++

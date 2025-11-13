@@ -17,6 +17,9 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#define BL_ON_CY 1 // black on cyan. for menu
+#define GR_ON_BL 2 // green on black, for current row
+
 enum class dirn { left, right, up, down};
 
 void cur_io_repaint();
