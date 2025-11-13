@@ -40,7 +40,7 @@ set(neo_srcs
 )
 
 add_executable(neoleo)
-target_sources(neoleo PUBLIC ${neo_srcs} main.cc ${wrapper_cc})
+target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  ${wrapper_cc})
 add_dependencies(neoleo ploppy)
 target_link_libraries(neoleo ploppy)
 target_link_libraries(neoleo ${TCL_LIBRARIES})
