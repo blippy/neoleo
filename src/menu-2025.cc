@@ -11,6 +11,7 @@
 #endif
 
 #include "menu-2025.h"
+#include "basic.h"
 #include "spans.h"
 #include "basic.h"
 #include "io-2019.h"
@@ -22,6 +23,7 @@
 using namespace std;
 
 static bool col_width_form();
+bool invoke_std_form(const char* desc, std::string& text_field);
 
 
 
@@ -110,6 +112,60 @@ void test_edit()
 	//wgetch(win());
 }
 
+void col_prec_form()
+{
+	string txt;
+	if(!invoke_std_form("precision: ", txt)) return;
+
+	try {
+		int prec = stoi(txt);
+		if(prec<0) throw std::invalid_argument("Cannot be negative");
+		set_column_prec(prec);
+	} catch(const std::invalid_argument& e) {
+
+	} catch(const std::out_of_range& e) {
+
+	}
+
+
+#if 0
+	win_dow par(1, 75, 1, 0);
+	wrefresh(par.m_w);
+	WINDOW* win;
+	win = par.m_w;
+	win_edln ed(win, 70, 0, 0 , desc,  text_field);
+	ed.run();
+	if(ed.m_cancelled) return false;
+	text_field = ed.m_input;
+	return true;
+#endif
+	// TODO
+}
+
+void mnu_column ()
+{
+
+	// create menu
+	const strings entries{
+		"precision p",
+		"width     w"
+	};
+
+	int lines = entries.size();
+	int cols = 0;
+	for(const auto& s:entries) if(s.size() > cols) cols = s.size();
+	cols;
+	win_dow win(lines+2, cols+2, 2, 0);
+	WINDOW *w = win();
+	for(int i = 0; i<lines; i++) win.print_at(i+1, 1, entries[i]);
+	box(w, 0 ,0);
+	wrefresh(w);
+
+	switch(get_ch()) {
+	case 'p': col_prec_form(); break;
+	case 'w' : col_width_form(); break;
+	}
+}
 // shown when you hit the menu button (m key)
 void process_menu() // FN
 {
@@ -117,7 +173,7 @@ void process_menu() // FN
 	defer1 d(show_menu, false);
 	
 	switch(get_ch()) {
-		case 'c': col_width_form(); break;
+		case 'c': mnu_column(); break;
 		case 't': test_edit(); break;
 #if USE_NEWT
 		case 't': test_newt(); break;

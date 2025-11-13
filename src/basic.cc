@@ -218,6 +218,22 @@ void column_align_left ()
 }
 // FN-END
 
+// 25/11 Added
+void set_column_prec(int prec)
+{
+	rng_t rng{current_col()};
+	assert(rng.hr == MAX_ROW);
+	assert(rng.lr == MIN_ROW);
+	//set_region_alignment(rng, 'L');
+	//make_cells_in_range (where); // BAD IDEA!
+	for(CELL* cp:get_cells_in_range(rng)) {
+		//log("set_column_prec called");
+		if(cp == nullptr) continue;
+		Global_modified = 1;
+		cp->set_prec(prec);
+	}
+}
+
 void set_cell_alignment_left()
 {
 	set_cell_alignment('L');

@@ -35,6 +35,12 @@ using std::endl;
 using std::get;
 
 
+void cell::set_prec(int p)
+{
+	cell_flags.cell_format = FMT_FXT;
+	cell_flags.cell_precision = p;
+}
+
 void cell::set_jst(enum jst j)
 {
 	cell_flags.cell_justify = j;
@@ -43,7 +49,8 @@ void cell::set_jst(enum jst j)
 
 void set_precision(CELL* cp, int precision)
 {
-	cp->cell_flags.cell_precision = precision;
+	if(!cp) return;
+	cp->set_prec(precision);
 }
 
 bool is_nul(CELL* cp)

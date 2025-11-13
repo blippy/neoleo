@@ -33,7 +33,7 @@ using std::map;
 using std::string;
 
 static void col_cmd2019();
-extern void hl_write_file();
+//extern void hl_write_file();
 static void maybe_quit_spreadsheet2019();
 static void row_cmd2019();
 static void save_spreadsheet2019();
@@ -164,7 +164,7 @@ const std::string nform_c::text()
 
 // return true for normal exit, false if user wants to abort action
 // text_field is modified by nform_c
-static bool invoke_std_form(const char* desc, std::string& text_field)
+bool invoke_std_form(const char* desc, std::string& text_field)
 {
 #ifndef  USE_FORM
 	win_dow par(1, 75, 1, 0);

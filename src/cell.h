@@ -106,6 +106,7 @@ class cell
 		struct cell_flags_s cell_flags;
 		enum jst get_cell_jst() { return cell_flags.cell_justify; }
 		void set_jst(enum jst j);
+		void set_prec(int p);
 		int width();
 
 
