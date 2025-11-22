@@ -160,6 +160,10 @@ void set_exit (int code)
 	exit_value = code;
 }
 
+void tickle_eval_expr(const std::string& expr)
+{
+	Tcl_Eval(interp, expr.c_str()); // TODO error check and cleanup
+}
 
 void tickle_run_file(const std::string& path)
 {

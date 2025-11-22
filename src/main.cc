@@ -31,8 +31,8 @@ using std::vector;
 
 using namespace std::literals;
 
-extern void headless_main();
-extern int headless_script(const char* script_file);
+//extern void headless_main();
+//extern int headless_script(const char* script_file);
 void curses_main();
 
 //static bool	option_tests = false;
@@ -41,11 +41,12 @@ void curses_main();
 
 //bool get_option_tests() { return option_tests;}
 
-static char short_options[] = "Vhm:t:v";
+static char short_options[] = "e:hm:t:v";
 static struct option long_options[] =
 {
 		//{"no-repl",		0,	NULL,	'0'},
 		//{"blang",		required_argument, NULL, 'b'},
+		{"eval",		required_argument,	NULL,	'e'},
 		{"version",		0,	NULL,	'V'},
 		//{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
@@ -84,9 +85,12 @@ show_usage (void)
 	printf("Usage: %s [OPTION]... [FILE]...\n", PACKAGE);
 
 const char* usage = R"(
-  -0, --no-repl            do not use headless or ncurses repl
-  -H, --headless           run without all toolkits
+  -e, --eval EXPR          Evaluate a Tcl expression
   -h, --help               display this help and exit
+  -m, --mode MODE          run in mode MODE, where MODE is one of:
+                              0 : do nothing. Exit after running scripts
+                              tcl : read and execute Tcl commands
+                           Default is to use ncurses
   -t  --tcl FILE           execute a Tcl file
   -V, --version            output version information and exit
 
@@ -98,11 +102,12 @@ Report bugs to https://github.com/blippy/neoleo/issues
 
 
 enum class ReplType { none, headless, ncurses};
+typedef struct {char type; string  str;} opt_tcl_t; // type is either 'e' for eval or 't' for Tcl file. str is the thing to be evaluated/run
 struct {
 	//ReplType rt = ReplType::ncurses;
 	//strings blang_files;
 	string mode;
-	strings tcl_files;
+	vector<opt_tcl_t> tcls; // stuff to either eval or run
 } cmd_options; // command-line options
 
 void parse_command_line (int argc, char **argv) //bool& user_wants_headless, strings& blang_files)
@@ -115,6 +120,9 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			break;
 
 		switch (opt) {
+			case 'e':
+				cmd_options.tcls.push_back(opt_tcl_t{'e', optarg});
+				break;
 			case 'v':
 			case 'V':
 				print_version();
@@ -131,7 +139,7 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			//	opt_script_file = optarg;
 			//	break;
 			case 't':
-				cmd_options.tcl_files.push_back(optarg);
+				cmd_options.tcls.push_back(opt_tcl_t{'t', optarg});
 				break;
 		}
 	}
@@ -194,9 +202,15 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	}
 #endif
 
-	for(auto const& f : cmd_options.tcl_files) {
-		extern void tickle_run_file(const std::string& path);
-		tickle_run_file(f);
+	void tickle_eval_expr(const std::string& expr);
+	extern void tickle_run_file(const std::string& path);
+	for(auto const& f : cmd_options.tcls) {
+		//cout << "type is " << f.type << endl;
+		switch(f.type) {
+		case 'e' : tickle_eval_expr(f.str); break;
+		case 't' : tickle_run_file(f.str); break;
+		default: throw std::logic_error("Cannot reach here");
+		}
 		//auto src = slurp(f.c_str());
 		//blang::interpret_string(src);
 	}

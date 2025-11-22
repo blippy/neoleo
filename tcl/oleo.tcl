@@ -44,3 +44,13 @@ proc ::oleo::get-col {n} {
         return $result
 }       
 
+
+proc ::oleo::print-range {r0 c0 r1 c1 } {
+	forn r $r0 $r1 1 {
+		forn c $c0 $c1 1 {
+			puts -nonewline [get-cell-fmt $r $c] 
+			if {$c < $c1} { puts -nonewline " "}
+		}
+		puts ""
+	}
+}
