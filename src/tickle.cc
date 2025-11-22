@@ -34,8 +34,10 @@ static Tcl_Interp *interp = nullptr;
 extern "C" int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
+char*  ploppy_get_cell_fmt(int r, int c);
 
 
+// 25/11
 static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 {
 	curow = r;
@@ -43,6 +45,19 @@ static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 	set_and_eval(r, c, formula, true);
 }
 
+
+// 25/11
+void ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi)
+{
+	for(auto r = r_lo; r <= r_hi; r++) {
+		for(auto c = c_lo; c <= c_hi; c++) {
+			cout << ploppy_get_cell_fmt(r, c);
+			if(c<c_hi) cout << " ";
+		}
+		cout << endl;
+	}
+
+}
 
 // 25/11
 void ploppy_insert_by_row()

@@ -19,6 +19,7 @@
 %rename ("load-oleo") ploppy_load_oleo;
 %rename ("save-oleo-as") ploppy_save_oleo_as;
 %rename ("set-cell") ploppy_set_cell;
+%rename ("print-range") ploppy_print_range;
 
 /*
 %{
