@@ -49,6 +49,16 @@ namespace fs = std::filesystem;
 
 
 
+// 25/11
+std::size_t strlen_utf8 (const std::string& str) {
+    std::size_t length = 0;
+    for (char c : str) {
+        if ((c & 0xC0) != 0x80) {
+            ++length;
+        }
+    }
+    return length;
+}
 
 
 
@@ -193,14 +203,16 @@ std::string spaces(int n)
 // FN pad_left .
 std::string pad_left(const std::string& s, int width)
 {
-	return spaces(width-s.size()) + s;
+	size_t len = strlen_utf8(s);
+	return spaces(width-len) + s;
 }
 // FN-END
 
 // FN pad_right .
 std::string pad_right(const std::string& s, int width)
 {
-	return s + spaces(width-s.size());
+	size_t len = strlen_utf8(s);
+	return s + spaces(width-len);
 }
 // FN-END
 
