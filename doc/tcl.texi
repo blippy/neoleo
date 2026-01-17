@@ -24,3 +24,61 @@ for i 1 10 2 @{
 @}
 @end example
 You can also specify negative steps
+
+
+The Tcl functions in neoleo are listed below. The variables R stand for `row' and `C' for column throughout.
+
+@table @samp
+
+@item get-cell-fmt R C
+Print a formatted cell for row R col C.
+
+
+@item go R C
+Go to row R col C.
+
+@item hi-ploppy
+Prints `Ploppy Tcl says hi'. This can be used for testing purposes.
+
+@item insert-by-col
+Insert values into spreadsheet for current row, column 1. 
+Enter one value per row.
+Comments start with `#'. Use `;' to move to the next row.
+Use `.' to terminate input.
+
+@item insert-by-row
+Insert values into spreadsheet rowwise. As per `insert-by-col' but rowwise
+instead of columnwise.
+
+
+@item insert-row
+Insert a row above the current row.
+
+@item load-oleo FILENAME
+Load spreadsheet FILENAME into neoleo.
+
+
+@item max-col
+Get the maximum column used in the spreadsheet.
+
+@item max-row
+Get the maximum row used in the spreadsheet.
+
+@item ploppy-life
+Return the value `42'. This is just for testing purposes.
+
+@item print-range R0 C0 R1 C1
+Print range in ASCII format from row R0 col C0 to row R1 col C1.
+
+@item save-oleo-as FILENAME
+Save the current spreadsheet as FILENAME.
+
+@item set-cell R C FORMULA
+Set cell with formula.
+
+
+@item set-exit INT
+Set the exit code of neoleo to INT. This can be used for signalling test errors.
+
+
+@end table

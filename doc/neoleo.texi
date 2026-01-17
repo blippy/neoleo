@@ -2,8 +2,8 @@
 @c %**start of header
 
 @set version 16.0
-@set update-date 23 Oct 2025
-@set update-month Oct 2025
+@set update-date 17 Jan 2026
+@set update-month Jan 2026
 
 @setfilename neoleo.info
 @settitle Neoleo @value{version}
@@ -100,11 +100,12 @@ Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
+*** TODO Invocation
+
 *** TODO entering formulae
 
 *** TODO sudo ldconfig to update install
 
-6
 
 @menu
 * Key bindings::	Start here!
