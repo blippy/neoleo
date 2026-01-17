@@ -820,7 +820,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 static void close_curses()
 {
 	endwin();
-	cout << "close_curses called\n";
+	//cout << "close_curses called\n";
 }
 
 void curses_main () // FN

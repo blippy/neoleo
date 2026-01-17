@@ -57,9 +57,7 @@ int scr_width()
 int get_ch (WINDOW *win)
 {
 	int c = wgetch(win);
-	log("get_ch:", c);
-	//write_status("test status");
-	//write_status(""); // clear the status line
+	//log("get_ch:", c);
 	return c;
 }
 

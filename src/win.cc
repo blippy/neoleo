@@ -165,7 +165,7 @@ void win_edln::add_char(int ch)
 {
 	if(m_only_digits && ! isdigit(ch)) return;
 	// m_input += ch; continue;
-	log("m_ncols:", m_ncols);
+	//log("m_ncols:", m_ncols);
 	if (m_input.size() >= (size_t) m_ncols) return;
 	m_input.insert(m_pos, string{static_cast<char>(ch)});
 	m_pos++;
