@@ -1,6 +1,39 @@
 @node Invoking neoleo, Key bindings, Top, Top
 @chapter Invoking neoleo
 
-TODO command line arguments
+@table @option
 
+@item -e, --eval EXPR
+Evaluate a Tcl expression(s). Multiple expressions can be separated by `;'s,
+according to standard Tcl syntax.
+
+
+@item -h,--help
+Print basic usage
+
+@item -m, --mode  MODE
+Control the mode of operation of neoleo. If neoleo is invoked without this option, it defaults to curses mode, presenting the user with a curses interface.
+The modes recognised are:
+0 do nothing
+tcl tcl mode
+If an unknown mode is used, neoleo defaults to the curses interface.
+
+
+@item -t, --tcl FILE
+Execute a Tcl file
+
+
+@item -v, --version
+Print version information
+
+
+@end table
+
+
+Multiple `-e' and `-t' options can be specified and mixed. They are evaluated, collectively, in the order specified in the command line. 
+E.g.
+
+@command{neoleo -e EXPR1 -t FILE -e EXPR2} 
+
+evaluates expression `EXPR1` followed by sourcing the Tcl file `FILE', followed by EXPR2
 
