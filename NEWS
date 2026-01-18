@@ -2,17 +2,14 @@
 VERSION:	16.0
 STATUS:		DEV
 DATE:		TBD
-NAME: 		HANK SCHRADER
 
-"Guess that's progress."
 
-After what was mostly compilation bugfixes in previous releases, we now have new features.
+After what was mostly compilation bugfixes in previous releases, 
+we now have new features.
 
 == FEATURES
 
-* Check out https://www.youtube.com/watch?v=ei2uxmvnI54 , where I show how you can control processes using neoleo.
-
-* Added blang - a BASIC language for neoleo, similar in idea to VBA
+* Added support for Tcl 
 
 * Page Up/Down make big movements
 

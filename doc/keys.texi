@@ -1,4 +1,4 @@
-@node Key bindings, Tcl bindings, Top, Top
+@node Key bindings, Tcl bindings, Invoking neoleo, Top
 @chapter Key bindings
 
 Absolute minimum you need to know:

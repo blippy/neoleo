@@ -11,6 +11,7 @@ find_program(MAKEINFO_EXECUTABLE makeinfo)
 set(info_in 
 	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/headless.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/invoking.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/tcl.texi
 )
@@ -37,6 +38,7 @@ set(html_out
 	${H}/index.html
 	${H}/Command-Index.html
 	${H}/Function-Index.html
+	${H}/Invoking-neoleo.html
 	${H}/Key-bindings.html
 	${H}/Options-Index.html
 	${H}/Concept-Index.html  
