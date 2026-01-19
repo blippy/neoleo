@@ -93,14 +93,12 @@ except that this permission notice may be stated in a translation approved
 by the Free Software Foundation.
 @end titlepage
 
-@node   Top, (dir), (dir)
+@node   Top, Invoking neoleo, (dir)
 @top Neoleo
 
 Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
-
-*** TODO Invocation
 
 *** TODO entering formulae
 
@@ -111,7 +109,6 @@ means complete, nor necessarily accurate for that matter.
 * Invoking neoleo::	Command-line arguments
 * Key bindings::	Start here!
 * Tcl bindings::	Program neoleo using Tcl
-* Headless mode::
 * Key Index::
 * Command Index::
 * Function Index::
@@ -135,7 +132,6 @@ info files stored in a place like
 
 
 @include invoking.texi
-@include headless.texi
 @include keys.texi
 @include tcl.texi
  
@@ -157,7 +153,7 @@ info files stored in a place like
 @c @include dbms.texi
 
 @page
-@node   Key Index, Command Index, Headless mode, Top
+@node   Key Index, Command Index, Tcl bindings, Top
 @unnumbered Key Index
 @printindex ky
 

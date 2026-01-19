@@ -14,8 +14,14 @@ Print basic usage
 @item -m, --mode  MODE
 Control the mode of operation of neoleo. If neoleo is invoked without this option, it defaults to curses mode, presenting the user with a curses interface.
 The modes recognised are:
-0 do nothing
-tcl tcl mode
+
+@table @samp
+@item 0 
+Zero-mode. It does not run neoleo interactively. It is only useful when used in conjunction with `-e' and '-t' options, otherwise it won't do anything.
+@item tcl 
+Tcl mode. Accepts Tcl commands via stdin.
+@end table
+
 If an unknown mode is used, neoleo defaults to the curses interface.
 
 
