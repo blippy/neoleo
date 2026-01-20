@@ -38,13 +38,58 @@ sudo dnf install ncurses-devel
 
 Other packages may be required.
 
+## Obtaining and unpacking neoleo
 
-That's not an exhaustive list.
-Help is avialable for the following platforms:
-[INSTALL-arch](INSTALL-arch.md)
-[INSTALL-debian](INSTALL-debian.md)
-[INSTALL-fedora](INSTALL-fedora.md)
-[INSTALL-slack](INSTALL-slack.md)
+### Git - development version
+
+This method is for developers. Distro maintainers should use the released version instead.
+
+```
+git clone https://github.com/blippy/neoleo.git
+cd neoleo
+```
+
+### Released version (for distro maintainers)
+
+```
+wget https://github.com/blippy/neoleo/archive/refs/tags/v16.0.tar.gz
+tar xvfz v16.0.tar.gz
+cd neoleo-16.0
+
+```
+
+## Building
+
+```
+mkdir build
+cd build
+cmake .. # but see below for customisation
+```
+
+By default, neoleo installs to `/usr/local`. Some developers like to install it to `$HOME/.local`. You can install it anywhere. Distro maintainers should install it to `/usr`, so will need to issue a command like:
+
+```
+cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+```
+
+Adjust according to taste.
+
+Now build:
+
+```
+make
+```
+
+You are likely to get a faster build if you use simultaneous builds, e.g. :
+
+```
+make -j12
+```
+
+## Linking
+
+Here be dragons. 
+
 
 
 Contents
