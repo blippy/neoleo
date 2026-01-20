@@ -67,5 +67,6 @@ target_link_libraries(testneo ${TCL_LIBRARIES})
 #)
 
 add_custom_target(link
+	COMMAND chmod a+x ${CMAKE_INSTALL_PREFIX}/lib/libploppy.so
 	COMMAND ldconfig -n ${CMAKE_INSTALL_PREFIX}/lib
 )	
