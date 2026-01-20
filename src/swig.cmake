@@ -12,7 +12,7 @@ set(wrapper_cc ${CMAKE_CURRENT_BINARY_DIR}/tickle_wrap.cc)
 add_custom_command(
 	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/tickle_wrap.o
 	COMMAND swig -c++ -tcl  -o ${wrapper_cc} ${CMAKE_CURRENT_SOURCE_DIR}/tickle.i
-	COMMAND c++ -I${TCL_INCLUDE_DIRS} -I${CMAKE_CURRENT_SOURCE_DIR}  -c 	${wrapper_cc}
+	COMMAND c++ -I${TCL_INCLUDE_DIRS} -I${CMAKE_CURRENT_SOURCE_DIR}  -fPIC -c 	${wrapper_cc}
 	BYPRODUCTS ${wrapper_cc} # needed??
 	COMMENT "Generating swig wrapper"
 )
@@ -33,6 +33,7 @@ add_custom_target(obj_wrapper
 
 #add_library(ploppy SHARED ${wrapper_cc} ${common_srcs})
 add_library(ploppy SHARED ${common_srcs}  ${CMAKE_CURRENT_BINARY_DIR}/tickle_wrap.o)
+#set_property(TARGET ploppy PROPERTY POSITION_INDEPENDENT_CODE ON)
 add_dependencies(ploppy obj_wrapper)
 #target_link_libraries(ploppy common)
 install(TARGETS ploppy DESTINATION lib)
