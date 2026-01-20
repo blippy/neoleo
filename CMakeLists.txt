@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(neoleo)
 
-#set(CMAKE_VERBOSE_MAKEFILE ON)
+##set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_subdirectory(doc)
 add_subdirectory(examples)
