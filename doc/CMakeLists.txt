@@ -2,6 +2,8 @@
 
 #project(doc)
 
+include(Man.cmake)
+
 find_program(MAKEINFO_EXECUTABLE makeinfo)
 
 

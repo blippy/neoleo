@@ -20,8 +20,6 @@ we now have new features.
 * Removed functionality to create csv and dsv files. examples/mkcsv.py
 contains an example of converting an oleo file to csv.
 
-* Added manpages: neoleo-file, neoleo-headless, neoleo-keys
-
 * Switched to cmake. Autotools ditched. You will therefore need cmake
 v3.30 or better installed. I have found cmake easier to deal with.
 v3.30 is required for C++23 `import std`.
@@ -43,10 +41,6 @@ refers to current column.
 (move to 1st column). Note that this is not supported on all terminals.
 
 * Fixed a bug whereby it hung on bad script insertion
-
-* p - print rows with row-range specifiers
-
-
 
 
 ===========================================================================
