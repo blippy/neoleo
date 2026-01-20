@@ -58,11 +58,14 @@ target_link_libraries(testneo ${TCL_LIBRARIES})
 #target_link_libraries(testneo common)
 #target_link_libraries(testneo ${TCL_LIBRARIES})
 
-add_custom_target(link DEPENDS ploppy)
-add_custom_command(TARGET link
-	POST_BUILD
-	#	COMMAND  cp app.uf2 ${rpi}/RPI-RP2/app.uf2
-	COMMAND ldconfig -n ${CMAKE_INSTALL_PREFIX}/lib
-	USES_TERMINAL
-)
+#add_custom_target(link DEPENDS ploppy)
+#add_custom_command(TARGET link
+#	POST_BUILD
+#	#	COMMAND  cp app.uf2 ${rpi}/RPI-RP2/app.uf2
+#	COMMAND ldconfig -n ${CMAKE_INSTALL_PREFIX}/lib
+#	USES_TERMINAL
+#)
 
+add_custom_target(link
+	COMMAND ldconfig -n ${CMAKE_INSTALL_PREFIX}/lib
+)	
