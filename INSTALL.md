@@ -5,6 +5,9 @@ I cannot guarantee this is complete. Installation is such a fiddly process, and 
 ## Contents
 
 * Prerequisites
+* Building
+* Installing and Linking
+* Uninstalling
 * Trouble-shooting
 
 
@@ -86,33 +89,39 @@ You are likely to get a faster build if you use simultaneous builds, e.g. :
 make -j12
 ```
 
-## Linking
+## Installing and Linking
 
-Here be dragons. 
+Here be dragons. Installing is easy enough:
 
-
-
-Contents
-========
-
-Trouble-shooting
-Basic Installation
-Compilers and Options
-
-mkdir build
-cd build
-cmake  -DCMAKE_INSTALL_PREFIX=$HOME/tmp ..
-make
+```
 sudo make install
+```
 
-Packagers probably want to use
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+You need to link the neoleo library too. Sometimes it is as easy as:
 
-An uninstall target is also provided. So you can so something like
+```
+sudo ldconfig
+```
+
+Problems arise when the library `libploppy.so` is not installed to a know directory. When you run `neoleo`, you may get the message:
+
+```
+neoleo: error while loading shared libraries: libploppy.so: cannot open shared object file: No such file or directory
+```
+
+It will not happen if you install to prefix `/usr/`, but `/usr/lib` might cause problems, depending on the distribution, as will other directories.
+
+
+## Uninstalling
+
+Use the command:
+
+```
 sudo make uninstall
+```
 
-Trouble-shooting
-================
+
+## Trouble-shooting
 
 * error adding symbols: DSO missing from command line
 
