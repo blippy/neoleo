@@ -91,6 +91,8 @@ make -j12
 
 ## Installing and Linking
 
+**Don't do this step. I might need it for later, though**
+
 Here be dragons. Installing is easy enough:
 
 ```
