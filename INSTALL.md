@@ -1,11 +1,45 @@
 # Installation overview for 16.0
 
+I cannot guarantee this is complete. Installation is such a fiddly process, and each Linux distro is its own special snowflake. Let me know of any build failures.
+
+## Contents
+
+* Prerequisites
+* Trouble-shooting
+
+
+## Prerequisites
+
 To compile neoleo you need:
 * cmake
 * ncurses developer libraries
 * swig
 * tcl headers
 
+### Arch (as at 2026-01-20)
+
+```
+sudo pacman -S swig tcl texlive-basic
+```
+
+Texlive might be more, or less, complete.
+
+### Debian (Trixie)
+
+```
+sudo apt install autoconf build-essential pkgconf libncurses-dev texinfo tcl-dev
+```
+
+### Fedora
+
+```
+sudo dnf install ncurses-devel 
+```
+
+Other packages may be required.
+
+
+That's not an exhaustive list.
 Help is avialable for the following platforms:
 [INSTALL-arch](INSTALL-arch.md)
 [INSTALL-debian](INSTALL-debian.md)
