@@ -4,7 +4,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging
-set(CMAKE_VERBOSE_MAKEFILE TRUE)
+#set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 set(CMAKE_CXX_COMPILER c++)
 #set(CMAKE_CXX_COMPILER clang++)
@@ -24,12 +24,21 @@ pkg_check_modules(TCL REQUIRED tcl)
 include_directories(${TCL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}) # for all targets
 #link_libraries(${TCL_LIBRARIES}) # required by everything
 
+include(swig.cmake)
+
 # files that we need for creating neoleo, testneo and a shared library
-set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc)
+set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc ${wrapper_cc})
 #add_library(common SHARED ${common_srcs})
 
+# this is the "object library" target: compiles the sources only once
+add_library(objlib OBJECT ${common_srcs})
+# shared libraries need PIC
+set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
+# shared and static libraries built from the same object files
+add_library(ploppy_shared SHARED $<TARGET_OBJECTS:objlib>)
+add_library(ploppy_static STATIC $<TARGET_OBJECTS:objlib>)
 
-include(swig.cmake)
+
 
 
 # sources exclusive to building neoleo
@@ -39,10 +48,11 @@ set(neo_srcs
 
 add_executable(neoleo)
 target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  ${wrapper_cc})
-add_dependencies(neoleo ploppy)
-target_link_libraries(neoleo ploppy)
+#add_dependencies(neoleo ploppy)
+#target_link_libraries(neoleo ploppy)
+#target_link_libraries(neoleo Common_static)
+target_link_libraries(neoleo ploppy_static)
 target_link_libraries(neoleo ${TCL_LIBRARIES})
-#target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  Wrapper/tickleTCL_wrap.cc)
 target_link_libraries(neoleo ncursesw tinfo)
 install(TARGETS neoleo)
 
@@ -51,8 +61,9 @@ install(TARGETS neoleo)
 
 # build testneo, which you shouldn't install, as it's for testing purposes
 add_executable(testneo testneo.cc)
-add_dependencies(testneo ploppy)
-target_link_libraries(testneo ploppy)
+#add_dependencies(testneo ploppy)
+#target_link_libraries(testneo ploppy)
+target_link_libraries(testneo ploppy_static)
 target_link_libraries(testneo ${TCL_LIBRARIES})
 #add_dependencies(testneo common)
 #target_link_libraries(testneo common)
