@@ -5,6 +5,8 @@ You can program neoleo using Tcl, either calling Tcl code from within neoleo ("e
 There is also a Tcl oleo package that provides extra functions for your programming convenience. 
 You can combine this regular Tcl to produce really powerful functionality.
 
+load libploppy.so
+
 Part of the oleo package:
 
 proc ::oleo::incra @{arr key by@}
@@ -75,6 +77,10 @@ Save the current spreadsheet as FILENAME.
 
 @item set-cell R C FORMULA
 Set cell with formula.
+E.g.
+set-cell 1 1 "\"this is a string\""
+set-cell 1 1 "42"
+set-cell 2 1 "r1c1+1"
 
 
 @item set-exit INT

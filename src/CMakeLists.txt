@@ -35,8 +35,9 @@ add_library(objlib OBJECT ${common_srcs})
 # shared libraries need PIC
 set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 # shared and static libraries built from the same object files
-add_library(ploppy_shared SHARED $<TARGET_OBJECTS:objlib>)
+add_library(ploppy SHARED $<TARGET_OBJECTS:objlib>)
 add_library(ploppy_static STATIC $<TARGET_OBJECTS:objlib>)
+install(TARGETS ploppy)
 
 
 
