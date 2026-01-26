@@ -108,6 +108,7 @@ means complete, nor necessarily accurate for that matter.
 @menu
 * Invoking neoleo::	Command-line arguments
 * Key bindings::	Start here!
+* Editing cells::	Including numbers, strings, formulae
 * Tcl bindings::	Program neoleo using Tcl
 * Key Index::
 * Command Index::
@@ -133,6 +134,7 @@ info files stored in a place like
 
 @include invoking.texi
 @include keys.texi
+@include cells.texi
 @include tcl.texi
  
 @c @include running.texi

@@ -13,6 +13,7 @@ find_program(MAKEINFO_EXECUTABLE makeinfo)
 set(info_in 
 	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/invoking.texi
+	${CMAKE_CURRENT_SOURCE_DIR}/cells.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
 	${CMAKE_CURRENT_SOURCE_DIR}/tcl.texi
 )
@@ -38,6 +39,7 @@ set(H ${CMAKE_CURRENT_BINARY_DIR}/html)
 set(html_out 
 	${H}/index.html
 	${H}/Command-Index.html
+	${H}/Editing-cells.html
 	${H}/Function-Index.html
 	${H}/Invoking-neoleo.html
 	${H}/Key-bindings.html

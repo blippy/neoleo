@@ -1,0 +1,82 @@
+@node Editing cells, Tcl bindings, Key bindings, Top
+@chapter Editing cell contents
+
+To edit a cell from the main screen, position the cursor to the cell you want to edit, and type `='. 
+There are three types of values you can create/edit: numbers, strings, formulae. Number are entered in the usual way. 
+
+Strings should be prefixed by the `"' character. Example:
+
+@example
+="This is some text
+@end example
+ 
+@section Formulae
+
+Formulae can take a combination of numeric values, strings, ranges, cell references, and functions.
+
+Neoleo understands the following operators: @code{=, !=, <=, <. >, >=, ^, +, -, /}. These have the usual meaning. Here `^' means "power".
+
+@subsection Ranges and cell references
+
+References are made via the `RC' convention. For example, `R1C2' refers to row 1 column 2. 
+Leaving out a number implies the current row/column. For example, `R2C' refers to row 2 of the current column.
+
+Relative references can be obtained by enclosing a number in square brackets. Thus `r[-1]c' refers to the previous row, current column. 
+
+Ranges are specified by separating them by colons. E.g. `r1:2c10:11' refers to all the cells in row 1 column 10 to row 2 column 11. 
+Relative rows/columns cannot be mixed in with ranges. 
+
+
+
+
+
+
+@subsection Functions
+
+The list of funtions are:
+
+
+@table @samp
+
+@item ctime(NUM)
+Convert a NUM to the Unix ctime; the nunber of seconds elapsed since the Epoch, 1970-01-01 00:00:00 +0000 (UTC).
+
+
+@item days(NUM)
+Like `ctime', but returns the number of days rather than seconds. It is ctime divided by 86400.
+
+@item if(TEST, VALUE_IF_TRUE, VALUE_IF_FALSE)
+Execute a test, returning eith the VALUE_IF_TRUE or VALUE_IF_FALSE as appropriate. Example:
+@example
+=if(11>10, 2, 3)
+@end example
+causes the value @code{2} to be displayed as the cell value.
+
+
+
+@item ceil(NUM)
+The ceiling of a number. E.g. @code{cel(2.1)} returns @code{3}.
+
+@item floor(NUM)
+The floor of a number. E.g. @code{cel(2.1)} returns @code{2}.
+
+@item sum(RNG)
+The sum of a range. E.g. @code{sum(r1:2c1:2)} calculates the sum of cells in the range R1C1 to R2C2.
+
+@item life()
+Return `42'. Mostly for testing purposes.
+
+@item strlen(STR)
+Returns the length of a string. E.g. @code{strlen("hello")} returns `5'.
+
+@item sqrt(NUM)
+Returns the square root of a number. E.g. @code{sqrt(4)} returns `2'. @code{sqrt(-4)} returns `#NAN'.
+
+@item hypot(NUM1, NUM2)
+Returns the hyptenuse of a right-angled triangle. E.g. @code{hypot(3,4)} returns `5'.
+
+@item plus(NUM1, NUM2)
+Returns the sum of two numbers. Equivalent of `NUM1 + NUM2'. Mostly for testing purposes.
+
+	
+@end table
