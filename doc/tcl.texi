@@ -5,27 +5,12 @@ You can program neoleo using Tcl, either calling Tcl code from within neoleo ("e
 There is also a Tcl oleo package that provides extra functions for your programming convenience. 
 You can combine this regular Tcl to produce really powerful functionality.
 
-load libploppy.so
 
-Part of the oleo package:
+@section Embedded Tcl functions
 
-proc ::oleo::incra @{arr key by@}
-Increment a variable. E.g.
-@example
-set i 1
-incr i ; # => i becomes 2
-incr i 10 ; # => i becomes 12
-@end example
-
-proc ::oleo::forn @{varName from to step block@}
-A convenient for-next-step loop
-E.g. for i from 1 to 10 step 2:
-@example
-for i 1 10 2 @{
-	puts "i => $i"
-@}
-@end example
-You can also specify negative steps
+Neoleo embed certain Tcl functions. If you invoke neoleo via a command like @code{neoleo -m tcl}, 
+then it will accept Tcl commands via stdin, as well well as specialised functions (see below). There are other ways of issuing Tcl commands from neoleo.
+See @ref{Invoking neoleo} for more information.
 
 
 The Tcl functions in neoleo are listed below. The variables R stand for `row' and `C' for column throughout.
@@ -88,3 +73,77 @@ Set the exit code of neoleo to INT. This can be used for signalling test errors.
 
 
 @end table
+
+
+
+@c ------------------------------------------------------------------------
+@section Extending Tcl
+
+Extending Tcl allows you to use functions embedded in neoleo (see above section) from Tcl itself. 
+Typically, you would invoke @code{tclsh} from the command-line. Then, from within tclsh, load the embedded functions: 
+@example
+load libploppy.so
+@end example
+
+This might not always work, though. If you obtain the message:
+@example
+couldn't load file "libploppy.so": libploppy.so: cannot open shared object file: No such file or directory
+@end example
+then it means that tclsh cannot find a cached version of library. 
+
+
+It will not happen if you install to prefix `/usr/`, but `/usr/local` might cause problems, depending on the distribution, as will other directories, 
+like within your HOME directory.
+
+Possible approaches to fixing the issue:@itemize @bullet
+@item Set @code{LD_LIBRARY_PATH} as an environment variable within your shell. E.g. to @code{/usr/local/lib:/other/paths}.
+
+@item Set the path of the library explicitly in tclsh (TODO explain)
+
+@item Add the path for the ldconfig cache. So you might want to do something like @code{sudo vim /etc/ld.so.conf/neoleo.conf}, 
+and put in the contents 
+@example
+/usr/local/lib
+@end example
+That is just an example, though. You will need to ammend it to the particular setup.
+
+Then run @code{sudo ldconfig} to update the library cache.
+
+@end itemize 
+
+
+
+
+@c ------------------------------------------------------------------------
+@section Oleo package 
+
+In addition to both extension and embedding, neoleo provides a Tcl package to use from within Tcl. You load the package as follows:
+@example
+require package oleo
+@end example
+
+   
+This is currently a work-in-progress as to if/where the package is installed. 
+The package itself works, I just need to figure out a good way to install it.
+
+** TODO Install the Tcl package and provide good accessibility
+
+Part of the oleo package:
+
+proc ::oleo::incra @{arr key by@}
+Increment a variable. E.g.
+@example
+set i 1
+incr i ; # => i becomes 2
+incr i 10 ; # => i becomes 12
+@end example
+
+proc ::oleo::forn @{varName from to step block@}
+A convenient for-next-step loop
+E.g. for i from 1 to 10 step 2:
+@example
+for i 1 10 2 @{
+	puts "i => $i"
+@}
+@end example
+You can also specify negative steps

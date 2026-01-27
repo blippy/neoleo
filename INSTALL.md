@@ -61,7 +61,7 @@ cd neoleo-16.0
 
 ```
 
-## Building
+## Building and basic installation
 
 ```
 mkdir build
@@ -89,29 +89,30 @@ You are likely to get a faster build if you use simultaneous builds, e.g. :
 make -j12
 ```
 
-## Installing and Linking
-
-**Don't do this step. I might need it for later, though**
-
-Here be dragons. Installing is easy enough:
+Install neoleo to some root-protected area:
 
 ```
 sudo make install
 ```
 
-You need to link the neoleo library too. Sometimes it is as easy as:
+You do not need `sudo` if you install to a directory that you have permissions to write to (e.g. `$HOME/.local`).
+
+
+## Linking
+
+Here be dragons. Neoleo is a static executable, so should work fine. This repo also make available a library called `libploppy.so`, which you can load into Tcl to extend it. 
+
+
+You achieve that you need to link the neoleo library too. Sometimes it is as easy as:
 
 ```
 sudo ldconfig
 ```
 
-Problems arise when the library `libploppy.so` is not installed to a know directory. When you run `neoleo`, you may get the message:
+Problems arise when the library `libploppy.so` is not installed to a library directory known to the Linux distro. Each distro has its own quirks as to what directories it knows about. For more information, type `info neoleo tcl`, section "Entending Tcl" for more information.
 
-```
-neoleo: error while loading shared libraries: libploppy.so: cannot open shared object file: No such file or directory
-```
 
-It will not happen if you install to prefix `/usr/`, but `/usr/lib` might cause problems, depending on the distribution, as will other directories.
+
 
 
 ## Uninstalling

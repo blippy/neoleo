@@ -100,11 +100,6 @@ Neoleo - the spreadsheet program.  This documentation is of Neoleo
 version @value{version}, as of @w{@value{update-date}.}  It is by no
 means complete, nor necessarily accurate for that matter.
 
-*** TODO entering formulae
-
-*** TODO sudo ldconfig to update install
-
-
 @menu
 * Invoking neoleo::	Command-line arguments
 * Key bindings::	Start here!

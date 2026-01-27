@@ -9,7 +9,7 @@ Lightweight curses spreadsheet based on GNU oleo.
 
 Absolute minimum you need to know:
 * `=` to edit a cell
-* `s` to save a file
+* `C-s` to save a file
 * `C-q` to quit
 * `C-g` cancels any edits you are making
 
