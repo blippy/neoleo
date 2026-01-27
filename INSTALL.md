@@ -30,7 +30,7 @@ Texlive might be more, or less, complete.
 ### Debian (Trixie)
 
 ```
-sudo apt install autoconf build-essential pkgconf libncurses-dev texinfo tcl-dev
+sudo apt install autoconf build-essential cmake pkgconf libncurses-dev swig texinfo tcl-dev
 ```
 
 ### Fedora
