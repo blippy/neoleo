@@ -58,3 +58,10 @@ add_custom_command(OUTPUT ${html_out}
 
 add_custom_target(html ALL DEPENDS ${html_out})
 install(FILES ${html_out}  DESTINATION share/neoleo/html)
+
+
+#################################################################
+# man page
+
+#add_custom_target(man ALL)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/neoleo.1 DESTINATION ${CMAKE_INSTALL_PREFIX}/man/man1)
