@@ -5,13 +5,18 @@ Absolute minimum you need to know:
 @table @samp
 @item Delete
 Delete current cell
+
 @item =
-Edit a cell. Start with '"' to enter a string. Numbers are entered normally.
-@item ^s
+Edit a cell. Start with '"' to enter a string. Numbers are entered normally. 
+See @ref{Editing cells} for more information.
+
+@item C-s
 Save a file
-@item ^q
+
+@item C-q
 Quit
-@item ^g
+
+@item C-g
 Cancels current input/edit
 @end table
 
