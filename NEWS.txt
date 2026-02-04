@@ -1,7 +1,7 @@
 ===========================================================================
 VERSION:	16.0
-STATUS:		DEV
-DATE:		TBD
+STATUS:		RELEASE
+DATE:		2026-02-04
 
 
 After what was mostly compilation bugfixes in previous releases, 
