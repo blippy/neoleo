@@ -405,7 +405,7 @@ void curses_loop ()
 void write_status (const std::string& str)
 {
 	// 25/4 Persist the error messages
-	log("write_status");
+	//log("write_status");
 	win_print(2, 0, str);
 	clrtoeol();
 	refresh();
