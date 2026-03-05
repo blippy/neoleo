@@ -52,11 +52,10 @@ int scr_width()
 }
 
 // FN get_ch .
-
-
 int get_ch (WINDOW *win)
 {
 	int c = wgetch(win);
+	clear_status();
 	//log("get_ch:", c);
 	return c;
 }
@@ -401,16 +400,30 @@ void curses_loop ()
 }
 
 
-// FN write_status 
-void write_status (const std::string& str)
+static string status; // 26/3 what to write on the status line
+
+// FN show_status .
+// 26/3
+void show_status ()
 {
+	win_print(2, 0, status);
+	clrtoeol();
+	//refresh();
+}
+
+// FN set_status
+void set_status (const std::string& str)
+{
+	status = str;
+	/*
 	// 25/4 Persist the error messages
-	//log("write_status");
+	//log("set_status");
 	win_print(2, 0, str);
 	clrtoeol();
 	refresh();
 	//wrefresh(stdscr);
 	//sleep(1);
+	 */
 
 }
 // FN-END
@@ -443,9 +456,9 @@ static void maybe_quit_spreadsheet2019()
 
 
 
-void clear_status_line()
+void clear_status ()
 {
-	write_status("");
+	set_status("");
 }
 
 

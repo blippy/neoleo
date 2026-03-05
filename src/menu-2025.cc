@@ -122,16 +122,31 @@ void col_prec_form()
 		if(prec<0) throw std::out_of_range("Cannot be negative");
 		set_column_prec(prec);
 		log("set column precision");
-		write_status("Column precision set");
+		set_status("Column precision set");
 	} catch(const std::invalid_argument& e) {
-		write_status("Invalid argument (Press any key)");
+		set_status("Invalid argument (Press any key)");
 		get_ch();
 	} catch(const std::out_of_range& e) {
-		write_status("Out of range (Press any key)");
+		set_status("Out of range (Press any key)");
 		get_ch();
 	}
 
 }
+
+// 26/3
+void mnu_show_submenu(const strings& entries)
+{
+	int lines = entries.size();
+	int cols = 0;
+	for(const auto& s:entries) if(s.size() > cols) cols = s.size();
+	cols;
+	win_dow win(lines+2, cols+2, 3, 0);
+	WINDOW *w = win();
+	for(int i = 0; i<lines; i++) win.print_at(i+1, 1, entries[i]);
+	box(w, 0 ,0);
+	wrefresh(w);
+}
+
 
 void mnu_column ()
 {
@@ -144,21 +159,35 @@ void mnu_column ()
 		"width       w"
 	};
 
-	int lines = entries.size();
-	int cols = 0;
-	for(const auto& s:entries) if(s.size() > cols) cols = s.size();
-	cols;
-	win_dow win(lines+2, cols+2, 3, 0);
-	WINDOW *w = win();
-	for(int i = 0; i<lines; i++) win.print_at(i+1, 1, entries[i]);
-	box(w, 0 ,0);
-	wrefresh(w);
+	mnu_show_submenu(entries);
 
 	switch(get_ch()) {
 	case 'l': column_align_left(); break;
 	case 'r': column_align_right(); break;
 	case 'p': col_prec_form(); break;
 	case 'w' : col_width_form(); break;
+	}
+}
+
+// 26/3
+void test_status ()
+{
+	set_status("This is a status test");
+}
+
+// 26/3
+void mnu_test()
+{
+	// create menu
+	const strings entries{
+		"edit   e",
+		"status s"
+	};
+	mnu_show_submenu(entries);
+
+	switch(get_ch()) {
+		case 'e': test_edit(); break;
+		case 's': test_status(); break;
 	}
 }
 // shown when you hit the menu button (m key)
@@ -169,7 +198,7 @@ void process_menu() // FN
 	
 	switch(get_ch()) {
 		case 'c': mnu_column(); break;
-		case 't': test_edit(); break;
+		case 't': mnu_test(); break;
 #if USE_NEWT
 		case 't': test_newt(); break;
 #endif

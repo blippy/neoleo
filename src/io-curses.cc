@@ -413,6 +413,7 @@ void cur_io_repaint ()
 	erase();
 	//clear();
 	show_menu();
+	show_status();
 	
 	if (win->lh_wid)
 	{
@@ -858,7 +859,7 @@ void curses_main () // FN
 			cur_io_repaint();
 			curses_loop();
 		} catch (OleoJmp& e) {
-			write_status(e.what());
+			set_status(e.what());
 		}
 	}
 }
