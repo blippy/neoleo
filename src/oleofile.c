@@ -1,7 +1,7 @@
 /*
- * $Id: oleofile.c,v 1.26 2001/02/13 23:38:06 danny Exp $
+ * $Id: oleofile.c,v 1.27 2002/03/06 18:48:39 danny Exp $
  *
- * Copyright © 1990-2000, 2001 Free Software Foundation, Inc.
+ * Copyright © 1990-2000, 2001, 2002 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@
 #include "funcdef.h"
 #include <stdio.h>
 #include <ctype.h>
+#include <locale.h>
+
 #include "sysdef.h"
 #include "io-generic.h"
 #include "io-abstract.h"
@@ -79,8 +81,12 @@ oleo_read_file (fp, ismerge)
   long mx_row = MAX_ROW, mx_col = MAX_COL;
   int old_a0;
   int next_a0;
+	char	*save_locale = NULL;
 
   Global->return_from_error = 1;
+
+  /* Temporarily put us in a default locale so we always save/load in the same way */
+  save_locale = setlocale(LC_ALL, "C");
 
   old_a0 = Global->a0;
   next_a0 = old_a0;
@@ -435,6 +441,7 @@ oleo_read_file (fp, ismerge)
 		  break;
 		case 'E':	/* Expression is */
 		  vval = ptr;
+// fprintf(stderr, "Yow %d [%s]\n", __LINE__, ptr);
 		  while (*ptr && *ptr != ';')
 		    ptr++;
 		  break;
@@ -491,10 +498,11 @@ oleo_read_file (fp, ismerge)
 		case 'E':	/* This cell's Expression */
 		  cexp = ptr;
 		  quotes = 0;
+// fprintf(stderr, "Yow %d [%s]\n", __LINE__, ptr);
 		  while (*ptr && (*ptr != ';' || quotes > 0))
-		    if (*ptr++ == '"')
+		    if (*ptr++ == '"') {
 		      quotes = !quotes;
-
+		    }
 		  break;
 		case 'G':
 		  strcpy (expbuf, cval);
@@ -641,6 +649,8 @@ oleo_read_file (fp, ismerge)
 	  io_recenter_all_win ();
 	  io_error_msg ("Line %d: Unknown OLEO line \"%s\"", lineno, cbuf);
 	  Global->return_from_error = 0;
+	  if (save_locale)
+		setlocale(LC_ALL, save_locale);
 	  return;
 	}	/* End of switch */
     }
@@ -650,12 +660,16 @@ oleo_read_file (fp, ismerge)
 	io_recenter_all_win ();
 	io_error_msg ("read-file: read-error near line %d.", lineno);
 	Global->return_from_error = 0;
+	if (save_locale)
+		setlocale(LC_ALL, save_locale);
 	return;
     }
   Global->a0 = next_a0;
   io_recenter_all_win ();
 
   Global->return_from_error = 0;
+  if (save_locale)
+	setlocale(LC_ALL, save_locale);
 }
 
 static char *
@@ -800,7 +814,9 @@ oleo_write_file (fp, rng)
   unsigned short w;
   /* struct var *var; */
   int old_a0, i, fnt_map_size = 0;
-  char	*s;
+	char	*s, *save_locale;
+
+  save_locale = setlocale(LC_ALL, "C");
 
   (void) fprintf (fp, "# This file was created by GNU Oleo\n");
 
@@ -1078,6 +1094,8 @@ oleo_write_file (fp, rng)
   /* End of writing */
   (void) fprintf (fp, "E\n");
   Global->a0 = old_a0;
+	if (save_locale)
+		setlocale(LC_ALL, save_locale);
 }
 
 int

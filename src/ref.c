@@ -1,5 +1,5 @@
 /*
- * $Id: ref.c,v 1.15 2001/02/13 23:38:06 danny Exp $
+ * $Id: ref.c,v 1.16 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  * 
@@ -263,7 +263,7 @@ char *
 read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
   unsigned char *new_bytes;
-  extern double __plinf, __neinf, __nan;
+  extern double __plinf, __neinf, oleo__nan;
 
   cur_row = row;
   cur_col = col;
@@ -348,7 +348,7 @@ read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 	  else if (!stricmp (nname, val))
 	    {
 	      SET_TYP (my_cell, TYP_FLT);
-	      my_cell->cell_flt = __nan;
+	      my_cell->cell_flt = oleo__nan;
 	    }
 	  else
 	    {

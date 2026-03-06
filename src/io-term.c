@@ -1,7 +1,7 @@
 /*
- * $Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $
+ * $Id: io-term.c,v 1.61 2011/07/05 00:16:13 delqn Exp $
  *
- * Copyright © 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
+ * Copyright © 1990, 1992, 1993, 1999, 2000, 2001, 2004, 2005 Free Software Foundation, Inc.
  * 
  * This file is part of Oleo, the GNU Spreadsheet.
  * 
@@ -20,7 +20,7 @@
  * the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
+static char *rcsid = "$Id: io-term.c,v 1.61 2011/07/05 00:16:13 delqn Exp $";
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -34,6 +34,7 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "global.h"
 
@@ -82,10 +83,6 @@ static char *rcsid = "$Id: io-term.c,v 1.51 2001/02/13 23:38:06 danny Exp $";
 #include "sc.h"
 #include "sylk.h"
 
-#ifdef	HAVE_PANIC_SAVE
-#include "panic.h"
-#endif
-
 #if	ENABLE_NLS
 extern char *gettext(char *);
 #endif
@@ -100,6 +97,20 @@ struct OleoGlobal	__tempGlobal,
 			*Global = &__tempGlobal;
 #endif
 
+/* lds moved these here from io-x11 because even curses can set colors */
+char *default_bg_color_name = "black";
+char *default_fg_color_name = "white";
+
+/* lds added to set colors & xterm size*/
+#if 0
+extern char geom_string[80];
+extern int geom_w;
+extern int geom_h;
+#endif
+int geom_w = 675;
+int geom_h = 350;
+char geom_string[80] = "675x350+0+0";
+
 /* These are the hooks used to do file-io. */
 void (*read_file) (FILE *, int) = oleo_read_file;
 void (*write_file) (FILE *, struct rng *) = oleo_write_file;
@@ -110,7 +121,7 @@ static char	option_separator = '\t';
 static char	*option_format = NULL;
 int		option_filter = 0;
 
-static char short_options[] = "VqfxthsFSv";
+static char short_options[] = "VqfxthsFSvbcw";
 static struct option long_options[] =
 {
 	{"version",		0,	NULL,			'V'},
@@ -124,6 +135,9 @@ static struct option long_options[] =
 	{"format",		1,	NULL,			'F'},
 	{"filter",		0,	NULL,			'-'},
 	{"version",		0,	NULL,			'v'},
+	{"bgcolor",       	1,	NULL,			'b'},
+	{"bgfgcolor",       	2,	NULL,			'c'},
+	{"window",		2,	NULL,			'w'},
 	{NULL,			0,	NULL,			0}
 };
 
@@ -196,9 +210,14 @@ struct UserPreferences UserPreferences;
  *	or if the string is non-empty.
  * Set cont to 1 if processing in do_set_option is to continue.
  */
+
+#define ncolors 9
+
+static char colorstr[ncolors][8] = {"black","red","green","orange","blue","magenta","cyan","white","yellow"};
+
 static struct pref {
 	char	*name;
-	void	*var;
+	void	*var;  /* if copynext then actual type is char** else int* */
 	int	value;
 	void	(*trigger)(char *);
 	int	copynext;
@@ -233,10 +252,10 @@ do_set_option (char *ptr)
 			(Preferences[i].trigger)(ptr);
 
 		if (Preferences[i].copynext) {
-			ptr += strlen(Preferences[i].name) + 1;
-			((char *)Preferences[i].var) = strdup(ptr);
+			*(char **)Preferences[i].var = strdup(ptr +
+			  strlen(Preferences[i].name) + 1);
 		} else if (Preferences[i].var)
-			*((int *)Preferences[i].var) = Preferences[i].value;
+			*(int *)Preferences[i].var = Preferences[i].value;
 
 		if (Preferences[i].cont == 0)
 			return 1;
@@ -288,15 +307,17 @@ do_set_option (char *ptr)
       print_width = astol (&ptr);
       return 0;
     }
-  if (set_opt && !strincmp ("file ", ptr, 5))
+//  if (set_opt && !strincmp ("file ", ptr, 5))
+  if (set_opt && !strincmp ("filetype ", ptr, 9))
     {
-      ptr += 5;
+      ptr += 9;
       if (!stricmp ("oleo", ptr))
 	{
 	  read_file = oleo_read_file;
 	  write_file = oleo_write_file;
 	  set_file_opts = oleo_set_options;
 	  show_file_opts = oleo_show_options;
+	  file_set_default_format(ptr);
 	}
       else if (!stricmp ("sylk", ptr))
 	{
@@ -305,6 +326,7 @@ do_set_option (char *ptr)
 	  write_file = sylk_write_file;
 	  set_file_opts = sylk_set_options;
 	  show_file_opts = sylk_show_options;
+	  file_set_default_format(ptr);
 	}
       else if (!stricmp ("sylk-noa0", ptr))
 	{
@@ -313,6 +335,7 @@ do_set_option (char *ptr)
 	  write_file = sylk_write_file;
 	  set_file_opts = sylk_set_options;
 	  show_file_opts = sylk_show_options;
+	  file_set_default_format(ptr);
 	}
       else if (!stricmp ("sc", ptr))
 	{
@@ -320,22 +343,29 @@ do_set_option (char *ptr)
 	  write_file = sc_write_file;
 	  set_file_opts = sc_set_options;
 	  show_file_opts = sc_show_options;
+	  file_set_default_format(ptr);
 	}
-#ifdef	HAVE_PANIC_SAVE
-      else if (!stricmp ("panic", ptr))
-	{
-	  read_file = panic_read_file;
-	  write_file = panic_write_file;
-	  set_file_opts = panic_set_options;
-	  show_file_opts = panic_show_options;
-	}
-#endif
       else if (!stricmp ("list", ptr))
 	{
+	  Global->sl_sep = '\t';
 	  read_file = list_read_file;
 	  write_file = list_write_file;
 	  set_file_opts = list_set_options;
 	  show_file_opts = list_show_options;
+	  /*if (ptr[4])
+	    {
+	    ptr+=4;
+	    sl_sep=string_to_char(&ptr);
+	    } */
+	}
+      else if (!stricmp ("csv", ptr))
+	{
+	  Global->sl_sep = ',';
+	  read_file = list_read_file;
+	  write_file = list_write_file;
+	  set_file_opts = list_set_options;
+	  show_file_opts = list_show_options;
+	  file_set_default_format(ptr);
 	  /*if (ptr[4])
 	    {
 	    ptr+=4;
@@ -385,10 +415,10 @@ save_preferences(void)
 	for (i=0; Preferences[i].name; i++)
 		if (Preferences[i].write) {
 			if (Preferences[i].copynext) {
-				if (strlen((char *)Preferences[i].var) != 0)
+				if (strlen(*(char **)Preferences[i].var) != 0)
 				    fprintf(fp, "set-option %s %s\n",
 					Preferences[i].name,
-					(char *) Preferences[i].var);
+					*(char **) Preferences[i].var);
 			} else if (Preferences[i].value == *(int *)Preferences[i].var)
 				fprintf(fp, "set-option %s\n",
 					Preferences[i].name);
@@ -626,6 +656,7 @@ show_var (char *ptr)
 {
   struct var *v;
   int num;
+  char buf[2048];
 
   while (*ptr == ' ')
     ptr++;
@@ -641,13 +672,13 @@ show_var (char *ptr)
   if (Global->a0)
     {
       if (v->v_rng.lr != v->v_rng.hr || v->v_rng.lc != v->v_rng.hc)
-	/* FOO */ sprintf (print_buf, "%s $%s$%u:$%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr, col_to_str (v->v_rng.hc), v->v_rng.hr);
+	/* FOO */ sprintf (buf, "%s $%s$%u:$%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr, col_to_str (v->v_rng.hc), v->v_rng.hr);
       else
-	/* FOO */ sprintf (print_buf, "%s $%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr);
+	/* FOO */ sprintf (buf, "%s $%s$%u", v->var_name, col_to_str (v->v_rng.lc), v->v_rng.lr);
     }
   else
-    sprintf (print_buf, "%s %s", v->var_name, range_name (&(v->v_rng)));
-  io_info_msg (print_buf);
+    sprintf (buf, "%s %s", v->var_name, range_name (&(v->v_rng)));
+  io_info_msg (buf);
 }
 
 static void
@@ -769,6 +800,8 @@ read_variables (FILE * fp)
       return;
     }
 }
+
+extern struct cmd_func cmd_funcs[];
 
 static void
 init_maps (void)
@@ -973,6 +1006,19 @@ oleo_catch_signals(void (*h)(int))
   }
 }
 
+int ck_color(char *usercolor)
+{
+  int i;
+  int ret;
+
+  ret = 0;
+  for(i=0 ; i<ncolors ; ++i)
+    if (strcmp(usercolor,colorstr[i]) == 0)
+      ret = i;
+
+  return ret;
+}
+  
 int 
 main (int argc, char **argv)
 {
@@ -1023,13 +1069,46 @@ main (int argc, char **argv)
 	  case 'v':
 	  case 'V':
 	    printf(_("%s %s\n"), GNU_PACKAGE, VERSION);
-            printf(_("Copyright © 1992-2000 Free Software Foundation, Inc.\n"));
+            printf(_("Copyright (c) 1992-2000 Free Software Foundation, Inc.\n"));
             printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"), GNU_PACKAGE);
             printf(_("You may redistribute copies of %s\n"), PACKAGE);
             printf(_("under the terms of the GNU General Public License.\n"));
             printf(_("For more information about these matters, "));
             printf(_("see the files named COPYING.\n"));
 	    exit (0);
+	    break;
+	  case 'b':
+	    default_bg_color_name = colorstr[ck_color(argv[optind])];
+//	    default_bg_color_name = colorstr[labs(atoi(argv[optind]))%ncolors];
+	    if (strcmp(default_bg_color_name,"black") != 0)
+	      default_fg_color_name = colorstr[0];
+	    ++optind;
+	    break;
+	  case 'c':
+	    default_bg_color_name = colorstr[ck_color(argv[optind])];
+	    ++optind;
+	    default_fg_color_name = colorstr[ck_color(argv[optind])];
+	    if (strcmp(default_bg_color_name, default_fg_color_name) == 0)
+	      if (strcmp(default_bg_color_name, "black") == 0)
+	        default_fg_color_name = colorstr[1];
+              else
+	        default_fg_color_name = colorstr[0];
+	    ++optind;
+	    break;
+	  case 'w':
+          #ifndef X_DISPLAY_MISSING
+	    Global->scr_cols = atoi(argv[optind]);
+          #endif		  
+	    ++optind;
+          #ifndef X_DISPLAY_MISSING
+	    Global->scr_lines = atoi(argv[optind]);
+          #endif		  
+	    ++optind;
+          #ifndef X_DISPLAY_MISSING
+	    geom_w = Global->scr_cols * 9;
+	    geom_h = Global->scr_lines * 15;
+	    sprintf(geom_string,"%dx%d+0+0",geom_w, geom_h);
+          #endif		  
 	    break;
 	  case 'q':
 	    spread_quietly = 1;
@@ -1065,9 +1144,8 @@ main (int argc, char **argv)
 	fprintf(stderr, "F: optind %d argv[optind] '%s' optopt %d %c\n",
 		optind, argv[optind], optopt, optopt);
 #endif
-	    option_format = argv[optind];
+	    option_format = optarg;
 	    file_set_default_format(option_format);
-	    optind++;
 	    break;
 	  case '-':
 		option_filter = 1;
@@ -1205,7 +1283,13 @@ main (int argc, char **argv)
 
 
   if (option_filter) {
-	    read_file_and_run_hooks(stdin, 0, "stdin");
+    if (setjmp(Global->error_exception)) {
+	fprintf (stderr, _("   error occured in stdin near line %d."),
+	  Global->sneaky_linec);
+	io_info_msg(_("   error occured in stdin near line %d."),
+	  Global->sneaky_linec);
+    } else
+	read_file_and_run_hooks(stdin, 0, "stdin");
   } else if (argc - optind == 1) {
       FILE * fp;
       /* fixme: record file name */

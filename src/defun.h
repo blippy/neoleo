@@ -1,5 +1,5 @@
 /*
- * $Id: defun.h,v 1.7 2000/08/10 21:02:50 danny Exp $
+ * $Id: defun.h,v 1.8 2001/04/16 23:50:07 pw Exp $
  *
  * Copyright © 1993, 2000 Free Software Foundation, Inc.
  *
@@ -1571,6 +1571,16 @@ DEFUN ("psprint-region",
 #ifdef DOC_STRINGS
 "Print the contents of REGION (in PostScript) to FILE.",
 #endif
+
+DEFUN ("print-zoom",
+       FDprint_zoom, FAprint_zoom, print_zoom_cmd)
+#ifdef FUNC_ARG_STRINGS
+"dPrint zoom? ",
+#endif
+#ifdef DOC_STRINGS
+"Apply zoom factor when printing, where 100.0 is non-zoomed.",
+#endif
+
 
 /* Control of X11 GUI Display */
 

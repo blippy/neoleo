@@ -1,5 +1,5 @@
 /*
- * $Id: args.c,v 1.6 2000/08/10 21:02:49 danny Exp $
+ * $Id: args.c,v 1.7 2001/11/23 21:25:32 pw Exp $
  *
  * Copyright © 1993, 1999 Free Software Foundation, Inc.
  *
@@ -156,7 +156,7 @@ read_file_verify (char ** end, struct command_arg * arg)
   *end = 0;
   if (!fp)
     {
-      io_error_msg ("Can't open file '%s':%s", arg->text.buf, err_msg ());
+      io_error_msg ("Can't open file '%s': %s", arg->text.buf, err_msg ());
       return "";
     }
   else
@@ -184,7 +184,7 @@ write_file_verify (char ** end, struct command_arg * arg)
   *end = 0;
   if (!fp)
     {
-      io_error_msg ("Can't open file '%s':%s", arg->text.buf, err_msg ());
+      io_error_msg ("Can't open file '%s': %s", arg->text.buf, err_msg ());
       return "";
     }
   else

@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/oleo/src/sciplotI.h,v 1.3 2000/08/10 21:02:49 danny Exp $
+ * $Header: /sources/oleo/oleo/src/sciplotI.h,v 1.3 2000/08/10 21:02:49 danny Exp $
  *
  * This file is part of GNU plotutils.
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: io-utils.h,v 1.12 2000/08/10 21:02:50 danny Exp $
+ * $Id: io-utils.h,v 1.13 2001/04/19 00:05:27 pw Exp $
  *
  * Copyright © 1992, 1999 Free Software Foundation, Inc.
  * 
@@ -24,7 +24,6 @@
 #include "cell.h"
 extern char numb_oflo[];
 extern char *bname[];
-extern char print_buf[];
 
 extern void init_infinity (void);
 extern char * flt_to_str (double val);

@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+POTFILES
+oleo.pot
+*.gmo
+cat-id-tbl.c
+stamp-cat-id

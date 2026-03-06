@@ -39,31 +39,10 @@ cell is A1.C20, then you only need type
 @example
              @kbd{M-C-p a}  /tmp/myfile @key{RET}
 @end example
-
-@item M-C-p l
-@cmindex latex-region
-Write a region to a file in LaTeX format.  By default the LaTeX code
-prints the entries in ruled boxes in portrait mode.  There are
-directions in the output file for the simple changes to print in
-landscape mode, or to have all the entries unboxed.  If your region
-contains a percent sign, then you must escape it by hand in the LaTeX
-file to make LaTeX run correctly.
-
-If the mark is set, you are prompted for a file name.  The region
-between mark and cell cursor will be printed in LaTeX format.  If the
-mark is not set, then you are first prompted for the region, and then
-for the file name.  (@code{latex-region}) For example, if the mark is
-not set, and you want to print the region A1.C20 to the file
-@file{/tmp/myfile.tex}, then you type
-@example
-             @kbd{M-C-p l} A1.C20 @key{RET} /tmp/myfile.tex @key{RET}
-@end example
-
-If the mark had been set so that the region between mark and the current
-cell is A1.C20, then you only need type
-@example
-             @kbd{M-C-p l}  /tmp/myfile.tex @key{RET}
-@end example
+The width of an ASCII page is defined with the option @code{print}.  The
+full width is broken up into chunks of columns whose width is specified in
+that option.  The chunks are placed in order left-to-right in the file.
+For information on how to set this value, @pxref{Options}.
 
 @item M-C-p p p
 @cmindex psprint-region
@@ -121,7 +100,6 @@ widths and heights are given in "points", of which there are
 72 in an inch.  
 
 @example
-
    Name            Width   Height    Comments
    ------------------------------------------------
    letter          612     792       8.5 x 11   in.   
@@ -140,6 +118,12 @@ widths and heights are given in "points", of which there are
    folio           612     936       8.5 x 13  in.   
    quarto          610     780     
 @end example
+
+@item M-C-p p z
+@cmindex print-zoom
+Set the zoom factor for PostScript output (@code{print-zoom}).  The prompt
+expects a zoom factor, where @code{100.0} is non-zoomed.  The value @code{90}
+causes the output to be shrunk to 90% of its nominal size, for example.
 
 @end table
 

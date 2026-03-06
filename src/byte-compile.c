@@ -1,5 +1,5 @@
 /*
- * $Id: byte-compile.c,v 1.12 2000/11/22 19:33:00 danny Exp $
+ * $Id: byte-compile.c,v 1.13 2001/04/16 00:16:21 pw Exp $
  *
  * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
@@ -39,8 +39,7 @@
 
 #ifdef _DEBUG_MALLOC_INC
 static void
-local_free (p)
-     void * p;
+local_free(void *p)
 {
   free (p);
 }
@@ -71,8 +70,6 @@ extern char *instr;
 extern int parse_error;
 extern struct node *parse_return;
 extern void sort ();
-
-static void add_backpatch (unsigned, unsigned);
 
 struct backpatch
   {
@@ -112,23 +109,24 @@ struct function the_funs[] =
   {C_STR, X_A0 | X_J, "", 0, "\"%s\""},
   {C_STR, X_A0 | X_JL, "", 0, "\"%s\""},
 
-  {C_CELL, X_A0, "", 0, "$%s$%u"},
-  {C_CELL, X_A0, "", 0, "$%s%u"},
-  {C_CELL, X_A0, "", 0, "%s$%u"},
-  {C_CELL, X_A0, "", 0, "%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s%u:$%s$%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:$%s%u"},
+  /* $ == absolute reference, else relative */
+  {C_CELL, X_A0, "", 0, "$%s$%u"}, /* none */
+  {C_CELL, X_A0, "", 0, "$%s%u"},  /* ROWREL */
+  {C_CELL, X_A0, "", 0, "%s$%u"},  /* COLREL */
+  {C_CELL, X_A0, "", 0, "%s%u"},   /* both */
+  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s$%u"},  /* none */
+  {C_RANGE, X_A0, "", 0, "$%s%u:$%s$%u"},   /* LR */
+  {C_RANGE, X_A0, "", 0, "$%s$%u:$%s%u"},   /* HR */
+  {C_RANGE, X_A0, "", 0, "$%s%u:$%s%u"},    /* both row */
+  {C_RANGE, X_A0, "", 0, "%s$%u:$%s$%u"},   /* LC, no row */
+  {C_RANGE, X_A0, "", 0, "%s%u:$%s$%u"},    /* LC, LR */
+  {C_RANGE, X_A0, "", 0, "%s$%u:$%s%u"},    /* etc.. */
   {C_RANGE, X_A0, "", 0, "%s%u:$%s%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s%u:%s$%u"},
-  {C_RANGE, X_A0, "", 0, "$%s$%u:%s%u"},
+  {C_RANGE, X_A0, "", 0, "$%s$%u:%s$%u"},   /* HC, no row */
+  {C_RANGE, X_A0, "", 0, "$%s%u:%s$%u"},    /* HC, LR */
+  {C_RANGE, X_A0, "", 0, "$%s$%u:%s%u"},    /* etc.. */
   {C_RANGE, X_A0, "", 0, "$%s%u:%s%u"},
-  {C_RANGE, X_A0, "", 0, "%s$%u:%s$%u"},
+  {C_RANGE, X_A0, "", 0, "%s$%u:%s$%u"},    /* both col, no row */
   {C_RANGE, X_A0, "", 0, "%s%u:%s$%u"},
   {C_RANGE, X_A0, "", 0, "%s$%u:%s%u"},
   {C_RANGE, X_A0, "", 0, "%s%u:%s%u"},
@@ -276,7 +274,7 @@ struct function skip_funs[] =
 /* The memory allocated here is used for several things, but byte_compile
    is a small file, so it might as well be here */
 void
-init_mem ()
+init_mem(void)
 {
   int n, i;
 
@@ -316,9 +314,7 @@ init_mem ()
 
 /* Stash away a backpatch for future editing. */
 static void
-add_backpatch (from, to)
-     unsigned from;
-     unsigned to;
+add_backpatch(unsigned int from, unsigned int to)
 {
   if (!patches)
     {
@@ -337,9 +333,7 @@ add_backpatch (from, to)
 }
 
 static int
-cmp_patch (n1, n2)
-     int n1;
-     int n2;
+cmp_patch(int n1, int n2)
 {
   int ret;
 
@@ -348,9 +342,7 @@ cmp_patch (n1, n2)
 }
 
 static void
-swp_patch (n1, n2)
-     int n1;
-     int n2;
+swp_patch(int n1, int n2)
 {
   struct backpatch tmp;
 
@@ -360,9 +352,7 @@ swp_patch (n1, n2)
 }
 
 static void
-rot_patch (n1, n2)
-     int n1;
-     int n2;
+rot_patch(int n1, int n2)
 {
   struct backpatch tmp;
   tmp = patches[n2];
@@ -373,7 +363,6 @@ rot_patch (n1, n2)
     }
   patches[n2] = tmp;
 }
-
 
 /* This takes an ascii string and returns a pointer to the byte-compiled
    result.  It calls yyparse() to do the actual parsing.  This is complicated
@@ -403,8 +392,7 @@ rot_patch (n1, n2)
    and a way to encode longer branches would be a *good* idea.
  */
 unsigned char *
-parse_and_compile (string)
-     char *string;
+parse_and_compile(char *string)
 {
   struct node *new_node;
   struct node *node;
@@ -804,8 +792,7 @@ loop:
    they don't need to be specially freed anymore.
  */
 void
-byte_free (form)
-     unsigned char *form;
+byte_free(unsigned char *form)
 {
   /* no longer needed
 	unsigned char *f;
@@ -879,8 +866,7 @@ byte_free (form)
    is a constant, we can free it, and never try to recompute its value.
    This returns non-zero if the expression is constant.*/
 int
-is_constant (bytes)
-     unsigned char *bytes;
+is_constant(unsigned char *bytes)
 {
   /* It's constant, but it's already been dealt with.
 	   Pretend it isn't. */

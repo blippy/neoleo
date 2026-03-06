@@ -1,10 +1,106 @@
+$Id: ChangeLog,v 1.169 2011/07/05 06:56:21 delqn Exp $
 
-$Id: ChangeLog,v 1.149 2001/03/09 11:33:29 danny Exp $
+Mon Jul  4 19:00:00 PST 2011  Delyan Raychev <delqn@gnu.org>
+	* Release oleo 1.99.17
+	* config.rpath: Added the file
+	* configure.in: disabling gettext until it's properly implemented; update ver
+	* m4/Makefile.am: disabling gettext
+
+2005-08-03  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (EXTRA_DIST): Add config.rpath.
+	* configure.in (AC_OUTPUT): Add po/Makefile.in.
+	(AC_OUTPUT): Remove command that created po/Makefile.
+	(AC_LINK_FILES): Remove invocation.
+
+Sat Jan 18 12:19:35 EST 2003  Pete Wyckoff  <pw@osc.edu>
+	* src/posixtm.y: Hide more yy* declarations for an old yacc.  Add
+	  missing semicolon.
+	* src/io-term.c: Add <errno> header.
+
+Wed Jan 15 19:33:55 EST 2003  Pete Wyckoff  <pw@osc.edu>
+	* src/io-term.c: Fix --format argument parsing using getopt to
+	  use optarg, not argv[optind].  Fix stdin error handling not to
+	  try to say a filename.
+
+Wed Mar  6 19:51:51 2002, Danny Backx
+	* src/oleofile.c : save and read while in the C locale,
+	  otherwise e.g. a pl_PL value of $LANG creates incompatible
+	  files.
+
+Fri Nov 23 16:24:08 EST 2001  Pete Wyckoff  <pw@osc.edu>
+	* doc/basics.texi doc/options.texi: Clean up information
+	  about file formats.
+	* src/basic.c: Straighten confusing logic.
+	* src/io-term.c: Set default file format for Meta-x set-option
+	  file <format>.
+
+Fri Aug 31 11:15:22 CEST 2001, Danny Backx
+	* Changes for autoconf 2.50
+
+Mon Jul 23 11:58:19 CEST 2001, Danny Backx
+	* Link -lncurses when found.
+
+Tue Jul 10 13:15:36 CEST 2001, Danny Backx
+	* GSL 0.9 has -lgslcblas, not -lgslblas
+	* Link -lXp -lXext when -lXp is found.
+
+Mon Jun 25 20:30:43 EDT 2001  Pete Wyckoff  <pw@osc.edu>
+	* doc/options.texi: Document list option per Wes Baldwin email
+	  comments.
+	* FAQ doc/basics.texi src/io-term.c src/io-utils.c: Expunge "panic"
+	  format.
+	* src/panic.c src/panic.h: Remove (panic expunge).
+	* Xresources/Makefile.am: Make likes TABs, not spaces.
+
+Sun May 13 09:49:31 CEST 2001, Danny Backx <danny@gnu.org>
+	* Portability fixes by Alexander Mai.
+
+Sat May 12 12:29:22 EDT 2001  Pete Wyckoff  <pw@osc.edu>
+	* src/Makefile.am: Add dependency to parse.h.
+	* src/io-term.c src/io-utils.c: Fix bugs with file preferences
+	  setting found by Harold W. Baldwin.
+
+Wed Apr 18 20:01:21 EDT 2001  Pete Wyckoff  <pw@osc.edu>
+	* doc/oleo.texi: Add INFO-DIR-ENTRY.
+	* src/decompile.c src/io-term.c: Use private print_buf.
+	* src/io-utils.c src/io-utils.h: Privatize print_buf.
+	* src/regions.c (txt_print_region): Allow cells to leak into
+	  those to its right as long as there are spaces for it.
+	* src/string.c: Remove extraneous declaration.
+
+Mon Apr 16 19:47:08 EDT 2001  Pete Wyckoff  <pw@osc.edu>
+	* doc/print-plot.texi: Remove latex printing documentation, add
+	  print-zoom.
+	* src/defun.h: Add print-zoom command, matching motif use.
+	* src/init.c: Bind print-zoom to psprint-commands.
+	* src/print.c src/print.h: Implement print_zoom_cmd().
+	* src/stubs.h: Add a stub for single float argument.
+
+Sun Apr 15 18:34:44 EDT 2001  Pete Wyckoff  <pw@osc.edu>
+	* doc/cell-refs.texi: Clarify noa0 mode range explanation.
+	* src/Makefile.am src/lex.c src/parse.y: New file lex.c, remove code
+	  from yacc source to its own file.  Massive rewrite of noa0 to handle
+	  all the cases (including that yucky sylk).
+	* src/byte-compile.c: Ansify, add some comments.
+	* src/decompile.c: Do not sort relative ranges, leave absolute sorting
+	  in place.  Remove + from positive relative offsets in cell and range
+	  printing.
+	* src/cmd.c: Mark a call through a function pointer explicit.
+
+Sat Mar 24 19:02:08 EST 2001  Pete Wyckoff  <pw@osc.edu>
+	* m4/xbae.m4: Complete conversion of ICE_Xbae -> AC_XBAE.
+	* src/io-term.c: Clean up Preferences[].var casting.
+	* src/mdi.h: Remove non-comment after #endif.
+
+Sat Mar 10 15:39:01 CET 2001, danny
+	* Release oleo 1.99.16
 
 Fri Mar  9 12:33:32 CET 2001, danny
 	* src/io-x11.c : Finally found out what was missing to get real i18n
 	  input. I needed to call XFilterEvent(). Thanks to the i18n checklist
 	  in O'Reilly's documentation.
+	  I believe the raw X mode now does i18n right.
 
 	* src/io-motif.c : Fixes by Robert A. Schmied for running out of colors in
 	  the splash window when Oleo starts (Motif mode), and for passing a NULL

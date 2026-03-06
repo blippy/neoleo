@@ -1,5 +1,5 @@
 #
-# $Header: /cvs/oleo/Xresources/Oleo.nl,v 1.2 2000/02/22 23:44:18 danny Exp $
+# $Header: /sources/oleo/oleo/Xresources/Oleo.nl,v 1.2 2000/02/22 23:44:18 danny Exp $
 #
 # This file configures the Dutch texts for the Motif interface of GNU Oleo.
 # It is a translation of Oleo.en, the English version.

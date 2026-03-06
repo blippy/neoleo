@@ -1,5 +1,5 @@
 /*
- * $Id: regions.c,v 1.16 2000/08/10 21:02:51 danny Exp $
+ * $Id: regions.c,v 1.17 2001/04/19 00:05:27 pw Exp $
  *
  * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
  *
@@ -154,8 +154,36 @@ precision_region (struct rng *where, int precision)
     }
 }
 
+/*
+ * Test-print a cell to see how many spaces we can steal from it for
+ * the current cell being considered for printing.
+ */
+static int
+spaces_before_cell(CELL *c, int wid)
+{
+    int len, j;
+
+    len = strlen(print_cell(c));
+    if (len == 0)  /* all the space is available */
+	return wid;
+    if (len >= wid - 1)  /* no free room here */
+	return 0;
+    if ((j = GET_JST(c)) == JST_DEF)
+	j = default_jst;
+
+    if (j == JST_LFT)
+        return 0;
+    else if (j == JST_RGT)
+	return wid-1 - len;
+    else
+	return (wid-1 - len) / 2;
+}
+
 unsigned int print_width;
 
+/*
+ * Column separation space is on the right.
+ */
 void
 txt_print_region (struct rng *print, FILE *fp)
 {
@@ -198,11 +226,15 @@ txt_print_region (struct rng *print, FILE *fp)
 		  spaces += w;
 		  continue;
 		}
-	      if (spaces)
+	      if (spaces > 0)
 		{
 		  fprintf (fp, "%*s", spaces, "");
 		  spaces = 0;
 		}
+	      else if (spaces < 0) {
+	          w += spaces;
+		  spaces = 0;
+	      }
 	      j = GET_JST (cp);
 	      if (j == JST_DEF)
 		j = default_jst;
@@ -220,9 +252,10 @@ txt_print_region (struct rng *print, FILE *fp)
 		    }
 		  else if (j == JST_CNT)
 		    {
+		      /* extra space due to centering on right */
 		      w = (w - 1) - lenstr;
 		      fprintf (fp, "%*s", w / 2 + lenstr, ptr);
-		      spaces = (w + 3) / 2;
+		      spaces = (w + 1) / 2 + 1;
 		    }
 #ifdef TEST
 		  else
@@ -234,24 +267,40 @@ txt_print_region (struct rng *print, FILE *fp)
 	      else
 		{
 		  CELLREF ccc = cc;
-		  CELL *ccp;
-		  int tmp_wid;
 		  unsigned int ww;
 
-		  for (ww = w;; tmp_wid = get_width (ccc), w += tmp_wid, spaces -= tmp_wid)
-		    {
+		  ww = w;
+		  for (;;) {
+		      int tmp_wid, next_wid;
+		      CELL *ccp;
+		      char *s;
+
 		      if (lenstr < w - 1)
 			break;
 		      if (++ccc > c_hi)
 			break;
+		      tmp_wid = get_width (ccc);
 		      ccp = find_cell (rr, ccc);
-		      if (!ccp || !GET_TYP (ccp) || GET_FORMAT (ccp) == FMT_HID)
-			continue;
-		      if (GET_FORMAT (ccp) == FMT_DEF && default_fmt == FMT_HID)
-			continue;
-		      break;
-		    }
-		  if (lenstr > w - 1)
+		      if (!tmp_wid || !ccp || !GET_TYP(ccp)
+		        || GET_FORMAT(ccp) == FMT_HID
+		        || (GET_FORMAT(ccp) == FMT_DEF
+			&& default_fmt == FMT_HID)) {
+		          w += tmp_wid;
+		          spaces -= tmp_wid;
+		          continue;
+		      }
+		      /* save and putback global print_buf contents */
+		      s = strdup(ptr);
+		      next_wid = spaces_before_cell(ccp, tmp_wid);
+		      memcpy(ptr, s, lenstr+1);
+		      free(s);
+		      w += next_wid;
+		      spaces -= next_wid;
+		      if (next_wid != tmp_wid)  /* something there */
+			break;
+		  }
+
+		  if (lenstr > w - 1 && ccc <= c_hi)
 		    {
 		      if (GET_TYP (cp) == TYP_FLT)
 			{

@@ -1,0 +1,11 @@
+*.o
+core
+oleo
+Makefile.in
+Makefile
+gpl.h
+posixtm.c
+posixtm.h
+parse.c
+parse.h
+.deps

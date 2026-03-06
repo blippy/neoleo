@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/oleo/src/eval.c,v 1.12 2001/02/13 23:38:05 danny Exp $
+ * $Header: /sources/oleo/oleo/src/eval.c,v 1.14 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1990, 1992, 1993, 2001 Free Software Foundation, Inc.
  *
@@ -35,13 +35,12 @@
 
 #ifdef	HAVE_MATH_H
 #include <math.h>
-#else
+#endif
+
+#ifndef	M_PI
 /*
  * Non-standard platform.
  */
-#ifdef	M_PI
-#undef M_PI
-#endif
 #define M_PI (3.1415926535897932384626433832795028841971693993751)
 #endif
 
@@ -565,7 +564,7 @@ eval_expression (expr)
 	case CONST_NINF:
 	case CONST_NAN:
 	  p->type = TYP_FLT;
-	  p->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : __nan);
+	  p->Float = (byte == CONST_INF) ? __plinf : ((byte == CONST_NINF) ? __neinf : oleo__nan);
 	  break;
 
 	case VAR:

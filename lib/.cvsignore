@@ -1,0 +1,6 @@
+Makefile
+Makefile.in
+*.o
+liboleo.a
+getdate.c
+.deps

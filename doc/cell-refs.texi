@@ -47,29 +47,32 @@ In both modes the case of cell and range letters is ignored.
 @cindex noa0 mode
 @vindex noa0
 
-  In @code{noa0} mode (the default), absolute cell addresses have the
+In @code{noa0} mode (the default), absolute cell addresses have the
 form @w{@code{R@var{row}C@var{col}}}, where @var{row} and @var{col} are
 the row and column (as integers).  Thus, @code{R1C2} is the second cell
-from the left on the top row.       The cell in the leftmost uppermost corner
+from the left on the top row.  The cell in the leftmost uppermost corner
 is @code{R1C1}, and the cell in the rightmost lowermost corner is
-@code{R65535C65535}.  
+@code{R65535C65535}.  You can use lower-case letters such as @code{r1c2},
+if you prefer.
 
 Relative addresses have the form
-@w{@code{R[@var{rowoffset}]C[@var{coloffset}]}}, as in @code{R[-1]C[+1]}
-(the cell above and to the right of the current cell).  An offset of 0
-can be omitted, along with its square brackets: @code{RC[+2]} (the cell
-two columns to the right).  The plus signs of positive offsets can also
-be omitted.  Absolute and relative addresses can be combined, as in
-@code{R4C[-1]} (the cell in row four that's one left of the current
-cell).
+@w{@code{R[@var{rowoffset}]C[@var{coloffset}]}}, as in @code{R[-1]C[+1]} (the
+cell above and to the right of the current cell).  An offset of 0 can be
+omitted, along with its square brackets: @code{RC[+2]} (the cell two columns to
+the right).  The plus signs of positive offsets can also be omitted.  Absolute
+and relative addresses can be combined, as in @code{R4C[-1]} (the cell in row
+four that's one left of the current cell).
 
-  Ranges in @code{noa0} mode are specified as
-@w{@code{R@var{row1}:@var{row2}C@var{col1}:@var{col2}}}, where the row
-and column references may be either absolute or relative, and can be
-mixed.  Thus, @code{R1:4C1:[-2]} refers to the cells of rows one through
-4, columns one through the second column to the left.  If @var{row1} =
-@var{row2} or @var{col1} = @var{col2}, the colon and second number may
-be omitted, as in @code{R1:10C2} (rows one through ten in column two).
+Ranges in @code{noa0} mode are specified as
+@w{@code{R@var{row1}:@var{row2}C@var{col1}:@var{col2}}}, where the row and
+column references may be either absolute or relative, and can be mixed.  Thus,
+@code{R1:4C1:[-2]} refers to the cells of rows one through 4, columns one
+through the second column to the left.  If @var{row1} = @var{row2} or
+@var{col1} = @var{col2}, the colon and second number may be omitted, as in
+@code{R1:10C2} (rows one through ten in column two).  A period (@code{.}) may
+be used in place of a colon (@code{:}) to separate the lower and upper ends of
+a range.  A shorthand for a range in which both ends are relative is, for
+example, @code{R[1:4]C7}, which is equivalent to @code{R[1]:[4]C7}.
 
 @node   a0 mode, Comparison, noa0 mode, Cell referencing
 @subsection a0 Mode

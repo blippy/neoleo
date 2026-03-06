@@ -1,5 +1,5 @@
 /*
- * $Id: io-curses.c,v 1.20 2001/02/13 23:38:06 danny Exp $
+ * $Id: io-curses.c,v 1.22 2004/08/18 14:40:58 danny Exp $
  *
  * Copyright © 1992, 1993, 1999, 2001 Free Software Foundation, Inc.
  *
@@ -41,7 +41,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <signal.h>
-#undef NULL
+
 #include "sysdef.h"
 #include "global.h"
 #include "cell.h"
@@ -58,6 +58,7 @@
 #include "key.h"
 #include "input.h"
 #include "info.h"
+
 #include <term.h>
 
 #define MIN_WIN_HEIGHT	(cwin->flags&WIN_EDGES ? 2 : 1)
@@ -68,6 +69,15 @@ static int textout = 0;
 static int term_cursor_claimed = 0;
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF, int);
+
+/* Needed for setting color */
+extern char *default_bg_color_name;
+extern char *default_fg_color_name;
+
+/* Needed to insure sceen size correct */
+extern struct OleoGlobal *Global;
+
+int ck_color(char *color);
 
 static int
 curses_metric (char * str, int len)
@@ -373,7 +383,14 @@ change_slop (VOIDSTAR where,
 static void 
 _io_open_display (void)
 {
-  initscr ();
+  static int pair = 1;
+  int bg, fg;
+
+/* Be sure -w run time hasn't adjust screen size */
+  Global->scr_cols = 80;
+  Global->scr_lines = 24;
+
+  initscr (); start_color();
   scrollok (stdscr, 0);
 #ifdef HAVE_CBREAK
   cbreak ();
@@ -383,9 +400,25 @@ _io_open_display (void)
   raw ();
   noecho ();
   nonl ();
+
+  /* Set up colors */
+  bg = ck_color(default_bg_color_name);
+  fg = ck_color(default_fg_color_name);
+  if (bg != fg)
+    init_pair(pair, fg, bg);
+  else
+    init_pair(pair, ck_color("white"), ck_color("black"));
+  attron(COLOR_PAIR(pair));
+  bkgdset(COLOR_PAIR(pair));
+  erase();
+  refresh();
+
+
   /* Must be after initscr() */
   io_init_windows (LINES, COLS, 1, 2, 1, 1, 1, 1);
   // io_init_windows (Global->scr_lines, Global->scr_cols, 1, 2, 1, 1, 1, 1);
+
+
   info_rows = 1;
   print_width = columns;		/* Make ascii print width == terminal width. */
 }

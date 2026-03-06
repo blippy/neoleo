@@ -1,7 +1,7 @@
 #ifndef SYSDEFH
 #define SYSDEFH
 /*
- * $Id: sysdef.h,v 1.7 2001/02/04 15:54:21 danny Exp $
+ * $Id: sysdef.h,v 1.8 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
  * 
@@ -118,8 +118,6 @@ extern char *strstr ();
 #endif /* _DEBUG_MALLOC_INC */
 
 #endif /* !defined(__STDC__) */
-
-extern char *getenv ();
 
 #ifndef RETSIGTYPE
 #define RETSIGTYPE void

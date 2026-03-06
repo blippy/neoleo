@@ -4,10 +4,10 @@ Version         : @VERSION@
 Release         : 2
 Group           : Office/Spreadsheet
 Copyright       : GPL
-Packager        : danny.backx@skynet.be
+Packager        : delqn@gnu.org
 # Icon            : src/oleo_icon.xpm
 BuildRoot       : /tmp/oleo-@VERSION@
-Source          : ftp://alpha.gnu.org/gnu/oleo/oleo-@VERSION@.tar.gz
+Source          : ftp://ftp.gnu.org/gnu/oleo/oleo-@VERSION@.tar.gz
 
 %description
 ...

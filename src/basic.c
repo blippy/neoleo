@@ -1,5 +1,5 @@
 /*
- * $Id: basic.c,v 1.20 2000/07/22 06:13:15 danny Exp $
+ * $Id: basic.c,v 1.21 2001/11/23 21:28:44 pw Exp $
  *
  * Copyright © 1993, 2000 Free Software Foundation, Inc.
  *
@@ -1342,18 +1342,15 @@ static char load_hooks_string[] = "load_hooks";
 void
 read_file_and_run_hooks (FILE * fp, int ismerge, char * name)
 {
-	char	*ext = NULL;
+  char *ext = NULL;
+
   if (!ismerge)
-    {
       FileSetCurrentFileName(name ? ck_savestr (name) : 0);
-    }
-	ext = strrchr(name, '.');
-	if (! ext) {
-		read_file_generic(fp, ismerge, NULL, name);
-	} else {
-		ext++;
-		read_file_generic(fp, ismerge, ext, name);
-	}
+
+  ext = strrchr(name, '.');
+  if (ext)
+      ++ext;
+  read_file_generic(fp, ismerge, ext, name);
 
   if (UserPreferences.run_load_hooks)
     {

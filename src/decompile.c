@@ -1,5 +1,5 @@
 /*
- * $Id: decompile.c,v 1.15 2000/08/10 21:02:50 danny Exp $
+ * $Id: decompile.c,v 1.17 2001/04/19 00:05:27 pw Exp $
  *
  * Copyright © 1990, 1992, 1993, 1999 Free Software Foundation, Inc.
  * 
@@ -78,9 +78,8 @@ n_alloc (int size, int tightness, char *fmt, ...)
 
 #define n_free(x)	ck_free(x)
 
-extern struct pr_node *
-byte_decompile (expr)
-     unsigned char *expr;
+static struct pr_node *
+byte_decompile(unsigned char *expr)
 {
   unsigned char byte;
   double tmp_flt;
@@ -241,13 +240,13 @@ next_byte:
 		      str = "rc";
 		    else if (row == decomp_row)
 		      {
-			str = "rc[%+d]";
+			str = "rc[%d]";
 			num1 = num2;
 		      }
 		    else if (col == decomp_col)
-		      str = "r[%+d]c";
+		      str = "r[%d]c";
 		    else
-		      str = "r[%+d]c[%+d]";
+		      str = "r[%d]c[%d]";
 		  }
 		else if (row == decomp_row)
 		  {
@@ -256,7 +255,7 @@ next_byte:
 		  }
 		else
 		  {
-		    str = "r[%+d]c%u";
+		    str = "r[%d]c%u";
 		    num2 = col;
 		  }
 	      }
@@ -267,7 +266,7 @@ next_byte:
 		if (col == decomp_col)
 		  str = "r%uc";
 		else
-		  str = "r%uc[%+d]";
+		  str = "r%uc[%d]";
 	      }
 	    else
 	      {
@@ -305,7 +304,7 @@ next_byte:
 			tmprbuf[1] = '\0';
 		      }
 		    else
-		      (void) sprintf (tmprbuf, "r[%+d]", rng.lr - decomp_row);
+		      (void) sprintf (tmprbuf, "r[%d]", rng.lr - decomp_row);
 		  }
 		else
 		  sprintf (tmprbuf, "r%u", rng.lr);
@@ -318,12 +317,12 @@ next_byte:
 		r2 = rng.hr - decomp_row;
 		if (r1 < r2)
 		  rtmp = r1, r1 = r2, r2 = rtmp;
-		(void) sprintf (tmprbuf, "r[%+d:%+d]", r1, r2);
+		(void) sprintf (tmprbuf, "r[%d:%d]", r1, r2);
 	      }
-	    else if ((byte & LRREL))
-	      (void) sprintf (tmprbuf, "r[%+d]:%u", rng.lr - decomp_row, rng.hr);
+	    else if (byte & LRREL)
+	      (void) sprintf (tmprbuf, "r[%d]:%u", rng.lr - decomp_row, rng.hr);
 	    else if (byte & HRREL)
-	      (void) sprintf (tmprbuf, "r%u:[%+d]", rng.lr, rng.hr - decomp_row);
+	      (void) sprintf (tmprbuf, "r%u:[%d]", rng.lr, rng.hr - decomp_row);
 	    else if (rng.lr < rng.hr)
 	      (void) sprintf (tmprbuf, "r%u:%u", rng.lr, rng.hr);
 	    else
@@ -339,25 +338,18 @@ next_byte:
 			tmpcbuf[1] = '\0';
 		      }
 		    else
-		      sprintf (tmpcbuf, "c[%+d]", rng.lc - decomp_col);
+		      sprintf (tmpcbuf, "c[%d]", rng.lc - decomp_col);
 		  }
 		else
 		  sprintf (tmpcbuf, "c%u", rng.lc);
 	      }
 	    else if ((byte & LCREL) && (byte & HCREL))
-	      {
-		int c1, c2, ctmp;
-
-		c1 = rng.lc - decomp_col;
-		c2 = rng.hc - decomp_col;
-		if (c1 < c2)
-		  ctmp = c1, c1 = c2, c2 = ctmp;
-		(void) sprintf (tmpcbuf, "c[%+d:%+d]", c1, c2);
-	      }
-	    else if ((byte & LCREL))
-	      (void) sprintf (tmpcbuf, "c[%+d]:%u", rng.lc - decomp_col, rng.hc);
+	      (void) sprintf (tmpcbuf, "c[%d:%d]", rng.lc - decomp_col,
+	        rng.hc - decomp_col);
+	    else if (byte & LCREL)
+	      (void) sprintf (tmpcbuf, "c[%d]:%u", rng.lc - decomp_col, rng.hc);
 	    else if (byte & HCREL)
-	      (void) sprintf (tmpcbuf, "c%u:[%+d]", rng.lc, rng.hc - decomp_col);
+	      (void) sprintf (tmpcbuf, "c%u:[%d]", rng.lc, rng.hc - decomp_col);
 	    else if (rng.lc < rng.hc)
 	      (void) sprintf (tmpcbuf, "c%u:%u", rng.lc, rng.hc);
 	    else
@@ -742,12 +734,12 @@ dbg_print_formula (expr)
   struct rng rng;
   char *buf;
   unsigned jumpto;
-  extern char print_buf[];
+  char pr_buf[2048];
 
   if (!expr)
     return;
-  strcpy (print_buf, "Formula: ");
-  buf = print_buf + 9;
+  strcpy (buf, "Formula: ");
+  buf = pr_buf + 9;
   while (*expr)
     {
       byte = *expr++;
@@ -841,5 +833,5 @@ dbg_print_formula (expr)
 	}
       buf += strlen (buf);
     }
-  io_text_line (print_buf);
+  io_text_line (pr_buf);
 }

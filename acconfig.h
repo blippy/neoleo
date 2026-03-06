@@ -164,9 +164,6 @@
 #if HAVE_LOCALE_H
 # include <locale.h>
 #endif
-#if !HAVE_SETLOCALE
-# define setlocale(Category, Locale) /* empty */
-#endif
 
 /* LessTif or Motif */
 #undef HAVE_MOTIF
@@ -176,6 +173,7 @@
 #undef HAVE_XLT
 #undef HAVE_XLT_FONTCHOOSER
 #undef HAVE_XPM
+#undef HAVE_LIB_XP
 
 /* GNU Plotutils */
 #undef	HAVE_LIBPLOT

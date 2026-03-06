@@ -1,5 +1,5 @@
 /*
- * $Id: io-utils.c,v 1.39 2001/02/13 23:38:06 danny Exp $
+ * $Id: io-utils.c,v 1.43 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1990, 1992, 1993, 2000, 2001 Free Software Foundation, Inc.
  *
@@ -71,7 +71,7 @@ char numb_oflo[] = "########################################";
 
 double __plinf;
 double __neinf;
-double __nan;
+double oleo__nan;
 
 char nname[] = "#NOT_A_NUMBER";
 char iname[] = "#INFINITY";
@@ -125,7 +125,7 @@ init_infinity (void)
   __neinf = divide (-1., 0.);
   (void) signal (SIGFPE, ignore_sig);
 #endif
-  __nan = __plinf + __neinf;
+  oleo__nan = __plinf + __neinf;
 }
 
 
@@ -133,9 +133,9 @@ init_infinity (void)
 /* Slightly larger than the maximum exponent we ever expect to see */
 #define BIGFLT 309
 #ifdef TEST
-char print_buf[1024 * 8];
+static char print_buf[1024 * 8];
 #else
-char print_buf[BIGFLT + 20];
+static char print_buf[BIGFLT + 20];
 #endif
 
 
@@ -1330,7 +1330,7 @@ file_set_default_format(char *s)
 	if (s == NULL)
 		defaultformat = strdup("oleo");
 	else
-		defaultformat = s;
+		defaultformat = strdup(s);
 }
 
 char *
@@ -1352,10 +1352,6 @@ write_file_generic_2(FILE *fp, struct rng *rng, char *format)
 		sylk_write_file(fp, rng);
 	} else if (!stricmp ("sc", format)) {
 		sc_write_file(fp, rng);
-#ifdef	HAVE_PANIC_SAVE
-	} else if (!stricmp ("panic", format)) {
-		panic_write_file(fp, rng);
-#endif
 	} else if (!stricmp ("list", format)) {
 		list_write_file(fp, rng);
 	} else {
@@ -1398,10 +1394,6 @@ read_file_generic_2(FILE *fp, int ismerge, char *format, char *name)
 		sylk_read_file(fp, ismerge);
 	} else if (stricmp ("sc", format) == 0) {
 		sc_read_file(fp, ismerge);
-#ifdef	HAVE_PANIC_SAVE
-	} else if (stricmp ("panic", format) == 0) {
-		panic_read_file(fp, ismerge);
-#endif
 	} else if (stricmp ("list", format) == 0) {
 		list_read_file(fp, ismerge);
 	} else if (stricmp("csv", format) == 0) {
@@ -1430,9 +1422,6 @@ static struct file_formats_s {
 	{ "list",	"list" },
 	{ "csv",	"[cC][sS][vV]" },
 	{ "dbf",	"[dD][bB][fF]" },
-#ifdef	HAVE_PANIC_SAVE
-	{ "panic",	"panic" },
-#endif
 	{ "sylk-noa0",	"sylk" },
 	{ NULL,	NULL }
 };
@@ -1454,7 +1443,7 @@ file_get_pattern(char *fmt)
 	int	i, m = sizeof(file_formats) / sizeof(struct file_formats_s) - 1;
 
 	for (i=0; i<m; i++) {
-		if (strcmp(fmt, file_formats[i].name) == 0)
+		if (stricmp(fmt, file_formats[i].name) == 0)
 			return file_formats[i].format;
 	}
 	return NULL;

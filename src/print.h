@@ -1,7 +1,7 @@
 /*
  * Copyright © 1993, 1999 Free Software Foundation, Inc.
  * 
- * $Id: print.h,v 1.13 2000/08/10 21:02:51 danny Exp $
+ * $Id: print.h,v 1.14 2001/04/16 23:50:07 pw Exp $
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ extern void put_ps_string (char *str, FILE *fp);
 extern void psprint_region (FILE * fp, struct rng * rng, float wid, float hgt, char * font);
 extern void set_page_size_cmd (char * whole_str);
 extern void print_region_cmd (struct rng *rng, FILE *fp);
+extern void print_zoom_cmd(float factor);
 
 extern int PrintGetNumPageSizes(void);
 extern char * PrintGetPageName(int index);

@@ -1,5 +1,5 @@
 /*
- * $Id: cmd.c,v 1.27 2001/02/14 20:54:50 danny Exp $
+ * $Id: cmd.c,v 1.28 2001/04/16 00:16:21 pw Exp $
  *
  * Copyright © 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  *
@@ -1785,7 +1785,7 @@ command_loop (int prefix, int iscmd)
 	if (!stub)
 	  io_error_msg ("Don't know how to invoke %s!!!", frame->cmd->func_name);
 	else
-	  stub (frame);
+	  (*stub)(frame);
 
 	running_frames = running_frames->next;
 	frame->next = 0;

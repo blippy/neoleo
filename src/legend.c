@@ -1,5 +1,5 @@
 /*
- * $Header: /cvs/oleo/src/legend.c,v 1.6 2000/08/10 21:02:51 danny Exp $
+ * $Header: /sources/oleo/oleo/src/legend.c,v 1.6 2000/08/10 21:02:51 danny Exp $
  *
  * This file is part of libsciplot, one of the libraries in the GNU PlotUtils package.
  *

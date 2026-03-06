@@ -1,5 +1,5 @@
 #
-# $Header: /cvs/oleo/src/Makefile.am,v 1.56 2001/02/08 00:26:36 pw Exp $
+# $Header: /sources/oleo/oleo/src/Makefile.am,v 1.60 2011/07/05 05:46:39 delqn Exp $
 #
 # CPPFLAGS = -Wall
 
@@ -12,7 +12,7 @@ CLEANFILES = parse.c parse.h posixtm.c posixtm.h
 DISTCLEANFILES = tags
 MAINTAINERCLEANFILES = Makefile.in
 
-YFLAGS = -d
+AM_YFLAGS = -d
 
 bin_PROGRAMS = oleo
 
@@ -38,14 +38,14 @@ MYSQL = mysql.c oleosql.h mysql.h
 #
 if HaveXbase
 XBSRC=		xbase.cpp oleo_xb.h
-CXXFLAGS=	$(CFLAGS)
+AM_CXXFLAGS=	$(CFLAGS)
 oleo_LINK=	$(CXXLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 else
 XBSRC=
 oleo_LINK=	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 endif
 
-oleo_SOURCES = parse.y byte-compile.c eval.c ref.c \
+oleo_SOURCES = parse.y lex.c byte-compile.c eval.c ref.c \
  decompile.c sort.c regions.c utils.c lists.c \
  io-term.c io-utils.c io-x11.c window.c io-edit.c userpref.h \
  line.c key.c format.c funcs.c \
@@ -84,9 +84,10 @@ MYINC=
 MYCFL=	${X_CFLAGS}
 endif
 
-oleo_LDADD = ${X_PRE_LIBS} ${MYLD} @INTLLIBS@ ../lib/liboleo.a ../intl/libintl.a ${X_LIBS}
+oleo_LDADD = ${X_PRE_LIBS} ${MYLD} ../lib/liboleo.a ${X_LIBS} #@LIBINTL@ 
+
 INCLUDES = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../intl ${MYINC}
-CFLAGS = @CFLAGS@ -DLOCALEDIR=\"$(localedir)\" ${MYCFL} \
+AM_CFLAGS = @CFLAGS@ -DLOCALEDIR=\"$(localedir)\" ${MYCFL} \
 	-DBUILD_PREFIX='"'${BUILD_PREFIX}'"'
 
 noinst_HEADERS = args.h basic.h byte-compile.h cell.h cmd.h decompile.h \
@@ -118,6 +119,7 @@ print.o:	$(srcdir)/afm.h
 
 ref.o:		parse.h
 sc.o:		parse.h
+lex.o:          parse.h
 
 plot.o:		oleo_plot.h ../config.h
 graph.o:	oleo_plot.h

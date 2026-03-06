@@ -46,7 +46,7 @@ If you wish to abort a command, type @kbd{C-g}
 * Getting Help::                Getting help
 * Saving and reading::          Saving and reading Spreadsheets
 * Command Line Options::        Command Line Options
-* .oleorc file::                The initialization file
+* ~/.oleorc file::              The initialization file
 * Expressions::                 Types of expressions
 @end menu
 
@@ -109,7 +109,7 @@ bottom of the screen, type
 M-x set-option @key{RET} input -1
 @end example
 
-This can be made the default.  (@pxref{.oleorc file})
+This can be made the default.  (@pxref{~/.oleorc file})
 
 @node Status Line , Work Area, Minibuffer, The Screen
 @unnumberedsubsec The status line
@@ -606,21 +606,23 @@ previously saved one.
 @table @kbd
 @item C-x C-s
 Save the spreadsheet to a file, using the current
-file-format. (@code{save-spreadsheet})
+file-format (@pxref{Options} for how to change the file-format).
+(@code{save-spreadsheet})
 @cmindex save-spreadsheet
-@footnote{where is info on file formats?}
 
 @item C-x C-v 
-Read in a file in the current
-file-format.  This erases the current contents of the
+Read in a file.  The file format is detected by the extension
+of the filename, or using the default format if the file has
+no extension.  This erases the current contents of the
 spreadsheet first.  This may ask for confirmation.
-(@code{visit-spreadsheet})
-@cmindex visit-spreadsheet
+(Set the default format using M-x set-option file <format>, or
+in Motif, use the menu item, or use the "-F" command line argument.)
+(@code{find-alternate-spreadsheet})
+@cmindex find-alternate-spreadsheet
 
 @item C-x i
 Read in a file and merge its contents into the
-current spreadsheet.  Note that some file-formats, (like
-panic-save) won't work with this command.
+current spreadsheet.
 (@code{merge-spreadsheet})
 @cmindex merge-spreadsheet
 
@@ -630,15 +632,12 @@ Change whether load-hooks are run when spreadsheets are loaded.
 When active, the find-alternate-spreadsheet command looks for a variable
 called `load_hooks' and executes the macro at that address.
 With a positive prefix argument, turns load hooks on.  With a negative
-argument, turns them off.  With no argument, acts as a toggle.
-@footnote{what is the default}
+argument, turns them off.  With no argument, acts as a toggle.  Load
+hooks are on by default.
 @end table
 
 
-
-
-
-@node Command Line Options, .oleorc file, Saving and reading, Basics
+@node Command Line Options, ~/.oleorc file, Saving and reading, Basics
 @section Command Line Options
 @comment  node-name,  next,  previous,  up
 @cindex Command Line Options
@@ -683,8 +682,8 @@ set separator for 'list' file type to a space
 @end table
 
 
-@node .oleorc file, Expressions, Command Line Options, Basics
-@section The @file{.oleorc} file
+@node ~/.oleorc file, Expressions, Command Line Options, Basics
+@section The @file{~/.oleorc} file
 @cindex .oleorc
 @comment  node-name,  next,  previous,  up
 

@@ -1,5 +1,5 @@
 #
-# $Header: /cvs/oleo/lib/Makefile.am,v 1.12 2001/02/08 00:21:23 pw Exp $
+# $Header: /sources/oleo/oleo/lib/Makefile.am,v 1.12 2001/02/08 00:21:23 pw Exp $
 #
 # Process this file with automake to produce Makefile.in
 #

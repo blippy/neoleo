@@ -1,5 +1,5 @@
 /*
- * $Id: posixtm.y,v 1.2 2000/07/22 06:13:16 danny Exp $
+ * $Id: posixtm.y,v 1.3 2003/01/18 17:25:59 pw Exp $
  *
  * Parse dates for touch.
  * Copyright (C) 1989, 1990, 1991 Free Software Foundation Inc.
@@ -49,7 +49,55 @@ static struct tm t;
 
 time_t mktime ();
 
-#define yyparse posixtime_yyparse
+/*
+ * For older yaccs, hide global symbols.  The canonical undefined ones
+ * are  in src/parse.y.  Almost any gnu bison version will not have this
+ * problem, note.
+ */
+#define yymaxdepth posixtime_maxdepth
+#define yyparse posixtime_parse
+#define yylex   posixtime_lex
+#define yyerror posixtime_error
+#define yylval  posixtime_lval
+#define yychar  posixtime_char
+#define yydebug posixtime_debug
+#define yypact  posixtime_pact
+#define yyr1    posixtime_r1
+#define yyr2    posixtime_r2
+#define yydef   posixtime_def
+#define yychk   posixtime_chk
+#define yypgo   posixtime_pgo
+#define yyact   posixtime_act
+#define yyexca  posixtime_exca
+#define yyerrflag posixtime_errflag
+#define yynerrs posixtime_nerrs
+#define yyps    posixtime_ps
+#define yypv    posixtime_pv
+#define yys     posixtime_s
+#define yy_yys  posixtime_yys
+#define yystate posixtime_state
+#define yytmp   posixtime_tmp
+#define yyv     posixtime_v
+#define yy_yyv  posixtime_yyv
+#define yyval   posixtime_val
+#define yylloc  posixtime_lloc
+#define yyreds  posixtime_reds          /* With YYDEBUG defined */
+#define yytoks  posixtime_toks          /* With YYDEBUG defined */
+/*
+ * The ones below are specific to a certain version of yacc that
+ * comes with SuSE8.0 linux at least.  We define everything just
+ * to make sure.
+ */
+#define yylhs   posixtime_yylhs
+#define yylen   posixtime_yylen
+#define yydefred posixtime_yydefred
+#define yydgoto posixtime_yydgoto
+#define yysindex posixtime_yysindex
+#define yyrindex posixtime_yyrindex
+#define yygindex posixtime_yygindex
+#define yytable  posixtime_yytable
+#define yycheck  posixtime_yycheck
+
 static int yylex ();
 static int yyerror ();
 %}
@@ -85,6 +133,7 @@ date :
 		   YYABORT;
 		 }
 	       }
+	       ;
 
 year : digitpair {
                    t.tm_year = $1;

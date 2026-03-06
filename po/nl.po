@@ -9,10 +9,10 @@ msgstr ""
 "POT-Creation-Date: 2001-03-10 15:32+0100\n"
 "PO-Revision-Date: 1998-08-27 17:50+0200\n"
 "Last-Translator: Danny Backx <danny@gnu.org>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Danny Backx <danny-hi-there-spammers-@gnu.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: src/io-term.c:815
 #, c-format
@@ -95,7 +95,7 @@ msgstr ", fout trad op bij het inlezen van '%s'\n"
 #: src/io-term.c:1223 src/io-term.c:1224
 #, c-format
 msgid "Can't open %s: %s\n"
-msgstr "Ik kan '%s' niet openen\n"
+msgstr "Ik kan '%s' niet openen: %s\n"
 
 #: src/io-motif.c:722
 msgid "Fit Print Area"

@@ -169,7 +169,6 @@ Answers
 	- .sc
 	- .csv	(comma separated values)
 	- .list	(tab separated values)
-	- .panic
 	- .dbf   (Dbase format)
 
 	It currently doesn't understand Excel or Lotus 1-2-3 file

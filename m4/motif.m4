@@ -14,7 +14,7 @@ dnl
 dnl The link_motif and include_motif variables should be fit to put on
 dnl your application's link line in your Makefile.
 dnl
-dnl Oleo CVS $Id: motif.m4,v 1.11 1999/04/27 18:28:13 danny Exp $
+dnl Oleo CVS $Id: motif.m4,v 1.12 2001/05/05 02:11:15 pw Exp $
 dnl
 AC_DEFUN(AC_FIND_MOTIF,
 [
@@ -165,7 +165,7 @@ fi
 if test "$with_motif" != "no"; then
         if test "$motif_libraries" = ""; then
                 link_motif="-lXm"
-                MOTIF_LIBS="-lXm"
+                MOTIF_LIBS="-lXm -lMrm"
         else
                 link_motif="-L$motif_libraries -lXm"
                 MOTIF_LIBS="-L$motif_libraries -lXm"

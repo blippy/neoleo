@@ -1,8 +1,8 @@
 /*
- * $Id: xrdb.c,v 1.8 2000/08/10 21:02:51 danny Exp $
+ * $Id: xrdb.c,v 1.9 2005/08/03 09:04:38 danny Exp $
  *
  * Deal with the X Resource Manager.
- * Copyright © 1990, 1992, 1993 Free Software Foundation.
+ * Copyright © 1990, 1992, 1993, 2000, 2005 Free Software Foundation.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,8 +56,10 @@
 
 /* This should be included before the X include files; otherwise, we get
    warnings about redefining NULL under BSD 4.3.  */
+#if 0
+#include <X11/Intrinsic.h>
+#endif
 #include <sys/param.h>
-#define NeedFunctionPrototypes 0
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

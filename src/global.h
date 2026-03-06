@@ -1,7 +1,7 @@
 #ifndef GLOBALH
 #define GLOBALH
 /*
- * $Id: global.h,v 1.20 2001/02/14 20:54:50 danny Exp $
+ * $Id: global.h,v 1.21 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1990, 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  * 
@@ -208,7 +208,7 @@ extern char mname[];
 extern char nname[];
 
 extern VOIDSTAR parse_hash;
-extern double __plinf, __neinf, __nan;
+extern double __plinf, __neinf, oleo__nan;
 
 /* These have two uses.  During parsing, these contain the 
  * base address of all relative references.  During evaluation,
@@ -231,7 +231,7 @@ extern int default_lock;
 
 extern unsigned short current_cycle;
 extern int ioerror;
-extern int errno;
+#include <errno.h>
 extern const char oleo_version_string[];
 
 extern double astof (char **);

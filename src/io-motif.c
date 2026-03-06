@@ -1,6 +1,6 @@
 #define	HAVE_TEST
 /*
- *  $Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $
+ *  $Id: io-motif.c,v 1.70 2005/08/03 19:04:54 danny Exp $
  *
  *  This file is part of Oleo, the GNU spreadsheet.
  *
@@ -22,7 +22,7 @@
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-static char rcsid[] = "$Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $";
+static char rcsid[] = "$Id: io-motif.c,v 1.70 2005/08/03 19:04:54 danny Exp $";
 
 #ifdef	HAVE_CONFIG_H
 #include "config.h"
@@ -42,7 +42,10 @@ static char rcsid[] = "$Id: io-motif.c,v 1.66 2001/03/09 11:33:29 danny Exp $";
 #ifdef	HAVE_LOCALE_H
 #include <locale.h>
 #endif
-#include <libintl.h>
+
+#ifdef HAVE_LIBINTL_H
+/* #include <libintl.h> */
+#endif
 
 #include <X11/Intrinsic.h>
 #include <X11/Shell.h>
@@ -1171,6 +1174,7 @@ void ConfigureGraph(Widget w, XtPointer client, XtPointer call)
 	int		ac;
 	Arg		al[5];
 
+#if XmVERSION > 1
 	MotifSelectGlobal(w);
 
 	if (! configureGraph) {
@@ -1179,7 +1183,6 @@ void ConfigureGraph(Widget w, XtPointer client, XtPointer call)
 		configureGraph = XmCreateTemplateDialog(mw, "configureGraph",
 			al, ac);
 
-#if XmVERSION > 1
 		ConfigureGraphNotebook = XmCreateNotebook(configureGraph,
 			"configureGraphNotebook",
 			NULL, 0);
@@ -1220,7 +1223,6 @@ void ConfigureGraph(Widget w, XtPointer client, XtPointer call)
 			ConfigureGraphNotebook,
 				XmNnotebookChildType, XmMAJOR_TAB,
 			NULL);
-#endif
 
 		/* Buttons */
 		ok = XtVaCreateManagedWidget("ok", xmPushButtonGadgetClass,
@@ -1241,6 +1243,7 @@ void ConfigureGraph(Widget w, XtPointer client, XtPointer call)
 
 	ConfigureGraphReset(ConfigureGraphInside);
 	XtManageChild(configureGraph);
+#endif
 }
 #endif
 
@@ -5988,6 +5991,7 @@ void versionCB(Widget w, XtPointer client, XtPointer call)
 	Arg		al[2];
 	int		ac;
 	char		xbae[64];
+	extern char	_XmVersionString[];
 
 	MotifSelectGlobal(w);
 
@@ -6006,7 +6010,8 @@ void versionCB(Widget w, XtPointer client, XtPointer call)
 	XmStringFree(xms2);
 
 	xms1 = xms;
-	xms2 = XmStringCreateLtoR("\n  " XmVERSION_STRING, XmFONTLIST_DEFAULT_TAG);
+	sprintf(xbae, "\n  %s", _XmVersionString);
+	xms2 = XmStringCreateLtoR(xbae, XmFONTLIST_DEFAULT_TAG);
 	xms = XmStringConcat(xms1, xms2);
 	XmStringFree(xms1);
 	XmStringFree(xms2);
@@ -6058,7 +6063,15 @@ void versionCB(Widget w, XtPointer client, XtPointer call)
 #endif
 
 #ifdef	HAVE_LIBPLOT
+#ifdef	PL_LIBPLOT_VER_STRING
 	sprintf(xbae, "\n  GNU PlotUtils (libplot version %s)", PL_LIBPLOT_VER_STRING);
+#else
+#ifdef	LIBPLOT_VERSION
+	sprintf(xbae, "\n  GNU PlotUtils (libplot version %s)", LIBPLOT_VERSION);
+#else
+	sprintf(xbae, "\n  GNU PlotUtils");
+#endif
+#endif
 	xms1 = xms;
 	xms2 = XmStringCreateLtoR(xbae, XmFONTLIST_DEFAULT_TAG);
 	xms = XmStringConcat(xms1, xms2);

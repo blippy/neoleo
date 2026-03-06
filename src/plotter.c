@@ -1,5 +1,5 @@
 /*
- * $Id: plotter.c,v 1.8 2000/11/22 19:33:01 danny Exp $
+ * $Id: plotter.c,v 1.9 2011/07/05 00:16:13 delqn Exp $
  *
  * This file contains the heart of libsciplot - the scientific plotting
  * library layered on top of GNU plotutils.
@@ -2639,8 +2639,6 @@ sp_plot_point(Multigrapher *mg, const Point *point)
 	case SP_PLOT_PIE:
 		sp_pie_plot_point(mg, point);
 		break;
-	default:
-		/* ?? */
 	}
 }
 
@@ -2770,8 +2768,6 @@ sp_begin_plot(Multigrapher *mg, double scale, double trans_x, double trans_y)
 	case SP_PLOT_PIE:
 		sp_pie_begin_graph(mg, scale, trans_x, trans_y);
 		break;
-	default:
-		/* ??? */
 	}
 
 	sp_first_dataset(mg);
@@ -2790,8 +2786,6 @@ sp_end_plot(Multigrapher *mg)
 	case SP_PLOT_PIE:
 		sp_pie_end_graph(mg);
 		break;
-	default:
-		/* ??? */
 	}
 }
 

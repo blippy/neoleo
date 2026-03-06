@@ -1,7 +1,7 @@
 /*
  * Copyright © 1992, 1993, 1999, 2000, 2001 Free Software Foundation, Inc.
  *
- * $Id: print.c,v 1.33 2001/02/13 23:38:06 danny Exp $
+ * $Id: print.c,v 1.34 2001/04/16 23:50:07 pw Exp $
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -264,6 +264,12 @@ set_page_size_cmd (char * whole_str)
 		default_pswid = neww * 72;
 		default_pshgt = newh * 72;
 	}
+}
+
+void
+print_zoom_cmd(float factor)
+{
+    Global->zoom = factor / 100.0;
 }
 
 void 

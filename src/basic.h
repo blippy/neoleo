@@ -2,7 +2,7 @@
 #define BASICH
 
 /*
- * $Id: basic.h,v 1.6 2000/08/10 21:02:49 danny Exp $
+ * $Id: basic.h,v 1.7 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1993 Free Software Foundation, Inc.
  *
@@ -36,9 +36,6 @@ enum motion_magic
 
 extern const int colmagic[9];
 extern  const int rowmagic[9];
-extern char * motion_name[9];
-extern enum motion_magic complementary_motion[9];
-extern enum motion_magic opposite_motion[9];
 
 extern int run_load_hooks;
 

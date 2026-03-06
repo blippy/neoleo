@@ -1,7 +1,7 @@
 #ifndef IO_TERMH
 #define IO_TERMH
 /*
- * $Id: io-term.h,v 1.10 2001/02/07 03:16:10 pw Exp $
+ * $Id: io-term.h,v 1.11 2011/07/05 00:16:13 delqn Exp $
  *
  * Copyright © 1992, 1993 Free Software Foundation, Inc.
  * 
@@ -43,8 +43,6 @@ extern int default_jst;
 extern int default_fmt;
 extern int default_lock;
 
-
-extern struct cmd_func cmd_funcs[];
 
 /* When printing ascii output, this controls page width. */
 extern int modified;

@@ -1,5 +1,5 @@
 /*
- * $Id: stubs.h,v 1.2 2000/07/22 06:13:16 danny Exp $
+ * $Id: stubs.h,v 1.3 2001/04/16 23:50:07 pw Exp $
  *
  * Copyright © 1993, 2000 Free Software Foundation, Inc.
  *
@@ -29,6 +29,7 @@ STUB1("f", stub_f, (FILE *), fp, FILE *)
 STUB1("k", stub_k, &, key, struct key_sequence *)
 STUB1("s", stub_s, (char *), string, char *)
 STUB1("i", stub_i, (int), integer, int)
+STUB1("d", stub_d, (float), floating, float)
 STUB1("r", stub_r, &, range, struct rng *)
 
 STUB2("dd", stub_dd, (double), floating, double, (double), floating, double)

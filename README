@@ -53,7 +53,7 @@ The system requirements for Oleo depend upon the user interface or
 interfaces that you intend to compile into the binary.
 
 
-(1) Character Terminal Interface Only
+(1) Character Terminal Interface Only - Always Required
 
 For the no-frills interface, try building with the following command line:
 
@@ -63,9 +63,11 @@ This no-frills character terminal interface does not offer support
 for plotting, but otherwise it has the same capabilities as the
 other versions.  This basic Oleo requires the following libraries:
 
-	* some version of curses (NCurses or Termcap/curses)
-	* GNU Gettext 0.10.32 (currently included in oleo)
-	* GNU texinfo (3.12) to build the documentation
+* some version of curses (NCurses or Termcap/curses)
+  On most Linux distributions, you'll need the curses
+  development package, e.g. ncurses-devel-5.2-8.
+* GNU Gettext 0.10.32 (currently included in oleo)
+* GNU texinfo (3.12) to build the documentation
 
 
 (2) Simple X11 Interface

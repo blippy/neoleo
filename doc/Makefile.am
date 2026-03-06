@@ -1,5 +1,5 @@
 #
-# $Header: /cvs/oleo/doc/Makefile.am,v 1.15 2001/02/14 20:54:49 danny Exp $
+# $Header: /sources/oleo/oleo/doc/Makefile.am,v 1.16 2011/07/05 05:43:12 delqn Exp $
 #
 # Process this file with automake to produce Makefile.in
 #
@@ -18,7 +18,7 @@ oleo.info:	oleo.texi $(TEXIS)
 
 if HavePerl
 
-htmldir=	$(prefix)/share/oleo
+#htmldir=	$(prefix)/share/oleo
 html_DATA=	oleo.html
 
 oleo.html:	$(srcdir)/oleo.texi ${TEXIS} $(top_builddir)/doc/texi2html

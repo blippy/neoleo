@@ -1,5 +1,5 @@
 /*
- * $Id: string.c,v 1.5 2000/08/10 21:02:51 danny Exp $
+ * $Id: string.c,v 1.6 2001/04/19 00:05:27 pw Exp $
  *
  * Copyright © 1990, 1992, 1993 Free Software Foundation, Inc.
  * 
@@ -60,8 +60,6 @@ struct value {
 	
 
 extern struct obstack tmp_mem;
-
-extern char *flt_to_str();
 
 static void
 do_edit (numarg,p)

@@ -1,9 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@set version 1.99.13
-@set update-date July 29 2000
-@set update-month July 2000
+@set version 1.99.16
+@set update-date July 4 2011
+@set update-month July 2011
 
 @setfilename oleo.info
 @settitle Oleo @value{version}
@@ -27,6 +27,14 @@
 @end tex
 @end ifclear
 
+@ifinfo
+@format
+START-INFO-DIR-ENTRY
+* Oleo: (oleo).        The GNU spreadsheet.
+END-INFO-DIR-ENTRY
+@end format
+@end ifinfo
+
 @finalout
 
 @ifinfo
@@ -34,7 +42,7 @@ This file documents Oleo, the GNU spreadsheet.
 
 This file is part of GNU Oleo.
 
-Copyright (C) 1993-2000 Free Software Foundation, Inc.
+Copyright (C) 1993-2011 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice

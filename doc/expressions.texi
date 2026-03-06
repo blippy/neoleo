@@ -1,4 +1,4 @@
-@node   Expressions, , .oleorc file, Basics
+@node   Expressions, , ~/.oleorc file, Basics
 @section Expressions
 @cindex Expressions
 

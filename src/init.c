@@ -1,5 +1,5 @@
 /*
- * $Id: init.c,v 1.10 2001/02/14 19:22:57 danny Exp $
+ * $Id: init.c,v 1.11 2001/04/16 23:50:07 pw Exp $
  *
  * Copyright © 1993, 2000, 2001 Free Software Foundation, Inc.
  *
@@ -650,7 +650,7 @@ static char *init_cmds[] =
   "bind-key print-commands psprint-commands p",
   "bind-key print-commands psprint-commands P",
   "set-map-prompt psprint-commands \\",
-  "set default [F]ont   set page [S]ize   [P]rint",
+  "set default [F]ont   set page [S]ize   [P]rint   set [Z]oom",
   "",
   "bind-key psprint-commands set-page-size s",
   "bind-key psprint-commands set-page-size S",
@@ -658,6 +658,8 @@ static char *init_cmds[] =
   "bind-key psprint-commands set-default-ps-font F",
   "bind-key psprint-commands psprint-region p",
   "bind-key psprint-commands psprint-region P",
+  "bind-key psprint-commands print-zoom z",
+  "bind-key psprint-commands print-zoom Z",
   "",
   "",
   "# Other init commands:",
