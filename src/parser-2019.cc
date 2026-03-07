@@ -913,10 +913,10 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 }
 // FN-END
 
+// FN set_and_eval .
 /* user is responsible for repainting the changed sheet, maybe calling something like _io_repaint() */
-std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it) // FN
+std::string set_and_eval (CELL* cp, const std::string& formula)
 {
-	CELL* cp = find_or_make_cell(r, c);
 	cp->set_formula_text(formula);
 	try {
 		Tour tour;
@@ -927,9 +927,13 @@ std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool
 		cp->set_value_2019(err_t{ex.num()});
 	}
 
-	//if(display_it) // this is really cack-handed
-	//	io_pr_cell(r, c, cp);
-
 	return string_cell(cp);
 }
+std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it)
+{
+	CELL* cp = find_or_make_cell(r, c);
+	return set_and_eval(cp, formula);
+}
+// FN-END
+
 

@@ -14,6 +14,7 @@
 
 #include "parser-2019.h"
 #include "sheet.h"
+#include "tickle.h"
 
 bool headless_tests();
 
@@ -345,7 +346,37 @@ int run_clear_test()
 }
 
 
+bool run_replace_tests ()
+{
+	bool all_pass = true;
+	int res;
+	string s;
+	set_and_eval(1, 1, "12");
+	s = set_and_eval(2, 1, "\"TARG\"");
+	//s = set_and_eval(2, 1, "TARG");
+	cout << s << endl;
 
+	res = ploppy_replace_first_form ("\"TARG\"", "\"SUBBED\"");
+	if(!check_result(2, 1, "\"SUBBED\"")) all_pass = false;
+	if(!check_result(1, 1, "12")) all_pass = false; // check that r1c1 hasn't been tampered with
+
+	cout << cell_value_string(1, 1, 0) << endl;
+	cout << cell_value_string(2, 1, 0) << endl;
+
+	// now try again, but messing with precisions
+	s = set_and_eval(3, 1, "\"TARG2\"");
+	auto cp = find_cell(3, 1);
+	cp->set_prec(2);
+	res = ploppy_replace_first_form ("\"TARG2\"", "13");
+	string val = string_cell_formatted(3, 1);
+	cout << val << endl;
+	if(trim(val) != "13.00") all_pass = false;
+	cout << val << endl;
+
+
+
+	return all_pass;
+}
 
 void exiting(bool all_pass)
 {
@@ -372,6 +403,7 @@ int main(int argc, char* argv[])
 	if(cmd == "pass") { cout << "you want to pass\n"; }
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
 	else if(cmd == "parser2019") { exiting(run_parser_2019_tests());}
+	else if(cmd == "replace") { exiting(run_replace_tests());}
 	else { cout << "Unknown test. Failing\n"; return 1; }
 
 	return 0;

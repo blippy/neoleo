@@ -48,6 +48,12 @@ using std::string;
 namespace fs = std::filesystem;
 
 
+// 26/3
+bool streq(const char* a, const char* b)
+{
+	return strcmp(a, b) == 0;
+}
+
 
 // 25/11
 std::size_t strlen_utf8 (const std::string& str) {

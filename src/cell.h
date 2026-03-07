@@ -75,6 +75,7 @@ inline int default_lock = LCK_UNL;
 
 typedef unsigned char* formula_t;
 
+// FN cell .
 class cell
 {
 	private:
@@ -98,7 +99,7 @@ class cell
 		void set_value_2019(value_t newval);
 		num_t to_num();
 
-		void set_formula_text(const std::string& str);
+		void set_formula_text(const std::string& str); // 26/3 Tricky, because there's no cache invalidation. Should prolly be private
 
 		void dump_cell();
 
@@ -121,6 +122,7 @@ class cell
 		void eval_dependents();
 		void set_cyclic();
 };
+// FN-END
 
 bool vacuous(cell* cp);
 std::string get_cell_formula_at(int r, int c);

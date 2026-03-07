@@ -24,6 +24,7 @@ using std::string;
 
 #include <tcl.h>
 
+#include "neotypes.h"
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
@@ -36,6 +37,20 @@ extern "C" int Ploppy_Init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
 char*  ploppy_get_cell_fmt(int r, int c);
 
+// 26/3
+// search spreadsheet. Replace first instance of TARGET with formula WITH
+// TARGET is assumed to be a formula
+// returns 0 if successful, 1 otherwise
+int ploppy_replace_first_form (const char* target, const char* with)
+{
+	for(CELL* cp: the_cells) {
+		if(streq(cp->get_formula_text().c_str(), target)) {
+			set_and_eval(cp, with);
+			return 0;
+		}
+	}
+	return 1;
+}
 
 // 25/11
 static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)

@@ -29,7 +29,7 @@ using std::map;
 using std::string;
 using std::vector;
 
-typedef std::vector<cell_t*> cellmap_t;
+
 
 
 /* mcarter 30-Apr-2018

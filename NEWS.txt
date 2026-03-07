@@ -7,6 +7,8 @@ DATE:		TBD
 
 * Improved status line visibility
 
+* Added Tcl function replace-first-form
+
 
 ===========================================================================
 VERSION:	16.0

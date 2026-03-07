@@ -27,5 +27,6 @@ void 	ploppy_go(int r, int c);
 void 	ploppy_insert_by_col();
 void 	ploppy_insert_by_row();
 void 	ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi);
+int 	ploppy_replace_first_form (const char* target, const char* with);
 
 

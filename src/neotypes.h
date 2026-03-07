@@ -125,7 +125,7 @@ typedef std::variant<std::monostate, num_t, std::string, err_t, rng_t, bool_t> v
 
 
 
-const auto VERSION = "16.0";
+const auto VERSION = "17.0";
 const auto  PACKAGE = "neoleo";
 const auto PACKAGE_NAME = PACKAGE;
 
@@ -178,7 +178,8 @@ std::string string_format( const std::string& format, Args ... args )
 }
 
 extern struct user_fmt fxt;
-
+typedef std::vector<cell_t*> cellmap_t;
+extern cellmap_t the_cells;
 
 void bind_char(char c, std::string blang_code); // bind a character to some blang code requiring interpreting
 std::string 	cell_value_string (CELLREF row, CELLREF col, int add_quote);
@@ -276,5 +277,6 @@ class ValErr : public std::exception
 };
 
 
+bool streq(const char* a, const char* b);
 
 

@@ -51,5 +51,6 @@ class Expr {
 
 value_t 		eval_expr (Tour& tour, const Expr& expr);
 Expr 			parse_string(std::string& s, ranges_t& predecs, CELLREF r, CELLREF c);
+std::string 	set_and_eval (CELL* cp, const std::string& formula);
 std::string 	set_and_eval(CELLREF r, CELLREF c, const std::string& formula, bool display_it = false);
 //Expr 			parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c);
