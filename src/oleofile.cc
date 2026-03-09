@@ -74,7 +74,6 @@ void read_file_generic(FILE *fp, char *format, const char *name)
 }
 
 //std::string_view s{"hello"sv};
-//static std::string _FileName = std::filesystem::current_path(); //  + "/unnamed.oleo"sv;
 static std::string _FileName{"unnamed.oleo"};
 
 
@@ -146,8 +145,7 @@ static long astol (char **ptr)
 /* We're reading in a cell, whose formula is FORM, and whose current value
    is VAL.  Parse both of them. . .  (Parsing of VAL is quite primitive)
  */
-void
-read_new_value (CELLREF row, CELLREF col, char *form, char *val)
+void read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 {
 	if(form) {
 		set_cell_input(row, col, form);
@@ -309,21 +307,15 @@ int oleo_read_file (const std::string& path)
 
 void oleo_read_file (FILE *fp)
 {
-	const int ismerge = 0;
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
-	//CELLREF czrow = 0, czcol = 0;
 	int lineno;
 	char cbuf[1024];
-	//char expbuf[1024];
-	//int cprot;
-	//char *cexp, *cval;
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
 	lineno = 0;
-	if (!ismerge)
-		clear_spreadsheet ();
+	clear_spreadsheet ();
 	while (fgets (cbuf, sizeof (cbuf), fp))
 	{
 		std::string input_line = cbuf;
@@ -363,7 +355,7 @@ void oleo_read_file (FILE *fp)
 			default:
 bad_field:
 				{
-					if (!ismerge) clear_spreadsheet ();
+					clear_spreadsheet ();
 					std::string fmt{"Line %d: Unknown OLEO line \"%s\""};
 					std::string msg{string_format(fmt, lineno, input_line.c_str())};
 					msg = trim(msg);
@@ -373,9 +365,8 @@ bad_field:
 		}	/* End of switch */
 	}
 	if (!feof (fp)) {
-		if (!ismerge) clear_spreadsheet ();
+		clear_spreadsheet ();
 		raise_error("read-file: read-error near line %d.", lineno);
-		return;
 	}
 }
 
