@@ -27,13 +27,6 @@
 #include "spans.h"
 #include "oleofile.h"
 
-//import std;
-//import utl;
-
-//using std::cout;
-//using std::map;
-//using std::string;
-
 using namespace std;
 
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
@@ -49,7 +42,6 @@ T map_or_raise(const std::map<S, T> &m, S key, std::string msg_if_fail) // FN
 	try {
 		return m.at(key);
 	} catch (std::out_of_range& e) {
-		//raise_error(msg_if_fail);
 		throw OleoJmp(msg_if_fail);
 	}
 }
@@ -85,7 +77,6 @@ void read_file_generic(FILE *fp, char *format, const char *name)
 		oleo_read_file(fp);
 }
 
-//std::string_view s{"hello"sv};
 static std::string _FileName{"unnamed.oleo"};
 
 
@@ -172,8 +163,6 @@ void read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 }
 
-//static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col);
-
 void oleo_read_window_config (const std::string& line)
 {
 	char *text = (char*) alloca(line.size()+1);
@@ -186,11 +175,9 @@ void oleo_read_window_config (const std::string& line)
 		switch (*text++)
 		{
 			case 'A': // cursor at
-				//log("oleo_read_window_config:A");
 				curow = astol (&text);
 				cucol = astol (&text);
 				break;
-				/* JF: Window options */
 			case 'O': // options
 			case 'S': /* Split into two windows. 25/4 unsupported */
 			case 'C': /* Set Colors NOT supported */
@@ -231,10 +218,7 @@ void read_cell_entry(const std::string& line, CELLREF& crow, CELLREF& ccol, CELL
 
 	const int ismerge = 0;
 	int cprot = 0;
-	//int cval = 0;
-	//int cexp = 0;
 	char *cexp = 0, *cval = 0;
-	//CELLREF crow = 0, ccol = 0; // , czrow = 0, czcol = 0;
 	char expbuf[1024];
 	int crow_tmp = crow, ccol_tmp = ccol;
 
@@ -243,7 +227,6 @@ void read_cell_entry(const std::string& line, CELLREF& crow, CELLREF& ccol, CELL
 		int quotes;
 
 		if (*ptr != ';') return; // bad field
-			//goto bad_field;
 		*ptr++ = '\0';
 		switch (*ptr++) {
 		case 'c':
@@ -287,7 +270,6 @@ void read_cell_entry(const std::string& line, CELLREF& crow, CELLREF& ccol, CELL
 			break;
 		default:
 			--ptr;
-			//goto bad_field;
 			return; // bad field
 		}
 	}
@@ -326,13 +308,11 @@ int oleo_read_file (const std::string& path)
 A line beginning with F (for format)
 
 */
-//static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col)
 static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col)
 {
 	char *ptr = (char*) alloca(fmt_line.size()+1);
 	assert(ptr);
 	strcpy(ptr, fmt_line.c_str());
-	//#define ptr (*cptr) // do some refactoring fudging
 	ptr++; // The 'F' is already read in, so skip it
 
 	CELL *cp;
@@ -344,9 +324,6 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 	bool is_italic = false;
 	std::string err_msg;
 	
-
-
-	// fnt = 0;	/* The font must be explicitly overriden for a cell. */
 	while (*ptr)
 	{
 		if (*ptr != ';') return false; // oh-oh spaghettio
@@ -360,7 +337,6 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 			break;
 
 		case 'D': /* Default format */
- 			//err_msg = std::format("Line {}: format {} not supported", lineno, ptr[0]);
 			default_fmt = format_map.at(*ptr++);  //map_or_raise(format_map, *ptr++, err_msg);
 
 			if (*ptr == 'F')
@@ -374,7 +350,6 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 			default_jst = jst_map.at(*ptr++);
 
 			// 25/4
-			//default_width = astol(&ptr);
 			(void) astol(&ptr);
 			break;
 
@@ -422,7 +397,6 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 		case 'r': crow = astol(&ptr); break;
 
 		default:
-			//goto bad_field;
 			return false;
 		}
 	}
@@ -442,10 +416,6 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 	case 1:
 		cp = find_or_make_cell(crow, ccol);
 		set_cell_flags(cp);
-		//SET_FORMAT(cp, fmt);
-		//SET_PRECISION(cp, prc);
-		//SET_JST(cp, jst);
-		// if (font_spec_in_format) cp->cell_font = fnt;
 		break;
 	case 2:
 		rng.lr = MIN_ROW;
@@ -453,13 +423,7 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 		rng.hr = mx_row;
 		rng.hc = czcol;
 		make_cells_in_range(rng);
-		for (CELL *cp : get_cells_in_range(rng))
-		{
-			set_cell_flags(cp);
-			//SET_FORMAT(cp, fmt);
-			//SET_PRECISION(cp, prc);
-			//SET_JST(cp, jst);
-		}
+		for (CELL *cp : get_cells_in_range(rng)) set_cell_flags(cp);
 		break;
 	case 4:
 		rng.lr = czrow;
@@ -467,20 +431,13 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 		rng.hr = czrow;
 		rng.hc = mx_col;
 		make_cells_in_range(rng);
-		for (CELL *cp : get_cells_in_range(rng))
-		{
-			set_cell_flags(cp);
-			//SET_FORMAT(cp, fmt);
-			//SET_JST(cp, jst);
-		}
+		for (CELL *cp : get_cells_in_range(rng)) set_cell_flags(cp);
 		break;
 	default:
 		break;
 	}
 
 	return true;
-//bad_field:
-//	return false;
 }
 
 
@@ -568,7 +525,6 @@ static char * oleo_fmt_to_str (int f1, int p1)
 }
 
 
-//static FILE *oleo_fp;
 static struct rng *oleo_rng;
 
 
@@ -611,70 +567,54 @@ void write_cells(olfos_t &out)
 		bool is_italic = cp->cell_flags.italic;
 		if (f1 != FMT_DEF || j1 != jst::def || is_bold || is_italic)
 		{
-			//(void) fprintf (fp, "F;");
 			out << "F;";
 			if (c != ccol) {
-				//(void) fprintf (fp, "c%u;", c);
 				out << "c" << c << ";";
 				ccol = c;
 			}
 			if (r != crow) {
-				//(void) fprintf (fp, "r%u;", r);
 				out << "r" << r << ";";
 				crow = r;
 			}
 
 			if(is_bold) out << "B;" ; //fprintf(fp, "B;");
 			if(is_italic) out << "I;"; //fprintf(fp, "I;");
-			//fprintf (fp, "F");
 			out << "F";
 			
-			//fprintf(fp, "%s", oleo_fmt_to_str (f1, GET_PRECISION(cp)));
 			out << oleo_fmt_to_str (f1, GET_PRECISION(cp));
-			//fprintf(fp, "%c\n", map_reverse(jst_map, j1));
 			out << map_reverse(jst_map, j1) << "\n";
 		}
 
 		if (is_nul(cp)) continue;
 
-		//(void) fprintf (fp, "C;");
 		out << "C;";
 		if (c != ccol) {
-			//(void) fprintf (fp, "c%u;", c);
 			out << "c" << c << ";";
 			ccol = c;
 		}
 		if (r != crow) {
-			//(void) fprintf (fp, "r%u;", r);
 			out << "r" << r << ";";
 			crow = r;
 		}
 
 		
 		std::string formula = formula_text(r, c);
-		//(void) fprintf (fp, "E%s;", formula.c_str());
 		out << "E" << formula << ";";
-		
-
 
 		value_t val = cp->get_value_2019();
 		std::string strval = stringify_value_file_style(val) ;
-		//fprintf(fp, "K%s", strval.c_str());
 		out << "K" << strval;
 
-		if(cp->locked()) out << ";P"; // fprintf (fp, ";P");
+		if(cp->locked()) out << ";P";
 
-		//putc ('\n', fp);
 		out << "\n";
 	}
 }
 
 static void oleo_write_window_config (olfos_t &out)
 {
-	//std::ostringstream oss;
 	out << "O;status 2\n";
 	out << "W;N" << 1 << ";A" << curow << " " << cucol 	<< ";C7 0 7;Ostandout\n";
-	//return oss.str();
 }
 
 
@@ -683,7 +623,6 @@ static void oleo_write_window_config (olfos_t &out)
 /* Modify this to write out *all* the options */
 static void write_mp_options (olfos_t &out)
 {
-	//fprintf (fp, "O;auto;background;noa0\n");
 	out << "O;auto;background;noa0\n";
 }
 
@@ -727,47 +666,21 @@ void oleo_write_file(olfos_t &out)
 void oleo_write_file(olfos_t& out, struct rng *rng)
 {
 	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
-
-	//(void) fprintf (fp, "# This file was created by Neoleo\n");
 	out <<  "# This file was created by Neoleo\n";
 
 	/* All versions of the oleo file format should have a 
 	 * version cookie on the second line.
 	 */
-	//(void) fprintf (fp, "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n");
 	out << "# format 3.1 (requires Neoleo 16.0 or higher if bold is used)\n";
 
-	//rng = &all_rng;
-
-	//(void) fprintf (fp, "F;D%s%c%u\n",
-	//		oleo_fmt_to_str (default_fmt, default_prc),
-	//		map_reverse(jst_map, default_jst),
-	//		default_width);
 	out << "F;D" << oleo_fmt_to_str(default_fmt, default_prc) << 	map_reverse(jst_map, default_jst) << default_width << "\n";
 
 	write_mp_options (out);
 	write_widths(out);
 
 	// 25/4 We no longer write the heights, because they are always 1
-	//span_find_t h_find = find_span(the_hgts, rng->lr, rng->hr);
-	//write_spans(fp, h_find, 'H');
-
-	//oleo_fp = fp;
 	oleo_rng = rng;
-
 	write_cells(out);
-
-	//std::string str = oleo_write_window_config();
 	oleo_write_window_config(out);
-	//fputs(str.c_str(), fp);
-	//(void) fprintf (fp, "E\n");
 	out << "E\n";
 }
-
-int oleo_set_options( int set_opt, char *option)
-{
-	return -1;
-}
-
-
-
