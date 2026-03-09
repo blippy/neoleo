@@ -224,8 +224,12 @@ void oleo_read_window_config (char * line)
 }
 
 
-void read_cell_entry(char *ptr, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CELLREF& czcol)
+void read_cell_entry(const std::string& line, CELLREF& crow, CELLREF& ccol, CELLREF& czrow, CELLREF& czcol)
 {
+	char *ptr = (char*) alloca(line.size()+1);
+	assert(ptr);
+	strcpy(ptr, line.c_str());
+
 	const int ismerge = 0;
 	int cprot = 0;
 	//int cval = 0;
@@ -523,7 +527,7 @@ void oleo_read_file (FILE *fp)
 
 
 			case 'C':		/* A Cell entry */
-				read_cell_entry(ptr, crow, ccol, czrow, czcol);
+				read_cell_entry(input_line, crow, ccol, czrow, czcol);
 				break;
 			case 'W':
 				oleo_read_window_config (ptr + 2);
