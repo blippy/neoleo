@@ -174,13 +174,12 @@ void read_new_value (CELLREF row, CELLREF col, char *form, char *val)
 
 //static bool read_fmt_line(char **cptr, CELLREF &crow, CELLREF &ccol, CELLREF &czrow, CELLREF &czcol, int &lineno, int &fnt_map_size, long &mx_row, long &mx_col);
 
-void oleo_read_window_config (char * line)
+void oleo_read_window_config (const std::string& line)
 {
-	//int wnum = 0;
-	char *text;
-	//CELLREF nrow = NON_ROW, ncol = NON_COL;
+	char *text = (char*) alloca(line.size()+1);
+	assert(text);
+	strcpy(text, line.c_str() + 2); // we can skip the 1st 2 chars at beginning
 
-	text = line;
 	auto eat = [&]() { while (*text && *text != ';') text++; };
 	for (;;)
 	{
@@ -491,46 +490,31 @@ void oleo_read_file (FILE *fp)
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
 	int lineno;
-	//char cbuf[1024];
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
 	lineno = 0;
 	clear_spreadsheet ();
 	std::string input_line;
-	//while (fgets (cbuf, sizeof (cbuf), fp))
 	while (getline(fp, input_line))
 	{
 		if(input_line.size() == 0) continue;
-		char *ptr; // [input_line.size()+1];
-		ptr = (char *) alloca(input_line.size() + 1);
+		char *ptr = (char *) alloca(input_line.size() + 1);
 		assert(ptr);
-		//defer1(free, ptr);
 		strcpy(ptr, input_line.c_str());
-		//cout << "input line '" << input_line << "'\n";
-		//std::string input_line = cbuf;
 		lineno++;
-		//cout << "oleofile:lineno:" << lineno << "\n";
-		//std::flush;
-
-		//if ((ptr = (char *)index (cbuf, '\n')))			*ptr = '\0';
-
-		//ptr = cbuf;
 		switch (input_line[0])
 		{
-
 			case 'F':		/* Format field */
 				if(!(read_fmt_line(input_line, crow, ccol, czrow, czcol, lineno, fnt_map_size, mx_row, mx_col))) {
 					goto bad_field;
 				}
 				break;
-
-
 			case 'C':		/* A Cell entry */
 				read_cell_entry(input_line, crow, ccol, czrow, czcol);
 				break;
 			case 'W':
-				oleo_read_window_config (ptr + 2);
+				oleo_read_window_config(input_line);
 				break;
 			case '#':		/* comment line -- ignored */
 			case '%':		/* Font or pixel size data. */
@@ -552,10 +536,6 @@ bad_field:
 					return;
 					}
 		}	/* End of switch */
-	}
-	if (!feof (fp)) {
-		clear_spreadsheet ();
-		raise_error("read-file: read-error near line %d.", lineno);
 	}
 }
 
