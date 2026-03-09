@@ -67,6 +67,18 @@ K map_reverse(const std::map<K,V> &m, V val)
 
 }
 
+static bool getline (FILE* fp, std::string& line)
+{
+	line = "";
+	int c = fgetc(fp);
+	if(c == EOF) return false;
+	while(1) {
+		if(c == '\n'|| c == EOF) return true;
+		line += c;
+		c = fgetc(fp);
+	}
+
+}
 
 void read_file_generic(FILE *fp, char *format, const char *name)
 {
@@ -310,23 +322,31 @@ void oleo_read_file (FILE *fp)
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
 	int lineno;
-	char cbuf[1024];
+	//char cbuf[1024];
 	int fnt_map_size = 0;
 
 	long mx_row = MAX_ROW, mx_col = MAX_COL;
 	lineno = 0;
 	clear_spreadsheet ();
-	while (fgets (cbuf, sizeof (cbuf), fp))
+	std::string input_line;
+	//while (fgets (cbuf, sizeof (cbuf), fp))
+	while (getline(fp, input_line))
 	{
-		std::string input_line = cbuf;
+		if(input_line.size() == 0) continue;
+		char *ptr; // [input_line.size()+1];
+		ptr = (char *) alloca(input_line.size() + 1);
+		assert(ptr);
+		//defer1(free, ptr);
+		strcpy(ptr, input_line.c_str());
+		//cout << "input line '" << input_line << "'\n";
+		//std::string input_line = cbuf;
 		lineno++;
 		//cout << "oleofile:lineno:" << lineno << "\n";
 		//std::flush;
 
-		if ((ptr = (char *)index (cbuf, '\n')))
-			*ptr = '\0';
+		//if ((ptr = (char *)index (cbuf, '\n')))			*ptr = '\0';
 
-		ptr = cbuf;
+		//ptr = cbuf;
 		switch (*ptr)
 		{
 
