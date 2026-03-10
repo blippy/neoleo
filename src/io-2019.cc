@@ -234,7 +234,7 @@ bool invoke_std_form(const char* desc, std::string& text_field)
 
 void edit_cell2019()
 {
-	std::string formula{ formula_text(curow, cucol)};
+	std::string formula{ get_formula_text(curow, cucol)};
 	std::string old_formula{formula};
 #if 1
 	if(!invoke_std_form("=", formula)) return;

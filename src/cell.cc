@@ -205,7 +205,7 @@ void set_cell_input(CELLREF r, CELLREF c, const std::string& new_input)
 
 std::string get_cell_formula_at(int r, int c)
 {
-	return formula_text(r, c);
+	return get_formula_text(r, c);
 }
 
 void edit_cell (const char* input)
@@ -215,35 +215,7 @@ void edit_cell (const char* input)
 }
 
 
-
-
-#if 0
-/*
- * highest_row() and highest_col() should be expected to 
- * overallocate the number of rows and columns in the 
- * spreadsheet. The true number of rows and columns must 
- * be calculated
- *
- */
-
-RC_t ws_extent()
-{
-	int capacity_r = highest_row(), capacity_c = highest_col();
-	//cell* m[capacity_r][capacity_c] = {};
-	int size_r = 0, size_c = 0;
-	for(int r=0; r<capacity_r; ++r)
-		for(int c=0; c < capacity_c; ++c){
-			cell * cp = find_cell(r+1, c+1);
-			if(vacuous(cp)) continue;
-			size_r = std::max(size_r, r+1);
-			size_c = std::max(size_c, c+1);
-			//m[r][c] = cp;
-		}
-	return RC_t{size_r, size_c};
-}
-#endif
-
-std::string formula_text(CELLREF r, CELLREF c){
+std::string get_formula_text (CELLREF r, CELLREF c){
 	CELL* cp = find_cell(r, c);
 	if(cp==nullptr) return "";
 	return cp->get_formula_text();
@@ -256,7 +228,7 @@ static std::string m_copied_cell_formula = "";
 
 void copy_this_cell_formula()
 {
-	m_copied_cell_formula = formula_text(curow, cucol);
+	m_copied_cell_formula = get_formula_text(curow, cucol);
 }
 
 void paste_this_cell_formula()

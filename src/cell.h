@@ -180,7 +180,7 @@ char * new_value (CELLREF row, CELLREF col, const char *string);
 
 typedef point_t RC_t;
 RC_t ws_extent();
-std::string formula_text(CELLREF r, CELLREF c);
+std::string get_formula_text(CELLREF r, CELLREF c);
 
 bool is_nul(CELL* cp);
 bool is_flt(CELL* cp);

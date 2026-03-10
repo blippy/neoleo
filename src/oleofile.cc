@@ -589,7 +589,7 @@ void write_cells(olfos_t &out)
 		}
 
 		
-		std::string formula = formula_text(r, c);
+		std::string formula = get_formula_text(r, c);
 		out << "E" << formula << ";";
 
 		value_t val = cp->get_value_2019();

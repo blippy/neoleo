@@ -360,7 +360,7 @@ std::string status_line(int wid)
 	//wid -= strlen (ptr);
 
 
-	std::string dec = formula_text(curow, cucol);
+	std::string dec = get_formula_text(curow, cucol);
 	const std::string& cvs = cell_value_string(curow, cucol, 1);
 	strcpy(ptr, cvs.c_str());
 
