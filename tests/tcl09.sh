@@ -6,8 +6,6 @@ rm -f out/$OLEO
 
 
 $NEO -m tcl  <<- "EOF" >out/$OLEO 
-NEO=`realpath ../src/neoleo`
-$NEO -m h << EOF
 insert-by-col
 12
 13.1

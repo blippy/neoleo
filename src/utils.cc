@@ -48,6 +48,20 @@ using std::string;
 namespace fs = std::filesystem;
 
 
+/*
+// 26/3
+void slurp (FILE *fp)
+{
+	std::string res;
+	char buf[100];
+	do {
+		size_t n = fread(buf, sizeof(buf), 1, fp);
+		res +=
+	} while(n>0);
+	std::string contents{slurp(fp)};
+}
+*/
+
 // 26/3
 bool streq(const char* a, const char* b)
 {

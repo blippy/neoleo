@@ -72,10 +72,13 @@ static bool getline (FILE* fp, std::string& line)
 
 }
 
+/*
+// caller closes
 void read_file_generic(FILE *fp, char *format, const char *name)
 {
 		oleo_read_file(fp);
 }
+*/
 
 static std::string _FileName{"unnamed.oleo"};
 
@@ -294,11 +297,18 @@ void read_cell_entry(const std::string& line, CELLREF& crow, CELLREF& ccol, CELL
 
 int oleo_read_file (const std::string& path)
 {
+	std::ifstream file;
+	file.open(path, ios::in);
+	oleo_read_file(file);
+	file.close();
+
+	/*
 	FILE* fp = fopen(path.c_str(), "r");
 	if(fp == 0) return 0;
 	FileSetCurrentFileName(path);
 	oleo_read_file(fp);
 	fclose(fp);
+	*/
 	return 1;
 }
 
@@ -441,8 +451,7 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 }
 
 
-
-void oleo_read_file (FILE *fp)
+void oleo_read_file (std::istream& is)
 {
 	char *ptr;
 	CELLREF crow = 0, ccol = 0, czrow = 0, czcol = 0;
@@ -453,7 +462,7 @@ void oleo_read_file (FILE *fp)
 	lineno = 0;
 	clear_spreadsheet ();
 	std::string input_line;
-	while (getline(fp, input_line))
+	while (getline(is, input_line))
 	{
 		if(input_line.size() == 0) continue;
 		char *ptr = (char *) alloca(input_line.size() + 1);
@@ -495,6 +504,16 @@ bad_field:
 		}	/* End of switch */
 	}
 }
+
+/*
+// caller must close file
+void oleo_read_file (FILE *fp)
+{
+	std::string contents{slurp(fp)};
+	std::istringstream iss (stringvalues);
+	oleo_read_file(iss);
+}
+*/
 
 static char * oleo_fmt_to_str (int f1, int p1)
 {
@@ -626,20 +645,33 @@ static void write_mp_options (olfos_t &out)
 	out << "O;auto;background;noa0\n";
 }
 
-static void write_cmd (FILE *fp, const char * name)
+
+static void write_cmd_XXX (FILE *fp, const char * name)
 {
 	if(name) FileSetCurrentFileName(name);
 	olfos_t olfos;
-	oleo_write_file(olfos, 0);
+	oleo_write_file(olfos);
 	fputs(olfos.str().c_str(), fp);
 	Global_modified = 0;
 }
 
 
 
-void oleo_write_file(void)
+
+void oleo_write_file (void)
 {
-	string name = FileGetCurrentFileName();
+	olfos_t os; //= std::ostringstream;
+	//os << file.rdbuf();
+	oleo_write_file(os);
+
+	std::string path = FileGetCurrentFileName();
+	std::ofstream file;
+	file.open(path);
+	file << os.str();
+	file.close();
+
+
+	/*
 	FILE *fp = fopen(name.c_str(), "w");
 	if(!fp) {
 		exit_value = 1;
@@ -649,23 +681,21 @@ void oleo_write_file(void)
 
 	write_cmd(fp, name.c_str());
 	fclose(fp);
+	*/
 }
 
-void oleo_write_file_as(std::string path)
+
+void oleo_write_file_as (std::string path)
 {
 	FileSetCurrentFileName(path);
 	oleo_write_file();
 }
 
 
-void oleo_write_file(olfos_t &out)
-{
-	oleo_write_file(out, nullptr);
-}
 
-void oleo_write_file(olfos_t& out, struct rng *rng)
+void oleo_write_file (olfos_t& out)
 {
-	assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
+	//assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
 	out <<  "# This file was created by Neoleo\n";
 
 	/* All versions of the oleo file format should have a 
@@ -679,8 +709,9 @@ void oleo_write_file(olfos_t& out, struct rng *rng)
 	write_widths(out);
 
 	// 25/4 We no longer write the heights, because they are always 1
-	oleo_rng = rng;
+	//oleo_rng = rng;
 	write_cells(out);
 	oleo_write_window_config(out);
 	out << "E\n";
+	Global_modified = 0;
 }

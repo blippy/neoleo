@@ -98,6 +98,7 @@ recalculate (int all)
  * Extended this to detect the extension of a file and have the right
  * read function process this.
  */
+/*
 void read_file_and_run_hooks (FILE * fp, const char * name)
 {
 	char	*ext = NULL;
@@ -111,6 +112,7 @@ void read_file_and_run_hooks (FILE * fp, const char * name)
 	}
 
 }
+*/
 
 
 

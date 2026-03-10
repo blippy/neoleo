@@ -176,6 +176,8 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	FileSetCurrentFileName(string{std::filesystem::current_path()} + "/unnamed.oleo"); // 25/11 In case started up from desktop with no file name
 
 	if (argc - optind == 1) {
+		oleo_read_file(argv[optind]);
+		/*
 		if (FILE *fp = fopen (argv[optind], "r")) {
 			try {
 				read_file_and_run_hooks (fp, argv[optind]);
@@ -186,6 +188,7 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 			} 
 			fclose (fp);
 		}
+		*/
 
 		//command_line_file = 1;
 		FileSetCurrentFileName(argv[optind]);
