@@ -83,6 +83,7 @@ class cell
 		coord_t coord;
 		value_t value_2019;
 		std::string formula_text;
+		void set_formula_text(const std::string& str); // 26/3 Tricky, because there's no cache invalidation. Should prolly be private
 
 	public:
 		cell(coord_t coord);
@@ -99,7 +100,8 @@ class cell
 		void set_value_2019(value_t newval);
 		num_t to_num();
 
-		void set_formula_text(const std::string& str); // 26/3 Tricky, because there's no cache invalidation. Should prolly be private
+
+		std::string set_and_eval (const std::string& formula);
 
 		void dump_cell();
 

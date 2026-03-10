@@ -63,7 +63,7 @@ Expr::Expr(const string& fname, const Expr& x)
  *     add n to head of L
  */
 
-class CyclicErr : public std::exception { };
+
 
 
 
@@ -915,24 +915,11 @@ Expr parse_string (std::string& s, ranges_t& predecs, CELLREF r, CELLREF c)
 
 // FN set_and_eval .
 /* user is responsible for repainting the changed sheet, maybe calling something like _io_repaint() */
-std::string set_and_eval (CELL* cp, const std::string& formula)
-{
-	cp->set_formula_text(formula);
-	try {
-		Tour tour;
-		eval_cell(tour, cp);
-	} catch(const CyclicErr& ex) {
-		cp->set_cyclic();
-	} catch(const ValErr& ex) {
-		cp->set_value_2019(err_t{ex.num()});
-	}
 
-	return string_cell(cp);
-}
 std::string set_and_eval (CELLREF r, CELLREF c, const std::string& formula, bool display_it)
 {
 	CELL* cp = find_or_make_cell(r, c);
-	return set_and_eval(cp, formula);
+	return cp->set_and_eval(formula);
 }
 // FN-END
 

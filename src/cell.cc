@@ -175,6 +175,21 @@ std::string cell::get_formula_text() const
 }
 	
 
+std::string cell::set_and_eval (const std::string& formula)
+{
+	set_formula_text(formula);
+	try {
+		Tour tour;
+		eval_cell(tour, this);
+	} catch(const CyclicErr& ex) {
+		set_cyclic();
+	} catch(const ValErr& ex) {
+		set_value_2019(err_t{ex.num()});
+	}
+
+	return string_cell(this);
+}
+
 
 void cell::dump_cell()
 {
@@ -208,11 +223,13 @@ std::string get_cell_formula_at(int r, int c)
 	return get_formula_text(r, c);
 }
 
+/*
 void edit_cell (const char* input)
 {
 	CELL* cp = find_or_make_cell(curow, cucol);
 	cp->set_formula_text(input);
 }
+*/
 
 
 std::string get_formula_text (CELLREF r, CELLREF c){

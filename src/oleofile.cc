@@ -618,16 +618,6 @@ static void write_mp_options (olfos_t &out)
 }
 
 
-static void write_cmd_XXX (FILE *fp, const char * name)
-{
-	if(name) FileSetCurrentFileName(name);
-	olfos_t olfos;
-	oleo_write_file(olfos);
-	fputs(olfos.str().c_str(), fp);
-	Global_modified = 0;
-}
-
-
 
 
 void oleo_write_file (void)
