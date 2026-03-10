@@ -72,13 +72,6 @@ static bool getline (FILE* fp, std::string& line)
 
 }
 
-/*
-// caller closes
-void read_file_generic(FILE *fp, char *format, const char *name)
-{
-		oleo_read_file(fp);
-}
-*/
 
 static std::string _FileName{"unnamed.oleo"};
 
@@ -301,14 +294,6 @@ int oleo_read_file (const std::string& path)
 	file.open(path, ios::in);
 	oleo_read_file(file);
 	file.close();
-
-	/*
-	FILE* fp = fopen(path.c_str(), "r");
-	if(fp == 0) return 0;
-	FileSetCurrentFileName(path);
-	oleo_read_file(fp);
-	fclose(fp);
-	*/
 	return 1;
 }
 
@@ -505,15 +490,6 @@ bad_field:
 	}
 }
 
-/*
-// caller must close file
-void oleo_read_file (FILE *fp)
-{
-	std::string contents{slurp(fp)};
-	std::istringstream iss (stringvalues);
-	oleo_read_file(iss);
-}
-*/
 
 static char * oleo_fmt_to_str (int f1, int p1)
 {
@@ -544,9 +520,6 @@ static char * oleo_fmt_to_str (int f1, int p1)
 }
 
 
-static struct rng *oleo_rng;
-
-
 void write_widths(olfos_t& out)
 {
 	span_find_t w_find = find_span(the_wids, MIN_COL, MAX_COL);
@@ -560,7 +533,6 @@ void write_widths(olfos_t& out)
 		do
 			ww = next_span(w_find, ccc);
 		while (ccc == ++cc && ww == w);
-		//(void) fprintf (fp, "F;%c%u %u %u\n", 'W', c, cc - 1, w - 1);
 		out << "F;W" << c << " " << cc-1 << " " << w-1 << "\n";
 		c = ccc;
 		w = ww;
@@ -661,7 +633,6 @@ static void write_cmd_XXX (FILE *fp, const char * name)
 void oleo_write_file (void)
 {
 	olfos_t os; //= std::ostringstream;
-	//os << file.rdbuf();
 	oleo_write_file(os);
 
 	std::string path = FileGetCurrentFileName();
@@ -669,19 +640,6 @@ void oleo_write_file (void)
 	file.open(path);
 	file << os.str();
 	file.close();
-
-
-	/*
-	FILE *fp = fopen(name.c_str(), "w");
-	if(!fp) {
-		exit_value = 1;
-		cerr << "? Couldn't open neoleo file for writing:" << name << endl;
-		return;
-	}
-
-	write_cmd(fp, name.c_str());
-	fclose(fp);
-	*/
 }
 
 
@@ -696,7 +654,7 @@ void oleo_write_file_as (std::string path)
 void oleo_write_file (olfos_t& out)
 {
 	//assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
-	out <<  "# This file was created by Neoleo\n";
+out <<  "# This file was created by Neoleo\n";
 
 	/* All versions of the oleo file format should have a 
 	 * version cookie on the second line.
@@ -709,7 +667,6 @@ void oleo_write_file (olfos_t& out)
 	write_widths(out);
 
 	// 25/4 We no longer write the heights, because they are always 1
-	//oleo_rng = rng;
 	write_cells(out);
 	oleo_write_window_config(out);
 	out << "E\n";
