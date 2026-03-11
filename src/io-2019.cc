@@ -366,7 +366,7 @@ void curses_loop ()
 	case CTRL('q'):		maybe_quit_spreadsheet2019();		break;
 	case '=': 			edit_cell2019(); 		break;
 	case '%': 			set_cell_toggle_percent();		break;
-	case 'c':			col_cmd2019();		break;
+	case 'c':			mnu_column();		break;
 	case 'm':			process_menu();		break;
 	case 'p':			i19_precision();		break;
 	case 'r':			row_cmd2019();		break;
@@ -415,16 +415,6 @@ void show_status ()
 void set_status (const std::string& str)
 {
 	status = str;
-	/*
-	// 25/4 Persist the error messages
-	//log("set_status");
-	win_print(2, 0, str);
-	clrtoeol();
-	refresh();
-	//wrefresh(stdscr);
-	//sleep(1);
-	 */
-
 }
 // FN-END
 
@@ -461,6 +451,7 @@ void clear_status ()
 }
 
 
+/*
 // user has typed 'c' to perform a col action. This function
 // decides which one it is
 // 25/5 added
@@ -479,6 +470,7 @@ static void col_cmd2019()
 
 	i19_parameter = -1;
 }
+*/
 
 
 static void delete_1row() { delete_row(1); }

@@ -191,10 +191,9 @@ CELLREF highest_col() { return max_col(); }
 
 void delete_all_cells()
 {
-	curow =1;
-	cucol = 1;
-	for(auto& c:the_cells)
-		delete c;
+	//curow =1;
+	//cucol = 1;
+	for(auto& c:the_cells) delete c;
 	the_cells.clear();
 
 }

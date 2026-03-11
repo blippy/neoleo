@@ -16,6 +16,7 @@
 #include "basic.h"
 #include "io-2019.h"
 #include "io-curses.h"
+#include "sheet.h"
 #include "win.h"
 
 //import win;
@@ -29,10 +30,11 @@ bool invoke_std_form(const char* desc, std::string& text_field);
 
 
 
-void show_menu (bool active) // FN
+void show_menu () // FN
 {
-	std::string text{"m to activate menu"};
-	if(active) text = "Col c | Test t";
+	//std::string text{"m to activate menu"};
+	//if(active) text = "Col c | Test t";
+	std::string text{"Col c | Test t"};
 	text = pad_right(text, COLS);
 
 	// display menu
@@ -153,6 +155,7 @@ void mnu_column ()
 
 	// create menu
 	const strings entries{
+		"insert left i",
 		"align left  l",
 		"align right r",
 		"precision   p",
@@ -162,6 +165,7 @@ void mnu_column ()
 	mnu_show_submenu(entries);
 
 	switch(get_ch()) {
+	case 'i': insert_col_left(); break;
 	case 'l': column_align_left(); break;
 	case 'r': column_align_right(); break;
 	case 'p': col_prec_form(); break;
@@ -193,8 +197,8 @@ void mnu_test()
 // shown when you hit the menu button (m key)
 void process_menu() // FN
 {
-	show_menu(true);
-	defer1 d(show_menu, false);
+	show_menu();
+	//defer1 d(show_menu, false);
 	
 	switch(get_ch()) {
 		case 'c': mnu_column(); break;

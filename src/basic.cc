@@ -42,11 +42,6 @@ using std::endl;
 rng_t current_col ()
 {
 	return rng_t{.lc = cucol, .hc = cucol};
-	//rng.lr = MIN_ROW;
-	//rng.lc = cucol;
-	//rng.hr = MAX_ROW;
-	//rng.hc = cucol;
-
 }
 // FN-END
 
@@ -60,21 +55,18 @@ noop (void)
 
 /* Commands that inser/delete rows/columns. */
 
-void
-insert_row (int repeat)
+void insert_row (int repeat)
 {
 	insert_row_above(curow);
 }
 
-void
-insert_1row()
+void insert_1row ()
 {
 	insert_row(1);
 }
 
 
-void
-delete_row (int repeat)
+void delete_row (int repeat)
 {
 	delete_sheet_row(curow);
 }
@@ -86,42 +78,10 @@ delete_row (int repeat)
 
 
 
-void
-recalculate (int all)
-{
-}
+void recalculate (int all) { }
 
 
 
-
-/*
- * Extended this to detect the extension of a file and have the right
- * read function process this.
- */
-/*
-void read_file_and_run_hooks (FILE * fp, const char * name)
-{
-	char	*ext = NULL;
-	FileSetCurrentFileName(name); // callee duplicates string
-	ext = strrchr((char*)  name, '.');
-	if (! ext) {
-		read_file_generic(fp,  NULL, name);
-	} else {
-		ext++;
-		read_file_generic(fp,  ext, name);
-	}
-
-}
-*/
-
-
-
-
-
-
-
-
-/* PROT may be `d', `p', or `u'. */
 
 void set_region_protection (const struct rng& rng, int prot)
 {
