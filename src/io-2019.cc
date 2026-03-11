@@ -473,7 +473,10 @@ static void col_cmd2019()
 */
 
 
-static void delete_1row() { delete_row(1); }
+
+static void insert_1row () { insert_row_above(curow); }
+
+static void delete_1row() { delete_sheet_row(curow); }
 
 
 

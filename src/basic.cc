@@ -46,37 +46,20 @@ rng_t current_col ()
 // FN-END
 
 
-/* A very basic command. */
 
-void
-noop (void)
-{}
-
-
+#if 0
 /* Commands that inser/delete rows/columns. */
 
-void insert_row (int repeat)
+void insert_row_XXX (int repeat)
 {
 	insert_row_above(curow);
 }
 
-void insert_1row ()
+void insert_1row_XXX ()
 {
 	insert_row(1);
 }
-
-
-void delete_row (int repeat)
-{
-	delete_sheet_row(curow);
-}
-
-
-/* Front end to the window functions. */
-
-
-
-
+#endif
 
 void recalculate (int all) { }
 

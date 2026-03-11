@@ -21,8 +21,8 @@
 
 void 	column_align_left();
 void 	column_align_right();
-void	delete_row (int repeat);
-void	insert_1row();
+//void	delete_row (int repeat);
+//void	insert_1row();
 void	recalculate (int all);
 // void	read_file_and_run_hooks (FILE * fp,  const char * name);
 void	set_cell_alignment_left();
