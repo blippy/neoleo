@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Categories=Office;Spreadsheet;
+Name=Neoleo
+GenericName=Neoleo
+Comment=Ncurses spreadsheet based on GNU oleo
+Exec=@CMAKE_INSTALL_PREFIX@/bin/neoleo %F
+Icon=@CMAKE_INSTALL_PREFIX@/share/pixmaps/neoleo.png
+Terminal=true
+MimeType=text/x-oleo;
+#MimeType=text/oleo;
+Keywords=office;spreadsheet;
+
