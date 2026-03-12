@@ -1,0 +1,9 @@
+libdir=@NEOLEO_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: @PROJECT_NAME@
+Description: Neoleo spreadhseet libraries
+Version: @VERSION@
+Requires: tcl
+Libs: -L${libdir} -lploppy_static @MYTARGET_LINK_LIBRARIES@
+Cflags: -I${includedir} @MYTARGET_LINK_LIBRARIES@

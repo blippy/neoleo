@@ -29,3 +29,10 @@ install(PROGRAMS procs/neopids procs/pids.py procs/sleepy
 install(FILES procs/pids.bas procs/youtube-script.txt
 	DESTINATION ${edest}/procs
 )
+
+install(FILES
+	c++/main.cc
+	c++/Makefile
+	c++/README.md
+	DESTINATION ${edest}/c++
+)

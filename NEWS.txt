@@ -9,6 +9,12 @@ DATE:		TBD
 
 * Added Tcl function replace-first-form
 
+* pkg-config info set up (incomplete) so that you can now create your own
+C++ executables that use neoleo as a library. See examples/c++ for a simple
+example that uses a Makefile.
+
+* column/row insertion/deletion now preserves cursor position
+
 
 ===========================================================================
 VERSION:	16.0

@@ -37,7 +37,7 @@ set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 # shared and static libraries built from the same object files
 add_library(ploppy SHARED $<TARGET_OBJECTS:objlib>)
 add_library(ploppy_static STATIC $<TARGET_OBJECTS:objlib>)
-install(TARGETS ploppy)
+install(TARGETS ploppy ploppy_static)
 
 
 
@@ -83,3 +83,23 @@ target_link_libraries(testneo ${TCL_LIBRARIES})
 #	COMMAND ldconfig -n ${CMAKE_INSTALL_PREFIX}/lib/libploppy.so
 #	COMMAND ldconfig # updates the cache
 #)	
+
+
+# 26/3 pkkconfig file
+# Users may need to do something like
+# export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+# There's something not 100% on this. 
+# https://discourse.cmake.org/t/how-to-create-pkgconfig-file/10337
+# example:
+# /usr/lib/x86_64-linux-gnu/pkgconfig/ncurses.pc
+set(CMAKE_INSTALL_FULL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/neoleo)
+set(NEOLEO_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # needed by neoleo.pc
+#message("CMAKE_INSTALL_FULL_INCLUDEDIR=${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+#set(CMAKE_I
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/neoleo.pc.in ${CMAKE_CURRENT_BINARY_DIR}/neoleo.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/neoleo.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+install(FILES 
+	${CMAKE_CURRENT_SOURCE_DIR}/neotypes.h
+	${CMAKE_CURRENT_SOURCE_DIR}/oleofile.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tickle.h
+	DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
