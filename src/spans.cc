@@ -29,10 +29,10 @@ int get_span(const span_t& span, int ref, int incr, int def)
 		return def;
 }
 
-#define COL  cucol
+//#define COL  cucol
 
 
-void set_width (int wid) { set_width(COL, wid); } // FN
+//void set_width (int wid) { set_width(COL, wid); } // FN
 
 int get_width (CELLREF col) // FN
 {

@@ -246,7 +246,7 @@ bool col_width_form()
 	
 	}
 
-	if(accept) set_width(new_width.value());
+	if(accept) set_width(cucol, new_width.value());
 
 	//cur_io_repaint();
 	return true;
