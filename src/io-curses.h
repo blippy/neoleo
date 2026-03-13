@@ -34,4 +34,4 @@ void io_shift_cell_cursor (dirn way, int repeat);
 #define WIN_PAG_VT		0x08 // page vertically
 #define WIN_EDGES		0x10 // edged disabled
 #define WIN_EDGE_REV	0x20 // edges standout
-inline int win_flags = WIN_EDGES | WIN_EDGE_REV; 
+inline const int win_flags = WIN_EDGES | WIN_EDGE_REV;

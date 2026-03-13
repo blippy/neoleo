@@ -422,10 +422,13 @@ void cur_io_repaint ()
 		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
 		printw ("#%*ld ", win->lh_wid - 2, (long int)1);
-		if (win_flags & WIN_EDGE_REV) standout(); // s_display.cdstandout();
+
+		// draw column labels
 		cc = win->screen.lc;
 		do
 		{
+			if (cc != cucol) standout();
+
 			n = get_width (cc);
 			if (n > win->numc)
 				n = win->numc;
@@ -450,22 +453,25 @@ void cur_io_repaint ()
 			}
 			else if (n == 1)
 				addstr ("#");
-		}
-		while (cc++ < win->screen.hc);
+
+			standend ();
+		} while (cc++ < win->screen.hc);
 
 		// print row labels
 		rr = win->screen.lr;
 		n = win->win_down;
 		do {
+			if (rr != curow) standout();
 			n1 = get_height (rr);
 			if (!n1) continue;
 			move (n, win->win_over - win->lh_wid);
 			printw ("R%-*d", win->lh_wid - 1, rr);
 			n += n1;
+			standend ();
 		} while (rr++ < win->screen.hr);
 
 
-		if (win_flags & WIN_EDGE_REV) standend ();
+
 	}
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(win->screen)) {

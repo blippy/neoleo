@@ -15,6 +15,9 @@ example that uses a Makefile.
 
 * column/row insertion/deletion now preserves cursor position
 
+* current row/column header no longer highlighted in cursor display. 
+This makes current location more obvious to user.
+
 
 ===========================================================================
 VERSION:	16.0
