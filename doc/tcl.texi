@@ -120,7 +120,8 @@ then it means that tclsh cannot find a cached version of library.
 It will not happen if you install to prefix `/usr/`, but `/usr/local` might cause problems, depending on the distribution, as will other directories, 
 like within your HOME directory.
 
-Possible approaches to fixing the issue:@itemize @bullet
+Possible approaches to fixing the issue:
+@itemize @bullet
 @item Set @code{LD_LIBRARY_PATH} as an environment variable within your shell. E.g. to @code{/usr/local/lib:/other/paths}.
 
 @item Set the path of the library explicitly in tclsh (TODO explain)
