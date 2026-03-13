@@ -31,7 +31,6 @@ int get_span(const span_t& span, int ref, int incr, int def)
 
 #define COL  cucol
 
-int get_width() { return get_width(COL);} // FN
 
 void set_width (int wid) { set_width(COL, wid); } // FN
 
@@ -43,7 +42,6 @@ int get_width (CELLREF col) // FN
 void set_width (CELLREF col, int wid) // FN
 {
 	the_wids[col] = wid;
-	//io_update_width(col, wid);
 }
 
 
@@ -73,12 +71,6 @@ int next_span (span_find_t& sp, CELLREF& n) // FN
 int get_height (CELLREF row) // FN
 {
 	return 1; // all heights are assumed 1
-	#if 0
-	int incr = - 1; // NB Why?
-	int h = get_span(the_hgts, row, incr, default_height);
-	assert(h==1);
-	return h;
-	#endif
 }
 
 

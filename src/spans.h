@@ -22,7 +22,6 @@ void set_width (CELLREF col, int wid);
 span_find_t find_span(span_t& spans, CELLREF lo, CELLREF hi);
 void flush_spans();
 int next_span(span_find_t& sp, CELLREF& n);
-int get_width ();
 int get_width (CELLREF col);
 int get_scaled_height (CELLREF r);
 void set_width (int wid); // of current column

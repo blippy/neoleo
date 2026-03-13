@@ -215,11 +215,9 @@ void process_menu() // FN
 // the examplar is io-2019.cc:nform_c
 bool col_width_form() 
 {
-	string input{to_string(get_width())};
+	string input{to_string(get_width(cucol))};
 	win_dow win(7, 30, 2, 0);
 	WINDOW* w = win();
-	//WINDOW *w = newwin(7, 30, 2 , 0); // lines cols y x
-	//defer1 d1(delwin, w);
 	box(w, 0 ,0);
 
 
@@ -230,7 +228,6 @@ bool col_width_form()
 	if(ed.m_cancelled) return true;
 	input = ed.m_input;
 	mvwprintw(w, 2, 2, "You said '%s'", input.c_str());
-	//mvwprintw(w, 3, 2, "C for canel");
 	wrefresh(w);
 	bool accept = false;
 	auto new_width = to_int(input);
@@ -249,9 +246,7 @@ bool col_width_form()
 	
 	}
 
-	if(accept) {
-		set_width(new_width.value());
-	}
+	if(accept) set_width(new_width.value());
 
 	//cur_io_repaint();
 	return true;
