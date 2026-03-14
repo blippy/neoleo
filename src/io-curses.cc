@@ -84,8 +84,8 @@ struct window
    * Number of columns and rows for right and bottom edges.
    * As this changes, numc and numr change accordingly.
    */
-  int bottom_edge_r;
-  int right_edge_c;
+  int bottom_edge_r = 0;
+  int right_edge_c = 0;
 
 
   /* Number of columns taken up by the row numbers at the
@@ -94,7 +94,7 @@ struct window
      five) if win->flags&WIN_PAG_HZ (to make things easier).
      Ranges between three "R9 " to seven "R32767 " depending on
      the number of the highest row on the screen.  */
-  int lh_wid;
+  int lh_wid = 0;
 
 };
 
@@ -831,7 +831,6 @@ void curses_main () // FN
 
 	io_init_windows();
 	recenter_window();
-	//cur_io_repaint();
 
 
 	// Tell ncurses to interpret "special keys". It means
@@ -843,6 +842,10 @@ void curses_main () // FN
 	//doupdate();
 	while(!Global_definitely_quit) {
 		try {
+			// 26/3 necessary to call these each time in case terminal dimension changes
+			//io_init_windows();
+			//recenter_window();
+
 			cur_io_repaint();
 			curses_loop();
 		} catch (OleoJmp& e) {
@@ -854,10 +857,10 @@ void curses_main () // FN
 
 void  io_init_windows ()
 {
-	cwin->win_down = grid_starts;
+	//cwin->win_down = grid_starts;
 	cwin->numr = LINES - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
 	cwin->numc = COLS;
-	cwin->bottom_edge_r = 0;
-	cwin->right_edge_c = 0;
-	cwin->lh_wid = 0;
+	//cwin->bottom_edge_r = 0;
+	//cwin->right_edge_c = 0;
+	//cwin->lh_wid = 0;
 }
