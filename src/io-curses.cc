@@ -71,14 +71,14 @@ struct window
      This only changes when the screen is resized,
      win->flags&WIN_EDGES changes, or a window is either
      created or destroyed */
-  int numr = LINES - grid_starts;
+  int numr;
 
   /* Number of text columns that can fit in this window.
      This changes when the screen is resized,
      win->flags&WIN_EDGES changes, a window is created or
      destoryed, or win->lh_wid changes.  In the last case
      win->numc+win->lh_wid remains a constant. */
-  int numc = COLS;
+  int numc;
 
   /*
    * Number of columns and rows for right and bottom edges.
@@ -96,6 +96,11 @@ struct window
      the number of the highest row on the screen.  */
   int lh_wid = 0;
 
+  void update()
+  {
+	  numr = LINES - grid_starts;
+	  numc = COLS;
+  }
 };
 
 
@@ -857,9 +862,10 @@ void curses_main () // FN
 
 void  io_init_windows ()
 {
+	cwin->update();
 	//cwin->win_down = grid_starts;
-	cwin->numr = LINES - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
-	cwin->numc = COLS;
+	//cwin->numr = LINES - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
+	//cwin->numc = COLS;
 	//cwin->bottom_edge_r = 0;
 	//cwin->right_edge_c = 0;
 	//cwin->lh_wid = 0;
