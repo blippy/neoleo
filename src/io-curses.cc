@@ -105,10 +105,10 @@ public:
 	}
 	;
 
-	void set_numcols(struct window_c *win, CELLREF hr) {
-		int lh = win_label_cols(win, hr);
-		win->win_over -= _lh_wid - lh;
-		win->numc += _lh_wid - lh;
+	void set_numcols(CELLREF hr) {
+		int lh = win_label_cols(this, hr);
+		win_over -= _lh_wid - lh;
+		numc += _lh_wid - lh;
 		_lh_wid = lh;
 	}
 
@@ -118,6 +118,23 @@ public:
 	}
 private:
 	int _lh_wid = 0;
+
+	int win_label_cols (class window_c * win, CELLREF hr)
+	{
+		int lh;
+
+		if ((win_flags & WIN_EDGES) == 0)
+			lh = 0;
+
+		else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
+			lh = 5;
+		else if (hr > 10)
+			lh = 4;
+		else
+			lh = 3;
+		return lh;
+	}
+
 };
 
 
@@ -241,29 +258,6 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 }
 
 
-int win_label_cols (class window_c * win, CELLREF hr)
-{
-	int lh;
-
-	if ((win_flags & WIN_EDGES) == 0)
-		lh = 0;
-
-	else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
-		lh = 5;
-	else if (hr > 10)
-		lh = 4;
-	else
-		lh = 3;
-	return lh;
-}
-
-int win_label_rows (struct window_c * win)
-{
-	return (win_flags & WIN_EDGES) ? label_rows : 0;
-}
-
-
-
 static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
 {
 	CELLREF lo, hi;
@@ -333,7 +327,7 @@ void  recenter_window (struct window_c *win = cwin) // FN
 	else
 		recenter_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
-	win->set_numcols (win, win->screen.hr);
+	win->set_numcols(win->screen.hr);
 	if (win_flags & WIN_PAG_HZ)
 		page_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
