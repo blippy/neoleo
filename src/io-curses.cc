@@ -59,8 +59,10 @@ static const int	label_rows = 1;
 
 
 constexpr int grid_starts = 4;	// y-position where data grid starts
-struct window
+class window_c
 {
+public:
+	window_c() {};
   /* Do not change these directly. */
   const int id = 1; // a window id
   int win_down = grid_starts; // should be const
@@ -104,13 +106,13 @@ struct window
 };
 
 
-inline window the_cwin;
-inline window* cwin = &the_cwin;
+inline window_c the_cwin;
+inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
 
 
-static void move_cursor_to (struct window *, CELLREF, CELLREF);
-static void	cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+static void move_cursor_to (struct window_c *, CELLREF, CELLREF);
+static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 void  		io_init_windows ();
@@ -224,7 +226,7 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 }
 
 
-int win_label_cols (struct window * win, CELLREF hr)
+int win_label_cols (struct window_c * win, CELLREF hr)
 {
 	int lh;
 
@@ -240,12 +242,12 @@ int win_label_cols (struct window * win, CELLREF hr)
 	return lh;
 }
 
-int win_label_rows (struct window * win)
+int win_label_rows (struct window_c * win)
 {
 	return (win_flags & WIN_EDGES) ? label_rows : 0;
 }
 
-void set_numcols (struct window *win, CELLREF hr)
+void set_numcols (struct window_c *win, CELLREF hr)
 {
 	int lh = win_label_cols (win, hr);
 	win->win_over -= win->lh_wid - lh;
@@ -313,7 +315,7 @@ static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *lo
 }
 
 
-void  recenter_window (struct window *win = cwin) // FN
+void  recenter_window (struct window_c *win = cwin) // FN
 {
 	//if(!win) win = cwin;
 	if (win_flags & WIN_PAG_VT)
@@ -394,7 +396,7 @@ void cur_io_repaint ()
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
 	int n, n1;
-	struct window *win = cwin;
+	struct window_c *win = cwin;
 
 	erase();
 	//clear();
@@ -473,7 +475,7 @@ void cur_io_repaint ()
 
 
 
-static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
+static void move_cursor_to (struct window_c *win, CELLREF r, CELLREF c)
 {
 	int cell_cursor_col = win->win_over;
 	for (int cc = win->screen.lc; cc < c; cc++)
@@ -488,7 +490,7 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 
 
 
-static void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
+static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 
 	defer2(wattroff, stdscr, COLOR_PAIR(GR_ON_BL)); // used if current row is row we're printing
