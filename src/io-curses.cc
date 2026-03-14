@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <cmath>
 
 #include <menu.h>
 #include <panel.h>
@@ -60,9 +61,6 @@ static const int	label_rows = 1;
 
 constexpr int grid_starts = 4;	// y-position where data grid starts
 
-
-int win_label_cols (class window_c * win, CELLREF hr);
-
 class window_c {
 public:
 	window_c() {
@@ -71,7 +69,7 @@ public:
 	/* Do not change these directly. */
 	const int id = 1; // a window id
 	int win_down = grid_starts; // should be const
-	int win_over = 0;// x-posiition Where the data in this window starts. Can change due to row number
+	int win_over = 0;// x-position Where the data in this window starts. Can change due to row number
 	struct rng screen { 0 }; /* Cells visible. recenter_* updates this. */
 
 	/* Number of lines of spreadsheet that can fit in this window.
@@ -83,7 +81,7 @@ public:
 	/* Number of text columns that can fit in this window.
 	 This changes when the screen is resized,
 	 win->flags&WIN_EDGES changes, a window is created or
-	 destoryed, or win->lh_wid changes.  In the last case
+	 destroyed, or win->lh_wid changes.  In the last case
 	 win->numc+win->lh_wid remains a constant. */
 	int numc = 0;
 
@@ -91,8 +89,8 @@ public:
 	 * Number of columns and rows for right and bottom edges.
 	 * As this changes, numc and numr change accordingly.
 	 */
-	int bottom_edge_r = 0;
-	int right_edge_c = 0;
+	//int bottom_edge_r = 0;
+	//int right_edge_c = 0;
 
 	/* Number of columns taken up by the row numbers at the
 	 left hand edge of the screen.  Zero if edges is
@@ -102,38 +100,19 @@ public:
 	 the number of the highest row on the screen.  */
 	int lh_wid() {
 		return _lh_wid;
-	}
-	;
+	};
 
-	void set_numcols(CELLREF hr) {
-		int lh = win_label_cols(this, hr);
-		win_over -= _lh_wid - lh;
-		numc += _lh_wid - lh;
-		_lh_wid = lh;
-	}
 
 	void update() {
 		numr = LINES - grid_starts;
-		numc = COLS;
+		_lh_wid = std::log10(curow + LINES) +3; // est. num of lines taken up by row numbers
+		win_over = _lh_wid +1;
+		numc = COLS - _lh_wid;
+		//log("update:COLS=", COLS);
+		// TODO 26/3 screen will have been thrown out of wack esp if COLS/LINES reduced
 	}
 private:
-	int _lh_wid = 0;
-
-	int win_label_cols (class window_c * win, CELLREF hr)
-	{
-		int lh;
-
-		if ((win_flags & WIN_EDGES) == 0)
-			lh = 0;
-
-		else if ((win_flags & WIN_PAG_HZ) || hr >= 100)
-			lh = 5;
-		else if (hr > 10)
-			lh = 4;
-		else
-			lh = 3;
-		return lh;
-	}
+	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
 
 };
 
@@ -327,7 +306,7 @@ void  recenter_window (struct window_c *win = cwin) // FN
 	else
 		recenter_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
-	win->set_numcols(win->screen.hr);
+	//win->set_numcols(win->screen.hr);
 	if (win_flags & WIN_PAG_HZ)
 		page_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
@@ -340,15 +319,10 @@ void  recenter_window (struct window_c *win = cwin) // FN
 
 std::string status_line(int wid)
 {
-	//log("status_line called");
-	//string rc_strx{std::format("r{}c{}", curow, cucol)};
-	//wid = rc_str.size();
-	//const char *ptr = rc_str.c_str(); //std::format("r{}c{}", curow, cucol).c_str();
 	char rc_str[1000];
 	snprintf(rc_str, sizeof(rc_str), "r%dc%d", curow, cucol);
 	char *ptr = rc_str;
 	addstr (ptr);
-	//wid -= strlen (ptr);
 
 
 	std::string dec = get_formula_text(curow, cucol);
@@ -399,9 +373,10 @@ void cur_io_repaint ()
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
 	int n, n1;
-	struct window_c *win = cwin;
+	window_c *win = cwin;
 
 	erase();
+	win->update();
 	//clear();
 	show_menu();
 	show_status();
