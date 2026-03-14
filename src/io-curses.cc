@@ -59,50 +59,65 @@ static const int	label_rows = 1;
 
 
 constexpr int grid_starts = 4;	// y-position where data grid starts
-class window_c
-{
+
+
+int win_label_cols (class window_c * win, CELLREF hr);
+
+class window_c {
 public:
-	window_c() {};
-  /* Do not change these directly. */
-  const int id = 1; // a window id
-  int win_down = grid_starts; // should be const
-  int win_over = 0;			// x-posiition Where the data in this window starts. Can change due to row number
-  struct rng screen{0};		/* Cells visible. recenter_* updates this. */
+	window_c() {
+	}
+	;
+	/* Do not change these directly. */
+	const int id = 1; // a window id
+	int win_down = grid_starts; // should be const
+	int win_over = 0;// x-posiition Where the data in this window starts. Can change due to row number
+	struct rng screen { 0 }; /* Cells visible. recenter_* updates this. */
 
-  /* Number of lines of spreadsheet that can fit in this window.
-     This only changes when the screen is resized,
-     win->flags&WIN_EDGES changes, or a window is either
-     created or destroyed */
-  int numr;
+	/* Number of lines of spreadsheet that can fit in this window.
+	 This only changes when the screen is resized,
+	 win->flags&WIN_EDGES changes, or a window is either
+	 created or destroyed */
+	int numr = 0;
 
-  /* Number of text columns that can fit in this window.
-     This changes when the screen is resized,
-     win->flags&WIN_EDGES changes, a window is created or
-     destoryed, or win->lh_wid changes.  In the last case
-     win->numc+win->lh_wid remains a constant. */
-  int numc;
+	/* Number of text columns that can fit in this window.
+	 This changes when the screen is resized,
+	 win->flags&WIN_EDGES changes, a window is created or
+	 destoryed, or win->lh_wid changes.  In the last case
+	 win->numc+win->lh_wid remains a constant. */
+	int numc = 0;
 
-  /*
-   * Number of columns and rows for right and bottom edges.
-   * As this changes, numc and numr change accordingly.
-   */
-  int bottom_edge_r = 0;
-  int right_edge_c = 0;
+	/*
+	 * Number of columns and rows for right and bottom edges.
+	 * As this changes, numc and numr change accordingly.
+	 */
+	int bottom_edge_r = 0;
+	int right_edge_c = 0;
 
+	/* Number of columns taken up by the row numbers at the
+	 left hand edge of the screen.  Zero if edges is
+	 win->flags&WIN_EDGES is off (by definition).  Seven (or
+	 five) if win->flags&WIN_PAG_HZ (to make things easier).
+	 Ranges between three "R9 " to seven "R32767 " depending on
+	 the number of the highest row on the screen.  */
+	int lh_wid() {
+		return _lh_wid;
+	}
+	;
 
-  /* Number of columns taken up by the row numbers at the
-     left hand edge of the screen.  Zero if edges is
-     win->flags&WIN_EDGES is off (by definition).  Seven (or
-     five) if win->flags&WIN_PAG_HZ (to make things easier).
-     Ranges between three "R9 " to seven "R32767 " depending on
-     the number of the highest row on the screen.  */
-  int lh_wid = 0;
+	void set_numcols(struct window_c *win, CELLREF hr) {
+		int lh = win_label_cols(win, hr);
+		win->win_over -= _lh_wid - lh;
+		win->numc += _lh_wid - lh;
+		_lh_wid = lh;
+	}
 
-  void update()
-  {
-	  numr = LINES - grid_starts;
-	  numc = COLS;
-  }
+	void update() {
+		numr = LINES - grid_starts;
+		numc = COLS;
+	}
+private:
+	int _lh_wid = 0;
 };
 
 
@@ -226,7 +241,7 @@ static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLRE
 }
 
 
-int win_label_cols (struct window_c * win, CELLREF hr)
+int win_label_cols (class window_c * win, CELLREF hr)
 {
 	int lh;
 
@@ -247,13 +262,7 @@ int win_label_rows (struct window_c * win)
 	return (win_flags & WIN_EDGES) ? label_rows : 0;
 }
 
-void set_numcols (struct window_c *win, CELLREF hr)
-{
-	int lh = win_label_cols (win, hr);
-	win->win_over -= win->lh_wid - lh;
-	win->numc += win->lh_wid - lh;
-	win->lh_wid = lh;
-}
+
 
 static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
 {
@@ -324,7 +333,7 @@ void  recenter_window (struct window_c *win = cwin) // FN
 	else
 		recenter_axis (curow, get_scaled_height, win->numr,
 				&(win->screen.lr), &(win->screen.hr));
-	set_numcols (win, win->screen.hr);
+	win->set_numcols (win, win->screen.hr);
 	if (win_flags & WIN_PAG_HZ)
 		page_axis (cucol, get_scaled_width, win->numc,
 				&(win->screen.lc), &(win->screen.hc));
@@ -403,13 +412,13 @@ void cur_io_repaint ()
 	show_menu();
 	show_status();
 	
-	if (win->lh_wid)
+	if (win->lh_wid())
 	{
-		move (win->win_down - 1, win->win_over - win->lh_wid);
+		move (win->win_down - 1, win->win_over - win->lh_wid());
 		//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
 		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
 		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
-		printw ("#%*ld ", win->lh_wid - 2, (long int)1);
+		printw ("#%*ld ", win->lh_wid() - 2, (long int)1);
 
 		// draw column labels
 		cc = win->screen.lc;
@@ -452,8 +461,8 @@ void cur_io_repaint ()
 			if (rr != curow) standout();
 			n1 = get_height (rr);
 			if (!n1) continue;
-			move (n, win->win_over - win->lh_wid);
-			printw ("R%-*d", win->lh_wid - 1, rr);
+			move (n, win->win_over - win->lh_wid());
+			printw ("R%-*d", win->lh_wid() - 1, rr);
 			n += n1;
 			standend ();
 		} while (rr++ < win->screen.hr);
