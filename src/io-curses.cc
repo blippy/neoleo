@@ -124,7 +124,7 @@ inline window* cwin = &the_cwin;
 
 
 static void move_cursor_to (struct window *, CELLREF, CELLREF);
-void 		cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
+static void	cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 void  		io_init_windows ();
@@ -502,7 +502,7 @@ static void move_cursor_to (struct window *win, CELLREF r, CELLREF c)
 
 
 
-void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
+static void cur_io_pr_cell_win (struct window *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 
 	defer2(wattroff, stdscr, COLOR_PAIR(GR_ON_BL)); // used if current row is row we're printing
