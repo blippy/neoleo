@@ -52,29 +52,10 @@ using std::vector;
 using namespace std::string_literals;
 
 
-//import utl;
-//import win;
 
-
-
-static int scr_lines = 24, scr_cols = 80;
-
-
-//static int 		input_rows = 1, status_rows = 1;
-//static const int 	user_status = 2;
 static const int	status = 1;
 static const int	label_rows = 1;
-//static const int	win_id = 1;
 
-
-
-
-
-
-
-
-
-/* The tty windows datastructures: */
 
 
 constexpr int grid_starts = 4;	// y-position where data grid starts
@@ -873,29 +854,10 @@ void curses_main () // FN
 
 void  io_init_windows ()
 {
-
-	//io_set_input_status (1, 2, 0);
-	//cwin->id = win_id++;
-	//cwin->win_over = 0;		/* This will be fixed by a future set_numcols */
-	//cwin->win_down = (label_rows + (user_status > 0) * status_rows + (user_input > 0) * input_rows);
-
-	//auto [y, x] = win_getyx(stdscr);
-	//int y, x;
-	//getyx(stdscr, y, x);
-	scr_lines = LINES;
-	scr_cols = COLS;
 	cwin->win_down = grid_starts;
-	cwin->numr = scr_lines - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
-	cwin->numc = scr_cols;
+	cwin->numr = LINES - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
+	cwin->numc = COLS;
 	cwin->bottom_edge_r = 0;
 	cwin->right_edge_c = 0;
 	cwin->lh_wid = 0;
-
-	/* at the end of this process
-	 	 (gdb) p the_cwin
-		$3 = {id = 1, win_over = 0, win_down = 3, screen = {lr = 0, lc = 0, hr = 0,
-    	hc = 0}, numr = 21, numc = 80, bottom_edge_r = 0, right_edge_c = 0,
-  	  lh_wid = 0}
-		(gdb) n
-	 */
 }
