@@ -71,14 +71,14 @@ struct window
      This only changes when the screen is resized,
      win->flags&WIN_EDGES changes, or a window is either
      created or destroyed */
-  int numr;
+  int numr = LINES - grid_starts;
 
   /* Number of text columns that can fit in this window.
      This changes when the screen is resized,
      win->flags&WIN_EDGES changes, a window is created or
      destoryed, or win->lh_wid changes.  In the last case
      win->numc+win->lh_wid remains a constant. */
-  int numc;
+  int numc = COLS;
 
   /*
    * Number of columns and rows for right and bottom edges.
