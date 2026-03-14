@@ -350,8 +350,8 @@ void bind_char(char c, std::string blang_code)
 	custom_bindings[c] = blang_code;
 }
 
-// FN curses_loop .
-void curses_loop ()
+// FN curses_input .
+void curses_input ()
 {
 
 	show_menu();

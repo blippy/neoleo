@@ -103,7 +103,9 @@ public:
 	};
 
 
-	void update() {
+	// terminal size might have changed
+	void update ()
+	{
 		numr = LINES - grid_starts;
 		_lh_wid = std::log10(curow + LINES) +3; // est. num of lines taken up by row numbers
 		win_over = _lh_wid +1;
@@ -127,7 +129,7 @@ static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 void  		io_init_windows ();
-bool 		curses_loop ();
+bool 		curses_input ();
 
 
 // FN page_down
@@ -832,7 +834,7 @@ void curses_main () // FN
 			//recenter_window();
 
 			cur_io_repaint();
-			curses_loop();
+			curses_input();
 		} catch (OleoJmp& e) {
 			set_status(e.what());
 		}

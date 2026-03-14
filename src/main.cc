@@ -18,9 +18,6 @@
 #include "parser-2019.h"
 #include "sheet.h"
 
-//#include <dlfcn.h>
-
-//#include <tcl.h> // TODO remove
 
 
 using std::cerr;
@@ -31,30 +28,16 @@ using std::vector;
 
 using namespace std::literals;
 
-//extern void headless_main();
-//extern int headless_script(const char* script_file);
 void curses_main();
-
-//static bool	option_tests = false;
-//static char*	opt_script_file = 0;
-//std::string	option_tests_argument = "regular";
-
-//bool get_option_tests() { return option_tests;}
 
 static char short_options[] = "e:hm:t:v";
 static struct option long_options[] =
 {
-		//{"no-repl",		0,	NULL,	'0'},
-		//{"blang",		required_argument, NULL, 'b'},
 		{"eval",		required_argument,	NULL,	'e'},
 		{"version",		0,	NULL,	'V'},
-		//{"headless",	0,	NULL,	'H'},
 		{"help",		0,	NULL,	'h'},
 		{"mode",		required_argument,	NULL,	'm'},
-		//{"parser",		0,	NULL,	'p'},
-		//{"script",		required_argument,	NULL,	's'},
 		{"tcl",			required_argument,	NULL,	't'},
-		//{"tests",		optional_argument,	NULL,	'T'},
 		{"version",		0,	NULL,	'v'},
 		{NULL,			0,	NULL,	0}
 };
@@ -104,8 +87,6 @@ Report bugs to https://github.com/blippy/neoleo/issues
 enum class ReplType { none, headless, ncurses};
 typedef struct {char type; string  str;} opt_tcl_t; // type is either 'e' for eval or 't' for Tcl file. str is the thing to be evaluated/run
 struct {
-	//ReplType rt = ReplType::ncurses;
-	//strings blang_files;
 	string mode;
 	vector<opt_tcl_t> tcls; // stuff to either eval or run
 } cmd_options; // command-line options
@@ -135,9 +116,6 @@ void parse_command_line (int argc, char **argv) //bool& user_wants_headless, str
 			case 'm':
 				cmd_options.mode = optarg;
 				break;
-			//case 's':
-			//	opt_script_file = optarg;
-			//	break;
 			case 't':
 				cmd_options.tcls.push_back(opt_tcl_t{'t', optarg});
 				break;
@@ -171,88 +149,39 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 	extern void tickle_main();
 	using namespace std::literals;
 	set_def_format(155); // which is "general.float", believe it or not
-	//log("\n=== Started as ", argv[0]);
-	//log("Current working dir:", std::filesystem::current_path());
 	FileSetCurrentFileName(string{std::filesystem::current_path()} + "/unnamed.oleo"); // 25/11 In case started up from desktop with no file name
 
 	if (argc - optind == 1) {
 		oleo_read_file(argv[optind]);
-		/*
-		if (FILE *fp = fopen (argv[optind], "r")) {
-			try {
-				read_file_and_run_hooks (fp, argv[optind]);
-			} catch (OleoJmp& e) {
-				cerr << e.what() << endl;
-				fprintf (stderr, ", error occurred reading '%s'\n", argv[optind]);
-				exit(1);
-			} 
-			fclose (fp);
-		}
-		*/
-
-		//command_line_file = 1;
 		FileSetCurrentFileName(argv[optind]);
 		optind++;
 	}
 
 	Global_modified = 0;
 
-#if 0
-	blx_init();
-	for(auto const& f : cmd_options.blang_files) {
-		auto src = slurp(f.c_str());
-		blang::interpret_string(src);
-	}
-#endif
-
 	void tickle_eval_expr(const std::string& expr);
 	extern void tickle_run_file(const std::string& path);
 	for(auto const& f : cmd_options.tcls) {
-		//cout << "type is " << f.type << endl;
 		switch(f.type) {
 		case 'e' : tickle_eval_expr(f.str); break;
 		case 't' : tickle_run_file(f.str); break;
 		default: throw std::logic_error("Cannot reach here");
 		}
-		//auto src = slurp(f.c_str());
-		//blang::interpret_string(src);
 	}
-
-#if 0
-	if(opt_script_file) {
-		headless_script(opt_script_file);
-		//exit(ret);
-	}
-#endif
 
 	const string& mode = cmd_options.mode;
-	//if(mode == "h") {headless_main(); }
 	if(mode=="0") { /* do nothing */ }
 	else if(mode=="tcl") { tickle_main();}
 	else { curses_main(); }
-	// otherwise we want to run neither, so it will be purely script-based
-
-
 }
 
 
 
 int main (int argc, char **argv)
 {
-
-
 	extern void tickle_init(char*);
 	tickle_init(argv[0]);
-
-
-	//malloc(666);
-	//int command_line_file = 0;	/* was there one? */
-	//bool use_headless = false;
-	//strings blang_files;
 	parse_command_line(argc, argv);
 	run_nonexperimental_mode(argc, argv); // , command_line_file, use_headless, blang_files);
-
-	//cout << "returning with exit_value " << exit_value << endl;
-	//if(exit_value != 0) exit(exit_value);
 	return exit_value;
 }
