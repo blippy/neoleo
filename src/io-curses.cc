@@ -98,35 +98,40 @@ public:
 	 five) if win->flags&WIN_PAG_HZ (to make things easier).
 	 Ranges between three "R9 " to seven "R32767 " depending on
 	 the number of the highest row on the screen.  */
-	int lh_wid() {
+	int lh_wid() const {
 		return _lh_wid;
 	};
 
 
 	// terminal size might have changed
+	// 26/3 Created
 	void update ()
 	{
 		// reconfigure the row settings
 		int numr_old = numr;
 		numr = LINES - grid_starts;
-		if(numr < numr_old) {
-			// tty has reduced rows. For simplicity, make curow the top row
-			screen.lr = curow;
+		if(numr < numr_old) { // tty got smaller
+			screen.lr = curow; //  For simplicity, make curow the top row
 		}
-		// figure out how many cells are in a row
-		screen.hr = screen.lr + numr -1;
-		//log("screen r =", screen.lr, " " , screen.hr);
-
+		screen.hr = screen.lr + numr -1; // figure out how many cells are in a row
 
 		// reconfigure the column settings
 		// NB this is dependent on the margin we need for printing th row numbers
-		//_lh_wid = std::log10(curow + LINES) +3; // est. num of lines taken up by row numbers
 		_lh_wid = std::log10(screen.hr) +3; // est. num of lines taken up by row numbers
 		win_over = _lh_wid +1;
+		int numc_old = numc;
 		numc = COLS - _lh_wid;
-		//log("update:COLS=", COLS);
-		// TODO 26/3 screen will have been thrown out of wack esp if COLS/LINES reduced
+		if(numc < numc_old) { // tty shrank
+			screen.lc = cucol; // For simplicity, make cucol the left-most col
+		}
+		if(numc != numc_old) { // a change is made, so let's figure out the new extent
+			screen.hc = screen.lc;
+			int num_cols = get_width(screen.hc);
+			while(num_cols + get_width(screen.hc+1) <= numc)
+					num_cols += get_width(++ screen.hc);
+		}
 	}
+
 private:
 	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
 
@@ -317,18 +322,14 @@ void  recenter_window (struct window_c *win = cwin) // FN
 {
 	//if(!win) win = cwin;
 	if (win_flags & WIN_PAG_VT)
-		page_axis (curow, get_scaled_height, win->numr,
-				&(win->screen.lr), &(win->screen.hr));
+		page_axis (curow, get_scaled_height, win->numr, &(win->screen.lr), &(win->screen.hr));
 	else
-		recenter_axis (curow, get_scaled_height, win->numr,
-				&(win->screen.lr), &(win->screen.hr));
-	//win->set_numcols(win->screen.hr);
+		recenter_axis (curow, get_scaled_height, win->numr, &(win->screen.lr), &(win->screen.hr));
+	// 26/3 win->set_numcols(win->screen.hr);
 	if (win_flags & WIN_PAG_HZ)
-		page_axis (cucol, get_scaled_width, win->numc,
-				&(win->screen.lc), &(win->screen.hc));
+		page_axis (cucol, get_scaled_width, win->numc, &(win->screen.lc), &(win->screen.hc));
 	else
-		recenter_axis (cucol, get_scaled_width, win->numc,
-				&(win->screen.lc), &(win->screen.hc));
+		recenter_axis (cucol, get_scaled_width, win->numc, &(win->screen.lc), &(win->screen.hc));
 }
 
 
