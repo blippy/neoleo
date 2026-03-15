@@ -168,7 +168,8 @@ void page_up()
 
 void cur_io_display_cell_cursor (void)
 {
-	if(!inside(curow, cucol, cwin->screen)) return;
+	assert(inside(curow, cucol, cwin->screen));
+	//if(!inside(curow, cucol, cwin->screen)) return;
 
 	int cell_cursor_col = cwin->win_over;
 	for (int cc = cwin->screen.lc; cc < cucol; cc++)
