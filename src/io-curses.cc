@@ -141,7 +141,7 @@ inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
 
 
-static void move_cursor_to (struct window_c *, CELLREF, CELLREF);
+static void move_cursor_to(CELLREF, CELLREF);
 static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 static void	io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
@@ -171,14 +171,18 @@ void cur_io_display_cell_cursor (void)
 	assert(inside(curow, cucol, cwin->screen));
 	//if(!inside(curow, cucol, cwin->screen)) return;
 
+	/*
 	int cell_cursor_col = cwin->win_over;
 	for (int cc = cwin->screen.lc; cc < cucol; cc++)
 		cell_cursor_col += get_width (cc);
 	int cell_cursor_row = cwin->win_down;
 	for (int rr = cwin->screen.lr; rr < curow; rr++)
 		cell_cursor_row += get_height (rr);
-	int cwid = std::min(cwin->numc, get_width (cucol));
 	move (cell_cursor_row, cell_cursor_col);
+	*/
+
+	move_cursor_to(curow, cucol);
+	int cwid = std::min(cwin->numc, get_width (cucol));
 	standout ();
 	for (int n = cwid; n; n--)
 		addch (inch () | A_STANDOUT);
@@ -453,8 +457,9 @@ void cur_io_repaint ()
 
 
 
-static void move_cursor_to (struct window_c *win, CELLREF r, CELLREF c)
+static void move_cursor_to (CELLREF r, CELLREF c)
 {
+	auto& win = cwin;
 	int cell_cursor_col = win->win_over;
 	for (int cc = win->screen.lc; cc < c; cc++)
 		cell_cursor_col += get_width (cc);
@@ -485,11 +490,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 	hgt = std::min(hgt, win->numr);
 
 
-	move_cursor_to (win, r, c);
-
-	//int yy, xx;
-	//getyx(stdscr, yy, xx);
-	// defer d{move, yy, xx};
+	move_cursor_to(r, c);
 
 	assert(win == cwin);
 	int glowing = (r == curow && c == cucol && win == cwin);
@@ -531,8 +532,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 		if (glowing)
 			standend ();
 
-		if (lenstr == 0 && c > win->screen.lc
-				&& find_slop(r, c - 1, &ccl, &cch))
+		if (lenstr == 0 && c > win->screen.lc && find_slop(r, c - 1, &ccl, &cch))
 		{
 			CELLREF ccdl, ccdh;
 
@@ -542,7 +542,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 				for (; ccdh != ccdl; --ccdh)
 					if (ccdh != c && (wwid = get_width (ccdh)))
 					{
-						move_cursor_to (win, r, ccdh);
+						move_cursor_to(r, ccdh);
 						printw ("%*s", wwid, "");
 					}
 			}
@@ -555,7 +555,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 			for (; cch != ccl; --cch)
 				if (cch != c && (wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch);
+					move_cursor_to(r, cch);
 					printw ("%*s", wwid, "");
 				}
 			io_pr_cell (r, ccl, find_cell (r, ccl));
@@ -640,13 +640,13 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 			for (; cch > cc; --cch)
 				if ((wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch);
+					move_cursor_to(r, cch);
 					printw ("%*s", wwid, "");
 				}
 			for (cch = c - 1; cch > ccl; --cch)
 				if ((wwid = get_width (cch)))
 				{
-					move_cursor_to (win, r, cch);
+					move_cursor_to(r, cch);
 					printw ("%*s", wwid, "");
 				}
 			if (ccl != c)
