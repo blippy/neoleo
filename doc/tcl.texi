@@ -1,4 +1,4 @@
-@node Tcl bindings, Key Index, Key bindings, Top
+@node Tcl bindings, Key Index, Editing cells, Top
 @chapter Tcl bindings
 
 You can program neoleo using Tcl, either calling Tcl code from within neoleo ("embedding") or calling a neoleo library from Tcl ("extending").
