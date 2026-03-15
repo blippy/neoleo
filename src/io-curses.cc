@@ -799,7 +799,7 @@ void curses_main () // FN
 	init_pair(GR_ON_BL, COLOR_GREEN, COLOR_BLACK);
 	curs_set(0); // turn the cursor off
 
-	// cwin->update();
+	cwin->update();
 	recenter_window();
 
 
