@@ -106,8 +106,22 @@ public:
 	// terminal size might have changed
 	void update ()
 	{
+		// reconfigure the row settings
+		int numr_old = numr;
 		numr = LINES - grid_starts;
-		_lh_wid = std::log10(curow + LINES) +3; // est. num of lines taken up by row numbers
+		if(numr < numr_old) {
+			// tty has reduced rows. For simplicity, make curow the top row
+			screen.lr = curow;
+		}
+		// figure out how many cells are in a row
+		screen.hr = screen.lr + numr -1;
+		//log("screen r =", screen.lr, " " , screen.hr);
+
+
+		// reconfigure the column settings
+		// NB this is dependent on the margin we need for printing th row numbers
+		//_lh_wid = std::log10(curow + LINES) +3; // est. num of lines taken up by row numbers
+		_lh_wid = std::log10(screen.hr) +3; // est. num of lines taken up by row numbers
 		win_over = _lh_wid +1;
 		numc = COLS - _lh_wid;
 		//log("update:COLS=", COLS);
