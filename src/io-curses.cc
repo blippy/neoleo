@@ -477,6 +477,9 @@ static void move_cursor_to (CELLREF r, CELLREF c)
 static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
 
+	assert(win == cwin);
+
+
 	defer2(wattroff, stdscr, COLOR_PAIR(GR_ON_BL)); // used if current row is row we're printing
 	//log("_io_pr_cell_win:", cp);
 	int wwid;
@@ -493,11 +496,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 
 	move_cursor_to(r, c);
 
-	assert(win == cwin);
-	int glowing = (r == curow && c == cucol && win == cwin);
-	if (glowing) {
-		standout ();
-	}
+
 
 	bool is_bold = cp->cell_flags.bold;
 	if(is_bold) wattr_on(stdscr, WA_BOLD, 0);
@@ -530,8 +529,6 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 			printw ("%*s%*s ", (wwid + 1) / 2 + lenstr, ptr, wwid / 2, "");
 		}
 
-		if (glowing)
-			standend ();
 
 		if (lenstr == 0 && c > win->screen.lc && find_slop(r, c - 1, &ccl, &cch))
 		{
@@ -590,20 +587,10 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 		if (wwid == 1)
 		{
 			addch (' ');
-			if (glowing)
-				standend ();
 		}
 		else if (wwid == wid)
 		{
 			printw ("%-*.*s ", wwid - 1, wwid - 1, ptr);
-			if (glowing)
-				standend ();
-		}
-		else if (glowing)
-		{
-			printw ("%.*s", wid, ptr);
-			standend ();
-			printw ("%-*.*s ", wwid - wid - 1, wwid - wid - 1, ptr + wid);
 		}
 		else if (r == curow && (cucol > c && cucol <= cc))
 		{
@@ -659,8 +646,6 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 
 	if(is_bold) wattr_off(stdscr, WA_BOLD, 0);
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
-	if (glowing) cur_io_update_status ();
-
 }
 
 
