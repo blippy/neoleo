@@ -22,7 +22,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
-#include <signal.h>
+//#include <signal.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,8 +30,9 @@
 #include <unistd.h>
 #include <cmath>
 
-#include <menu.h>
-#include <panel.h>
+#include <ncurses.h>
+//#include <menu.h>
+//#include <panel.h>
 
 
 #include "cell.h"
