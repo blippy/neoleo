@@ -55,8 +55,6 @@ using namespace std::string_literals;
 
 
 static const int	status = 1;
-static const int	label_rows = 1;
-
 
 
 constexpr int grid_starts = 4;	// y-position where data grid starts
@@ -146,7 +144,7 @@ inline window_c* cwin = &the_cwin;
 static void move_cursor_to (struct window_c *, CELLREF, CELLREF);
 static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
-void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
+static void	io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 bool 		curses_input ();
 
 
@@ -724,10 +722,11 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 
 
-
-void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
+// only called by cur_io_repaint
+static void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	if(cwin && inside(r, c, cwin->screen))
+	assert(cwin && inside(r, c, cwin->screen)); // 26/3 at least I think it should always be true how I have it set up
+	//if(cwin && inside(r, c, cwin->screen))
 		cur_io_pr_cell_win (cwin, r, c, cp);
 }
 
