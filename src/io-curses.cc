@@ -147,7 +147,6 @@ static void move_cursor_to (struct window_c *, CELLREF, CELLREF);
 static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 void 		io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
-void  		io_init_windows ();
 bool 		curses_input ();
 
 
@@ -816,11 +815,9 @@ static void close_curses()
 void curses_main () // FN
 {
 
-	//cur_io_open_display();
 	setlocale(LC_ALL, ""); // helpful for unicode
 	initscr ();
 	defer d{close_curses};
-	//defer d;
 	scrollok (stdscr, 0);
 	crmode ();
 	raw ();
@@ -831,7 +828,7 @@ void curses_main () // FN
 	init_pair(GR_ON_BL, COLOR_GREEN, COLOR_BLACK);
 	curs_set(0); // turn the cursor off
 
-	io_init_windows();
+	// cwin->update();
 	recenter_window();
 
 
@@ -841,29 +838,12 @@ void curses_main () // FN
 	keypad(stdscr, TRUE);
 
 	show_menu();
-	//doupdate();
 	while(!Global_definitely_quit) {
 		try {
-			// 26/3 necessary to call these each time in case terminal dimension changes
-			//io_init_windows();
-			//recenter_window();
-
 			cur_io_repaint();
 			curses_input();
 		} catch (OleoJmp& e) {
 			set_status(e.what());
 		}
 	}
-}
-
-
-void  io_init_windows ()
-{
-	cwin->update();
-	//cwin->win_down = grid_starts;
-	//cwin->numr = LINES - grid_starts; //(scr_lines - label_rows - !!user_status * status_rows - input_rows );
-	//cwin->numc = COLS;
-	//cwin->bottom_edge_r = 0;
-	//cwin->right_edge_c = 0;
-	//cwin->lh_wid = 0;
 }
