@@ -381,7 +381,7 @@ static void ioc_print_row(CELLREF r)
 		CELL* cp = find_cell(r, c);
 		if(cp == nullptr) continue;
 		std::string str1 = string_cell(cp);
-		auto str2 = pad_jst(str1, get_width(c), cp->get_cell_jst());
+		auto str2 = pad_jst(str1, get_width(c), cp->get_cell_jst(), true);
 		move_cursor_to(r, c);
 		win_print(str2);
 	}

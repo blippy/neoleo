@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include <filesystem>
+#include <ranges>
 //#include <format>
 
 #include "cell.h"
@@ -211,42 +212,60 @@ std::string spaces(int n)
 }
 
 // FN pad_left .
-std::string pad_left(const std::string& s, int width)
+// 26/3 added trunc
+std::string pad_left(const std::string& s, int width, bool trunc)
 {
 	size_t len = strlen_utf8(s);
+	if(trunc && len>width) {
+		//log("pad_left:trunc");
+		std::string s1 = s.substr(len -width, width); // take the right-most
+		//s1.reserve(width);
+		//for(int i = 0; i< width; i++) s1[i] += s[i+len];
+		//log("pad_left:trunc str:", s1);
+		return s1;
+	}
 	return spaces(width-len) + s;
 }
 // FN-END
 
 // FN pad_right .
-std::string pad_right(const std::string& s, int width)
+// 26/3 added trunc
+std::string pad_right(const std::string& s, int width, bool trunc)
 {
 	size_t len = strlen_utf8(s);
+	if(trunc && len>width) {
+		//log("pad_right:trunc");
+		std::string s1 = s.substr(0, width); // take the left-most
+		//for(int i = 0; i< len; i++) s1 += s[i+len];
+		return s1;
+	}
 	return s + spaces(width-len);
 }
 // FN-END
 
 // FN pad_centre .
-std::string pad_centre(const std::string& s, int width)
+// 26/3 added trunc
+std::string pad_centre(const std::string& s, int width, bool trunc)
 {
-	return pad_left(pad_right(s, width/2), width);
+	return pad_left(pad_right(s, width/2, trunc), width, trunc);
 }
 // FN-END
 
 // FN pad_jst .
-std::string pad_jst(const std::string& s, int width, enum jst j)
+// 26/2 added trunc
+std::string pad_jst(const std::string& s, int width, enum jst j, bool trunc)
 {
 	std::string txt{s};
 	switch(j) {
 		case jst::def:
 		case jst::rgt:
-			txt = pad_left(txt, width);
+			txt = pad_left(txt, width, trunc);
 			break;
 		case jst::lft:
-			txt = pad_right(txt, width);
+			txt = pad_right(txt, width, trunc);
 			break;
 		case jst::cnt:
-			txt = pad_centre(txt, width);
+			txt = pad_centre(txt, width, trunc);
 			break;
 	}
 	return txt;
