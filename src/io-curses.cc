@@ -53,6 +53,7 @@ using std::string;
 using std::vector;
 using namespace std::string_literals;
 
+#define USE_2026 0
 
 
 static const int	status = 1;
@@ -143,9 +144,7 @@ inline window_c* cwin = &the_cwin;
 
 
 static void move_cursor_to(CELLREF, CELLREF);
-static void	cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
-static void	io_pr_cell (CELLREF r, CELLREF c, CELL *cp);
 bool 		curses_input ();
 
 
@@ -229,6 +228,7 @@ static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
 
 static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
 {
+	log("set_slop: r:", r, " clo:", clo, " chi:", chi);
 	slop_t s{r, clo, chi};
 	the_slops.push_back(s);
 }
@@ -373,106 +373,19 @@ void cur_io_update_status (void) // FN
 }
 
 
-void cur_io_repaint ()
+#if USE_2026 == 1
+// TODO
+#else
+
+static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
+
+// only called by cur_io_repaint
+static void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
 {
-	//io_recenter_cur_win();
-	CELLREF cc, rr;
-	int n, n1;
-	window_c *win = cwin;
-
-	erase();
-	win->update();
-	//clear();
-	show_menu();
-	show_status();
-	
-	if (win->lh_wid())
-	{
-		move (win->win_down - 1, win->win_over - win->lh_wid());
-		//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
-		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
-		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
-		printw ("#%*ld ", win->lh_wid() - 2, (long int)1);
-
-		// draw column labels
-		cc = win->screen.lc;
-		do
-		{
-			if (cc != cucol) standout();
-
-			n = get_width (cc);
-			if (n > win->numc)
-				n = win->numc;
-			if (n > 1)
-			{
-				char *ptr;
-				char buf[30];
-
-
-				sprintf (buf, "C%u", cc);
-				ptr = buf;
-
-				--n;
-				n1 = strlen (ptr);
-				if (n < n1)
-					printw ("%.*s ", n, "###############");
-				else
-				{
-					n1 = (n - n1) / 2;
-					printw ("%*s%-*s ", n1, "", n - n1, ptr);
-				}
-			}
-			else if (n == 1)
-				addstr ("#");
-
-			standend ();
-		} while (cc++ < win->screen.hc);
-
-		// print row labels
-		rr = win->screen.lr;
-		n = win->win_down;
-		do {
-			if (rr != curow) standout();
-			n1 = get_height (rr);
-			if (!n1) continue;
-			move (n, win->win_over - win->lh_wid());
-			printw ("R%-*d", win->lh_wid() - 1, rr);
-			n += n1;
-			standend ();
-		} while (rr++ < win->screen.hr);
-
-
-
-	}
-	flush_slops();
-	for(CELL* cp: get_cells_in_range(win->screen)) {
-		decoord(cp, rr, cc);
-		if (!is_nul(cp)) cur_io_pr_cell_win(win, rr, cc, cp);
-	}
-	
-	cur_io_display_cell_cursor ();
-	cur_io_update_status ();
+	assert(cwin && inside(r, c, cwin->screen)); // 26/3 at least I think it should always be true how I have it set up
+	//if(cwin && inside(r, c, cwin->screen))
+		cur_io_pr_cell_win (cwin, r, c, cp);
 }
-
-
-
-
-
-static void move_cursor_to (CELLREF r, CELLREF c)
-{
-	auto& win = cwin;
-	int cell_cursor_col = win->win_over;
-	for (int cc = win->screen.lc; cc < c; cc++)
-		cell_cursor_col += get_width (cc);
-
-	int cell_cursor_row = win->win_down;
-	for (int rr = win->screen.lr; rr < r; rr++)
-		cell_cursor_row += get_height (rr);
-
-	move (cell_cursor_row, cell_cursor_col);
-}
-
-
 
 static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp) // FN
 {
@@ -648,6 +561,117 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
 }
 
+void ioc_print_cells()
+{
+	flush_slops();
+	for(CELL* cp: get_cells_in_range(cwin->screen)) {
+		CELLREF rr, cc;
+		decoord(cp, rr, cc);
+		if (!is_nul(cp)) cur_io_pr_cell_win(cwin, rr, cc, cp);
+	}
+}
+
+#endif
+
+void cur_io_repaint ()
+{
+	//io_recenter_cur_win();
+	CELLREF cc, rr;
+	int n, n1;
+	window_c *win = cwin;
+
+	erase();
+	win->update();
+	//clear();
+	show_menu();
+	show_status();
+
+	if (win->lh_wid())
+	{
+		move (win->win_down - 1, win->win_over - win->lh_wid());
+		//static_assert(std::is_same<decltype(win), void*>::value, "printw() might be wrong");
+		static_assert(sizeof(win) == sizeof(void*), "printw() might be wrong");
+		static_assert(sizeof(win) == sizeof(long int), "printw() might be wrong");
+		printw ("#%*ld ", win->lh_wid() - 2, (long int)1);
+
+		// draw column labels
+		cc = win->screen.lc;
+		do
+		{
+			if (cc != cucol) standout();
+
+			n = get_width (cc);
+			if (n > win->numc)
+				n = win->numc;
+			if (n > 1)
+			{
+				char *ptr;
+				char buf[30];
+
+
+				sprintf (buf, "C%u", cc);
+				ptr = buf;
+
+				--n;
+				n1 = strlen (ptr);
+				if (n < n1)
+					printw ("%.*s ", n, "###############");
+				else
+				{
+					n1 = (n - n1) / 2;
+					printw ("%*s%-*s ", n1, "", n - n1, ptr);
+				}
+			}
+			else if (n == 1)
+				addstr ("#");
+
+			standend ();
+		} while (cc++ < win->screen.hc);
+
+		// print row labels
+		rr = win->screen.lr;
+		n = win->win_down;
+		do {
+			if (rr != curow) standout();
+			n1 = get_height (rr);
+			if (!n1) continue;
+			move (n, win->win_over - win->lh_wid());
+			printw ("R%-*d", win->lh_wid() - 1, rr);
+			n += n1;
+			standend ();
+		} while (rr++ < win->screen.hr);
+
+
+
+	}
+	ioc_print_cells();
+
+
+	cur_io_display_cell_cursor ();
+	cur_io_update_status ();
+}
+
+
+
+
+
+static void move_cursor_to (CELLREF r, CELLREF c)
+{
+	auto& win = cwin;
+	int cell_cursor_col = win->win_over;
+	for (int cc = win->screen.lc; cc < c; cc++)
+		cell_cursor_col += get_width (cc);
+
+	int cell_cursor_row = win->win_down;
+	for (int rr = win->screen.lr; rr < r; rr++)
+		cell_cursor_row += get_height (rr);
+
+	move (cell_cursor_row, cell_cursor_col);
+}
+
+
+
+
 
 
 
@@ -694,13 +718,7 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 
 
-// only called by cur_io_repaint
-static void io_pr_cell (CELLREF r, CELLREF c, CELL *cp)
-{
-	assert(cwin && inside(r, c, cwin->screen)); // 26/3 at least I think it should always be true how I have it set up
-	//if(cwin && inside(r, c, cwin->screen))
-		cur_io_pr_cell_win (cwin, r, c, cp);
-}
+
 
 
 
