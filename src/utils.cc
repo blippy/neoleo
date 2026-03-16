@@ -123,16 +123,6 @@ Log::~Log()
 
 
 
-
-
-
-
-
-
-
-//using namespace std;
-
-
 const char* ValErr::what() const throw()
 {
 	return ename_desc[n];

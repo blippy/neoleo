@@ -53,7 +53,7 @@ using std::string;
 using std::vector;
 using namespace std::string_literals;
 
-#define USE_2026 0
+#define USE_2026 1
 
 
 static const int	status = 1;
@@ -374,7 +374,28 @@ void cur_io_update_status (void) // FN
 
 
 #if USE_2026 == 1
-// TODO
+static void ioc_print_row(CELLREF r)
+{
+	// 26/3 TODO work out slops, attr
+	for(CELLREF c = cwin->screen.lc; c < cwin->screen.hc; c++) {
+		CELL* cp = find_cell(r, c);
+		if(cp == nullptr) continue;
+		std::string str1 = string_cell(cp);
+		auto str2 = pad_jst(str1, get_width(c), cp->get_cell_jst());
+		move_cursor_to(r, c);
+		win_print(str2);
+	}
+
+}
+
+
+static void ioc_print_cells()
+{
+	for(int r = cwin->screen.lr ; r < cwin->screen.hr; r++) {
+		ioc_print_row(r);
+	}
+}
+
 #else
 
 static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
@@ -561,7 +582,7 @@ static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL
 	if(is_italic) wattr_off(stdscr, WA_ITALIC, 0);
 }
 
-void ioc_print_cells()
+static void ioc_print_cells()
 {
 	flush_slops();
 	for(CELL* cp: get_cells_in_range(cwin->screen)) {

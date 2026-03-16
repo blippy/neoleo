@@ -1,0 +1,11 @@
+# This file was created by Neoleo
+# format 3.1 (requires Neoleo 16.0 or higher if bold is used)
+F;DGFR8
+O;auto;background;noa0
+C;c1;r1;E"Display of long lines";K"Display of long lines"
+C;r2;E"This is a long line";K"This is a long line"
+C;c2;E12;K12
+C;c9;r3;E"This is another long line";K"This is another long line"
+O;status 2
+W;N1;A3 9;C7 0 7;Ostandout
+E
