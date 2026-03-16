@@ -190,61 +190,6 @@ void cur_io_display_cell_cursor (void)
 }
 
 
-/* Functions, etc for dealing with cell contents being displayed
-	on top of other cells. */
-
-typedef struct slop { CELLREF row, clo, chi; } slop_t;
-typedef vector<slop_t> slops_t;
-slops_t the_slops;
-
-static void flush_slops ()
-{
-	the_slops.clear();
-}
-
-
-static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
-{
-
-	for(auto &s : the_slops) {
-		if(s.row == r && s.clo <= c && s.chi >= c) {
-			*cclp = s.clo;
-			*cchp = s.chi;
-			return 1;
-		}
-	}
-	return 0;
-}
-
-static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
-{
-	for(auto it = the_slops.begin(); it != the_slops.end() ; ++it)  {
-		if(it->row == r && it->clo == clo && it->chi == chi) {
-			the_slops.erase(it);
-			return;
-		}
-	}
-}
-
-static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
-{
-	log("set_slop: r:", r, " clo:", clo, " chi:", chi);
-	slop_t s{r, clo, chi};
-	the_slops.push_back(s);
-}
-
-static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
-{
-	for(auto &s : the_slops) {
-		if(s.row == r && s.clo == olo && s.chi == ohi) {
-			s.clo = lo;
-			s.chi = hi;
-			return;
-		}
-
-	}
-}
-
 
 static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
 {
@@ -408,7 +353,62 @@ static void ioc_print_cells()
 	}
 }
 
-#else
+#else // Not USE_2026
+/* Functions, etc for dealing with cell contents being displayed on top of other cells. */
+
+typedef struct slop { CELLREF row, clo, chi; } slop_t;
+typedef vector<slop_t> slops_t;
+slops_t the_slops;
+
+static void flush_slops ()
+{
+	the_slops.clear();
+}
+
+
+static int find_slop (CELLREF r, CELLREF c, CELLREF *cclp, CELLREF *cchp)
+{
+
+	for(auto &s : the_slops) {
+		if(s.row == r && s.clo <= c && s.chi >= c) {
+			*cclp = s.clo;
+			*cchp = s.chi;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static void kill_slop (CELLREF r, CELLREF clo, CELLREF chi)
+{
+	for(auto it = the_slops.begin(); it != the_slops.end() ; ++it)  {
+		if(it->row == r && it->clo == clo && it->chi == chi) {
+			the_slops.erase(it);
+			return;
+		}
+	}
+}
+
+static void set_slop (CELLREF r, CELLREF clo, CELLREF chi)
+{
+	log("set_slop: r:", r, " clo:", clo, " chi:", chi);
+	slop_t s{r, clo, chi};
+	the_slops.push_back(s);
+}
+
+static void change_slop (CELLREF r, CELLREF olo, CELLREF ohi, CELLREF lo, CELLREF hi)
+{
+	for(auto &s : the_slops) {
+		if(s.row == r && s.clo == olo && s.chi == ohi) {
+			s.clo = lo;
+			s.chi = hi;
+			return;
+		}
+
+	}
+}
+
+
 
 static void cur_io_pr_cell_win (struct window_c *win, CELLREF r, CELLREF c, CELL *cp);
 
