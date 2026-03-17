@@ -370,6 +370,7 @@ void curses_input ()
 	case 'm':			process_menu();		break;
 	case 'p':			i19_precision();		break;
 	case 'r':			row_cmd2019();		break;
+	case 't':			mnu_test(); break;
 	case KEY_DC:		clear_cell_formula();		break; // delete key
 	case KEY_DOWN: 		cursor_down();		break;
 	case KEY_LEFT:		cursor_left();		break;

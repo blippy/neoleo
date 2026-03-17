@@ -180,7 +180,7 @@ void test_status ()
 }
 
 // 26/3
-void mnu_test()
+void mnu_test ()
 {
 	// create menu
 	const strings entries{
