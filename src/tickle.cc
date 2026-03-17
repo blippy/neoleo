@@ -39,7 +39,13 @@ char*  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
-void 	ploppy_set_status (const char* status)
+void ploppy_log (char* str)
+{
+	log(str);
+}
+
+// 26/3 created
+void ploppy_set_status (const char* status)
 {
 	set_status(status);
 }

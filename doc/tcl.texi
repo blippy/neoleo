@@ -70,9 +70,15 @@ Load spreadsheet FILENAME into neoleo.
 @item max-col
 Get the maximum column used in the spreadsheet.
 
+
 @c ----
 @item max-row
 Get the maximum row used in the spreadsheet.
+
+@c ----
+@item plog STR
+Create a log entry STR in the log file (typically at $HOME/.neoleo/log.txt).
+
 
 @c ----
 @item ploppy-life

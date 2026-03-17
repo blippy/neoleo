@@ -16,6 +16,7 @@
 %rename ("max-col") ploppy_max_col;
 %rename ("max-row") ploppy_max_row;
 %rename ("load-oleo") ploppy_load_oleo;
+%rename ("plog") ploppy_log;
 %rename ("ploppy-life") ploppy_life;
 %rename ("print-range") ploppy_print_range;
 %rename ("replace-first-form") ploppy_replace_first_form;
