@@ -29,6 +29,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <cmath>
+#include <format>
 
 #include <ncurses.h>
 //#include <menu.h>
@@ -169,18 +170,6 @@ void page_up ()
 static void cur_io_display_cell_cursor (void)
 {
 	assert(inside(curow, cucol, cwin->screen));
-	//if(!inside(curow, cucol, cwin->screen)) return;
-
-	/*
-	int cell_cursor_col = cwin->win_over;
-	for (int cc = cwin->screen.lc; cc < cucol; cc++)
-		cell_cursor_col += get_width (cc);
-	int cell_cursor_row = cwin->win_down;
-	for (int rr = cwin->screen.lr; rr < curow; rr++)
-		cell_cursor_row += get_height (rr);
-	move (cell_cursor_row, cell_cursor_col);
-	*/
-
 	move_cursor_to(curow, cucol);
 	int cwid = std::min(cwin->numc, get_width (cucol));
 	standout ();
@@ -269,6 +258,22 @@ static void  recenter_window (struct window_c *win = cwin) // FN
 
 static std::string status_line (int wid)
 {
+#if 1
+	std::string result = std::format("r{}c{} ", curow, cucol);
+	std::string cvs{cell_value_string(curow, cucol, 1)};
+	result += cvs;
+	if(result.size() > COLS) {
+		return pad_right(result, COLS-3, true) + "...";
+	}
+
+	std::string form = get_formula_text(curow, cucol);
+	if(result.size() + form.size() + 3 > COLS) {
+		form = pad_right(form, COLS- result.size()-6, true) + "...";
+	}
+	result += " [" + form + "]";
+
+	return result;
+#else
 	char rc_str[1000];
 	snprintf(rc_str, sizeof(rc_str), "r%dc%d", curow, cucol);
 	char *ptr = rc_str;
@@ -305,7 +310,7 @@ static std::string status_line (int wid)
 	}
 
 	return "";
-
+#endif
 }
 static void cur_io_update_status (void) // FN
 {
