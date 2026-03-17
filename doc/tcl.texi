@@ -174,7 +174,7 @@ Then run @code{sudo ldconfig} to update the library cache.
 
 In addition to both extension and embedding, neoleo provides a Tcl package to use from within Tcl. You load the package as follows:
 @example
-require package oleo
+package require oleo
 @end example
 
    
