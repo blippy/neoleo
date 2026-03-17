@@ -8,7 +8,7 @@ list(REMOVE_ITEM egs CMakeLists.txt)
 #install(examples ALL DESTINATION share/neoleo)
 install(FILES ${egs} DESTINATION ${edest})
 
-install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/cs.py key-bind.tcl neodsv.py neog.py 
+install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/cs.py key-bind.tcl neodsv.py 
 	DESTINATION ${edest}
 )
 
