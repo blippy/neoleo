@@ -143,13 +143,13 @@ inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
 
 
-static void move_cursor_to(CELLREF, CELLREF);
+static void move_cursor_to (CELLREF, CELLREF);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 bool 		curses_input ();
 
 
 // FN page_down
-void page_down()
+void page_down ()
 {
 	curow = std::min(cwin->screen.hr+1, (int) MAX_ROW);
 	io_move_cell_cursor(curow, cucol);
@@ -157,7 +157,7 @@ void page_down()
 // FN-END
 
 // FN page_up
-void page_up()
+void page_up ()
 {
 	curow = std::max(1, cwin->screen.lr-1);
 	io_move_cell_cursor(curow, cucol);
@@ -166,7 +166,7 @@ void page_up()
 
 
 
-void cur_io_display_cell_cursor (void)
+static void cur_io_display_cell_cursor (void)
 {
 	assert(inside(curow, cucol, cwin->screen));
 	//if(!inside(curow, cucol, cwin->screen)) return;
@@ -251,7 +251,7 @@ static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *lo
 }
 
 
-void  recenter_window (struct window_c *win = cwin) // FN
+static void  recenter_window (struct window_c *win = cwin) // FN
 {
 	//if(!win) win = cwin;
 	if (win_flags & WIN_PAG_VT)
@@ -267,7 +267,7 @@ void  recenter_window (struct window_c *win = cwin) // FN
 
 
 
-std::string status_line(int wid)
+static std::string status_line (int wid)
 {
 	char rc_str[1000];
 	snprintf(rc_str, sizeof(rc_str), "r%dc%d", curow, cucol);
@@ -307,7 +307,7 @@ std::string status_line(int wid)
 	return "";
 
 }
-void cur_io_update_status (void) // FN
+static void cur_io_update_status (void) // FN
 {
 
 	move (status, 0);
@@ -320,7 +320,7 @@ void cur_io_update_status (void) // FN
 
 #if USE_2026 == 1
 // 26/3 created
-static void ioc_print_row(CELLREF r)
+static void ioc_print_row (CELLREF r)
 {
 	//const int lc = cwin->screen.lc, hc = cwin->screen.hc;
 	//const int ncells = hc - lc +1; // number of cells displayable on screen
@@ -346,7 +346,7 @@ static void ioc_print_row(CELLREF r)
 }
 
 
-static void ioc_print_cells()
+static void ioc_print_cells ()
 {
 	for(int r = cwin->screen.lr ; r < cwin->screen.hr; r++) {
 		ioc_print_row(r);
@@ -606,7 +606,7 @@ static void ioc_print_cells()
 
 #endif
 
-void cur_io_repaint ()
+static void cur_io_repaint ()
 {
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
@@ -828,7 +828,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 
 
 
-static void close_curses()
+static void close_curses () // FN
 {
 	endwin();
 	//cout << "close_curses called\n";
