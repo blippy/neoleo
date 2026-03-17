@@ -189,8 +189,6 @@ void win_edln::run()
 		int ch = get_ch(m_parent);
 		if(ch == '\r') break;
 		if(ch == KEY_LEFT) {
-
-			//input += '<';
 			m_pos = max(m_pos-1, 0);
 		} else if (ch == KEY_END) {
 			m_pos = m_input.size();
@@ -205,7 +203,7 @@ void win_edln::run()
 			m_input.erase(m_pos, 1);
 			m_pos = max(m_pos, 0);
 		} else if(ch == KEY_BACKSPACE || ch == 127) {
-			log("KEY_BACKSPACE or 127 delete key detected");
+			//log("KEY_BACKSPACE or 127 delete key detected");
 			if(m_pos == 0) continue;
 			m_pos--; 
 			m_input.erase(m_pos, 1);
