@@ -181,8 +181,12 @@ extern struct user_fmt fxt;
 typedef std::vector<cell_t*> cellmap_t;
 extern cellmap_t the_cells;
 
-void bind_char(char c, std::string blang_code); // bind a character to some blang code requiring interpreting
+using binding_t = std::optional<std::string>; // just a convenient shorthand
+
+void 			bind_char(char c, const std::string& str_to_interpret); // bind a character to some Tcl code requiring interpreting
 std::string 	cell_value_string (CELLREF row, CELLREF col, int add_quote);
+binding_t		get_binding(char c);
+std::string 	get_status ();
 char 			*adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
 std::string 	trim(const std::string& str);
 std::string 	print_cell_flt (num_t flt, unsigned int precision, unsigned int j);
@@ -191,6 +195,7 @@ std::string 	pad_right(const std::string& s, int width, bool trunc = false);
 std::string 	pad_centre(const std::string& s, int width, bool trunc = false);
 std::string 	pad_jst(const std::string& s, int width, enum jst j, bool trunc = false);
 std::string 	spaces(int n);
+void 			set_status (const std::string& str);
 std::string 	string_cell (CELL * cp);
 std::string 	string_cell (CELLREF r, CELLREF c);
 std::string 	string_cell ();
@@ -202,7 +207,7 @@ bool 			is_range(const value_t& val);
 char* 			pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 std::string  	fmt_std_date(int t);
 std::string 	fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
-
+void 			test_status ();
 
 
 class defer {

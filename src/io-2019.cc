@@ -5,8 +5,8 @@
 //#define USE_FORM
 #ifdef USE_FORM
 #include <form.h>
-#endif
 #include <panel.h>
+#endif
 
 #include <unistd.h>
 
@@ -21,6 +21,7 @@
 #include "oleofile.h"
 #include "sheet.h"
 #include "io-curses.h"
+#include "tickle.h"
 #include "win.h"
 
 //import std;
@@ -30,7 +31,7 @@
 using namespace std::string_literals;
 using std::cout;
 using std::cerr;
-using std::map;
+//using std::map;
 using std::string;
 
 static void col_cmd2019();
@@ -342,13 +343,7 @@ void process_key(const keymap_t& keymap)
 // FN-END
 
 
-static map<char, string> custom_bindings; // map between a char and a blang string that must be interpreted
 
-// bind a character to some blang code requiring interpreting
-void bind_char(char c, std::string blang_code)
-{
-	custom_bindings[c] = blang_code;
-}
 
 // FN curses_input .
 void curses_input ()
@@ -362,62 +357,106 @@ void curses_input ()
 		return;
 	}
 
-	switch (c) {
-	case CTRL('q'):		maybe_quit_spreadsheet2019();		break;
-	case '=': 			edit_cell2019(); 		break;
-	case '%': 			set_cell_toggle_percent();		break;
-	case 'c':			mnu_column();		break;
-	case 'm':			process_menu();		break;
-	case 'p':			i19_precision();		break;
-	case 'r':			row_cmd2019();		break;
-	case 't':			mnu_test(); break;
-	case KEY_DC:		clear_cell_formula();		break; // delete key
-	case KEY_DOWN: 		cursor_down();		break;
-	case KEY_LEFT:		cursor_left();		break;
-	case 27:			complex_key_sequence_27();		break;
-	case 554:			io_shift_cell_cursor(dirn::left, cucol-1); break ; // Ctrl-←  repeat cucol-1 times to bring cursor to col 1
-	case 575:			io_shift_cell_cursor(dirn::up, curow-1); break ; // Ctrl-↑  repeat curol-1 times to bring cursor to row 1
-	case KEY_RIGHT:		cursor_right();		break;
-	case KEY_UP:		cursor_up();		break;
-	case KEY_NPAGE:		page_down();		break;
-	case KEY_PPAGE:		page_up();		break;
-	case CTRL('b'):		set_cell_toggle_bold();		break;
-	case CTRL('c'):		copy_this_cell_formula();		break;
-	case CTRL('i'):		set_cell_toggle_italic();		break;
-	case CTRL('l'):		set_cell_alignment_left();		break;
-	case CTRL('r'):		set_cell_alignment_right();		break;
-	case CTRL('s'):		save_spreadsheet2019();		break;
-	case CTRL('v'):		paste_this_cell_formula();		break;
-	}
-
-#if 0
-	if(custom_bindings.contains(c)) {
+	auto usr_binds = get_binding(c); // customised bindings take precedence
+	if (usr_binds.has_value()) {
 		log("custom binding found");
-		blang::interpret_string(custom_bindings[c]);
+		tickle_eval_expr(usr_binds.value());
+	} else {
+		switch (c) {
+		case CTRL('q'):
+			maybe_quit_spreadsheet2019();
+			break;
+		case '=':
+			edit_cell2019();
+			break;
+		case '%':
+			set_cell_toggle_percent();
+			break;
+		case 'c':
+			mnu_column();
+			break;
+		case 'm':
+			process_menu();
+			break;
+		case 'p':
+			i19_precision();
+			break;
+		case 'r':
+			row_cmd2019();
+			break;
+		case 't':
+			mnu_test();
+			break;
+		case KEY_DC:
+			clear_cell_formula();
+			break; // delete key
+		case KEY_DOWN:
+			cursor_down();
+			break;
+		case KEY_LEFT:
+			cursor_left();
+			break;
+		case 27:
+			complex_key_sequence_27();
+			break;
+		case 554:
+			io_shift_cell_cursor(dirn::left, cucol - 1);
+			break; // Ctrl-←  repeat cucol-1 times to bring cursor to col 1
+		case 575:
+			io_shift_cell_cursor(dirn::up, curow - 1);
+			break; // Ctrl-↑  repeat curol-1 times to bring cursor to row 1
+		case KEY_RIGHT:
+			cursor_right();
+			break;
+		case KEY_UP:
+			cursor_up();
+			break;
+		case KEY_NPAGE:
+			page_down();
+			break;
+		case KEY_PPAGE:
+			page_up();
+			break;
+		case CTRL('b'):
+			set_cell_toggle_bold();
+			break;
+		case CTRL('c'):
+			copy_this_cell_formula();
+			break;
+		case CTRL('i'):
+			set_cell_toggle_italic();
+			break;
+		case CTRL('l'):
+			set_cell_alignment_left();
+			break;
+		case CTRL('r'):
+			set_cell_alignment_right();
+			break;
+		case CTRL('s'):
+			save_spreadsheet2019();
+			break;
+		case CTRL('v'):
+			paste_this_cell_formula();
+			break;
+		}
 	}
-#endif
 
 	i19_parameter = -1;
 }
 
 
-static string status; // 26/3 what to write on the status line
+
 
 // FN show_status .
 // 26/3
 void show_status ()
 {
-	win_print(2, 0, status);
+	win_print(2, 0, get_status());
 	clrtoeol();
 	//refresh();
 }
 
-// FN set_status
-void set_status (const std::string& str)
-{
-	status = str;
-}
-// FN-END
+
 
 
 

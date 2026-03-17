@@ -11,7 +11,7 @@
 
 //typedef uint16_t CELLREF;
 
-void	set_exit (int code);
+void	ploppy_bind_key(char k, const char* str_to_interpret);
 void 	ploppy_hi( );
 int 	ploppy_life();
 int 	ploppy_max_col();
@@ -28,5 +28,8 @@ void 	ploppy_insert_by_col();
 void 	ploppy_insert_by_row();
 void 	ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi);
 int 	ploppy_replace_first_form (const char* target, const char* with);
-
+void 	ploppy_set_status (const char* status);
+void 	ploppy_test_binding();
+void	set_exit (int code);
+void	tickle_eval_expr(const std::string& expr);
 

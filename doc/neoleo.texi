@@ -1,9 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
 
-@set version 16.0
-@set update-date 17 Jan 2026
-@set update-month Jan 2026
+@set version 17.0
+@set update-date 17 Mar 2026
+@set update-month Mar 2026
 
 @setfilename neoleo.info
 @settitle Neoleo @value{version}

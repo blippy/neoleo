@@ -37,6 +37,25 @@ extern "C" int Ploppy_Init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
 char*  ploppy_get_cell_fmt(int r, int c);
 
+
+// 26/3 created
+void 	ploppy_set_status (const char* status)
+{
+	set_status(status);
+}
+
+// 26/3 created
+void ploppy_test_binding()
+{
+	test_status();
+}
+// 26/3 created
+void ploppy_bind_key (char k, const char* str_to_interpret)
+{
+	string s{str_to_interpret};
+	bind_char(k, s);
+}
+
 // 26/3
 // search spreadsheet. Replace first instance of TARGET with formula WITH
 // TARGET is assumed to be a formula

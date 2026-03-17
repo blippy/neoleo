@@ -28,6 +28,8 @@
 #include <unistd.h>
 
 #include <filesystem>
+#include <map>
+//#include <optional>
 #include <ranges>
 //#include <format>
 
@@ -48,6 +50,22 @@ using std::get;
 using std::string;
 namespace fs = std::filesystem;
 
+
+// 26/3 mmoved from io-2019.cc because we want to access it from Tcl but without including curses
+static std::map<char, string> custom_bindings; // map between a char and a Tcl string that must be interpreted
+
+// bind a character to some Tcl code requiring interpreting
+void bind_char(char c, const std::string& str_to_interpret)
+{
+	custom_bindings[c] = str_to_interpret;
+}
+
+std::optional<std::string> get_binding(char c)
+{
+	if(custom_bindings.contains(c))
+		return custom_bindings[c];
+	return {};
+}
 
 /*
 // 26/3
@@ -197,8 +215,23 @@ struct user_fmt {
 
 
 
+// can't go in io-2019.cc due to library compilation issues
+static string status; // 26/3 what to write on the status line
 
+// FN set_status
+void set_status (const std::string& str)
+{
+	status = str;
+}
+// FN-END
 
+std::string get_status () { return status; }
+
+// 26/3
+void test_status ()
+{
+	set_status("This is a status test");
+}
 
 
 std::string spaces(int n)

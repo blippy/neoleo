@@ -18,6 +18,21 @@ The Tcl functions in neoleo are listed below. The variables R stand for `row' an
 @table @samp
 
 @c ----
+@item bind-key C STR
+Bind the key character C to STR, where STR is a Tcl expression that executes when C is typed during an ncurses session. 
+Keys bound in this way superced default key bindings.
+  
+For example:
+@example
+bind-key s @{set-status @{Hello from Tcl@}@} 
+@end example
+whereupon hitting the key 's' will cause @code{Hello from Tcl} to appear in the status bar.
+
+See @code{examples/key-bind.tcl} for an example
+
+
+
+@c ----
 @item get-cell-fmt R C
 Print a formatted cell for row R col C.
 
@@ -84,6 +99,7 @@ replaces the text foo in a cell with the number 9455.
 @item save-oleo-as FILENAME
 Save the current spreadsheet as FILENAME.
 
+
 @c ----
 @item set-cell R C FORMULA
 Set cell with formula.
@@ -93,8 +109,15 @@ set-cell 1 1 "42"
 set-cell 2 1 "r1c1+1"
 
 
+@c ----
 @item set-exit INT
 Set the exit code of neoleo to INT. This can be used for signalling test errors.
+
+
+@c ----
+@item test-binding
+A simple test to ensure that key-binding works. It's really only useful for testing purposes. See @code{examples/key-bind.tcl} for an example.
+
 
 
 @end table

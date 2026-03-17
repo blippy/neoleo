@@ -173,11 +173,6 @@ void mnu_column ()
 	}
 }
 
-// 26/3
-void test_status ()
-{
-	set_status("This is a status test");
-}
 
 // 26/3
 void mnu_test ()
