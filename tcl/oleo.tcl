@@ -1,8 +1,10 @@
-package provide oleo 0.1
+package provide oleo 0.2
 
 namespace eval ::oleo {
 	namespace export incra oleo-hi
 }
+
+load libploppy.so
 
 # increment array
 # For example, see 25.tcl

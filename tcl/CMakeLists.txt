@@ -14,5 +14,5 @@
 #message("TCL_INCLUDE_PATH=${TCL_INCLUDE_PATH}")
 #message("TCL_TCLSH=${TCL_TCLSH}")
 #install(FILES oleo.tcl pkgIndex.tcl DESTINATION lib/tcl${TCL_MAJOR_VERSION}/${TCLSH_VERSION_STRING})
-message("TCLLIBPATH may need the path  ${CMAKE_INSTALL_PREFIX}/lib/oleo")
+message("TCLLIBPATH may need the path  ${CMAKE_INSTALL_PREFIX}/lib")
 install(FILES oleo.tcl pkgIndex.tcl DESTINATION lib/oleo)

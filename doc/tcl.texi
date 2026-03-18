@@ -172,28 +172,37 @@ Then run @code{sudo ldconfig} to update the library cache.
 @c ------------------------------------------------------------------------
 @section Oleo package 
 
-In addition to both extension and embedding, neoleo provides a Tcl package to use from within Tcl. You load the package as follows:
+
+In addition to both extension and embedding, neoleo provides a Tcl package to use from within Tcl/tclsh. A simple example:
 @example
 package require oleo
+::oleo::oleo-hi ; # a simple test function
 @end example
 
-   
-This is currently a work-in-progress as to if/where the package is installed. 
-The package itself works, I just need to figure out a good way to install it.
-
-** TODO Install the Tcl package and provide good accessibility
-
-Part of the oleo package:
-
-proc ::oleo::incra @{arr key by@}
-Increment a variable. E.g.
+If you receive
 @example
-set i 1
-incr i ; # => i becomes 2
-incr i 10 ; # => i becomes 12
+can't find package oleo
 @end example
 
-proc ::oleo::forn @{varName from to step block@}
+then it indicates that some environment has not been set correctly. 
+Everything "should" work if neoleo was configured to install with a prefix @code{/usr}. 
+
+By default, however, the package is configured as being installed at @code{@value{PREFIX}/lib/oleo}. 
+You may therefore need to set the enivornment variable:
+@example
+export TCLLIBPATH=@value{PREFIX}/lib
+@end example
+
+Note that  TCLLIBPATH directories need to be separated by spaces rather than colons because it constitutes a Tcl list.
+   
+
+@subsection Contents of the oleo package
+
+
+@table @samp
+
+@c ----
+@item proc ::oleo::forn @{varName from to step block@}
 A convenient for-next-step loop
 E.g. for i from 1 to 10 step 2:
 @example
@@ -201,4 +210,22 @@ for i 1 10 2 @{
 	puts "i => $i"
 @}
 @end example
+
+@c ----
+@item proc ::oleo::oleo-hi
+Print a friendly greeting. Mostly used for testing purposes.
+
+@c ----
+@item proc ::oleo::incra @{arr key by@}
+Increment a variable. E.g.
+@example
+set i 1
+incr i ; # => i becomes 2
+incr i 10 ; # => i becomes 12
+@end example
+
+
+
 You can also specify negative steps
+
+@end table
