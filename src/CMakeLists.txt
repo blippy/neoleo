@@ -27,7 +27,9 @@ include_directories(${TCL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}) # for all t
 include(swig.cmake)
 
 # files that we need for creating neoleo, testneo and a shared library
-set(common_srcs cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc ${wrapper_cc})
+set(common_srcs basic.cc cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc ${wrapper_cc})
+set(common_curses  io-curses.cc  io-2019.cc     menu-2025.cc    win.cc	 )
+set(common_srcs ${common_curses} ${common_srcs})
 #add_library(common SHARED ${common_srcs})
 
 # this is the "object library" target: compiles the sources only once
@@ -36,6 +38,7 @@ add_library(objlib OBJECT ${common_srcs})
 set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 # shared and static libraries built from the same object files
 add_library(ploppy SHARED $<TARGET_OBJECTS:objlib>)
+target_link_libraries(ploppy ncursesw tinfo)
 add_library(ploppy_static STATIC $<TARGET_OBJECTS:objlib>)
 install(TARGETS ploppy ploppy_static)
 
@@ -43,9 +46,8 @@ install(TARGETS ploppy ploppy_static)
 
 
 # sources exclusive to building neoleo
-set(neo_srcs 
-	basic.cc    io-2019.cc  io-curses.cc    menu-2025.cc    win.cc	       
-)
+#set(neo_srcs 
+#)
 
 add_executable(neoleo)
 target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  ${wrapper_cc})
