@@ -108,12 +108,12 @@ Save the current spreadsheet as FILENAME.
 
 @c ----
 @item set-cell R C FORMULA
-Set cell with formula.
-E.g.
-set-cell 1 1 "\"this is a string\""
-set-cell 1 1 "42"
-set-cell 2 1 "r1c1+1"
-
+Set cell with formula. Examples:
+@example
+set-cell 1 1 @{"this is a string"@} ; # set a string
+set-cell 1 1 13.13 ; # set a number
+set-cell 2 1 @{r1c1+1@} ; # set a formula
+@end example
 
 @c ----
 @item set-exit INT
