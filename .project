@@ -30,4 +30,15 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.eclipse.cdt.autotools.core.autotoolsNatureV2</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1773829185505</id>
+			<name></name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-/usr/local/include/*</arguments>
+			</matcher>
+		</filter>
+	</filteredResources>
 </projectDescription>
