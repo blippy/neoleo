@@ -8,6 +8,11 @@
 // https://github.com/hpaluch-pil/tcl-cpp-example/blob/master/tcl_ex.cpp
 // NB You need to add the exported functions to tickle.h
 
+/* NB 26/3 memory cleanup
+ * Tcl_DeleteInterp(interp) cleans up the interpreter before exiting.
+ * Tcl_Finalize() deletes in-memory caches. You must promise that you will not call more Tcl API functions in the current process.
+ */
+
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
@@ -210,12 +215,12 @@ void set_exit (int code)
 
 void tickle_eval_expr(const std::string& expr)
 {
-	Tcl_Eval(interp, expr.c_str()); // TODO error check and cleanup
+	Tcl_Eval(interp, expr.c_str());
 }
 
 void tickle_run_file(const std::string& path)
 {
-	Tcl_EvalFile(interp, path.c_str()); // TODO error check and cleanup
+	Tcl_EvalFile(interp, path.c_str());
 }
 
 // a repl from stdin
@@ -230,8 +235,18 @@ void tickle_main()
 	}
 }
 
+// 26/3 created
+void tickle_atexit ()
+{
+	Tcl_DeleteInterp(interp);
+	Tcl_Finalize();
+	//log("tickle_atexit called");
+}
+
 void tickle_init(char* argv0)
 {
+	int at = std::atexit(tickle_atexit);
+	assert(at == 0);
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
 	int ok = Ploppy_Init(interp);
