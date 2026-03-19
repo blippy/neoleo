@@ -134,7 +134,11 @@ cell_t* find_or_make_cell (coord_t coord)
 
 	return ptr;
 }
-cell_t* find_or_make_cell (CELLREF row, CELLREF col) { return find_or_make_cell(to_coord(row, col)); }
+cell_t* find_or_make_cell (CELLREF row, CELLREF col)
+{
+	assert(row >= MIN_ROW && col >= MIN_COL );
+	return find_or_make_cell(to_coord(row, col));
+}
 cell_t* find_or_make_cell() {return find_or_make_cell(curow, cucol);}
 
 

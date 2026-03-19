@@ -18,6 +18,8 @@ example that uses a Makefile.
 * current row/column header no longer highlighted in cursor display. 
 This makes current location more obvious to user.
 
+* iss#49 fixed: return a default value of the appropriate type for monostate
+
 * iss#53 fixed: deleting cell now marks the sheet as modified
  
 * iss#55 fixed: oleo Tcl package now properly installed to system.

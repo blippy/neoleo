@@ -8,6 +8,7 @@
  */
 
 //#include <exception>
+#include <sstream>
 #include <iostream>
 #include <stdio.h>
 #include <string>
@@ -172,10 +173,15 @@ bool check_result(CELLREF r, CELLREF c, const string& expecting)
 {
 	string res = cell_value_string(r, c, 0);
 	//cout << std::format("Result  of R{}C{} is`{}' " , r, c, res);
-	printf("Result  of R%dC%d is`%s' " , r, c, res.c_str());
+	printf("Result  of R%dC%d is`%s'. Expecting `%s' " , r, c, res.c_str(), expecting.c_str());
 	bool pass = res == expecting;
 	cout << (pass ? "PASS"s : "FAIL") << "\n";
 	return pass;
+}
+
+void check_result(CELLREF r, CELLREF c, const string& expecting, bool& pass)
+{
+	if(!check_result(r,c, expecting)) pass = false;
 }
 
 bool interpret (int r, int c, const string& s, const string& expecting)
@@ -385,6 +391,51 @@ void interpret3(CELLREF r, CELLREF c, const std::string& formula, const std::str
 	if(!interpret(r, c, formula, expect)) pass = false;
 }
 
+// problems referencing cells outside minimum range
+// see issue49.oleo
+bool iss49 ()
+{
+	const char* input = R"(
+F;DGFR8
+O;auto;background;noa0;ticks 1
+C;c1;r1;K12
+C;r2;K15
+C;r3;K17
+C;r4;Er[-1]c + rc[-1];K17
+C;c2;r1;Er[-1]c + rc[-1];K12
+C;r2;Er[-1]c + rc[-1];K27
+C;r3;Er[-1]c + rc[-1];K44
+C;r4;Er[-1]c + rc[-1];K61
+C;c3;r1;E1 + rc[-1];K13
+C;r2;E1 + rc[-1];K28
+C;c4;r1;Erc[-1]
+C;r2;Er[-1]c + rc[-1];K0
+C;r3;K18
+C;c5;r1;E1 + rc[-1];K1
+C;r2;Er[-1]c + rc[-1];K1
+O;status 2
+W;N1;A1 1;C7 0 7;Ostandout
+E
+)";
+
+	std::istringstream  is(input);
+
+	extern void oleo_read_file (std::istream& is);
+	oleo_read_file(is);
+
+	bool all_pass = true;
+	check_result(1, 2, "12", all_pass);
+	check_result(1, 3, "13", all_pass);
+	check_result(1, 4, "13", all_pass);
+	check_result(1, 4, "13", all_pass);
+	check_result(1, 5, "14", all_pass);
+	check_result(2, 2, "27", all_pass);
+	check_result(2, 5, "55", all_pass);
+	check_result(4, 2, "61", all_pass);
+	//cout << get_cell()
+	return all_pass;
+}
+
 // parsing "+100" causes an error
 bool iss56 ()
 {
@@ -420,6 +471,7 @@ int main(int argc, char* argv[])
 	string cmd{argv[1]};	
 	if(cmd == "pass") { cout << "you want to pass\n"; }
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
+	else if(cmd == "iss49") { exiting(iss49());}
 	else if(cmd == "iss56") { exiting(iss56());}
 	else if(cmd == "parser2019") { exiting(run_parser_2019_tests());}
 	else if(cmd == "replace") { exiting(run_replace_tests());}

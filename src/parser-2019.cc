@@ -93,16 +93,21 @@ static value_t to_irreducible(Tour& tour, const value_t& val)
 	rng_t rng{std::get<rng_t>(val)};
 	if( rng.lr != rng.hr || rng.lc != rng.hc)
 		throw ValErr(BAD_NAME); 
+
+	if(rng.lr < MIN_ROW || rng.lc < MIN_COL)
+		return std::monostate{};
+
 	CELL* cp = find_or_make_cell(rng.lr, rng.lc);
 	//if(root == cp) throw ValErr(CYCLE);
 	eval_cell(tour, cp); // maybe too much evaluation?
 	return cp->get_value_2019();
 }
+
+
 	template <class T>
 T tox (Tour& tour, const value_t& val, int errtype)
 {
 	auto val1{to_irreducible(tour, val)};
-
 	if(std::holds_alternative<T>(val1))
 		return std::get<T>(val1);
 	else
@@ -114,9 +119,32 @@ string str_eval(Tour& tour, const Expr& expr);
 
 
 bool to_bool (Tour& tour, const value_t& v) { return tox<bool_t>(tour, v, NON_BOOL).v; }
-num_t to_num (Tour& tour, const value_t& v) { return tox<num_t>(tour, v, NON_NUMBER); }
+
+num_t to_num (Tour& tour, const value_t& v)
+{
+	auto val1{to_irreducible(tour, v)};
+	// 26/3 convert monostate to 0
+	if(std::holds_alternative<std::monostate>(val1))
+		return 0;
+	if(std::holds_alternative<num_t>(val1))
+		return std::get<num_t>(val1);
+	else
+		throw ValErr(NON_NUMBER);
+}
+
 err_t to_err (Tour& tour, const value_t& v) { return tox<err_t>(tour, v, ERR_CMD); }
-string to_str (Tour& tour, const value_t& v) { return tox<string>(tour, v, NON_STRING); }
+
+string to_str (Tour& tour, const value_t& v)
+{
+	auto val1{to_irreducible(tour, v)};
+	// 26/3 convert monostate to 0
+	if(std::holds_alternative<std::monostate>(val1))
+		return "";
+	if(std::holds_alternative<string>(val1))
+		return std::get<string>(val1);
+	else
+		throw ValErr(NON_STRING);
+}
 
 rng_t to_range(const value_t& val) 
 {
