@@ -378,6 +378,24 @@ bool run_replace_tests ()
 	return all_pass;
 }
 
+
+// 26/3 created. Quite a good function, this.
+void interpret3(CELLREF r, CELLREF c, const std::string& formula, const std::string& expect, bool& pass)
+{
+	if(!interpret(r, c, formula, expect)) pass = false;
+}
+
+// parsing "+100" causes an error
+bool iss56 ()
+{
+	bool pass = true;
+	interpret3(1, 1, "-100", "-100", pass);
+	interpret3(1, 1, "+100", "100", pass);
+	interpret3(1, 1, "+ 200", "200", pass);
+
+	return pass;
+
+}
 void exiting(bool all_pass)
 {
 	if(all_pass)
@@ -402,6 +420,7 @@ int main(int argc, char* argv[])
 	string cmd{argv[1]};	
 	if(cmd == "pass") { cout << "you want to pass\n"; }
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
+	else if(cmd == "iss56") { exiting(iss56());}
 	else if(cmd == "parser2019") { exiting(run_parser_2019_tests());}
 	else if(cmd == "replace") { exiting(run_replace_tests());}
 	else { cout << "Unknown test. Failing\n"; return 1; }

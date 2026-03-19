@@ -18,6 +18,10 @@ example that uses a Makefile.
 * current row/column header no longer highlighted in cursor display. 
 This makes current location more obvious to user.
 
+* iss#55 fix: oleo Tcl package now properly installed to system.
+
+* iss#56 fix: can now parse "+100"
+
 
 ===========================================================================
 VERSION:	16.0

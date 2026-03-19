@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// 25/11 TODO It doesn't yet parse +100
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TYPE DECLARATIONS
@@ -691,6 +690,8 @@ Expr parse_p (tokens_t& tokes, ranges_t& predecs, CELLREF r, CELLREF c)
 					  parse_error();
 				  return x1;
 			  }
+		case '+': // 26/3 iss56 fix: parse something like "+100"
+			  return Expr("+", parse_t(tokes, predecs, r, c));
 		case '-':
 			  return Expr("-", parse_t(tokes, predecs, r, c));
 		default:
