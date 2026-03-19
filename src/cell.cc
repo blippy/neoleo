@@ -159,6 +159,7 @@ void cell::insert_predec_deps(coord_t coord)
 void cell::set_formula_text(const std::string& str)
 {
 	if(str ==formula_text) return;
+	Global_modified = 1; // iss#53
 	formula_text = str;
 
 	predecs.clear();

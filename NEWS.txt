@@ -18,9 +18,11 @@ example that uses a Makefile.
 * current row/column header no longer highlighted in cursor display. 
 This makes current location more obvious to user.
 
-* iss#55 fix: oleo Tcl package now properly installed to system.
+* iss#53 fixed: deleting cell now marks the sheet as modified
+ 
+* iss#55 fixed: oleo Tcl package now properly installed to system.
 
-* iss#56 fix: can now parse "+100"
+* iss#56 fixed: can now parse "+100"
 
 
 ===========================================================================
