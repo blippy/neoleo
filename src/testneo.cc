@@ -388,12 +388,12 @@ void interpret3(CELLREF r, CELLREF c, const std::string& formula, const std::str
 // parsing "+100" causes an error
 bool iss56 ()
 {
-	bool pass = true;
-	interpret3(1, 1, "-100", "-100", pass);
-	interpret3(1, 1, "+100", "100", pass);
-	interpret3(1, 1, "+ 200", "200", pass);
+	bool all_pass = true;
+	interpret3(1, 1, "-100", "-100", all_pass);
+	interpret3(1, 1, "+100", "100", all_pass);
+	interpret3(1, 1, "+ 200", "200", all_pass);
 
-	return pass;
+	return all_pass;
 
 }
 void exiting(bool all_pass)
