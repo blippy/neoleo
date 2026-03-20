@@ -590,7 +590,7 @@ std::string cell_value_string (CELLREF row, CELLREF col, int add_quote)
 
 
 
-
+#if 0
 char *adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just)
 {
 	int fmt;
@@ -725,7 +725,7 @@ handle_exp:
 	}
 	return bptr;
 }
-
+#endif
 
 
 /* Functions for printing out the names of cells and ranges */
