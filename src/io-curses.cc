@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <cmath>
 #include <format>
 
 #include <ncurses.h>
@@ -44,6 +43,7 @@
 #include "regions.h"
 #include "sheet.h"
 #include "spans.h"
+#include "vidi.h"
 #include "win.h"
 
 
@@ -57,86 +57,10 @@ using namespace std::string_literals;
 #define USE_2026 1
 
 
-static const int	status = 1;
 
 
-constexpr int grid_starts = 4;	// y-position where data grid starts
-
-class window_c {
-public:
-	window_c() {
-	}
-	;
-	/* Do not change these directly. */
-	const int id = 1; // a window id
-	int win_down = grid_starts; // should be const
-	int win_over = 0;// x-position Where the data in this window starts. Can change due to row number
-	struct rng screen { 0 }; /* Cells visible. recenter_* updates this. */
-
-	/* Number of lines of spreadsheet that can fit in this window.
-	 This only changes when the screen is resized,
-	 win->flags&WIN_EDGES changes, or a window is either
-	 created or destroyed */
-	int numr = 0;
-
-	/* Number of text columns that can fit in this window.
-	 This changes when the screen is resized,
-	 win->flags&WIN_EDGES changes, a window is created or
-	 destroyed, or win->lh_wid changes.  In the last case
-	 win->numc+win->lh_wid remains a constant. */
-	int numc = 0;
-
-	/*
-	 * Number of columns and rows for right and bottom edges.
-	 * As this changes, numc and numr change accordingly.
-	 */
-	//int bottom_edge_r = 0;
-	//int right_edge_c = 0;
-
-	/* Number of columns taken up by the row numbers at the
-	 left hand edge of the screen.  Zero if edges is
-	 win->flags&WIN_EDGES is off (by definition).  Seven (or
-	 five) if win->flags&WIN_PAG_HZ (to make things easier).
-	 Ranges between three "R9 " to seven "R32767 " depending on
-	 the number of the highest row on the screen.  */
-	int lh_wid() const {
-		return _lh_wid;
-	};
 
 
-	// terminal size might have changed
-	// 26/3 Created
-	void update ()
-	{
-		// reconfigure the row settings
-		int numr_old = numr;
-		numr = LINES - grid_starts;
-		if(numr < numr_old) { // tty got smaller
-			screen.lr = curow; //  For simplicity, make curow the top row
-		}
-		screen.hr = screen.lr + numr -1; // figure out how many cells are in a row
-
-		// reconfigure the column settings
-		// NB this is dependent on the margin we need for printing th row numbers
-		_lh_wid = std::log10(screen.hr) +3; // est. num of lines taken up by row numbers
-		win_over = _lh_wid +1;
-		int numc_old = numc;
-		numc = COLS - _lh_wid;
-		if(numc < numc_old) { // tty shrank
-			screen.lc = cucol; // For simplicity, make cucol the left-most col
-		}
-		if(numc != numc_old) { // a change is made, so let's figure out the new extent
-			screen.hc = screen.lc;
-			int num_cols = get_width(screen.hc);
-			while(num_cols + get_width(screen.hc+1) <= numc)
-					num_cols += get_width(++ screen.hc);
-		}
-	}
-
-private:
-	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
-
-};
 
 
 inline window_c the_cwin;
@@ -620,7 +544,7 @@ static void cur_io_repaint ()
 	window_c *win = cwin;
 
 	erase();
-	win->update();
+	win->update(COLS, LINES);
 	//clear();
 	show_menu();
 	show_status();
@@ -856,7 +780,7 @@ void curses_main () // FN
 	init_pair(GR_ON_BL, COLOR_GREEN, COLOR_BLACK);
 	curs_set(0); // turn the cursor off
 
-	cwin->update();
+	cwin->update(COLS, LINES);
 	recenter_window();
 
 

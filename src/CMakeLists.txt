@@ -27,7 +27,7 @@ include_directories(${TCL_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}) # for all t
 include(swig.cmake)
 
 # files that we need for creating neoleo, testneo and a shared library
-set(common_srcs basic.cc cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc ${wrapper_cc})
+set(common_srcs basic.cc cell.cc  oleofile.cc parser-2019.cc regions.cc sheet.cc spans.cc tickle.cc utils.cc vidi.cc ${wrapper_cc})
 set(common_curses  io-curses.cc  io-2019.cc     menu-2025.cc    win.cc	 )
 set(common_srcs ${common_curses} ${common_srcs})
 #add_library(common SHARED ${common_srcs})
