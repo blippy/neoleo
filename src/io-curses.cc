@@ -331,7 +331,7 @@ static void ioc_print_row (CELLREF r)
 	//const int ncells = hc - lc +1; // number of cells displayable on screen
 
 	size_t msw = 0; // maximum slop width - allowing cells to overspill to the next column
-	// 26/3 TODO attr, numbers being to long
+	// 26/3 TODO numbers being to long
 	for(CELLREF c = cwin->screen.hc; c >= cwin->screen.lc; c--) {
 		CELL* cp = find_cell(r, c);
 		size_t width = get_width(c);
@@ -344,8 +344,14 @@ static void ioc_print_row (CELLREF r)
 		//size_t use_cols = std::min(std::max(width, str1.size()),msw); // how many nucruses cols? Reserve 1 for trailing space
 		//auto str2 = pad_jst(str1, use_cols, cp->get_cell_jst(), true) + " ";
 		msw = 0;
+
+		// display result
+		if(cp->cell_flags.bold) wattr_on(stdscr, WA_BOLD, 0);
+		if(cp->cell_flags.italic) wattr_on(stdscr, WA_ITALIC, 0);
 		move_cursor_to(r, c);
 		win_print(str3);
+		wattr_off(stdscr, WA_BOLD, 0);
+		wattr_off(stdscr, WA_ITALIC, 0);
 	}
 
 }
