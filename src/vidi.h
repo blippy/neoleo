@@ -5,6 +5,9 @@
  *
  */
 
+#include <string>
+#include <tuple>
+
 #include "neotypes.h"
 #include "spans.h"
 
@@ -12,6 +15,8 @@
 inline constexpr int grid_starts = 4;	// y-position where data grid starts
 inline constexpr int status = 1;
 
+
+typedef struct  {int cursr; int cursc; std::string str; struct cell_flags_s cell_flags;} vcell_t;
 
 class window_c {
 public:
@@ -55,10 +60,12 @@ public:
 	// terminal size might have changed
 	// 26/3 Created
 	void update(int num_cols, int num_lines);
+	std::vector<vcell_t> get_vidi_cells();
+	std::tuple<int, int> get_cursor(int curow, int cucol);
 
 private:
 	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
-	int m_num_cols, m_num_lines; // corresponds to COLS and LINES in an ncurses display
+	int m_num_cols = 0, m_num_lines = 0; // corresponds to COLS and LINES in an ncurses display
 
 };
 

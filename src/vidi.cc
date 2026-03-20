@@ -1,5 +1,7 @@
 #include <cmath>
 
+#include "cell.h"
+#include "sheet.h"
 #include "vidi.h"
 
 
@@ -41,3 +43,51 @@ void window_c::update(int num_cols, int num_lines)
 			num_cols += get_width(++screen.hc);
 	}
 }
+
+
+
+std::vector<vcell_t> window_c::get_vidi_cells()
+{
+	std::vector<vcell_t> res;
+	res.reserve(200); // just for good measure
+	//ioc_print_cells();
+	for(int r = screen.lr ; r < screen.hr; r++) {
+		size_t msw = 0; // maximum slop width - allowing cells to overspill to the next column
+		for(CELLREF c = screen.hc; c >= screen.lc; c--) {
+			vcell_t vc;
+			CELL* cp = find_cell(r, c);
+			size_t width = get_width(c);
+			msw += width;
+			if(cp == nullptr || width == 0) continue;
+			auto str = utl_fmt_cell(cp, width-1, msw-1);
+
+			msw = 0;
+
+
+			auto [cell_cursor_row, cell_cursor_col] = get_cursor(r, c);
+
+			vc.cell_flags = cp->cell_flags;
+			vc.cursc = cell_cursor_col;
+			vc.cursr = cell_cursor_row;
+			vc.str = str;
+			res.push_back(vc);
+		}
+	}
+
+	return res;
+}
+
+std::tuple<int, int> window_c::get_cursor(int r, int c)
+{
+	int cell_cursor_col = win_over;
+	for (int cc = screen.lc; cc < c; cc++)
+		cell_cursor_col += get_width(cc);
+
+	int cell_cursor_row = win_down;
+	for (int rr = screen.lr; rr < r; rr++)
+		cell_cursor_row += get_height(rr);
+
+	return{cell_cursor_row, cell_cursor_col};
+}
+
+

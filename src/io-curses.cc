@@ -68,7 +68,6 @@ inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
 
 
-static void move_cursor_to (CELLREF, CELLREF);
 void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 bool 		curses_input ();
 
@@ -89,18 +88,6 @@ void page_up ()
 }
 // FN-END
 
-
-
-static void cur_io_display_cell_cursor (void)
-{
-	assert(inside(curow, cucol, cwin->screen));
-	move_cursor_to(curow, cucol);
-	int cwid = std::min(cwin->numc, get_width (cucol));
-	standout ();
-	for (int n = cwid; n; n--)
-		addch (inch () | A_STANDOUT);
-	standend ();
-}
 
 
 
@@ -252,6 +239,7 @@ static void cur_io_update_status (void) // FN
 
 #if USE_2026 == 1
 // 26/3 created
+/*
 static void ioc_print_row (CELLREF r)
 {
 
@@ -274,14 +262,10 @@ static void ioc_print_row (CELLREF r)
 		wattr_off(stdscr, WA_ITALIC, 0);
 	}
 }
+*/
 
 
-static void ioc_print_cells ()
-{
-	for(int r = cwin->screen.lr ; r < cwin->screen.hr; r++) {
-		ioc_print_row(r);
-	}
-}
+
 
 #else // Not USE_2026
 /* Functions, etc for dealing with cell contents being displayed on top of other cells. */
@@ -607,10 +591,30 @@ static void cur_io_repaint ()
 
 
 	}
-	ioc_print_cells();
 
 
-	cur_io_display_cell_cursor ();
+	// show all the cells in the display
+	for(const auto& vc : the_cwin.get_vidi_cells()) {
+		if(vc.cell_flags.bold) wattr_on(stdscr, WA_BOLD, 0);
+		if(vc.cell_flags.italic) wattr_on(stdscr, WA_ITALIC, 0);
+		move(vc.cursr, vc.cursc);
+		win_print(vc.str);
+		wattr_off(stdscr, WA_BOLD, 0);
+		wattr_off(stdscr, WA_ITALIC, 0);
+	}
+
+
+
+	// display cell cursor
+	assert(inside(curow, cucol, cwin->screen));
+	auto [y, x] = the_cwin.get_cursor(curow, cucol);
+	move(y, x);
+	int cwid = std::min(the_cwin.numc, get_width (cucol));
+	standout ();
+	for (int n = cwid; n; n--)
+		addch (inch () | A_STANDOUT);
+	standend ();
+
 	cur_io_update_status ();
 }
 
@@ -618,19 +622,7 @@ static void cur_io_repaint ()
 
 
 
-static void move_cursor_to (CELLREF r, CELLREF c)
-{
-	auto& win = cwin;
-	int cell_cursor_col = win->win_over;
-	for (int cc = win->screen.lc; cc < c; cc++)
-		cell_cursor_col += get_width (cc);
 
-	int cell_cursor_row = win->win_down;
-	for (int rr = win->screen.lr; rr < r; rr++)
-		cell_cursor_row += get_height (rr);
-
-	move (cell_cursor_row, cell_cursor_col);
-}
 
 
 
