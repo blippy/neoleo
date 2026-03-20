@@ -268,7 +268,7 @@ static void complex_key_sequence_27()
 	int c;
 	auto get = [&](){ 
 		c = get_ch(); 
-		log("complex_key_sequence_27:" , c);
+		//log("complex_key_sequence_27:" , c); // 26/3 still seems to be called on occasion
 		return c;
 	};
 	if(get() != 91) goto fail;
