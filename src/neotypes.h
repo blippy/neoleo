@@ -185,15 +185,21 @@ using binding_t = std::optional<std::string>; // just a convenient shorthand
 
 void 			bind_char(char c, const std::string& str_to_interpret); // bind a character to some Tcl code requiring interpreting
 std::string 	cell_value_string (CELLREF row, CELLREF col, int add_quote);
+std::string  	fmt_std_date(int t);
+std::string 	fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
 binding_t		get_binding(char c);
 std::string 	get_status ();
-char 			*adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
-std::string 	trim(const std::string& str);
+//char 			*adjust_prc (char *oldp, CELL * cp, int width, int smallwid, enum jst just);
+bool 			is_num(const value_t& val);
+bool 			is_range(const value_t& val);
+std::string 	nchars(int n, char c);
 std::string 	print_cell_flt (num_t flt, unsigned int precision, unsigned int j);
 std::string 	pad_left(const std::string& s, int width, bool trunc = false);
 std::string 	pad_right(const std::string& s, int width, bool trunc = false);
 std::string 	pad_centre(const std::string& s, int width, bool trunc = false);
 std::string 	pad_jst(const std::string& s, int width, enum jst j, bool trunc = false);
+void 			panic (const char *s,...);
+char* 			pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
 std::string 	spaces(int n);
 void 			set_status (const std::string& str);
 std::string 	string_cell (CELL * cp);
@@ -201,13 +207,9 @@ std::string 	string_cell (CELLREF r, CELLREF c);
 std::string 	string_cell ();
 std::string 	string_cell_formatted (CELLREF r, CELLREF c);
 std::string 	stringify_value_file_style(const value_t& val);
-void 			panic (const char *s,...);
-bool 			is_num(const value_t& val);
-bool 			is_range(const value_t& val);
-char* 			pr_flt (num_t val, struct user_fmt *fmt, int prec, bool use_prec = true);
-std::string  	fmt_std_date(int t);
-std::string 	fmt_value (value_t& val, int p = default_prc, int j = FMT_DEF);
 void 			test_status ();
+std::string 	trim(const std::string& str);
+std::string 	utl_fmt_cell(CELL* cp, int col_width, int max_width);
 
 
 class defer {

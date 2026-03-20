@@ -12,4 +12,5 @@ file ../build/src/neoleo
 #r -s ../tests/decompile-01.scr
 #r -H -b todo.bas
 #r -H -b test.bas <<< q
-r -m 0 -e "puts hello"
+#r -m 0 -e "puts hello"
+r

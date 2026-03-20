@@ -234,14 +234,20 @@ void test_status ()
 }
 
 
+// 26/3 created
+std::string nchars(int n, char c)
+{
+	if(n <=0) return "";
+	std::string res;
+	res.resize(n, c);
+	//res.reserve(n);
+	//std::fill(res.begin(), res.end()-1, c);
+	return res;
+}
+
 std::string spaces(int n)
 {
-	n = std::max(0, n);
-	//char sa[n+1];
-	char *sa = (char*) alloca(n+1);
-	std::fill(sa, sa+n, ' ');
-	sa[n] = '\0';
-	return sa; 
+	return nchars(n, ' ');
 }
 
 // FN pad_left .
@@ -378,6 +384,34 @@ template <typename T> bool use_specified_zero_p(const T val, const char* fmt)
 }
 
 
+
+std::string utl_fmt_cell(CELL* cp, int col_width, int max_width)
+{
+	assert(max_width >= col_width);
+	std::string str1 = string_cell(cp);
+	auto len1 = str1.size();
+	std::string res{str1};
+
+	if(len1<col_width) {
+		enum jst just = cp->get_cell_jst();
+		if(is_flt(cp) && just == jst::def) just = jst::rgt;
+		if(just == jst::rgt)
+			res = spaces(col_width-len1) + str1;
+		else if (just == jst::cnt)
+			res = spaces((col_width-len1)/2) + str1;
+		//else
+		//	res = str1;
+	} else if(len1 > max_width) {
+		if(is_flt(cp)) {
+			res = nchars(col_width, '#');
+		} else {
+			res = str1.substr(0, max_width);
+		}
+	}
+
+	//log("utl_fmt_cell `", res, "'");
+	return res;
+}
 
 char* pr_flt(num_t val, struct user_fmt *fmt, int prec, bool use_prec) {
 	//log_debug("pr_flt:prec:" + std::to_string(prec));
@@ -536,7 +570,7 @@ std::string string_cell_formatted (CELLREF r, CELLREF c)
 std::string string_cell (CELL * cp)
 {
 
-	if (!cp) return CCC("");
+	if (!cp) return "";
 
 	int j = GET_FORMAT (cp);
 

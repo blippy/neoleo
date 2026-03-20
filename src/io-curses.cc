@@ -323,6 +323,9 @@ static void cur_io_update_status (void) // FN
 }
 
 
+
+
+
 #if USE_2026 == 1
 // 26/3 created
 static void ioc_print_row (CELLREF r)
@@ -337,19 +340,15 @@ static void ioc_print_row (CELLREF r)
 		size_t width = get_width(c);
 		msw += width;
 		if(cp == nullptr || width == 0) continue;
-		//if(width ==0) continue;
-		std::string str1 = string_cell(cp);
-		auto str2 = pad_jst(str1, width -1 , cp->get_cell_jst()) + " ";
-		auto str3 = pad_right(str2, msw, true);
-		//size_t use_cols = std::min(std::max(width, str1.size()),msw); // how many nucruses cols? Reserve 1 for trailing space
-		//auto str2 = pad_jst(str1, use_cols, cp->get_cell_jst(), true) + " ";
+		auto str = utl_fmt_cell(cp, width-1, msw-1);
+
 		msw = 0;
 
 		// display result
 		if(cp->cell_flags.bold) wattr_on(stdscr, WA_BOLD, 0);
 		if(cp->cell_flags.italic) wattr_on(stdscr, WA_ITALIC, 0);
 		move_cursor_to(r, c);
-		win_print(str3);
+		win_print(str);
 		wattr_off(stdscr, WA_BOLD, 0);
 		wattr_off(stdscr, WA_ITALIC, 0);
 	}
