@@ -330,11 +330,8 @@ static void cur_io_update_status (void) // FN
 // 26/3 created
 static void ioc_print_row (CELLREF r)
 {
-	//const int lc = cwin->screen.lc, hc = cwin->screen.hc;
-	//const int ncells = hc - lc +1; // number of cells displayable on screen
 
 	size_t msw = 0; // maximum slop width - allowing cells to overspill to the next column
-	// 26/3 TODO numbers being to long
 	for(CELLREF c = cwin->screen.hc; c >= cwin->screen.lc; c--) {
 		CELL* cp = find_cell(r, c);
 		size_t width = get_width(c);
@@ -352,7 +349,6 @@ static void ioc_print_row (CELLREF r)
 		wattr_off(stdscr, WA_BOLD, 0);
 		wattr_off(stdscr, WA_ITALIC, 0);
 	}
-
 }
 
 
