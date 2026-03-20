@@ -31,11 +31,8 @@
 using namespace std::string_literals;
 using std::cout;
 using std::cerr;
-//using std::map;
 using std::string;
 
-static void col_cmd2019();
-//extern void hl_write_file();
 static void maybe_quit_spreadsheet2019();
 static void row_cmd2019();
 static void save_spreadsheet2019();
