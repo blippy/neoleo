@@ -68,7 +68,7 @@ inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
 
 
-void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
+//void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 bool 		curses_input ();
 
 

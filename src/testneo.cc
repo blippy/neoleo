@@ -16,6 +16,7 @@
 #include "parser-2019.h"
 #include "sheet.h"
 #include "tickle.h"
+#include "vidi.h"
 
 bool headless_tests();
 
@@ -30,7 +31,8 @@ int run_clear_test();
 
 //import value;
 
-void check(std::string got, std::string expected, std::string msg)
+template <typename T>
+void check(T got, T expected, std::string msg)
 {
 	//cout << msg << "\t";
 	bool ok = got == expected;
@@ -44,6 +46,10 @@ void check(std::string got, std::string expected, std::string msg)
 
 }
 
+void check(std::string got, std::string expected, std::string msg)
+{
+	check(got, expected, msg);
+}
 
 void check(bool ok, std::string msg)
 {
@@ -447,6 +453,34 @@ bool iss56 ()
 	return all_pass;
 
 }
+
+bool iss57 ()
+{
+	//bool all_pass = true;
+	window_c win;
+	int nr = 24, nc = 80;
+	auto lc = &win.screen.lc, hc = &win.screen.hc;
+
+	win.update(nc, nr);
+	check((int) *lc,  1, "normal low column");
+	check((int) *hc, 9, "normal high column");
+
+	set_width(1, 3);
+	win.update(nc, nr);
+	check((int) *lc,  1, "small case low column");
+	check((int) *hc, 10, "small case  high column");
+
+	// now let's do some funky movement
+	cucol = 10;
+	set_width(10, 20);
+	win.update(nc, nr);
+	check((int) *lc,  6, "C10 low column");
+	check((int) *hc, 13, "C10  high column");
+
+	return all_pass;
+
+}
+
 void exiting(bool all_pass)
 {
 	if(all_pass)
@@ -473,6 +507,7 @@ int main(int argc, char* argv[])
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
 	else if(cmd == "iss49") { exiting(iss49());}
 	else if(cmd == "iss56") { exiting(iss56());}
+	else if(cmd == "iss57") { exiting(iss57());}
 	else if(cmd == "parser2019") { exiting(run_parser_2019_tests());}
 	else if(cmd == "replace") { exiting(run_replace_tests());}
 	else { cout << "Unknown test. Failing\n"; return 1; }

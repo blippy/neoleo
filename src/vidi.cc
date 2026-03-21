@@ -2,9 +2,10 @@
 
 #include "cell.h"
 #include "sheet.h"
+#include "spans.h"
 #include "vidi.h"
 
-
+static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP);
 
 int window_c::lh_wid() const {
 	return _lh_wid;
@@ -71,15 +72,18 @@ void window_c::update(int num_cols, int num_lines)
 	win_over = _lh_wid + 1;
 	int numc_old = numc;
 	numc = num_cols - _lh_wid;
-	if (numc < numc_old) { // tty shrank
-		screen.lc = cucol; // For simplicity, make cucol the left-most col
+
+	// recompute struct screen, assuming cursor will be OK. It's the best we can do at his stage
+	// NB column widths might have changed, too.
+	screen.hc = screen.lc;
+	int ncols = get_width(screen.lc);
+	while (ncols + get_width(screen.hc + 1) <= numc)	ncols += get_width(++screen.hc);
+	if(cucol < screen.lc || cucol > screen.hc) {
+		// drats, didn't work, so just recenter
+		recenter_axis(cucol, get_width, numc, &screen.lc, &screen.hc);
 	}
-	if (numc != numc_old) { // a change is made, so let's figure out the new extent
-		screen.hc = screen.lc;
-		int num_cols = get_width(screen.hc);
-		while (num_cols + get_width(screen.hc + 1) <= numc)
-			num_cols += get_width(++screen.hc);
-	}
+
+
 }
 
 

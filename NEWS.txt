@@ -26,6 +26,8 @@ This makes current location more obvious to user.
 
 * iss#56 fixed: can now parse "+100"
 
+* iss#57 fixed: curses cell width changes
+
 
 ===========================================================================
 VERSION:	16.0
