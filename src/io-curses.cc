@@ -76,7 +76,7 @@ bool 		curses_input ();
 void page_down ()
 {
 	curow = std::min(cwin->screen.hr+1, (int) MAX_ROW);
-	io_move_cell_cursor(curow, cucol);
+	cwin->io_move_cell_cursor(curow, cucol);
 }
 // FN-END
 
@@ -84,86 +84,16 @@ void page_down ()
 void page_up ()
 {
 	curow = std::max(1, cwin->screen.lr-1);
-	io_move_cell_cursor(curow, cucol);
+	cwin->io_move_cell_cursor(curow, cucol);
 }
 // FN-END
 
 
 
 
-static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
-{
-	CELLREF lo, hi;
-	int tot;
-	int n;
-	int more;
-
-	lo = hi = cur;
-	n = tot = (*get) (cur);
-	do
-	{
-		if (lo > MIN_ROW && tot + (n = (*get) (lo - 1)) <= total)
-		{
-			--lo;
-			tot += n;
-			more = 1;
-		}
-		else
-			more = 0;
-		if (hi < MAX_ROW && tot + (n = (*get) (hi + 1)) <= total)
-		{
-			hi++;
-			tot += n;
-			more++;
-		}
-	}
-	while (more);
-	*loP = lo;
-	*hiP = hi;
-}
-
-static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
-{
-	CELLREF lo, hi;
-	int w, ww;
-
-	lo = hi = MIN_ROW;
-	w = (*get) (hi);
-	for (;;)
-	{
-		ww = (*get) (hi + 1);
-		while (w + ww <= total && hi < MAX_ROW)
-		{
-			hi++;
-			w += ww;
-			ww = (*get) (hi + 1);
-		}
-		if (hi >= cur)
-			break;
-		hi++;
-		lo = hi;
-		w = ww;
-	}
-	if (lo > cur || hi > MAX_ROW)
-		raise_error("Can't find a non-zero-sized cell page_axis");
-	*loP = lo;
-	*hiP = hi;
-}
 
 
-static void  recenter_window (struct window_c *win = cwin) // FN
-{
-	//if(!win) win = cwin;
-	if (win_flags & WIN_PAG_VT)
-		page_axis (curow, get_scaled_height, win->numr, &(win->screen.lr), &(win->screen.hr));
-	else
-		recenter_axis (curow, get_scaled_height, win->numr, &(win->screen.lr), &(win->screen.hr));
-	// 26/3 win->set_numcols(win->screen.hr);
-	if (win_flags & WIN_PAG_HZ)
-		page_axis (cucol, get_scaled_width, win->numc, &(win->screen.lc), &(win->screen.hc));
-	else
-		recenter_axis (cucol, get_scaled_width, win->numc, &(win->screen.lc), &(win->screen.hc));
-}
+
 
 
 
@@ -630,44 +560,6 @@ static void cur_io_repaint ()
 
 
 
-static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
-{
-	CELLREF cc;
-	int n;
-
-	cc = *curp;
-
-	if (cc < hi)
-	{
-		cc++;
-		while ((n = (*get) (cc)) == 0)
-		{
-			if (cc == hi)
-				break;
-			cc++;
-		}
-		if (n)
-		{
-			*curp = cc;
-			return;
-		}
-	}
-	if (cc > lo)
-	{
-		--cc;
-		while ((n = (*get) (cc)) == 0)
-		{
-			if (cc == lo)
-				break;
-			--cc;
-		}
-		if (n)
-		{
-			*curp = cc;
-			return;
-		}
-	}
-}
 
 
 
@@ -677,23 +569,7 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 
 
 
-void io_move_cell_cursor (CELLREF rr, CELLREF cc)
-{
-	if(inside(rr, cc, cwin->screen)) {
-		//win_io_hide_cell_cursor(); // 25/5 apparently unnecessary
-		curow = rr;
-		cucol = cc;
-	} else 	{
-		curow = rr;
-		cucol = cc;
-		recenter_window(cwin);
-	}
 
-	if (get_scaled_width(cucol) == 0)
-		find_nonzero(&cucol, cwin->screen.lc, cwin->screen.hc, get_scaled_width);
-	if (get_scaled_height (curow) == 0)
-		find_nonzero(&curow, cwin->screen.lr, cwin->screen.hr, get_scaled_height);
-}
 
 void io_shift_cell_cursor (dirn way, int repeat) // FN
 {
@@ -745,7 +621,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 		break;
 	}
 
-	io_move_cell_cursor (r, c);
+	cwin->io_move_cell_cursor (r, c);
 }
 
 
@@ -773,7 +649,7 @@ void curses_main () // FN
 	curs_set(0); // turn the cursor off
 
 	cwin->update(COLS, LINES);
-	recenter_window();
+	cwin->recenter_window();
 
 
 	// Tell ncurses to interpret "special keys". It means

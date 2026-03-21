@@ -11,6 +11,14 @@
 #include "neotypes.h"
 #include "spans.h"
 
+#define WIN_LCK_HZ		0x01 // locked horizontally
+#define WIN_LCK_VT		0x02 // locked vertically
+#define WIN_PAG_HZ		0x04 // page horizontally
+#define WIN_PAG_VT		0x08 // page vertically
+#define WIN_EDGES		0x10 // edged disabled
+#define WIN_EDGE_REV	0x20 // edges standout
+inline const int win_flags = WIN_EDGES | WIN_EDGE_REV;
+
 
 inline constexpr int grid_starts = 4;	// y-position where data grid starts
 inline constexpr int status = 1;
@@ -62,6 +70,9 @@ public:
 	void update(int num_cols, int num_lines);
 	std::vector<vcell_t> get_vidi_cells();
 	std::tuple<int, int> get_cursor(int curow, int cucol);
+	void  recenter_window ();
+	void io_move_cell_cursor (CELLREF rr, CELLREF cc);
+
 
 private:
 	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
