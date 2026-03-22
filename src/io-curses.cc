@@ -139,7 +139,8 @@ static void cur_io_repaint ()
 		cc = win->screen.lc;
 		do
 		{
-			if (cc != cucol) standout();
+			standout();
+			if (cc == cucol) wattr_on(stdscr, WA_BOLD, 0);
 
 			n = win->get_vid_col_width (cc);
 			if (n > win->numc)
@@ -166,6 +167,7 @@ static void cur_io_repaint ()
 			else if (n == 1)
 				addstr ("#");
 
+			wattr_off(stdscr, WA_BOLD, 0);
 			standend ();
 		} while (cc++ < win->screen.hc);
 
@@ -173,12 +175,15 @@ static void cur_io_repaint ()
 		rr = win->screen.lr;
 		n = win->win_down;
 		do {
-			if (rr != curow) standout();
+			//if (rr != curow) standout();
+			standout();
+			if(rr == curow) wattr_on(stdscr, WA_BOLD, 0);
 			n1 = get_height (rr);
 			if (!n1) continue;
 			move (n, win->win_over - win->lh_wid());
 			printw ("R%-*d", win->lh_wid() - 1, rr);
 			n += n1;
+			wattr_off(stdscr, WA_BOLD, 0);
 			standend ();
 		} while (rr++ < win->screen.hr);
 
