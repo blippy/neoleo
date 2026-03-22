@@ -5,6 +5,8 @@ DATE:		TBD
 
 == FEATURES
 
+* Mouse button presses can now change current cursor position
+
 * Improved status line visibility
 
 * Added Tcl functions: bind-key, plog, replace-first-form, test-binding.

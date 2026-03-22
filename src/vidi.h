@@ -80,6 +80,7 @@ public:
 	//void recenter_axis(CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP);
 	void recenter_axis(CELLREF cur, WinWhich which, int total, CELLREF *loP, CELLREF *hiP);
 	int get_which(WinWhich which, CELLREF ref);
+	void set_cursor_from_mouse(int mouse_x, int mouse_y);
 
 
 private:

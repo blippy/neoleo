@@ -23,6 +23,7 @@
 enum class dirn { left, right, up, down};
 
 //void cur_io_repaint();
+void mouse_button1_clicked(int mousex, int mousey);
 void page_down();
 void page_up();
 void io_shift_cell_cursor (dirn way, int repeat);

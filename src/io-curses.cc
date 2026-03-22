@@ -66,6 +66,11 @@ inline window_c* cwin = &the_cwin;
 //void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
 bool 		curses_input ();
 
+void mouse_button1_clicked(int mousex, int mousey)
+{
+	cwin->set_cursor_from_mouse(mousex, mousey);
+}
+
 
 // FN page_down
 void page_down ()
@@ -294,6 +299,7 @@ void curses_main () // FN
 	init_pair(BL_ON_CY, COLOR_BLACK, COLOR_CYAN);
 	init_pair(GR_ON_BL, COLOR_GREEN, COLOR_BLACK);
 	curs_set(0); // turn the cursor off
+	mousemask(ALL_MOUSE_EVENTS, NULL);
 
 	cwin->update(COLS, LINES);
 	cwin->recenter_window();

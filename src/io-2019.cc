@@ -356,8 +356,23 @@ void curses_input ()
 
 	auto usr_binds = get_binding(c); // customised bindings take precedence
 	if (usr_binds.has_value()) {
-		log("custom binding found");
+		//log("custom binding found");
 		tickle_eval_expr(usr_binds.value());
+	} else if(c == KEY_MOUSE) {
+		MEVENT event;
+		if(getmouse(&event) == OK) {
+			if(event.bstate & BUTTON1_CLICKED) {
+				mouse_button1_clicked(event.x, event.y);
+				//cwin->set_cursor_from_mouse(event.x, event.y);
+				//log("curses_input button 1 clicked with x = ", event.x, " and y = ", event.y);
+			} else if(event.bstate & BUTTON4_PRESSED) { // MMB scroll up, believe it or not
+				cursor_up();
+				//log("BUTTON4_PRESSED");
+			} else if(event.bstate & BUTTON5_PRESSED) { // MMB scroll down, believe it or not
+				cursor_down();
+				//log("BUTTON5_PRESSED");
+			}
+		}
 	} else {
 		switch (c) {
 		case CTRL('q'):

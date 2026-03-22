@@ -245,3 +245,32 @@ std::tuple<int, int> window_c::get_cursor(int r, int c)
 }
 
 
+void window_c::set_cursor_from_mouse(int mouse_x, int mouse_y)
+{
+	//log("window_c::set_cursor_from_mouse: called ", mouse_x , " ", mouse_y);
+	int col = 0;
+	int x = mouse_x - _lh_wid;
+	if(x >= 0) {
+		int tot = 0;
+		for(int c = screen.lc; c <= screen.hc; c++) {
+			tot += get_vid_col_width(c);
+			if(x <= tot) {
+				col = c;
+				break;
+
+			}
+
+		}
+	}
+	//log("window_c::set_cursor_from_mouse: col ", col);
+
+	//int row = 0;
+	int row = std::max(0, mouse_y + screen.lr -win_down);
+	//log("window_c::set_cursor_from_mouse: row ", row);
+
+	if(col >0 && row >0) {
+		cucol = col;
+		curow = row;
+	}
+
+}
