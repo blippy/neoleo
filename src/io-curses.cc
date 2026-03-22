@@ -141,7 +141,7 @@ static void cur_io_repaint ()
 		{
 			if (cc != cucol) standout();
 
-			n = get_width (cc);
+			n = win->get_vid_col_width (cc);
 			if (n > win->numc)
 				n = win->numc;
 			if (n > 1)
@@ -203,7 +203,7 @@ static void cur_io_repaint ()
 	assert(inside(curow, cucol, cwin->screen));
 	auto [y, x] = the_cwin.get_cursor(curow, cucol);
 	move(y, x);
-	int cwid = std::min(the_cwin.numc, get_width (cucol));
+	int cwid = win->get_vid_col_width (cucol);
 	standout ();
 	for (int n = cwid; n; n--)
 		addch (inch () | A_STANDOUT);

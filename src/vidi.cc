@@ -11,7 +11,15 @@ int window_c::lh_wid() const {
 	return _lh_wid;
 };
 
-static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CELLREF))
+// 26/3 created
+// we need to ensure that the cell fits within the width of the display
+int window_c::get_vid_col_width (int c)
+{
+	return std::min(numc, get_width(c));
+}
+
+
+void window_c::find_nonzero (CELLREF *curp, WinWhich which, CELLREF lo, CELLREF hi)
 {
 	CELLREF cc;
 	int n;
@@ -21,7 +29,7 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 	if (cc < hi)
 	{
 		cc++;
-		while ((n = (*get) (cc)) == 0)
+		while ((n = get_which(which, cc)) == 0)
 		{
 			if (cc == hi)
 				break;
@@ -36,7 +44,7 @@ static void find_nonzero (CELLREF *curp, CELLREF lo, CELLREF hi, int (*get) (CEL
 	if (cc > lo)
 	{
 		--cc;
-		while ((n = (*get) (cc)) == 0)
+		while ((n = get_which(which, cc)) == 0)
 		{
 			if (cc == lo)
 				break;
@@ -76,14 +84,22 @@ void window_c::update(int num_cols, int num_lines)
 	// recompute struct screen, assuming cursor will be OK. It's the best we can do at his stage
 	// NB column widths might have changed, too.
 	screen.hc = screen.lc;
-	int ncols = get_width(screen.lc);
-	while (ncols + get_width(screen.hc + 1) <= numc)	ncols += get_width(++screen.hc);
+	int ncols = get_vid_col_width(screen.lc);
+	while (ncols + get_vid_col_width(screen.hc + 1) <= numc)	ncols += get_vid_col_width(++screen.hc);
 	if(cucol < screen.lc || cucol > screen.hc) {
 		// drats, didn't work, so just recenter
-		recenter_axis(cucol, get_width, numc, &screen.lc, &screen.hc);
+		recenter_axis(cucol, WinWhich::width, numc, &screen.lc, &screen.hc);
 	}
 
 
+}
+
+int window_c::get_which(WinWhich which, CELLREF ref)
+{
+	if(which == WinWhich::width)
+		return get_vid_col_width(ref);
+	else
+		return get_scaled_height(ref);
 }
 
 
@@ -99,24 +115,27 @@ void window_c::io_move_cell_cursor (CELLREF rr, CELLREF cc)
 		recenter_window();
 	}
 
-	if (get_scaled_width(cucol) == 0)
-		find_nonzero(&cucol, screen.lc, screen.hc, get_scaled_width);
-	if (get_scaled_height (curow) == 0)
-		find_nonzero(&curow, screen.lr, screen.hr, get_scaled_height);
+	if (get_vid_col_width(cucol) == 0)
+		find_nonzero(&cucol, WinWhich::width , screen.lc, screen.hc);
+	if (get_scaled_height(curow) == 0)
+		find_nonzero(&curow, WinWhich::height, screen.lr, screen.hr);
 }
 
-static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
+//void window_c::recenter_axis (CELLREF cur, auto  get, int total, CELLREF *loP, CELLREF *hiP)
+void window_c::recenter_axis(CELLREF cur, WinWhich which, int total, CELLREF *loP, CELLREF *hiP)
 {
+
+
 	CELLREF lo, hi;
 	int tot;
 	int n;
 	int more;
 
 	lo = hi = cur;
-	n = tot = (*get) (cur);
+	n = tot = get_which(which, cur);
 	do
 	{
-		if (lo > MIN_ROW && tot + (n = (*get) (lo - 1)) <= total)
+		if (lo > MIN_ROW && tot + (n = get_which(which, lo - 1)) <= total)
 		{
 			--lo;
 			tot += n;
@@ -124,7 +143,7 @@ static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF
 		}
 		else
 			more = 0;
-		if (hi < MAX_ROW && tot + (n = (*get) (hi + 1)) <= total)
+		if (hi < MAX_ROW && tot + (n = get_which(which, hi + 1)) <= total)
 		{
 			hi++;
 			tot += n;
@@ -136,21 +155,21 @@ static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF
 	*hiP = hi;
 }
 
-static void page_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP)
+void window_c::page_axis (CELLREF cur, WinWhich which, int total, CELLREF *loP, CELLREF *hiP)
 {
 	CELLREF lo, hi;
 	int w, ww;
 
 	lo = hi = MIN_ROW;
-	w = (*get) (hi);
+	w = get_which(which, hi);
 	for (;;)
 	{
-		ww = (*get) (hi + 1);
+		ww = get_which(which, hi + 1);
 		while (w + ww <= total && hi < MAX_ROW)
 		{
 			hi++;
 			w += ww;
-			ww = (*get) (hi + 1);
+			ww = get_which(which, hi + 1);
 		}
 		if (hi >= cur)
 			break;
@@ -169,14 +188,14 @@ void  window_c::recenter_window () // FN
 {
 	//if(!win) win = cwin;
 	if (win_flags & WIN_PAG_VT)
-		page_axis (curow, get_scaled_height, numr, &(screen.lr), &(screen.hr));
+		page_axis (curow, WinWhich::height, numr, &(screen.lr), &(screen.hr));
 	else
-		recenter_axis (curow, get_scaled_height, numr, &(screen.lr), &(screen.hr));
+		recenter_axis (curow, WinWhich::height, numr, &(screen.lr), &(screen.hr));
 	// 26/3 win->set_numcols(win->screen.hr);
 	if (win_flags & WIN_PAG_HZ)
-		page_axis (cucol, get_scaled_width, numc, &(screen.lc), &(screen.hc));
+		page_axis (cucol, WinWhich::width, numc, &(screen.lc), &(screen.hc));
 	else
-		recenter_axis (cucol, get_scaled_width, numc, &(screen.lc), &(screen.hc));
+		recenter_axis (cucol, WinWhich::width, numc, &(screen.lc), &(screen.hc));
 }
 
 
@@ -191,7 +210,7 @@ std::vector<vcell_t> window_c::get_vidi_cells()
 		for(CELLREF c = screen.hc; c >= screen.lc; c--) {
 			vcell_t vc;
 			CELL* cp = find_cell(r, c);
-			size_t width = get_width(c);
+			size_t width = get_vid_col_width(c);
 			msw += width;
 			if(cp == nullptr || width == 0) continue;
 			auto str = utl_fmt_cell(cp, width-1, msw-1);
@@ -216,7 +235,7 @@ std::tuple<int, int> window_c::get_cursor(int r, int c)
 {
 	int cell_cursor_col = win_over;
 	for (int cc = screen.lc; cc < c; cc++)
-		cell_cursor_col += get_width(cc);
+		cell_cursor_col += get_vid_col_width(cc);
 
 	int cell_cursor_row = win_down;
 	for (int rr = screen.lr; rr < r; rr++)

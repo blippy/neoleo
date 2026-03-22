@@ -5,6 +5,7 @@
  *
  */
 
+#include <functional>
 #include <string>
 #include <tuple>
 
@@ -26,9 +27,12 @@ inline constexpr int status = 1;
 
 typedef struct  {int cursr; int cursc; std::string str; struct cell_flags_s cell_flags;} vcell_t;
 
+enum class WinWhich { width, height }; // used for example by recenter_axis (but which axis)
+
 class window_c {
 public:
 	window_c() {};
+
 
 	/* Do not change these directly. */
 	const int id = 1; // a window id
@@ -72,11 +76,18 @@ public:
 	std::tuple<int, int> get_cursor(int curow, int cucol);
 	void  recenter_window ();
 	void io_move_cell_cursor (CELLREF rr, CELLREF cc);
+	int get_vid_col_width(int c); // width of cell, possibly restricted by display dimensions
+	//void recenter_axis(CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP);
+	void recenter_axis(CELLREF cur, WinWhich which, int total, CELLREF *loP, CELLREF *hiP);
+	int get_which(WinWhich which, CELLREF ref);
 
 
 private:
 	int _lh_wid = 3; // number of cols taken up by the row numbers, e.g. "R123 "
 	int m_num_cols = 0, m_num_lines = 0; // corresponds to COLS and LINES in an ncurses display
+	void page_axis(CELLREF cur, WinWhich which, int total, CELLREF *loP, CELLREF *hiP);
+	void find_nonzero (CELLREF *curp, WinWhich which, CELLREF lo, CELLREF hi);
 
 };
 
+//using vidi_get = std::function<int(int)>;
