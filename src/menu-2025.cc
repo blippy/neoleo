@@ -210,40 +210,17 @@ void process_menu() // FN
 // the examplar is io-2019.cc:nform_c
 bool col_width_form() 
 {
-	string input{to_string(get_width(cucol))};
-	win_dow win(7, 30, 2, 0);
+	win_dow win(3, 20, 2, 0);
 	WINDOW* w = win();
 	box(w, 0 ,0);
 
-
-	
-	win_edln ed(w, 2, 1, 3, "Cursor width:", input);
+	string input{to_string(get_width(cucol))};
+	win_edln ed(w, 2, 1, 2, "Cursor width:", input);
 	ed.m_only_digits = true;
 	ed.run();
 	if(ed.m_cancelled) return true;
 	input = ed.m_input;
-	mvwprintw(w, 2, 2, "You said '%s'", input.c_str());
-	wrefresh(w);
-	bool accept = false;
 	auto new_width = to_int(input);
-	if(new_width) {
-		mvwprintw(w, 3, 2, "A for accept, C for cancel");
-		wrefresh(w);		
-		while(1) {
-			int ch = get_ch(w);
-			if(ch == 'a') { accept = true; break;}
-			if(ch == 'c') { break;}
-		}
-	} else {
-		mvwprintw(w, 3, 2, "Bad input. C for cancel");
-		wrefresh(w);
-		while(get_ch(w) == 'c');
-	
-	}
-
-	if(accept) set_width(cucol, new_width.value());
-
-	//cur_io_repaint();
+	if(new_width)  set_width(cucol, new_width.value());
 	return true;
-
 }
