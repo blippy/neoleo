@@ -32,6 +32,6 @@ foreach line [split $pss "\n"] {
 
 }
 
-plog "pid.tcl says hi"
+set-status "pid.tcl says hi"
 bind-key h {exec whiptail --msgbox hello 10 50}
 display-curses

@@ -5,20 +5,20 @@
 //https://stackoverflow.com/questions/7223437/how-to-create-a-tcl-function-with-optional-arguments-using-swig
 //%rename("twice") tickle_twice;
 //%newobject ploppy_get_cell; // because a char* is returned
-%rename("display-curses") ploppy_display_curses;
-%rename("get-cell") ploppy_get_cell;
-%rename ("get-cell-fmt") ploppy_get_cell_fmt;
 //%newobject ploppy_get_cell_fmt; // Tcl must free
 
 %rename ("bind-key") ploppy_bind_key;
-%rename ("hi-ploppy") ploppy_hi;
+%rename ("display-curses") ploppy_display_curses;
+%rename ("get-cell") ploppy_get_cell;
+%rename ("get-cell-fmt") ploppy_get_cell_fmt;
 %rename ("go") ploppy_go;
+%rename ("hi-ploppy") ploppy_hi;
 %rename ("insert-by-col") ploppy_insert_by_col;
 %rename ("insert-by-row") ploppy_insert_by_row;
 %rename ("insert-row") ploppy_insert_row;
+%rename ("load-oleo") ploppy_load_oleo;
 %rename ("max-col") ploppy_max_col;
 %rename ("max-row") ploppy_max_row;
-%rename ("load-oleo") ploppy_load_oleo;
 %rename ("plog") ploppy_log;
 %rename ("ploppy-life") ploppy_life;
 %rename ("print-range") ploppy_print_range;
