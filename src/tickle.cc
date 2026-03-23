@@ -40,7 +40,7 @@ static Tcl_Interp *interp = nullptr;
 extern "C" int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
-char*  ploppy_get_cell_fmt(int r, int c);
+std::string  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
@@ -148,9 +148,11 @@ void ploppy_insert_by_col()
 	}
 }
 
-char*  ploppy_get_cell_fmt(int r, int c)
+std::string  ploppy_get_cell_fmt(int r, int c)
+//char*  ploppy_get_cell_fmt(int r, int c)
 {
-	return ploppy_string(string_cell_formatted(r,c));
+	//return ploppy_string(string_cell_formatted(r,c));
+	return string_cell_formatted(r,c);
 }
 
 
@@ -175,15 +177,17 @@ int ploppy_load_oleo(char* path)
 	return oleo_read_file(path);
 }
 
-void ploppy_set_cell(int r, int c, char* formula)
+void ploppy_set_cell(int r, int c, const std::string& formula )
 {
 	set_and_eval (r, c, formula, false);
 }
 
 
-char*  ploppy_get_cell(int r, int c)
+std::string  ploppy_get_cell(int r, int c)
 {
-	return ploppy_string(string_cell(r,c));
+	//std:;string str = string_cell(r,c);
+	//return ploppy_string(str);
+	return string_cell(r,c);
 }
 
 
@@ -228,6 +232,11 @@ void tickle_main()
 {
 	std::string cmd;
 	while(std::getline(cin, cmd)) {
+		// 26/3 copying a string doesn't seem necessary
+		//char *str = ploppy_string(cmd);
+		//assert(str);
+		//strcpy(str, cmd.c_str());
+		//int err = Tcl_Eval(interp, str);
 		int err = Tcl_Eval(interp, cmd.c_str());
 		if ( err != TCL_OK ){
 				fprintf(stderr,"Error calling Tcl_Eval(): %s\n",Tcl_GetStringResult(interp));

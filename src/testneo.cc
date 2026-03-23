@@ -492,6 +492,7 @@ void exiting(bool all_pass)
 int main(int argc, char* argv[])
 {
 
+	//malloc(666); // in case I want to check sanitisation
 
 	//puts("neotest says hi");
 	//auto result = set_and_eval(1, 1, "7", false);

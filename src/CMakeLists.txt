@@ -1,6 +1,5 @@
 set(CMAKE_VERBOSE_MAKEFILE ON)
-
-#include(Sanitise.cmake)
+#include(../Sanitise.cmake)
 
 set(CMAKE_BUILD_TYPE Debug)
 #add_compile_definitions("NDEBUG") # debugging

@@ -179,6 +179,8 @@ void run_nonexperimental_mode(int argc, char** argv) //, int command_line_file, 
 
 int main (int argc, char **argv)
 {
+	//malloc(666); // in case I want to check sanitisation
+
 	extern void tickle_init(char*);
 	tickle_init(argv[0]);
 	parse_command_line(argc, argv);

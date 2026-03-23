@@ -1,11 +1,13 @@
 %module Ploppy
 
+%include "std_string.i"
+
 //https://stackoverflow.com/questions/7223437/how-to-create-a-tcl-function-with-optional-arguments-using-swig
 //%rename("twice") tickle_twice;
+//%newobject ploppy_get_cell; // because a char* is returned
 %rename("get-cell") ploppy_get_cell;
-%newobject ploppy_get_cell; // because a char* is returned
 %rename ("get-cell-fmt") ploppy_get_cell_fmt;
-%newobject ploppy_get_cell_fmt; // Tcl must free
+//%newobject ploppy_get_cell_fmt; // Tcl must free
 
 %rename ("bind-key") ploppy_bind_key;
 %rename ("hi-ploppy") ploppy_hi;

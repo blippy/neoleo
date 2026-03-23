@@ -2,8 +2,12 @@
 /*
  * tickle.h
  *
+ * 26/3 It seems actually more reliable to use strd::string instead of char*
+ *
  *  Created on: 5 Nov 2025
  *      Author: pi
+ *
+ *
  */
 
 //#include "neotypes.h"
@@ -11,18 +15,23 @@
 
 //typedef uint16_t CELLREF;
 
+
+#include <string>
+
 void	ploppy_bind_key(char k, const char* str_to_interpret);
 void 	ploppy_hi( );
 int 	ploppy_life();
 int 	ploppy_max_col();
 int 	ploppy_max_row();
 //int ploppy_get_cell(char** result, int r, int c);
-char*  	ploppy_get_cell(int r, int c);
+//char*  	ploppy_get_cell(int r, int c);
+std::string  	ploppy_get_cell(int r, int c);
 int 	ploppy_load_oleo(char* path);
 void	ploppy_log(char* str);
-void 	ploppy_set_cell(int r, int c, char* formula);
-void 	ploppy_save_oleo_as(char* path);
-char*  	ploppy_get_cell_fmt(int r, int c);
+//void 	ploppy_set_cell(int r, int c, char* formula);
+void 		ploppy_set_cell(int r, int c, const std::string& formula );
+void 		ploppy_save_oleo_as(char* path);
+std::string	ploppy_get_cell_fmt(int r, int c);
 void 	ploppy_insert_row();
 void 	ploppy_go(int r, int c);
 void 	ploppy_insert_by_col();
