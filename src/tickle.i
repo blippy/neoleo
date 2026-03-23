@@ -5,6 +5,7 @@
 //https://stackoverflow.com/questions/7223437/how-to-create-a-tcl-function-with-optional-arguments-using-swig
 //%rename("twice") tickle_twice;
 //%newobject ploppy_get_cell; // because a char* is returned
+%rename("display-curses") ploppy_display_curses;
 %rename("get-cell") ploppy_get_cell;
 %rename ("get-cell-fmt") ploppy_get_cell_fmt;
 //%newobject ploppy_get_cell_fmt; // Tcl must free

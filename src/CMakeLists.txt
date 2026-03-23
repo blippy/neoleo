@@ -39,6 +39,7 @@ set_property(TARGET objlib PROPERTY POSITION_INDEPENDENT_CODE 1)
 add_library(ploppy SHARED $<TARGET_OBJECTS:objlib>)
 target_link_libraries(ploppy ncursesw tinfo)
 add_library(ploppy_static STATIC $<TARGET_OBJECTS:objlib>)
+target_link_libraries(ploppy_static ncursesw tinfo)
 install(TARGETS ploppy ploppy_static)
 
 
@@ -55,7 +56,7 @@ target_sources(neoleo PUBLIC ${neo_srcs} main.cc) #  ${wrapper_cc})
 #target_link_libraries(neoleo Common_static)
 target_link_libraries(neoleo ploppy_static)
 target_link_libraries(neoleo ${TCL_LIBRARIES})
-target_link_libraries(neoleo ncursesw tinfo)
+#target_link_libraries(neoleo ncursesw tinfo)
 install(TARGETS neoleo)
 
 

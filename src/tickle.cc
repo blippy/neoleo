@@ -44,6 +44,13 @@ std::string  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
+void ploppy_display_curses()
+{
+	extern void curses_main();
+	curses_main();
+}
+
+// 26/3 created
 void ploppy_log (char* str)
 {
 	log(str);

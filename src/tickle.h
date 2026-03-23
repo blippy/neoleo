@@ -43,3 +43,4 @@ void 	ploppy_test_binding();
 void	set_exit (int code);
 void	tickle_eval_expr(const std::string& expr);
 
+void ploppy_display_curses();
