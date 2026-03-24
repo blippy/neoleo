@@ -158,7 +158,7 @@ const std::string nform_c::text()
 
 // return true for normal exit, false if user wants to abort action
 // text_field is modified by nform_c
-bool invoke_std_form(const char* desc, std::string& text_field)
+bool invoke_std_form(const std::string& desc, std::string& text_field)
 {
 #ifndef  USE_FORM
 	win_dow par(1, 75, 1, 0);

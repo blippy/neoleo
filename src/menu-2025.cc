@@ -24,7 +24,7 @@
 using namespace std;
 
 static bool col_width_form();
-bool invoke_std_form(const char* desc, std::string& text_field);
+bool invoke_std_form(const std::string& desc, std::string& text_field);
 
 
 
