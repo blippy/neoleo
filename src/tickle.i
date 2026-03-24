@@ -11,6 +11,7 @@
 %rename ("display-curses") ploppy_display_curses;
 %rename ("get-cell") ploppy_get_cell;
 %rename ("get-cell-fmt") ploppy_get_cell_fmt;
+%rename ("get-row-num") ploppy_get_row_num;
 %rename ("go") ploppy_go;
 %rename ("hi-ploppy") ploppy_hi;
 %rename ("insert-by-col") ploppy_insert_by_col;

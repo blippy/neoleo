@@ -73,6 +73,8 @@ void window_c::update(int num_cols, int num_lines)
 		screen.lr = curow; //  For simplicity, make curow the top row
 	}
 	screen.hr = screen.lr + numr - 1; // figure out how many cells are in a row
+	if(curow < screen.lr || curow > screen.hr)
+		recenter_axis(curow, WinWhich::height, numr, &screen.lr, &screen.hr);
 
 	// reconfigure the column settings
 	// NB this is dependent on the margin we need for printing th row numbers
@@ -205,7 +207,7 @@ std::vector<vcell_t> window_c::get_vidi_cells()
 	std::vector<vcell_t> res;
 	res.reserve(200); // just for good measure
 	//ioc_print_cells();
-	for(int r = screen.lr ; r < screen.hr; r++) {
+	for(int r = screen.lr ; r <= screen.hr; r++) {
 		size_t msw = 0; // maximum slop width - allowing cells to overspill to the next column
 		for(CELLREF c = screen.hc; c >= screen.lc; c--) {
 			vcell_t vc;

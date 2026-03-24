@@ -44,6 +44,12 @@ std::string  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
+int ploppy_get_row_num()
+{
+	return curow;
+}
+
+// 26/3 created
 std::string ploppy_invoke_std_form(const std::string& desc, const std::string& text_field)
 {
 	extern bool invoke_std_form(const std::string& desc, std::string& text_field);

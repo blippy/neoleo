@@ -20,6 +20,7 @@
 
 void		ploppy_bind_key(char k, const std::string&  str_to_interpret);
 void 		ploppy_display_curses();
+int			ploppy_get_row_num();
 void 		ploppy_hi( );
 int 		ploppy_life();
 int 		ploppy_max_col();

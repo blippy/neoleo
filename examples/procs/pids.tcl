@@ -36,20 +36,35 @@ foreach line [split $pss "\n"] {
 set findval ""
 proc find-proc {} {
 	global findval
-	plog "entered find-proc"
+	#plog "entered find-proc"
 	#set input "firefox"
 	set output [invoke-std-form "find:" $findval]
 	if {[string equal 1 [string range $output 0 0]]} {
-		plog "ok, that's interesting"
+		#plog "ok, that's interesting"
 		set findval [string range $output 1 end]
-		#set row 
+		#plog "findval = $findval"
+		set row [get-row-num]
+		#plog "row = $row"
+		incr row
+		#plog "row = $row"
+		set mrows [max-row]
+		#plog "max-row $mrows"
+		while { $row <= $mrows } {
+			plog "row $row"
+			set cell-val [get-cell $row 3]
+			if {[string first $findval ${cell-val}] >= 0} {
+				go $row 3
+				break
+			}
+			incr row
+		}
 	}
-	plog "$findval"
+	#plog "$findval"
 }
 
 set-status "pid.tcl says hi"
-bind-key f {find-proc}
+bind-key / {find-proc}
 bind-key s {set-status {foo bar}}
 # bind-key h {exec whiptail --msgbox hello 10 50}
-plog "about to display curses"
+#plog "about to display curses"
 # display-curses
