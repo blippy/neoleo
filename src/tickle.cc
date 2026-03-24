@@ -44,6 +44,17 @@ std::string  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
+std::string ploppy_invoke_std_form(const std::string& desc, const std::string& text_field)
+{
+	extern bool invoke_std_form(const std::string& desc, std::string& text_field);
+	std::string input{text_field};
+	bool ok = invoke_std_form(desc, input);
+	std::string res = ok ? "1"s : "0"s;
+	res += input;
+	return res;
+}
+
+// 26/3 created
 void ploppy_display_curses()
 {
 	extern void curses_main();
@@ -68,10 +79,10 @@ void ploppy_test_binding()
 	test_status();
 }
 // 26/3 created
-void ploppy_bind_key (char k, const char* str_to_interpret)
+void ploppy_bind_key (char k, const std::string&  str_to_interpret)
 {
-	string s{str_to_interpret};
-	bind_char(k, s);
+	//string s{str_to_interpret};
+	bind_char(k, str_to_interpret);
 }
 
 // 26/3

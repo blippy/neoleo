@@ -9,7 +9,7 @@ DATE:		TBD
 
 * Improved status line visibility
 
-* Added Tcl functions: bind-key, plog, replace-first-form, test-binding.
+* Added Tcl functions: bind-key, display-curses, invoke-std-form, plog, replace-first-form, test-binding.
 
 * pkg-config info set up (incomplete) so that you can now create your own
 C++ executables that use neoleo as a library. See examples/c++ for a simple

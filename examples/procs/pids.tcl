@@ -1,6 +1,6 @@
 # 2026-03-22 created
 # run using neoleo -t pids.tcl
-load libploppy.so
+# load libploppy.so
 
 
 proc from {lst n} {
@@ -32,6 +32,24 @@ foreach line [split $pss "\n"] {
 
 }
 
+
+set findval ""
+proc find-proc {} {
+	global findval
+	plog "entered find-proc"
+	#set input "firefox"
+	set output [invoke-std-form "find:" $findval]
+	if {[string equal 1 [string range $output 0 0]]} {
+		plog "ok, that's interesting"
+		set findval [string range $output 1 end]
+		#set row 
+	}
+	plog "$findval"
+}
+
 set-status "pid.tcl says hi"
-bind-key h {exec whiptail --msgbox hello 10 50}
-display-curses
+bind-key f {find-proc}
+bind-key s {set-status {foo bar}}
+# bind-key h {exec whiptail --msgbox hello 10 50}
+plog "about to display curses"
+# display-curses

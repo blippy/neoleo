@@ -16,6 +16,7 @@
 %rename ("insert-by-col") ploppy_insert_by_col;
 %rename ("insert-by-row") ploppy_insert_by_row;
 %rename ("insert-row") ploppy_insert_row;
+%rename ("invoke-std-form") ploppy_invoke_std_form;
 %rename ("load-oleo") ploppy_load_oleo;
 %rename ("max-col") ploppy_max_col;
 %rename ("max-row") ploppy_max_row;
