@@ -19,6 +19,7 @@
 #include <string>
 
 void		ploppy_bind_key(char k, const std::string&  str_to_interpret);
+void		ploppy_clear_sheet();
 void 		ploppy_display_curses();
 int			ploppy_get_row_num();
 void 		ploppy_hi( );
