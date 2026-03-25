@@ -61,9 +61,13 @@ Save spreadsheet
 @item C-v
 Paste cell formula from clipboard
 @item C-↑
-Go to first row of column
+Go to first row
+@item C-↓
+Got to last row
 @item C-←
-Go to first column of row
+Go to first column
+@item C-→
+Go to last column
 @end table
 
 
