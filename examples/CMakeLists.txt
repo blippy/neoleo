@@ -23,10 +23,10 @@ install(FILES
 	DESTINATION ${edest}/accounts
 )
 
-install(PROGRAMS procs/neopids procs/pids.py procs/sleepy
+install(PROGRAMS pids/pids.tcl pids/sleepy 
 	DESTINATION ${edest}/procs
 )
-install(FILES procs/pids.bas procs/youtube-script.txt
+install(FILES pids/README.md
 	DESTINATION ${edest}/procs
 )
 

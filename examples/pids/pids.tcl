@@ -1,6 +1,10 @@
+#!/bin/sh
+# A Tcl comment, whose contents don't matter \
+exec neoleo -t ./pids.tcl
+
 # 2026-03-22 created
 # run using neoleo -t pids.tcl
-# load libploppy.so
+#load libploppy.so
 
 
 proc from {lst n} {
@@ -36,21 +40,13 @@ foreach line [split $pss "\n"] {
 set findval ""
 proc find-proc {} {
 	global findval
-	#plog "entered find-proc"
-	#set input "firefox"
 	set output [invoke-std-form "find:" $findval]
 	if {[string equal 1 [string range $output 0 0]]} {
-		#plog "ok, that's interesting"
 		set findval [string range $output 1 end]
-		#plog "findval = $findval"
 		set row [get-row-num]
-		#plog "row = $row"
 		incr row
-		#plog "row = $row"
 		set mrows [max-row]
-		#plog "max-row $mrows"
 		while { $row <= $mrows } {
-			plog "row $row"
 			set cell-val [get-cell $row 3]
 			if {[string first $findval ${cell-val}] >= 0} {
 				go $row 3
@@ -59,12 +55,19 @@ proc find-proc {} {
 			incr row
 		}
 	}
-	#plog "$findval"
+}
+
+proc kill-process {} {
+	set row [get-row-num]
+	set pid [get-cell $row 1]
+	set cmd "kill -9 $pid"
+plog "kill-process called $row $pid $cmd"
+	exec kill -9 $pid
 }
 
 set-status "pid.tcl says hi"
 bind-key / {find-proc}
+bind-key k {kill-process}
+bind-key q {definitely-quit}
 bind-key s {set-status {foo bar}}
-# bind-key h {exec whiptail --msgbox hello 10 50}
-#plog "about to display curses"
 # display-curses

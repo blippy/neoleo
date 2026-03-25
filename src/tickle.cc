@@ -44,6 +44,12 @@ std::string  ploppy_get_cell_fmt(int r, int c);
 
 
 // 26/3 created
+void ploppy_definitely_quit()
+{
+	Global_definitely_quit = true;
+}
+
+// 26/3 created
 int ploppy_get_row_num()
 {
 	return curow;
@@ -254,6 +260,45 @@ void tickle_run_file(const std::string& path)
 // a repl from stdin
 void tickle_main()
 {
+
+#if 0
+	log("tickle_main called");
+const char *repl = R"(
+proc input { buffer ch } {
+    if { [gets $ch line] != -1 } {
+        append buffer "$line\n"
+        if { [info complete $buffer] } {
+            if { $buffer ne "\n" } {
+                catch {eval uplevel #0 [list $buffer]} res
+                if { [string length $res] } {
+                    puts $res
+                }
+            }
+            puts -nonewline "% "
+            flush stdout
+            fileevent stdin readable [list input "" stdin]
+        } else {
+            fileevent stdin readable [list input $buffer stdin]
+        }
+    } else {
+        set ::forever 1
+    }
+    
+}
+
+puts -nonewline "% "
+flush stdout
+fileevent stdin readable [list input "" stdin]
+
+vwait forever
+
+exit
+)";
+
+
+	Tcl_Eval(interp, repl);
+	return;
+#else
 	std::string cmd;
 	while(std::getline(cin, cmd)) {
 		// 26/3 copying a string doesn't seem necessary
@@ -266,6 +311,7 @@ void tickle_main()
 				fprintf(stderr,"Error calling Tcl_Eval(): %s\n",Tcl_GetStringResult(interp));
 		}
 	}
+#endif
 }
 
 // 26/3 created

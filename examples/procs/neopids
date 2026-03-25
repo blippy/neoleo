@@ -1,4 +1,0 @@
-#!/bin/sh
-
-ARGS="$@"
-neoleo $ARGS -b pids.bas

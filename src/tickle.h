@@ -35,6 +35,7 @@ std::string	ploppy_invoke_std_form(const std::string& desc, const std::string& t
 int 		ploppy_load_oleo(char* path);
 void		ploppy_log(char* str);
 void 		ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi);
+void		ploppy_definitely_quit();
 int 		ploppy_replace_first_form (const char* target, const char* with);
 void 		ploppy_save_oleo_as(char* path);
 void 		ploppy_set_cell(int r, int c, const std::string& formula );

@@ -8,6 +8,7 @@
 //%newobject ploppy_get_cell_fmt; // Tcl must free
 
 %rename ("bind-key") ploppy_bind_key;
+%rename ("definitely-quit") ploppy_definitely_quit;
 %rename ("display-curses") ploppy_display_curses;
 %rename ("get-cell") ploppy_get_cell;
 %rename ("get-cell-fmt") ploppy_get_cell_fmt;
