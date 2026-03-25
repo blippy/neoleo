@@ -411,9 +411,11 @@ void curses_input ()
 		case 27:
 			complex_key_sequence_27();
 			break;
+		case 534: curow = max_row(); break; // Ctl-↓
 		case 554:
 			io_shift_cell_cursor(dirn::left, cucol - 1);
 			break; // Ctrl-←  repeat cucol-1 times to bring cursor to col 1
+		case 569: cucol = max_col(); break; // Ctl-→
 		case 575:
 			io_shift_cell_cursor(dirn::up, curow - 1);
 			break; // Ctrl-↑  repeat curol-1 times to bring cursor to row 1
