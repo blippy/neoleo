@@ -65,11 +65,30 @@ proc kill-process {} {
 	exec kill -9 $pid
 }
 
+# find ppid
+proc parent {} {
+plog a
+	set pid [string trim [get-cell [get-row-num] 1]]
+	set row 2
+	set mrows [max-row]
+plog a
+	while { $row <= $mrows } {
+		set ppid [string trim [get-cell $row 2]]
+plog "$row $pid $ppid"		
+		if { $pid == $ppid } {
+plog found 		
+			go $row [get-col-num]
+			break;
+		}
+		incr row
+	}
+}
 
 set-status "pid.tcl says hi"
 reload
 bind-key / {find-proc}
 bind-key k {kill-process}
+bind-key p {parent}
 bind-key q {definitely-quit}
 bind-key r {reload}
 bind-key s {set-status {foo bar}}
