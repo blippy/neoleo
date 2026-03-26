@@ -21,6 +21,7 @@
 void		ploppy_bind_key(char k, const std::string&  str_to_interpret);
 void		ploppy_clear_sheet();
 void 		ploppy_display_curses();
+int 		ploppy_get_col_num();
 int			ploppy_get_row_num();
 void 		ploppy_hi( );
 int 		ploppy_life();
@@ -42,6 +43,7 @@ void 		ploppy_save_oleo_as(char* path);
 void 		ploppy_set_cell(int r, int c, const std::string& formula );
 void 		ploppy_set_status (const char* status);
 void 		ploppy_test_binding();
+
 void		set_exit (int code);
 void		tickle_eval_expr(const std::string& expr);
 
