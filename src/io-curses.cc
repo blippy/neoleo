@@ -89,7 +89,7 @@ void page_up ()
 // FN-END
 
 
-static std::string status_line (int wid)
+static std::string formula_line (int wid)
 {
 	std::string result = std::format("r{}c{} ", curow, cucol);
 	std::string cvs{cell_value_string(curow, cucol, 1)};
@@ -99,27 +99,21 @@ static std::string status_line (int wid)
 	}
 
 	std::string form = get_formula_text(curow, cucol);
-	if(result.size() + form.size() + 3 > COLS) {
-		form = pad_right(form, COLS- result.size()-6, true) + "...";
+	int remaining_cols =  COLS- result.size()-6; // reserve 6 for " [...]"
+	if(remaining_cols <= 0) return result;
+	//log("remaining_cols:", remaining_cols);
+	if(form.size()  > remaining_cols) {
+		form = form.substr(0, std::max(0,remaining_cols)) + "...";
+		//log("shortened formula:", form);
 	}
 	result += " [" + form + "]";
 
 	return result;
 }
-static void cur_io_update_status (void) // FN
-{
-
-	move (status, 0);
-	//int wid = cwin->screen.hc; // columns - 2;
-	int wid = COLS;
-	win_print(status_line(wid));
-	clrtoeol();
-}
 
 
 
-
-static void cur_io_repaint ()
+static void cur_io_repaint () // FN
 {
 	//io_recenter_cur_win();
 	CELLREF cc, rr;
@@ -130,6 +124,13 @@ static void cur_io_repaint ()
 	win->update(COLS, LINES);
 	//clear();
 	show_menu();
+
+	// show formula line
+	move (status, 0);
+	int wid = COLS;
+	win_print(formula_line(wid));
+	clrtoeol();
+
 	show_status();
 
 	if (win->lh_wid())
@@ -219,7 +220,7 @@ static void cur_io_repaint ()
 		addch (inch () | A_STANDOUT);
 	standend ();
 
-	cur_io_update_status ();
+
 }
 
 
