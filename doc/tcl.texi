@@ -32,6 +32,18 @@ See @code{examples/key-bind.tcl} for an example
 
 
 
+@c ---
+@item clear-sheet
+Deletes all the cells from the spreadhseet. Does not affect the cursor position.
+
+
+
+@c ---
+@item definitely-quit
+Sets `Global_definitely_quit' to `true'. This only has an effect in ncurses mode, causing neoleo to quit ignoring any unsaved changes.
+
+
+
 @c ----
 @item display-curses
 Enter graphical mode with the usual ncurses interface. Use with caution, 
@@ -42,6 +54,12 @@ as anything entered in a script thereafter will not be executed until neoelo com
 @c ----
 @item get-cell-fmt R C
 Print a formatted cell for row R col C.
+
+
+
+@c ---
+@item get-row-num
+RETURN the current cursor row number.
 
 
 
@@ -83,6 +101,26 @@ Insert a row above the current row.
 @item load-oleo FILENAME
 Load spreadsheet FILENAME into neoleo.
 
+
+
+@c ---
+@item invoke-std-form PROMPT TEXT
+Invoke standard form on the curses interface. It is used to obtain input from the user.
+Ncurses mode needs to be running. Do not call this fuction if it is not. 
+PROMPT is prompt text for the user. TEXT is a default value of the input.
+
+RETURNS a string in the form 0input or 1input. The leading digit indicates whether or not whether the input was accepted by the user by pressing return.
+0 means that the user cancelled the operation. 1 means the user has accepted the input.
+
+The example pids.tcl contains an example of its usage.
+
+@example
+set input "washington"
+set output [invoke-std-form "state:" $input]
+if @{[string equal 1 [string range $output 0 0]]@} @{
+	# do something with $output ...
+@} 
+@end example
 
 
 @c ----
