@@ -43,6 +43,7 @@ char* ploppy_string(const std::string& s);
 std::string  ploppy_get_cell_fmt(int r, int c);
 
 
+
 // 26/3
 void ploppy_clear_sheet()
 {
@@ -55,6 +56,13 @@ void ploppy_definitely_quit()
 {
 	Global_definitely_quit = true;
 }
+
+// 26/3 created
+int ploppy_get_col_num()
+{
+	return cucol;
+}
+
 
 // 26/3 created
 int ploppy_get_row_num()
