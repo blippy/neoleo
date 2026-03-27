@@ -17,7 +17,7 @@ add_custom_command(
 	OUTPUT ${wrapper_cc}
 	#COMMAND c++ -I${TCL_INCLUDE_DIRS} -I${CMAKE_CURRENT_SOURCE_DIR} -c 	${wrapper_cc}
 	COMMAND swig -c++ -tcl  -o ${wrapper_cc} ${CMAKE_CURRENT_SOURCE_DIR}/tickle.i
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tickle.i
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/tickle.i ${CMAKE_CURRENT_SOURCE_DIR}/tickle.cc ${CMAKE_CURRENT_SOURCE_DIR}/tickle.h
 	COMMENT "Generating tickle_wrap.cc"
 )
 	

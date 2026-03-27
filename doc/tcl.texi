@@ -183,6 +183,12 @@ set-cell 2 1 @{r1c1+1@} ; # set a formula
 
 
 
+@c ---
+@item set-col-precision C PREC
+Set the column precision of column C to PREC.
+
+
+
 @c ----
 @item set-exit INT
 Set the exit code of neoleo to INT. This can be used for signalling test errors.

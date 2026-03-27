@@ -37,6 +37,9 @@ proc reload {} {
 		set row [expr $row + 1]
 	
 	}
+
+	set-col-precision 1 0
+	set-col-precision 2 0
 }
 
 set findval ""
@@ -67,16 +70,17 @@ proc kill-process {} {
 
 # find ppid
 proc parent {} {
-plog a
-	set pid [string trim [get-cell [get-row-num] 1]]
+#plog a
+	set ppid [string trim [get-cell [get-row-num] 2]]
 	set row 2
 	set mrows [max-row]
-plog a
+#plog a
 	while { $row <= $mrows } {
-		set ppid [string trim [get-cell $row 2]]
-plog "$row $pid $ppid"		
-		if { $pid == $ppid } {
-plog found 		
+		set pid [string trim [get-cell $row 1]]
+		set same [string equal $ppid $pid]		
+#plog "$row <$ppid> <$pid> $same"
+		if {$same} {
+#plog found 		
 			go $row [get-col-num]
 			break;
 		}

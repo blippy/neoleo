@@ -182,19 +182,19 @@ void column_align_right ()
 // FN-END
 
 // 25/11 Added
+void set_column_prec(int col, int prec)
+{
+	for(auto const cp: the_cells) {
+		if(cp && get_col(cp) == col) {
+			Global_modified = 1;
+			cp->set_prec(prec);
+		}
+	}
+}
+
 void set_column_prec(int prec)
 {
-	rng_t rng{current_col()};
-	assert(rng.hr == MAX_ROW);
-	assert(rng.lr == MIN_ROW);
-	//set_region_alignment(rng, 'L');
-	//make_cells_in_range (where); // BAD IDEA!
-	for(CELL* cp:get_cells_in_range(rng)) {
-		//log("set_column_prec called");
-		if(cp == nullptr) continue;
-		Global_modified = 1;
-		cp->set_prec(prec);
-	}
+	set_column_prec(cucol,  prec);
 }
 
 void set_cell_alignment_left()

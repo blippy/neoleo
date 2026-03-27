@@ -123,7 +123,7 @@ void col_prec_form()
 		int prec = stoi(txt);
 		if(prec<0) throw std::out_of_range("Cannot be negative");
 		set_column_prec(prec);
-		log("set column precision");
+		//log("set column precision");
 		set_status("Column precision set");
 	} catch(const std::invalid_argument& e) {
 		set_status("Invalid argument (Press any key)");

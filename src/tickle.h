@@ -41,6 +41,7 @@ void		ploppy_definitely_quit();
 int 		ploppy_replace_first_form (const char* target, const char* with);
 void 		ploppy_save_oleo_as(char* path);
 void 		ploppy_set_cell(int r, int c, const std::string& formula );
+void		ploppy_set_col_prec(int col, int prec);
 void 		ploppy_set_status (const char* status);
 void 		ploppy_test_binding();
 
