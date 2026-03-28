@@ -5,6 +5,7 @@ namespace eval ::oleo {
 }
 
 
+# only load libploppy.so if necessary
 if { [catch ploppy-life] } {
 	load libploppy.so
 }
