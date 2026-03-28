@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 set(SANITIZE_CONDITION "$<CONFIG:Sanitize>")
-set(SANITIZE_CONDITION 1)
+set(SANITIZE_CONDITION 0)
 
 if (MSVC)
   set(
