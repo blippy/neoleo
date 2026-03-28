@@ -4,7 +4,10 @@ namespace eval ::oleo {
 	namespace export incra oleo-hi
 }
 
-load libploppy.so
+
+if { [catch ploppy-life] } {
+	load libploppy.so
+}
 
 # increment array
 # For example, see 25.tcl
