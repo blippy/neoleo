@@ -69,8 +69,9 @@ set(CMAKE_INSTALL_FULL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/neoleo)
 set(NEOLEO_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # needed by neoleo.pc
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/neoleo.pc.in ${CMAKE_CURRENT_BINARY_DIR}/neoleo.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/neoleo.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
-install(FILES 
-	${CMAKE_CURRENT_SOURCE_DIR}/neotypes.h
-	${CMAKE_CURRENT_SOURCE_DIR}/oleofile.h
-	${CMAKE_CURRENT_SOURCE_DIR}/tickle.h
+install(FILES
+	neotypes.h oleofile.h sheet.h tickle.h 
+	#${CMAKE_CURRENT_SOURCE_DIR}/neotypes.h
+	#${CMAKE_CURRENT_SOURCE_DIR}/oleofile.h
+	#${CMAKE_CURRENT_SOURCE_DIR}/tickle.h
 	DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
