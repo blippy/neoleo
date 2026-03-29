@@ -1,0 +1,31 @@
+@node Examples, Key Index, Tcl bindings, Top
+@chapter Examples
+
+This chapter gives a tour of the more interesting examples. Examples are installed in the directory @value{PREFIX}/share/neoleo/examples
+
+@section pids.tcl
+
+This lists the OS processes. Simple run @code{./pids.tcl}. The keybindings are are follows:
+
+@table @samp
+
+@item /
+Find a process. It brings up a dialog box to find the next process containing the user-specified string.  
+
+@item k
+Perform a @code{kill -9} on the process listed on the current cursor row.
+
+@item p
+Go to the parent of the currently-selected process.
+
+@item q
+Quit neoleo unconditionally.
+
+@item r
+Reload the process list.
+
+@item s
+A test key binding that sets the ncurses status line to @code{foo bar}.
+
+
+@end table

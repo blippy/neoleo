@@ -10,12 +10,13 @@ find_program(MAKEINFO_EXECUTABLE makeinfo)
 #################################################################
 # build neoleo.info
 
-set(info_in 
-	${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
-	${CMAKE_CURRENT_SOURCE_DIR}/invoking.texi
-	${CMAKE_CURRENT_SOURCE_DIR}/cells.texi
-	${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
-	${CMAKE_CURRENT_SOURCE_DIR}/tcl.texi
+set(info_in
+	neoleo.texi invoking.texi cells.texi eg.texi keys.texi tcl.texi 
+	#${CMAKE_CURRENT_SOURCE_DIR}/neoleo.texi
+	#${CMAKE_CURRENT_SOURCE_DIR}/invoking.texi
+	#${CMAKE_CURRENT_SOURCE_DIR}/cells.texi
+	#${CMAKE_CURRENT_SOURCE_DIR}/keys.texi
+	#${CMAKE_CURRENT_SOURCE_DIR}/tcl.texi
 )
 set(p "${CMAKE_INSTALL_PREFIX}")
 set(info_out ${CMAKE_CURRENT_BINARY_DIR}/neoleo.info)
@@ -40,6 +41,7 @@ set(html_out
 	${H}/index.html
 	${H}/Command-Index.html
 	${H}/Editing-cells.html
+	${H}/Examples.html
 	${H}/Function-Index.html
 	${H}/Invoking-neoleo.html
 	${H}/Key-bindings.html
