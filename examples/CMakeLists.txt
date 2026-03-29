@@ -24,10 +24,10 @@ install(FILES
 )
 
 install(PROGRAMS pids/pids.tcl pids/sleepy 
-	DESTINATION ${edest}/procs
+	DESTINATION ${edest}/pids
 )
 install(FILES pids/README.md
-	DESTINATION ${edest}/procs
+	DESTINATION ${edest}/pids
 )
 
 install(FILES
