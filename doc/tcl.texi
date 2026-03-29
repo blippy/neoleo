@@ -190,6 +190,12 @@ Set the column precision of column C to PREC.
 
 
 @c ----
+@item set-col-width C WIDTH
+Set the width of column C to WIDTH
+
+
+
+@c ----
 @item set-exit INT
 Set the exit code of neoleo to INT. This can be used for signalling test errors.
 

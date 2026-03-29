@@ -43,6 +43,11 @@ char* ploppy_string(const std::string& s);
 std::string  ploppy_get_cell_fmt(int r, int c);
 
 
+void ploppy_set_col_width(int col, int width)
+{
+	set_width(col, width);
+}
+
 void ploppy_set_col_prec(int col, int prec)
 {
 	extern void set_column_prec(int, int);

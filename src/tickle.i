@@ -50,8 +50,9 @@
 %rename ("replace-first-form") ploppy_replace_first_form;
 %rename ("save-oleo-as") ploppy_save_oleo_as;
 %rename ("set-cell") ploppy_set_cell;
-%rename ("set-exit") set_exit;
+%rename ("set-col-width") ploppy_set_col_width;
 %rename ("set-col-precision") ploppy_set_col_prec;
+%rename ("set-exit") set_exit;
 %rename ("set-status") ploppy_set_status;
 %rename ("test-binding") ploppy_test_binding;
 %rename ("test-tcl11") ploppy_test_tcl11;
