@@ -88,8 +88,13 @@ proc parent {} {
 	}
 }
 
-set-status "pid.tcl says hi"
+proc show-help {} {
+	set-status {? help, / find, k kill, p parent, q quit, r reload}
+}
+
 reload
+show-help
+bind-key ? {show-help}
 bind-key / {find-proc}
 bind-key k {kill-process}
 bind-key p {parent}
