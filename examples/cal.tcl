@@ -1,4 +1,6 @@
 # 2026-03-30	Added. Much to do!
+package require struct::matrix
+
 set icon "🗓️"
 
 
@@ -27,7 +29,11 @@ proc clock-fmt {secs fmt} {
 	return [clock format $secs -format $fmt] ; # Mon ... Sun
 }
 
-proc print-cal { year month } {
+proc compose-cal { year month } {
+	set m [::struct::matrix]
+	$m add columns 7
+	$m add rows 7
+	$m set cell 1 1 foo
 	global months
 	set dim [daysInMonth $year $month] ; # num days in in month
 	set fdom1  [lindex $months [expr $month -1]] ; # 1 .. 12 => Jan .. Dec
@@ -38,19 +44,17 @@ proc print-cal { year month } {
 	#puts "fdom $fdom"
 	puts "         $fdom1 $year" 
 	set day [expr 1 - $fdom]
-	puts {Sun Mon Tue Wed Thu Fri Sat} 
-	foreach r {0 1 2 3 4 5} {
-		foreach c {1 2 3 4 5 6 7} {
-			if {$day <= 0 || $day > $dim} {
-				puts -nonewline "    "
-			} else {
-				puts -nonewline [format "%3d " $day]
-			}
+	$m set row 0 {Sun Mon Tue Wed Thu Fri Sat} 
+	foreach r {1 2 3 4 5 6} {
+		foreach c {0 1 2 3 4 5 6 } {
+			if {$day > 0 && $day < $dim} {	$m set cell $c $r $day 	}
 			incr day
 		}
-		puts ""
+		#puts ""
 	}
-	puts ""
+	#puts ""
+	
+	return $m
 }
 
 
@@ -64,12 +68,20 @@ set monn [clock-fmt $now %N] ; # month 1 .. 12 for Jan .. Dec
 set d "$year-$mon3-01"
 #puts "d $d monn $monn"
 
+set mat [::struct::matrix]
+$mat add columns 6
+$mat add rows 7
+$mat set cell 1 1 foo
+	
 
+proc print-cal {year month} {
+	set m [compose-cal $year $month]
+	puts [$m format 2string] 
+} 
 
-#puts "$year $mon3 day3 $day3"
 
 print-cal 2026 2
 
-print-cal 2026 3
+#print-cal 2026 3
 
-print-cal 2026 4
+#print-cal 2026 4
