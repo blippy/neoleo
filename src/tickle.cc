@@ -41,6 +41,7 @@ extern "C" int Ploppy_Init(Tcl_Interp *interp);
 //extern "C" int SWIG_init(Tcl_Interp *interp);
 char* ploppy_string(const std::string& s);
 std::string  ploppy_get_cell_fmt(int r, int c);
+void tickle_eval_expr(const std::string& expr);
 
 
 void ploppy_set_col_width(int col, int width)
@@ -273,10 +274,6 @@ void set_exit (int code)
 	exit_value = code;
 }
 
-void tickle_eval_expr(const std::string& expr)
-{
-	Tcl_Eval(interp, expr.c_str());
-}
 
 void tickle_run_file(const std::string& path)
 {
@@ -350,13 +347,26 @@ void tickle_atexit ()
 
 void tickle_init(char* argv0)
 {
+	//log("tickle_init called");
 	int at = std::atexit(tickle_atexit);
 	assert(at == 0);
 	interp = Tcl_CreateInterp(); // deleted by Tcl_DeleteInterp
 	assert(interp);
+	Tcl_FindExecutable(argv0); // apparently necessary for paths
 	int ok = Ploppy_Init(interp);
 	if(ok == TCL_ERROR) {
 		puts("couldn't Ploppy_Init");
 		return;
 	}
+	tickle_eval_expr("plog {hello from tickle_init}");
+	tickle_eval_expr("lappend auto_path /usr/share/tcltk/tcllib1.21");
 }
+
+void tickle_eval_expr(const std::string& expr)
+{
+	//log("tickle_eval_expr", expr, " with interp ", interp);
+	if(!interp) tickle_init(0); // 26/3 can happen if it's a script is being called but not through main(), but via libploppy.so
+	Tcl_Eval(interp, expr.c_str());
+	//log("tickle_eval_expr exiting");
+}
+

@@ -356,7 +356,7 @@ void curses_input ()
 
 	auto usr_binds = get_binding(c); // customised bindings take precedence
 	if (usr_binds.has_value()) {
-		//log("custom binding found");
+		log("custom binding found: ", usr_binds.value());
 		tickle_eval_expr(usr_binds.value());
 	} else if(c == KEY_MOUSE) {
 		MEVENT event;
