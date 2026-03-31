@@ -30,29 +30,24 @@ proc clock-fmt {secs fmt} {
 }
 
 proc compose-cal { year month } {
+	global months
 	set m [::struct::matrix]
 	$m add columns 7
 	$m add rows 7
-	$m set cell 1 1 foo
-	global months
 	set dim [daysInMonth $year $month] ; # num days in in month
 	set fdom1  [lindex $months [expr $month -1]] ; # 1 .. 12 => Jan .. Dec
 	set fdom2 [format "%4d-%3s-01" $year $fdom1]
-	#puts "fdom2 $fdom2"
 	set fdom_secs [clock scan $fdom2 -format {%Y-%b-%d}] ; # first day of month as seconds
 	set fdom [clock-fmt $fdom_secs %w] ; # when does the 1st day of the month start? Sun=0, Sat=6
-	#puts "fdom $fdom"
 	puts "         $fdom1 $year" 
 	set day [expr 1 - $fdom]
 	$m set row 0 {Sun Mon Tue Wed Thu Fri Sat} 
 	foreach r {1 2 3 4 5 6} {
 		foreach c {0 1 2 3 4 5 6 } {
-			if {$day > 0 && $day < $dim} {	$m set cell $c $r $day 	}
+			if {$day > 0 && $day <= $dim} {	$m set cell $c $r $day 	}
 			incr day
 		}
-		#puts ""
 	}
-	#puts ""
 	
 	return $m
 }
@@ -82,6 +77,6 @@ proc print-cal {year month} {
 
 print-cal 2026 2
 
-#print-cal 2026 3
+print-cal 2026 3
 
-#print-cal 2026 4
+print-cal 2026 4
