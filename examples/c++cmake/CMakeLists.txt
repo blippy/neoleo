@@ -4,7 +4,7 @@ project(app)
 set(CMAKE_CXX_STANDARD 23)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(NEOLEO REQUIRED neoleo ncurses)
+pkg_check_modules(NEOLEO REQUIRED neoleo)
 
 message("libraries are ${NEOLEO_LIBRARIES}")
 

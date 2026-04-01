@@ -31,8 +31,15 @@ install(FILES pids/README.md
 )
 
 install(FILES
-	c++/main.cc
-	c++/Makefile
-	c++/README.md
-	DESTINATION ${edest}/c++
+	c++makefile/main.cc
+	c++makefile/Makefile
+	c++makefile/README.md
+	DESTINATION ${edest}/c++makefile
+)
+
+install(FILES
+	c++cmake/main.cc
+	c++cmake/CMakeLists.txt
+	c++cmake/README.md
+	DESTINATION ${edest}/c++cmake
 )
