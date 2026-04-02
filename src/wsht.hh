@@ -16,7 +16,6 @@
 class wsht {
 public:
 	span_t the_wids;
-	span_find_t	find_span(CELLREF lo, CELLREF hi);
 	void 		flush_spans();
 	int 		get_height (CELLREF row);
 	int 		get_scaled_height (CELLREF r);

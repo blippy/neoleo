@@ -23,15 +23,15 @@
 #include "io-curses.h"
 #include "tickle.h"
 #include "win.h"
+#include "wsht.hh"
 
-//import std;
-//import utl;
-//import win;
 
 using namespace std::string_literals;
 using std::cout;
 using std::cerr;
 using std::string;
+
+#define wsh the_wsht
 
 static void maybe_quit_spreadsheet2019();
 static void row_cmd2019();
@@ -480,7 +480,7 @@ static void save_spreadsheet2019(){
 	//log("Filename before:<", filename, ">");
 	if(!invoke_std_form("Save spreadsheet as:", filename)) return;
 	FileSetCurrentFileName(filename);
-	oleo_write_file_as(filename);
+	oleo_write_file_as(wsh, filename);
 }
 
 // return true to go ahead with quit, false otherwise

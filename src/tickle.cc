@@ -36,6 +36,8 @@ using std::string;
 #include "wsht.hh"
 
 #define set_width the_wsht.set_width
+#define wsh the_wsht
+
 
 static Tcl_Interp *interp = nullptr;
 
@@ -229,7 +231,7 @@ char* ploppy_string(const std::string& s)
 
 void ploppy_save_oleo_as(char* path)
 {
-	oleo_write_file_as(path);
+	oleo_write_file_as(wsh, path);
 }
 
 int ploppy_load_oleo(char* path)

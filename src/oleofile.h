@@ -23,20 +23,18 @@
 
 #include <sstream>
 #include <string>
+#include "wsht.hh"
+
 
 using olfis_t = std::istringstream;
 using olfos_t = std::ostringstream;
-//using olfos_t = std::ostream;
 
 std::string FileGetCurrentFileName();
 void 		FileSetCurrentFileName(const char *s);
 void 		FileSetCurrentFileName(const std::string& s);
-//void		oleo_read_file (FILE *);
 int			oleo_read_file (const std::string& path);
 int			oleo_set_options (int, char *);
-void 		oleo_write_file (void);
-void		oleo_write_file (olfos_t&);
-//void		oleo_write_file (olfos_t&, struct rng *);
-void 		oleo_write_file_as(std::string path);
-//void 		read_file_generic(FILE *, char *, const char *);
+void 		oleo_write_file (wsht& wsh);
+void		oleo_write_file (wsht& wsh, olfos_t&);
+void 		oleo_write_file_as(wsht& wsh, std::string path);
 void 		oleo_read_file (std::istream& is);

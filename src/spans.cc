@@ -46,12 +46,12 @@ void wsht::set_width (CELLREF col, int wid) // FN
 
 
 
-span_find_t wsht::find_span (CELLREF lo, CELLREF hi) // FN
+span_find_t find_span (wsht& wsh, CELLREF lo, CELLREF hi) // FN
 {
 	span_find_t res;
 	for(int i=lo; i<=hi; ++i)
-		if(the_wids.find(i) != the_wids.end())
-			res.dq.emplace_back(std::make_pair(i, the_wids[i]));
+		if(wsh.the_wids.find(i) != wsh.the_wids.end())
+			res.dq.emplace_back(std::make_pair(i, wsh.the_wids[i]));
 	return res;
 }
 

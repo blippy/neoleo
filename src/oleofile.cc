@@ -31,7 +31,7 @@
 using namespace std;
 
 #define set_width the_wsht.set_width
-#define find_span the_wsht.find_span
+//#define find_span the_wsht.find_span
 #define next_span the_wsht.next_span
 
 
@@ -526,9 +526,9 @@ static char * oleo_fmt_to_str (int f1, int p1)
 }
 
 
-void write_widths(olfos_t& out)
+void write_widths(wsht& wsh, olfos_t& out)
 {
-	span_find_t w_find = find_span(MIN_COL, MAX_COL);
+	span_find_t w_find = find_span(wsh, MIN_COL, MAX_COL);
 	CELLREF c{0};
 	unsigned short w = next_span(w_find, c);
 	while (w)
@@ -626,10 +626,10 @@ static void write_mp_options (olfos_t &out)
 
 
 
-void oleo_write_file (void)
+void oleo_write_file (wsht& wsh)
 {
 	olfos_t os; //= std::ostringstream;
-	oleo_write_file(os);
+	oleo_write_file(wsh, os);
 
 	std::string path = FileGetCurrentFileName();
 	std::ofstream file;
@@ -639,15 +639,15 @@ void oleo_write_file (void)
 }
 
 
-void oleo_write_file_as (std::string path)
+void oleo_write_file_as (wsht& wsh, std::string path)
 {
 	FileSetCurrentFileName(path);
-	oleo_write_file();
+	oleo_write_file(wsh);
 }
 
 
 
-void oleo_write_file (olfos_t& out)
+void oleo_write_file (wsht& wsh, olfos_t& out)
 {
 	//assert(rng == nullptr); // mcarter 06-May-2018: insist on writing whole spreadsheet
 out <<  "# This file was created by Neoleo\n";
@@ -660,7 +660,7 @@ out <<  "# This file was created by Neoleo\n";
 	out << "F;D" << oleo_fmt_to_str(default_fmt, default_prc) << 	map_reverse(jst_map, default_jst) << default_width << "\n";
 
 	write_mp_options (out);
-	write_widths(out);
+	write_widths(wsh, out);
 
 	// 25/4 We no longer write the heights, because they are always 1
 	write_cells(out);
