@@ -29,9 +29,7 @@
 
 #include <filesystem>
 #include <map>
-//#include <optional>
 #include <ranges>
-//#include <format>
 
 #include "cell.h"
 #include "neotypes.h"
@@ -41,11 +39,6 @@
 #include "wsht.hh"
 
 
-//export module utl;
-
-//import std;
-
-//#define get_width the_wsht.get_width
 #define wsh the_wsht
 
 using namespace std::literals;
