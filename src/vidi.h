@@ -12,12 +12,12 @@
 #include "neotypes.h"
 #include "spans.h"
 
-#define WIN_LCK_HZ		0x01 // locked horizontally
-#define WIN_LCK_VT		0x02 // locked vertically
-#define WIN_PAG_HZ		0x04 // page horizontally
-#define WIN_PAG_VT		0x08 // page vertically
-#define WIN_EDGES		0x10 // edged disabled
-#define WIN_EDGE_REV	0x20 // edges standout
+constexpr auto WIN_LCK_HZ	=	0x01; // locked horizontally
+constexpr auto WIN_LCK_VT	=	0x02; // locked vertically
+constexpr auto WIN_PAG_HZ	=	0x04; // page horizontally
+constexpr auto WIN_PAG_VT	=	0x08; // page vertically
+constexpr auto WIN_EDGES	=	0x10; // edged disabled
+constexpr auto WIN_EDGE_REV	=	0x20; // edges standout
 inline const int win_flags = WIN_EDGES | WIN_EDGE_REV;
 
 
