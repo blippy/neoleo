@@ -30,9 +30,10 @@
 
 using namespace std;
 
-#define set_width the_wsht.set_width
+//#define set_width the_wsht.set_width
 //#define find_span the_wsht.find_span
-#define next_span the_wsht.next_span
+#define wsh the_wsht
+//#define next_span the_wsht.next_span
 
 
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
@@ -388,7 +389,7 @@ static bool read_fmt_line(const std::string& fmt_line, CELLREF &crow, CELLREF &c
 			cwid = astol(&ptr) + 1;
 			for (; clo <= chi; clo++)
 			{
-				set_width(clo, cwid);
+				set_width(wsh, clo, cwid);
 			}
 			break;
 
@@ -530,14 +531,14 @@ void write_widths(wsht& wsh, olfos_t& out)
 {
 	span_find_t w_find = find_span(wsh, MIN_COL, MAX_COL);
 	CELLREF c{0};
-	unsigned short w = next_span(w_find, c);
+	unsigned short w = next_span(wsh, w_find, c);
 	while (w)
 	{
 		CELLREF cc, ccc;
 		unsigned short ww;
 		cc = c;
 		do
-			ww = next_span(w_find, ccc);
+			ww = next_span(wsh, w_find, ccc);
 		while (ccc == ++cc && ww == w);
 		out << "F;W" << c << " " << cc-1 << " " << w-1 << "\n";
 		c = ccc;

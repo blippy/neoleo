@@ -23,7 +23,8 @@ bool headless_tests();
 
 using namespace std;
 
-#define set_width the_wsht.set_width
+//#define set_width the_wsht.set_width
+#define wsh the_wsht
 
 static bool all_pass = true; // all the checks have passed so far
 
@@ -466,14 +467,14 @@ bool iss57 ()
 	check((int) *lc,  1, "normal low column");
 	check((int) *hc, 9, "normal high column");
 
-	set_width(1, 3);
+	set_width(wsh, 1, 3);
 	win.update(nc, nr);
 	check((int) *lc,  1, "small case low column");
 	check((int) *hc, 10, "small case  high column");
 
 	// now let's do some funky movement
 	cucol = 10;
-	set_width(10, 20);
+	set_width(wsh, 10, 20);
 	win.update(nc, nr);
 	check((int) *lc,  6, "C10 low column");
 	check((int) *hc, 13, "C10  high column");

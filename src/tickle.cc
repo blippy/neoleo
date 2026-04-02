@@ -35,7 +35,7 @@ using std::string;
 #include "spans.h"
 #include "wsht.hh"
 
-#define set_width the_wsht.set_width
+//#define set_width the_wsht.set_width
 #define wsh the_wsht
 
 
@@ -51,7 +51,7 @@ void tickle_eval_expr(const std::string& expr);
 
 void ploppy_set_col_width(int col, int width)
 {
-	set_width(col, width);
+	set_width(wsh, col, width);
 }
 
 void ploppy_set_col_prec(int col, int prec)

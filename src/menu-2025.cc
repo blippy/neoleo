@@ -20,16 +20,14 @@
 #include "wsht.hh"
 #include "win.h"
 
-//import win;
-
 using namespace std;
 
 static bool col_width_form();
 bool invoke_std_form(const std::string& desc, std::string& text_field);
 
-#define get_width the_wsht.get_width
-#define set_width the_wsht.set_width
-
+//#define get_width the_wsht.get_width
+//#define set_width the_wsht.set_width
+#define wsh the_wsht
 
 
 void show_menu () // FN
@@ -216,13 +214,13 @@ bool col_width_form()
 	WINDOW* w = win();
 	box(w, 0 ,0);
 
-	string input{to_string(get_width(cucol))};
+	string input{to_string(get_width(wsh, cucol))};
 	win_edln ed(w, 2, 1, 2, "Cursor width:", input);
 	ed.m_only_digits = true;
 	ed.run();
 	if(ed.m_cancelled) return true;
 	input = ed.m_input;
 	auto new_width = to_int(input);
-	if(new_width)  set_width(cucol, new_width.value());
+	if(new_width)  set_width(wsh, cucol, new_width.value());
 	return true;
 }

@@ -45,7 +45,8 @@
 
 //import std;
 
-#define get_width the_wsht.get_width
+//#define get_width the_wsht.get_width
+#define wsh the_wsht
 
 using namespace std::literals;
 using std::get;
@@ -553,7 +554,7 @@ std::string fmt_value (value_t& val, int p, int j)
 // convert a cell to a string adjusting for width and format
 std::string string_cell_formatted (CELLREF r, CELLREF c)
 {
-	int w = get_width(c);
+	int w = get_width(wsh, c);
 
 	CELL *cp = find_cell(r, c);
 	std::string text;

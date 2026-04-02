@@ -16,15 +16,7 @@
 class wsht {
 public:
 	span_t the_wids;
-	void 		flush_spans();
-	int 		get_height (CELLREF row);
-	int 		get_scaled_height (CELLREF r);
-	int 		get_scaled_width (CELLREF c);
-	int			get_span(const span_t& span, int ref, int incr, int def);
-	int 		get_width (CELLREF col);
-	int 		next_span(span_find_t& sp, CELLREF& n);
-	void 		set_width (CELLREF col, int wid);
-
+	// 26/4 expand further
 };
 
 inline wsht the_wsht;

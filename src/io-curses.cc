@@ -62,7 +62,8 @@ using namespace std::string_literals;
 inline window_c the_cwin;
 inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
-#define get_scaled_width the_wsht.get_scaled_width
+//#define get_scaled_width the_wsht.get_scaled_width
+#define wsh the_wsht
 
 
 //void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);
@@ -240,7 +241,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 		while (c < MAX_COL && over-- > 0)
 		{
 			c++;
-			while ((w = get_scaled_width (c)) == 0 && c < MAX_COL) c++;
+			while ((w = get_scaled_width (wsh, c)) == 0 && c < MAX_COL) c++;
 		}
 		if (over > 0 || c == cucol || w == 0) raise_error("Can't go right");
 		break;
@@ -250,7 +251,7 @@ void io_shift_cell_cursor (dirn way, int repeat) // FN
 		while (c > MIN_COL && over++ < 0)
 		{
 			--c;
-			while ((w = get_scaled_width (c)) == 0 && c > MIN_COL) --c;
+			while ((w = get_scaled_width(wsh, c)) == 0 && c > MIN_COL) --c;
 		}
 		if (over < 0 || c == cucol || w == 0) raise_error("Can't go %s", "left");
 		break;

@@ -6,8 +6,9 @@
 #include "vidi.h"
 #include "wsht.hh"
 
-#define get_height the_wsht.get_height
-#define get_width the_wsht.get_width
+//#define get_height the_wsht.get_height
+//#define get_width the_wsht.get_width
+#define wsh the_wsht
 
 static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP);
 
@@ -19,7 +20,7 @@ int window_c::lh_wid() const {
 // we need to ensure that the cell fits within the width of the display
 int window_c::get_vid_col_width (int c)
 {
-	return std::min(numc, get_width(c));
+	return std::min(numc, get_width(wsh, c));
 }
 
 

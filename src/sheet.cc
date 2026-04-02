@@ -30,7 +30,8 @@ using std::map;
 using std::string;
 using std::vector;
 
-#define flush_spans the_wsht.flush_spans
+//#define flush_spans the_wsht.flush_spans
+#define wsh the_wsht
 
 
 /* mcarter 30-Apr-2018
@@ -80,7 +81,7 @@ cellmap_t the_cells;
 
 void clear_spreadsheet (void)
 {
-	flush_spans();
+	flush_spans(wsh);
 	//default_width = saved_default_width;
 	default_height = saved_default_height;
 	default_jst = base_default_jst;
