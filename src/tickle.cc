@@ -33,6 +33,9 @@ using std::string;
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
+#include "wsht.hh"
+
+#define set_width the_wsht.set_width
 
 static Tcl_Interp *interp = nullptr;
 

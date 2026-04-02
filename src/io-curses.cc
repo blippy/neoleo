@@ -42,6 +42,7 @@
 #include "neotypes.h"
 #include "regions.h"
 #include "sheet.h"
+#include "wsht.hh"
 #include "spans.h"
 #include "vidi.h"
 #include "win.h"
@@ -61,6 +62,7 @@ using namespace std::string_literals;
 inline window_c the_cwin;
 inline window_c* cwin = &the_cwin;
 #define	win_id		Global->win_id
+#define get_scaled_width the_wsht.get_scaled_width
 
 
 //void 		io_move_cell_cursor (CELLREF rr, CELLREF cc);

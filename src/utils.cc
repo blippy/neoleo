@@ -38,12 +38,14 @@
 #include "oleofile.h"
 #include "sheet.h"
 #include "spans.h"
+#include "wsht.hh"
 
 
 //export module utl;
 
 //import std;
 
+#define get_width the_wsht.get_width
 
 using namespace std::literals;
 using std::get;

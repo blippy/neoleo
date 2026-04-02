@@ -4,6 +4,10 @@
 #include "sheet.h"
 #include "spans.h"
 #include "vidi.h"
+#include "wsht.hh"
+
+#define get_height the_wsht.get_height
+#define get_width the_wsht.get_width
 
 static void recenter_axis (CELLREF cur, int (*get) (CELLREF), int total, CELLREF *loP, CELLREF *hiP);
 

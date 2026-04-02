@@ -17,6 +17,7 @@
 #include "io-2019.h"
 #include "io-curses.h"
 #include "sheet.h"
+#include "wsht.hh"
 #include "win.h"
 
 //import win;
@@ -26,7 +27,8 @@ using namespace std;
 static bool col_width_form();
 bool invoke_std_form(const std::string& desc, std::string& text_field);
 
-
+#define get_width the_wsht.get_width
+#define set_width the_wsht.set_width
 
 
 

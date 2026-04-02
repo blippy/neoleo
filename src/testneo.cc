@@ -17,12 +17,13 @@
 #include "sheet.h"
 #include "tickle.h"
 #include "vidi.h"
+#include "wsht.hh"
 
 bool headless_tests();
 
 using namespace std;
 
-
+#define set_width the_wsht.set_width
 
 static bool all_pass = true; // all the checks have passed so far
 

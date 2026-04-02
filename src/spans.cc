@@ -4,23 +4,23 @@
 //import std;
 //import utl;
 
-void flush_spans ()
+void wsht::flush_spans ()
 {
 	the_wids.clear();
 	//the_hgts.clear();
 }
 
-int get_scaled_height (CELLREF r)
+int wsht::get_scaled_height (CELLREF r)
 {
 	return get_height(r);
 }
 
-int get_scaled_width (CELLREF c)
+int wsht::get_scaled_width (CELLREF c)
 {
 	return get_width(c);
 }
 
-int get_span(const span_t& span, int ref, int incr, int def)
+int wsht::get_span(const span_t& span, int ref, int incr, int def)
 {
 	auto search = span.find(ref);
 	if(search != span.end() && search->second !=0)
@@ -34,24 +34,24 @@ int get_span(const span_t& span, int ref, int incr, int def)
 
 //void set_width (int wid) { set_width(COL, wid); } // FN
 
-int get_width (CELLREF col) // FN
+int wsht::get_width (CELLREF col) // FN
 {
 	return get_span(the_wids, col, 0, default_width);
 }
 
-void set_width (CELLREF col, int wid) // FN
+void wsht::set_width (CELLREF col, int wid) // FN
 {
 	the_wids[col] = wid;
 }
 
 
 
-span_find_t find_span (span_t& spans, CELLREF lo, CELLREF hi) // FN
+span_find_t wsht::find_span (CELLREF lo, CELLREF hi) // FN
 {
 	span_find_t res;
 	for(int i=lo; i<=hi; ++i)
-		if(spans.find(i) != spans.end())
-			res.dq.emplace_back(std::make_pair(i, spans[i]));
+		if(the_wids.find(i) != the_wids.end())
+			res.dq.emplace_back(std::make_pair(i, the_wids[i]));
 	return res;
 }
 
@@ -59,7 +59,7 @@ span_find_t find_span (span_t& spans, CELLREF lo, CELLREF hi) // FN
 
 
 
-int next_span (span_find_t& sp, CELLREF& n) // FN
+int wsht::next_span (span_find_t& sp, CELLREF& n) // FN
 {
 	if(sp.dq.empty()) return 0;
 	auto [n1, span]  = sp.dq[0];
@@ -68,7 +68,7 @@ int next_span (span_find_t& sp, CELLREF& n) // FN
 	return span;
 }
 
-int get_height (CELLREF row) // FN
+int wsht::get_height (CELLREF row) // FN
 {
 	return 1; // all heights are assumed 1
 }

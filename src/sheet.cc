@@ -21,6 +21,7 @@
 #include "cell.h"
 #include "sheet.h"
 #include "spans.h"
+#include "wsht.hh"
 
 
 using std::cout;
@@ -29,7 +30,7 @@ using std::map;
 using std::string;
 using std::vector;
 
-
+#define flush_spans the_wsht.flush_spans
 
 
 /* mcarter 30-Apr-2018

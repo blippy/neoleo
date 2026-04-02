@@ -30,6 +30,11 @@
 
 using namespace std;
 
+#define set_width the_wsht.set_width
+#define find_span the_wsht.find_span
+#define next_span the_wsht.next_span
+
+
 const map<char, int>  format_map{{'D', FMT_DEF}, {'G', FMT_GEN}, {'E', FMT_EXP}, {'F', FMT_FXT}, {'$', FMT_DOL},
 	{',', FMT_CMA}, {'U', FMT_USR}, {'%', FMT_PCT}, {'H', FMT_HID}, {'d', FMT_DATE}};
 
@@ -523,7 +528,7 @@ static char * oleo_fmt_to_str (int f1, int p1)
 
 void write_widths(olfos_t& out)
 {
-	span_find_t w_find = find_span(the_wids, MIN_COL, MAX_COL);
+	span_find_t w_find = find_span(MIN_COL, MAX_COL);
 	CELLREF c{0};
 	unsigned short w = next_span(w_find, c);
 	while (w)
