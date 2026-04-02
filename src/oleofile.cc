@@ -22,6 +22,7 @@
 #include <string>
 
 #include "neotypes.h"
+#include "wsht.hh"
 #include "sheet.h"
 #include "regions.h"
 #include "spans.h"
