@@ -21,16 +21,9 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
-//#include <ncursesw/ncurses.h>
 #include <cursesw.h>
 
 #include "neotypes.h"
-//#include "utils.h"
-//#include <string>
-
-//export module win;
-
-//import std;
 
 using std::max;
 using std::min;
