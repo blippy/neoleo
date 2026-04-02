@@ -5,18 +5,15 @@
 
 #include "neotypes.h"
 
+/*
 extern float height_scale;
 extern float width_scale;
 extern float user_height_scale;
 extern float user_width_scale;
+*/
 
+typedef struct span_find {
+	std::deque<std::pair<int, int>> dq;
+} span_find_t;
 
-
-//class spans_c {
-//public:
-
-//};
-
-
-//inline span_t the_wids; // , the_hgts;
-
+typedef std::map<int,int> span_t; // used for the widths and heights of cells
