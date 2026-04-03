@@ -1,7 +1,7 @@
 package provide oleo 0.2
 
 namespace eval ::oleo {
-	namespace export incra oleo-hi
+	namespace export forn get-col incra oleo-hi
 }
 
 
@@ -26,10 +26,22 @@ proc ::oleo::incra {arr key by} {
 # forn i 1 10 1 { 
 #	# for i from 1 10 step 1
 #   puts "i= $i"
-# }:w
+# }
 
-proc ::oleo::forn {varName from to step block} {
+
+proc ::oleo::forn {varName from to args} {
         upvar 1 $varName var
+        set len [llength $args]
+        if { $len == 2 } {
+                set step [lindex $args 0]
+                set block [lindex $args 1]
+        } elseif {$len == 1} {
+                set step 1
+                set block [lindex $args 0]
+        } else {
+                error "bad number of argument in forn"
+        }
+
         for {set var $from} { ($var<=$to && $step>0) || ($var>=$to && $step<=0)} {set var [expr $var + $step]} {
                 uplevel 1 $block
         }
