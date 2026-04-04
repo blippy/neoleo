@@ -1,7 +1,7 @@
 package provide oleo 0.2
 
 namespace eval ::oleo {
-	namespace export AndMatcher asRows  decrd forn get-col incra incrd oleo-hi ladd mand mstreq streq toMat
+	namespace export AndMatcher asRows  decrd forn get-col incra incrd oleo-hi ladd mand mstreq prmat streq toMat
 	#namespace exprt ColMatcher subRows
 }
 
@@ -169,4 +169,6 @@ proc ::oleo::subRows {mat matcher} {
 proc ::oleo::mstreq {col want} { return [::oleo::ColMatcher new ::oleo::streq $col $want]}
 
 proc ::oleo::mand {matcher1 matcher2} { return [::oleo::AndMatcher new $matcher1 $matcher2] }
+
+proc ::oleo::prmat {mat} { puts [$mat format 2string] }
 
