@@ -2,8 +2,8 @@ package provide oleo 0.2
 
 namespace eval ::oleo {
 	namespace export AndMatcher asRows  decrd forn get-col incra incrd oleo-hi ladd mand mstreq prmat streq toMat
-	namespace export subRows
-	#namespace exprt ColMatcher subRows
+	#namespace export subRows
+	namespace export ColMatcher subRows
 }
 
 
