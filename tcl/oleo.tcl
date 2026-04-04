@@ -21,14 +21,6 @@ proc ::oleo::incra {arr key by} {
         }
 }
 
-# nicer implementation of the for loop
-# e.g. 
-# forn i 1 10 1 { 
-#	# for i from 1 10 step 1
-#   puts "i= $i"
-# }
-
-
 proc ::oleo::forn {varName from to args} {
         upvar 1 $varName var
         set len [llength $args]

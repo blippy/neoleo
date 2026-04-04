@@ -51,6 +51,8 @@ as anything entered in a script thereafter will not be executed until neoelo com
 
 
 
+
+
 @c ----
 @item get-cell-fmt R C
 Print a formatted cell for row R col C.
@@ -283,14 +285,26 @@ Note that  TCLLIBPATH directories need to be separated by spaces rather than col
 @table @samp
 
 @c ----
-@item proc ::oleo::forn @{varName from to step block@}
-A convenient for-next-step loop
+@item proc ::oleo::forn @{varName from to block@}
+@itemx proc ::oleo::forn @{varName from to step block@}
+
+A convenient for-next-step loop.
+
 E.g. for i from 1 to 10 step 2:
 @example
 for i 1 10 2 @{
 	puts "i => $i"
 @}
 @end example
+
+E.g. to automatically increment by 1:
+@example
+for i 1 10 @{
+	puts "i => $i"
+@}
+@end example
+
+
 
 @c ----
 @item proc ::oleo::oleo-hi
