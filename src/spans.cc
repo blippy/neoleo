@@ -18,7 +18,7 @@ int get_scaled_width (wsht& wsh, CELLREF c)
 	return get_width(wsh, c);
 }
 
-int get_span(const span_t& span, int ref, int incr, int def)
+static int get_span(const span_t& span, int ref, int incr, int def)
 {
 	auto search = span.find(ref);
 	if(search != span.end() && search->second !=0)
