@@ -529,6 +529,7 @@ static char * oleo_fmt_to_str (int f1, int p1)
 
 void write_widths(wsht& wsh, olfos_t& out)
 {
+#if 0
 	span_find_t w_find = find_span(wsh, MIN_COL, MAX_COL);
 	CELLREF c{0};
 	unsigned short w = next_span(wsh, w_find, c);
@@ -544,6 +545,30 @@ void write_widths(wsht& wsh, olfos_t& out)
 		c = ccc;
 		w = ww;
 	}
+#endif
+
+	// collect all the entries in the widths together
+	vector<int> cols;
+	vector<int> widths;
+	for(int col = MIN_COL; col<= MAX_COL; col++) {
+		if(wsh.the_wids.contains(col)) {
+			cols.push_back(col);
+			widths.push_back(wsh.the_wids[col]);
+		}
+	}
+	// tack on an extra col to avoid out-by-one error
+	widths.push_back(-1);
+
+	// now aggregate these into a range of the same widths
+	int idx = 0;
+	while(idx < cols.size()) {
+		int start_col = cols[idx];
+		while(widths[idx+1]  == widths[idx]) idx++;
+		//--;
+		out << "F;W" << start_col  << " " << cols[idx] << " " << widths[idx]-1 << "\n";
+		idx++;
+	}
+
 
 }
 
