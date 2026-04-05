@@ -18,6 +18,7 @@ int get_scaled_width (wsht& wsh, CELLREF c)
 	return get_width(wsh, c);
 }
 
+#if 0
 static int get_span(const span_t& span, int ref, int incr, int def)
 {
 	auto search = span.find(ref);
@@ -26,11 +27,18 @@ static int get_span(const span_t& span, int ref, int incr, int def)
 	else
 		return def;
 }
+#endif
 
 
 int get_width (wsht& wsh, CELLREF col) // FN
 {
-	return get_span(wsh.the_wids, col, 0, default_width);
+	try {
+		return wsh.the_wids.at(col);
+	} catch(const std::out_of_range& ex) {
+		return default_width;
+	}
+
+	//return get_span(wsh.the_wids, col, 0, default_width);
 }
 
 void set_width (wsht& wsh, CELLREF col, int wid) // FN
