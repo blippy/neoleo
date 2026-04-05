@@ -288,8 +288,5 @@ class ValErr : public std::exception
 bool streq(const char* a, const char* b);
 
 
-typedef struct span_find {
-	std::deque<std::pair<int, int>> dq;
-} span_find_t;
 
 typedef std::map<int,int> span_t; // used for the widths and heights of cells

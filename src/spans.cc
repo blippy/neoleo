@@ -18,17 +18,6 @@ int get_scaled_width (wsht& wsh, CELLREF c)
 	return get_width(wsh, c);
 }
 
-#if 0
-static int get_span(const span_t& span, int ref, int incr, int def)
-{
-	auto search = span.find(ref);
-	if(search != span.end() && search->second !=0)
-		return search->second + incr;
-	else
-		return def;
-}
-#endif
-
 
 int get_width (wsht& wsh, CELLREF col) // FN
 {
@@ -47,28 +36,6 @@ void set_width (wsht& wsh, CELLREF col, int wid) // FN
 }
 
 
-
-span_find_t find_span (wsht& wsh, CELLREF lo, CELLREF hi) // FN
-{
-	span_find_t res;
-	for(int i=lo; i<=hi; ++i)
-		if(wsh.the_wids.find(i) != wsh.the_wids.end())
-			res.dq.emplace_back(std::make_pair(i, wsh.the_wids[i]));
-	return res;
-}
-
-
-
-
-
-int next_span (wsht& wsh, span_find_t& sp, CELLREF& n) // FN
-{
-	if(sp.dq.empty()) return 0;
-	auto [n1, span]  = sp.dq[0];
-	sp.dq.pop_front();
-	n = n1;
-	return span;
-}
 
 int get_height (wsht& wsh, CELLREF row) // FN
 {
