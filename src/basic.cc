@@ -64,6 +64,15 @@ void insert_1row_XXX ()
 void recalculate (int all) { }
 
 
+// 26/4 created
+void clear_cur_column ()
+{
+	for(auto const cp: the_cells) {
+		if(cp && get_col(cp) == cucol) {
+			cp->set_and_eval("");
+		}
+	}
+}
 
 
 void set_region_protection (const struct rng& rng, int prot)

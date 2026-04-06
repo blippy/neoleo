@@ -152,9 +152,11 @@ void mnu_show_submenu(const strings& entries)
 
 void mnu_column ()
 {
+	void clear_cur_column();
 
 	// create menu
 	const strings entries{
+		"clear       c",
 		"insert left i",
 		"align left  l",
 		"align right r",
@@ -165,6 +167,7 @@ void mnu_column ()
 	mnu_show_submenu(entries);
 
 	switch(get_ch()) {
+	case 'c': clear_cur_column(); break;
 	case 'i': insert_col_left(); break;
 	case 'l': column_align_left(); break;
 	case 'r': column_align_right(); break;
