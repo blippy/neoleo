@@ -483,6 +483,17 @@ bool iss57 ()
 
 }
 
+
+// test of eval of string equality
+bool eval01 ()
+{
+	bool all_pass = true;
+	interpret3(1, 1, "\"foo\" = \"bar\"", "#FALSE", all_pass);
+	interpret3(1, 1, "\"foo\" = \"foo\"", "#TRUE", all_pass);
+	interpret3(1, 1, "\"foo\" = 13", "#FALSE", all_pass);
+	return all_pass;
+}
+
 void exiting(bool all_pass)
 {
 	if(all_pass)
@@ -507,6 +518,7 @@ int main(int argc, char* argv[])
 	}
 	string cmd{argv[1]};	
 	if(cmd == "pass") { cout << "you want to pass\n"; }
+	else if(cmd == "eval01") { exiting(eval01());}
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
 	else if(cmd == "iss49") { exiting(iss49());}
 	else if(cmd == "iss56") { exiting(iss56());}

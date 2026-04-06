@@ -297,9 +297,9 @@ value_t to_bool (num_t n)
 }
 value_t do_eq (Tour& tour, const args_t& args)
 {
-	num_t x,y;
-	two_nums(tour, args, x, y);
-	return to_bool(x == y);
+	value_t v1 = eval_expr(tour, args[0]);
+	value_t v2 = eval_expr(tour, args[1]);
+	return to_bool(v1 == v2);
 }
 value_t do_ne (Tour& tour, const args_t& args)
 {
