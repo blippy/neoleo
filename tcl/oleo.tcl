@@ -1,7 +1,7 @@
 package provide oleo 0.2
 
 namespace eval ::oleo {
-	namespace export AndMatcher asRows  decrd forn get-col incra incrd oleo-hi ladd mand mstreq prmat streq toMat
+	namespace export AndMatcher asRows  decrd forn get-col incra incrd oleo-hi ladd mand mstreq prmat streq toMat write-file
 	namespace export ColMatcher subRows
 }
 
@@ -56,6 +56,12 @@ proc ::oleo::get-col {n} {
         }       
         return $result
 }       
+
+proc ::oleo::write-file {path text} {
+        set fp [open "$path" w]
+        puts $fp $text
+        close $fp
+}
 
 
 
