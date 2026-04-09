@@ -46,7 +46,6 @@
 %rename ("max-row") ploppy_max_row;
 %rename ("plog") ploppy_log;
 %rename ("ploppy-life") ploppy_life;
-%rename ("print-range") ploppy_print_range;
 %rename ("replace-first-form") ploppy_replace_first_form;
 %rename ("save-oleo-as") ploppy_save_oleo_as;
 %rename ("set-cell") ploppy_set_cell;
@@ -54,6 +53,7 @@
 %rename ("set-col-precision") ploppy_set_col_prec;
 %rename ("set-exit") set_exit;
 %rename ("set-status") ploppy_set_status;
+%rename ("string-range") ploppy_string_range;
 %rename ("test-binding") ploppy_test_binding;
 %rename ("test-tcl11") ploppy_test_tcl11;
 

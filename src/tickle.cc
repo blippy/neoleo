@@ -154,16 +154,18 @@ static void set_cell_input_1 (CELLREF r, CELLREF c, const string& formula)
 
 
 // 25/11
-void ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi)
+// 26/4 creates string instead of printing
+std::string ploppy_string_range (int r_lo, int c_lo, int r_hi, int c_hi)
 {
+	std::string result;
 	for(auto r = r_lo; r <= r_hi; r++) {
 		for(auto c = c_lo; c <= c_hi; c++) {
-			cout << string_cell_formatted(r, c);
-			if(c<c_hi) cout << " ";
+			result += string_cell_formatted(r, c);
+			if(c<c_hi) result += " ";
 		}
-		cout << endl;
+		result += "\n";
 	}
-
+	return result;
 }
 
 // 25/11
