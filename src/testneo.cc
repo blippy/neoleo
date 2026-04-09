@@ -48,12 +48,18 @@ void check(T got, T expected, std::string msg)
 
 }
 
-void check(std::string got, std::string expected, std::string msg)
+
+void check(std::string got, const char* expected, std::string msg)
+{
+	check(got, string{expected}, msg);
+}
+
+void check_str(std::string got, std::string expected, std::string msg)
 {
 	check(got, expected, msg);
 }
 
-void check(bool ok, std::string msg)
+void check_ok(bool ok, std::string msg)
 {
 	if(!ok) all_pass = false;
 	std::string s = ok? "PASS" : "FAIL";
@@ -75,7 +81,7 @@ bool format_tests()
 {
 	auto check_fmt = [](num_t v, const std::string& s) {
 		bool ok = string(pr_flt(v, &fxt, 2)) == s;
-		check(ok, "check_fmt: " + s);
+		check_ok(ok, "check_fmt: " + s);
 	};
 	check_fmt(24.6f, "24.60");
 	check_fmt(16.36f, "16.36"); // a source of potential rounding oddities
@@ -83,8 +89,8 @@ bool format_tests()
 	check_fmt(1.0f,  "1.00");
 
 
-	check(pad_left("hello", 7) == "  hello", "padleft");
-	check(pad_right("hello", 7) == "hello  ", "padright");
+	check_ok(pad_left("hello", 7) == "  hello", "padleft");
+	check_ok(pad_right("hello", 7) == "hello  ", "padright");
 
 	string s1{"Hello %s, meaning of life is %d"};
 	string s2 = format_sub_test(s1, "world", 42);
@@ -92,7 +98,7 @@ bool format_tests()
 	check(s2,  "Hello world, meaning of life is 42", "format_sub_test");
 
 	time_t t =1745492070;
-	check(fmt_std_date(t), "2025-04-24", "fmt_std_date");
+	check_str(fmt_std_date(t), "2025-04-24", "fmt_std_date");
 	return all_pass;
 }
 
@@ -117,9 +123,9 @@ bool test_values()
 {
 	//cout << "test_values ... ";
 	value_t v1 =1.0, v2 = 1.0;
-	check(v1==v2, "v1==v2");
+	check_ok(v1==v2, "v1==v2");
 	v2 = 3.0;
-	check(v1!=v2, "v1!=v2");
+	check_ok(v1!=v2, "v1!=v2");
 	return all_pass;
 }
 
@@ -494,6 +500,16 @@ bool eval01 ()
 	return all_pass;
 }
 
+// dependency test
+bool eval02 ()
+{
+	set_and_eval(1, 3, "23.3", false);
+	set_and_eval(1, 4, "\"A\"", false);
+	set_and_eval(1, 6, "if(rc4 = \"A\", rc3, \"\")", false);
+	check(string_cell(1,6), "23.3", "eval02");
+	return all_pass;
+}
+
 void exiting(bool all_pass)
 {
 	if(all_pass)
@@ -519,6 +535,7 @@ int main(int argc, char* argv[])
 	string cmd{argv[1]};	
 	if(cmd == "pass") { cout << "you want to pass\n"; }
 	else if(cmd == "eval01") { exiting(eval01());}
+	else if(cmd == "eval02") { exiting(eval02());}
 	else if(cmd == "fail") { cout << "you want to fail\n"; return 1;}
 	else if(cmd == "iss49") { exiting(iss49());}
 	else if(cmd == "iss56") { exiting(iss56());}
