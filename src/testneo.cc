@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "basic.h"
 #include "parser-2019.h"
 #include "sheet.h"
 #include "tickle.h"
@@ -506,7 +507,8 @@ bool eval02 ()
 	set_and_eval(1, 3, "23.3", false);
 	set_and_eval(1, 4, "\"A\"", false);
 	set_and_eval(1, 6, "if(rc4 = \"A\", rc3, \"\")", false);
-	check(string_cell(1,6), "23.3", "eval02");
+	set_column_prec(6, 2);
+	check(string_cell(1,6), "23.30", "eval02");
 	return all_pass;
 }
 

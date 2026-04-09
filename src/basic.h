@@ -31,6 +31,7 @@ void 	set_cell_toggle_bold();
 void 	set_cell_toggle_italic();
 void 	set_cell_toggle_percent();
 void 	set_column_prec(int prec);
+void 	set_column_prec (int col, int prec);
 void	set_def_format (int fmt);
 int		set_window_option (int set_opt, char *text);
 //void	write_cmd (FILE *fp, const char * name);

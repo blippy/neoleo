@@ -191,7 +191,7 @@ void column_align_right ()
 // FN-END
 
 // 25/11 Added
-void set_column_prec(int col, int prec)
+void set_column_prec (int col, int prec)
 {
 	for(auto const cp: the_cells) {
 		if(cp && get_col(cp) == col) {
@@ -201,16 +201,16 @@ void set_column_prec(int col, int prec)
 	}
 }
 
-void set_column_prec(int prec)
+void set_column_prec (int prec)
 {
 	set_column_prec(cucol,  prec);
 }
 
-void set_cell_alignment_left()
+void set_cell_alignment_left ()
 {
 	set_cell_alignment('L');
 }
-void set_cell_alignment_right()
+void set_cell_alignment_right ()
 {
 	set_cell_alignment('R');
 }
