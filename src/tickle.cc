@@ -158,7 +158,7 @@ void ploppy_print_range (int r_lo, int c_lo, int r_hi, int c_hi)
 {
 	for(auto r = r_lo; r <= r_hi; r++) {
 		for(auto c = c_lo; c <= c_hi; c++) {
-			cout << ploppy_get_cell_fmt(r, c);
+			cout << string_cell_formatted(r, c);
 			if(c<c_hi) cout << " ";
 		}
 		cout << endl;
@@ -210,7 +210,7 @@ void ploppy_insert_by_col()
 	}
 }
 
-std::string  ploppy_get_cell_fmt(int r, int c)
+std::string  ploppy_get_cell_fmt (int r, int c)
 //char*  ploppy_get_cell_fmt(int r, int c)
 {
 	//return ploppy_string(string_cell_formatted(r,c));
