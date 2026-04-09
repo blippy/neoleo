@@ -157,6 +157,7 @@ void mnu_column ()
 	// create menu
 	const strings entries{
 		"clear       c",
+		"delete      d",
 		"insert left i",
 		"align left  l",
 		"align right r",
@@ -168,6 +169,7 @@ void mnu_column ()
 
 	switch(get_ch()) {
 	case 'c': clear_cur_column(); break;
+	case 'd': delete_cur_col(); break;
 	case 'i': insert_col_left(); break;
 	case 'l': column_align_left(); break;
 	case 'r': column_align_right(); break;

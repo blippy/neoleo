@@ -5,6 +5,8 @@ DATE:		TBD
 
 == FEATURES
 
+* Added menu item column : delete
+
 * Mouse button presses can now change current cursor position
 
 * Improved status line visibility

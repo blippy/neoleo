@@ -275,7 +275,20 @@ void insert_row_above (coord_t row)
 }
 // FN-END
 
-void delete_sheet_row(coord_t row)
+// 26/4 Created
+void delete_cur_col ()
+{
+	vector<cell_s> cells;
+	for(CELL* cp: the_cells) {
+		auto [r, c] = decoord(cp);
+		if(c==cucol) continue;
+		if(c>=cucol) c--;
+		cells.push_back(cell_s{r, c, cp->cell_flags, cp->get_formula_text()});
+	}
+	recreate_cells(cells);
+}
+
+void delete_sheet_row (coord_t row)
 {
 	vector<cell_s> cells;
 	for(CELL* cp: the_cells) {
@@ -287,7 +300,7 @@ void delete_sheet_row(coord_t row)
 	recreate_cells(cells);
 }
 
-void copy_row(CELLREF dst_row, CELLREF src_row)
+void copy_row (CELLREF dst_row, CELLREF src_row)
 {
 
 	if(src_row == dst_row) return;

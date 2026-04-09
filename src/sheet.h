@@ -33,6 +33,7 @@ void 	clear_spreadsheet (void);
 void 	copy_row(CELLREF dst_row, CELLREF src_row);
 std::tuple<CELLREF, CELLREF> decoord(const CELL* cp);
 void 	decoord(const CELL* cp, CELLREF& r, CELLREF& c);
+void 	delete_cur_col();
 void 	delete_all_cells();
 void 	delete_sheet_row(coord_t row);
 void 	dump_sheet();

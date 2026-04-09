@@ -491,7 +491,6 @@ static void maybe_quit_spreadsheet2019()
 	std::string response = ""; 
 	if(!invoke_std_form("Spreadsheet modified; kill anyway? (y/[n])? ", response)) return;
 	if(response == "y" || response == "yes") Global_definitely_quit = true;
-
 }
 
 
@@ -504,27 +503,6 @@ void clear_status ()
 	set_status("");
 }
 
-
-/*
-// user has typed 'c' to perform a col action. This function
-// decides which one it is
-// 25/5 added
-static void col_cmd2019()
-{
-	//log("col_cmd2019 enter");
-	int c = get_ch();
-	if(c == 'i') {
-		insert_col_left();
-	} else if (c == 'a') {
-		//log("col_cmd2019 got a");
-		c = get_ch();
-		if(c == 'l')
-			column_align_left();
-	}
-
-	i19_parameter = -1;
-}
-*/
 
 
 
