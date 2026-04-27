@@ -27,10 +27,10 @@ sudo pacman -S swig tcl texlive-basic
 
 Texlive might be more, or less, complete.
 
-### Debian (Trixie)
+### Debian (Trixie), Ubuntu (26.04)
 
 ```
-sudo apt install autoconf build-essential cmake pkgconf libncurses-dev swig texinfo tcl-dev
+sudo apt install build-essential cmake pkgconf libncurses-dev swig texinfo tcl-dev
 ```
 
 ### Fedora
