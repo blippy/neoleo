@@ -1,0 +1,28 @@
+#!/bin/sh
+# the next line restarts using tclsh \
+exec tclsh "$0" "$@"
+
+
+package require struct::matrix
+
+package require oleo
+namespace import oleo::*
+
+set fname [lindex $argv 0]
+load-oleo $fname
+
+#set m [toMat]
+
+#prmat $m
+
+#puts [$m columns]
+
+set mcol [max-col]
+forn r 1 [max-row] 1 {
+	forn c 1 $mcol 1 {
+		set val [get-cell $r $c]
+		puts -nonewline $val
+		if { $c < $mcol } { puts -nonewline "\t" }
+	}
+	puts ""
+}
