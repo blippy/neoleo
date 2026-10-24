@@ -30,8 +30,24 @@ add_custom_command(OUTPUT ${info_out}
 
 add_custom_target(info ALL DEPENDS ${info_out})
 
-install(FILES ${info_out} DESTINATION share/info)
+include(GNUInstallDirs) 
+#install(FILES ${info_out} DESTINATION share/info)
+install(FILES ${info_out} TYPE INFO)
+message(STATUS "bliipy 1 ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INFODIR}")
 
+# run install-info to update the root dir
+install(CODE "
+  message(STATUS \"Running install-info for mymanual...\")
+  execute_process(
+    COMMAND install-info
+            --info-dir=${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INFODIR}
+            ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INFODIR}/neoleo.info
+    RESULT_VARIABLE result
+  )
+  if(NOT result EQUAL 0)
+    message(FATAL_ERROR \"install-info failed with code \${result}\")
+  endif()
+")
 
 #################################################################
 # build html files

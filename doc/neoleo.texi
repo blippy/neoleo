@@ -1,5 +1,9 @@
 \input texinfo    @c -*- texinfo -*-
 @c %**start of header
+@dircategory User Applications
+@direntry
+* Neoleo: (neoleo).	Ncurses spreadsheet
+@end direntry
 
 @set version 17.0
 @set update-date 17 Mar 2026
